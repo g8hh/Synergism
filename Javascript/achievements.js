@@ -206,7 +206,7 @@ var areward44 = "Unlock the Prism Rune! Transcensions give more offerings based 
 var areward45 = "Reduce tax scaling by up to 5%, depending on the length of prestige."
 var areward46 = "Reduce tax scaling by up to another 5%, depending on length of prestige."
 var areward47 = "Reduce tax scaling by up to ANOTHER 10%, depending on length of prestige!"
-var areward50 = "Unlock new Atomic production and unlock 3 new incredibly difficult challenges! Gain obtainium based your fastest ever Reincarnation (Max 1 per second)."
+var areward50 = "Unlock new Atomic production and unlock 3 new incredibly difficult challenges! Gain 2x particles on all future Reincarnations!"
 var areward51 = "Reincarnations give more offerings based on time spent (Up to +25 at 1800 seconds)"
 var areward57 = "Gain +1, +1% free Multipliers!"
 var areward58 = "Gain +1, +1% more free Multipliers!"
@@ -404,11 +404,14 @@ if (i == 'two') {
     if (player.challengecompletions.two > 19.5) {achievementaward(89)}
     if (player.challengecompletions.two > 49.5) {achievementaward(90)}
     if (player.challengecompletions.two > 74.5) {achievementaward(91)}
+    if (!auto) {
     if (player.coinsThisTranscension.greaterThanOrEqualTo("1e1000") && generatorcheck == 0){achievementaward(76)}
-
+    }
 }
 if (i == 'three') {
+    if (!auto) {
     if (player.coinsThisTranscension.greaterThanOrEqualTo("1e99999") && generatorcheck == 0){achievementaward(77)}
+    }
     if (player.challengecompletions.three > 0.5) {achievementaward(92)}
     if (player.challengecompletions.three > 2.5) {achievementaward(93)}
     if (player.challengecompletions.three > 4.5) {achievementaward(94)}
@@ -427,7 +430,9 @@ if (i == 'four') {
     if (player.challengecompletions.four > 74.5) {achievementaward(105)}
 }
 if (i == 'five') {
+    if (!auto) {
     if (player.coinsThisTranscension.greaterThanOrEqualTo("1e120000")) {achievementaward(63)}
+    }
     if (player.challengecompletions.five > 0.5) {achievementaward(106)}
     if (player.challengecompletions.five > 2.5) {achievementaward(107)}
     if (player.challengecompletions.five > 4.5) {achievementaward(108)}

@@ -1,7 +1,7 @@
-function challengeDisplay(i,changefocus = true) {
+function challengeDisplay(i,changefocus = true,automated = false) {
     if (changefocus){challengefocus = i}
-    if (i <= 5) {document.getElementById("challengetotalscore").style.color = "plum"}
-    if (i > 5 && i <= 8) {document.getElementById("challengetotalscore").style.color = "green"}
+    if (i <= 5 && !automated) {document.getElementById("challengetotalscore").style.color = "plum"}
+    if (i > 5 && i <= 8 && !automated) {document.getElementById("challengetotalscore").style.color = "green"}
     if (i==1){q = "one"}
     if (i==2){q = "two"}
     if (i==3){q = "three"}
@@ -16,27 +16,27 @@ function challengeDisplay(i,changefocus = true) {
 
     if (i == 1 && challengefocus == 1) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except Multipliers do not directly increase Multiplier. Instead, Multipliers act as Accelerators. Accelerator Power from Accelerator Boosts are nerfed by about 50%."
-        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.one + "/" + (25 + 1 * player.researches[66]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.one * Math.pow((1 + player.challengecompletions.one), 2))) + " Coins in challenge."
+        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.one + "/" + (25 + 1 * player.researches[66]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.one * Math.pow((1 + player.challengecompletions.one), 2))) + " Coins in challenge. [HIGHEST EVER COMPLETED (Manually): " + player.highestchallengecompletions.one + "]"
         document.getElementById("challengereward").textContent = "Reward: +10%, +10 Multiplier Power Boosts per completion. First Completion awards 1 multiplier. " + c
     }
     if (i == 2 && challengefocus == 2) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except Accelerators only boost generation through Coin Upgrades. Otherwise, Accelerators do nothing. Multiplier power is nerfed by about 75%."
-        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.two + "/" + (25 + 1 * player.researches[67]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.two * Math.pow((1 + player.challengecompletions.two), 2))) + " Coins in challenge."
+        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.two + "/" + (25 + 1 * player.researches[67]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.two * Math.pow((1 + player.challengecompletions.two), 2))) + " Coins in challenge. [HIGHEST EVER COMPLETED (Manually): " + player.highestchallengecompletions.two + "]"
         document.getElementById("challengereward").textContent = "Reward: +5% Accel. Boost power, +5 free Accelerator per completion. Gain +0.5% higher Acceleration Power every 2 completions. " + c
     }
     if (i == 3 && challengefocus == 3) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except you cannot gain Crystals or Mythos Shards. Accelerators are weaker."
-        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.three + "/" + (25 + 1 * player.researches[68]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.three * Math.pow((1 + player.challengecompletions.three), 2))) + " Coins in challenge."
-        document.getElementById("challengereward").textContent = "Reward: Increase crystal multiplier to production by an exponent of .04 per completion. Purchased mythos producers will also increase mythos producers by +0.5% per producer per completion. " + c
+        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.three + "/" + (25 + 1 * player.researches[68]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.three * Math.pow((1 + player.challengecompletions.three), 2))) + " Coins in challenge. [HIGHEST EVER COMPLETED (Manually): " + player.highestchallengecompletions.three + "]"
+        document.getElementById("challengereward").textContent = "Reward: Increase crystal multiplier to production by an exponent of .04 per completion. Purchased mythos producers will also increase grandmaster production by 0.5% each, for each completion. " + c
     }
     if (i == 4 && challengefocus == 4) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except the cost of Coin buildings, Accelerators and Multipliers scales much faster and scales immediately. Gets harder each completion!"
-        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.four + "/" + (25 + 1 * player.researches[69]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.four * Math.pow((1 + player.challengecompletions.four), 2))) + " Coins in challenge."
+        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.four + "/" + (25 + 1 * player.researches[69]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.four * Math.pow((1 + player.challengecompletions.four), 2))) + " Coins in challenge. [HIGHEST EVER COMPLETED (Manually): " + player.highestchallengecompletions.four + "]"
         document.getElementById("challengereward").textContent = "Reward: Accelerator cost scaling starts 5 slower, and Multiplier cost scaling starts 2 slower per completion. Buildings scale 1% slower as well! " + c
     }
     if (i == 5 && challengefocus == 5) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except prestiging rewards scale much more slowly. Diamond generation is also debuffed, and diamond-boosting upgrades are disabled. Gets harder each completion!"
-        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.five + "/" + (25 + 1 * player.researches[70]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.five * Math.pow((1 + player.challengecompletions.five), 2))) + " Coins in challenge."
+        document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.five + "/" + (25 + 1 * player.researches[70]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.five * Math.pow((1 + player.challengecompletions.five), 2))) + " Coins in challenge. [HIGHEST EVER COMPLETED (Manually): " + player.highestchallengecompletions.five + "]"
         document.getElementById("challengereward").textContent = "Reward: Each completions multiplies all crystal producer production by 10. Diamond gain is also increased significantly per completion. " +c
     }
     if (i == 6 && challengefocus == 6) {
@@ -49,4 +49,9 @@ function challengeDisplay(i,changefocus = true) {
         document.getElementById("challengetotalscore").textContent = "Times Completed: " +player.challengecompletions.seven + "/25. Goal: Gain " + format(Decimal.pow(10, challengebaserequirementsrein.seven * Math.pow(1 + player.challengecompletions.seven, 2))) + " Mythos Shards."
         document.getElementById("challengereward").textContent = "Reward: Accelerator/Multiplier boost is powered by 0.04 per completion. The speed and duplication rune are 2% less expensive to level per completion (applies retroactively!). First completion makes multiplier boosts 25% more effective! " + c
     }
+}
+
+function toggleRetryChallenges() {
+    if (player.retrychallenges){player.retrychallenges = false; document.getElementById("retrybutton").textContent = "Retry: OFF"}
+    else{player.retrychallenges = true; document.getElementById("retrybutton").textContent = "Retry: ON"}
 }

@@ -7,7 +7,7 @@ html {
 
 
 }
-body {background-color: black ;
+body {background-color: #111111 ;
 	transform: scale(0.8);
 	transform-origin: 0 0;
 	overflow-x: hidden;}
@@ -16,6 +16,9 @@ body {
 	color: black;
 	margin: 0;
 	box-sizing: border-box;
+}
+btn {
+	color: #171717
 }
 a {
 	color: white;
@@ -52,18 +55,18 @@ input[type="range"] {
 
 button {
 	color: white;
-	background-color: black;
+	background-color: #171717;
     outline: none;
     cursor: pointer;
 }
 
 button:active {
-    background-color: black;
+    background-color: #171717;
     cursor: pointer;
 }
 
 button:focus {
-    border-color: black;
+    border-color: #171717;
     cursor: pointer;
 }
 
@@ -538,7 +541,7 @@ position: absolute;
 	width: 1200px;
 	margin-left: -600px;
 	height: 20px;
-	color: gray;
+	color: lightgray;
 	text-align: center;
 }
 #buildingsTable {
@@ -561,54 +564,108 @@ position: absolute;
 position:absolute;
 display: inline-block;
 text-align:center;
-top: 197px;
+top: 207px;
 left: 10%;
 margin-left: -12.5px
+}
+#cointext {
+position:absolute;
+display: inline-block;
+text-align:center;
+top: 247px;
+width: 150px;
+left: 10%;
+margin-left: -72.5px
 }
 
 #prestigeupgradetitle{
 position:absolute;
 display: inline-block;
 text-align:center;
-top: 197px;
+top: 207px;
 left: 25%;
 margin-left: -12.5px
 }
+#prestigetext {
+	position:absolute;
+	display: inline-block;
+	text-align:center;
+	top: 247px;
+	width: 150px;
+	left: 25%;
+	margin-left: -72.5px
+	}
 #transcendupgradetitle{
 position:absolute;
 display: inline-block;
 text-align:center;
-top: 197px;
+top: 207px;
 left: 40%;
 margin-left: -12.5px
 }
+#transcendtext {
+	position:absolute;
+	display: inline-block;
+	text-align:center;
+	top: 247px;
+	width: 150px;
+	left: 40%;
+	margin-left: -72.5px
+	}
 
 
 #reincarnationupgradetitle{
 position:absolute;
 display: inline-block;
 text-align:center;
-top: 197px;
+top: 207px;
 left: 85%;
 margin-left: -14.5px
 }
+#reincarnationtext {
+	position:absolute;
+	display: inline-block;
+	text-align:center;
+	top: 247px;
+	width: 150px;
+	left: 85%;
+	margin-left: -72.5px
+	}
 #automationtitle {
 	position:absolute;
 display: inline-block;
 text-align:center;
-top: 197px;
+top: 207px;
 left: 70%;
 margin-left: -13.5px
 }
+#automationtext {
+	position:absolute;
+	display: inline-block;
+	text-align:center;
+	top: 247px;
+	width: 150px;
+	left: 70%;
+	margin-left: -72.5px
+	}
 
 #generatortitle {
 	position:absolute;
 display: inline-block;
 text-align:center;
-top: 197px;
+top: 207px;
 left: 55%;
 margin-left: -13px
 }
+#generatortext {
+	position:absolute;
+	display: inline-block;
+	text-align:center;
+	top: 247px;
+	width: 150px;
+	left: 55%;
+	margin-left: -72.5px
+	}
 
 #upgradesrow2 {
 	position:relative;
@@ -618,35 +675,35 @@ margin-left: -13px
 
 #coinupgradestable {
 	position: absolute;
-	top: 110px;
+	top: 150px;
 	left: 10%;
 	margin-left: -88px;
 }
 
 #prestigeupgradestable {
 	position: absolute;
-	top: 110px;
+	top: 150px;
 	left: 25%;
 	margin-left: -88px;
 }
 
 #transcendupgradestable {
 	position: absolute;
-	top: 110px;
+	top: 150px;
 	left: 40%;
 	margin-left: -88px;
 }
 
 #reincarnationupgradestable {
 	position: absolute;
-	top: 110px;
+	top: 150px;
 	left: 85%;
 	margin-left: -88px;
 }
 
 #automationtable {
 	position:absolute;
-	top: 110px;
+	top: 150px;
 	left: 70%;
 	margin-left: -88px;
 	
@@ -654,14 +711,14 @@ margin-left: -13px
 
 #generatortable {
 	position: absolute;
-	top: 110px;
+	top: 150px;
 	left: 55%;
 	margin-left: -88px;
 }
 
 #shoptogglerow {
 	position:relative;
-	top: 345px;
+	top: 385px;
 }
 
 #shoptogglecoin {
@@ -706,7 +763,7 @@ margin-left: -13px
 
 #upgradesrow3 {
 	position: relative;
-	top: 180px;
+	top: 220px;
 	text-align: center;
 }
 
@@ -715,7 +772,7 @@ margin-left: -13px
 	text-align: center;
 	top: 215px;
 	width: 1000px;
-	left: 50%;
+	left: 48%;
 	margin-left: -500px;
 }
 
@@ -723,7 +780,7 @@ margin-left: -13px
 	position: absolute;
 	top: 235px;
 	width: 300px;
-	left: 50%;
+	left: 48%;
 	margin-left: -150px;
 }
 
@@ -731,7 +788,7 @@ margin-left: -13px
 	position: absolute;
 	top: 255px;
 	width: 400px;
-	left: 50%;
+	left: 48%;
 	margin-left: -200px;
 	color: pink
 }
@@ -749,7 +806,7 @@ margin-left: -13px
 	position: absolute;
 	top: 0px;
 	width: 500px;
-	left: 50%;
+	left: 25%;
 	margin-left: -250px;
 }
 
@@ -757,21 +814,21 @@ margin-left: -13px
 #settingpic1 {
 	position: absolute;
 	top: 60px;
-	left: 45%;
+	left: 20%;
 	margin-left: -18px;
 }
 
 #settingpic2 {
 	position: absolute;
 	top: 60px;
-	left: 50%;
+	left: 25%;
 	margin-left: -18px;
 }
 
 #settingpic3 {
 	position: absolute;
 	top: 60px;
-	left: 55%;
+	left: 30%;
 	margin-left: -18px;
 }
 
@@ -860,8 +917,8 @@ margin-left: -13px
 	height: 30px;
 	width: 130px;
 	top: 320px;
-	left: 50%;
-	margin-left: -55px;
+	left: 48%;
+	margin-left: -65px;
 }
 
 #toggle10 {
@@ -919,6 +976,13 @@ margin-left: -13px
 	left: 50%;
 	margin-left: -75px;
 }
+#prestigeautotoggle {
+	position:absolute;
+	width: 150px;
+	top: 394px;
+	left: 50%;
+	margin-left: -75px;
+}
 
 #toggle16 {
 	position:absolute;
@@ -968,7 +1032,7 @@ margin-left: -13px
 	width: 40px;
 	height: 40px;
 	top: 95px;
-	left: 43.45%;
+	left: 18.45%;
 
 }
 #toggle29 {
@@ -976,14 +1040,14 @@ margin-left: -13px
 	width: 40px;
 	height: 40px;
 	top: 95px;
-	left: 48.45%
+	left: 23.45%
 }
 #toggle30 {
 	position: absolute;
 	width: 40px;
 	height: 40px;
 	top: 95px;
-	left: 53.45%
+	left: 28.45%
 }
 
 #exportgame {
@@ -1038,11 +1102,11 @@ margin-left: -13px
 }
 #versionnumber{
 	position: absolute;
-	width: 600px;
+	width: 900px;
 	height: 100px;
 	top: 450px;
 	left: 50%;
-	margin-left: -300px;
+	margin-left: -450px;
 }
 
 #statistics {
@@ -1437,7 +1501,7 @@ margin-left: -13px
 
 #prestigeamount {
 	position: absolute;
-	top: 400px;
+	top: 418px;
 	padding: 0px;
 	left: 50%;
 	width: 100px;
@@ -1965,7 +2029,7 @@ margin-left: -13px
 
 #transcendamount {
 	position: absolute;
-	top: 400px;
+	top: 418px;
 	padding: 0px;
 	left: 50%;
 	width: 100px;
@@ -1990,6 +2054,13 @@ margin-left: -13px
 	position:absolute;
 	width: 150px;
 	top: 374px;
+	left: 50%;
+	margin-left: -75px;
+}
+#transcendautotoggle {
+	position:absolute;
+	width: 150px;
+	top: 394px;
 	left: 50%;
 	margin-left: -75px;
 }
@@ -2153,7 +2224,7 @@ margin-left: -13px
 
 #challengereward {
 	position: absolute;
-	top: 110px;
+	top: 130px;
 	width: 500px;
 	color: pink;
 	text-align: left;
@@ -2206,7 +2277,7 @@ margin-left: -13px
     padding: 0px;
     top: 20px;
     width: 1000px;
-    left: 42%;
+    left: 38%;
     margin-left: -500px;
 }
  
@@ -2368,6 +2439,13 @@ margin-left: -13px
 	left: 50%;
 	margin-left: -75px;
 }
+#reincarnateautotoggle {
+	position:absolute;
+	width: 150px;
+	top: 394px;
+	left: 50%;
+	margin-left: -75px;
+}
 
 #autoreincarnate {
 	position: absolute;
@@ -2382,7 +2460,7 @@ margin-left: -13px
 
 #reincarnationamount {
 	position: absolute;
-	top: 400px;
+	top: 418px;
 	padding: 0px;
 	left: 50%;
 	width: 100px;
@@ -2475,4 +2553,39 @@ margin-left: -13px
 	height: 20px;
 	color: plum;
 	text-align: center;
+}
+#automaticobtainium{
+	position: absolute;
+	padding: 5px;
+	top: 370px;
+	left: 50%;
+	width: 1200px;
+	margin-left: -600px;
+	height: 20px;
+	text-align: center;
+}
+#contentteaser1 {
+	position: absolute;
+	padding: 5px;
+	top: 410px;
+	left: 50%;
+	width: 1200px;
+	margin-left: -600px;
+	height: 20px;
+	text-align: center;
+}
+
+#retrychallengesetting {
+	position: absolute;
+	top: 0px;
+	width: 500px;
+	left: 50%;
+	margin-left: -250px;
+}
+#retrybutton {
+	position: absolute;
+	width: 70px;
+	top: 60px;
+	left: 50%;
+	margin-left: -35px;
 }

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-   <meta charset="utf-8" />
+<head>   <meta charset="utf-8" />
     <script src='kongregate_api.js'></script>
     <title>协同放置 - Synergism</title>
     </head>
@@ -11,6 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="chs.js"></script>
 <script src="//likexia.gitee.io/game/zh/core.js"></script>
+
 <div id="navbar">
 
     <div id="resourcesrow">
@@ -49,12 +49,12 @@
 
         <table id="resettable">
             <tr>
-            <td><img class="coinunlock4" src="Pictures/Transparent Pics/Prestige.png" style="cursor: pointer" onmouseover="resetrepeat(1);" onclick="resetCheck('prestige')"></td>
-            <td><img class="prestigeunlock" src="Pictures/Transparent Pics/Transcend.png" style="cursor:pointer"  onmouseover="resetrepeat(2)" onclick="resetCheck('transcend')"></td>
-            <td><img class="transcendunlock" src="Pictures/Transparent Pics/Reincarnate.png" style="cursor:pointer" onmouseover="resetrepeat(4)" onclick="resetCheck('reincarnate')"></td>
-            <td><img class="transcendunlock" src="Pictures/AcceleratorBoost.png" onmouseover="resetrepeat(5)" style="cursor:pointer" onclick="boostAccelerator()"></td>
-            <td><img class="transcendunlock" src="Pictures/Challenge.png"  onmouseover="resetrepeat(3)" onclick="resetCheck('challenge')" style="cursor:pointer"></td>
-            <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ChallengeReincarnation.png" onmouseover="resetrepeat(6)" onclick="resetCheck('reincarnationchallenge')" style="cursor:pointer"></td>
+            <td><img class="coinunlock4" id="prestigebtn" src="Pictures/Transparent Pics/Prestige.png" style="cursor: pointer" onmouseover="resetrepeat(1);" onclick="resetCheck('prestige')"></td>
+            <td><img class="prestigeunlock" id="transcendbtn" src="Pictures/Transparent Pics/Transcend.png" style="cursor:pointer"  onmouseover="resetrepeat(2)" onclick="resetCheck('transcend')"></td>
+            <td><img class="transcendunlock" id="reincarnatebtn" src="Pictures/Transparent Pics/Reincarnate.png" style="cursor:pointer" onmouseover="resetrepeat(4)" onclick="resetCheck('reincarnate')"></td>
+            <td><img class="transcendunlock" id="acceleratorboostbtn" src="Pictures/Transparent Pics/AcceleratorBoost.png" onmouseover="resetrepeat(5)" style="cursor:pointer" onclick="boostAccelerator()"></td>
+            <td><img class="transcendunlock" id="challengebtn" src="Pictures/Transparent Pics/Challenge.png"  onmouseover="resetrepeat(3)" onclick="resetCheck('challenge')" style="cursor:pointer"></td>
+            <td><img class="reincarnationunlock" id="reincarnatechallengebtn" src="Pictures/Transparent Pics/ChallengeReincarnation.png" onmouseover="resetrepeat(6)" onclick="resetCheck('reincarnationchallenge')" style="cursor:pointer"></td>
             </tr>
         </table>
         <p id="resetinfo"></p>
@@ -105,7 +105,7 @@
     <div id="buyamountcoin">
         <table class="coinunlock3" id="coinbuyamount">
             <tr>
-            <td><img  id="coinone" src="Pictures/Transparent Pics/CoinOne.png" style="cursor:pointer;" onclick="toggleBuyAmount(1,'coin')"></td>
+            <td><img  id="coinone" src="Pictures/Transparent Pics/CoinOne.png" style="cursor:pointer; background-color: green;" onclick="toggleBuyAmount(1,'coin')"></td>
             <td><img  id="cointen" src="Pictures/Transparent Pics/CoinTen.png"  style="cursor:pointer;" onclick="toggleBuyAmount(10,'coin')"></td>    
             <td><img  id="coinhundred" src="Pictures/Transparent Pics/CoinHundred.png"  style="cursor:pointer;" onclick="toggleBuyAmount(100,'coin')"></td>        
             </tr>
@@ -126,40 +126,40 @@
     
     <div id="buildingtext">
         <p id=buildtext1 style="color: gold">Workers: 321495 [+1.49e+391945]</p>
-        <button id="buycoin1" onclick="buyProducer('first', 'Coin', 1)">Cost: 100 Coins.</button>
+        <button id="buycoin1" onclick="buyProducer('first', 'Coin', 1)" style="background-color: #070707;">Cost: 100 Coins.</button>
         <p id="buildtext2" style="color: gold">100 Coins/second [100%]</p>
         <p class="coinunlock1" id="buildtext3" style="color: gold">Investments: 0 [+0]</p> 
-        <button class="coinunlock1" id="buycoin2" onclick="buyProducer('second','Coin', 2)">Cost: 2e3 Coins.</button>
+        <button class="coinunlock1" id="buycoin2" onclick="buyProducer('second','Coin', 2)" style="background-color: #070707;">Cost: 2e3 Coins.</button>
         <p class="coinunlock1" id="buildtext4" style="color: gold">0 Coins/second [0%]</p> 
         <p class="coinunlock2" id="buildtext5" style="color: gold">Printers: 0 [+0]</p> 
-        <button class="coinunlock2" id="buycoin3" onclick="buyProducer('third', 'Coin', 3)">Cost: 4e4 Coins.</button>
+        <button class="coinunlock2" id="buycoin3" onclick="buyProducer('third', 'Coin', 3)" style="background-color: #070707;">Cost: 4e4 Coins.</button>
         <p class="coinunlock2" id="buildtext6" style="color: gold">0 Coins/second [0%]</p> 
         <p class="coinunlock3" id="buildtext7" style="color: gold">Coin Mints: 0 [+0]</p> 
-        <button class="coinunlock3" id="buycoin4" onclick="buyProducer('fourth', 'Coin', 4)">Cost: 8e5 Coins.</button>
+        <button class="coinunlock3" id="buycoin4" onclick="buyProducer('fourth', 'Coin', 4)" style="background-color: #070707;">Cost: 8e5 Coins.</button>
         <p class="coinunlock3" id="buildtext8" style="color: gold">0 Coins/second [0%]</p> 
         <p class="coinunlock4" id="buildtext9" style="color: gold">Alchemies: 0 [+0]</p> 
-        <button class="coinunlock4" id="buycoin5" onclick="buyProducer('fifth', 'Coin', 5)">Cost: 1.6e7 Coins.</button>
+        <button class="coinunlock4" id="buycoin5" onclick="buyProducer('fifth', 'Coin', 5)" style="background-color: #070707;">Cost: 1.6e7 Coins.</button>
         <p class="coinunlock4" id="buildtext10" style="color: gold">0 Coins/second [0%]</p> 
         <p class="coinunlock1" id="buildtext11" style="color: yellow">Accelerators: 0 [+0]</p>
-        <button class="coinunlock1" id="buyaccelerator" onclick="buyAccelerator()">Cost: 500 Coins.</button>
+        <button class="coinunlock1" id="buyaccelerator" onclick="buyAccelerator()" style="background-color: #070707;">Cost: 500 Coins.</button>
         <p class="coinunlock1" id="buildtext12" style="color: cyan">Acceleration Factor: 10.0%. Acceleration Multiplier: 1.00x</p>
         <p class="coinunlock3" id="buildtext13" style="color: yellow">Multipliers: 0 [+0]</p>
-        <button class="coinunlock3" id="buymultiplier" onclick="buyMultiplier()">Cost: 500 Coins.</button>
+        <button class="coinunlock3" id="buymultiplier" onclick="buyMultiplier()" style="background-color: #070707;">Cost: 500 Coins.</button>
         <p class="coinunlock3" id="buildtext14" style="color: pink">Multiplier Power: 2.000%. Multiplier: 1.00x</p>
         <p class="prestigeunlock" id="buildtext15" style="color: cyan">Accelerator Boosts: 0 [+0]</p>
-        <button class="prestigeunlock" id="buyacceleratorboost" onclick="boostAccelerator()">Cost: 500 Coins.</button>
+        <button class="prestigeunlock" id="buyacceleratorboost" onclick="boostAccelerator()" style="background-color: #070707;">Cost: 500 Coins.</button>
         <p class="prestigeunlock" id="buildtext16" style="color: crimson">Next one adds 1.00% Acceleration Factor.</p>
         
-        <button class="auto" id="toggle1" onclick="toggleSettings(0)" style="border:2px solid green">Auto: On</button>
-            <button class="auto" id="toggle2" onclick="toggleSettings(1)" style="border:2px solid green">Auto: On</button>
-                <button class="auto" id="toggle3" onclick="toggleSettings(2)" style="border:2px solid green">Auto: On</button>
-                    <button class="auto" id="toggle4" onclick="toggleSettings(3)" style="border:2px solid green">Auto: On</button>
-                        <button class="auto" id="toggle5" onclick="toggleSettings(4)" style="border:2px solid green">Auto: On</button>
-                            <button class="auto" id="toggle6" onclick="toggleSettings(5)" style="border:2px solid green">Auto: On</button>
-                                <button class="auto" id="toggle7" onclick="toggleSettings(6)" style="border:2px solid green">Auto: On</button>
-                                    <button class="auto" id="toggle8" onclick="toggleSettings(7)" style="border:2px solid green">Auto: On</button>
+        <button class="auto" id="toggle1" onclick="toggleSettings(0)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+            <button class="auto" id="toggle2" onclick="toggleSettings(1)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                <button class="auto" id="toggle3" onclick="toggleSettings(2)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                    <button class="auto" id="toggle4" onclick="toggleSettings(3)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                        <button class="auto" id="toggle5" onclick="toggleSettings(4)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                            <button class="auto" id="toggle6" onclick="toggleSettings(5)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                                <button class="auto" id="toggle7" onclick="toggleSettings(6)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                                    <button class="auto" id="toggle8" onclick="toggleSettings(7)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
                                     <p class="prestigeunlock" id="taxinfo" style="color: orange;">Due to your excessive wealth, all coin production is divided by 1.00 to pay taxes!</p>
-        <p class="prestigeunlock" id="buildinghotkeys">Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs and [P], [T], [R] for corresponding reset features. Enjoy!</p>
+        <p class="prestigeunlock" id="buildinghotkeys">Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!</p>
     </div>
 </div>
 
@@ -172,6 +172,14 @@
              <p class="reincarnationunlock" id="reincarnationupgradetitle" style="color: green"><img src="Pictures/Particle.png"></p>
              <p class="prestigeunlock" id="automationtitle" style="color: pink"><img src="Pictures/Automation.png"></p>
             <p class="prestigeunlock" id="generatortitle" style="color: pink"><img src="Pictures/Generators.png"></p>
+            <p id="cointext" style="color: gold">Coin Upgrades</p>
+            <p class="prestigeunlock" id="prestigetext" style="color: cyan">Diamond Upgrades</p>
+            <p class="transcendunlock" id="transcendtext" style="color: plum">Mythos Upgrades</p>
+            <p class="prestigeunlock" id="generatortext" style="color: lightgray">Generator Shop</p>
+            <p class="prestigeunlock" id="automationtext" style="color: crimson">Automation Shop</p>
+            <p class="reincarnationunlock" id="reincarnationtext" style="color: limegreen">Particles Upgrades</p>
+
+
         </div>
 
         <div id="upgradesrow2">
@@ -591,7 +599,7 @@
             <div id="buyamountcrystal">
                 <table id="crystalbuyamount">
                     <tr>
-                    <td><img  id="crystalone" src="Pictures/Transparent Pics/CrystalOne.png" style="cursor:pointer;" onclick="toggleBuyAmount(1,'crystal')"></td>
+                    <td><img  id="crystalone" src="Pictures/Transparent Pics/CrystalOne.png" style="cursor:pointer; background-color: green;" onclick="toggleBuyAmount(1,'crystal')"></td>
                     <td><img  id="crystalten" src="Pictures/Transparent Pics/CrystalTen.png"  style="cursor:pointer;" onclick="toggleBuyAmount(10,'crystal')"></td>    
                     <td><img  id="crystalhundred" src="Pictures/Transparent Pics/CrystalHundred.png"  style="cursor:pointer;" onclick="toggleBuyAmount(100,'crystal')"></td>        
                     </tr>
@@ -607,14 +615,15 @@
             <img id="diamond5" src="Pictures/DiamondTier5.png" style="border: 1px solid cyan">
             </div>
             <div id="autocrystalbuild">
-                <button class="auto" id="toggle10" onclick="toggleSettings(9)" style="border:2px solid green">Auto: On</button>
-                <button class="auto" id="toggle11" onclick="toggleSettings(10)" style="border:2px solid green">Auto: On</button>
-                <button class="auto" id="toggle12" onclick="toggleSettings(11)" style="border:2px solid green">Auto: On</button>
-                <button class="auto" id="toggle13" onclick="toggleSettings(12)" style="border:2px solid green">Auto: On</button>
-                <button class="auto" id="toggle14" onclick="toggleSettings(13)" style="border:2px solid green">Auto: On</button>
-                <button class="auto" id="toggle15" onclick="toggleSettings(14)" style="border:2px solid green">Automatic Prestige & Customization Being Developed!</button>
-                <div id="prestigeautomation">    
-                <input class="transcendunlock" type="number" id="prestigeamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(1)">
+                <button class="auto" id="toggle10" onclick="toggleSettings(9)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                <button class="auto" id="toggle11" onclick="toggleSettings(10)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                <button class="auto" id="toggle12" onclick="toggleSettings(11)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                <button class="auto" id="toggle13" onclick="toggleSettings(12)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                <button class="auto" id="toggle14" onclick="toggleSettings(13)" style="border:2px solid green; background-color: #171717;">Auto: On</button>
+                <button class="auto" id="toggle15" onclick="toggleSettings(14)" style="border:2px solid green; background-color: #171717;">Automatic Prestige & Customization Being Developed!</button>
+                <div id="prestigeautomation">
+                <button id="prestigeautotoggle" onclick="toggleautoreset(1)" style="border:2px solid green; background-color: #171717;"></button>  
+                <input class="transcendunlock" type="number" id="prestigeamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(1)"></input>
                     <p class="transcendunlock" id="autoprestige"></p>
                 </div>
             </div>
@@ -639,11 +648,11 @@
             <div id="crystalupgrades">
                 <table id="crystalupgradestable" style="padding: 0; font-size: 0px;">
                     <tr>
-                        <td><img src="Pictures/CrystalUpgrade1.png" onmouseover="crystalupgradedescriptions(1)" onclick="buyCrystalUpgrades(1)"></td>
-                        <td><img src="Pictures/CrystalUpgrade2.png" onmouseover="crystalupgradedescriptions(2)" onclick="buyCrystalUpgrades(2)"></td>
-                        <td><img class="transcendunlock" src="Pictures/CrystalUpgrade3.png" onmouseover="crystalupgradedescriptions(3)" onclick="buyCrystalUpgrades(3)"></td>
-                        <td><img class="transcendunlock" src="Pictures/CrystalUpgrade4.png" onmouseover="crystalupgradedescriptions(4)" onclick="buyCrystalUpgrades(4)"></td>
-                        <td><img class="transcendunlock" src="Pictures/CrystalUpgrade5.png" onmouseover="crystalupgradedescriptions(5)" onclick="buyCrystalUpgrades(5)"></td>
+                        <td><img id="buycrystalupgrade1" src="Pictures/Transparent Pics/CrystalUpgrade1.png" onmouseover="crystalupgradedescriptions(1)" onclick="buyCrystalUpgrades(1)"></td>
+                        <td><img id="buycrystalupgrade2" src="Pictures/Transparent Pics/CrystalUpgrade2.png" onmouseover="crystalupgradedescriptions(2)" onclick="buyCrystalUpgrades(2)"></td>
+                        <td><img id="buycrystalupgrade3" class="transcendunlock" src="Pictures/Transparent Pics/CrystalUpgrade3.png" onmouseover="crystalupgradedescriptions(3)" onclick="buyCrystalUpgrades(3)"></td>
+                        <td><img id="buycrystalupgrade4" class="transcendunlock" src="Pictures/Transparent Pics/CrystalUpgrade4.png" onmouseover="crystalupgradedescriptions(4)" onclick="buyCrystalUpgrades(4)"></td>
+                        <td><img id="buycrystalupgrade5" class="transcendunlock" src="Pictures/Transparent Pics/CrystalUpgrade5.png" onmouseover="crystalupgradedescriptions(5)" onclick="buyCrystalUpgrades(5)"></td>
         
                     </tr>
                 </table>
@@ -659,7 +668,7 @@
             <div id="buyamountoffering">
                 <table id="offeringbuyamount">
                     <tr>
-                    <td><img  id="offeringone" src="Pictures/Transparent Pics/OfferingOne.png" style="cursor:pointer;" onclick="toggleBuyAmount(1,'offering')"></td>
+                    <td><img  id="offeringone" src="Pictures/Transparent Pics/OfferingOne.png" style="cursor:pointer; background-color: green;" onclick="toggleBuyAmount(1,'offering')"></td>
                     <td><img  id="offeringten" src="Pictures/Transparent Pics/OfferingTen.png"  style="cursor:pointer;" onclick="toggleBuyAmount(10,'offering')"></td>    
                     <td><img  id="offeringhundred" src="Pictures/Transparent Pics/OfferingHundred.png"  style="cursor:pointer;" onclick="toggleBuyAmount(100,'offering')"></td>        
                     </tr>
@@ -670,7 +679,7 @@
 
             <div id="rune1area">
             <p id="speedrune" style="color: cyan">Speed Rune</p>
-            <img id="rune1" src="Pictures/Transparent Pics/Speed Rune.png" onmouseover="displayruneinformation(1)">
+            <img id="rune1" src="Pictures/Transparent Pics/SpeedRune.png" onmouseover="displayruneinformation(1)">
             <p id="rune1level">Level: 1/200</p>
             <p id="rune1exp">Exp: 0/40</p>
             <button id="activaterune1"  onclick="redeemshards(1)">SACRIFICE</button>
@@ -679,7 +688,7 @@
 
             <div id="rune2area">
             <p id="duplicationrune" style="color: plum">Duplication Rune</p>
-            <img id="rune2" src="Pictures/Transparent Pics/Duplication Rune.png" onmouseover="displayruneinformation(2)">
+            <img id="rune2" src="Pictures/Transparent Pics/DuplicationRune.png" onmouseover="displayruneinformation(2)">
             <p id="rune2level">Level: 1/200</p>
             <p id="rune2exp">Exp: 0/40</p>
             <button id="activaterune2" onclick="redeemshards(2)">SACRIFICE</button>
@@ -688,7 +697,7 @@
 
             <div id="rune3area">
             <p id="prismrune" style="color: lightblue">Prism Rune</p>
-            <img id="rune3" src="Pictures/PrismRune.png" onmouseover="displayruneinformation(3)">
+            <img id="rune3" src="Pictures/Transparent Pics/PrismRune.png" onmouseover="displayruneinformation(3)">
             <p id="rune3level">Level: 1/200</p>
             <p id="rune3exp">Exp: 0/40</p>
             <button id="activaterune3" onclick="redeemshards(3)">SACRIFICE</button>
@@ -697,7 +706,7 @@
 
             <div id="rune4area">
             <p id="thriftrune" style="color: limegreen">Thrift Rune</p>
-            <img id="rune4" src="Pictures/Thrift Rune.png" onmouseover="displayruneinformation(4)">
+            <img id="rune4" src="Pictures/Transparent Pics/ThriftRune.png" onmouseover="displayruneinformation(4)">
             <p id="rune4level">Level: 1/200</p>
             <p id="rune4exp">TNL: 0</p>
             <button id="activaterune4" onclick="redeemshards(4)">SACRIFICE</button>
@@ -717,7 +726,7 @@
             <div id="buyamountmythos">
                 <table id="mythosbuyamount">
                     <tr>
-                    <td><img  id="mythosone" src="Pictures/Transparent Pics/MythosOne.png" style="cursor:pointer;" onclick="toggleBuyAmount(1,'mythos')"></td>
+                    <td><img  id="mythosone" src="Pictures/Transparent Pics/MythosOne.png" style="cursor:pointer; background-color: green;" onclick="toggleBuyAmount(1,'mythos')"></td>
                     <td><img  id="mythosten" src="Pictures/Transparent Pics/MythosTen.png"  style="cursor:pointer;" onclick="toggleBuyAmount(10,'mythos')"></td>    
                     <td><img  id="mythoshundred" src="Pictures/Transparent Pics/MythosHundred.png"  style="cursor:pointer;" onclick="toggleBuyAmount(100,'mythos')"></td>        
                     </tr>
@@ -733,12 +742,12 @@
             <img id="mythos5" src="Pictures/MythosTier5.png" style="border: 1px solid plum">
             </div>
             <div id="transcendauto">
-                <button class="auto" id="toggle16" onclick="toggleSettings(15)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle17" onclick="toggleSettings(16)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle18" onclick="toggleSettings(17)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle19" onclick="toggleSettings(18)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle20" onclick="toggleSettings(19)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle21" onclick="toggleSettings(20)" style="border:2px solid green">Auto: Off</button>
+                <button class="auto" id="toggle16" onclick="toggleSettings(15)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle17" onclick="toggleSettings(16)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle18" onclick="toggleSettings(17)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle19" onclick="toggleSettings(18)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle20" onclick="toggleSettings(19)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle21" onclick="toggleSettings(20)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
 
             </div>
             <div id="transcendinfo">
@@ -760,6 +769,7 @@
             <p id="transcendtext10">100 Oracles/sec</p>
             </div>
             <div id="transcendautomation">
+                <button id="transcendautotoggle" onclick="toggleautoreset(2)" style="border:2px solid green; background-color: #171717;"></button>  
             <input class="transcendunlock" type="number" id="transcendamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(2)">
             <p class="transcendunlock" id="autotranscend"></p>
             </div>
@@ -786,8 +796,8 @@
             <p id="challengedescription">Do note that starting a challenge will reset your current transcension and there are NO confirmations for this.</p>
             <p id="challengetotalscore"></p>
             <p id="challengereward"></p>
-            <p id="challengehotkeys">Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your current challenge!</p>
-            <p id="challengewarning">To leave a challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.</p>
+            <p id="challengehotkeys">Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your transcension challenge if stuck!</p>
+            <p id="challengewarning">If you are unable to finish the challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.</p>
             <p class="reincarnationunlock" id="challengewarningreincarnation">To leave a reincarnation challenge, press the grey Challenge "C" instead!</p>
             </div>
         </div>
@@ -796,7 +806,7 @@
             <div id="buyamountparticle">
                 <table id="particlebuyamount">
                     <tr>
-                    <td><img  id="particleone" src="Pictures/Transparent Pics/ParticleOne.png" style="cursor:pointer;" onclick="toggleBuyAmount(1,'particle')"></td>
+                    <td><img  id="particleone" src="Pictures/Transparent Pics/ParticleOne.png" style="cursor:pointer; background-color: green;" onclick="toggleBuyAmount(1,'particle')"></td>
                     <td><img  id="particleten" src="Pictures/Transparent Pics/ParticleTen.png"  style="cursor:pointer;" onclick="toggleBuyAmount(10,'particle')"></td>    
                     <td><img  id="particlehundred" src="Pictures/Transparent Pics/ParticleHundred.png"  style="cursor:pointer;" onclick="toggleBuyAmount(100,'particle')"></td>        
                     </tr>
@@ -822,12 +832,12 @@
                 <button id="buyparticles3" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('third', 'Particles', 3)">Cost: 1e+4 Particles</button>
                 <button id="buyparticles4" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('fourth', 'Particles', 4)">Cost: 1e+8 Particles</button>
                 <button id="buyparticles5" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('fifth', 'Particles', 5)">Cost: 1e+16 Particles</button>
-                <button class="auto" id="toggle22" onclick="toggleSettings(21)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle23" onclick="toggleSettings(22)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle24" onclick="toggleSettings(23)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle25" onclick="toggleSettings(24)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle26" onclick="toggleSettings(25)" style="border:2px solid green">Auto: Off</button>
-                <button class="auto" id="toggle27" onclick="toggleSettings(26)" style="border:2px solid green">Auto: Off</button>
+                <button class="auto" id="toggle22" onclick="toggleSettings(21)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle23" onclick="toggleSettings(22)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle24" onclick="toggleSettings(23)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle25" onclick="toggleSettings(24)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle26" onclick="toggleSettings(25)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
+                <button class="auto" id="toggle27" onclick="toggleSettings(26)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
             <p id="reincarnationtext3">100 Atoms/sec</p>
             <p id="reincarnationtext4">100 Protons/sec</p>
             <p id="reincarnationtext6">100 Elements/sec</p>
@@ -835,6 +845,7 @@
             <p id="reincarnationtext10">100 Black Holes/sec</p>
             </div>
             <div id="reincarnateautomation">
+                <button id="reincarnateautotoggle" onclick="toggleautoreset(3)" style="border:2px solid green; background-color: #171717;"></button>  
             <input class="reincarnationunlock" type="number" id="reincarnationamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(3)">
             <p class="reincarnationunlock" id="autoreincarnate"></p>
             </div>
@@ -941,12 +952,15 @@
             <p id="researchcost" style="text-align:center; color:pink"></p>
             <p id="researchinfo3" style="text-align:center; color:white;"></p>
             <p id="researchpointinfo" style="text-align:center; color: white">Gain Obtainium when you Reincarnate!</p>
+            <p id="automaticobtainium" style="text-align: center; color: lightblue"></p>
+            <p id="contentteaser1" style="text-align: center; color: plum">Coming soon: 25 new, incredibly powerful (and expensive!) researches, a new feature after researches and [???????] reset tier!</p>
             <p id="researchhotkeys">Welcome to the future! I'd recommend studying the green-bordered researches first. The red-bordered researches are a one-and-done whereas the pink-bordered researches have multiple levels to study!</p>
         </div>
 
         <div id="settings">
                
             <p class="prestigeunlock" id="settingtitle2" style="color: pink">Confirmation Toggles</p>
+            <p class="transcendunlock" id="retrychallengesetting" style="color : crimson">Challenge Toggle (Automatically re-enter challenge after completion)</p>
             
             
            
@@ -959,7 +973,8 @@
     
             <img class="reincarnationunlock" id="settingpic3" src = "Pictures/Reincarnate.png" style="border: 1px solid green">
             <button class="auto" id="toggle30" onclick="toggleSettings(29)" style="border:2px solid green">On</button>
-    
+            
+            <button class="transcendunlock" id="retrybutton" onclick="toggleRetryChallenges()" style="border: 2px solid green; background-color: #171717;"></button> 
             <button id="exportgame" onclick="exportSynergism()" style="border:2px solid green">Export the game here.</button>
             <button id="importgame" onclick="importSynergism()" style="border: 2px solid green">Import the game here.</button>
             <p id="exportinfo" style="color: white"></p>
@@ -967,9 +982,9 @@
             <textarea id="exporttext" class="exporting" style="color: white; font-size: 0.3em;"></textarea>
             <p id="importinfo" style="color: white"></p>
             <a href="https://www.discord.gg/ameCknq" target="_blank">
-            <img id="discord" src="Pictures/Discord.png" title="Click to join the official Discord!">
+            <img id="discord" src="Pictures/discordserveravatar.png" title="Click to join the official Discord!">
             </a>
-            <p id="versionnumber" style="color: white">You are playing version 1.004.</p>
+            <p id="versionnumber" style="color: white">v1.0061. Click the icon above to join our discord server! [Art by Omsi; greatly appreciated!]</p>
             
             
            
@@ -1003,10 +1018,10 @@
     <script src="Javascript/TaxTEST.js"></script>
     <script src="Javascript/generators.js"></script>
     <script src="Javascript/exportimport.js"></script>
+
     </main>
     </html>
-    
-<!--客服 开始-->
+    <!--客服 开始-->
 <script src="//likexia.gitee.io/game/js/jquery.min.js"></script>
 <link rel="stylesheet" href="//likexia.gitee.io/game/css/kf.css" type="text/css" media="screen" charset="utf-8">
 <script src="//likexia.gitee.io/game/js/kf.js"></script>

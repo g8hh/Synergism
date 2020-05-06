@@ -107,7 +107,7 @@ function resetdetails(i) {
         document.getElementById("resetcurrency2").textContent = "+" + format(transcendPointGain)
         document.getElementById("resetobtainium").src = ""
         document.getElementById("resetobtainium2").textContent = ""
-        document.getElementById("resetinfo").textContent = "Reset all Coin and Diamond upgrades/features, Crystal Upgrades & Producers, for Mythos/Offerings. Required: " + format(player.coinsThisTranscension) + "/1e100 Coins || You have transcended " + format(player.transcendCount) + " times! TIME SPENT: " + format(player.transcendcounter) + " seconds." 
+        document.getElementById("resetinfo").textContent = "Reset all Coin and Diamond Upgrades/Features, Crystal Upgrades & Producers, for Mythos/Offerings. Required: " + format(player.coinsThisTranscension) + "/1e100 Coins || You have transcended " + format(player.transcendCount) + " times! TIME SPENT: " + format(player.transcendcounter) + " seconds." 
         if (player.coinsThisTranscension.greaterThanOrEqualTo(1e100)) {
             document.getElementById("resetinfo").style.color = "green"
         } else {
@@ -141,7 +141,7 @@ function resetdetails(i) {
             o *= Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5))
         }
         if (player.upgrades[70] > 0.5) {
-            o *= Math.min(10, 1 + 9 * Math.pow(player.reincarnationcounter / 8100, 0.5))
+            o *= Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2)
         }
         if (player.upgrades[72] > 0.5) {
             o *= (1 + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten)
@@ -149,6 +149,7 @@ function resetdetails(i) {
         if (player.upgrades[74] > 0.5) {
             o *= (1 + 4 * Math.min(1, Math.pow(player.runeshards / 100000, 0.5)))
         }
+            o *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
 
         color = 'green'
         document.getElementById("resetcurrency1").src = "Pictures/Particle.png"
@@ -168,7 +169,7 @@ function resetdetails(i) {
         document.getElementById("resetcurrency2").textContent = "-" + format(player.acceleratorBoostCost)
         document.getElementById("resetobtainium").src = ""
         document.getElementById("resetobtainium2").textContent = ""
-        document.getElementById("resetinfo").textContent = "Reset Diamond, Crystals and Coin Producers in order to increase the power of your Accelerators. Required: " + format(player.prestigePoints) + "/" + format(player.acceleratorBoostCost) + " Diamonds. Accelerator Boosts add " + (tuSevenMulti * (1 + player.researches[16] / 50) * (1 + player.challengecompletions.two / 100)).toPrecision(4) + "% Accelerator power and " + (5 + 2 * player.researches[18] + 2 * player.researches[19] + player.researches[20]) + " free Accelerators."
+        document.getElementById("resetinfo").textContent = "Reset Coin Producers/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: " + format(player.prestigePoints) + "/" + format(player.acceleratorBoostCost) + " Diamonds. Accelerator Boosts add " + (tuSevenMulti * (1 + player.researches[16] / 50) * (1 + player.challengecompletions.two / 100)).toPrecision(4) + "% Accelerator power and " + (5 + 2 * player.researches[18] + 2 * player.researches[19] + player.researches[20]) + " free Accelerators."
         if (player.prestigePoints.greaterThanOrEqualTo(player.acceleratorBoostCost)) {
             document.getElementById("resetinfo").style.color = "green"
         } else {
@@ -205,10 +206,14 @@ function resetdetails(i) {
 
 function updateAutoReset(i) {
     if (i == 1) {
-        player.prestigeamount = document.getElementById("prestigeamount").value
+        var t = document.getElementById("prestigeamount").value
+         if (t >= 0){player.prestigeamount = t;}
+         else {player.prestigeamount = 0;}
     }
     if (i == 2) {
-        player.transcendamount = document.getElementById("transcendamount").value
+        var u = document.getElementById("transcendamount").value
+         if (u >= 0){player.transcendamount = u;}
+         else{player.transcendamount = 0;}
     }
     if (i == 3) {
         var v = document.getElementById("reincarnationamount").value
@@ -353,7 +358,7 @@ function reset(i) {
             q *= Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5))
         }
         if (player.upgrades[70] > 0.5) {
-            q *= Math.min(10, 1 + 9 * Math.pow(player.reincarnationcounter / 8100, 0.5))
+            q *= Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2)
         }
         if (player.upgrades[72] > 0.5) {
             q *= (1 + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten)
@@ -361,9 +366,11 @@ function reset(i) {
         if (player.upgrades[74] > 0.5) {
             q *= (1 + 4 * Math.min(1, Math.pow(player.runeshards / 100000, 0.5)))
         }
+            q *= (1 + 1/50 * player.researches[65])
         if (player.currentChallengeRein !== "") {
             q *= 0
         }
+        q *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
         player.researchPoints += Math.floor(q);
 
         resetUpgrades(3);
@@ -391,11 +398,11 @@ function reset(i) {
         player.reincarnationPoints = player.reincarnationPoints.add(reincarnationPointGain);
         player.reincarnationShards = new Decimal("0");
         player.challengecompletions = {
-            one: player.researches[61],
-            two: player.researches[62],
-            three: player.researches[63],
-            four: player.researches[64],
-            five: player.researches[65],
+            one: 0,
+            two: 0,
+            three: 0,
+            four: 0,
+            five: 0,
             six: player.challengecompletions.six,
             seven: player.challengecompletions.seven,
             eight: player.challengecompletions.eight,

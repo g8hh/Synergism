@@ -24,7 +24,7 @@ var researchBaseCosts = [0, 1, 1, 1, 1, 1,
 							2, 8, 320, 1280, 51200,
 							10, 100, 1000, 100000, 2000000,
 							10, 100, 1000, 25000, 500000,
-							5, 20, 80, 320, 1280,
+							5, 10, 80, 5000, 20000,
 							2, 20, 200, 2000, 20000,
 							10, 40, 160, 1000, 10000,
 							]
@@ -43,7 +43,7 @@ var researchMaxLevels = [0, 1, 1, 1, 1, 1,
 							 1, 1, 1, 1, 1,
 							 10, 10, 10, 10, 10,
 							 20, 20, 20, 20, 20,
-							 5, 5, 5, 5, 5,
+							 1, 28, 28, 3, 50,
 							 50, 50, 50, 50, 50,
 							 1, 1, 1, 1, 1,
 							 ]								
@@ -171,7 +171,7 @@ var runemultiplierincrease = {
 	five: 1
 }
 
-var mythosupgrade13 = new Decimal("1")
-var mythosupgrade14 = new Decimal("1")
-var mythosupgrade15 = new Decimal("1")
+var mythosupgrade13 = new Decimal("1");
+var mythosupgrade14 = new Decimal("1");
+var mythosupgrade15 = new Decimal("1");
 var challengefocus = 0;

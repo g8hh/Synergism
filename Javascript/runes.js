@@ -87,7 +87,7 @@
             }
         
         var a = Math.random()
-        if (a > 1 - 0.05 * player.achievements[79] - 0.05 * player.achievements[86] - 0.05 * player.achievements[93] - 0.05 * player.achievements[100] - 0.05 * player.achievements[107] - 0.05 * player.achievements[114] - 0.10 * player.achievements[121] - 0.10 * player.achievements[128] - 0.05 * player.upgrades[61] - player.runelevels[3]/800) {player.runeshards += 1}
+        if (a > 1 - 0.05 * player.achievements[79] - 0.05 * player.achievements[86] - 0.05 * player.achievements[93] - 0.05 * player.achievements[100] - 0.05 * player.achievements[107] - 0.05 * player.achievements[114] - 0.10 * player.achievements[121] - 0.10 * player.achievements[128] - 0.05 * player.upgrades[61] - Math.min(0.25,player.runelevels[3]/800)) {player.runeshards += 1}
         while (player.runeexp[u] >= (runeexpbase[u] * Math.pow(player.runelevels[u], 3) * ((4 * player.runelevels[u]) + 100)/500 * r) && player.runelevels[u] < 500){
             player.runelevels[u] += 1; submitRuneStats(i)
         }

@@ -72,8 +72,8 @@
         var r = 1;
         var s = 0;
         if (u == 0 || (u == 1 && player.achievements[38] == 1) || (u == 2 && player.achievements[44] == 1) || (u == 3 && player.achievements[102] == 1)){    
-        if (player.challengecompletions.six > 0.5 && u == 3) {r -= 0.02 * player.challengecompletions.six}
-        if (player.challengecompletions.seven > 0.5 && (u == 0 || u == 1)) {r -= 0.02 * player.challengecompletions.seven}
+        if (player.challengecompletions.six > 0.5 && u == 3) {r -= 0.02 * player.challengecompletions.six};
+        if (player.challengecompletions.seven > 0.5 && (u == 0 || u == 1)) {r -= 0.02 * player.challengecompletions.seven};
         if (player.upgrades[71] > 0.5) {s += player.runelevels[u]}
 
         player.runeshards -= 1;
@@ -83,11 +83,19 @@
                 if (player.achievements[38] > 0.5) {player.runeexp[1] += 3}
                 if (player.achievements[44] > 0.5) {player.runeexp[2] += 3}
                 if (player.achievements[102] > 0.5) {player.runeexp[3] += 3}
-                for (var k = 0; k < 4; k++) {if (player.runeexp[k] >= (runeexpbase[k] * Math.pow(player.runelevels[k], 3) * ((4 * player.runelevels[k]) + 100)/500 * r) && player.runelevels[k] < 200) {player.runelevels[k] += 1; var p = k + 1; displayruneinformation(p, false); submitRuneStats(p)}}  
+                for (var k = 0; k < 4; k++){
+                    var m = 1
+                    if (player.challengecompletions.six > 0.5 && k == 3) {m -= 0.02 * player.challengecompletions.six}
+                    if (player.challengecompletions.seven > 0.5 && (k == 0 || k == 1)) {m -= 0.02 * player.challengecompletions.seven}
+
+                    if (player.runeexp[k] >= (runeexpbase[k] * Math.pow(player.runelevels[k], 3) * ((4 * player.runelevels[k]) + 100)/500 * m) && player.runelevels[k] < 500) {
+                        player.runelevels[k] += 1; var p = k + 1; displayruneinformation(p, false); submitRuneStats(p)
+                    }
+                }  
             }
         
         var a = Math.random()
-        if (a > 1 - 0.05 * player.achievements[79] - 0.05 * player.achievements[86] - 0.05 * player.achievements[93] - 0.05 * player.achievements[100] - 0.05 * player.achievements[107] - 0.05 * player.achievements[114] - 0.10 * player.achievements[121] - 0.10 * player.achievements[128] - 0.05 * player.upgrades[61] - Math.min(0.25,player.runelevels[3]/800)) {player.runeshards += 1}
+        if (a > 1 - 0.05 * player.achievements[80] - 0.05 * player.achievements[87] - 0.05 * player.achievements[94] - 0.05 * player.achievements[101] - 0.05 * player.achievements[108] - 0.05 * player.achievements[115] - 0.10 * player.achievements[122] - 0.10 * player.achievements[129] - 0.05 * player.upgrades[61] - Math.min(0.25,player.runelevels[3]/800)) {player.runeshards += 1}
         while (player.runeexp[u] >= (runeexpbase[u] * Math.pow(player.runelevels[u], 3) * ((4 * player.runelevels[u]) + 100)/500 * r) && player.runelevels[u] < 500){
             player.runelevels[u] += 1; submitRuneStats(i)
         }
@@ -95,6 +103,8 @@
     }
     }
     }
+    console.log(player.runeexp[2] - (runeexpbase[k] * Math.pow(player.runelevels[k], 3) * ((4 * player.runelevels[k]) + 100)/500 * r))
+
 }
 
 function submitRuneStats(i) {

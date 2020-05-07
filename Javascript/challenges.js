@@ -32,7 +32,7 @@ function challengeDisplay(i,changefocus = true,automated = false) {
     if (i == 4 && challengefocus == 4) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except the cost of Coin buildings, Accelerators and Multipliers scales much faster and scales immediately. Gets harder each completion!"
         document.getElementById("challengetotalscore").textContent = "Times Completed: " + player.challengecompletions.four + "/" + (25 + 1 * player.researches[69]) +". Goal: Gain " + format(Decimal.pow(10, challengebaserequirements.four * Math.pow((1 + player.challengecompletions.four), 2))) + " Coins in challenge. [HIGHEST EVER COMPLETED (Manually): " + player.highestchallengecompletions.four + "]"
-        document.getElementById("challengereward").textContent = "Reward: Accelerator cost scaling starts 5 slower, and Multiplier cost scaling starts 2 slower per completion. Buildings scale 1% slower as well! " + c
+        document.getElementById("challengereward").textContent = "Reward: Accelerator cost scaling starts 5 slower, and Multiplier cost scaling starts 2 slower per completion. Buildings scale 0.5% slower as well! " + c
     }
     if (i == 5 && challengefocus == 5) {
         document.getElementById("challengedescription").textContent = "Go through a transcension, except prestiging rewards scale much more slowly. Diamond generation is also debuffed, and diamond-boosting upgrades are disabled. Gets harder each completion!"

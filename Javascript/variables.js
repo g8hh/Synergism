@@ -162,7 +162,7 @@ var challengebaserequirementsrein = {
 
 var prestigeamount = 1;
 var taxdivisor = new Decimal("1");
-
+var taxdivisorcheck = new Decimal("1");
 var runemultiplierincrease = {
 	one: 1,
 	two: 1,
@@ -175,3 +175,5 @@ var mythosupgrade13 = new Decimal("1");
 var mythosupgrade14 = new Decimal("1");
 var mythosupgrade15 = new Decimal("1");
 var challengefocus = 0;
+
+var maxexponent = 10000;

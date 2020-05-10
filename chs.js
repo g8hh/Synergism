@@ -489,7 +489,7 @@ var cnPrefix = {
     'Effect: Augments will produce': '效果:强化产出',
     'Runes will gain (Rune Level) additional EXP per offering used.': '献祭符文会获得相当于符文等级的额外经验',
     'Effect: Writing\'s on the wall. Look above!': '效果:都写在上面了,往上看!',
-    'Obtainium gain is multiplied (1 + C) where C is #Reincarnation Challenges completed.': '难得素获取提高(1+转世挑战完成次数)',
+    'Obtainium gain from Reincarnations is multiplied (1 + C) where C is #Reincarnation Challenges completed.': '难得素获取提高(1+转世挑战完成次数)',
     'Gain +100% free accelerator boosts and +10 free Crystal Upgrade levels, but only in Reincarnation Challenges.': '在转世挑战中获得+100%的免费加速器加成和+10免费水晶升级',
     'Effect: Same as Transcend upgrade 10, except you MUST be in a Recinarnation challenge in particular.': '效果:和超越升级第十项一样,你必须在转世挑战中才会生效',
     'Obtainium gain is increased based on your unspent offerings. [Max: 100,000 unspent]': '基于未使用的祭品获得额外难得素加成[最大:100,000未使用]',

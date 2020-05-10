@@ -119,7 +119,7 @@ var cnPrefix = {
     'Welcome to reincarnation! +5% Offering Recycle, +5 EXP/Offering!': '欢迎来到转世!献祭回收祭品概率+5%,祭品经验+5',
     'Increase the number of free Multipliers gained by 20% from all sources.': '所有获得的免费加倍增加20%',
     'Increase the number of free Accelerator Boosts gained by 20% from all sources.': '所有获得的免费加速器强化增加20%',
-    'Increase most rune effects by 10%. (Excludes any recycle chance bonus)': '所有符文有效等级增加10%(对任何回收加成无效)',
+    'Increase most rune effects by 10%. (Excludes any recycle chance bonus': '所有符文有效等级增加10%(对任何回收加成无效',
     'Multiply the production of all crystal producers by 1e4.': '所有水晶生产者产量增加1e4',
     'Multiply all crystal producer production by 5% per level.': '每级提高水晶生产者产量5%',
     'Multiply all crystal producer production by 10% per level.': '每级提高水晶生产者产量10%',

@@ -10,10 +10,10 @@
             m *= (1 + player.researches[4]/10) * (1 + player.researches[21]/800)
         if (i == 1) {
             if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "+1 Accelerator, +0.5% Accelerators per level. +1 Accelerator Boost every 10 levels!"}
-            document.getElementById("runeshowpower1").textContent = "Speed Rune Bonus: " + "+" + format(Math.floor(player.runelevels[0] * m)) + " Accelerators, +" + (player.runelevels[0]/2  * m).toPrecision(2) +"% Accelerators, +" + format(Math.floor(player.runelevels[0]/10 * m)) + " Accelerator Boosts."
+            document.getElementById("runeshowpower1").textContent = "Speed Rune Bonus: " + "+" + format(Math.floor(player.runelevels[0] * m)) + " Accelerators, +" + (player.runelevels[0]/2  * m).toPrecision(4) +"% Accelerators, +" + format(Math.floor(player.runelevels[0]/10 * m)) + " Accelerator Boosts."
         }
         if (i == 2) {
-            if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "~(Level^2/100) Multipliers, +0.5% Multipliers per level. Tax growth is delayed more for each level!"}
+            if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!"}
             document.getElementById("runeshowpower2").textContent = "Duplication Rune Bonus: " + "+" + format(Math.floor(player.runelevels[1] * m / 10) * Math.floor(10 + player.runelevels[1] * m /10) / 2) + " Multipliers, +" + format(m *player.runelevels[1]/2) +"% Multipliers, -" + (100 * (1 - Math.pow(10, - player.runelevels[1]/500))).toPrecision(4)  + "% Tax Growth."
         }
         if (i == 3) {
@@ -22,7 +22,7 @@
         }
         if (i == 4) {
             if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "+0.25% building cost growth delay per level, +0.125% offering recycle chance per level [MAX: 25%]"}
-            document.getElementById("runeshowpower4").textContent = "Thrift Rune Bonus: " + "Delay all producer cost increases by " + (player.runelevels[3]/4 * m).toPrecision(3) + "% buildings. Increase offering recycling chance: " + player.runelevels[3]/8 + "%."
+            document.getElementById("runeshowpower4").textContent = "Thrift Rune Bonus: " + "Delay all producer cost increases by " + (player.runelevels[3]/4 * m).toPrecision(3) + "% buildings. Increase offering recycling chance: " + Math.min(25,player.runelevels[3]/8) + "%."
         }
        
         
@@ -60,7 +60,7 @@
         if (player.achievements[33] > 0.5) {q *= 1.10}
         if (player.achievements[34] > 0.5) {q *= 1.15}
         if (player.achievements[35] > 0.5) {q *= 1.25}
-        if (player.upgrades[75] > 0.5) {q *= (1 + 2 * Math.min(1, Math.pow(player.researchPoints/100000, 0.5)))}
+        if (player.upgrades[75] > 0.5) {q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium/100000, 0.5)))}
         q = Math.floor(q) * 100/100
         player.runeshards += q
     }

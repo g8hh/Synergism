@@ -1,7 +1,7 @@
 function challengeDisplay(i,changefocus = true,automated = false) {
     if (changefocus){challengefocus = i}
     if (i <= 5 && !automated) {document.getElementById("challengetotalscore").style.color = "plum"}
-    if (i > 5 && i <= 8 && !automated) {document.getElementById("challengetotalscore").style.color = "green"}
+    if (i > 5 && i <= 8 && !automated) {document.getElementById("challengetotalscore").style.color = "limegreen"}
     if (i==1){q = "one"}
     if (i==2){q = "two"}
     if (i==3){q = "three"}

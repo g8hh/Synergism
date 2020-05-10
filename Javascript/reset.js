@@ -65,7 +65,7 @@ function resetdetails(i) {
         q *= 1.25
     }
     if (player.upgrades[75] > 0.5) {
-        q *= (1 + 2 * Math.min(1, Math.pow(player.researchPoints / 100000, 0.5)))
+        q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium / 100000, 0.5)))
     }
     q = Math.floor(q) * 100 / 100
 
@@ -96,7 +96,7 @@ function resetdetails(i) {
         document.getElementById("resetobtainium2").textContent = ""
         document.getElementById("resetinfo").textContent = "Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings. Required: " + format(player.coinsThisPrestige) + "/1e16 Coins || TIME SPENT: " + format(player.prestigecounter) + " seconds."
         if (player.coinsThisPrestige.greaterThanOrEqualTo(1e16)) {
-            document.getElementById("resetinfo").style.color = "green"
+            document.getElementById("resetinfo").style.color = "limegreen"
         } else {
             document.getElementById("resetinfo").style.color = "crimson"
         }
@@ -109,7 +109,7 @@ function resetdetails(i) {
         document.getElementById("resetobtainium2").textContent = ""
         document.getElementById("resetinfo").textContent = "Reset all Coin and Diamond Upgrades/Features, Crystal Upgrades & Producers, for Mythos/Offerings. Required: " + format(player.coinsThisTranscension) + "/1e100 Coins || TIME SPENT: " + format(player.transcendcounter) + " seconds." 
         if (player.coinsThisTranscension.greaterThanOrEqualTo(1e100)) {
-            document.getElementById("resetinfo").style.color = "green"
+            document.getElementById("resetinfo").style.color = "limegreen"
         } else {
             document.getElementById("resetinfo").style.color = "crimson"
         }
@@ -123,7 +123,7 @@ function resetdetails(i) {
         document.getElementById("resetobtainium2").textContent = ""
         if (player.currentChallenge !== "") {
             if (player.coinsThisTranscension.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirements[s] * Math.pow(1 + player.challengecompletions[s], 2)))) {
-                document.getElementById("resetinfo").style.color = "green"
+                document.getElementById("resetinfo").style.color = "limegreen"
             } else {
                 document.getElementById("resetinfo").style.color = "crimson"
             }
@@ -147,7 +147,7 @@ function resetdetails(i) {
             o *= (1 + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten)
         }
         if (player.upgrades[74] > 0.5) {
-            o *= (1 + 4 * Math.min(1, Math.pow(player.runeshards / 100000, 0.5)))
+            o *= (1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5)))
         }
             o *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
             o *= (1 + player.researches[65]/50)
@@ -159,7 +159,7 @@ function resetdetails(i) {
         document.getElementById("resetobtainium2").textContent = "+" + format(Math.floor(o))
         document.getElementById("resetinfo").textContent = "Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings! Required: " + format(player.transcendShards) + "/1e300 Mythos Shards || TIME SPENT: " + format(player.reincarnationcounter) + " seconds."
         if (player.transcendShards.greaterThanOrEqualTo(1e300)) {
-            document.getElementById("resetinfo").style.color = "green"
+            document.getElementById("resetinfo").style.color = "limegreen"
         } else {
             document.getElementById("resetinfo").style.color = "crimson"
         }
@@ -172,7 +172,7 @@ function resetdetails(i) {
         document.getElementById("resetobtainium2").textContent = ""
         document.getElementById("resetinfo").textContent = "Reset Coin Producers/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: " + format(player.prestigePoints) + "/" + format(player.acceleratorBoostCost) + " Diamonds."
         if (player.prestigePoints.greaterThanOrEqualTo(player.acceleratorBoostCost)) {
-            document.getElementById("resetinfo").style.color = "green"
+            document.getElementById("resetinfo").style.color = "limegreen"
         } else {
             document.getElementById("resetinfo").style.color = "crimson"
         }
@@ -186,7 +186,7 @@ function resetdetails(i) {
         document.getElementById("resetobtainium2").textContent = ""
         if (player.currentChallengeRein !== "") {
             if (player.transcendShards.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirementsrein[s] * Math.pow(1 + player.challengecompletions[s], 2)))) {
-                document.getElementById("resetinfo").style.color = "green"
+                document.getElementById("resetinfo").style.color = "limegreen"
             } else {
                 document.getElementById("resetinfo").style.color = "crimson"
             }
@@ -299,6 +299,7 @@ function reset(i) {
         player.transcendCount += 1;
         kongregate.stats.submit("transcendcount", player.transcendCount)
 
+
         player.prestigePoints = new Decimal("0");
         player.transcendPoints = player.transcendPoints.add(transcendPointGain);
         player.transcendShards = new Decimal("0");
@@ -365,10 +366,10 @@ function reset(i) {
             q *= (1 + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten)
         }
         if (player.upgrades[74] > 0.5) {
-            q *= (1 + 4 * Math.min(1, Math.pow(player.runeshards / 100000, 0.5)))
+            q *= (1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5)))
         }
             q *= (1 + 1/50 * player.researches[65])
-        if (player.currentChallengeRein !== "") {
+        if (player.currentChallengeRein !== "" && (q < 1.5)) {
             q *= 0
         }
         q *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
@@ -394,6 +395,7 @@ function reset(i) {
 
         player.reincarnationCount += 1;
         kongregate.stats.submit("reincarnatecount", player.reincarnationCount)
+
 
         player.transcendPoints = new Decimal("0");
         player.reincarnationPoints = player.reincarnationPoints.add(reincarnationPointGain);

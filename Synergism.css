@@ -10,7 +10,9 @@ html {
 body {background-color: #111111 ;
 	transform: scale(0.8);
 	transform-origin: 0 0;
-	overflow-x: hidden;}
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
 
 body {
 	color: black;
@@ -81,7 +83,10 @@ a {color: white;}
 	width: 50%;
 	z-index: 1
 }
-
+#preload {
+	position:absolute;
+	z-index: 2
+}
 #resourcestable {
 	position: absolute;
 	top: 20px;
@@ -888,7 +893,27 @@ margin-left: -13px
 	left: 75%;
 	margin-left: -250px;
 }
-
+#temporarystats7 {
+	position: absolute;
+	top: 150px;
+	width: 500px;
+	left: 75%;
+	margin-left: -250px;
+}
+#temporarystats8 {
+	position: absolute;
+	top: 170px;
+	width: 500px;
+	left: 75%;
+	margin-left: -250px;
+}
+#patchnotes {
+	position: absolute;
+	top: 250px;
+	width: 128px;
+	left: 75%;
+	margin-left: -64px;
+}
 #toggle1 {
 	position:absolute;
 	width: 80px;
@@ -1181,29 +1206,27 @@ margin-left: -13px
 	border: 1px solid white
 	
 }
+#achievementprogress {
+	position: absolute;
+	top: 20px;
+	left: 46.75%;
+	width: 300px;
+	margin-left: -150px;
+}
 #achievementstable {
 	position: absolute;
 	top: 55px;
-	margin-left: -80px;
-	left: 25%;
+	margin-left: -420px;
+	left: 50%;
 }
 
 #achievementinfo {
 	position: fixed;
-	top: 300px;
+	top: 470px;
 	width: 500px;
-	left: 70%;
+	left: 47.8%;
 	margin-left: -250px;
 	border: 1px solid plum
-}
-
-#achievementpoints {
-	position: absolute;
-	top: -40px;
-	width: 500px;
-	left: 50%;
-	margin-left: -250px;
-	color: green
 }
 
 #achievementtutorial {
@@ -1218,7 +1241,7 @@ margin-left: -13px
 #achievementdescription {
 	position: absolute;
 	top: 15px;
-	width: 500px;
+	width: 900px;
 	color: white;
 	text-align: left;
 	left: 10px;
@@ -1227,8 +1250,8 @@ margin-left: -13px
 #achievementreward {
 	position: absolute;
 	top: 55px;
-	width: 500px;
-	color: green;
+	width: 900px;
+	color: limegreen;
 	text-align: left;
 	left: 10px;
 }
@@ -1236,19 +1259,19 @@ margin-left: -13px
 #achievementcolorcode1 {
 	position: absolute;
 	padding: 5px;
-	top: 350px;
-	left: 70%;
+	top: 437px;
+	left: 48%;
 	width: 600px;
 	margin-left: -300px;
 	height: 20px;
-	color: green;
+	color: limegreen;
 	text-align: center;
 }
 #achievementcolorcode2 {
 	position: absolute;
 	padding: 5px;
-	top: 370px;
-	left: 70%;
+	top: 457px;
+	left: 48%;
 	width: 600px;
 	margin-left: -300px;
 	height: 20px;
@@ -1258,8 +1281,8 @@ margin-left: -13px
 #achievementcolorcode3 {
 	position: absolute;
 	padding: 5px;
-	top: 390px;
-	left: 70%;
+	top: 477px;
+	left: 48%;
 	width: 600px;
 	margin-left: -300px;
 	height: 20px;
@@ -1269,8 +1292,8 @@ margin-left: -13px
 #achievementcolorcode4 {
 	position: absolute;
 	padding: 5px;
-	top: 410px;
-	left: 70%;
+	top: 497px;
+	left: 48%;
 	width: 600px;
 	margin-left: -300px;
 	height: 20px;

@@ -49,7 +49,7 @@ function calculatetax() {
     taxdivisor = Decimal.pow(1.01, (c) * (exponent))
     taxdivisorcheck = Decimal.pow(1.01, (compareC) * (exponent))
     var warning = ""
-    if (player.reincarnationCount > 0.5){warning = "Your tax overtakes production at " + format(Decimal.pow(10, maxexponent - Decimal.log(taxdivisorcheck,10))) + " Coins/s."}
+    if (player.reincarnationCount > 0.5){warning = "Your tax also caps your Coin gain at " + format(Decimal.pow(10, maxexponent - Decimal.log(taxdivisorcheck,10))) + "/s."}
     document.getElementById("taxinfo").textContent = "Due to your excessive wealth, coin production is divided by " + format(taxdivisor,2) + " to pay taxes! " + warning
 }
 

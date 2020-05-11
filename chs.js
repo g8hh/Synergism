@@ -285,7 +285,7 @@ var cnPrefix = {
     'The Singularity: Reincarnate without having bought a multiplier.': '奇点:不购买加倍进行一次转世',
     'Gotta go SLOW!: Prestige without buying Accelerators or Accelerator Boosts.': '正在变慢!:不购买加速器和加速器加成进行一次转生',
     'I\'m really going slow: Transcend without having bought Accelerators or Boosts.': '我真的变慢了:不购买加速器和加速器加成进行一次超越',
-    'Are we there yet?: Reincarnate without having owned Accelerators or Boosts.': '我们还在那里吗?:不购买加速器和加速器加成进行一次转世',
+    'Are we there yet?: Reincarnate without having bought Accelerators or Boosts.': '我们还在那里吗?:不购买加速器和加速器加成进行一次转世',
     'A careful search for Diamonds: Get 1e120,000 Coins in [Diamond-] without buying Accelerators or Boosts.': '仔细寻找钻石:在钻石减少挑战中不购买加速器和加速器加成达到e120,000金币',
     'Very Based: Prestige without purchasing Coin Upgrades.': '非常基础:不购买金币升级进行一次转生',
     'Miser: Transcend without purchasing Coin Upgrades.': '守财奴:不购买金币升级进行一次超越',

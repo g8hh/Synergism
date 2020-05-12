@@ -1,6 +1,6 @@
 function buyAccelerator(autobuyer=false){
 	var autobuyamount = 0;
-	if(autobuyer){autobuyamount = 9999}
+	if(autobuyer){autobuyamount = 1000}
 	var buythisamount = Math.max(player.coinbuyamount, autobuyamount)
 	while(player.coins.greaterThanOrEqualTo(player.acceleratorCost) && ticker < buythisamount) {
 
@@ -18,7 +18,10 @@ function buyAccelerator(autobuyer=false){
 
 		if (player.currentChallenge == "four") {
 		player.acceleratorCost = player.acceleratorCost.times(Decimal.pow(10, player.acceleratorBought))
-		}
+        }
+        if (player.currentChallengeRein == "eight"){
+        player.acceleratorCost = player.acceleratorCost.times(Decimal.pow(1e50, player.acceleratorBought))
+        }
 
 		ticker++
 	}
@@ -39,7 +42,7 @@ function buyAccelerator(autobuyer=false){
 
 function buyMultiplier(autobuyer=false){
 	var autobuyamount = 0;
-	if(autobuyer){autobuyamount = 9999}
+	if(autobuyer){autobuyamount = 1000}
 	var buythisamount = Math.max(player.coinbuyamount, autobuyamount)
 	while(player.coins.greaterThanOrEqualTo(player.multiplierCost) && ticker < buythisamount) {
 		player.coins = player.coins.sub(player.multiplierCost);
@@ -55,7 +58,10 @@ function buyMultiplier(autobuyer=false){
 		}
 		if (player.currentChallenge == "four") {
 		player.multiplierCost = player.multiplierCost.times(Decimal.pow(10, player.multiplierBought))
-		}
+        }
+        if (player.currentChallengeRein == "eight") {
+        player.multiplierCost = player.multiplierCost.times(Decimal.pow(1e50, player.multiplierBought))
+        }
 		ticker++
 	}
 		ticker = 0;
@@ -106,7 +112,10 @@ function buyProducer(pos,type,num,autobuyer=false) {
 				 if (player[pos + 'Owned' + type] >= 1000 - (10 * player.challengecompletions.four)) {
 					player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(1.25, player[pos + 'Owned' + type]));
 				 }
-				 }
+                 }
+            if (player.currentChallengeRein == "eight" && (type == "Coin" || type == "Diamonds" || type == "Mythos")){
+                player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(100, player[pos + 'Owned' + type]));
+            }
 				 ticker += 1;
 			 }
 			 ticker = 0;
@@ -148,7 +157,10 @@ function buyProducer(pos,type,num,autobuyer=false) {
 	}
 
 function buyResearch(index) {
-		if (player.researches[index] < researchMaxLevels[index] && player.researchPoints >= (researchBaseCosts[index])) {
+    let buyamount = 1;
+    let i = 1;
+    if (maxbuyresearch){buyamount = 1000}
+		while(player.researches[index] < researchMaxLevels[index] && player.researchPoints >= (researchBaseCosts[index]) && buyamount >= i) {
 			player.researchPoints -= researchBaseCosts[index]
 			player.researches[index] += 1;
 			researchfiller2 = "Level: " + player.researches[index] + "/" + researchMaxLevels[index]
@@ -158,7 +170,7 @@ function buyResearch(index) {
 			if (index == 48 && player.unlocks.rrow2 == false) {player.unlocks.rrow2 = true; revealStuff()}
 			if (index == 49 && player.unlocks.rrow3 == false) {player.unlocks.rrow3 = true; revealStuff()}
 			if (index == 50 && player.unlocks.rrow4 == false) {player.unlocks.rrow4 = true; revealStuff()}
-
+            i++
         }
     }
 

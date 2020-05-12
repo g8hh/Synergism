@@ -17,15 +17,16 @@ if (player.currentChallenge == "" && (i == 'one' || i == 'two' || i == 'three' |
     reset(2);
     player.transcendCount -= 1;
 }
-if (player.currentChallenge == "" && (i == 'six' || i == 'seven') && player.currentChallengeRein == "") {
+if (player.currentChallenge == "" && (i == 'six' || i == 'seven' || i == 'eight') && player.currentChallengeRein == "") {
     player.currentChallengeRein = i;
     reset(3);
     player.reincarnationCount -= 1;
 }
-    var x = ""
-    var y = ""
+    let x = ""
+    let y = ""
     if (player.currentChallengeRein == 'six') {x = " || TAX+ [Reincarnation]"}
     if (player.currentChallengeRein == 'seven') {x = " || MULTIPLIER/ACCELERATOR-- [Reincarnation]"}
+    if (player.currentChallengeRein == 'eight') {x = " || COST++ [Reincarnation]"}
     if (player.currentChallengeRein !== "" && player.currentChallenge !== "") { y = "s"}
     if (i == player.currentChallenge || i == player.currentChallengeRein){
     if (i == 'one'){document.getElementById("currentchallenge").textContent = "Current Challenge" + y + ": No Multipliers [Transcension]" + x}
@@ -40,13 +41,15 @@ if (player.currentChallenge == "" && (i == 'six' || i == 'seven') && player.curr
 
 function toggleBuyAmount(quantity, type) {
 player[type + 'buyamount'] = quantity 
-if (quantity == 1) {var a = "one"}
-if (quantity == 10) {var a = "ten"}
-if (quantity == 100) {var a = "hundred"}
+let a = ""
+if (quantity == 1) {a = "one"}
+if (quantity == 10) {a = "ten"}
+if (quantity == 100) {a = "hundred"}
+if (quantity == 1000) {a = "thousand"}
 
 
-var c = type + a
-var d = ""
+let c = type + a
+let d = ""
  d = d + c
 
 document.getElementById(d).style.backgroundColor = "Green";
@@ -62,6 +65,11 @@ if (quantity !== 10) {
 }
 if (quantity !== 100) {
     a = "hundred"
+    d = type + a
+    document.getElementById(d).style.backgroundColor = "Black"
+}
+if (quantity !== 1000) {
+    a = "thousand"
     d = type + a
     document.getElementById(d).style.backgroundColor = "Black"
 }
@@ -140,4 +148,12 @@ function toggleauto() {
 			}
 	}
 
-}	
+}
+
+function toggleResearchBuy() {
+    if (maxbuyresearch){
+        maxbuyresearch = false;
+        document.getElementById("toggleresearchbuy").textContent = "Upgrade: 1 Level"
+    }
+    else {maxbuyresearch = true; document.getElementById("toggleresearchbuy").textContent = "Upgrade: MAX [if possible]"}
+}

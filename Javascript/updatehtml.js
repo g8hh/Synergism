@@ -52,6 +52,10 @@ function revealStuff() {
     for (var i = 0; i < j.length; i++) {
     j[i].style.display = "none";
     }
+    var k = document.getElementsByClassName("chal7");
+    for (var i = 0; i < k.length; i++) {
+    k[i].style.display = "none"
+    }
 
 
 document.getElementById("rune2area").style.display = "none"
@@ -69,25 +73,25 @@ if(player.upgrades[89] == 1) document.getElementById("transcendautomation").styl
 if(player.researches[46] == 1) document.getElementById("reincarnateautomation").style.display = "block";
 
 if (player.unlocks.coinone == true) {
-    var c1 = document.getElementsByClassName("coinunlock1");
+    let c1 = document.getElementsByClassName("coinunlock1");
     for (var i = 0; i < c1.length; i++) {
       c1[i].style.display = "block";
     }
 }
 if (player.unlocks.cointwo == true) {
-    var c2 = document.getElementsByClassName("coinunlock2");
+    let c2 = document.getElementsByClassName("coinunlock2");
       for (var i = 0; i < c2.length; i++) {
     c2[i].style.display = "block";
       }
 }
 if (player.unlocks.cointhree == true) {
-    var c3 = document.getElementsByClassName("coinunlock3");
+    let c3 = document.getElementsByClassName("coinunlock3");
       for (var i = 0; i < c3.length; i++) {
     c3[i].style.display = "block";
       }
 }
 if (player.unlocks.coinfour == true) {
-    var c4 = document.getElementsByClassName("coinunlock4");
+    let c4 = document.getElementsByClassName("coinunlock4");
       for (var i = 0; i < c4.length; i++) {
     c4[i].style.display = "block";
       }
@@ -95,51 +99,57 @@ if (player.unlocks.coinfour == true) {
 
 
 if (player.unlocks.prestige == true) {
-    var a = document.getElementsByClassName("prestigeunlock");
+    let a = document.getElementsByClassName("prestigeunlock");
       for (var i = 0; i < a.length; i++) {
     a[i].style.display = "block";
   }
 }
 if (player.unlocks.generation == true) {
-    var b = document.getElementsByClassName("generationunlock");
+    let b = document.getElementsByClassName("generationunlock");
     for (var i = 0; i < b.length; i++) {
     b[i].style.display = "block";
     }	
 }
 if (player.unlocks.transcend == true) {
-    var c = document.getElementsByClassName("transcendunlock");
+    let c = document.getElementsByClassName("transcendunlock");
       for (var i = 0; i < c.length; i++) {
     c[i].style.display = "block";
   }
 }
 if (player.unlocks.reincarnate == true) {
-    var d = document.getElementsByClassName("reincarnationunlock");
+    let d = document.getElementsByClassName("reincarnationunlock");
     for (var i = 0; i < d.length; i++) {
     d[i].style.display = "block";
 }
 }
 if (player.unlocks.rrow1 == true) {
-var e = document.getElementsByClassName("reinrow1");
+let e = document.getElementsByClassName("reinrow1");
 for (var i = 0; i < e.length; i++) {
 e[i].style.display = "block";
     }
 }
 if (player.unlocks.rrow2 == true) {
-    var e = document.getElementsByClassName("reinrow2");
+    let e = document.getElementsByClassName("reinrow2");
     for (var i = 0; i < e.length; i++) {
     e[i].style.display = "block";
             }
         }
         if (player.unlocks.rrow3 == true) {
-            var e = document.getElementsByClassName("reinrow3");
+            let e = document.getElementsByClassName("reinrow3");
             for (var i = 0; i < e.length; i++) {
             e[i].style.display = "block";
                     }
                 }
                 if (player.unlocks.rrow4 == true) {
-                    var e = document.getElementsByClassName("reinrow4");
+                    let e = document.getElementsByClassName("reinrow4");
                     for (var i = 0; i < e.length; i++) {
                     e[i].style.display = "block";
+                            }
+                        }
+                        if (player.achievements[123] == 1){
+                            let e = document.getElementsByClassName("chal7");
+                            for (var i = 0; i < e.length; i++){
+                                e[i].style.display= "block"
                             }
                         }
 var e = document.getElementsByClassName("auto");
@@ -350,10 +360,10 @@ if (currentTab == "prestige") {
 }
 if (currentTab == "runes"){
     document.getElementById("runeshards").textContent = "You have " + format(player.runeshards) + " Offerings."
-    document.getElementById("rune1level").textContent = "Level: " + player.runelevels[0] + "/500"
-    document.getElementById("rune2level").textContent = "Level: " + player.runelevels[1] + "/500"
-    document.getElementById("rune3level").textContent = "Level: " + player.runelevels[2] + "/500"
-    document.getElementById("rune4level").textContent = "Level: " + player.runelevels[3] + "/500"
+    document.getElementById("rune1level").textContent = "Level: " + player.runelevels[0] + "/" + (500 + player.researches[78])
+    document.getElementById("rune2level").textContent = "Level: " + player.runelevels[1] + "/" + (500 + player.researches[80])
+    document.getElementById("rune3level").textContent = "Level: " + player.runelevels[2] + "/" + (500 + player.researches[79])
+    document.getElementById("rune4level").textContent = "Level: " + player.runelevels[3] + "/" + (500 + player.researches[77])
     document.getElementById("rune1exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1 * Math.pow(player.runelevels[0] , 3) * (4 * player.runelevels[0] + 100)/500 * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[0]))),2) + " EXP" 
     document.getElementById("rune2exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (4 * Math.pow(player.runelevels[1] , 3) * (4 * player.runelevels[1] + 100)/500 * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[1]))),2) + " EXP"
     document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (1 - 0.02 * player.challengecompletions.eight) - player.runeexp[2]))),2) + " EXP"

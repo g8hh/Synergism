@@ -280,6 +280,7 @@ var areward110 = "Delay tax growth by 4%."
 var areward115 = "+5% chance to not spend an offering when sacrificing."
 var areward117 = "Delay tax growth by 5.66%."
 var areward122= "+10% chance to not spend an offering when sacrificing."
+var areward123 = "Unlock 5 expensive yet powerful researches!"
 var areward124 = "Delay tax growth by 5.66%."
 var areward129= "+10% chance to not spend an offering when sacrificing."
 var areward131 = "Delay tax growth by 5.66%."
@@ -369,7 +370,7 @@ function resetachievementcheck(i) {
         if (player.reincarnatenoaccelerator == true) {
             achievementaward(62)
         }
-        if (player.reinarnatenomultiplier == true) {
+        if (player.reincarnatenomultiplier == true) {
             achievementaward(59)
         }
         if (player.reincarnatenocoinupgrades == true) {
@@ -494,6 +495,15 @@ if (i == 'seven') {
     if (player.challengecompletions.seven > 14.5) {achievementaward(125)}
     if (player.challengecompletions.seven > 24.5) {achievementaward(126)}
 }
+if (i == 'eight') {
+    if (player.challengecompletions.eight > 0.5) {achievementaward(127)}
+    if (player.challengecompletions.eight > 1.5) {achievementaward(128)}
+    if (player.challengecompletions.eight > 2.5) {achievementaward(129)}
+    if (player.challengecompletions.eight > 4.5) {achievementaward(130)}
+    if (player.challengecompletions.eight > 9.5) {achievementaward(131)}
+    if (player.challengecompletions.eight > 14.5) {achievementaward(132)}
+    if (player.challengecompletions.eight > 24.5) {achievementaward(133)}
+}
 }
 
 function achievementdescriptions(i) {
@@ -523,13 +533,10 @@ function achievementaward(num) {
         player.achievementPoints += achievementpointvalues[num]
         player.worlds += achievementpointvalues[num]
         document.getElementById("achievementprogress").textContent = "Achievement Points: " + player.achievementPoints + "/" + totalachievementpoints + " [" + (100 * player.achievementPoints / totalachievementpoints).toPrecision(4) + "%]"
+        player.achievements[num] = 1;
+        revealStuff()
     }
-    player.achievements[num] = 1;
     var x = "ach" + num
     document.getElementById(x).style.backgroundColor = "Green"
-    achievementunlock()
 }
 
-function achievementunlock() {
-    revealStuff()
-}

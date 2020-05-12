@@ -49,6 +49,12 @@ function challengeDisplay(i,changefocus = true,automated = false) {
         document.getElementById("challengetotalscore").textContent = "Times Completed: " +player.challengecompletions.seven + "/25. Goal: Gain " + format(Decimal.pow(10, challengebaserequirementsrein.seven * Math.pow(1 + player.challengecompletions.seven, 2))) + " Mythos Shards."
         document.getElementById("challengereward").textContent = "Reward: Accelerator/Multiplier boost is powered by 0.04 per completion. The speed and duplication rune are 2% less expensive to level per completion (applies retroactively!). First completion makes multiplier boosts 25% more effective! " + c
     }
+    if (i == 8 && challengefocus == 8){
+        document.getElementById("challengedescription").textContent = "Reincarnate and reach your target, except building power is stuck at 1, and the cost growth is insanely high all the time!"
+        document.getElementById("challengetotalscore").textContent = "Times Completed: " +player.challengecompletions.eight + "/25. Goal: Gain " + format(Decimal.pow(10, challengebaserequirementsrein.eight * Math.pow(1 + player.challengecompletions.eight, 2))) + " Mythos Shards."
+        document.getElementById("challengereward").textContent = "Reward: Each completion raises base building power by 0.25 per completion! The first completion unlocks 25 new researches and a new feature: Anthill! For your bug squashing wishes. [Rewards will be out in v1.009/v1.010] " + c
+
+    }
 }
 
 function toggleRetryChallenges() {

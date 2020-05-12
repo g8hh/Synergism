@@ -1,4 +1,4 @@
-function buyGenerator(i, state) {
+function buyGenerator(i, state, auto = false) {
     if (i == 1 && player.prestigePoints.greaterThanOrEqualTo(1e12) && player.unlocks.generation == false) {player.unlocks.generation = true}
     var q = 100 + i
     let type = "transcendPoints"
@@ -21,7 +21,8 @@ function buyGenerator(i, state) {
             player.upgrades[q] = 1;
             upgradeupdate(q, state)
         }
-    revealStuff()
+
+    if (!auto){revealStuff()}
 }
 
 function buyAutobuyers(i, state) {
@@ -43,13 +44,13 @@ function autoUpgrades() {
 	if (player.upgrades[90] > 0.5 && player.shoptoggles.generators == true){
 		
 		var i;
-		for (i = 1; i < 6; i++) {if (player.prestigePoints.greaterThanOrEqualTo(Decimal.pow(10, upgradeCosts[(100+i)])) && player.shoptoggles.generators == true) {buyGenerator(i, true)}}
+		for (i = 1; i < 6; i++) {if (player.prestigePoints.greaterThanOrEqualTo(Decimal.pow(10, upgradeCosts[(100+i)])) && player.shoptoggles.generators == true) {buyGenerator(i, true, true)}}
 		var j;
-		for (j = 6; j < 11; j++) {if (player.coins.greaterThanOrEqualTo(Decimal.pow(10,upgradeCosts[(100+j)])) && player.shoptoggles.generators == true){buyGenerator(j, true)}}
+		for (j = 6; j < 11; j++) {if (player.coins.greaterThanOrEqualTo(Decimal.pow(10,upgradeCosts[(100+j)])) && player.shoptoggles.generators == true){buyGenerator(j, true, true)}}
 		var k;
-		for (k = 11; k < 16; k++) {if (player.prestigePoints.greaterThanOrEqualTo(Decimal.pow(10,upgradeCosts[(100+k)])) && player.shoptoggles.generators == true){buyGenerator(k, true)}}
+		for (k = 11; k < 16; k++) {if (player.prestigePoints.greaterThanOrEqualTo(Decimal.pow(10,upgradeCosts[(100+k)])) && player.shoptoggles.generators == true){buyGenerator(k, true, true)}}
 		var l;
-		for (l = 16; l < 21; l++) {if (player.transcendPoints.greaterThanOrEqualTo(Decimal.pow(10,upgradeCosts[(100+l)])) && player.shoptoggles.generators == true){buyGenerator(l, true)}}
+		for (l = 16; l < 21; l++) {if (player.transcendPoints.greaterThanOrEqualTo(Decimal.pow(10,upgradeCosts[(100+l)])) && player.shoptoggles.generators == true){buyGenerator(l, true, true)}}
 	}
 	if (player.upgrades[91] > 0.5){
 		var i;

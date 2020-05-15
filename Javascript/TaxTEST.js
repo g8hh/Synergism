@@ -29,9 +29,8 @@ function calculatetax() {
     exponent *= e;
     exponent *= (1 - 1/20 * player.researches[51] - 1/40 * player.researches[52] - 1/80 * player.researches[53] - 1/160 * player.researches[54] - 1/320 * player.researches[55])
     exponent *= (1 - 0.05 / 1800 * (player.achievements[45] + player.achievements[46] + 2 * player.achievements[47]) * Math.min(player.prestigecounter,1800))
-    exponent *= ((1 - 0.02 * player.challengecompletions.six * Math.min(3.75 / 2, buildingPower - 1)))
-    exponent *= (1 - 0.075 * Math.ceil(player.challengecompletions.six / 100))
-    exponent *= (Math.pow(10, - (player.runelevels[1] * (1 + player.researches[4]/10) * (1 + player.researches[21]/800)) / 500))
+    exponent *= Math.pow(0.965, player.challengecompletions.six)
+    exponent *= (Math.pow(6, - (player.runelevels[1] * (1 + player.researches[4]/10) * (1 + player.researches[21]/800)) / 500))
     exponent *= (1 - 0.04 * player.achievements[82] - 0.04 * player.achievements[89] - 0.04 * player.achievements[96] - 0.04 * player.achievements[103] - 0.04 * player.achievements[110] - 0.0566 * player.achievements[117] - 0.0566 * player.achievements[124] - 0.0566 * player.achievements[131])
     exponent *= f
     maxexponent = Math.floor(275/(Decimal.log(1.01,10) * exponent)) - 1

@@ -17,7 +17,7 @@ function resetdetails(i) {
     var c = 0;
     if (i == 4 || i == 6) {
         a += 15
-        if (player.achievements[51] > 0.5) {
+        if (player.achievements[52] > 0.5) {
             a += (25 * Math.min(player.reincarnationcounter/1800, 1))
         }
         if (player.upgrades[62] > 0.5) {
@@ -144,14 +144,20 @@ function resetdetails(i) {
             o *= Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2)
         }
         if (player.upgrades[72] > 0.5) {
-            o *= (1 + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten)
+            o *= Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))
         }
         if (player.upgrades[74] > 0.5) {
             o *= (1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5)))
         }
-            o *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
             o *= (1 + player.researches[65]/50)
             o *= (1 + player.researches[76]/100)
+            o *= (1 + 0.01 * player.achievements[84] + 0.03 * player.achievements[91] + 0.05 * player.achievements[98] + 0.07 * player.achievements[105] + 0.09 * player.achievements[112] + 0.11 * player.achievements[119] + 0.13 * player.achievements[126] + 0.15 * player.achievements[133] + 0.17 * player.achievements[140] + 0.19 * player.achievements[147])
+        if (player.achievements[53] > 0.5){
+            o *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3]))
+        }
+        if (player.achievements[52] > 0.5){o += 4}
+            o *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
+
 
         color = 'green'
         document.getElementById("resetcurrency1").src = "Pictures/Particle.png"
@@ -358,19 +364,30 @@ function reset(i) {
             q *= Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2)
         }
         if (player.upgrades[72] > 0.5) {
-            q *= (1 + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight + player.challengecompletions.nine + player.challengecompletions.ten)
+            q *= Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))
         }
         if (player.upgrades[74] > 0.5 && player.maxofferings !== undefined) {
             q *= (1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5)))
         }
             q *= (1 + 1/50 * player.researches[65])
             q *= (1 + 1/100 * player.researches[76])
+        q *= (1 + 0.01 * player.achievements[84] + 0.03 * player.achievements[91] + 0.05 * player.achievements[98] + 0.07 * player.achievements[105] + 0.09 * player.achievements[112] + 0.11 * player.achievements[119] + 0.13 * player.achievements[126] + 0.15 * player.achievements[133] + 0.17 * player.achievements[140] + 0.19 * player.achievements[147])
+        if (player.achievements[53] > 0.5){
+        q *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3]))
+        }
+        if (player.achievements[52] > 0.5){q += 4}
+        q *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
         if (player.currentChallengeRein !== "" && (q < 1.5)) {
             q = 0
         }
-        q *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
+
         player.researchPoints += Math.floor(q);
 
+        let opscheck = q/(1 + player.reincarnationcounter)
+        if (opscheck > player.obtainiumpersecond){
+        player.obtainiumpersecond = opscheck
+        }
+        
         resetUpgrades(3);
         player.coinsThisReincarnation = new Decimal("100");
         player.firstOwnedMythos = 0;

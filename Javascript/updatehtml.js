@@ -359,20 +359,20 @@ if (currentTab == "prestige") {
     }
 }
 if (currentTab == "runes"){
-    document.getElementById("runeshards").textContent = "You have " + format(player.runeshards) + " Offerings."
+    document.getElementById("runeshards").textContent = "You have " + format(player.runeshards,0,false) + " Offerings."
     document.getElementById("rune1level").textContent = "Level: " + player.runelevels[0] + "/" + (500 + player.researches[78])
     document.getElementById("rune2level").textContent = "Level: " + player.runelevels[1] + "/" + (500 + player.researches[80])
     document.getElementById("rune3level").textContent = "Level: " + player.runelevels[2] + "/" + (500 + player.researches[79])
     document.getElementById("rune4level").textContent = "Level: " + player.runelevels[3] + "/" + (500 + player.researches[77])
-    document.getElementById("rune1exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1 * Math.pow(player.runelevels[0] , 3) * (4 * player.runelevels[0] + 100)/500 * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[0]))),2) + " EXP" 
-    document.getElementById("rune2exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (4 * Math.pow(player.runelevels[1] , 3) * (4 * player.runelevels[1] + 100)/500 * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[1]))),2) + " EXP"
-    document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (1 - 0.02 * player.challengecompletions.eight) - player.runeexp[2]))),2) + " EXP"
-    document.getElementById("rune4exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (16 * Math.pow(player.runelevels[3] , 3) * (4 * player.runelevels[3] + 100)/500 * (1 - 0.02 * player.challengecompletions.six) - player.runeexp[3]))),2) + " EXP"
+    document.getElementById("rune1exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1 * Math.pow(player.runelevels[0] , 3) * (4 * player.runelevels[0] + 100)/500 * (Math.max(1, (player.runelevels[0]-500)/25)) * (Math.max(1, (player.runelevels[0]-600)/30)) * (Math.max(1, (player.runelevels[0]-700)/25)) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[0]))),2) + " EXP" 
+    document.getElementById("rune2exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (4 * Math.pow(player.runelevels[1] , 3) * (4 * player.runelevels[1] + 100)/500 * (Math.max(1, (player.runelevels[1]-500)/25)) * (Math.max(1, (player.runelevels[1]-600)/30)) * (Math.max(1, (player.runelevels[1]-700)/25)) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[1]))),2) + " EXP"
+    document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (Math.max(1, (player.runelevels[2]-500)/25)) * (Math.max(1, (player.runelevels[2]-600)/30)) * (Math.max(1, (player.runelevels[2]-700)/25)) * (1 - 0.02 * player.challengecompletions.eight) - player.runeexp[2]))),2) + " EXP"
+    document.getElementById("rune4exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (16 * Math.pow(player.runelevels[3] , 3) * (4 * player.runelevels[3] + 100)/500 * (Math.max(1, (player.runelevels[3]-500)/25)) * (Math.max(1, (player.runelevels[3]-600)/30)) * (Math.max(1, (player.runelevels[3]-700)/25)) * (1 - 0.02 * player.challengecompletions.six) - player.runeexp[3]))),2) + " EXP"
     document.getElementById("runedetails").textContent = "Gain " + (25 + 3 * player.researches[22] + 2 * player.researches[23] + 3 * player.upgrades[66] + 5 * player.upgrades[61]) + " EXP per offering sacrificed. Gain more offerings through resetting longer runs!" 
 
    
     
-    document.getElementById("runerecycle").textContent = "You have " +(0.5 + 5 * player.achievements[80] + 5 * player.achievements[87] + 5 * player.achievements[94] + 5 * player.achievements[101] + 5 * player.achievements[108] + 5 * player.achievements[115] + 10 * player.achievements[122] + 10 * player.achievements[129] + 5 * player.upgrades[61] + Math.min(25, player.runelevels[3]/8))  + "% chance of recycling your offerings. Recycled offerings are not spent!"
+    document.getElementById("runerecycle").textContent = "You have " +(5 * player.achievements[80] + 5 * player.achievements[87] + 5 * player.achievements[94] + 5 * player.achievements[101] + 5 * player.achievements[108] + 5 * player.achievements[115] + 10 * player.achievements[122] + 10 * player.achievements[129] + 5 * player.upgrades[61] + Math.min(25, player.runelevels[3]/8))  + "% chance of recycling your offerings. Recycled offerings are not spent!"
 }
 if (currentTab == "transcension") {
     document.getElementById("transcendshardinfo").textContent = "You have " + format(player.transcendShards,2) + " Mythos Shards, providing " + format(totalMultiplierBoost) + " Multiplier Power boosts."
@@ -440,6 +440,8 @@ if (currentTab == "settings") {
     document.getElementById("temporarystats6").textContent = "Fastest Reincarnation: " + format(1000 * player.fastestreincarnate) + "ms"
     document.getElementById("temporarystats7").textContent = "Most Offerings saved at once: " + format(player.maxofferings) 
     document.getElementById("temporarystats8").textContent = "Most Obtainium saved at once: " + format(player.maxobtainium)  
+    document.getElementById("temporarystats9").textContent = "Best Obtainium/sec: " + format(player.obtainiumpersecond)
+    document.getElementById("temporarystats10").textContent = "Summative Rune Levels: " + format(player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3])
 
 
     

@@ -1,20 +1,31 @@
-if (!Math.trunc) {
-  Math.trunc = function(v) {
-      v = +v;
-      if (!isFinite(v)) return v;
-      
-      return (v - v % 1)   ||   (v < 0 ? -0 : v === 0 ? v : 0);
-  }}
-Number.isSafeInteger = Number.isSafeInteger || function (value) {
-        return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
-     };
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = global || self, global.Decimal = factory());
-}
-(this, function () { 'use strict';
+}(this, function () { 'use strict';
+  // Khafra says fuck you for removing these
+  Math.sign = Math.sign || function(x) {
+    return ((x > 0) - (x < 0)) || +x;
+  };
+
+  Math.log10 = Math.log10 || function(x) {
+      return Math.log(x) * Math.LOG10E;
+  }
+
+  Number.isInteger = Number.isInteger || function(value) {
+      return typeof value === 'number' && 
+          isFinite(value) && 
+          Math.floor(value) === value;
+  };
+
+  Number.isSafeInteger = Number.isSafeInteger || function (value) {
+      return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
+  };
+
+  Math.trunc = Math.trunc || function (v) {
+    return v < 0 ? Math.ceil(v) : Math.floor(v);
+  };
+  // end of fuck you
 
   var padEnd = function (string, maxLength, fillString) {
 
@@ -63,9 +74,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
   var NUMBER_EXP_MAX = 308; // The smallest exponent that can appear in a Number, though not all mantissas are valid here.
 
-  var NUMBER_EXP_MIN = -324; // Tolerance which is used for Number conversion to compensate floating-point error.
-
-  var ROUND_TOLERANCE = 1e-10;
+  var NUMBER_EXP_MIN = -324;
 
   var powerOf10 = function () {
     // We need this lookup table because Math.pow(10, exponent)
@@ -95,35 +104,6 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
   var ME_NN = function ME_NN(mantissa, exponent) {
     return new Decimal().fromMantissaExponent_noNormalize(mantissa, exponent);
   };
-
-  function affordGeometricSeries(resourcesAvailable, priceStart, priceRatio, currentOwned) {
-    var actualStart = priceStart.mul(priceRatio.pow(currentOwned));
-    return Decimal.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10() / priceRatio.log10());
-  }
-
-  function sumGeometricSeries(numItems, priceStart, priceRatio, currentOwned) {
-    return priceStart.mul(priceRatio.pow(currentOwned)).mul(Decimal.sub(1, priceRatio.pow(numItems))).div(Decimal.sub(1, priceRatio));
-  }
-
-  function affordArithmeticSeries(resourcesAvailable, priceStart, priceAdd, currentOwned) {
-    // n = (-(a-d/2) + sqrt((a-d/2)^2+2dS))/d
-    // where a is actualStart, d is priceAdd and S is resourcesAvailable
-    // then floor it and you're done!
-    var actualStart = priceStart.add(currentOwned.mul(priceAdd));
-    var b = actualStart.sub(priceAdd.div(2));
-    var b2 = b.pow(2);
-    return b.neg().add(b2.add(priceAdd.mul(resourcesAvailable).mul(2)).sqrt()).div(priceAdd).floor();
-  }
-
-  function sumArithmeticSeries(numItems, priceStart, priceAdd, currentOwned) {
-    var actualStart = priceStart.add(currentOwned.mul(priceAdd)); // (n/2)*(2*a+(n-1)*d)
-
-    return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
-  }
-
-  function efficiencyOfPurchase(cost, currentRpS, deltaRpS) {
-    return cost.div(currentRpS).add(cost.div(deltaRpS));
-  }
   /**
    * The Decimal's value is simply mantissa * 10^exponent.
    */
@@ -149,8 +129,8 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       this.exponent = NaN;
 
       if (value === undefined) {
-        this.m = 0;
-        this.e = 0;
+        this.mantissa = 0;
+        this.exponent = 0;
       } else if (value instanceof Decimal) {
         this.fromDecimal(value);
       } else if (typeof value === "number") {
@@ -483,14 +463,6 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     Decimal.cbrt = function (value) {
       return D(value).cbrt();
     };
-
-    Decimal.dp = function (value) {
-      return D(value).dp();
-    };
-
-    Decimal.decimalPlaces = function (value) {
-      return D(value).dp();
-    };
     /**
      * If you're willing to spend 'resourcesAvailable' and want to buy something
      * with exponentially increasing cost each purchase (start at priceStart,
@@ -500,7 +472,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
 
     Decimal.affordGeometricSeries = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
-      return affordGeometricSeries(D(resourcesAvailable), D(priceStart), D(priceRatio), currentOwned);
+      return this.affordGeometricSeries_core(D(resourcesAvailable), D(priceStart), D(priceRatio), currentOwned);
     };
     /**
      * How much resource would it cost to buy (numItems) items if you already have currentOwned,
@@ -509,7 +481,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
 
     Decimal.sumGeometricSeries = function (numItems, priceStart, priceRatio, currentOwned) {
-      return sumGeometricSeries(numItems, D(priceStart), D(priceRatio), currentOwned);
+      return this.sumGeometricSeries_core(numItems, D(priceStart), D(priceRatio), currentOwned);
     };
     /**
      * If you're willing to spend 'resourcesAvailable' and want to buy something with additively
@@ -519,7 +491,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
 
     Decimal.affordArithmeticSeries = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
-      return affordArithmeticSeries(D(resourcesAvailable), D(priceStart), D(priceAdd), D(currentOwned));
+      return this.affordArithmeticSeries_core(D(resourcesAvailable), D(priceStart), D(priceAdd), D(currentOwned));
     };
     /**
      * How much resource would it cost to buy (numItems) items if you already have currentOwned,
@@ -529,7 +501,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
 
     Decimal.sumArithmeticSeries = function (numItems, priceStart, priceAdd, currentOwned) {
-      return sumArithmeticSeries(D(numItems), D(priceStart), D(priceAdd), D(currentOwned));
+      return this.sumArithmeticSeries_core(D(numItems), D(priceStart), D(priceAdd), D(currentOwned));
     };
     /**
      * When comparing two purchases that cost (resource) and increase your resource/sec by (deltaRpS),
@@ -540,7 +512,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
 
     Decimal.efficiencyOfPurchase = function (cost, currentRpS, deltaRpS) {
-      return efficiencyOfPurchase(D(cost), D(currentRpS), D(deltaRpS));
+      return this.efficiencyOfPurchase_core(D(cost), D(currentRpS), D(deltaRpS));
     };
 
     Decimal.randomDecimalForTesting = function (absMaxExponent) {
@@ -575,26 +547,55 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
         [a.toString() + "+" + c.toString(), result.toString()]
       */
     };
+
+    Decimal.affordGeometricSeries_core = function (resourcesAvailable, priceStart, priceRatio, currentOwned) {
+      var actualStart = priceStart.mul(priceRatio.pow(currentOwned));
+      return Decimal.floor(resourcesAvailable.div(actualStart).mul(priceRatio.sub(1)).add(1).log10() / priceRatio.log10());
+    };
+
+    Decimal.sumGeometricSeries_core = function (numItems, priceStart, priceRatio, currentOwned) {
+      return priceStart.mul(priceRatio.pow(currentOwned)).mul(Decimal.sub(1, priceRatio.pow(numItems))).div(Decimal.sub(1, priceRatio));
+    };
+
+    Decimal.affordArithmeticSeries_core = function (resourcesAvailable, priceStart, priceAdd, currentOwned) {
+      // n = (-(a-d/2) + sqrt((a-d/2)^2+2dS))/d
+      // where a is actualStart, d is priceAdd and S is resourcesAvailable
+      // then floor it and you're done!
+      var actualStart = priceStart.add(currentOwned.mul(priceAdd));
+      var b = actualStart.sub(priceAdd.div(2));
+      var b2 = b.pow(2);
+      return b.neg().add(b2.add(priceAdd.mul(resourcesAvailable).mul(2)).sqrt()).div(priceAdd).floor();
+    };
+
+    Decimal.sumArithmeticSeries_core = function (numItems, priceStart, priceAdd, currentOwned) {
+      var actualStart = priceStart.add(currentOwned.mul(priceAdd)); // (n/2)*(2*a+(n-1)*d)
+
+      return numItems.div(2).mul(actualStart.mul(2).plus(numItems.sub(1).mul(priceAdd)));
+    };
+
+    Decimal.efficiencyOfPurchase_core = function (cost, currentRpS, deltaRpS) {
+      return cost.div(currentRpS).add(cost.div(deltaRpS));
+    };
     /**
      * When mantissa is very denormalized, use this to normalize much faster.
      */
 
 
     Decimal.prototype.normalize = function () {
-      if (this.m >= 1 && this.m < 10) {
-        return this;
+      if (this.mantissa >= 1 && this.mantissa < 10) {
+        return;
       } // TODO: I'm worried about mantissa being negative 0 here which is why I set it again, but it may never matter
 
 
-      if (this.m === 0) {
-        this.m = 0;
-        this.e = 0;
-        return this;
+      if (this.mantissa === 0) {
+        this.mantissa = 0;
+        this.exponent = 0;
+        return;
       }
 
-      var tempExponent = Math.floor(Math.log10(Math.abs(this.m)));
-      this.m = tempExponent === NUMBER_EXP_MIN ? this.m * 10 / 1e-323 : this.m / powerOf10(tempExponent);
-      this.e += tempExponent;
+      var tempExponent = Math.floor(Math.log10(Math.abs(this.mantissa)));
+      this.mantissa = this.mantissa / powerOf10(tempExponent);
+      this.exponent += tempExponent;
       return this;
     };
 
@@ -606,8 +607,8 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
         return this;
       }
 
-      this.m = mantissa;
-      this.e = exponent; // Non-normalized mantissas can easily get here, so this is mandatory.
+      this.mantissa = mantissa;
+      this.exponent = exponent; // Non-normalized mantissas can easily get here, so this is mandatory.
 
       this.normalize();
       return this;
@@ -618,35 +619,35 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
 
     Decimal.prototype.fromMantissaExponent_noNormalize = function (mantissa, exponent) {
-      this.m = mantissa;
-      this.e = exponent;
+      this.mantissa = mantissa;
+      this.exponent = exponent;
       return this;
     };
 
     Decimal.prototype.fromDecimal = function (value) {
-      this.m = value.m;
-      this.e = value.e;
+      this.mantissa = value.mantissa;
+      this.exponent = value.exponent;
       return this;
     };
 
     Decimal.prototype.fromNumber = function (value) {
       // SAFETY: Handle Infinity and NaN in a somewhat meaningful way.
       if (isNaN(value)) {
-        this.m = Number.NaN;
-        this.e = Number.NaN;
+        this.mantissa = Number.NaN;
+        this.exponent = Number.NaN;
       } else if (value === Number.POSITIVE_INFINITY) {
-        this.m = 1;
-        this.e = EXP_LIMIT;
+        this.mantissa = 1;
+        this.exponent = EXP_LIMIT;
       } else if (value === Number.NEGATIVE_INFINITY) {
-        this.m = -1;
-        this.e = EXP_LIMIT;
+        this.mantissa = -1;
+        this.exponent = EXP_LIMIT;
       } else if (value === 0) {
-        this.m = 0;
-        this.e = 0;
+        this.mantissa = 0;
+        this.exponent = 0;
       } else {
-        this.e = Math.floor(Math.log10(Math.abs(value))); // SAFETY: handle 5e-324, -5e-324 separately
+        this.exponent = Math.floor(Math.log10(Math.abs(value))); // SAFETY: handle 5e-324, -5e-324 separately
 
-        this.m = this.e === NUMBER_EXP_MIN ? value * 10 / 1e-323 : value / powerOf10(this.e); // SAFETY: Prevent weirdness.
+        this.mantissa = this.exponent === NUMBER_EXP_MIN ? value * 10 / 1e-323 : value / powerOf10(this.exponent); // SAFETY: Prevent weirdness.
 
         this.normalize();
       }
@@ -657,17 +658,17 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     Decimal.prototype.fromString = function (value) {
       if (value.indexOf("e") !== -1) {
         var parts = value.split("e");
-        this.m = parseFloat(parts[0]);
-        this.e = parseFloat(parts[1]); // Non-normalized mantissas can easily get here, so this is mandatory.
+        this.mantissa = parseFloat(parts[0]);
+        this.exponent = parseFloat(parts[1]); // Non-normalized mantissas can easily get here, so this is mandatory.
 
         this.normalize();
       } else if (value === "NaN") {
-        this.m = Number.NaN;
-        this.e = Number.NaN;
+        this.mantissa = Number.NaN;
+        this.exponent = Number.NaN;
       } else {
         this.fromNumber(parseFloat(value));
 
-        if (isNaN(this.m)) {
+        if (isNaN(this.mantissa)) {
           throw Error("[DecimalError] Invalid argument: " + value);
         }
       }
@@ -688,8 +689,8 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
         return this.fromString(value);
       }
 
-      this.m = 0;
-      this.e = 0;
+      this.mantissa = 0;
+      this.exponent = 0;
       return this;
     };
 
@@ -700,33 +701,33 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       //  But it's not clear how to specifically write that.
       //  So I'll just settle with 'exponent >= 0 and difference between rounded
       //  and not rounded < 1e-9' as a quick fix.
-      // var result = this.m*Math.pow(10, this.e);
-      if (!isFinite(this.e)) {
+      // var result = this.mantissa*Math.pow(10, this.exponent);
+      if (!isFinite(this.exponent)) {
         return Number.NaN;
       }
 
-      if (this.e > NUMBER_EXP_MAX) {
-        return this.m > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+      if (this.exponent > NUMBER_EXP_MAX) {
+        return this.mantissa > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
       }
 
-      if (this.e < NUMBER_EXP_MIN) {
+      if (this.exponent < NUMBER_EXP_MIN) {
         return 0;
       } // SAFETY: again, handle 5e-324, -5e-324 separately
 
 
-      if (this.e === NUMBER_EXP_MIN) {
-        return this.m > 0 ? 5e-324 : -5e-324;
+      if (this.exponent === NUMBER_EXP_MIN) {
+        return this.mantissa > 0 ? 5e-324 : -5e-324;
       }
 
-      var result = this.m * powerOf10(this.e);
+      var result = this.mantissa * powerOf10(this.exponent);
 
-      if (!isFinite(result) || this.e < 0) {
+      if (!isFinite(result) || this.exponent < 0) {
         return result;
       }
 
       var resultRounded = Math.round(result);
 
-      if (Math.abs(resultRounded - result) < ROUND_TOLERANCE) {
+      if (Math.abs(resultRounded - result) < 1e-10) {
         return resultRounded;
       }
 
@@ -735,38 +736,38 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
     Decimal.prototype.mantissaWithDecimalPlaces = function (places) {
       // https://stackoverflow.com/a/37425022
-      if (isNaN(this.m) || isNaN(this.e)) {
+      if (isNaN(this.mantissa) || isNaN(this.exponent)) {
         return Number.NaN;
       }
 
-      if (this.m === 0) {
+      if (this.mantissa === 0) {
         return 0;
       }
 
       var len = places + 1;
-      var numDigits = Math.ceil(Math.log10(Math.abs(this.m)));
-      var rounded = Math.round(this.m * Math.pow(10, len - numDigits)) * Math.pow(10, numDigits - len);
+      var numDigits = Math.ceil(Math.log10(Math.abs(this.mantissa)));
+      var rounded = Math.round(this.mantissa * Math.pow(10, len - numDigits)) * Math.pow(10, numDigits - len);
       return parseFloat(rounded.toFixed(Math.max(len - numDigits, 0)));
     };
 
     Decimal.prototype.toString = function () {
-      if (isNaN(this.m) || isNaN(this.e)) {
+      if (isNaN(this.mantissa) || isNaN(this.exponent)) {
         return "NaN";
       }
 
-      if (this.e >= EXP_LIMIT) {
-        return this.m > 0 ? "Infinity" : "-Infinity";
+      if (this.exponent >= EXP_LIMIT) {
+        return this.mantissa > 0 ? "Infinity" : "-Infinity";
       }
 
-      if (this.e <= -EXP_LIMIT || this.m === 0) {
+      if (this.exponent <= -EXP_LIMIT || this.mantissa === 0) {
         return "0";
       }
 
-      if (this.e < 21 && this.e > -7) {
+      if (this.exponent < 21 && this.exponent > -7) {
         return this.toNumber().toString();
       }
 
-      return this.m + "e" + (this.e >= 0 ? "+" : "") + this.e;
+      return this.mantissa + "e" + (this.exponent >= 0 ? "+" : "") + this.exponent;
     };
 
     Decimal.prototype.toExponential = function (places) {
@@ -778,22 +779,22 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       //  "1.000000000000000000e-999"
       // TBH I'm tempted to just say it's a feature.
       // If you're doing pretty formatting then why don't you know how many decimal places you want...?
-      if (isNaN(this.m) || isNaN(this.e)) {
+      if (isNaN(this.mantissa) || isNaN(this.exponent)) {
         return "NaN";
       }
 
-      if (this.e >= EXP_LIMIT) {
-        return this.m > 0 ? "Infinity" : "-Infinity";
+      if (this.exponent >= EXP_LIMIT) {
+        return this.mantissa > 0 ? "Infinity" : "-Infinity";
       }
 
-      if (this.e <= -EXP_LIMIT || this.m === 0) {
+      if (this.exponent <= -EXP_LIMIT || this.mantissa === 0) {
         return "0" + (places > 0 ? padEnd(".", places + 1, "0") : "") + "e+0";
       } // two cases:
       // 1) exponent is < 308 and > -324: use basic toFixed
       // 2) everything else: we have to do it ourselves!
 
 
-      if (this.e > NUMBER_EXP_MIN && this.e < NUMBER_EXP_MAX) {
+      if (this.exponent > NUMBER_EXP_MIN && this.exponent < NUMBER_EXP_MAX) {
         return this.toNumber().toExponential(places);
       }
 
@@ -802,41 +803,41 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       }
 
       var len = places + 1;
-      var numDigits = Math.max(1, Math.ceil(Math.log10(Math.abs(this.m))));
-      var rounded = Math.round(this.m * Math.pow(10, len - numDigits)) * Math.pow(10, numDigits - len);
-      return rounded.toFixed(Math.max(len - numDigits, 0)) + "e" + (this.e >= 0 ? "+" : "") + this.e;
+      var numDigits = Math.max(1, Math.ceil(Math.log10(Math.abs(this.mantissa))));
+      var rounded = Math.round(this.mantissa * Math.pow(10, len - numDigits)) * Math.pow(10, numDigits - len);
+      return rounded.toFixed(Math.max(len - numDigits, 0)) + "e" + (this.exponent >= 0 ? "+" : "") + this.exponent;
     };
 
     Decimal.prototype.toFixed = function (places) {
-      if (isNaN(this.m) || isNaN(this.e)) {
+      if (isNaN(this.mantissa) || isNaN(this.exponent)) {
         return "NaN";
       }
 
-      if (this.e >= EXP_LIMIT) {
-        return this.m > 0 ? "Infinity" : "-Infinity";
+      if (this.exponent >= EXP_LIMIT) {
+        return this.mantissa > 0 ? "Infinity" : "-Infinity";
       }
 
-      if (this.e <= -EXP_LIMIT || this.m === 0) {
+      if (this.exponent <= -EXP_LIMIT || this.mantissa === 0) {
         return "0" + (places > 0 ? padEnd(".", places + 1, "0") : "");
       } // two cases:
       // 1) exponent is 17 or greater: just print out mantissa with the appropriate number of zeroes after it
       // 2) exponent is 16 or less: use basic toFixed
 
 
-      if (this.e >= MAX_SIGNIFICANT_DIGITS) {
-        return this.m.toString().replace(".", "").padEnd(this.e + 1, "0") + (places > 0 ? padEnd(".", places + 1, "0") : "");
+      if (this.exponent >= MAX_SIGNIFICANT_DIGITS) {
+        return this.mantissa.toString().replace(".", "").padEnd(this.exponent + 1, "0") + (places > 0 ? padEnd(".", places + 1, "0") : "");
       }
 
-      return this.toNumber().toFixed(places);
+      return this.toNumber().toFixed(places + 1);
     };
 
     Decimal.prototype.toPrecision = function (places) {
-      if (this.e <= -7) {
+      if (this.exponent <= -7) {
         return this.toExponential(places - 1);
       }
 
-      if (places > this.e) {
-        return this.toFixed(places - this.e - 1);
+      if (places > this.exponent) {
+        return this.toFixed(places - this.exponent - 1);
       }
 
       return this.toExponential(places - 1);
@@ -855,11 +856,11 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.abs = function () {
-      return ME_NN(Math.abs(this.m), this.e);
+      return ME_NN(Math.abs(this.mantissa), this.exponent);
     };
 
     Decimal.prototype.neg = function () {
-      return ME_NN(-this.m, this.e);
+      return ME_NN(-this.mantissa, this.exponent);
     };
 
     Decimal.prototype.negate = function () {
@@ -871,7 +872,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.sign = function () {
-      return Math.sign(this.m);
+      return Math.sign(this.mantissa);
     };
 
     Decimal.prototype.sgn = function () {
@@ -879,11 +880,11 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.round = function () {
-      if (this.e < -1) {
+      if (this.exponent < -1) {
         return new Decimal(0);
       }
 
-      if (this.e < MAX_SIGNIFICANT_DIGITS) {
+      if (this.exponent < MAX_SIGNIFICANT_DIGITS) {
         return new Decimal(Math.round(this.toNumber()));
       }
 
@@ -891,11 +892,11 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.floor = function () {
-      if (this.e < -1) {
-        return Math.sign(this.m) >= 0 ? new Decimal(0) : new Decimal(-1);
+      if (this.exponent < -1) {
+        return Math.sign(this.mantissa) >= 0 ? new Decimal(0) : new Decimal(-1);
       }
 
-      if (this.e < MAX_SIGNIFICANT_DIGITS) {
+      if (this.exponent < MAX_SIGNIFICANT_DIGITS) {
         return new Decimal(Math.floor(this.toNumber()));
       }
 
@@ -903,11 +904,11 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.ceil = function () {
-      if (this.e < -1) {
-        return Math.sign(this.m) > 0 ? new Decimal(1) : new Decimal(0);
+      if (this.exponent < -1) {
+        return Math.sign(this.mantissa) > 0 ? new Decimal(1) : new Decimal(0);
       }
 
-      if (this.e < MAX_SIGNIFICANT_DIGITS) {
+      if (this.exponent < MAX_SIGNIFICANT_DIGITS) {
         return new Decimal(Math.ceil(this.toNumber()));
       }
 
@@ -915,11 +916,11 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.trunc = function () {
-      if (this.e < 0) {
+      if (this.exponent < 0) {
         return new Decimal(0);
       }
 
-      if (this.e < MAX_SIGNIFICANT_DIGITS) {
+      if (this.exponent < MAX_SIGNIFICANT_DIGITS) {
         return new Decimal(Math.trunc(this.toNumber()));
       }
 
@@ -932,18 +933,18 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       // TODO: Optimizations and simplification may be possible, see https://github.com/Patashu/break_infinity.js/issues/8
       var decimal = D(value);
 
-      if (this.m === 0) {
+      if (this.mantissa === 0) {
         return decimal;
       }
 
-      if (decimal.m === 0) {
+      if (decimal.mantissa === 0) {
         return this;
       }
 
       var biggerDecimal;
       var smallerDecimal;
 
-      if (this.e >= decimal.e) {
+      if (this.exponent >= decimal.exponent) {
         biggerDecimal = this;
         smallerDecimal = decimal;
       } else {
@@ -951,13 +952,13 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
         smallerDecimal = this;
       }
 
-      if (biggerDecimal.e - smallerDecimal.e > MAX_SIGNIFICANT_DIGITS) {
+      if (biggerDecimal.exponent - smallerDecimal.exponent > MAX_SIGNIFICANT_DIGITS) {
         return biggerDecimal;
       } // Have to do this because adding numbers that were once integers but scaled down is imprecise.
       // Example: 299 + 18
 
 
-      return ME(Math.round(1e14 * biggerDecimal.m + 1e14 * smallerDecimal.m * powerOf10(smallerDecimal.e - biggerDecimal.e)), biggerDecimal.e - 14);
+      return ME(Math.round(1e14 * biggerDecimal.mantissa + 1e14 * smallerDecimal.mantissa * powerOf10(smallerDecimal.exponent - biggerDecimal.exponent)), biggerDecimal.exponent - 14);
     };
 
     Decimal.prototype.plus = function (value) {
@@ -981,16 +982,16 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       // mantissa is -10...10, any number short of MAX/10 can be safely multiplied in
       if (typeof value === "number") {
         if (value < 1e307 && value > -1e307) {
-          return ME(this.m * value, this.e);
+          return ME(this.mantissa * value, this.exponent);
         } // If the value is larger than 1e307, we can divide that out of mantissa (since it's
         // greater than 1, it won't underflow)
 
 
-        return ME(this.m * 1e-307 * value, this.e + 307);
+        return ME(this.mantissa * 1e-307 * value, this.exponent + 307);
       }
 
       var decimal = typeof value === "string" ? new Decimal(value) : value;
-      return ME(this.m * decimal.m, this.e + decimal.e);
+      return ME(this.mantissa * decimal.mantissa, this.exponent + decimal.exponent);
     };
 
     Decimal.prototype.multiply = function (value) {
@@ -1018,7 +1019,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.recip = function () {
-      return ME(1 / this.m, -this.e);
+      return ME(1 / this.mantissa, -this.exponent);
     };
 
     Decimal.prototype.reciprocal = function () {
@@ -1061,72 +1062,72 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       3e100
             */
 
-      if (this.m === 0) {
-        if (decimal.m === 0) {
+      if (this.mantissa === 0) {
+        if (decimal.mantissa === 0) {
           return 0;
         }
 
-        if (decimal.m < 0) {
+        if (decimal.mantissa < 0) {
           return 1;
         }
 
-        if (decimal.m > 0) {
+        if (decimal.mantissa > 0) {
           return -1;
         }
       }
 
-      if (decimal.m === 0) {
-        if (this.m < 0) {
+      if (decimal.mantissa === 0) {
+        if (this.mantissa < 0) {
           return -1;
         }
 
-        if (this.m > 0) {
+        if (this.mantissa > 0) {
           return 1;
         }
       }
 
-      if (this.m > 0) {
-        if (decimal.m < 0) {
+      if (this.mantissa > 0) {
+        if (decimal.mantissa < 0) {
           return 1;
         }
 
-        if (this.e > decimal.e) {
+        if (this.exponent > decimal.exponent) {
           return 1;
         }
 
-        if (this.e < decimal.e) {
+        if (this.exponent < decimal.exponent) {
           return -1;
         }
 
-        if (this.m > decimal.m) {
+        if (this.mantissa > decimal.mantissa) {
           return 1;
         }
 
-        if (this.m < decimal.m) {
+        if (this.mantissa < decimal.mantissa) {
           return -1;
         }
 
         return 0;
       }
 
-      if (this.m < 0) {
-        if (decimal.m > 0) {
+      if (this.mantissa < 0) {
+        if (decimal.mantissa > 0) {
           return -1;
         }
 
-        if (this.e > decimal.e) {
+        if (this.exponent > decimal.exponent) {
           return -1;
         }
 
-        if (this.e < decimal.e) {
+        if (this.exponent < decimal.exponent) {
           return 1;
         }
 
-        if (this.m > decimal.m) {
+        if (this.mantissa > decimal.mantissa) {
           return 1;
         }
 
-        if (this.m < decimal.m) {
+        if (this.mantissa < decimal.mantissa) {
           return -1;
         }
 
@@ -1142,7 +1143,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
     Decimal.prototype.eq = function (value) {
       var decimal = D(value);
-      return this.e === decimal.e && this.m === decimal.m;
+      return this.exponent === decimal.exponent && this.mantissa === decimal.mantissa;
     };
 
     Decimal.prototype.equals = function (value) {
@@ -1160,23 +1161,23 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     Decimal.prototype.lt = function (value) {
       var decimal = D(value);
 
-      if (this.m === 0) {
-        return decimal.m > 0;
+      if (this.mantissa === 0) {
+        return decimal.mantissa > 0;
       }
 
-      if (decimal.m === 0) {
-        return this.m <= 0;
+      if (decimal.mantissa === 0) {
+        return this.mantissa <= 0;
       }
 
-      if (this.e === decimal.e) {
-        return this.m < decimal.m;
+      if (this.exponent === decimal.exponent) {
+        return this.mantissa < decimal.mantissa;
       }
 
-      if (this.m > 0) {
-        return decimal.m > 0 && this.e < decimal.e;
+      if (this.mantissa > 0) {
+        return decimal.mantissa > 0 && this.exponent < decimal.exponent;
       }
 
-      return decimal.m > 0 || this.e > decimal.e;
+      return decimal.mantissa > 0 || this.exponent > decimal.exponent;
     };
 
     Decimal.prototype.lte = function (value) {
@@ -1186,23 +1187,23 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     Decimal.prototype.gt = function (value) {
       var decimal = D(value);
 
-      if (this.m === 0) {
-        return decimal.m < 0;
+      if (this.mantissa === 0) {
+        return decimal.mantissa < 0;
       }
 
-      if (decimal.m === 0) {
-        return this.m > 0;
+      if (decimal.mantissa === 0) {
+        return this.mantissa > 0;
       }
 
-      if (this.e === decimal.e) {
-        return this.m > decimal.m;
+      if (this.exponent === decimal.exponent) {
+        return this.mantissa > decimal.mantissa;
       }
 
-      if (this.m > 0) {
-        return decimal.m < 0 || this.e > decimal.e;
+      if (this.mantissa > 0) {
+        return decimal.mantissa < 0 || this.exponent > decimal.exponent;
       }
 
-      return decimal.m < 0 && this.e < decimal.e;
+      return decimal.mantissa < 0 && this.exponent < decimal.exponent;
     };
 
     Decimal.prototype.gte = function (value) {
@@ -1286,15 +1287,15 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.log10 = function () {
-      return this.e + Math.log10(this.m);
+      return this.exponent + Math.log10(this.mantissa);
     };
 
     Decimal.prototype.absLog10 = function () {
-      return this.e + Math.log10(Math.abs(this.m));
+      return this.exponent + Math.log10(Math.abs(this.mantissa));
     };
 
     Decimal.prototype.pLog10 = function () {
-      return this.m <= 0 || this.e < 0 ? 0 : this.log10();
+      return this.mantissa <= 0 || this.exponent < 0 ? 0 : this.log10();
     };
 
     Decimal.prototype.log = function (base) {
@@ -1322,14 +1323,14 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       var numberValue = value instanceof Decimal ? value.toNumber() : value; // TODO: Fast track seems about neutral for performance.
       //  It might become faster if an integer pow is implemented,
       //  or it might not be worth doing (see https://github.com/Patashu/break_infinity.js/issues/4 )
-      // Fast track: If (this.e*value) is an integer and mantissa^value
+      // Fast track: If (this.exponent*value) is an integer and mantissa^value
       // fits in a Number, we can do a very fast method.
 
-      var temp = this.e * numberValue;
+      var temp = this.exponent * numberValue;
       var newMantissa;
 
       if (Number.isSafeInteger(temp)) {
-        newMantissa = Math.pow(this.m, numberValue);
+        newMantissa = Math.pow(this.mantissa, numberValue);
 
         if (isFinite(newMantissa) && newMantissa !== 0) {
           return ME(newMantissa, temp);
@@ -1339,7 +1340,7 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
 
       var newExponent = Math.trunc(temp);
       var residue = temp - newExponent;
-      newMantissa = Math.pow(10, numberValue * Math.log10(this.m) + residue);
+      newMantissa = Math.pow(10, numberValue * Math.log10(this.mantissa) + residue);
 
       if (isFinite(newMantissa) && newMantissa !== 0) {
         return ME(newMantissa, newExponent);
@@ -1378,29 +1379,29 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
     };
 
     Decimal.prototype.sqr = function () {
-      return ME(Math.pow(this.m, 2), this.e * 2);
+      return ME(Math.pow(this.mantissa, 2), this.exponent * 2);
     };
 
     Decimal.prototype.sqrt = function () {
-      if (this.m < 0) {
+      if (this.mantissa < 0) {
         return new Decimal(Number.NaN);
       }
 
-      if (this.e % 2 !== 0) {
-        return ME(Math.sqrt(this.m) * 3.16227766016838, Math.floor(this.e / 2));
+      if (this.exponent % 2 !== 0) {
+        return ME(Math.sqrt(this.mantissa) * 3.16227766016838, Math.floor(this.exponent / 2));
       } // Mod of a negative number is negative, so != means '1 or -1'
 
 
-      return ME(Math.sqrt(this.m), Math.floor(this.e / 2));
+      return ME(Math.sqrt(this.mantissa), Math.floor(this.exponent / 2));
     };
 
     Decimal.prototype.cube = function () {
-      return ME(Math.pow(this.m, 3), this.e * 3);
+      return ME(Math.pow(this.mantissa, 3), this.exponent * 3);
     };
 
     Decimal.prototype.cbrt = function () {
       var sign = 1;
-      var mantissa = this.m;
+      var mantissa = this.mantissa;
 
       if (mantissa < 0) {
         sign = -1;
@@ -1408,18 +1409,18 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       }
 
       var newMantissa = sign * Math.pow(mantissa, 1 / 3);
-      var mod = this.e % 3;
+      var mod = this.exponent % 3;
 
       if (mod === 1 || mod === -1) {
-        return ME(newMantissa * 2.1544346900318837, Math.floor(this.e / 3));
+        return ME(newMantissa * 2.1544346900318837, Math.floor(this.exponent / 3));
       }
 
       if (mod !== 0) {
-        return ME(newMantissa * 4.6415888336127789, Math.floor(this.e / 3));
+        return ME(newMantissa * 4.6415888336127789, Math.floor(this.exponent / 3));
       } // mod != 0 at this point means 'mod == 2 || mod == -2'
 
 
-      return ME(newMantissa, Math.floor(this.e / 3));
+      return ME(newMantissa, Math.floor(this.exponent / 3));
     }; // Some hyperbolic trig functions that happen to be easy
 
 
@@ -1487,65 +1488,8 @@ Number.isSafeInteger = Number.isSafeInteger || function (value) {
       return this.cmp(other) > 0;
     };
 
-    Decimal.prototype.decimalPlaces = function () {
-      return this.dp();
-    };
-
-    Decimal.prototype.dp = function () {
-      if (!isFinite(this.mantissa)) {
-        return NaN;
-      }
-
-      if (this.exponent >= MAX_SIGNIFICANT_DIGITS) {
-        return 0;
-      }
-
-      var mantissa = this.mantissa;
-      var places = -this.exponent;
-      var e = 1;
-
-      while (Math.abs(Math.round(mantissa * e) / e - mantissa) > ROUND_TOLERANCE) {
-        e *= 10;
-        places++;
-      }
-
-      return places > 0 ? places : 0;
-    };
-
-    Object.defineProperty(Decimal, "MAX_VALUE", {
-      get: function get() {
-        return MAX_VALUE;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(Decimal, "MIN_VALUE", {
-      get: function get() {
-        return MIN_VALUE;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(Decimal, "NUMBER_MAX_VALUE", {
-      get: function get() {
-        return NUMBER_MAX_VALUE;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(Decimal, "NUMBER_MIN_VALUE", {
-      get: function get() {
-        return NUMBER_MIN_VALUE;
-      },
-      enumerable: true,
-      configurable: true
-    });
     return Decimal;
   }();
-  var MAX_VALUE = ME_NN(1, EXP_LIMIT);
-  var MIN_VALUE = ME_NN(1, -EXP_LIMIT);
-  var NUMBER_MAX_VALUE = D(Number.MAX_VALUE);
-  var NUMBER_MIN_VALUE = D(Number.MIN_VALUE);
 
   return Decimal;
 

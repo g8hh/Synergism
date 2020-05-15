@@ -157,3 +157,9 @@ function toggleResearchBuy() {
     }
     else {maxbuyresearch = true; document.getElementById("toggleresearchbuy").textContent = "Upgrade: MAX [if possible]"}
 }
+
+function toggleFocus(i) {
+    if (i==1){document.getElementById("prestigeautotoggle").focus();}
+    if (i==2){document.getElementById("transcendamount").focus();}
+    if (i==3){document.getElementById("reincarnationamount").focus();}
+}

@@ -24,7 +24,9 @@ var achievementpointvalues = [0, 1, 2, 4, 6, 8, 9, 10,
 1, 2, 4, 6, 8, 9, 10,
 1, 2, 4, 6, 8, 9, 10,]
 
-var totalachievementpoints = achievementpointvalues.reduce((a, b) => a + b, 0)
+var totalachievementpoints = achievementpointvalues.reduce(function(a, b) { 
+    return a + b
+}, 0);
 
 var adesc1 = "A Loyal Employee: Hire your first worker."
 var adesc2 = "Small Business: Hire 10 workers."
@@ -79,7 +81,7 @@ var adesc50 = "Going Quantum: Reincarnate for at least 1 Particle."
 var adesc51 = "Tunneling Vision: Reincarnate for at least 100,000 Particles."
 var adesc52 = "Simulating the World: Reincarnate for at least 1e+30 Particles."
 var adesc53 = "Multidimensional Creation: Reincarnate for at least 1e+200 Particles."
-var adesc54 = "Lepton Dance: Reincarnate for at least 1e+1000 Particles."
+var adesc54 = "Lepton Dance: Reincarnate for at least 1e+1500 Particles."
 var adesc55 = "Do we have enough yet?: Reincarnate for at least 1e+5000 Particles."
 var adesc56 = "I Feel Luck in My Cells: Reincarnate for at least 1e+7777 Particles."
 var adesc57 = "One Way Only: Prestige without buying multipliers."
@@ -242,7 +244,9 @@ var areward45 = "Reduce tax scaling by up to 5%, depending on the length of pres
 var areward46 = "Reduce tax scaling by up to another 5%, depending on length of prestige."
 var areward47 = "Reduce tax scaling by up to ANOTHER 10%, depending on length of prestige!"
 var areward50 = "Unlock new Atomic production and unlock 3 new incredibly difficult challenges! Gain 2x particles on all future Reincarnations!"
-var areward51 = "Reincarnations give more offerings based on time spent (Up to +25 at 1800 seconds)"
+var areward51 = "Manual Reincarnations give +4 Obtainium (unaffected by multipliers except time multiplier)!"
+var areward52 = "Reincarnations give more offerings based on time spent (Up to +25 at 1800 seconds)"
+var areward53 = "Increase the amount of obtainium gained through all features by 0.05% additive for each rune level."
 var areward57 = "Gain +1, +1% free Multipliers!"
 var areward58 = "Gain +1, +1% more free Multipliers!"
 var areward59 = "Gain +1, +1% more, MORE free Multipliers!"
@@ -260,30 +264,41 @@ var areward78 = "Start transcensions/challenges with 1 Refinery and automaticall
 var areward79 = "Automatically buy the first crystal upgrade if you can afford it!"
 var areward80 = "Start transcensions/challenges with Multiplier Autobuyer unlocked. +5% chance to not spend an offering when sacrificing."
 var areward82 = "Delay tax growth by 4%."
+var areward84 = "+1% obtainium (stacks additively with other achievement rewards)"
 var areward85 = "Start transcensions/challenges with 1 Coal Plant and automatically buy Coal Plants."
 var areward86 = "Automatically buy the second crystal upgrade if you can afford it!"
 var areward87 = "Start transcensions/challenges with Accelerator Autobuyer unlocked. +5% chance to not spend an offering when sacrificing."
 var areward89 = "Delay tax growth by 4%."
+var areward91 = "+3% obtainium (stacks additively with other achievement rewards)"
 var areward92 = "Start transcensions/challenges with 1 Coal Rig and automatically buy Coal Rigs."
 var areward93 = "Automatically buy the third crystal upgrade if you can afford it!"
 var areward94 = "+5% chance to not spend an offering when sacrificing."
 var areward96 = "Delay tax growth by 4%."
+var areward98 = "+5% obtainium (stacks additively with other achievement rewards)"
 var areward99 = "Start transcensions/challenges with 1 Diamond Pickaxe and automatically buy Diamond Pickaxes."
 var areward100 = "Automatically buy the fourth crystal upgrade if you can afford it!"
 var areward101 = "+5% chance to not spend an offering when sacrificing."
 var areward102 = "Unlock the Thrift rune!"
 var areward103 = "Delay tax growth by 4%."
+var areward105 = "+7% obtainium (stacks additively with other achievement rewards)"
 var areward106 = "Start transcensions/challenges with 1 Pandora's Box and automatically buy Pandora's Boxes."
 var areward107 = "Automatically buy the fifth crystal upgrade if you can afford it!"
 var areward108 = "+5% chance to not spend an offering when sacrificing."
 var areward110 = "Delay tax growth by 4%."
+var areward112 = "+9% obtainium (stacks additively with other achievement rewards)"
 var areward115 = "+5% chance to not spend an offering when sacrificing."
 var areward117 = "Delay tax growth by 5.66%."
+var areward119 = "+11% obtainium (stacks additively with other achievement rewards)"
 var areward122= "+10% chance to not spend an offering when sacrificing."
 var areward123 = "Unlock 5 expensive yet powerful researches!"
 var areward124 = "Delay tax growth by 5.66%."
+var areward126 = "+13% obtainium (stacks additively with other achievement rewards)"
 var areward129= "+10% chance to not spend an offering when sacrificing."
 var areward131 = "Delay tax growth by 5.66%."
+var areward133 = "+15% obtainium (stacks additively with other achievement rewards)"
+var areward140 = "+17% obtainium (stacks additively with other achievement rewards)"
+var areward147 = "+19% obtainium (Achievement total is up to 100%!)"
+
 
 function resetachievementcheck(i) {
     if (i == 1) {
@@ -356,7 +371,7 @@ function resetachievementcheck(i) {
         if (transcendPointGain.greaterThanOrEqualTo(1e308)) {
             achievementaward(46)
         }
-        if (transcendPointGain.greaterThanOrEqualTo("1e2000")) {
+        if (transcendPointGain.greaterThanOrEqualTo("1e1500")) {
             achievementaward(47)
         }
         if (transcendPointGain.greaterThanOrEqualTo("1e25000")) {
@@ -417,7 +432,7 @@ function resetachievementcheck(i) {
 }
 
 
-function challengeachievementcheck(i,auto=false) {
+function challengeachievementcheck(i,auto) {
     var generatorcheck = Math.max(player.upgrades[101] + player.upgrades[102] + player.upgrades[103] + player.upgrades[104] + player.upgrades[105])
 if (i == 'one') {
     if (player.challengecompletions.one > 0.5) {achievementaward(78)}

@@ -1,4 +1,4 @@
-function buyGenerator(i, state, auto = false) {
+function buyGenerator(i, state, auto) {
     if (i == 1 && player.prestigePoints.greaterThanOrEqualTo(1e12) && player.unlocks.generation == false) {player.unlocks.generation = true}
     var q = 100 + i
     let type = "transcendPoints"

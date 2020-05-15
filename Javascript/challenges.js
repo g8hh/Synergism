@@ -1,4 +1,5 @@
-function challengeDisplay(i,changefocus = true,automated = false) {
+function challengeDisplay(i,changefocus, automated) {
+    changefocus = (changefocus === null || changefocus === undefined) ? true : changefocus;
     if (changefocus){challengefocus = i}
     if (i <= 5 && !automated) {document.getElementById("challengetotalscore").style.color = "plum"}
     if (i > 5 && i <= 8 && !automated) {document.getElementById("challengetotalscore").style.color = "limegreen"}
@@ -42,7 +43,7 @@ function challengeDisplay(i,changefocus = true,automated = false) {
     if (i == 6 && challengefocus == 6) {
         document.getElementById("challengedescription").textContent = "Reincarnate and reach your target, except tax scales immediately and much faster. Production is also divided by a further 1e250."
         document.getElementById("challengetotalscore").textContent = "Times Completed: " +player.challengecompletions.six + "/25. Goal: Gain " + format(Decimal.pow(10, challengebaserequirementsrein.six * Math.pow(1 + player.challengecompletions.six, 2))) + " Mythos Shards."
-        document.getElementById("challengereward").textContent = "Reward: Taxes scale 2-4% slower per completion with effect scaling based on building power. The thrift rune is 2% less expensive to level per completion (applies retroactively!). First completion divides tax growth by a further 1.075! " + c
+        document.getElementById("challengereward").textContent = "Reward: Taxes scale 3.5% slower per completion MULTIPLICATIVELY. The thrift rune is 2% less expensive to level per completion (applies retroactively!). First completion divides tax growth by a further 1.075! " + c
     }
     if (i == 7 && challengefocus == 7) {
         document.getElementById("challengedescription").textContent = "Reincarnate and reach your target, except Multipliers and Accelerators do nothing. Your production is also divided by a further 1e1,250 and building power is siginificantly reduced."

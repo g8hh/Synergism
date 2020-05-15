@@ -63,7 +63,12 @@ function promocodes(i) {
  */
 function exportSynergism() {
     player.offlinetick = Date.now();
+    if (player.quarkstimer >= 3600){
+        player.worlds += Math.floor(player.quarkstimer/3600);
+        player.quarkstimer = (player.quarkstimer % 3600)
+    }
     saveSynergy();
+
     if('clipboardData' in window) {
         window.clipboardData.setData('Text', localStorage.getItem('Synergysave2'));
         return;
@@ -78,8 +83,8 @@ function exportSynergism() {
     document.getElementById("exportinfo").textContent = "Savefile copied to file!"
 }
 
-function importSynergism() {
-    const input = prompt("Got a save? Great! Just paste it below.");
+function importSynergism(input) {
+    console.log(input)
     try {
         const data = JSON.parse(atob(input));
         if (data.exporttest === "YES!" && data.kongregatetest !== "YES!") {
@@ -133,21 +138,39 @@ function promocodes() {
         player.runeshards += p
         el.textContent = "Promo Code 'synergism1008' Applied! +25 Quarks, +" + p + " Offerings."
     }
-    else if (input == "transcendlol" && (player.version == "1.0081" || player.version == "1.0082") && player.offerpromo14used == false){
+    else if (input == "transcendlol" && (player.version == "1.0081" || player.version == "1.0082" || player.version == "1.0084") && player.offerpromo14used == false){
         player.offerpromo14used = true;
         player.worlds += 25;
 
         el.textContent = "Promo Code 'transcendlol' Applied! +25 Quarks."
     }
-    else if (input == "111111hype" && (player.version == "1.0082") && player.offerpromo15used == false){
+    else if (input == "111111hype" && (player.version == "1.0082" || player.version == "1.0084") && player.offerpromo15used == false){
         player.offerpromo15used = true;
         player.worlds += 200;
 
         el.textContent = "Thank you for playing Synergism! I'm a bit late on the 100k celebration so here's the next best thing. +200 Quarks! [Oh and 111111hype applied!]"
     }
-    else {el.textContent = "I don't think you put that code in right, or your code is simply not valid. Try again!"}
-    if(el.textContent.length) {
-        // remove text after 5 seconds
-        setTimeout(() => el.textContent = '', 15000);
+    else if (input == "oops" && (player.version == "1.0082" || player.version == "1.0084") && player.offerpromo16used == false){
+        player.offerpromo16used = true;
+        player.worlds += 200;
+        var p = 200
+        if (player.brokenfile1 == true){
+        player.worlds += 300
+        p += 300
+        }
+
+        el.textContent = "Sorry for the balances, but it was necessary to prevent saves from breaking. Enjoy a nice reward! +" + p + " Quarks."
     }
+    else if (input == "patience" && (player.version == "1.0084") && player.offerpromo17used == false){
+        player.offerpromo17used = true
+        player.worlds += 99
+
+        el.textContent = "Here's 99 Quarks for waiting for the update!"
+     } else {
+        el.textContent = "I don't think you put that code in right, or your code is simply not valid. Try again!"
+    }
+        
+    setTimeout(function() {
+        el.textContent = ''
+    }, 15000);
 }

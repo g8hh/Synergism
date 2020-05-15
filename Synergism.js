@@ -220,6 +220,7 @@ const player = {
 			  researchPoints: 0,
 			  obtainiumtimer: 0,
 			  obtainiumlocktoggle: false,
+			  obtainiumpersecond: 0,
 			  maxobtainium: 0,
 			  // Ignore the first index. The other 25 are shaped in a 5x5 grid similar to the production appearance
 			  researches: [0, 0, 0, 0, 0, 0,
@@ -306,6 +307,7 @@ const player = {
 			  runeshards: 0,
 			  offeringlocktoggle: false,
 			  maxofferings: 0,
+			  offeringpersecond: 0,
 
 			  prestigecounter: 0,
 			  transcendcounter: 0,
@@ -355,6 +357,12 @@ const player = {
 			  offerpromo13used: false,
 			  offerpromo14used: false,
 			  offerpromo15used: false,
+			  offerpromo16used: false,
+			  offerpromo17used: false,
+
+			  quarkstimer: 90000,
+
+			  brokenfile1: false,
 			  exporttest: "YES!",
 			  kongregatetest: "NO!"
 }
@@ -362,71 +370,37 @@ const player = {
 Object.defineProperty(player, 'version', {
    configurable: false,
    enumerable: true,
-   value: '1.0082'
+   value: '1.0084'
 });
 
-function saveSynergy(button = false) {
-   player.offlinetick = Date.now()
-   const p = player; // temp hold
+function saveSynergy(button) {
+   	player.offlinetick = Date.now()
+	   
+   	const p = player; // temp hold
+	delete p.version; // don't save
+   	localStorage.setItem("Synergysave2", btoa(JSON.stringify(p)));	
 
-   delete p.version; // don't save
-   localStorage.setItem("Synergysave2", btoa(JSON.stringify(p)));	
-
-   if (button){
-   var el = document.getElementById("saveinfo")
-   el.textContent = "Game saved successfully!"
-   if (el.textContent.length) {
-	setTimeout(() => el.textContent = '', 4000);
-   }
-   }
+   	if (button) {
+		let el = document.getElementById("saveinfo").textContent;
+		el = "Game saved successfully!"
+		setTimeout(function() {
+			el = '';
+		}, 4000);
+   	}
 }
 
 
 
-function loadSynergy(imported = 0) {
-   
-   
-   /*document.addEventListener("keydown", function onPress(event) {
-	   var type = ""
-	   var pos = ""
-	   var num = 0
-	   if (event.key === "1") {var pos = "first"; num += 1; if (currentTab == "challenges") {toggleChallenges('one')}; if (currentTab == "runes"){redeemshards(1)}}
-	   if (event.key === "2") {var pos = "second"; num += 2; if (currentTab == "challenges") {toggleChallenges('two')}; if (currentTab == "runes"){redeemshards(2)}}
-	   if (event.key === "3") {var pos = "third"; num += 3; if (currentTab == "challenges") {toggleChallenges('three')}; if (currentTab == "runes"){redeemshards(3)}}
-	   if (event.key === "4") {var pos = "fourth"; num += 4; if (currentTab == "challenges") {toggleChallenges('four')}; if (currentTab == "runes"){redeemshards(4)}}
-	   if (event.key === "5") {var pos = "fifth"; num += 5; if (currentTab == "challenges") {toggleChallenges('five')}}
-	   if (event.key === "6") {buyCrystalUpgrades(1)}
-	   if (event.key === "7") {buyCrystalUpgrades(2)}
-	   if (event.key === "8") {buyCrystalUpgrades(3)}
-	   if (event.key === "9") {buyCrystalUpgrades(4)}
-	   if (event.key === "0") {buyCrystalUpgrades(5)}
-	   if (currentTab == "buildings") {var type = "Coin"}
-	   if (currentTab == "prestige") {var type = "Diamonds"; num = 1/2 * (Math.pow(num, 2) + num)}
-	   if (currentTab == "transcension") {var type = "Mythos"; num = 1/2 * (Math.pow(num, 2) + num)}
-	   if (currentTab == "reincarnation") {var type = "Particles"; num = 1/2 * (Math.pow(num, 2) + num)}
-	   if (event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5") {buyProducer(pos, type, num)}
-	   if ((event.key === "A" || event.key === "a") && currentTab == "buildings") {buyAccelerator()}
-	   if ((event.key === "B" || event.key === "b") && currentTab == "buildings") {boostAccelerator()}
-	   if ((event.key === "M" || event.key === "m") && currentTab == "buildings") {buyMultiplier()}
-	   if ((event.key === "P") || event.key === "p") {resetCheck('prestige')}
-	   if ((event.key === "T") || event.key === "t") {resetCheck('transcend')}
-	   if ((event.key === "R") || event.key === "r") {resetCheck('reincarnate')}
-	   if ((event.key === "E" || event.key === "e") && player.currentChallenge !== "") {resetCheck('challenge')}	
-	   
-	   if ((event.key === "ArrowLeft")) {keyboardtabchange(-1)}
-	   if ((event.key === "ArrowRight")) {keyboardtabchange(1)}
-   }); */
-   
-
+function loadSynergy() {
    const string = localStorage.getItem("Synergysave2");
    const data = string ? JSON.parse(atob(string)) : null;
 
    if (data) {
-	   function isDecimal(o = {}) {
+	   function isDecimal(o) {
 		   if(!(o instanceof Object)) {
 			   return false;
 		   }
-		   return Object.keys(o).length === 2 && Object.keys(o).every(function(v) { return ['mantissa', 'exponent'].includes(v) });
+		   return Object.keys(o).length === 2 && Object.keys(o).every(function(v) { return ['mantissa', 'exponent'].indexOf(v) > -1 });
 	   }
 
 	   if(data.version) {
@@ -562,6 +536,40 @@ function loadSynergy(imported = 0) {
 		if (player.researchPoints > 1.5e9){player.researchPoints = 1.5e9; player.maxobtainium = 1.5e9;};
 
 	}
+	if (player.offerpromo16used === undefined){
+		player.offerpromo16used = false;
+		player.brokenfile1 = false;
+	}
+	if (player.offerpromo17used === undefined || player.researches[31] > 10){
+		player.offerpromo17used = false;
+		player.offeringpersecond = 0;
+		player.obtainiumpersecond = 0;
+		player.quarkstimer = 90000;
+		player.researchPoints += (100 * player.researches[31] + 1000 * player.researches[32]);
+		player.researches[31] = 0;
+		player.researches[32] = 0;
+	}
+
+	if (player.reincarnationPoints.greaterThanOrEqualTo("1e1777") && player.version == "1.0084" && (player.brokenfile1 == false || player.brokenfile1 === undefined)){
+		reset(3);
+		player.reincarnationPoints = new Decimal("1e1000");
+		player.transcendPoints = new Decimal("0");
+		player.prestigePoints = new Decimal("0");
+		player.challengecompletions.six = 20;
+		player.challengecompletions.seven = 10;
+		player.brokenfile1 = true;
+		player.firstOwnedParticles = 0;
+		player.secondOwnedParticles = 0;
+		player.thirdOwnedParticles = 0;
+		player.fourthOwnedParticles = 0;
+		player.fifthOwnedParticles = 0;
+		player.firstCostParticles = new Decimal("1");
+		player.secondCostParticles = new Decimal("100");
+		player.thirdCostParticles = new Decimal("1e4");
+		player.fourthCostParticles = new Decimal("1e8");
+		player.fifthCostParticles = new Decimal("1e16");
+
+	}
 
 		if (player.transcendCount < 0){player.transcendCount = 0};
 		if (player.reincarnationCount < 0){player.reincarnationCount = 0;};
@@ -659,7 +667,12 @@ if ((updatedtime - player.offlinetick) > 10000) {
 	player.prestigecounter += timeadd;
 	player.transcendcounter += timeadd;
 	player.reincarnationcounter += timeadd;
+
+	player.quarkstimer += timeadd
+	if(player.quarkstimer >= 90000){player.quarkstimer = 90000}
 	
+	if (timeadd >= 3600){player.researchPoints = Math.floor((player.researches[31]/20 + player.researches[32]/20) * player.obtainiumpersecond * (timeadd - 3600))}
+	console.log("Offline progress has allowed you to gain " + Math.floor((player.researches[31]/20 + player.researches[32]/20) * player.obtainiumpersecond * (timeadd - 3600)) + " obtainium!")
 	if (player.researches[61] > 0.5) {
 		player.obtainiumtimer += timeadd
 		resetCurrency();
@@ -715,12 +728,10 @@ document.getElementById("preload").style.display = "none"
 
 //
 
-function updatetimer() {
-	player.offlinetick = Date.now();
-    saveSynergy();
-}
+
 
 function format(input, accuracy = 0, short = true) {
+	accuracy = accuracy || 0;
 	if (input instanceof Decimal) {
 		var power = input.e
 		var matissa = input.mantissa
@@ -788,36 +799,16 @@ function updateAllTick() {
 	
 	costDivisor = 1;
 
-    if (player.upgrades[8] > 0.5) {
-        a += Math.floor(player.multiplierBought / 7);
-    }
-    if (player.upgrades[21] > 0.5) {
-        a += 5;
-    }
-    if (player.upgrades[22] > 0.5) {
-        a += 4;
-    }
-    if (player.upgrades[23] > 0.5) {
-        a += 3;
-	}
-	if (player.upgrades[24] > 0.5) {
-		a += 2;
-	}
-	if (player.upgrades[25] > 0.5) {
-		a += 1;
-	}
-    if (player.upgrades[27] > 0.5) {
-        a += Math.min(250, Math.floor(Decimal.log(player.coins.add(1), 1e3))) + Math.min(1750, Math.max(0, Math.floor(Decimal.log(player.coins.add(1),1e15)) - 50));
-    }
-    if (player.upgrades[29] > 0.5) {
-        a += Math.floor(Math.min(2000,(player.firstOwnedCoin + player.secondOwnedCoin + player.thirdOwnedCoin + player.fourthOwnedCoin + player.fifthOwnedCoin) / 80))
-    }
-    if (player.upgrades[32] > 0.5) {
-        a += Math.min(500, Math.floor(Decimal.log(player.prestigePoints.add(1), 1e25)));
-    }
-    if (player.upgrades[45] > 0.5) {
-        a += Math.min(2500, Math.floor(Decimal.log(player.transcendShards.add(1), 10)));
-	}
+    if (player.upgrades[8] > 0.5) {a += Math.floor(player.multiplierBought / 7);}
+    if (player.upgrades[21] > 0.5) {a += 5;}
+    if (player.upgrades[22] > 0.5) {a += 4;}
+    if (player.upgrades[23] > 0.5) {a += 3;}
+	if (player.upgrades[24] > 0.5) {a += 2;}
+	if (player.upgrades[25] > 0.5) {a += 1;}
+    if (player.upgrades[27] > 0.5) {a += Math.min(250, Math.floor(Decimal.log(player.coins.add(1), 1e3))) + Math.min(1750, Math.max(0, Math.floor(Decimal.log(player.coins.add(1),1e15)) - 50));}
+    if (player.upgrades[29] > 0.5) {a += Math.floor(Math.min(2000,(player.firstOwnedCoin + player.secondOwnedCoin + player.thirdOwnedCoin + player.fourthOwnedCoin + player.fifthOwnedCoin) / 80))}
+    if (player.upgrades[32] > 0.5) {a += Math.min(500, Math.floor(Decimal.log(player.prestigePoints.add(1), 1e25)));}
+    if (player.upgrades[45] > 0.5) {a += Math.min(2500, Math.floor(Decimal.log(player.transcendShards.add(1), 10)));}
 	if (player.achievements[5] > 0.5) {a += Math.floor(player.firstOwnedCoin / 500)}
 	if (player.achievements[12] > 0.5) {a += Math.floor(player.secondOwnedCoin / 500)}
 	if (player.achievements[19] > 0.5) {a += Math.floor(player.thirdOwnedCoin / 500)}
@@ -828,12 +819,8 @@ function updateAllTick() {
 	if (player.achievements[62] > 0.5) {a += 2}
 	
 	b = 0
-	if (player.upgrades[26] > 0.5) {
-		b += 1;
-	}
-	if (player.upgrades[31] > 0.5) {
-		b += Math.floor(totalCoinOwned/2000) * 100/100
-	}
+	if (player.upgrades[26] > 0.5) {b += 1;}
+	if (player.upgrades[31] > 0.5) {b += Math.floor(totalCoinOwned/2000) * 100/100}
 	if (player.achievements[7] > 0.5){b += Math.floor(player.firstOwnedCoin/2000)}
 	if (player.achievements[14] > 0.5){b += Math.floor(player.secondOwnedCoin/2000)}
 	if (player.achievements[21] > 0.5){b += Math.floor(player.thirdOwnedCoin/2000)}
@@ -996,7 +983,10 @@ function updateAllMultiplier() {
 
 	let b = 0;
 	let c = 0;
-	b += Decimal.log(player.transcendShards.add(1), challengeOneLog - 1/80 * player.researches[31] - 1/100 * player.researches[32] - 3/400 * player.researches[33] - 1/200 * player.researches[34] - 1/400 * player.researches[35]);
+	b += Decimal.log(player.transcendShards.add(1), 3);
+	b *= (1 + player.researches[33]/50)
+	b *= (1 + player.researches[34]/50)
+	b *= (1 + player.researches[35]/50)
 
 	c += Math.floor((0.1 * b * player.challengecompletions.one))
 
@@ -1141,7 +1131,7 @@ if (player.achievements[43] > 0.5) {
 	globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.pow(player.runelevels[2] * (1 + player.researches[4]/5) * (1 + player.researches[21]/800), 2).times(Decimal.pow(2, player.runelevels[2] * (1 + player.researches[5]/10) * (1 + player.researches[21]/800)  - 8).add(1)))
 }
 if (player.upgrades[36] > 0.5) {globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.min("1e5000", Decimal.pow(player.prestigePoints, 1/500)))}
-if (player.upgrades[63] > 0.5) {globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.pow(player.reincarnationPoints.add(1),6))}
+if (player.upgrades[63] > 0.5) {globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.min("1e6000",Decimal.pow(player.reincarnationPoints.add(1),6)))}
 if (player.researches[39] > 0.5) {globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.pow(reincarnationMultiplier, 1/50))}
 
 globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.min(Decimal.pow(10, 50 + 2 * player.crystalUpgrades[0]), Decimal.pow(1.05, player.achievementPoints * player.crystalUpgrades[0])))
@@ -1166,7 +1156,7 @@ globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.pow(1.05, player
 	if (player.upgrades[52] > 0.5) {
 		globalMythosMultiplier = globalMythosMultiplier.times(Decimal.pow(globalMythosMultiplier, 0.025))
 	}
-	if (player.upgrades[64] > 0.5) {globalMythosMultiplier = globalMythosMultiplier.times(Decimal.pow(player.reincarnationPoints.add(1), 2))}
+	if (player.upgrades[64] > 0.5) {globalMythosMultiplier = globalMythosMultiplier.times(Decimal.min("1e2000",Decimal.pow(player.reincarnationPoints.add(1), 2)))}
 	if (player.researches[40] > 0.5) {globalMythosMultiplier = globalMythosMultiplier.times(Decimal.pow(reincarnationMultiplier, 1/250))}
  grandmasterMultiplier = new Decimal(1);
  totalMythosOwned = player.firstOwnedMythos + player.secondOwnedMythos + player.thirdOwnedMythos + player.fourthOwnedMythos + player.fifthOwnedMythos;
@@ -1329,15 +1319,15 @@ function resetCurrency() {
 	if (player.upgrades[65] > 0.5) {reincarnationPointGain = reincarnationPointGain.times(5)}
 	}
 
-function resetCheck(i,manual=true) {
+function resetCheck(i,manual) {
+	manual = (manual === null || manual === undefined) ? true : manual;
 	if (i == 'prestige') {
 		if (player.coinsThisPrestige.greaterThanOrEqualTo(1e16) || prestigePointGain.greaterThanOrEqualTo(100)) {
 			if (manual) {
-			resetConfirmation('prestige');
-			}
-			if (!manual) {
-			resetachievementcheck(1);
-			reset(1);
+				resetConfirmation('prestige');
+			} else {
+				resetachievementcheck(1);
+				reset(1);
 			}
 		}
 		else {}
@@ -1632,20 +1622,25 @@ function constantIntervals() {
 		document.getElementById("preload").style.display = "none"
 	}
 
-lastUpdate = 0;
-gameInterval = 0;
+let lastUpdate = 0;
+//gameInterval = 0;
 
 function createTimer() {
-lastUpdate = Date.now();
-gameInterval = setInterval(tick, 25);
+	lastUpdate = Date.now();
+	setInterval(tick, 50);
 }
 
 function tick() {
 	var now = Date.now();
-    var dt = Math.min(7200, (now - lastUpdate)/1000);
+    var dt = Math.max(0, Math.min(36000, (now - lastUpdate)/1000));
 	lastUpdate = now;
 
+	player.quarkstimer += dt
+	if(player.quarkstimer >= 90000){player.quarkstimer = 90000}
 	if(player.researches[61] > 0.5){player.obtainiumtimer += dt;}
+
+	document.getElementById("quarktimerdisplay").textContent = format((3600 - (player.quarkstimer % 3600.00001)),2) + "s until +1 export Quark"
+	document.getElementById("quarktimeramount").textContent = "Quarks on export: " + Math.floor(player.quarkstimer / 3600) + " [Max 25]"
 
 	if (player.researches[61] > 0.5) {
 		var u = 1;
@@ -1660,14 +1655,14 @@ function tick() {
 		document.getElementById("automaticobtainium").textContent = "Thanks to research, you will automatically gain " + format(Math.floor((1 + player.researches[64]) * u)) + " obtainium in " + format((60 - player.researches[62] - player.researches[63] - player.obtainiumtimer),1) + " seconds." 
 	}
 
-	if (dt > 1) {
-		while(dt > 1){
-			player.prestigecounter += 1;
-			player.transcendcounter += 1;
-			player.reincarnationcounter += 1;
-			resourceGain(1);
+	if (dt > 5) {
+		while(dt > 5){
+			player.prestigecounter += 5;
+			player.transcendcounter += 5;
+			player.reincarnationcounter += 5;
+			resourceGain(5);
 			updateAll();
-			dt -= 1
+			dt -= 5
 		}
 		player.prestigecounter += dt;
 		player.transcendcounter += dt;
@@ -1676,7 +1671,7 @@ function tick() {
 		updateAll();
 		player.offlinetick = Date.now()
 	}
-	else if (dt <= 1){
+	else if (dt <= 5){
 			resourceGain(dt);
 			player.prestigecounter += dt;
 			player.transcendcounter += dt;
@@ -1684,11 +1679,19 @@ function tick() {
 	}
 }
 
-window['addEventListener' in window ? 'addEventListener' : 'attachEvents']('beforeunload', function() {
-	updatetimer();
- });
 
- document['addEventListener' in document ? 'addEventListener' : 'attachEvent']('keydown', function (event) {
+document['addEventListener' in document ? 'addEventListener' : 'attachEvent']('keydown', function (event) {
+	// activeElement is the focused element on page
+	// if the autoprestige input is focused, hotkeys shouldn't work
+	// fixes https://github.com/Pseudo-Corp/Synergism-Issue-Tracker/issues/2
+	if(
+		document.querySelector('.prestigeamount') === document.activeElement || 
+		document.querySelector('.transcendamount') === document.activeElement ||
+		document.querySelector('.reincarnationamount') === document.activeElement 
+	) {
+		return;
+	}
+
 	var type = ""
 	var pos = ""
 	var num = 0
@@ -1718,19 +1721,11 @@ window['addEventListener' in window ? 'addEventListener' : 'attachEvents']('befo
 	if ((event.key === "ArrowLeft")) {keyboardtabchange(-1)}
 	if ((event.key === "ArrowRight")) {keyboardtabchange(1)}
 });
- 
- /*window['addEventListener' in window ? 'addEventListener' : 'attachEvents']('load', function() {
-	loadSynergy();
-	saveSynergy();
-	revealStuff();
-	hideStuff();
-	createTimer();
-	constantIntervals();
-	htmlInserts();
- });*/
 
 
- window['addEventListener' in window ? 'addEventListener' : 'attachEvent']('load', function() {
+
+
+window['addEventListener' in window ? 'addEventListener' : 'attachEvent']('load', function() {
 	const dec = LZString.decompressFromBase64(localStorage.getItem('Synergysave2'));
 	const isLZString = dec !== '';
 	
@@ -1748,6 +1743,6 @@ window['addEventListener' in window ? 'addEventListener' : 'attachEvents']('befo
 		createTimer();
 		constantIntervals();
 		htmlInserts();
-	}, 1000);
+	}, 0);
 });
  

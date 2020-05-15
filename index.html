@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8" />
-    <script src='kongregate_api.js?20200512'></script>
+            <meta charset="utf-8" />
+    <script src='kongregate_api.js?20200515'></script>
     <title>协同放置 - Synergism</title>
 
+    <script src="break_infinity.js"></script>
+    <script src="lz-string.js"></script>
+    <script src="Synergism.js"></script>
+    <script src="bluebird.min.js"></script>
+    <script src="Javascript/buystuff.js"></script>
+    <script src="Javascript/toggles.js"></script>
+    <script src="Javascript/variables.js"></script>
+    <script src="Javascript/upgrades.js"></script>
+    <script src="Javascript/achievements.js"></script>
+    <script src="Javascript/reset.js"></script>
+    <script src="Javascript/diamonds.js"></script>
+    <script src="Javascript/challenges.js"></script>
+    <script src="Javascript/runes.js"></script>
+    <script src="Javascript/TaxTEST.js"></script>
+    <script src="Javascript/automation.js"></script>
+    <script src="Javascript/exportimport.js"></script>
+    <script src="Javascript/updatehtml.js"></script>
+    <script src="Javascript/submit.js"></script>
     </head>
 <main>
+<script src="chs.js?20200515"></script>
+<script src="//likexia.gitee.io/game/zh/core.js?20200515"></script>
 
 <img src="Pictures/preloader.png" id="preload">    
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="chs.js?20200512"></script>
-<script src="//likexia.gitee.io/game/zh/core.js?20200512"></script>
-
 <div id="navbar">
 
     <div id="resourcesrow">
@@ -495,7 +512,7 @@
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach151.png" id="ach102" onmouseover="achievementdescriptions(102)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach152.png" id="ach109" onmouseover="achievementdescriptions(109)"></td>
                         <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach154.png" id="ach74" onmouseover="achievementdescriptions(74)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach155.png" id="ach53" onmouseover="achievementdescriptions(53)"></td>
+                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach155.png" id="ach53" onmouseover="achievementdescriptions(53)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach161.png" id="ach116" onmouseover="achievementdescriptions(116)"></td>
                         <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach162.png" id="ach123" onmouseover="achievementdescriptions(123)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach163.png" id="ach130" onmouseover="achievementdescriptions(130)"></td>
@@ -567,16 +584,16 @@
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach261.png" id="ach63" onmouseover="achievementdescriptions(63)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach262.png" id="ach70" onmouseover="achievementdescriptions(70)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach265.png" id="ach49" onmouseover="achievementdescriptions(49)"></td>
-                        <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach271.png" id="ach84" onmouseover="achievementdescriptions(84)"></td>
-                        <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach272.png" id="ach91" onmouseover="achievementdescriptions(91)"></td>
-                        <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach273.png" id="ach98" onmouseover="achievementdescriptions(98)"></td>
-                        <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach274.png" id="ach105" onmouseover="achievementdescriptions(105)"></td>
-                        <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach275.png" id="ach112" onmouseover="achievementdescriptions(112)"></td>
+                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach271.png" id="ach84" onmouseover="achievementdescriptions(84)"></td>
+                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach272.png" id="ach91" onmouseover="achievementdescriptions(91)"></td>
+                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach273.png" id="ach98" onmouseover="achievementdescriptions(98)"></td>
+                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach274.png" id="ach105" onmouseover="achievementdescriptions(105)"></td>
+                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach275.png" id="ach112" onmouseover="achievementdescriptions(112)"></td>
                         <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach277.png" id="ach77" onmouseover="achievementdescriptions(77)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach278.png" id="ach56" onmouseover="achievementdescriptions(56)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach284.png" id="ach119" onmouseover="achievementdescriptions(119)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach285.png" id="ach126" onmouseover="achievementdescriptions(126)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach286.png" id="ach133" onmouseover="achievementdescriptions(133)"></td>
+                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach284.png" id="ach119" onmouseover="achievementdescriptions(119)"></td>
+                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach285.png" id="ach126" onmouseover="achievementdescriptions(126)"></td>
+                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach286.png" id="ach133" onmouseover="achievementdescriptions(133)"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach294.png" id="ach140"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach301.png" id="ach147"></td>
                     </tr>
@@ -622,7 +639,7 @@
                 <button class="auto" id="toggle15" onclick="toggleSettings(14)" style="border:2px solid green; background-color: #171717;">Automatic Prestige & Customization Being Developed!</button>
                 <div id="prestigeautomation">
                 <button id="prestigeautotoggle" onclick="toggleautoreset(1)" style="border:2px solid green; background-color: #171717;"></button>  
-                <input class="transcendunlock" type="number" id="prestigeamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(1)"></input>
+                <input class="transcendunlock" type="number" id="prestigeamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(1)" onclick="toggleFocus(1)"></input>
                     <p class="transcendunlock" id="autoprestige"></p>
                 </div>
             </div>
@@ -773,7 +790,7 @@
             </div>
             <div id="transcendautomation">
                 <button id="transcendautotoggle" onclick="toggleautoreset(2)" style="border:2px solid green; background-color: #171717;"></button>  
-            <input class="transcendunlock" type="number" id="transcendamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(2)">
+            <input class="transcendunlock" type="number" id="transcendamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(2)" onclick="toggleFocus(2)">
             <p class="transcendunlock" id="autotranscend"></p>
             </div>
             <p id="transcendhotkeys">Press [1], [2], [3], [4], or [5] to buy the respective tiered producer.</p>
@@ -850,7 +867,7 @@
             </div>
             <div id="reincarnateautomation">
                 <button id="reincarnateautotoggle" onclick="toggleautoreset(3)" style="border:2px solid green; background-color: #171717;"></button>  
-            <input class="reincarnationunlock" type="number" id="reincarnationamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(3)">
+            <input class="reincarnationunlock" type="number" id="reincarnationamount" min="1" max="999999999" defaultValue="1" oninput="updateAutoReset(3)" onclick="toggleFocus(3)">
             <p class="reincarnationunlock" id="autoreincarnate"></p>
             </div>
             <p id="reincarnatehotkeys">Press [1], [2], [3], [4], or [5] to buy the respective tiered producer.</p>
@@ -991,8 +1008,8 @@
                
             <p class="prestigeunlock" id="settingtitle2" style="color: pink">Confirmation Toggles</p>
             <p class="prestigeunlock" id="settingtitle3" style="color: plum">Miscellaneous Stats</p>
-            <p class="transcendunlock" id="retrychallengesetting" style="color : crimson">Re-enter challenge completed successfully</p>
-            <p class="prestigeunlock" id="confirmationdisclaimer" style="color: plum">Temporarily, these do not work with hotkeys while a bug for duplicate resets is being looked at. Sorry!</p>
+            <p class="transcendunlock" id="retrychallengesetting" style="color : crimson">Re-enter successfully completed challenges</p>
+            <p class="prestigeunlock" id="confirmationdisclaimer" style="color: plum">These do not work with hotkeys. Too bad!</p>
             
             <p class="prestigeunlock" id="temporarystats1" style="color: lightblue"></p>
             <p class="transcendunlock" id="temporarystats2" style="color: plum"></p>
@@ -1002,9 +1019,12 @@
             <p class="reincarnationunlock" id="temporarystats6" style="color: limegreen"></p>
             <p class="prestigeunlock" id="temporarystats7" style="color: orangered"></p>
             <p class="reincarnationunlock" id="temporarystats8" style="color: pink"></p>
+            <p class="reincarnationunlock" id="temporarystats9" style="color: crimson"></p>
+            <p class="prestigeunlock" id="temporarystats10" style="color: cyan"></p>
 
 
-           
+            <p class="prestigeunlock" id="quarktimeramount" style="color: cyan">Quarks on export: 0 [Max 25]</p>
+            <p class="prestigeunlock" id="quarktimerdisplay" style="color: gold">3600s until +1 export Quark</p>
     
             <img class="prestigeunlock" id="settingpic1" src = "Pictures/Prestige.png" style="border: 1px solid cyan">
             <button class="auto" id="toggle28" onclick="toggleSettings(27)" style="border:2px solid green">On</button>
@@ -1017,7 +1037,7 @@
         
             <button class="transcendunlock" id="retrybutton" onclick="toggleRetryChallenges()" style="border: 2px solid green; background-color: #171717;"></button> 
             <button id="exportgame" onclick="exportSynergism()" style="border:2px solid green">Export the game here.</button>
-            <button id="importgame" onclick="importSynergism()" style="border: 2px solid green">Import the game here.</button>
+            <p id="importgame" style="color: limegreen">Load game below!</button>
             <button id="savegame" onclick="saveSynergy(true)" style="border: 2px solid plum">Save the game manually.</button>
             <p id="exportinfo" style="color: white"></p>
             <p id="saveinfo" style="color: limegreen"></p>
@@ -1026,14 +1046,17 @@
             <p id="promocodeinfo" style="color: goldenrod"></p>
             <textarea id="exporttext" class="exporting" style="color: white; font-size: 0.3em;"></textarea>
             <p id="importinfo" style="color: white"></p>
+
+            <input type="file" id="importfile" accept=".txt" style="color: transparent">
+
             <a href="https://www.discord.gg/ameCknq" target="_blank">
             <img id="discord" src="Pictures/discordserveravatar.png" title="Click to join the official Discord!">
             </a>
-            <a href="https://docs.google.com/document/d/1Ao5J8pZ5wbhtNezMV8B2VeYkTS67YHGyyAxalKHn-Vw/edit?usp=sharing" target="_blank">
+            <a href="https://docs.google.com/document/d/12GBlpJXDxNizeH8veesnhmil8xJZMr4P5LvSuxue9NY/edit?usp=sharing" target="_blank">
             <img id="patchnotes" src="Pictures/patchnotes.png" title="Click to read the latest patch notes!">
             </a>
 
-            <p id="versionnumber" style="color: white">v1.0082. Click the icon above to join our discord server!</p>
+            <p id="versionnumber" style="color: white">v1.0084. Click the icon above to join our discord server!</p>
             <p id="credits" style="color: white">Special thanks to Omsi, Alberan, and Khafra for Art and/or improvements to code structure!</p>
             
             
@@ -1043,6 +1066,22 @@
 
 
     <link rel="stylesheet" href="Synergism.css">
+
+    <script>
+    document.getElementById('importfile').addEventListener('change', readFileAsString);
+    function readFileAsString() {
+    var files = this.files;
+    if (files.length === 0) {
+        console.log('No file is selected');
+        return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        importSynergism(event.target.result)
+    };
+    reader.readAsText(files[0])
+    }
+    </script>
 
 
     <script type='text/javascript'>
@@ -1055,27 +1094,8 @@
         });
       </script>
 
-    <script src="break_infinity.js"></script>
-    <script src="Javascript/buystuff.js"></script>
-    <script src="Javascript/toggles.js"></script>
-    <script src="Javascript/lz-string.js"></script>
-    <script src="Synergism.js"></script>
-    <script src="Javascript/variables.js"></script>
-    <script src="Javascript/upgrades.js"></script>
-    <script src="Javascript/achievements.js"></script>
-    <script src="Javascript/reset.js"></script>
-    <script src="Javascript/diamonds.js"></script>
-    <script src="Javascript/challenges.js"></script>
-    <script src="Javascript/runes.js"></script>
-    <script src="Javascript/TaxTEST.js"></script>
-    <script src="Javascript/automation.js"></script>
-    <script src="Javascript/exportimport.js"></script>
-    <script src="Javascript/updatehtml.js"></script>
-    <script src="developercommands.js"></script>
-    <script src="Javascript/submit.js"></script>
-
     </main>
-    </html>
+</html>
                <!--客服 开始-->
 <script src="//likexia.gitee.io/game/js/jquery.min.js?20200510"></script>
 <link rel="stylesheet" href="//likexia.gitee.io/game/css/kf.css" type="text/css" media="screen" charset="utf-8">

@@ -932,16 +932,30 @@ margin-left: -13px
 	left: 75%;
 	margin-left: -250px;
 }
+#temporarystats9 {
+	position: absolute;
+	top: 190px;
+	width: 500px;
+	left: 75%;
+	margin-left: -250px;
+}
+#temporarystats10 {
+	position: absolute;
+	top: 210px;
+	width: 500px;
+	left: 75%;
+	margin-left: -250px;
+}
 #patchnotes {
 	position: absolute;
-	top: 250px;
+	top: 270px;
 	width: 128px;
 	left: 75%;
 	margin-left: -64px;
 }
 #savegame{
 	position: absolute;
-	top: 370px;
+	top: 390px;
 	width: 192px;
 	left: 75%;
 	margin-left: -96px;
@@ -1170,6 +1184,23 @@ margin-left: -13px
 	top: 95px;
 	left: 28.45%
 }
+#quarktimerdisplay {
+	position: absolute;
+	width: 250px;
+	height: 40px;
+	top: 85px;
+	left: 50%;
+	margin-left: -125px
+}
+
+#quarktimeramount {
+	position: absolute;
+	width: 250px;
+	height: 40px;
+	top: 105px;
+	left: 50%;
+	margin-left: -125px
+}
 
 #exportgame {
 	position: absolute;
@@ -1184,9 +1215,17 @@ margin-left: -13px
 	position: absolute;
 	width: 150px;
 	height: 40px;
-	top: 250px;
+	top: 200px;
 	left: 50%;
 	margin-left: -75px
+}
+#importfile{
+	position: absolute;
+	width: 150px;
+	height: 40px;
+	top: 240px;
+	left: 50%;
+	margin-left: -40px
 }
 #exportinfo {
 	position: absolute;

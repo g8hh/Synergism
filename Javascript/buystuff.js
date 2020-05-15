@@ -1,6 +1,6 @@
-function buyAccelerator(autobuyer=false){
+function buyAccelerator(autobuyer){
 	var autobuyamount = 0;
-	if(autobuyer){autobuyamount = 1000}
+	if(autobuyer){autobuyamount = 500}
 	var buythisamount = Math.max(player.coinbuyamount, autobuyamount)
 	while(player.coins.greaterThanOrEqualTo(player.acceleratorCost) && ticker < buythisamount) {
 
@@ -40,9 +40,9 @@ function buyAccelerator(autobuyer=false){
 
 	}
 
-function buyMultiplier(autobuyer=false){
+function buyMultiplier(autobuyer){
 	var autobuyamount = 0;
-	if(autobuyer){autobuyamount = 1000}
+	if(autobuyer){autobuyamount = 500}
 	var buythisamount = Math.max(player.coinbuyamount, autobuyamount)
 	while(player.coins.greaterThanOrEqualTo(player.multiplierCost) && ticker < buythisamount) {
 		player.coins = player.coins.sub(player.multiplierCost);
@@ -80,7 +80,7 @@ function buyMultiplier(autobuyer=false){
 
 	}
 	
-function buyProducer(pos,type,num,autobuyer=false) {
+function buyProducer(pos,type,num,autobuyer) {
 	var autobuyamount = 0;
     var r = 1;
     var tag = ""
@@ -91,7 +91,7 @@ function buyProducer(pos,type,num,autobuyer=false) {
 	if (type == 'Mythos'){tag = "transcendPoints"; var amounttype = "mythos"}
 	if (type == 'Particles') {tag = "reincarnationPoints"; var amounttype = "particle"}
 	if (type == "Coin") {tag = "coins"; var amounttype = "coin"}
-	if (autobuyer){autobuyamount = 1000}
+	if (autobuyer){autobuyamount = 500}
 	var buythisamount = Math.max(autobuyamount, player[amounttype + 'buyamount'])
 		while(player[tag].greaterThanOrEqualTo(player[pos + 'Cost' + type]) && ticker < buythisamount) {
 			player[tag] = player[tag].sub(player[pos + 'Cost' + type]);
@@ -219,7 +219,7 @@ function buyCrystalUpgrades(i) {
 	}
 	crystalupgradedescriptions(i)
 }	
-function boostAccelerator(automated = false) {
+function boostAccelerator(automated) {
 	var buyamount = 1;
 	if (player.upgrades[46] == 1) {
 	buyamount = player.coinbuyamount;

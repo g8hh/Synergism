@@ -81,18 +81,18 @@ function buyMultiplier(autobuyer){
 	}
 	
 function buyProducer(pos,type,num,autobuyer) {
-	var autobuyamount = 0;
+	let buythisamount = 0;
     var r = 1;
     var tag = ""
 	r += 1/400 * player.runelevels[3]
-	r += 1/200 * (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59] + player.researches[60])
+	r += 1/200 * (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59] + player.researches[60]) * effectiveLevelMult
 	r += 1/200 * player.challengecompletions.four
 	if (type == 'Diamonds'){tag = "prestigePoints"; var amounttype = "crystal"}
 	if (type == 'Mythos'){tag = "transcendPoints"; var amounttype = "mythos"}
 	if (type == 'Particles') {tag = "reincarnationPoints"; var amounttype = "particle"}
 	if (type == "Coin") {tag = "coins"; var amounttype = "coin"}
-	if (autobuyer){autobuyamount = 500}
-	var buythisamount = Math.max(autobuyamount, player[amounttype + 'buyamount'])
+	if (autobuyer){buythisamount = 500}
+	if (!autobuyer){buythisamount = player[amounttype + 'buyamount']}
 		while(player[tag].greaterThanOrEqualTo(player[pos + 'Cost' + type]) && ticker < buythisamount) {
 			player[tag] = player[tag].sub(player[pos + 'Cost' + type]);
 			player[pos + 'Owned' + type] += 1;
@@ -107,14 +107,17 @@ function buyProducer(pos,type,num,autobuyer) {
 			if (player[pos + 'Owned' + type] >= (20000 * r)){
 			player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(player[pos + 'Owned' + type], 3)).times(100000).times(100 + num * 100)  
 			 }
+			if (player[pos + 'Owned' + type] >= (250000 * r)){
+				player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(1.03, player[pos + 'Owned' + type] - 250000 * r))  
+			}
 			if (player.currentChallenge == "four" && (type == "Coin" || type == "Diamonds")) {
 				 player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Math.pow(100 * player[pos + 'Owned' + type] + 10000, 1.25 + 1/4 * player.challengecompletions.four));
 				 if (player[pos + 'Owned' + type] >= 1000 - (10 * player.challengecompletions.four)) {
 					player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(1.25, player[pos + 'Owned' + type]));
 				 }
                  }
-            if (player.currentChallengeRein == "eight" && (type == "Coin" || type == "Diamonds" || type == "Mythos")){
-                player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(100, player[pos + 'Owned' + type]));
+            if (player.currentChallengeRein == "eight" && (type == "Coin" || type == "Diamonds" || type == "Mythos") && player[pos + 'Owned' + type] >= (1000 * player.challengecompletions.eight)){
+                player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(10, (player[pos + 'Owned' + type] - (1000 * player.challengecompletions.eight))/(1 + 1/4 * player.challengecompletions.eight)));
             }
 				 ticker += 1;
 			 }
@@ -156,23 +159,33 @@ function buyProducer(pos,type,num,autobuyer) {
 			if (player.fifthOwnedCoin >= 42777 && player.achievements[35] < 0.5) {achievementaward(35)}
 	}
 
-function buyResearch(index) {
+function buyResearch(index,auto=false) {
+	if (player.autoResearchToggle && player.autoResearch > 0.5 && !auto){
+		let p = player.autoResearch
+		if (player.researches[p] == researchMaxLevels[p]){document.getElementById("res" + player.autoResearch).style.backgroundColor = "green"}
+		else {document.getElementById("res" + player.autoResearch).style.backgroundColor = "purple"}
+	}
+	if (!auto && player.autoResearchToggle && player.shopUpgrades.obtainiumAutoLevel > 0.5){player.autoResearch = index; document.getElementById("res" + index).style.backgroundColor = "orange"}
+
     let buyamount = 1;
     let i = 1;
-    if (maxbuyresearch){buyamount = 1000}
+	if (maxbuyresearch || auto){buyamount = 1000}
+		if (auto || !player.autoResearchToggle){
 		while(player.researches[index] < researchMaxLevels[index] && player.researchPoints >= (researchBaseCosts[index]) && buyamount >= i) {
 			player.researchPoints -= researchBaseCosts[index]
 			player.researches[index] += 1;
 			researchfiller2 = "Level: " + player.researches[index] + "/" + researchMaxLevels[index]
-			researchdescriptions(index)
+			researchdescriptions(index,auto)
 
 			if (index == 47 && player.unlocks.rrow1 == false) {player.unlocks.rrow1 = true; revealStuff()}
 			if (index == 48 && player.unlocks.rrow2 == false) {player.unlocks.rrow2 = true; revealStuff()}
 			if (index == 49 && player.unlocks.rrow3 == false) {player.unlocks.rrow3 = true; revealStuff()}
 			if (index == 50 && player.unlocks.rrow4 == false) {player.unlocks.rrow4 = true; revealStuff()}
-            i++
-        }
-    }
+			i++
+		}
+		if (i > 1){revealStuff()}
+	}
+}
 
 function buyUpgrades(type, pos, state) {
 		var addendum = ""
@@ -253,4 +266,16 @@ function boostAccelerator(automated) {
     if (player.acceleratorBoostBought >= 15000 && player.achievements[168] == 0){achievementaward(168)}
 
 
+	}
+
+
+	function buyParticleBuilding(i){
+		let pos = i
+		let counter = 0;
+		while(player[pos + 'CostParticles'].lessThanOrEqualTo(player.reincarnationPoints) && counter < player.particlebuyamount){
+			player.reincarnationPoints = player.reincarnationPoints.sub(player[pos + 'CostParticles']);
+			player[pos + 'CostParticles'] = player[pos + 'CostParticles'].times(2);
+			player[pos + 'OwnedParticles'] += 1;
+			counter++;
+		}
 	}

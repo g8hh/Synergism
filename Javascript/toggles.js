@@ -159,7 +159,44 @@ function toggleResearchBuy() {
 }
 
 function toggleFocus(i) {
-    if (i==1){document.getElementById("prestigeautotoggle").focus();}
+    if (i==1){document.getElementById("prestigeamount").focus();}
     if (i==2){document.getElementById("transcendamount").focus();}
     if (i==3){document.getElementById("reincarnationamount").focus();}
+}
+
+function toggleAutoResearch() {
+    let el = document.getElementById("toggleautoresearch")
+    if (player.autoResearchToggle){player.autoResearchToggle = false; el.textContent = "Automatic: OFF"; player.autoResearch = 0;}
+    else {player.autoResearchToggle = true; el.textContent = "Automatic: ON"};
+
+
+    if(!player.autoResearchToggle){
+        for (var i = 1; i <= 100; i++){
+            let l = document.getElementById("res" + i)
+            if (player.researches[i] == 0){l.style.backgroundColor = "black"}
+            if (player.researches[i] > 0 && player.researches[i] < researchMaxLevels[i]){l.style.backgroundColor = "purple"}
+            if (player.researches[i] == researchMaxLevels[i]){l.style.backgroundColor = "green"}
+        }
+    }
+}
+
+function toggleAutoSacrifice(index) {
+    let el = document.getElementById("toggleautosacrifice")
+    if (index == 0){
+    if (player.autoSacrificeToggle){player.autoSacrificeToggle = false; el.textContent = "Automatic: OFF"; player.autoSacrifice = 0;}
+    else {player.autoSacrificeToggle = true; el.textContent = "Automatic: ON"}
+    }
+    if(player.autoSacrificeToggle && player.shopUpgrades.offeringAutoLevel > 0.5){
+    switch(index){
+        case 1: player.autoSacrifice = 1; break;
+        case 2: player.autoSacrifice = 2; break;
+        case 3: player.autoSacrifice = 3; break;
+        case 4: player.autoSacrifice = 4; break;
+        case 5: player.autoSacrifice = 5; break;
+    }
+    }
+    for(var i = 1; i <= 5; i++){
+        if(player.autoSacrifice == i){document.getElementById("rune"+i).style.backgroundColor = "orange"}
+        else{document.getElementById("rune"+i).style.backgroundColor = "#171717"}
+    }
 }

@@ -56,21 +56,31 @@ function revealStuff() {
     for (var i = 0; i < k.length; i++) {
     k[i].style.display = "none"
     }
+    let l = document.getElementsByClassName("chal8");
+    for (var i = 0; i < l.length; i++){
+    l[i].style.display = "none"
+    }
 
 
 document.getElementById("rune2area").style.display = "none"
 document.getElementById("rune3area").style.display = "none"
 document.getElementById("rune4area").style.display = "none"
+document.getElementById("rune5area").style.display = "none"
 document.getElementById("prestigeautomation").style.display = "none"
 document.getElementById("transcendautomation").style.display = "none"
 document.getElementById("reincarnateautomation").style.display = "none"
+document.getElementById("toggleautosacrifice").style.display = "none"
+document.getElementById("toggleautoresearch").style.display = "none"
 
 if(player.achievements[38] == 1) document.getElementById("rune2area").style.display = "block";
 if(player.achievements[44] == 1) document.getElementById("rune3area").style.display = "block";
 if(player.achievements[102] == 1) document.getElementById("rune4area").style.display = "block";
+if(player.researches[82] == 1) document.getElementById("rune5area").style.display = "block";
 if(player.achievements[43] == 1) document.getElementById("prestigeautomation").style.display = "block";
 if(player.upgrades[89] == 1) document.getElementById("transcendautomation").style.display = "block";
 if(player.researches[46] == 1) document.getElementById("reincarnateautomation").style.display = "block";
+if(player.shopUpgrades.offeringAutoLevel > 0.5) document.getElementById("toggleautosacrifice").style.display = "block";
+if(player.shopUpgrades.obtainiumAutoLevel > 0.5) document.getElementById("toggleautoresearch").style.display = "block";
 
 if (player.unlocks.coinone == true) {
     let c1 = document.getElementsByClassName("coinunlock1");
@@ -146,12 +156,18 @@ if (player.unlocks.rrow2 == true) {
                     e[i].style.display = "block";
                             }
                         }
-                        if (player.achievements[123] == 1){
+                        if (player.achievements[124] == 1){
                             let e = document.getElementsByClassName("chal7");
                             for (var i = 0; i < e.length; i++){
                                 e[i].style.display= "block"
                             }
                         }
+                          if (player.achievements[127] == 1){
+                            let e = document.getElementsByClassName("chal8");
+                            for (var i = 0; i < e.length; i++){
+                              e[i].style.display = "block"
+                            }
+                          }
 var e = document.getElementsByClassName("auto");
     if (player.upgrades[81] == 1){e[0].style.display = "block";}
     if (player.upgrades[82] == 1){e[1].style.display = "block";}
@@ -209,6 +225,8 @@ document.getElementById("reincarnation").style.display = "none"
 document.getElementById("reincarnationtab").style.backgroundColor = "#171717"
 document.getElementById("research").style.display = "none"
 document.getElementById("researchtab").style.backgroundColor = "#171717"
+document.getElementById("shop").style.display = "none"
+document.getElementById("shoptab").style.backgroundColor = "purple"
 
 document.getElementById("activaterune2").style.display = "none"
 document.getElementById("activaterune3").style.display = "none"
@@ -248,11 +266,12 @@ if (currentTab == "runes") {
     document.getElementById("runes").style.display = "block"
     document.getElementById("runestab").style.backgroundColor = "blue"
     document.getElementById("runeshowlevelup").textContent = "Hey, hover over a rune icon to get details on what each one does and what benefits they're giving you!"
-    document.getElementById("researchrunebonus").textContent = "Thanks to researches, your effective levels are increased by " + (100 * (1 + player.researches[4]/10) * (1 + player.researches[21]/800) - 100).toPrecision(4) + "%"
+    document.getElementById("researchrunebonus").textContent = "Thanks to researches, your effective levels are increased by " + (100 * effectiveLevelMult - 100).toPrecision(4) + "%"
     displayruneinformation(1,false)
     displayruneinformation(2,false)
     displayruneinformation(3,false)
     displayruneinformation(4,false)
+    displayruneinformation(5,false)
     player.tabnumber = 5;
 }
 if (currentTab == "transcension") {
@@ -275,7 +294,10 @@ if (currentTab == "researches") {
     document.getElementById("research").style.display = "block"
     document.getElementById("researchtab").style.backgroundColor = "green"
     player.tabnumber = 9;
-
+}
+if (currentTab == "shop") {
+  document.getElementById("shop").style.display = "block"
+  document.getElementById("shoptab").style.backgroundColor = "limegreen"
 }
 
 if (player.achievements[38] > 0.5) {
@@ -293,13 +315,11 @@ function htmlInserts() {
 document.getElementById("coinDisplay").textContent = format(player.coins)
 document.getElementById("offeringDisplay").textContent = format(player.runeshards)
 document.getElementById("diamondDisplay").textContent = format(player.prestigePoints)
-document.getElementById("crystalDisplay").textContent = format(player.prestigeShards)
 document.getElementById("mythosDisplay").textContent = format(player.transcendPoints)
 document.getElementById("mythosshardDisplay").textContent = format(player.transcendShards)
 document.getElementById("particlesDisplay").textContent = format(player.reincarnationPoints)
-document.getElementById("atomsDisplay").textContent = format(player.reincarnationShards)
+document.getElementById("quarkDisplay").textContent = format(player.worlds)
 document.getElementById("obtainiumDisplay").textContent = format(player.researchPoints)
-document.getElementById("quarksDisplay").textContent = format(player.worlds)
 
 if (currentTab == "buildings") {
     document.getElementById("buildtext1").textContent = "Workers: " + format(player.firstOwnedCoin) + " [+" + format(player.firstGeneratedCoin) + "]"
@@ -364,15 +384,17 @@ if (currentTab == "runes"){
     document.getElementById("rune2level").textContent = "Level: " + player.runelevels[1] + "/" + (500 + player.researches[80])
     document.getElementById("rune3level").textContent = "Level: " + player.runelevels[2] + "/" + (500 + player.researches[79])
     document.getElementById("rune4level").textContent = "Level: " + player.runelevels[3] + "/" + (500 + player.researches[77])
+    document.getElementById("rune5level").textContent = "Level: " + player.runelevels[4] + "/" + (500)
     document.getElementById("rune1exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1 * Math.pow(player.runelevels[0] , 3) * (4 * player.runelevels[0] + 100)/500 * (Math.max(1, (player.runelevels[0]-500)/25)) * (Math.max(1, (player.runelevels[0]-600)/30)) * (Math.max(1, (player.runelevels[0]-700)/25)) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[0]))),2) + " EXP" 
     document.getElementById("rune2exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (4 * Math.pow(player.runelevels[1] , 3) * (4 * player.runelevels[1] + 100)/500 * (Math.max(1, (player.runelevels[1]-500)/25)) * (Math.max(1, (player.runelevels[1]-600)/30)) * (Math.max(1, (player.runelevels[1]-700)/25)) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[1]))),2) + " EXP"
-    document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (Math.max(1, (player.runelevels[2]-500)/25)) * (Math.max(1, (player.runelevels[2]-600)/30)) * (Math.max(1, (player.runelevels[2]-700)/25)) * (1 - 0.02 * player.challengecompletions.eight) - player.runeexp[2]))),2) + " EXP"
+    document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (Math.max(1, (player.runelevels[2]-500)/25)) * (Math.max(1, (player.runelevels[2]-600)/30)) * (Math.max(1, (player.runelevels[2]-700)/25))  - player.runeexp[2]))),2) + " EXP"
     document.getElementById("rune4exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (16 * Math.pow(player.runelevels[3] , 3) * (4 * player.runelevels[3] + 100)/500 * (Math.max(1, (player.runelevels[3]-500)/25)) * (Math.max(1, (player.runelevels[3]-600)/30)) * (Math.max(1, (player.runelevels[3]-700)/25)) * (1 - 0.02 * player.challengecompletions.six) - player.runeexp[3]))),2) + " EXP"
-    document.getElementById("runedetails").textContent = "Gain " + (25 + 3 * player.researches[22] + 2 * player.researches[23] + 3 * player.upgrades[66] + 5 * player.upgrades[61]) + " EXP per offering sacrificed. Gain more offerings through resetting longer runs!" 
+    document.getElementById("rune5exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1000 * Math.pow(player.runelevels[4] , 3) * (4 * player.runelevels[4] + 100)/500 * (Math.max(1, (player.runelevels[4]-500)/25)) * (Math.max(1, (player.runelevels[4]-600)/30)) * (Math.max(1, (player.runelevels[4]-700)/25)) - player.runeexp[4]))),2) + " EXP"
+    document.getElementById("runedetails").textContent = "Gain " + (25 + 3 * player.researches[22] + 2 * player.researches[23] + 3 * player.upgrades[66] + 5 * player.upgrades[61]) + "* EXP per offering sacrificed. Optimal Reset time for Offerings: " + format(600 + 0.4 * player.runelevels[4] + 6 * player.researches[85] + 120 * player.shopUpgrades.offeringTimerLevel) + " Seconds." 
 
    
     
-    document.getElementById("runerecycle").textContent = "You have " +(5 * player.achievements[80] + 5 * player.achievements[87] + 5 * player.achievements[94] + 5 * player.achievements[101] + 5 * player.achievements[108] + 5 * player.achievements[115] + 10 * player.achievements[122] + 10 * player.achievements[129] + 5 * player.upgrades[61] + Math.min(25, player.runelevels[3]/8))  + "% chance of recycling your offerings. Recycled offerings are not spent!"
+    document.getElementById("runerecycle").textContent = "You have " +(5 * player.achievements[80] + 5 * player.achievements[87] + 5 * player.achievements[94] + 5 * player.achievements[101] + 5 * player.achievements[108] + 5 * player.achievements[115] + 7.5 * player.achievements[122] + 7.5 * player.achievements[129] + 5 * player.upgrades[61] + Math.min(25, player.runelevels[3]/8))  + "% chance of recycling your offerings. This multiplies EXP gain by " + format(1/(1- .05 * player.achievements[80] -.05 * player.achievements[87] - 0.05 * player.achievements[94] -0.05 * player.achievements[101] -.05 * player.achievements[108] - .05 * player.achievements[115] - .075 * player.achievements[122] - .075 * player.achievements[129] - 0.05 * player.upgrades[61] - Math.min(.25, player.runelevels[3]/800)),2) + "!"
 }
 if (currentTab == "transcension") {
     document.getElementById("transcendshardinfo").textContent = "You have " + format(player.transcendShards,2) + " Mythos Shards, providing " + format(totalMultiplierBoost) + " Multiplier Power boosts."
@@ -406,20 +428,20 @@ if (currentTab == "reincarnation") {
     document.getElementById("reincarnationshardinfo").textContent = "You have " + format(player.reincarnationShards,2) + " Atoms, providing " + buildingPower.toPrecision(4) + " Building Power. Multiplier to Coin Production: " + format(reincarnationMultiplier)
     document.getElementById("reincarnationtext1").textContent = "Protons: " + format(player.firstOwnedParticles) + " [+" + format(player.firstGeneratedParticles,2) + "]"
     document.getElementById("reincarnationtext6").textContent = "Atoms/Sec: " + format((produceFirstParticles).times(40),2) 
-    document.getElementById("reincarnationtext2").textContent = "Elements: " + player.secondOwnedParticles + " [+" + format(player.secondGeneratedParticles,2) + "]"
+    document.getElementById("reincarnationtext2").textContent = "Elements: " + format(player.secondOwnedParticles) + " [+" + format(player.secondGeneratedParticles,2) + "]"
     document.getElementById("reincarnationtext7").textContent = "Protons/Sec: " + format((produceSecondParticles).times(40),2) 
-    document.getElementById("reincarnationtext3").textContent = "Pulsars: " + player.thirdOwnedParticles + " [+" + format(player.thirdGeneratedParticles,2) + "]"
+    document.getElementById("reincarnationtext3").textContent = "Pulsars: " + format(player.thirdOwnedParticles) + " [+" + format(player.thirdGeneratedParticles,2) + "]"
     document.getElementById("reincarnationtext8").textContent = "Elements/Sec: " + format((produceThirdParticles).times(40),2) 
-    document.getElementById("reincarnationtext4").textContent = "Quasars: " + player.fourthOwnedParticles + " [+" + format(player.fourthGeneratedParticles,2) + "]"
+    document.getElementById("reincarnationtext4").textContent = "Quasars: " + format(player.fourthOwnedParticles) + " [+" + format(player.fourthGeneratedParticles,2) + "]"
     document.getElementById("reincarnationtext9").textContent = "Pulsars/Sec: " + format((produceFourthParticles).times(40),2) 
-    document.getElementById("reincarnationtext5").textContent = "Galactic Nuclei: " + player.fifthOwnedParticles + " [+" + format(player.fifthGeneratedParticles,2) + "]"
+    document.getElementById("reincarnationtext5").textContent = "Galactic Nuclei: " + format(player.fifthOwnedParticles) + " [+" + format(player.fifthGeneratedParticles,2) + "]"
     document.getElementById("reincarnationtext10").textContent = "Quasars/Sec: " + format((produceFifthParticles).times(40),2) 
     
-    document.getElementById("buyparticles1").textContent = "Cost: " + format(player.firstCostParticles,2) + " Particles"
-    document.getElementById("buyparticles2").textContent = "Cost: " + format(player.secondCostParticles) + " Particles"
-    document.getElementById("buyparticles3").textContent = "Cost: " + format(player.thirdCostParticles) + " Particles"
-    document.getElementById("buyparticles4").textContent = "Cost: " + format(player.fourthCostParticles) + " Particles"
-    document.getElementById("buyparticles5").textContent = "Cost: " + format(player.fifthCostParticles) + " Particles"
+    document.getElementById("buyparticles1").textContent = "Cost: " + format(Decimal.pow(2, player.firstOwnedParticles)) + " Particles"
+    document.getElementById("buyparticles2").textContent = "Cost: " + format(Decimal.pow(2, player.secondOwnedParticles).times(1e2)) + " Particles"
+    document.getElementById("buyparticles3").textContent = "Cost: " + format(Decimal.pow(2, player.thirdOwnedParticles).times(1e4)) + " Particles"
+    document.getElementById("buyparticles4").textContent = "Cost: " + format(Decimal.pow(2, player.fourthOwnedParticles).times(1e8)) + " Particles"
+    document.getElementById("buyparticles5").textContent = "Cost: " + format(Decimal.pow(2, player.fifthOwnedParticles).times(1e16)) + " Particles"
     if (player.resettoggle3 == 1 || player.resettoggle3 == 0) {
         document.getElementById("autoreincarnate").textContent = "Reincarnate when your Particles can increase by a factor " + format(Decimal.pow(10, player.reincarnationamount)) + " [Toggle number above]. Current Multiplier: " + format(Decimal.pow(10, Decimal.log(reincarnationPointGain.add(1),10) - Decimal.log(player.reincarnationPoints.add(1),10),2)) + "."
     }
@@ -430,6 +452,7 @@ if (currentTab == "reincarnation") {
 
 if (currentTab == "researches") {
     document.getElementById("researchinfo").textContent = "You have " + format(player.researchPoints,0,false) + " Obtainium"
+    document.getElementById("contentteaser1").textContent = "Optimal Reincarnation Time for Obtainium [Assuming e22 Upgrade bought]: " + format((3600 + 120 * player.shopUpgrades.obtainiumTimerLevel)) + " Seconds."
 }
 if (currentTab == "settings") {
     document.getElementById("temporarystats1").textContent = "Prestige count: " + format(player.prestigeCount)
@@ -441,10 +464,37 @@ if (currentTab == "settings") {
     document.getElementById("temporarystats7").textContent = "Most Offerings saved at once: " + format(player.maxofferings) 
     document.getElementById("temporarystats8").textContent = "Most Obtainium saved at once: " + format(player.maxobtainium)  
     document.getElementById("temporarystats9").textContent = "Best Obtainium/sec: " + format(player.obtainiumpersecond)
-    document.getElementById("temporarystats10").textContent = "Summative Rune Levels: " + format(player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3])
+    document.getElementById("temporarystats10").textContent = "Summative Rune Levels: " + format(player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3] + player.runelevels[4])
 
 
     
+}
+
+if (currentTab == "shop") {
+    document.getElementById("quarkamount").textContent = "You have " + format(player.worlds) + " Quarks!"
+
+    document.getElementById("offeringpotionowned").textContent = "Own: " + format(player.shopUpgrades.offeringPotion)
+    document.getElementById("obtainiumpotionowned").textContent = "Own: " + format(player.shopUpgrades.obtainiumPotion)
+    
+    document.getElementById("offeringtimerlevel").textContent = "Level: " + player.shopUpgrades.offeringTimerLevel + "/5"
+    document.getElementById("obtainiumtimerlevel").textContent = "Level: " + player.shopUpgrades.obtainiumTimerLevel + "/5"
+    document.getElementById("offeringautolevel").textContent = "Level: " + player.shopUpgrades.offeringAutoLevel + "/5"
+    document.getElementById("obtainiumautolevel").textContent = "Level: " + player.shopUpgrades.obtainiumAutoLevel + "/5"
+    document.getElementById("cashgrab").textContent = "Level: " + player.shopUpgrades.cashGrabLevel + "/5"
+
+    document.getElementById("offeringtimerbutton").textContent = "Upgrade for " + (shopBaseCosts.offerTimer + 25 * player.shopUpgrades.offeringTimerLevel) + " Quarks"
+    document.getElementById("offeringautobutton").textContent = "Upgrade for " + (shopBaseCosts.offerAuto + 25 * player.shopUpgrades.offeringAutoLevel) + " Quarks"
+    document.getElementById("obtainiumtimerbutton").textContent = "Upgrade for " + (shopBaseCosts.obtainiumTimer + 25 * player.shopUpgrades.obtainiumTimerLevel) + " Quarks"
+    document.getElementById("obtainiumautobutton").textContent = "Upgrade for " + (shopBaseCosts.obtainiumAuto + 25 * player.shopUpgrades.obtainiumAutoLevel) + " Quarks"
+    document.getElementById("instantchallengebutton").textContent = "Buy for " + (shopBaseCosts.instantChallenge) + " Quarks"
+    document.getElementById("cashgrabbutton").textContent = "Upgrade for " + (shopBaseCosts.cashGrab + 100 * player.shopUpgrades.cashGrabLevel) + " Quarks"
+
+    if(player.shopUpgrades.offeringTimerLevel == 5){document.getElementById("offeringtimerbutton").textContent = "Maxed!"}
+    if(player.shopUpgrades.offeringAutoLevel == 5){document.getElementById("offeringautobutton").textContent = "Maxed!"}
+    if(player.shopUpgrades.obtainiumTimerLevel == 5){document.getElementById("obtainiumtimerbutton").textContent = "Maxed!"}
+    if(player.shopUpgrades.obtainiumAutoLevel == 5){document.getElementById("obtainiumautobutton").textContent = "Maxed!"}
+    if(player.shopUpgrades.instantChallengeBought){document.getElementById("instantchallengebutton").textContent = "Bought!"; document.getElementById("instantchallenge").textContent = "Bought!"}
+    if(player.shopUpgrades.cashGrabLevel == 5){document.getElementById("cashgrabbutton").textContent = "Maxed!"}
 }
 
 }
@@ -534,12 +584,14 @@ document.getElementById("activaterune1").style.backgroundColor = "#171717"
 document.getElementById("activaterune2").style.backgroundColor = "#171717"
 document.getElementById("activaterune3").style.backgroundColor = "#171717"
 document.getElementById("activaterune4").style.backgroundColor = "#171717"
+document.getElementById("activaterune5").style.backgroundColor = "#171717"
 
 if (player.runeshards > 0.5){
     document.getElementById("activaterune1").style.backgroundColor = "purple"
     document.getElementById("activaterune2").style.backgroundColor = "purple"
     document.getElementById("activaterune3").style.backgroundColor = "purple"
     document.getElementById("activaterune4").style.backgroundColor = "purple"	
+    document.getElementById("activaterune5").style.backgroundColor = "purple"	
 }
 }
 if (currentTab == "transcension"){

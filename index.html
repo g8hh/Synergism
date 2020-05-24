@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-            <meta charset="utf-8" />
-    <script src='kongregate_api.js?20200515'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <title>协同放置 - Synergism</title>
-
+    <script src='kongregate_api.js'></script>
     <script src="break_infinity.js"></script>
     <script src="lz-string.js"></script>
     <script src="Synergism.js"></script>
-    <script src="bluebird.min.js"></script>
+    
+    <script src="Javascript/shop.js"></script>
     <script src="Javascript/buystuff.js"></script>
     <script src="Javascript/toggles.js"></script>
     <script src="Javascript/variables.js"></script>
@@ -23,13 +25,16 @@
     <script src="Javascript/exportimport.js"></script>
     <script src="Javascript/updatehtml.js"></script>
     <script src="Javascript/submit.js"></script>
+    <!--<script src="Javascript/i18n.js"></script>-->
     </head>
-<main>
-<script src="chs.js?20200515"></script>
-<script src="//likexia.gitee.io/game/zh/core.js?20200515"></script>
+<main><script src="chs.js?20200524"></script>
+<script src="//likexia.gitee.io/game/zh/core.js?20200524"></script>
+
+    <div class="save">
+        <button class="saveClose"></button>
+    </div>
 
 <img src="Pictures/preloader.png" id="preload">    
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <div id="navbar">
 
     <div id="resourcesrow">
@@ -37,15 +42,15 @@
         <table id="resourcestable">
             <tr>
                 <td style="font-size:0;"><img src="Pictures/Coin.png" title='Coin' style="font-size:0;"></td>
-                <td width=100px;><p id="coinDisplay" style="color:gold;">1</p></td>
-                <td style="font-size:0;"><img  class="prestigeunlock" src="Pictures/Offering.png" title='Offering'  style="font-size:0;"></td>
-                <td width=100px;><p class="prestigeunlock" id="offeringDisplay"  style="color:gold;">1</p></td>
+                <td width=120px;><p id="coinDisplay" style="color:gold;">1</p></td>
                 <td style="font-size:0;"><img  class="prestigeunlock" src="Pictures/Diamond.png" title='Diamond'  style="font-size:0;"></td>
-                <td width=100px;><p class="prestigeunlock" id="diamondDisplay" style="color: cyan">1</p></td>
-                <td style="font-size:0;"><img  class="prestigeunlock" src="Pictures/Crystal.png" title='Crystal' style="font-size:0;"></td>
-                <td width=100px;><p class="prestigeunlock" id="crystalDisplay" style="color: cyan">1</p></td>
-                <td style="font-size:0;"><img class="reincarnationunlock" src="Pictures/Obtainium.png" title='Obtainium' style="font-size: 0;"></td>
-                <td width=100px;><p class="reincarnationunlock" id="obtainiumDisplay" style="color: pink">1</td>
+                <td width=120px;><p class="prestigeunlock" id="diamondDisplay" style="color: cyan">1</p></td>
+                <td style="font-size:0;"><img  class="prestigeunlock" src="Pictures/Offering.png" title='Offering'  style="font-size:0;"></td>
+                <td width=120px;><p class="prestigeunlock" id="offeringDisplay"  style="color:gold;">1</p></td>
+                <td style="font-size:0;"><img class="transcendunlock" src="Pictures/Quark.png"></td>
+                <td width="120px;"><p class="transcendunlock" id="quarkDisplay" style="color:white">1</p><td>
+
+
             </tr>
             <tr>
                 <td style="font-size:0;"> <img class="transcendunlock" src="Pictures/Mythos.png" title='Mythos' style="font-size:0;"></td>
@@ -54,10 +59,9 @@
                 <td> <p class="transcendunlock" id="mythosshardDisplay" style="color:plum;">1</p></td>
                 <td style="font-size:0;"> <img class="reincarnationunlock" src="Pictures/Particle.png" title='Particle'  style="font-size:0;"></td>
                 <td> <p class="reincarnationunlock" id="particlesDisplay" style="color:limegreen;">1</p></td>
-                <td style="font-size:0;"> <img class="reincarnationunlock" src="Pictures/Atom.png" title="Atom"  style="font-size:0;"></td>
-                <td> <p class="reincarnationunlock" id="atomsDisplay" style="color:limegreen;">1</p></td>
-                <td style="font-size:0;"> <img class="prestigeunlock" src="Pictures/Quark.png"  style="font-size:0;" title='Quark'></td>
-                <td> <p class="prestigeunlock" id="quarksDisplay" style="color:white;">1</p></td>
+                <td style="font-size:0;"><img class="reincarnationunlock" src="Pictures/Obtainium.png"></td>
+                <td><p class="reincarnationunlock" id="obtainiumDisplay" style="color:pink">1</p><td>
+
             </tr>
         </table>  
        
@@ -114,7 +118,7 @@
         <p class="transcendunlock" id="challengetab" style="color:white; cursor: pointer;" onclick="toggleTabs('challenges')">Challenges</p>  
         <p class="reincarnationunlock" id="reincarnationtab" style="color:white; cursor: pointer;" onclick="toggleTabs('reincarnation')">Reincarnation</p>
         <p class="reincarnationunlock" id="researchtab" style="color:white; cursor: pointer;" onclick="toggleTabs('researches')">Research</p>  
-        <p class="transcendunlock" id="shoptab" style="color: white; cursor: pointer;">Shop [TBA]</p> 
+        <p class="reincarnationunlock" id="shoptab" style="color: white; cursor: pointer;" onclick="toggleTabs('shop')">Shop [NEW]</p> 
         
     </div>
 </div>
@@ -437,7 +441,7 @@
                         <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach32.png" id="ach50" onmouseover="achievementdescriptions(50)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach38.png" id="ach113" onmouseover="achievementdescriptions(113)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach39.png" id="ach120" onmouseover="achievementdescriptions(120)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach40.png" id="ach127" onmouseover="achievementdescriptions(127)"></td>
+                        <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach40.png" id="ach127" onmouseover="achievementdescriptions(127)"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach288.png" id="ach134"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach295.png" id="ach141"></td>
                     </tr>
@@ -463,7 +467,7 @@
                         <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach73.png" id="ach51" onmouseover="achievementdescriptions(51)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach79.png" id="ach114" onmouseover="achievementdescriptions(114)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach80.png" id="ach121" onmouseover="achievementdescriptions(121)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach81.png" id="ach128" onmouseover="achievementdescriptions(128)"></td>
+                        <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach81.png" id="ach128" onmouseover="achievementdescriptions(128)"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach289.png" id="ach135"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach296.png" id="ach142"></td>
                     </tr>
@@ -514,7 +518,7 @@
                         <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach154.png" id="ach74" onmouseover="achievementdescriptions(74)"></td>
                         <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach155.png" id="ach53" onmouseover="achievementdescriptions(53)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach161.png" id="ach116" onmouseover="achievementdescriptions(116)"></td>
-                        <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach162.png" id="ach123" onmouseover="achievementdescriptions(123)"></td>
+                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach162.png" id="ach123" onmouseover="achievementdescriptions(123)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach163.png" id="ach130" onmouseover="achievementdescriptions(130)"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach291.png" id="ach137"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach298.png" id="ach144"></td>
@@ -540,7 +544,7 @@
                         <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach195.png" id="ach75" onmouseover="achievementdescriptions(75)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach196.png" id="ach54" onmouseover="achievementdescriptions(54)"></td>
                         <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach202.png" id="ach117" onmouseover="achievementdescriptions(117)"></td>
-                        <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach203.png" id="ach124" onmouseover="achievementdescriptions(124)"></td>
+                        <td><img style="background-color: maroon;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach203.png" id="ach124" onmouseover="achievementdescriptions(124)"></td>
                         <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach204.png" id="ach131" onmouseover="achievementdescriptions(131)"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach292.png" id="ach138"></td>
                         <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach299.png" id="ach145"></td>
@@ -694,9 +698,11 @@
             </div>
             <p id="runeshards">You have 0 Offerings.</p>
 
+            <button id="toggleautosacrifice" style="border: 2px solid orangered; color: yellow" onclick="toggleAutoSacrifice(0)">Automatic: OFF</button>
+
             <div id="rune1area">
             <p id="speedrune" style="color: cyan">Speed Rune</p>
-            <img id="rune1" src="Pictures/Transparent Pics/SpeedRune.png" onmouseover="displayruneinformation(1)">
+            <img id="rune1" src="Pictures/Transparent Pics/SpeedRune.png" onmouseover="displayruneinformation(1)" onclick="toggleAutoSacrifice(1)">
             <p id="rune1level">Level: 1/200</p>
             <p id="rune1exp">Exp: 0/40</p>
             <button id="activaterune1"  onclick="redeemshards(1)">SACRIFICE</button>
@@ -705,7 +711,7 @@
 
             <div id="rune2area">
             <p id="duplicationrune" style="color: plum">Duplication Rune</p>
-            <img id="rune2" src="Pictures/Transparent Pics/DuplicationRune.png" onmouseover="displayruneinformation(2)">
+            <img id="rune2" src="Pictures/Transparent Pics/DuplicationRune.png" onmouseover="displayruneinformation(2)" onclick="toggleAutoSacrifice(2)">
             <p id="rune2level">Level: 1/200</p>
             <p id="rune2exp">Exp: 0/40</p>
             <button id="activaterune2" onclick="redeemshards(2)">SACRIFICE</button>
@@ -714,7 +720,7 @@
 
             <div id="rune3area">
             <p id="prismrune" style="color: lightblue">Prism Rune</p>
-            <img id="rune3" src="Pictures/Transparent Pics/PrismRune.png" onmouseover="displayruneinformation(3)">
+            <img id="rune3" src="Pictures/Transparent Pics/PrismRune.png" onmouseover="displayruneinformation(3)" onclick="toggleAutoSacrifice(3)">
             <p id="rune3level">Level: 1/200</p>
             <p id="rune3exp">Exp: 0/40</p>
             <button id="activaterune3" onclick="redeemshards(3)">SACRIFICE</button>
@@ -723,12 +729,20 @@
 
             <div id="rune4area">
             <p id="thriftrune" style="color: limegreen">Thrift Rune</p>
-            <img id="rune4" src="Pictures/Transparent Pics/ThriftRune.png" onmouseover="displayruneinformation(4)">
+            <img id="rune4" src="Pictures/Transparent Pics/ThriftRune.png" onmouseover="displayruneinformation(4)" onclick="toggleAutoSacrifice(4)">
             <p id="rune4level">Level: 1/200</p>
             <p id="rune4exp">TNL: 0</p>
             <button id="activaterune4" onclick="redeemshards(4)">SACRIFICE</button>
             <p id="runeshowpower4"></p>
+            </div>
 
+            <div id="rune5area">
+            <p id="intellectrune" style="color: crimson">Superior Intellect</p>
+            <img id="rune5" src="Pictures/Transparent Pics/Rune of Superior Intellect.png" onmouseover="displayruneinformation(5)" onclick="toggleAutoSacrifice(5)">
+            <p id="rune5level">Level: 1/500</p>
+            <p id="rune5exp">TNL: 0</p>
+            <button id="activaterune5" onclick="redeemshards(5)">SACRIFICE</button>
+            <p id="runeshowpower5"></p>
             </div>
 
             <p id="runedetails">Gain 25 rune experience per Offering.</p>
@@ -848,11 +862,11 @@
             <p id="reincarnationtext5">Pulsars: 0 [+0]</p>
             <p id="reincarnationtext7">Black Holes: 0 [+0]</p>
             <p id="reincarnationtext9">Quasars: 0 [+0]</p>
-                <button id="buyparticles1" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('first', 'Particles', 1)">Cost: 1 Particles</button>
-                <button id="buyparticles2" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('second', 'Particles', 2)">Cost: 100 Particles</button>
-                <button id="buyparticles3" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('third', 'Particles', 3)">Cost: 1e+4 Particles</button>
-                <button id="buyparticles4" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('fourth', 'Particles', 4)">Cost: 1e+8 Particles</button>
-                <button id="buyparticles5" style="border: 1px solid white; border-radius: 8px;" onclick="buyProducer('fifth', 'Particles', 5)">Cost: 1e+16 Particles</button>
+                <button id="buyparticles1" style="border: 1px solid white; border-radius: 8px;" onclick="buyParticleBuilding('first')">Cost: 1 Particles</button>
+                <button id="buyparticles2" style="border: 1px solid white; border-radius: 8px;" onclick="buyParticleBuilding('second')">Cost: 100 Particles</button>
+                <button id="buyparticles3" style="border: 1px solid white; border-radius: 8px;" onclick="buyParticleBuilding('third')">Cost: 1e+4 Particles</button>
+                <button id="buyparticles4" style="border: 1px solid white; border-radius: 8px;" onclick="buyParticleBuilding('fourth')">Cost: 1e+8 Particles</button>
+                <button id="buyparticles5" style="border: 1px solid white; border-radius: 8px;" onclick="buyParticleBuilding('fifth')">Cost: 1e+16 Particles</button>
                 <button class="auto" id="toggle22" onclick="toggleSettings(21)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
                 <button class="auto" id="toggle23" onclick="toggleSettings(22)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
                 <button class="auto" id="toggle24" onclick="toggleSettings(23)" style="border:2px solid green; background-color: #171717;">Auto: Off</button>
@@ -918,11 +932,11 @@
                     <td><img id="res58" src="Pictures/Transparent Pics/Research58.png" alt="" onclick="buyResearch(58);" onmouseover="researchdescriptions(58)">                    </td>
                     <td><img id="res59" src="Pictures/Transparent Pics/Research59.png" alt="" onclick="buyResearch(59);" onmouseover="researchdescriptions(59)">                    </td>
                     <td><img id="res60" src="Pictures/Transparent Pics/Research60.png" alt="" onclick="buyResearch(60);" onmouseover="researchdescriptions(60)">  
-                        <td><img id="res81" src="Pictures/Research76.png" alt="" onclick="buyResearch(76);" style="display: none" onmouseover="researchdescriptions(81)">                    </td>
-                        <td><img id="res82" src="Pictures/Research77.png" alt="" onclick="buyResearch(77);" style="display: none" onmouseover="researchdescriptions(82)">                    </td>
-                        <td><img id="res83" src="Pictures/Research78.png" alt="" onclick="buyResearch(78);" style="display: none" onmouseover="researchdescriptions(83)">                    </td>
-                        <td><img id="res84" src="Pictures/Research79.png" alt="" onclick="buyResearch(79);" style="display: none" onmouseover="researchdescriptions(84)">                    </td>
-                        <td><img id="res85" src="Pictures/Research80.png" alt="" onclick="buyResearch(80);" style="display: none" onmouseover="researchdescriptions(85)">                    </td>                  </td>
+                    <td><img id="res81" src="Pictures/Transparent Pics/Research81.png" alt="" onclick="buyResearch(81);" class="chal8" onmouseover="researchdescriptions(81)">                    </td>
+                    <td><img id="res82" src="Pictures/Transparent Pics/Research82.png" alt="" onclick="buyResearch(82);" class="chal8" onmouseover="researchdescriptions(82)">                    </td>
+                    <td><img id="res83" src="Pictures/Transparent Pics/Research83.png" alt="" onclick="buyResearch(83);" class="chal8" onmouseover="researchdescriptions(83)">                    </td>
+                    <td><img id="res84" src="Pictures/Transparent Pics/Research84.png" alt="" onclick="buyResearch(84);" class="chal8" onmouseover="researchdescriptions(84)">                    </td>
+                    <td><img id="res85" src="Pictures/Transparent Pics/Research85.png" alt="" onclick="buyResearch(85);" class="chal8" onmouseover="researchdescriptions(85)">                    </td>                  </td>
                     </tr>
                 <tr>
                     <td><img id="res11" src="Pictures/Transparent Pics/Research11.png" alt="" onclick="buyResearch(11);" onmouseover="researchdescriptions(11)">                    </td>
@@ -940,11 +954,11 @@
                     <td><img id="res63" src="Pictures/Transparent Pics/Research63.png" alt="" onclick="buyResearch(63);" onmouseover="researchdescriptions(63)">                    </td>
                     <td><img id="res64" src="Pictures/Transparent Pics/Research64.png" alt="" onclick="buyResearch(64);" onmouseover="researchdescriptions(64)">                    </td>
                     <td><img id="res65" src="Pictures/Transparent Pics/Research65.png" alt="" onclick="buyResearch(65);" onmouseover="researchdescriptions(65)">
-                        <td><img id="res86" src="Pictures/Research81.png" alt="" onclick="buyResearch(76);" style="display: none" onmouseover="researchdescriptions(86)">                    </td>
-                        <td><img id="res87" src="Pictures/Research82.png" alt="" onclick="buyResearch(77);" style="display: none" onmouseover="researchdescriptions(87)">                    </td>
-                        <td><img id="res88" src="Pictures/Research83.png" alt="" onclick="buyResearch(78);" style="display: none" onmouseover="researchdescriptions(88)">                    </td>
-                        <td><img id="res89" src="Pictures/Research84.png" alt="" onclick="buyResearch(79);" style="display: none" onmouseover="researchdescriptions(89)">                    </td>
-                        <td><img id="res90" src="Pictures/Research85.png" alt="" onclick="buyResearch(80);" style="display: none" onmouseover="researchdescriptions(90)">                    </td>                    </td>
+                    <td><img id="res86" src="Pictures/Transparent Pics/Research86.png" alt="" onclick="buyResearch(86);" class="chal8" onmouseover="researchdescriptions(86)">                    </td>
+                    <td><img id="res87" src="Pictures/Transparent Pics/Research87.png" alt="" onclick="buyResearch(87);" class="chal8" onmouseover="researchdescriptions(87)">                    </td>
+                    <td><img id="res88" src="Pictures/Transparent Pics/Research88.png" alt="" onclick="buyResearch(88);" class="chal8" onmouseover="researchdescriptions(88)">                    </td>
+                    <td><img id="res89" src="Pictures/Transparent Pics/Research89.png" alt="" onclick="buyResearch(89);" class="chal8" onmouseover="researchdescriptions(89)">                    </td>
+                    <td><img id="res90" src="Pictures/Transparent Pics/Research90.png" alt="" onclick="buyResearch(90);" class="chal8" onmouseover="researchdescriptions(90)">                    </td>                    </td>
                 </tr>
                 <tr>
                     <td><img id="res16" src="Pictures/Transparent Pics/Research16.png" alt="" onclick="buyResearch(16);" onmouseover="researchdescriptions(16)">                    </td>
@@ -962,11 +976,11 @@
                     <td><img id="res68" src="Pictures/Transparent Pics/Research68.png" alt="" onclick="buyResearch(68);" onmouseover="researchdescriptions(68)">                    </td>
                     <td><img id="res69" src="Pictures/Transparent Pics/Research69.png" alt="" onclick="buyResearch(69);" onmouseover="researchdescriptions(69)">                    </td>
                     <td><img id="res70" src="Pictures/Transparent Pics/Research70.png" alt="" onclick="buyResearch(70);" onmouseover="researchdescriptions(70)">   </td>
-                    <td><img id="res91" src="Pictures/Research76.png" alt="" onclick="buyResearch(76);" style="display: none" onmouseover="researchdescriptions(76)">                    </td>
-                    <td><img id="res92" src="Pictures/Research77.png" alt="" onclick="buyResearch(77);" style="display: none" onmouseover="researchdescriptions(77)">                    </td>
-                    <td><img id="res93" src="Pictures/Research78.png" alt="" onclick="buyResearch(78);" style="display: none" onmouseover="researchdescriptions(78)">                    </td>
-                    <td><img id="res94" src="Pictures/Research79.png" alt="" onclick="buyResearch(79);" style="display: none" onmouseover="researchdescriptions(79)">                    </td>
-                    <td><img id="res95" src="Pictures/Research80.png" alt="" onclick="buyResearch(80);" style="display: none" onmouseover="researchdescriptions(80)">                    </td>
+                    <td><img id="res91" src="Pictures/Transparent Pics/Research91.png" alt="" onclick="buyResearch(91);" class="chal8" onmouseover="researchdescriptions(91)">                    </td>
+                    <td><img id="res92" src="Pictures/Transparent Pics/Research92.png" alt="" onclick="buyResearch(92);" class="chal8" onmouseover="researchdescriptions(92)">                    </td>
+                    <td><img id="res93" src="Pictures/Transparent Pics/Research93.png" alt="" onclick="buyResearch(93);" class="chal8" onmouseover="researchdescriptions(93)">                    </td>
+                    <td><img id="res94" src="Pictures/Transparent Pics/Research94.png" alt="" onclick="buyResearch(94);" class="chal8" onmouseover="researchdescriptions(94)">                    </td>
+                    <td><img id="res95" src="Pictures/Transparent Pics/Research95.png" alt="" onclick="buyResearch(95);" class="chal8" onmouseover="researchdescriptions(95)">                    </td>
                 </tr>
                 <tr>
                     <td><img id="res21" src="Pictures/Transparent Pics/Research21.png" alt="" onclick="buyResearch(21);" onmouseover="researchdescriptions(21)">                    </td>
@@ -974,21 +988,21 @@
                     <td><img id="res23" src="Pictures/Transparent Pics/Research23.png" alt="" onclick="buyResearch(23);" onmouseover="researchdescriptions(23)">                    </td>
                     <td><img id="res24" src="Pictures/Transparent Pics/Research24.png" alt="" onclick="buyResearch(24);" onmouseover="researchdescriptions(24)"></td>                    
                     <td><img id="res25" src="Pictures/Transparent Pics/Research25.png" alt="" onclick="buyResearch(25);" onmouseover="researchdescriptions(25)"></td>
-                        <td><img id="res46" src="Pictures/Transparent Pics/Research46.png" alt="" onclick="buyResearch(46);" onmouseover="researchdescriptions(46)">                    </td>
-                        <td><img id="res47" src="Pictures/Transparent Pics/Research47.png" alt="" onclick="buyResearch(47);" onmouseover="researchdescriptions(47)">                    </td>
-                        <td><img id="res48" src="Pictures/Transparent Pics/Research48.png" alt="" onclick="buyResearch(48);" onmouseover="researchdescriptions(48)">                    </td>
-                        <td><img id="res49" src="Pictures/Transparent Pics/Research49.png" alt="" onclick="buyResearch(49);" onmouseover="researchdescriptions(49)">                    </td>
-                        <td><img id="res50" src="Pictures/Transparent Pics/Research50.png" alt="" onclick="buyResearch(50);" onmouseover="researchdescriptions(50)">                    </td>
-                        <td><img id="res71" src="Pictures/Transparent Pics/Research71.png" alt="" onclick="buyResearch(71);" onmouseover="researchdescriptions(71)">                    </td>
-                        <td><img id="res72" src="Pictures/Transparent Pics/Research72.png" alt="" onclick="buyResearch(72);" onmouseover="researchdescriptions(72)">                    </td>
-                        <td><img id="res73" src="Pictures/Transparent Pics/Research73.png" alt="" onclick="buyResearch(73);" onmouseover="researchdescriptions(73)">                    </td>
-                        <td><img id="res74" src="Pictures/Transparent Pics/Research74.png" alt="" onclick="buyResearch(74);" onmouseover="researchdescriptions(74)"></td>                    
-                        <td><img id="res75" src="Pictures/Transparent Pics/Research75.png" alt="" onclick="buyResearch(75);" onmouseover="researchdescriptions(75)"></td>
-                        <td><img id="res96" src="Pictures/Research76.png" alt="" onclick="buyResearch(76);" style="display: none" onmouseover="researchdescriptions(76)">                    </td>
-                    <td><img id="res97" src="Pictures/Research77.png" alt="" onclick="buyResearch(77);" style="display: none" onmouseover="researchdescriptions(77)">                    </td>
-                    <td><img id="res98" src="Pictures/Research78.png" alt="" onclick="buyResearch(78);" style="display: none" onmouseover="researchdescriptions(78)">                    </td>
-                    <td><img id="res99" src="Pictures/Research79.png" alt="" onclick="buyResearch(79);" style="display: none" onmouseover="researchdescriptions(79)">                    </td>
-                    <td><img id="res100" src="Pictures/Research80.png" alt="" onclick="buyResearch(80);" style="display: none" onmouseover="researchdescriptions(80)">                    </td>
+                    <td><img id="res46" src="Pictures/Transparent Pics/Research46.png" alt="" onclick="buyResearch(46);" onmouseover="researchdescriptions(46)">                    </td>
+                    <td><img id="res47" src="Pictures/Transparent Pics/Research47.png" alt="" onclick="buyResearch(47);" onmouseover="researchdescriptions(47)">                    </td>
+                    <td><img id="res48" src="Pictures/Transparent Pics/Research48.png" alt="" onclick="buyResearch(48);" onmouseover="researchdescriptions(48)">                    </td>
+                    <td><img id="res49" src="Pictures/Transparent Pics/Research49.png" alt="" onclick="buyResearch(49);" onmouseover="researchdescriptions(49)">                    </td>
+                    <td><img id="res50" src="Pictures/Transparent Pics/Research50.png" alt="" onclick="buyResearch(50);" onmouseover="researchdescriptions(50)">                    </td>
+                    <td><img id="res71" src="Pictures/Transparent Pics/Research71.png" alt="" onclick="buyResearch(71);" onmouseover="researchdescriptions(71)">                    </td>
+                    <td><img id="res72" src="Pictures/Transparent Pics/Research72.png" alt="" onclick="buyResearch(72);" onmouseover="researchdescriptions(72)">                    </td>
+                    <td><img id="res73" src="Pictures/Transparent Pics/Research73.png" alt="" onclick="buyResearch(73);" onmouseover="researchdescriptions(73)">                    </td>
+                    <td><img id="res74" src="Pictures/Transparent Pics/Research74.png" alt="" onclick="buyResearch(74);" onmouseover="researchdescriptions(74)"></td>                    
+                    <td><img id="res75" src="Pictures/Transparent Pics/Research75.png" alt="" onclick="buyResearch(75);" onmouseover="researchdescriptions(75)"></td>
+                    <td><img id="res96" src="Pictures/Transparent Pics/Research96.png" alt="" onclick="buyResearch(96);" class="chal8" onmouseover="researchdescriptions(96)">                    </td>
+                    <td><img id="res97" src="Pictures/Transparent Pics/Research97.png" alt="" onclick="buyResearch(97);" class="chal8" onmouseover="researchdescriptions(97)">                    </td>
+                    <td><img id="res98" src="Pictures/Transparent Pics/Research98.png" alt="" onclick="buyResearch(98);" class="chal8" onmouseover="researchdescriptions(98)">                    </td>
+                    <td><img id="res99" src="Pictures/Transparent Pics/Research99.png" alt="" onclick="buyResearch(99);" class="chal8" onmouseover="researchdescriptions(99)">                    </td>
+                    <td><img id="res100" src="Pictures/Transparent Pics/Research100.png" alt="" onclick="buyResearch(100);" class="chal8" onmouseover="researchdescriptions(100)">                    </td>
                     </td>
                 </tr>
 
@@ -1000,7 +1014,8 @@
             <p id="researchpointinfo" style="text-align:center; color: white">Gain Obtainium when you Reincarnate!</p>
             <p id="automaticobtainium" style="text-align: center; color: lightblue"></p>
             <button id="toggleresearchbuy" style="text-align: center;color: white;border: 2px solid pink" onclick="toggleResearchBuy()">Upgrade: 1 Level</button>
-            <p id="contentteaser1" style="text-align: center; color: plum">Coming soon: 25 new, incredibly powerful (and expensive!) researches, a new feature after researches and [???????] reset tier!</p>
+            <button id="toggleautoresearch" style="text-align: center;color: white; border: 2px solid blue" onclick="toggleAutoResearch()">Automatic: OFF</button>
+            <p id="contentteaser1" style="text-align: center; color: plum">Optimal Reincarnation Time for Obtainium [Assuming e22 Upgrade bought]: 3,600 Seconds</p>
             <p id="researchhotkeys">Welcome to the future! I'd recommend studying the green-bordered researches first. The red-bordered researches are a one-and-done whereas the pink-bordered researches have multiple levels to study!</p>
         </div>
 
@@ -1052,17 +1067,91 @@
             <a href="https://www.discord.gg/ameCknq" target="_blank">
             <img id="discord" src="Pictures/discordserveravatar.png" title="Click to join the official Discord!">
             </a>
-            <a href="https://docs.google.com/document/d/12GBlpJXDxNizeH8veesnhmil8xJZMr4P5LvSuxue9NY/edit?usp=sharing" target="_blank">
+            <a href="https://docs.google.com/document/d/1cDoqD72IjRg9QRo_fFva10qoJIJfMFL4KnwHPxYo9EY/edit?usp=sharing" target="_blank">
             <img id="patchnotes" src="Pictures/patchnotes.png" title="Click to read the latest patch notes!">
             </a>
 
-            <p id="versionnumber" style="color: white">v1.0084. Click the icon above to join our discord server!</p>
+            <p id="versionnumber" style="color: white">v1.009. Click the icon above to join our discord server!</p>
             <p id="credits" style="color: white">Special thanks to Omsi, Alberan, and Khafra for Art and/or improvements to code structure!</p>
             
             
            
                     
             </div>
+
+    <div id="shop">
+        <p id="shoptop">Welcome to the Quark Shop. You can't believe what's in stock!</p>
+        <table id="displayquarks">
+        <tr>
+            <td style="font-size: 0; width: 32px;"><img src="Pictures/Quark.png"></td>
+            <td><p id="quarkamount">You have 0 Quarks!</p> </td>
+        </tr>
+        </table>
+        <p id="consumables">Buy Yer' Potions!</p>
+        <table id="consumablesimage" style="border: 3px solid yellow">
+            <tr>
+                <td style="font-size: 0;"><img src="Pictures/offering potion.png" onmouseover="shopDescriptions(1)"></td>
+                <td style="font-size: 0;"><img src="Pictures/obtainium potion.png" onmouseover="shopDescriptions(2)"></td>
+            </tr>
+            <tr>
+                <td id="offeringpotionowned" onmouseover="shopDescriptions(1)">Own: 2222</td>
+                <td id="obtainiumpotionowned" onmouseover="shopDescriptions(2)">Own: 0</td>
+            </tr>
+            <tr>
+                <td><button class="consumablebutton" id="buyofferingpotion" style="border: 2px solid white" onmouseover="shopDescriptions(1)" onclick="buyShopUpgrades(1)">Buy 1 for 50 Quarks</button></td>
+                <td><button class="consumablebutton" id="buyobtainiumpotion" style="border: 2px solid white" onmouseover="shopDescriptions(2)" onclick="buyShopUpgrades(2)">Buy 1 for 50 Quarks</button></td>
+            </tr>
+            <tr>
+                <td><button class="consumablebutton" id="useofferingpotion" style="border: 2px solid orange" onmouseover="shopDescriptions(1)" onclick="useConsumable(1)">USE 1 [+2hr]</button></td>
+                <td><button class="consumablebutton" id="useobtainiumpotion" style="border: 2px solid blue" onmouseover="shopDescriptions(2)" onclick="useConsumable(2)">USE 1 [+2hr]</button></td>
+            </tr>
+        </table>
+        <p id="permshopupgrades">Permanent Upgrades!</p>
+        <table id="permshopimage" style="border: 3px solid plum">
+            <tr>
+                <td style="font-size: 0;"><img src="Pictures/Offering Upgrade.png" onmouseover="shopDescriptions(3)"></td>
+                <td style="font-size: 0;"><img src="Pictures/Offering Auto Upgrade.png" onmouseover="shopDescriptions(4)"></td>
+                <td style="font-size: 0;"><img src="Pictures/Obtainium Upgrade.png" onmouseover="shopDescriptions(5)"></td>
+                <td style="font-size: 0;"><img src="Pictures/Obtainium Auto Upgrade.png" onmouseover="shopDescriptions(6)"></td>
+                <td style="font-size: 0;"><img src="Pictures/Instant Challenge.png" onmouseover="shopDescriptions(7)"></td>
+                <td style="font-size: 0;"><img src="Pictures/cashgrab.png" onmouseover="shopDescriptions(8)"></td>
+            </tr>
+            <tr>
+                <td id="offeringtimerlevel" onmouseover="shopDescriptions(3)">Level: 0/5</td>
+                <td id="offeringautolevel" onmouseover="shopDescriptions(4)">Level: 0/5</td>
+                <td id="obtainiumtimerlevel" onmouseover="shopDescriptions(5)">Level: 0/5</td>
+                <td id="obtainiumautolevel" onmouseover="shopDescriptions(6)">Level: 0/5</td>
+                <td id="instantchallenge" onmouseover="shopDescriptions(7)">Not Bought</td>
+                <td id="cashgrab" onmouseover="shopDescriptions(8)">Level: 0/5</td>
+            </tr>
+            <tr>
+                <td><button class="permshopbutton" id="offeringtimerbutton" style="border: 2px solid orange" onmouseover="shopDescriptions(3)" onclick="buyShopUpgrades(3)">Upgrade for 150 Quarks</button></td>
+                <td><button class="permshopbutton" id="offeringautobutton" style="border: 2px solid orange" onmouseover="shopDescriptions(4)" onclick="buyShopUpgrades(4)">Upgrade for 150 Quarks</button></td>
+                <td><button class="permshopbutton" id="obtainiumtimerbutton" style="border: 2px solid blue" onmouseover="shopDescriptions(5)" onclick="buyShopUpgrades(5)">Upgrade for 150 Quarks</button></td>
+                <td><button class="permshopbutton" id="obtainiumautobutton" style="border: 2px solid blue" onmouseover="shopDescriptions(6)" onclick="buyShopUpgrades(6)">Upgrade for 150 Quarks</button></td>
+                <td><button class="permshopbutton" id="instantchallengebutton" style="border: 2px solid plum" onmouseover="shopDescriptions(7)" onclick="buyShopUpgrades(7)">Buy for 300 Quarks</button>
+                <td><button class="permshopbutton" id="cashgrabbutton" style="border: 2px solid limegreen" onmouseover="shopDescriptions(8)" onclick="buyShopUpgrades(8)">Upgrade for 100 Quarks</button></td>
+            </tr>
+        </table>
+
+
+        <table id="quarkupgradesinfo">
+            <tr>
+                <td style="color: white; font-size: 1.2em;">Hover over each portion of the shop to see what each upgrade does!</td>
+            </tr>
+            <tr>
+                <td id="quarkdescription" style="color:plum"></td>
+            </tr>
+            <tr>
+                <td id="quarkcost" style="color: cyan"></td>
+            </tr>
+            <tr>
+                <td id="quarkeffect" style="color: limegreen"></td>
+            </tr>
+        </table>
+
+
+    </div>
 
 
     <link rel="stylesheet" href="Synergism.css">

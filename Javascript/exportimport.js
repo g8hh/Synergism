@@ -64,7 +64,7 @@ function promocodes(i) {
 function exportSynergism() {
     player.offlinetick = Date.now();
     if (player.quarkstimer >= 3600){
-        player.worlds += Math.floor(player.quarkstimer/3600);
+        player.worlds += (Math.floor(player.quarkstimer/3600) * (1 + player.researches[99] + player.researches[100]));
         player.quarkstimer = (player.quarkstimer % 3600)
     }
     saveSynergy();
@@ -84,14 +84,13 @@ function exportSynergism() {
 }
 
 function importSynergism(input) {
-    console.log(input)
     try {
         const data = JSON.parse(atob(input));
         if (data.exporttest === "YES!" && data.kongregatetest !== "YES!") {
             localStorage.setItem("Synergysave2", input);
-            loadSynergy(true);
+            loadSynergy();
             document.getElementById("importinfo").textContent = "Successfully imported your savefile. Go nuts!"
-        } else { //
+        } else { 
             document.getElementById("importinfo").textContent = "Savefile code invalid. Try again with a valid code!"
         }
     } catch(err) {
@@ -166,7 +165,16 @@ function promocodes() {
         player.worlds += 99
 
         el.textContent = "Here's 99 Quarks for waiting for the update!"
-     } else {
+     }
+    else if (input == "shopequalp2w" && (player.version == "1.009") && player.offerpromo18used == false){
+        player.offerpromo18used = true
+        player.worlds += 125;
+        player.shopUpgrades.offeringPotion += 2;
+        player.shopUpgrades.obtainiumPotion += 2;
+
+        el.textContent = "Platonic's a sellout, Amirite? I'm the shop owner. Here's a couple goodies for you! [125 Quarks, 2 of each Potion]"
+    }
+    else {
         el.textContent = "I don't think you put that code in right, or your code is simply not valid. Try again!"
     }
         

@@ -1,5 +1,5 @@
 var runediv = [1.5, 2, 3, 5, 8]
-var runeexpbase = [1, 4, 9, 16, 25]
+var runeexpbase = [1, 4, 9, 16, 1000]
 
 // this shows the logarithm of costs. ex: upgrade one will cost 1e+6 coins, upgrade 2 1e+7, etc.
 var upgradeCosts = [0, 6, 7, 8, 10, 12, 20, 25, 30, 35, 45, 55, 75, 110, 150, 200, 250, 500, 750, 1000, 1500,
@@ -28,8 +28,10 @@ var researchBaseCosts = [0, 1, 1, 1, 1, 1,
 							2, 20, 200, 2000, 20000,
 							10, 40, 160, 1000, 10000,
 							1e7, 1e7, 2e7, 3e7, 4e7,
-							2e7, 2e7, 4e7, 8e7, 1.6e8,
-							1e7, 1e7, 1e7, 1e8, 1e9
+							2e8, 1e9, 2.5e8, 5e9, 7.5e7,
+							2.5e7, 7.5e7, 3e8, 1e9, 2.5e7,
+							1e8, 2e9, 1e10, 7.5e10, 1e10,
+							1e9, 3e10, 1e12, 5e9, 7.777e12
 
 							]
 
@@ -51,9 +53,10 @@ var researchMaxLevels = [0, 1, 1, 1, 1, 1,
 							 50, 50, 50, 50, 50,
 							 1, 1, 1, 1, 1,
 							 100, 250, 250, 250, 250,
-							 1000, 1000, 1000, 1000,
-							 1, 100, 100, 100, 100,
-							 100, 100, 100, 100, 100
+							 200, 1, 50, 100, 100,
+							 1000, 1000, 1000, 1000, 777,
+							 400, 400, 100, 100, 1,
+							 1, 1, 1, 1, 1
 							 ]								
 
 var ticker = 0;
@@ -165,7 +168,7 @@ var challengebaserequirements = {
 var challengebaserequirementsrein = {
 	six: 125,
 	seven: 500,
-	eight: 999999,
+	eight: 12000,
 }
 
 var prestigeamount = 1;
@@ -187,3 +190,19 @@ var challengefocus = 0;
 var maxexponent = 10000;
 
 var maxbuyresearch = false;
+
+var effectiveLevelMult = 1;
+var optimalOfferingTimer = 600;
+var optimalObtainiumTimer = 3600;
+
+const shopBaseCosts = {
+	offerPotion: 50,
+	obtainiumPotion: 50,
+	offerTimer: 150,
+	obtainiumTimer: 150,
+	offerAuto: 150,
+	obtainiumAuto: 150,
+	instantChallenge: 300,
+	cashGrab: 100
+}
+

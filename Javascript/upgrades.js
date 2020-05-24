@@ -60,8 +60,8 @@ var upgdesc59 = "Coin Mint production is multiplied by 1e+25000."
 var upgdesc60 = "Alchemies production is multiplied by 1e+35000." //Reincarnation Upgrades 61-100
 var upgdesc61 = "Welcome to reincarnation! +5% Offering Recycle, +5 EXP/Offering!"
 var upgdesc62 = "Completing challenges, automatically or manually, increase offerings gained in Reincarnation. Bonus subject to time multiplier!"
-var upgdesc63 = "Crystal Production is multiplied based on Particles to the sixth power [Caps at 1e3600x]."
-var upgdesc64 = "Mythos Shard Production is multiplied by your Particles to the second power [Caps at 1e1600x]."
+var upgdesc63 = "Crystal Production is multiplied based on Particles to the sixth power [Caps at 1e6000x]."
+var upgdesc64 = "Mythos Shard Production is multiplied by your Particles."
 var upgdesc65 = "Multiply the gain of Particles from Reincarnation by 5x!"
 var upgdesc66 = "When you use an Offering, every unlocked rune will get 3 free experience."
 var upgdesc67 = "Atom gain is increased by 3% per Particle producer purchased!"
@@ -192,7 +192,7 @@ function() { return "Look above!"},
 function() { return "+5% Offering Recycle/+5EXP per Offerings. Duh!"},
 function() { return "Base offering amount for Reincarnations +" + Math.floor(1/5 * (player.challengecompletions.one + player.challengecompletions.two + player.challengecompletions.three + player.challengecompletions.four + player.challengecompletions.five + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight)) + ". Challenge yourself!"},
 function() { return "All crystal production x" + format(Decimal.min("1e6000", Decimal.pow(player.reincarnationPoints.add(1),6)))},
-function() { return "All mythos shard production x" + format(Decimal.min("1e2000",Decimal.pow(player.reincarnationPoints.add(1),2)))},
+function() { return "All mythos shard production x" + format(Decimal.min("1e2000",Decimal.pow(player.reincarnationPoints.add(1),2)).times(Decimal.pow(Decimal.max(1, player.reincarnationPoints.dividedBy("1e1000")), 1/2)))},
 function() { return "5x Particle gain from Reincarnations. Duh!"},
 function() { return "It's quite clear in the description!"},
 function() { return "The first particle-tier producer is " + format(Decimal.pow(1.03, player.firstOwnedParticles + player.secondOwnedParticles + player.thirdOwnedParticles + player.fourthOwnedParticles + player.fifthOwnedParticles),2) + "x as productive."},
@@ -425,23 +425,45 @@ var resdesc77 = "Increase the level cap of Thrift rune by 1 per level, and +0.4%
 var resdesc78 = "Increase the level cap of Speed rune by 1 per level, and +0.4% exp for that rune in particular."
 var resdesc79 = "Increase the level cap of Prism rune by 1 per level, and +0.4% exp for that rune in particular."
 var resdesc80 = "Increase the level cap of Duplication rune by 1 per level, and +0.4% exp for that rune in particular."
-var resdesc86 = "Automated Obtainium feeling lacking? Well, what if I scaled it to be up to 10x more productive for longer runs?"
-function researchdescriptions(i) {
+var resdesc81 = "You thought the previous researches are expensive? You're going to need this! [+0.5% Obtainium/level]"
+var resdesc82 = "Permanently UNLOCK the Rune of Superior Intellect! [+%Ob / +Ant Speed / +Offering Timer Ext.]"
+var resdesc83 = "Taking forever to level up that SI Rune? Here's +2% SI Rune EXP per level."
+var resdesc84 = "Still taking longer than you wish it did? Take another +1% SI Rune EXP per level."
+var resdesc85 = "You'll love this. Improve time itself by making offering gain better for another +6 seconds before diminishing returns per level."
+var resdesc86 = "Yeah, going back to basics. +0.1% Accelerators/Level."
+var resdesc87 = "0/5 Multipliers SUCK: +0.1% Multipliers/Level."
+var resdesc88 = "-1/5 A.Boosts SUCK: +0.1% Accelerator Boosts/Level."
+var resdesc89 = "-5/5 MULTIPLIERS STILL SUCK: +0.4% Multiplier Boosts/Level"
+var resdesc90 = "Runes don't suck at all, but why not make them even BETTER? +0.01% Rune Effect/level!"
+var resdesc91 = "As lazy as this icon. A simple +0.25% Rune EXP for all runes!"
+var resdesc92 = "Even lazier! Another simple +0.25% Rune EXP for all runes!"
+var resdesc93 = "It's like I wasn't even trying. +1 Accelerator Boost per 100 Summative Rune Levels, per level."
+var resdesc94 = "The power of laziness benefits you. +100 Multiplier per 100 Summative Rune Levels, per level."
+var resdesc95 = "Gain +40 base Offerings from Reincarnations by purchasing this. Math Nerds will love this!"
+var resdesc96 = "Bribe the ants to force certain warrior ants to produce new ants. [Unlocks T6 Ant Production in v1.010]"
+var resdesc97 = "Bribe the ants to force certain lieutenant ants to produce new ants. [Unlocks T7 Ant Production in v1.010]"
+var resdesc98 = "Bribe the ants to force the K I N G ant to produce new ants. [Unlocks T8 Ant Production in v1.010]"
+var resdesc99 = "Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting (Up to +50)!"
+var resdesc100 = "Alright, Platonic is off his rocker. I don't expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +75)!"
+function researchdescriptions(i,auto=false) {
     var x = "resdesc" + i
     var y = window[x]
     var z = ""
     var p = "res" + i
-    z = " Cost: " + (format(researchBaseCosts[i],0,false)) + " Obtainium"
+    z = " Cost: " + (format(researchBaseCosts[i],0,false)) + " Obtainium" 
     if (player.researches[i] == researchMaxLevels[i]) {
         document.getElementById("researchcost").style.color = "Gold"
         document.getElementById("researchinfo3").style.color = "plum"
         z = z + " || MAXED!"}
-    else {document.getElementById("researchcost").style.color = "White"
+    else {document.getElementById("researchcost").style.color = "limegreen"
           document.getElementById("researchinfo3").style.color = "white"}
+    
+    if (player.researchPoints < researchBaseCosts[i] && player.researches[i] < researchMaxLevels[i]){document.getElementById("researchcost").style.color = "crimson"}
 
+    if (!auto && !player.autoResearchToggle){
     if (player.researches[i] > 0.5 && player.researches[i] < researchMaxLevels[i]) {document.getElementById(p).style.backgroundColor = "purple"}
     if (player.researches[i] > 0.5 && player.researches[i] >= researchMaxLevels[i]) {document.getElementById(p).style.backgroundColor = "green"}
-
+    }
     document.getElementById("researchinfo2").textContent = y
     document.getElementById("researchcost").textContent = z
     document.getElementById("researchinfo3").textContent = "Level " + player.researches[i] + "/" + researchMaxLevels[i]

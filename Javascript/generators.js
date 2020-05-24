@@ -20,6 +20,7 @@ function buyGenerator(i, state) {
             player[type] = player[type].sub(cost);
             player.upgrades[q] = 1;
             upgradeupdate(q, state)
+            player.reincarnatenocoinprestigetranscendorgeneratorupgrades = false;
         }
     revealStuff()
 	}

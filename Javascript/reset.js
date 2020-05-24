@@ -24,7 +24,11 @@ function resetdetails(i) {
             a += 1 / 5 * (player.challengecompletions.one + player.challengecompletions.two + player.challengecompletions.three + player.challengecompletions.four + player.challengecompletions.five + player.challengecompletions.six + player.challengecompletions.seven + player.challengecompletions.eight)
         }
         a += 3 * player.researches[25]
-        a *= Math.pow(player.reincarnationcounter / 600 * Math.pow(Math.min(1.5, player.reincarnationcounter / 400), 1), 0.7)
+        if (player.researches[95] == 1){
+            a += 40
+        }
+        a *= Math.pow(player.reincarnationcounter / 600 * Math.pow(Math.min(optimalOfferingTimer/400, player.reincarnationcounter / 400), 1), 0.7)
+
     }
     if (i >= 2 && i !== 5) {
         b += 3
@@ -35,7 +39,7 @@ function resetdetails(i) {
             b += (15 * Math.min(player.transcendcounter/1800, 1))
         }
         b += 1 * player.researches[24]
-        b *= Math.pow(player.transcendcounter / 540 * Math.pow(Math.min(1.25, player.transcendcounter / 480), 1), 0.6)
+        b *= Math.pow(player.transcendcounter / 540 * Math.pow(Math.min(optimalOfferingTimer/480, player.transcendcounter / 480), 1), 0.6)
 
     }
     if (i >= 1) {
@@ -50,7 +54,7 @@ function resetdetails(i) {
             c += (15 * Math.min(player.prestigecounter/1800, 1))
         }
         c += 1 * player.researches[24]
-        c *= Math.pow(player.prestigecounter / 480 * Math.pow(Math.min(1.0, player.prestigecounter / 600), 1), 0.5)
+        c *= Math.pow(player.prestigecounter / 480 * Math.pow(Math.min(optimalOfferingTimer/600, player.prestigecounter / 600), 1), 0.5)
     }
     q = a + b + c
     
@@ -67,6 +71,8 @@ function resetdetails(i) {
     if (player.upgrades[75] > 0.5) {
         q *= (1 + 2 * Math.min(1, Math.pow(player.maxobtainium / 30000000, 0.5)))
     }
+    q *= (1 + 1/50 * player.shopUpgrades.offeringAutoLevel);
+    q *= (1 + 1/100 * player.shopUpgrades.cashGrabLevel);
     q = Math.floor(q) * 100 / 100
 
     if (player.currentChallenge == "one") {
@@ -90,7 +96,10 @@ function resetdetails(i) {
     if (i == 1) {
         color = 'cyan'
         document.getElementById("resetofferings2").textContent = format(q)
+        if (document.getElementById("resetcurrency1").src !== "Pictures/Diamond.png"){
         document.getElementById("resetcurrency1").src = "Pictures/Diamond.png"
+        }
+
         document.getElementById("resetcurrency2").textContent = "+" + format(prestigePointGain)
         document.getElementById("resetobtainium").src = ""
         document.getElementById("resetobtainium2").textContent = ""
@@ -103,7 +112,9 @@ function resetdetails(i) {
     }
     if (i == 2) {
         color = 'plum'
+        if (document.getElementById("resetcurrency1").src !== "Pictures/Mythos.png"){
         document.getElementById("resetcurrency1").src = "Pictures/Mythos.png"
+        }
         document.getElementById("resetcurrency2").textContent = "+" + format(transcendPointGain)
         document.getElementById("resetobtainium").src = ""
         document.getElementById("resetobtainium2").textContent = ""
@@ -141,7 +152,7 @@ function resetdetails(i) {
             o *= Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5))
         }
         if (player.upgrades[70] > 0.5) {
-            o *= Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2)
+            o *= Math.pow(Math.min(19 + 0.6 * player.shopUpgrades.obtainiumTimerLevel, 1 + 2 * player.reincarnationcounter / 400),2)
         }
         if (player.upgrades[72] > 0.5) {
             o *= Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))
@@ -151,16 +162,24 @@ function resetdetails(i) {
         }
             o *= (1 + player.researches[65]/50)
             o *= (1 + player.researches[76]/100)
+            o *= (1 + player.researches[81]/200)
+            o *= (1 + player.shopUpgrades.obtainiumAutoLevel/50)
+            o *= (1 + player.shopUpgrades.cashGrabLevel/100)
+            o *= (1 + player.runelevels[4]/500) * Math.pow(2, player.runelevels[4]/250)
             o *= (1 + 0.01 * player.achievements[84] + 0.03 * player.achievements[91] + 0.05 * player.achievements[98] + 0.07 * player.achievements[105] + 0.09 * player.achievements[112] + 0.11 * player.achievements[119] + 0.13 * player.achievements[126] + 0.15 * player.achievements[133] + 0.17 * player.achievements[140] + 0.19 * player.achievements[147])
         if (player.achievements[53] > 0.5){
-            o *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3]))
+            o *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3] + player.runelevels[4]))
         }
-        if (player.achievements[52] > 0.5){o += 4}
+        if (player.achievements[128]){o *= 1.5};
+        if (player.achievements[129]){o *= 1.25};
+        if (player.achievements[51] > 0.5){o += 4}
             o *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
 
 
         color = 'green'
+        if (document.getElementById("resetcurrency1").src !== "Pictures/Particle.png"){
         document.getElementById("resetcurrency1").src = "Pictures/Particle.png"
+        }
         document.getElementById("resetcurrency2").textContent = "+" + format(reincarnationPointGain)
         document.getElementById("resetobtainium").src = "Pictures/Obtainium.png"
         document.getElementById("resetobtainium2").textContent = "+" + format(Math.floor(o))
@@ -173,7 +192,9 @@ function resetdetails(i) {
     }
     if (i == 5) {
         color = 'cyan'
+        if (document.getElementById("resetcurrency1").src !== "Pictures/Diamond.png"){
         document.getElementById("resetcurrency1").src = "Pictures/Diamond.png"
+        }
         document.getElementById("resetcurrency2").textContent = "-" + format(player.acceleratorBoostCost)
         document.getElementById("resetobtainium").src = ""
         document.getElementById("resetobtainium2").textContent = ""
@@ -192,12 +213,12 @@ function resetdetails(i) {
         document.getElementById("resetcurrency2").textContent = ""
         document.getElementById("resetobtainium2").textContent = ""
         if (player.currentChallengeRein !== "") {
-            if (player.transcendShards.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirementsrein[s] * Math.pow(1 + player.challengecompletions[s], 2)))) {
+            if (player.transcendShards.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirementsrein[s] * Math.min(Math.pow(1.3797, player.challengecompletions[s]),Math.pow(1 + player.challengecompletions[s], 2))))) {
                 document.getElementById("resetinfo").style.color = "limegreen"
             } else {
                 document.getElementById("resetinfo").style.color = "crimson"
             }
-            document.getElementById("resetinfo").textContent = "Are you done or tired of being in your challenge? Click to leave challenge " + s + ". Progress: " + format(player.transcendShards) + "/" + format(Decimal.pow(10, challengebaserequirementsrein[s] * Math.pow(1 + player.challengecompletions[s], 2))) + " Mythos Shards. TIME SPENT: " + format(player.reincarnationcounter) + " Seconds."
+            document.getElementById("resetinfo").textContent = "Are you done or tired of being in your challenge? Click to leave challenge " + s + ". Progress: " + format(player.transcendShards) + "/" + format(Decimal.pow(10, challengebaserequirementsrein[s] * Math.min(Math.pow(1.3797, player.challengecompletions[s]),Math.pow(1 + player.challengecompletions[s], 2)))) + " Mythos Shards. TIME SPENT: " + format(player.reincarnationcounter) + " Seconds."
         }
         if (player.currentChallengeRein == "") {
             document.getElementById("resetinfo").textContent = "You're not in a reincarnation challenge right now. Why would you need to leave it?"
@@ -361,7 +382,7 @@ function reset(i) {
             q *= Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(11), 10), 0.5))
         }
         if (player.upgrades[70] > 0.5) {
-            q *= Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2)
+            q *= Math.pow(Math.min(19 + 0.6 * player.shopUpgrades.obtainiumTimerLevel, 1 + 2 * player.reincarnationcounter / 400),2)
         }
         if (player.upgrades[72] > 0.5) {
             q *= Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))
@@ -371,11 +392,18 @@ function reset(i) {
         }
             q *= (1 + 1/50 * player.researches[65])
             q *= (1 + 1/100 * player.researches[76])
+            q *= (1 + 1/200 * player.researches[81])
+            q *= (1 + player.shopUpgrades.obtainiumAutoLevel/50)
+            q *= (1 + player.shopUpgrades.cashGrabLevel/100)
+
+            q *= (1 + player.runelevels[4]/500) * Math.pow(2, player.runelevels[4]/250)
         q *= (1 + 0.01 * player.achievements[84] + 0.03 * player.achievements[91] + 0.05 * player.achievements[98] + 0.07 * player.achievements[105] + 0.09 * player.achievements[112] + 0.11 * player.achievements[119] + 0.13 * player.achievements[126] + 0.15 * player.achievements[133] + 0.17 * player.achievements[140] + 0.19 * player.achievements[147])
         if (player.achievements[53] > 0.5){
-        q *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3]))
+        q *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3] + player.runelevels[4]))
         }
-        if (player.achievements[52] > 0.5){q += 4}
+        if (player.achievements[128]){q *= 1.5};
+        if (player.achievements[129]){q *= 1.25};
+        if (player.achievements[51] > 0.5){q += 4}
         q *= Math.min(1 + 3 * player.upgrades[70], Math.pow(player.reincarnationcounter/30, 2))
         if (player.currentChallengeRein !== "" && (q < 1.5)) {
             q = 0
@@ -423,6 +451,16 @@ function reset(i) {
             nine: player.challengecompletions.nine,
             ten: player.challengecompletions.ten
         }
+
+        if (player.shopUpgrades.instantChallengeBought && player.currentChallengeRein == ""){
+            player.challengecompletions.one = player.highestchallengecompletions.one
+            player.challengecompletions.two = player.highestchallengecompletions.two
+            player.challengecompletions.three = player.highestchallengecompletions.three
+            player.challengecompletions.four = player.highestchallengecompletions.four
+            player.challengecompletions.five = player.highestchallengecompletions.five
+
+        }
+
         player.reincarnatenocoinupgrades = true;
         player.reincarnatenocoinorprestigeupgrades = true;
         player.reincarnatenocoinprestigeortranscendupgrades = true;
@@ -436,6 +474,9 @@ function reset(i) {
         player.reincarnationcounter = 0;
 
 
+        if (player.autoResearchToggle && player.autoResearch > 0.5){
+            buyResearch(player.autoResearch, true)
+        }
 
     }
 
@@ -562,7 +603,7 @@ function resetUpgrades(i) {
         player.crystalUpgradesCost = [7, 15, 20, 40, 100, 200, 500, 1000]
 
         var m = 0;
-        m += Math.floor(player.runelevels[2] * (1 + player.researches[5] / 10) * (1 + player.researches[21] / 800) / 10) * 100 / 100
+        m += Math.floor(player.runelevels[2] * effectiveLevelMult / 10) * 100 / 100
         if (player.upgrades[73] > 0.5 && player.currentChallengeRein !== "") {
             m += 10
         }

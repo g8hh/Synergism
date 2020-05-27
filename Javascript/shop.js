@@ -3,7 +3,7 @@ const obtainiumconsumedesc = "Instantly gain 2 hours of Obtainium, based on your
 
 const offertimerdesc = "Each level increases the timer capacity for Offerings by 120 seconds per level!"
 const offerautodesc = "Automatically pour Offerings into a rune. 1st level unlocks feature, and each level increases Offering gain by 2%. Every 10 seconds, 2^(Level + 1) offerings are spent. TO ACTIVATE: Click on the rune icon (PICTURE) and it will turn orange just for you!"
-const obtainiumtimerdesc = "Each level increases the timer capacity for Obtainium by 120 seconds per level!"
+const obtainiumtimerdesc = "Each level increases the timer capacity for Obtainium by 120 seconds per level! WARNING: You need a certain 1e22 Particle Upgrade for this to be useful!"
 const obtainiumautodesc = "Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed."
 const instantchallengedesc = "Instead of needing enough coins to get autocompletions, and waiting to complete, you instantly completions up until highest ever completed! Does not work in R. Challenges."
 const cashgrabdesc = "This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium."
@@ -37,7 +37,7 @@ function shopDescriptions(i) {
         case 5:
             rofl.textContent = obtainiumtimerdesc;
             lmao.textContent = "Cost: " + (shopBaseCosts.obtainiumTimer + 25 * player.shopUpgrades.obtainiumTimerLevel) + " Quarks."
-            lol.textContent = "CURRENT Effect: Offering Timer +" + format(120 * player.shopUpgrades.obtainiumTimerLevel) + " Seconds."
+            lol.textContent = "CURRENT Effect: Obtainium Timer +" + format(120 * player.shopUpgrades.obtainiumTimerLevel) + " Seconds."
             break;
         case 6:
             rofl.textContent = obtainiumautodesc;
@@ -65,7 +65,7 @@ function buyShopUpgrades(i) {
             case 1: if(player.worlds >= shopBaseCosts.offerPotion) {player.worlds -= 50; player.shopUpgrades.offeringPotion += 1;}; break;
             case 2: if(player.worlds >= shopBaseCosts.obtainiumPotion) {player.worlds -= 50; player.shopUpgrades.obtainiumPotion += 1;}; break;
             case 3: if(player.worlds >= (shopBaseCosts.offerTimer + 25 * player.shopUpgrades.offeringTimerLevel) && player.shopUpgrades.offeringTimerLevel < 5) {player.worlds -= (shopBaseCosts.offerTimer + 25 * player.shopUpgrades.offeringTimerLevel); player.shopUpgrades.offeringTimerLevel += 1;}; break;
-            case 4: if(player.worlds >= (shopBaseCosts.offerAuto + 25 * player.shopUpgrades.offeringAutoLevel) && player.shopUpgrades.offeringAutoLevel < 5) {player.worlds -= (shopBaseCosts.offerAuto + 25 * player.shopUpgrades.offeringAutoLevel); player.shopUpgrades.offeringAutoLevel += 1;}; break;
+            case 4: if(player.worlds >= (shopBaseCosts.offerAuto + 25 * player.shopUpgrades.offeringAutoLevel) && player.shopUpgrades.offeringAutoLevel < 7) {player.worlds -= (shopBaseCosts.offerAuto + 25 * player.shopUpgrades.offeringAutoLevel); player.shopUpgrades.offeringAutoLevel += 1;}; break;
             case 5: if(player.worlds >= (shopBaseCosts.obtainiumTimer + 25 * player.shopUpgrades.obtainiumTimerLevel) && player.shopUpgrades.obtainiumTimerLevel < 5) {player.worlds -= (shopBaseCosts.obtainiumTimer + 25 * player.shopUpgrades.obtainiumTimerLevel); player.shopUpgrades.obtainiumTimerLevel += 1;}; break;
             case 6: if(player.worlds >= (shopBaseCosts.obtainiumAuto + 25 * player.shopUpgrades.obtainiumAutoLevel) && player.shopUpgrades.obtainiumAutoLevel < 5) {player.worlds -= (shopBaseCosts.obtainiumAuto + 25 * player.shopUpgrades.obtainiumAutoLevel); player.shopUpgrades.obtainiumAutoLevel += 1;}; break;
 

@@ -118,55 +118,8 @@ function promocodes() {
         player.runeshards += 25; 
         player.worlds += 50; 
         el.textContent = "Promo Code 'synergism2020' Applied! +25 Offerings, +50 Quarks"
-    } else if (input == "synergism1008" && (player.version == "1.008" || player.version == "1.0081" || player.version == "1.0082") && player.offerpromo13used == false){
-        player.offerpromo13used = true;
-        player.worlds += 25;
-
-        var p = 0
-        if (player.transcendCount > 0.5 || player.reincarnationCount > 0.5) {p += 15}
-        if (player.achievements[44] > 0.5) {p += 10}
-        if (player.challengecompletions.three > 0.5) {p += 10}
-        if (player.challengecompletions.five > 0.5) {p += 15}
-        if (player.coinsTotal.greaterThanOrEqualTo("1e2500")) {p += 25}
-        if (player.reincarnationCount > 0.5) {p += 25}
-        if (player.challengecompletions.six > 0.5){p += 40}
-        if (player.challengecompletions.seven > 0.5){p += 60}
-        if (player.upgrades[67] > 0.5){p += 100}
-        if (player.upgrades[71] > 0.5){p += 300}
-        if (player.upgrades[75] > 0.5){p += 2500}
-        player.runeshards += p
-        el.textContent = "Promo Code 'synergism1008' Applied! +25 Quarks, +" + p + " Offerings."
     }
-    else if (input == "transcendlol" && (player.version == "1.0081" || player.version == "1.0082" || player.version == "1.0084") && player.offerpromo14used == false){
-        player.offerpromo14used = true;
-        player.worlds += 25;
-
-        el.textContent = "Promo Code 'transcendlol' Applied! +25 Quarks."
-    }
-    else if (input == "111111hype" && (player.version == "1.0082" || player.version == "1.0084") && player.offerpromo15used == false){
-        player.offerpromo15used = true;
-        player.worlds += 200;
-
-        el.textContent = "Thank you for playing Synergism! I'm a bit late on the 100k celebration so here's the next best thing. +200 Quarks! [Oh and 111111hype applied!]"
-    }
-    else if (input == "oops" && (player.version == "1.0082" || player.version == "1.0084") && player.offerpromo16used == false){
-        player.offerpromo16used = true;
-        player.worlds += 200;
-        var p = 200
-        if (player.brokenfile1 == true){
-        player.worlds += 300
-        p += 300
-        }
-
-        el.textContent = "Sorry for the balances, but it was necessary to prevent saves from breaking. Enjoy a nice reward! +" + p + " Quarks."
-    }
-    else if (input == "patience" && (player.version == "1.0084") && player.offerpromo17used == false){
-        player.offerpromo17used = true
-        player.worlds += 99
-
-        el.textContent = "Here's 99 Quarks for waiting for the update!"
-     }
-    else if (input == "shopequalp2w" && (player.version == "1.009") && player.offerpromo18used == false){
+    else if (input == "shopequalp2w" && (player.version == "1.009" || player.version == "1.0091") && player.offerpromo18used == false){
         player.offerpromo18used = true
         player.worlds += 125;
         player.shopUpgrades.offeringPotion += 2;
@@ -174,8 +127,15 @@ function promocodes() {
 
         el.textContent = "Platonic's a sellout, Amirite? I'm the shop owner. Here's a couple goodies for you! [125 Quarks, 2 of each Potion]"
     }
+    else if (input == "buffgod" && (player.version == "1.0091") && player.offerpromo19used == false){
+        player.offerpromo19used = true
+        player.worlds += 100;
+        player.shopUpgrades.offeringPotion += 1;
+        player.shopUpgrades.obtainiumPotion += 1;
+        el.textContent = "You're incredibly powerful now! [+100 Quarks, +1 of each Consumable]"
+    }
     else {
-        el.textContent = "I don't think you put that code in right, or your code is simply not valid. Try again!"
+        el.textContent = "Your code is either invalid or already used. Try again!"
     }
         
     setTimeout(function() {

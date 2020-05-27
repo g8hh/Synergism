@@ -361,10 +361,11 @@ const player = {
 			  offerpromo16used: false,
 			  offerpromo17used: false,
 			  offerpromo18used: false,
+			  offerpromo19used: false,
 
 			  loaded1009: false,
 			  loaded1009hotfix1: false,
-
+			  loaded10091: false,
 
 			  shopUpgrades: {
 				  offeringPotion: 1,
@@ -391,7 +392,7 @@ const player = {
 Object.defineProperty(player, 'version', {
    configurable: false,
    enumerable: true,
-   value: '1.009'
+   value: '1.0091'
 });
 
 function saveSynergy(button) {
@@ -441,7 +442,7 @@ function loadSynergy() {
 
 	   if (data.loaded1009 === undefined || !data.loaded1009 || data.loaded1009 === null){player.loaded1009 = false;}
 	   if (data.loaded1009hotfix1 === undefined || !data.loaded1009hotfix1 || data.loaded1009hotfix1 === null){player.loaded1009hotfix1 = false;}
-		   
+	   if (data.loaded10091 === undefined){player.loaded10091 = false;}
 
 	   if (player.offerpromo6used === undefined){
 		player.offerpromo6used = false; 
@@ -622,6 +623,29 @@ function loadSynergy() {
 		player.fourthCostParticles = new Decimal("1e8");
 		player.fifthCostParticles = new Decimal("1e16");
 	}
+	if (data.offerpromo19used === undefined || data.loaded10091 === undefined || !data.loaded10091 || player.researches[86] > 100 || player.researches[87] > 100 || player.researches[88] > 100 || player.researches[89] > 100 || player.researches[90] > 10){
+		player.offerpromo19used = false;
+		player.loaded10091 = true;
+		player.researchPoints += 7.5e8 * player.researches[82];
+		player.researchPoints += 2e8 * player.researches[83];
+		player.researchPoints += 4.5e9 * player.researches[84];
+		player.researchPoints += 2.5e7 * player.researches[86];
+		player.researchPoints += 7.5e7 * player.researches[87];
+		player.researchPoints += 3e8 * player.researches[88];
+		player.researchPoints += 1e9 * player.researches[89];
+		player.researchPoints += 2.5e7 * player.researches[90];
+		player.researchPoints += 1e8 * player.researches[91];
+		player.researchPoints += 2e9 * player.researches[92];
+		player.researchPoints += 9e9 * player.researches[93];
+		player.researchPoints += 7.25e10 * player.researches[94];
+		player.researches[86] = 0;
+		player.researches[87] = 0;
+		player.researches[88] = 0;
+		player.researches[89] = 0;
+		player.researches[90] = 0;
+		player.researches[91] = 0;
+		player.researches[92] = 0;
+	}
 
 		if (player.transcendCount < 0){player.transcendCount = 0};
 		if (player.reincarnationCount < 0){player.reincarnationCount = 0;};
@@ -715,7 +739,7 @@ if (player.offlinetick < 1.5e12) {player.offlinetick = Date.now()}
 var updatedtime = Date.now()
 if ((updatedtime - player.offlinetick) > 10000) {
 	console.log(player.offlinetick)
-	var timeadd = Math.min(28800, (updatedtime - player.offlinetick) / 1000);
+	var timeadd = Math.min(28800 * 3, (updatedtime - player.offlinetick) / 1000);
 	player.prestigecounter += timeadd;
 	player.transcendcounter += timeadd;
 	player.reincarnationcounter += timeadd;
@@ -891,7 +915,7 @@ function updateAllTick() {
 	b += Math.floor((0.01 + player.runelevels[0]) * effectiveLevelMult / 10);
 	b *= (1 + 1/5 * player.researches[3])
 	b *= (1 + 1/100 * player.researches[16] + 1/100 * player.researches[17])
-	b *= (1 + 1/1000 * player.researches[88])
+	b *= (1 + 1/100 * player.researches[88])
 	if (player.upgrades[73] > 0.5 && player.currentChallengeRein !== "") {b *= 2}
 	b = Math.floor(b)
 	freeAcceleratorBoost = b;
@@ -911,7 +935,7 @@ function updateAllTick() {
 		a *=(1 + player.achievements[62]/100)
 		a *=(1 + 1/5 * player.researches[1])
 		a *=(1 + 1/20 * player.researches[6] + 1/80 * player.researches[7] + 1/150 * player.researches[8] + 3/800 * player.researches[9] + 1/500 * player.researches[10]);
-		a *=(1 + 1/1000 * player.researches[86])
+		a *=(1 + 1/100 * player.researches[86])
 		a *= Math.pow(1.01, player.upgrades[21] + player.upgrades[22] + player.upgrades[23] + player.upgrades[24] + player.upgrades[25])
 		if ((player.currentChallenge !== "" || player.currentChallengeRein !== "") && player.upgrades[50] > 0.5) {a *= 1.25}
 		a = Math.floor(a)
@@ -1036,7 +1060,7 @@ function updateAllMultiplier() {
     a *=(1 + 1/5 * player.researches[2])
 	a *=(1 + 1/20 * player.researches[11] + 1/40 * player.researches[12] + 1/200 * player.researches[13] + 1/400 * player.researches[14] + 1/500 * player.researches[15])
 	a *=(1 + player.runelevels[1]/200 * effectiveLevelMult)
-	a *=(1 + 1/1000 * player.researches[87])
+	a *=(1 + 1/100 * player.researches[87])
 	if ((player.currentChallenge !== "" || player.currentChallengeRein !== "") && player.upgrades[50] > 0.5) {a *= 1.25};
 		
 	a = Math.floor(a)
@@ -1052,7 +1076,7 @@ function updateAllMultiplier() {
 	b *= (1 + player.researches[33]/50)
 	b *= (1 + player.researches[34]/50)
 	b *= (1 + player.researches[35]/50)
-	b *= (1 + player.researches[89]/250)
+	b *= (1 + player.researches[89]/25)
 
 	c += Math.floor((0.1 * b * player.challengecompletions.one))
 
@@ -1079,7 +1103,7 @@ prestigeMultiplier = Decimal.pow(player.prestigeShards, 1/3 + Math.min(10, 0.05 
 let c7 = 1;
 if (player.currentChallengeRein == "seven") {c7 = 0.05}
 if (player.currentChallengeRein == "eight") {c7 = 0}
-buildingPower = 1 + (1 - Math.pow(2, -1/160)) * c7 * Decimal.log(player.reincarnationShards.add(1), 10) * (1 + 1/100 * player.researches[36] + 1/200 * player.researches[37] + 1/200 * player.researches[38]) + (c7 + 0.1) * 0.25/1.1 * player.challengecompletions.eight
+buildingPower = 1 + (1 - Math.pow(2, -1/160)) * c7 * Decimal.log(player.reincarnationShards.add(1), 10) * (1 + 1/100 * player.researches[36] + 1/200 * player.researches[37] + 1/200 * player.researches[38]) + (c7 + 0.2) * 0.25/1.2 * player.challengecompletions.eight
 
 reincarnationMultiplier = Decimal.pow(buildingPower, totalCoinOwned);
 
@@ -1222,7 +1246,7 @@ globalCrystalMultiplier = globalCrystalMultiplier.times(Decimal.pow(1.05, player
 	if (player.upgrades[52] > 0.5) {
 		globalMythosMultiplier = globalMythosMultiplier.times(Decimal.pow(globalMythosMultiplier, 0.025))
 	}
-	if (player.upgrades[64] > 0.5) {globalMythosMultiplier = globalMythosMultiplier.times(Decimal.min("1e2000",Decimal.pow(player.reincarnationPoints.add(1), 2))).times(Decimal.pow(Decimal.max(1, player.reincarnationPoints.dividedBy("1e1000")), 1/2))}
+	if (player.upgrades[64] > 0.5) {globalMythosMultiplier = globalMythosMultiplier.times(Decimal.pow(player.reincarnationPoints.add(1),2))}
 	if (player.researches[40] > 0.5) {globalMythosMultiplier = globalMythosMultiplier.times(Decimal.pow(reincarnationMultiplier, 1/250))}
  grandmasterMultiplier = new Decimal(1);
  totalMythosOwned = player.firstOwnedMythos + player.secondOwnedMythos + player.thirdOwnedMythos + player.fourthOwnedMythos + player.fifthOwnedMythos;
@@ -1677,7 +1701,7 @@ function updateAll() {
 			player.maxobtainium = player.researchPoints;
 		}
 
-		effectiveLevelMult = (1 + player.researches[4]/10) * (1 + player.researches[21]/800) * (1 + player.researches[90]/10000)
+		effectiveLevelMult = (1 + player.researches[4]/10) * (1 + player.researches[21]/800) * (1 + player.researches[90]/100)
 		optimalOfferingTimer = 600 + 6 * player.researches[85] + 0.4 * player.runelevels[4] + 120 * player.shopUpgrades.offeringTimerLevel
 		optimalObtainiumTimer = 3600 + 120 * player.shopUpgrades.obtainiumTimerLevel
 	}
@@ -1709,8 +1733,8 @@ function tick() {
 	if(player.quarkstimer >= 90000){player.quarkstimer = 90000}
 	if(player.researches[61] > 0.5){player.obtainiumtimer += dt;}
 
-	document.getElementById("quarktimerdisplay").textContent = format((3600 - (player.quarkstimer % 3600.00001)),2) + "s until +1 export Quark"
-	document.getElementById("quarktimeramount").textContent = "Quarks on export: " + (Math.floor(player.quarkstimer / 3600) * (1 + player.researches[99] + player.researches[100])) + " [Max 25]"
+	document.getElementById("quarktimerdisplay").textContent = format((3600 - (player.quarkstimer % 3600.00001)),2) + "s until +" +(1 + player.researches[99] + player.researches[100]) + " export Quark"
+	document.getElementById("quarktimeramount").textContent = "Quarks on export: " + (Math.floor(player.quarkstimer / 3600) * (1 + player.researches[99] + player.researches[100])) + " [Max " + format((25 * (1 + player.researches[99] + player.researches[100]))) +"]"
 
 	if (player.shopUpgrades.offeringAutoLevel > 0.5 && player.autoSacrificeToggle){
 	player.sacrificeTimer += dt
@@ -1796,7 +1820,7 @@ document['addEventListener' in document ? 'addEventListener' : 'attachEvent']('k
 	if (currentTab == "buildings") {type = "Coin"}
 	if (currentTab == "prestige") {type = "Diamonds"; num = 1/2 * (Math.pow(num, 2) + num)}
 	if (currentTab == "transcension") {type = "Mythos"; num = 1/2 * (Math.pow(num, 2) + num)}
-	if (currentTab == "reincarnation") {buyParticleBuilding(pos)}
+	if (currentTab == "reincarnation" && (event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5")) {buyParticleBuilding(pos)}
 	if ((event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5") && player.currentTab !== "reincarnation") {buyProducer(pos, type, num)}
 	if ((event.key === "A" || event.key === "a") && currentTab == "buildings") {buyAccelerator()}
 	if ((event.key === "B" || event.key === "b") && currentTab == "buildings") {boostAccelerator()}
@@ -1812,10 +1836,12 @@ document['addEventListener' in document ? 'addEventListener' : 'attachEvent']('k
 	if(event.key === "ArrowLeft") {
 		event.preventDefault();
 		keyboardtabchange(-1);
-	} else if (event.key === "ArrowRight") {
+	}
+	if (event.key === "ArrowRight") {
 		event.preventDefault();
 		keyboardtabchange(1);
 	}
+	console.log(event.key)
 
 });
 

@@ -84,8 +84,8 @@ function buyProducer(pos,type,num,autobuyer) {
 	let buythisamount = 0;
     var r = 1;
     var tag = ""
-	r += 1/400 * player.runelevels[3]
-	r += 1/200 * (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59] + player.researches[60]) * effectiveLevelMult
+	r += 1/400 * player.runelevels[3] * effectiveLevelMult
+	r += 1/200 * (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59] + player.researches[60])
 	r += 1/200 * player.challengecompletions.four
 	if (type == 'Diamonds'){tag = "prestigePoints"; var amounttype = "crystal"}
 	if (type == 'Mythos'){tag = "transcendPoints"; var amounttype = "mythos"}
@@ -116,8 +116,8 @@ function buyProducer(pos,type,num,autobuyer) {
 					player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(1.25, player[pos + 'Owned' + type]));
 				 }
                  }
-            if (player.currentChallengeRein == "eight" && (type == "Coin" || type == "Diamonds" || type == "Mythos") && player[pos + 'Owned' + type] >= (1000 * player.challengecompletions.eight)){
-                player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(10, (player[pos + 'Owned' + type] - (1000 * player.challengecompletions.eight))/(1 + 1/4 * player.challengecompletions.eight)));
+            if (player.currentChallengeRein == "eight" && (type == "Coin" || type == "Diamonds" || type == "Mythos") && player[pos + 'Owned' + type] >= (1000 * player.challengecompletions.eight * r)){
+                player[pos + 'Cost' + type] = player[pos + 'Cost' + type].times(Decimal.pow(2, (player[pos + 'Owned' + type] - (1000 * player.challengecompletions.eight * r))/(1 + 1/2 * player.challengecompletions.eight)));
             }
 				 ticker += 1;
 			 }
@@ -163,7 +163,8 @@ function buyResearch(index,auto=false) {
 	if (player.autoResearchToggle && player.autoResearch > 0.5 && !auto){
 		let p = player.autoResearch
 		if (player.researches[p] == researchMaxLevels[p]){document.getElementById("res" + player.autoResearch).style.backgroundColor = "green"}
-		else {document.getElementById("res" + player.autoResearch).style.backgroundColor = "purple"}
+		else if (player.researches[p] > 0.5) {document.getElementById("res" + player.autoResearch).style.backgroundColor = "purple"}
+		else {document.getElementById("res" + player.autoResearch).style.backgroundColor = "black"}
 	}
 	if (!auto && player.autoResearchToggle && player.shopUpgrades.obtainiumAutoLevel > 0.5){player.autoResearch = index; document.getElementById("res" + index).style.backgroundColor = "orange"}
 

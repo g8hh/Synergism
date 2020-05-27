@@ -165,7 +165,7 @@ function resetdetails(i) {
             o *= (1 + player.researches[81]/200)
             o *= (1 + player.shopUpgrades.obtainiumAutoLevel/50)
             o *= (1 + player.shopUpgrades.cashGrabLevel/100)
-            o *= (1 + player.runelevels[4]/500) * Math.pow(2, player.runelevels[4]/250)
+            o *= (1 + player.runelevels[4]/500 * effectiveLevelMult * (1 + player.researches[84]/1000)) * Math.pow(2, player.runelevels[4]/150 * effectiveLevelMult * (1 + player.researches[84]/1000))
             o *= (1 + 0.01 * player.achievements[84] + 0.03 * player.achievements[91] + 0.05 * player.achievements[98] + 0.07 * player.achievements[105] + 0.09 * player.achievements[112] + 0.11 * player.achievements[119] + 0.13 * player.achievements[126] + 0.15 * player.achievements[133] + 0.17 * player.achievements[140] + 0.19 * player.achievements[147])
         if (player.achievements[53] > 0.5){
             o *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3] + player.runelevels[4]))
@@ -396,7 +396,7 @@ function reset(i) {
             q *= (1 + player.shopUpgrades.obtainiumAutoLevel/50)
             q *= (1 + player.shopUpgrades.cashGrabLevel/100)
 
-            q *= (1 + player.runelevels[4]/500) * Math.pow(2, player.runelevels[4]/250)
+            q *= (1 + player.runelevels[4]/500 * effectiveLevelMult * (1 + player.researches[84]/1000)) * Math.pow(2, player.runelevels[4]/150 * effectiveLevelMult * (1 + player.researches[84]/1000))
         q *= (1 + 0.01 * player.achievements[84] + 0.03 * player.achievements[91] + 0.05 * player.achievements[98] + 0.07 * player.achievements[105] + 0.09 * player.achievements[112] + 0.11 * player.achievements[119] + 0.13 * player.achievements[126] + 0.15 * player.achievements[133] + 0.17 * player.achievements[140] + 0.19 * player.achievements[147])
         if (player.achievements[53] > 0.5){
         q *= (1 + 1/2000 * (player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3] + player.runelevels[4]))

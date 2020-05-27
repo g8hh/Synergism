@@ -10,9 +10,9 @@
         
         var m = effectiveLevelMult
         let SIMult1 = (1 + player.researches[83]/50);
-        let SIMult2 = (1 + player.researches[84]/100);
-        let mult1 = (1 + player.researches[91]/400);
-        let mult2 = (1 + player.researches[92]/400);
+        let SILevelMult = (1 + player.researches[84]/1000)
+        let mult1 = (1 + player.researches[91]/100);
+        let mult2 = (1 + player.researches[92]/100);
         let recycleMult = 1/(1 - 0.05 * player.achievements[80] - 0.05 * player.achievements[87] - 0.05 * player.achievements[94] - 0.05 * player.achievements[101] - 0.05 * player.achievements[108] - 0.05 * player.achievements[115] - 0.075 * player.achievements[122] - 0.075 * player.achievements[129] - 0.05 * player.upgrades[61] - Math.min(0.25,player.runelevels[3]/800))
         let s = 0;
         if (player.upgrades[71] == 1 && i == 1){s = player.runelevels[0]}
@@ -39,13 +39,13 @@
         }
         if (i == 4) {
             if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "+0.25% building cost growth delay per level, +0.125% offering recycle chance per level [MAX: 25%], 2^((200 - Level)/550) Tax growth multiplier AFTER level 200"}
-            document.getElementById("runeshowpower4").textContent = "Thrift Rune Bonus: " + "Delay all producer cost increases by " + (player.runelevels[3]/4 * m).toPrecision(3) + "%. Offering recycle chance +: " + Math.min(25,player.runelevels[3]/8) + "%. -" + (100 * (1 - Math.pow(2, Math.min(0, (200 - player.runelevels[3])/550)))).toPrecision(4) + "% Tax Growth"
+            document.getElementById("runeshowpower4").textContent = "Thrift Rune Bonus: " + "Delay all producer cost increases by " + (player.runelevels[3]/4 * m).toPrecision(3) + "%. Offering recycle chance +: " + Math.min(25,player.runelevels[3]/8) + "%. -" + (100 * (1 - Math.pow(4, Math.min(0, (200 - player.runelevels[3])/550)))).toPrecision(4) + "% Tax Growth"
             if (updatelevelup)document.getElementById("runedisplayexp").textContent = "+" + format(recycleMult * mult1 * mult2 * (1 + player.researches[77]/250) * (25 + 3 * player.researches[22] + 2 * player.researches[23] + 5 * player.upgrades[61] + s)) + " EXP per offering."
         }
         if (i == 5) {
-            if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "~(2^(level/250) * (1 + level/500))x Obtainium, Level^1.5 Ant Hatch Speed, +0.125 Base Reincarnation offerings"}
-            document.getElementById("runeshowpower5").textContent = "S. Intellect Rune Bonus: " + "Obtainium gain +" + (100 * (1 + player.runelevels[4]/500 * m) * Math.pow(2, player.runelevels[4] * m/250) - 100).toPrecision(3) + "%. Ant Speed: x" + format(Math.pow(player.runelevels[4] * m, 1.5)) + ". Offering timer extension: +" + (player.runelevels[4] * 0.4).toFixed(2) + " seconds."
-            if (updatelevelup)document.getElementById("runedisplayexp").textContent = "+" + format(recycleMult * SIMult1 * SIMult2 * mult1 * mult2 * (25 + 3 * player.researches[22] + 2 * player.researches[23] + 5 * player.upgrades[61] + s)) + " EXP per offering."
+            if (updatelevelup) {document.getElementById("runeshowlevelup").textContent = "~(2^(level/150) * (1 + level/500))x Obtainium, Level^1.5 Ant Hatch Speed, +0.125 Base Reincarnation offerings"}
+            document.getElementById("runeshowpower5").textContent = "S. Intellect Rune Bonus: " + "Obtainium gain +" + (100 * (1 + player.runelevels[4]/500 * m * SILevelMult) * Math.pow(2, player.runelevels[4] * m * SILevelMult/150) - 100).toPrecision(3) + "%. Ant Speed: x" + format(Math.pow(player.runelevels[4] * m * SILevelMult, 1.5)) + ". Offering timer extension: +" + (player.runelevels[4] * 0.4).toFixed(2) + " seconds."
+            if (updatelevelup)document.getElementById("runedisplayexp").textContent = "+" + format(recycleMult * SIMult1 * mult1 * mult2 * (25 + 3 * player.researches[22] + 2 * player.researches[23] + 5 * player.upgrades[61] + s)) + " EXP per offering."
         }
        
         
@@ -110,6 +110,7 @@
     function redeemshards(i,auto=false) {
         u = i - 1;
         let res1mult = 1;
+        let SIMult1 = 1;
         let res2mult = (1 + player.researches[91]/400);
         let res3mult = (1 + player.researches[92]/400);
         let amount = Math.min(player.runeshards, player.offeringbuyamount);
@@ -120,8 +121,7 @@
         if (u == 1){res1mult = (1 + player.researches[80]/250); num = 80};
         if (u == 2){res1mult = (1 + player.researches[79]/250); num = 79};
         if (u == 3){res1mult = (1 + player.researches[77]/250); num = 77};
-        if (u == 4){res1mult = 1};
-
+        if (u == 4){res1mult = 1; SIMult1 = (1 + player.researches[83]/50)};
         if (player.runeshards >= 1) {
         var r = 1;
         var s = 0;
@@ -131,7 +131,7 @@
         if (player.upgrades[71] > 0.5) {s += player.runelevels[u]}
 
         player.runeshards -= amount;
-        player.runeexp[u] += amount * recycleMult * Math.floor((25 + 3 * player.researches[22] + 2 * player.researches[23] + 5 * player.upgrades[61] + s) * res1mult * res2mult * res3mult);
+        player.runeexp[u] += amount * recycleMult * Math.floor((25 + 3 * player.researches[22] + 2 * player.researches[23] + 5 * player.upgrades[61] + s) * res1mult * res2mult * res3mult * SIMult1);
             if (player.upgrades[66] > 0.5) {
                 player.runeexp[0] += 3 * amount * recycleMult
                 if (player.achievements[38] > 0.5) {player.runeexp[1] += 3 * amount * recycleMult}

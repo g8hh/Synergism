@@ -14,4 +14,8 @@ function submitStats() {
     kongregate.stats.submit("runetwo",player.runelevels[1])
     kongregate.stats.submit("runethree",player.runelevels[2])
     kongregate.stats.submit("runefour",player.runelevels[3])
+    kongregate.stats.submit("runefive",player.runelevels[4])
+    kongregate.stats.submit("challengesix", player.highestchallengecompletions.six)
+    kongregate.stats.submit("challengeseven",player.highestchallengecompletions.seven)
+    kongregate.stats.submit("challengeeight", player.highestchallengecompletions.eight)
 }

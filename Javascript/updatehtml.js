@@ -478,7 +478,7 @@ if (currentTab == "shop") {
     
     document.getElementById("offeringtimerlevel").textContent = "Level: " + player.shopUpgrades.offeringTimerLevel + "/5"
     document.getElementById("obtainiumtimerlevel").textContent = "Level: " + player.shopUpgrades.obtainiumTimerLevel + "/5"
-    document.getElementById("offeringautolevel").textContent = "Level: " + player.shopUpgrades.offeringAutoLevel + "/5"
+    document.getElementById("offeringautolevel").textContent = "Level: " + player.shopUpgrades.offeringAutoLevel + "/7"
     document.getElementById("obtainiumautolevel").textContent = "Level: " + player.shopUpgrades.obtainiumAutoLevel + "/5"
     document.getElementById("cashgrab").textContent = "Level: " + player.shopUpgrades.cashGrabLevel + "/5"
 
@@ -490,7 +490,7 @@ if (currentTab == "shop") {
     document.getElementById("cashgrabbutton").textContent = "Upgrade for " + (shopBaseCosts.cashGrab + 100 * player.shopUpgrades.cashGrabLevel) + " Quarks"
 
     if(player.shopUpgrades.offeringTimerLevel == 5){document.getElementById("offeringtimerbutton").textContent = "Maxed!"}
-    if(player.shopUpgrades.offeringAutoLevel == 5){document.getElementById("offeringautobutton").textContent = "Maxed!"}
+    if(player.shopUpgrades.offeringAutoLevel == 7){document.getElementById("offeringautobutton").textContent = "Maxed!"}
     if(player.shopUpgrades.obtainiumTimerLevel == 5){document.getElementById("obtainiumtimerbutton").textContent = "Maxed!"}
     if(player.shopUpgrades.obtainiumAutoLevel == 5){document.getElementById("obtainiumautobutton").textContent = "Maxed!"}
     if(player.shopUpgrades.instantChallengeBought){document.getElementById("instantchallengebutton").textContent = "Bought!"; document.getElementById("instantchallenge").textContent = "Bought!"}

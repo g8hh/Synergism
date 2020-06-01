@@ -56,7 +56,7 @@ var researchMaxLevels = [0, 1, 1, 1, 1, 1,
 							 200, 1, 50, 100, 100,
 							 100, 100, 100, 100, 10,
 							 100, 100, 100, 100, 1,
-							 1, 1, 1, 1, 1
+							 1, 1, 1, 2, 1
 							 ]								
 
 var ticker = 0;
@@ -196,8 +196,8 @@ var optimalOfferingTimer = 600;
 var optimalObtainiumTimer = 3600;
 
 const shopBaseCosts = {
-	offerPotion: 50,
-	obtainiumPotion: 50,
+	offerPotion: 35,
+	obtainiumPotion: 35,
 	offerTimer: 150,
 	obtainiumTimer: 150,
 	offerAuto: 150,

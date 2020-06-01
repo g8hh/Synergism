@@ -111,8 +111,8 @@
         u = i - 1;
         let res1mult = 1;
         let SIMult1 = 1;
-        let res2mult = (1 + player.researches[91]/400);
-        let res3mult = (1 + player.researches[92]/400);
+        let res2mult = (1 + player.researches[91]/100);
+        let res3mult = (1 + player.researches[92]/100);
         let amount = Math.min(player.runeshards, player.offeringbuyamount);
         if (auto){amount = Math.min(player.runeshards, Math.pow(2, 1 + player.shopUpgrades.offeringAutoLevel))}
         let recycleMult = 1/(1 - 0.05 * player.achievements[80] - 0.05 * player.achievements[87] - 0.05 * player.achievements[94] - 0.05 * player.achievements[101] - 0.05 * player.achievements[108] - 0.05 * player.achievements[115] - 0.075 * player.achievements[122] - 0.075 * player.achievements[129] - 0.05 * player.upgrades[61] - Math.min(0.25,player.runelevels[3]/800));

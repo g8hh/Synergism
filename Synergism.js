@@ -362,6 +362,7 @@ const player = {
 			  offerpromo17used: false,
 			  offerpromo18used: false,
 			  offerpromo19used: false,
+			  offerpromo20used: false,
 
 			  loaded1009: false,
 			  loaded1009hotfix1: false,
@@ -392,7 +393,7 @@ const player = {
 Object.defineProperty(player, 'version', {
    configurable: false,
    enumerable: true,
-   value: '1.0091'
+   value: '1.00911'
 });
 
 function saveSynergy(button) {
@@ -438,11 +439,12 @@ function loadSynergy() {
 			   value: isDecimal(player[v]) ? new Decimal(data[v]) : data[v]
 		   });
 	   });}
-	   catch(err){}
+	   catch(err){console.log(err)}
 
 	   if (data.loaded1009 === undefined || !data.loaded1009 || data.loaded1009 === null){player.loaded1009 = false;}
 	   if (data.loaded1009hotfix1 === undefined || !data.loaded1009hotfix1 || data.loaded1009hotfix1 === null){player.loaded1009hotfix1 = false;}
 	   if (data.loaded10091 === undefined){player.loaded10091 = false;}
+	   if (data.offerpromo20used === undefined){player.offerpromo20used = false;}
 
 	   if (player.offerpromo6used === undefined){
 		player.offerpromo6used = false; 
@@ -791,7 +793,7 @@ if (player.autoSacrificeToggle){document.getElementById("toggleautosacrifice").t
 if (!player.autoSacrificeToggle){document.getElementById("toggleautosacrifice").textContent = "Automatic: OFF"}
 
 if (player.autoResearchToggle && player.autoResearch > 0.5){document.getElementById("res" + player.autoResearch).style.backgroundColor = "orange"}
-
+if (player.autoSacrificeToggle && player.autoSacrifice > 0.5){document.getElementById("rune" + player.autoSacrifice).style.backgroundColor = "orange"}
 
 
 document.getElementById("preload").style.display = "none"

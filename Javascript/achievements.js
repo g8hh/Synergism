@@ -22,7 +22,8 @@ var achievementpointvalues = [0, 1, 2, 4, 6, 8, 9, 10,
 1, 2, 4, 6, 8, 9, 10,
 1, 2, 4, 6, 8, 9, 10,
 1, 2, 4, 6, 8, 9, 10,
-1, 2, 4, 6, 8, 9, 10,]
+10, 10, 10, 10, 10, 10, 10,
+10, 10, 10, 10, 10, 10, 10]
 
 var totalachievementpoints = achievementpointvalues.reduce(function(a, b) { 
     return a + b
@@ -155,26 +156,26 @@ var adesc124 = "Multipliers don't even work 0/5: Complete {[No Accelerator/Multi
 var adesc125 = "Accelerators don't even work -5/5: Complete {[No Accelerator/Multiplier]} fifteen times."
 var adesc126 = "ACCELERATOR BOOSTS DON'T EVEN WORK -100/5: Complete {[No Accelerator/Multiplier]} twenty-five times."
 var adesc127 = "I hate this challenge: Complete Cost++ Once."
-var adesc128 = "A costly mistake: Complete Cost++ Twice"
+var adesc128 = "A costly mistake: Complete Cost++ Twice."
 var adesc129 = "Impetus: Complete Cost++ Three Times."
 var adesc130 = "Are you broke yet? Complete Cost++ Five Times."
 var adesc131 = "The world of Finance: Complete Cost++ Ten Times."
 var adesc132 = "Marginal Gains: Complete Cost++ Twenty Times."
 var adesc133 = "I buy these: Complete Cost++ Twenty-Five Times."
-var adesc134 = "TBD: TBD"
-var adesc135 = "TBD: TBD"
-var adesc136 = "TBD: TBD"
-var adesc137 = "TBD: TBD"
-var adesc138 = "TBD: TBD"
-var adesc139 = "TBD: TBD"
-var adesc140 = "TBD: TBD"
-var adesc141 = "TBD: TBD"
-var adesc142 = "TBD: TBD"
-var adesc143 = "TBD: TBD"
-var adesc144 = "TBD: TBD"
-var adesc145 = "TBD: TBD"
-var adesc146 = "TBD: TBD"
-var adesc147 = "TBD: TBD"
+var adesc134 = "Agnostic: Complete No Runes Once."
+var adesc135 = "Ant-i Runes: Complete No Runes Twice."
+var adesc136 = "Isn't it getting tiresome?: Complete No Runes Three Times."
+var adesc137 = "Machine does not accept offerings: Complete No Runes Five Times."
+var adesc138 = "Runes Suck 1/5: Complete No Runes Ten Times."
+var adesc139 = "I didn't even notice Prism was gone: Complete No Runes Twenty Times."
+var adesc140 = "Atheist: Complete No Runes Twenty-Five Times."
+var adesc141 = "Sadism: Complete {[Sadistic I]} Once."
+var adesc142 = "Masochism: Complete {[Sadistic I]} Twice."
+var adesc143 = "Insanity: Complete {[Sadistic I]} Three Times."
+var adesc144 = "How? Complete {[Sadistic I]} Five Times."
+var adesc145 = "Why? Complete {[Sadistic I]} Ten Times."
+var adesc146 = "Descend: Complete {[Sadistic I]} Twenty Times."
+var adesc147 = "End of the Universe: Complete {[Sadistic I]} Twenty-Five Times."
 var adesc148 = "Gas gas gas: Purchase 5 Accelerators."
 var adesc149 = "0 to 25: Purchase 25 Accelerators."
 var adesc150 = "0 to 100: Purchase 100 Accelerators"
@@ -196,13 +197,20 @@ var adesc165 = "Dematerialize: Purchase 200 Accelerator Booosts."
 var adesc166 = "Breaking the laws of Physics: Purchase 1,000 Accelerator Boosts."
 var adesc167 = "Decayed Realism: Purchase 5,000 Accelerator Boosts."
 var adesc168 = "Kinda fast: Purchase 15,000 Accelerator Boosts."
-var adesc169 = "A small stash: Hold onto 100 offerings."
-var adesc170 = "Fit for a king: Hold onto 400 offerings."
-var adesc171 = "Fit for a god: Hold onto 1600 offerings."
-var adesc172 = "Extreme Hoarders edition: Hold onto 6400 offerings."
-var adesc173 = "This can't be healthy: Hold onto 24000 offerings."
-var adesc174 = "At least we get a little obtainium: Hold onto 96000 offerings."
-var adesc175 = "Sacrilege: Hold onto 400000 offerings."
+var adesc169 = "The Galactic Feast: Obtain 3 Galactic Crumbs."
+var adesc170 = "Only the finest: Obtain 100,000 Galactic Crumbs."
+var adesc171 = "Six-Course Meal: Obtain 666,666,666 Galactic Crumbs."
+var adesc172 = "Accumulation of Food: Obtain 1e20 Galactic Crumbs."
+var adesc173 = "Cookie Clicking: Obtain 1e40 Galactic Crumbs."
+var adesc174 = "Unlimited Bread Sticks!: Obtain 1e500 Galactic Crumbs."
+var adesc175 = "Restaurant at the end of the Universe: Obtain 1e2500 Galactic Crumbs."
+var adesc176 = "Ant-icipation!: Amass a 2x Ant Multiplier through sacrifice and own a Tier 2 ant."
+var adesc177 = "Ant-ecedent: Amass a 6x Ant Multiplier through sacrifice and own a Tier 3 ant."
+var adesc178 = "Ants are friends, not food!: Amass a 20x Ant Multiplier through sacrifice and own a Tier 4 Ant."
+var adesc179 = "Ant Devil?: Amass a 100x Ant Multiplier through sacrifice and own a Tier 5 Ant."
+var adesc180 = "The world's best chef: Amass a 500x Ant Multiplier through sacrifice and own a Tier 6 Ant."
+var adesc181 = "6 Michelin Stars: Amass a 6,666x Ant Multiplier through sacrifice and own a Tier 7 Ant."
+var adesc182 = "Keys to the Restaurant at the end of the Universe: Amass a 77,777x Ant Multiplier through sacrifice and own a Tier 8 Ant."
 
 
 
@@ -289,17 +297,35 @@ var areward112 = "+9% obtainium (stacks additively with other achievement reward
 var areward115 = "+5% offering recycle."
 var areward117 = "Delay tax growth by 5.66%."
 var areward118 = "Each Reincarnation challenge completion delays tax growth by 0.75% per level, multiplicative"
-var areward119 = "+11% obtainium (stacks additively with other achievement rewards)"
+var areward119 = "+11% obtainium. Unlock a nice trinket somewhere..."
 var areward122 = "+7.5% offering recycle."
 var areward124 = "Delay tax growth by 5.66%. Unlock 5 new incredibly powerful researches!"
-var areward126 = "+13% obtainium (stacks additively with other achievement rewards)"
-var areward127 = "Unlock 20 new incredibly expensive yet good researches. Unlock [A n t] (v1.010)"
+var areward126 = "+13% obtainium. You get an accessory to commemorate this moment!"
+var areward127 = "Unlock 20 new incredibly expensive yet good researches. Unlock the [Anthill] feature!"
 var areward128 = "Make researches go Cost-- with 1.5x Obtainium!"
 var areward129 = "+7.5% offering recycle. Gain another 1.25x Obtainium multiplier!"
 var areward131 = "Delay tax growth by 5.66%."
-var areward133 = "+15% obtainium (stacks additively with other achievement rewards)"
-var areward140 = "+17% obtainium (stacks additively with other achievement rewards)"
-var areward147 = "+19% obtainium (Achievement total is up to 100%!)"
+var areward132 = "Permanently gain +25% more sacrifice reward!"
+var areward133 = "+15% obtainium. Obtain the gift of Midas himself."
+var areward134 = "Unlock 10 newer incredibly expensive yet good researches. Unlock <<Talismans>> in the Runes Tab!"
+var areward135 = "Talisman positive bonuses are now +0.05 stronger per level."
+var areward136 = "Talisman positive bonuses are now +0.05 even stronger per level."
+var areward137 = "Permanently gain +25% more sacrifice reward!"
+var areward140 = "+17% obtainium. Lazy joke about not leaking talismans here [You get a new one]"
+var areward141 = "Unlock a new reset tier!"
+var areward147 = "+19% obtainium (Achievement total is up to 100%!). Gain the Polymath Talisman!"
+var areward169 = "ALL Ant speed multiplied by log10(crumbs + 10)"
+var areward171 = "+16.666% ALL Ant speed!"
+var areward172 = "Gain more ants the longer your reincarnation lasts (max speed achieved in 2 hours)"
+var areward173 = "Unlock Ant Sacrifice, allowing you to reset your ants and ant upgrades in exchange for amazing rewards! Automatically buy Worker Ants."
+var areward176 = "Unlock Tier 2 Ant autobuy, and autobuy Inceptus and Fortunae ants! Add +25 Base Ant ELO."
+var areward177 = "Unlock Tier 3 Ant autobuy, and autobuy Tributum ants! Add +50 Base Ant ELO."
+var areward178 = "Unlock Tier 4 Ant autobuy, and autobuy Celeritus and Multa ants! Add +75 Base Ant ELO."
+var areward179 = "Unlock Tier 5 Ant autobuy, and autobuy Sacrificium ants! Add +100 Base Ant ELO."
+var areward180 = "Unlock Tier 6 Ant autobuy, and autobuy Hic and Experientia ants! Add +1% Base Ant ELO."
+var areward181 = "Unlock Tier 7 Ant autobuy, and autobuy Praemoenio ants! Add +2% Base Ant ELO."
+var areward182 = "Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO."
+
 
 
 function resetachievementcheck(i) {
@@ -521,6 +547,62 @@ if (i == 'eight') {
     if (player.challengecompletions.eight > 14.5) {achievementaward(132)}
     if (player.challengecompletions.eight > 24.5) {achievementaward(133)}
 }
+if (i == 'nine') {
+    if (player.challengecompletions.nine > 0.5) {achievementaward(134)}
+    if (player.challengecompletions.nine > 1.5) {achievementaward(135)}
+    if (player.challengecompletions.nine > 2.5) {achievementaward(136)}
+    if (player.challengecompletions.nine > 4.5) {achievementaward(137)}
+    if (player.challengecompletions.nine > 9.5) {achievementaward(138)}
+    if (player.challengecompletions.nine > 14.5) {achievementaward(139)}
+    if (player.challengecompletions.nine > 24.5) {achievementaward(140)}
+}
+if (i == 'ten') {
+    if (player.challengecompletions.ten > 0.5) {achievementaward(141)}
+    if (player.challengecompletions.ten > 1.5) {achievementaward(142)}
+    if (player.challengecompletions.ten > 2.5) {achievementaward(143)}
+    if (player.challengecompletions.ten > 4.5) {achievementaward(144)}
+    if (player.challengecompletions.ten > 9.5) {achievementaward(145)}
+    if (player.challengecompletions.ten > 14.5) {achievementaward(146)}
+    if (player.challengecompletions.ten > 24.5) {achievementaward(147)}
+}
+}
+
+function buildingAchievementCheck(){
+    if (player.firstOwnedCoin >= 1 && player.achievements[1] < 0.5) {achievementaward(1)}
+			if (player.firstOwnedCoin >= 10 && player.achievements[2] < 0.5) {achievementaward(2)}
+			if (player.firstOwnedCoin >= 100 && player.achievements[3] < 0.5) {achievementaward(3)}
+			if (player.firstOwnedCoin >= 1000 && player.achievements[4] < 0.5) {achievementaward(4)}
+			if (player.firstOwnedCoin >= 5000 && player.achievements[5] < 0.5) {achievementaward(5)}
+			if (player.firstOwnedCoin >= 10000 && player.achievements[6] < 0.5) {achievementaward(6)}
+			if (player.firstOwnedCoin >= 20000 && player.achievements[7] < 0.5) {achievementaward(7)}
+			if (player.secondOwnedCoin >= 1 && player.achievements[8] < 0.5) {achievementaward(8)}
+            if (player.secondOwnedCoin >= 10 && player.achievements[9] < 0.5) {achievementaward(9)}
+            if (player.secondOwnedCoin >= 100 && player.achievements[10] < 0.5) {achievementaward(10)}
+            if (player.secondOwnedCoin >= 1000 && player.achievements[11] < 0.5) {achievementaward(11)}
+            if (player.secondOwnedCoin >= 5000 && player.achievements[12] < 0.5) {achievementaward(12)}
+            if (player.secondOwnedCoin >= 10000 && player.achievements[13] < 0.5) {achievementaward(13)}
+			if (player.secondOwnedCoin >= 20000 && player.achievements[14] < 0.5) {achievementaward(14)}
+			if (player.thirdOwnedCoin >= 1 && player.achievements[15] < 0.5) {achievementaward(15)}
+            if (player.thirdOwnedCoin >= 10 && player.achievements[16] < 0.5) {achievementaward(16)}
+            if (player.thirdOwnedCoin >= 100 && player.achievements[17] < 0.5) {achievementaward(17)}
+            if (player.thirdOwnedCoin >= 1000 && player.achievements[18] < 0.5) {achievementaward(18)}
+            if (player.thirdOwnedCoin >= 5000 && player.achievements[19] < 0.5) {achievementaward(19)}
+            if (player.thirdOwnedCoin >= 10000 && player.achievements[20] < 0.5) {achievementaward(20)}
+			if (player.thirdOwnedCoin >= 20000 && player.achievements[21] < 0.5) {achievementaward(21)}
+			if (player.fourthOwnedCoin >= 1 && player.achievements[22] < 0.5) {achievementaward(22)}
+            if (player.fourthOwnedCoin >= 10 && player.achievements[23] < 0.5) {achievementaward(23)}
+            if (player.fourthOwnedCoin >= 100 && player.achievements[24] < 0.5) {achievementaward(24)}
+            if (player.fourthOwnedCoin >= 1000 && player.achievements[25] < 0.5) {achievementaward(25)}
+            if (player.fourthOwnedCoin >= 5000 && player.achievements[26] < 0.5) {achievementaward(26)}
+            if (player.fourthOwnedCoin >= 10000 && player.achievements[27] < 0.5) {achievementaward(27)}
+			if (player.fourthOwnedCoin >= 20000 && player.achievements[28] < 0.5) {achievementaward(28)}
+			if (player.fifthOwnedCoin >= 1 && player.achievements[29] < 0.5) {achievementaward(29)}
+            if (player.fifthOwnedCoin >= 10 && player.achievements[30] < 0.5) {achievementaward(30)}
+            if (player.fifthOwnedCoin >= 66 && player.achievements[31] < 0.5) {achievementaward(31)}
+            if (player.fifthOwnedCoin >= 666 && player.achievements[32] < 0.5) {achievementaward(32)}
+            if (player.fifthOwnedCoin >= 6666 && player.achievements[33] < 0.5) {achievementaward(33)}
+            if (player.fifthOwnedCoin >= 17777 && player.achievements[34] < 0.5) {achievementaward(34)}
+			if (player.fifthOwnedCoin >= 42777 && player.achievements[35] < 0.5) {achievementaward(35)}
 }
 
 function achievementdescriptions(i) {

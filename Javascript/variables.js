@@ -5,7 +5,7 @@ var runeexpbase = [1, 4, 9, 16, 1000]
 var upgradeCosts = [0, 6, 7, 8, 10, 12, 20, 25, 30, 35, 45, 55, 75, 110, 150, 200, 250, 500, 750, 1000, 1500,
 					   2, 3, 4, 5, 6, 7, 10, 13, 20, 30, 150, 400, 800, 1600, 3200, 10000, 20000, 50000, 100000, 200000,
 						1, 2, 3, 5, 6, 7, 42, 65, 87, 150, 300, 500, 1000, 1500, 2000, 3000, 6000, 12000, 25000, 75000,
-						0, 1, 2, 2, 3, 5, 6, 10, 15, 22, 30, 37, 45, 52, 60, 9999, 9999, 9999, 9999, 9999,
+						0, 1, 2, 2, 3, 5, 6, 10, 15, 22, 30, 37, 45, 52, 60, 1900, 2500, 3000, 7482, 21397,
 						3, 6, 9, 12, 15, 20, 30, 6, 8, 8, 10, 13, 60, 1, 2, 4, 8, 16, 25, 40,
 						12, 16, 20, 30, 50, 500, 1250, 5000, 25000, 125000, 1500, 7500, 30000, 150000, 1000000, 250, 1000, 5000, 25000, 125000];
 
@@ -21,7 +21,7 @@ var researchBaseCosts = [0, 1, 1, 1, 1, 1,
 							2, 20, 10000, 100000, 1000000,
 							2, 500, 250000, 2500, 50000,
 							1, 1, 5, 25, 125,
-							2, 5, 320, 1280, 3e7,
+							2, 5, 320, 1280, 2.5e9,
 							10, 100, 1000, 100000, 2000000,
 							10, 100, 1000, 25000, 500000,
 							5, 10, 80, 5000, 20000,
@@ -31,8 +31,12 @@ var researchBaseCosts = [0, 1, 1, 1, 1, 1,
 							2e8, 2.5e8, 5e7, 5e8, 7.5e7,
 							1e8, 1.25e8, 1.5e8, 2e8, 3e8,
 							1e8, 4e8, 1e9, 2.5e9, 1e10,
-							1e9, 3e10, 1e12, 5e9, 7.777e12
-
+							2e9, 5e9, 3e10, 5e9, 7.777e12,
+							5e10, 1.5e11, 3e10, 1e11, 1e12,
+							2e11, 1e12, 2e10, 2e11, 1e12,
+							2e13, 5e13, 1e14, 2e14, 5e14,
+							1e15, 2e15, 1e16, 1e15, 1e16,
+							1e14, 1e15, 1e15, 1e18, 1e20
 							]
 
 
@@ -56,8 +60,12 @@ var researchMaxLevels = [0, 1, 1, 1, 1, 1,
 							 200, 1, 50, 100, 100,
 							 100, 100, 100, 100, 10,
 							 100, 100, 100, 100, 1,
-							 1, 1, 1, 2, 1
-							 ]								
+							 100, 20, 20, 2, 1,
+							 10, 10, 25, 25, 1,
+							 10, 10, 100, 100, 20,
+							 250, 250, 250, 250, 250,
+							 1, 20, 25, 25, 25,
+							 25, 25, 100, 1, 1]								
 
 var ticker = 0;
 
@@ -169,6 +177,8 @@ var challengebaserequirementsrein = {
 	six: 125,
 	seven: 500,
 	eight: 12000,
+	nine: 2.66e8,
+	ten: 1e9,
 }
 
 var prestigeamount = 1;
@@ -195,6 +205,8 @@ var effectiveLevelMult = 1;
 var optimalOfferingTimer = 600;
 var optimalObtainiumTimer = 3600;
 
+var runeSum = 0;
+
 const shopBaseCosts = {
 	offerPotion: 35,
 	obtainiumPotion: 35,
@@ -203,6 +215,98 @@ const shopBaseCosts = {
 	offerAuto: 150,
 	obtainiumAuto: 150,
 	instantChallenge: 300,
-	cashGrab: 100
+	cashGrab: 100,
+	antSpeed: 200,
 }
 
+var shopConfirmation = true;
+
+var globalAntMult = new Decimal("1");
+var antMultiplier = new Decimal("1");
+
+var antOneProduce = new Decimal("1");
+var antTwoProduce = new Decimal("1");
+var antThreeProduce = new Decimal("1");
+var antFourProduce = new Decimal("1");
+var antFiveProduce = new Decimal("1");
+var antSixProduce = new Decimal("1");
+var antSevenProduce = new Decimal("1");
+var antEightProduce = new Decimal("1");
+
+var antCostGrowth = [null, 1e40, 3, 10, 1e2, 1e4, 1e8, 1e16, 1e32]
+
+var antUpgradeBaseCost = [null, 100, 100, 1000, 1000, 1e5, 1e6, 1e8, 1e11, 1e15, 1e20, 1e40, 1e100]
+var antUpgradeCostIncreases = [null, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 100]
+
+var bonusant1 = 0;
+var bonusant2 = 0;
+var bonusant3 = 0;
+var bonusant4 = 0;
+var bonusant5 = 0;
+var bonusant6 = 0;
+var bonusant7 = 0;
+var bonusant8 = 0;
+var bonusant9 = 0;
+var bonusant10 = 0;
+var bonusant11 = 0;
+var bonusant12 = 0;
+
+var rune1level = 1;
+var rune2level = 1;
+var rune3level = 1;
+var rune4level = 1;
+var rune5level = 1;
+var rune1Talisman = 0;
+var rune2Talisman = 0;
+var rune3Talisman = 0;
+var rune4Talisman = 0;
+var rune5Talisman = 0;
+
+
+var talisman1Effect = [null, 0, 0, 0, 0, 0]
+var talisman2Effect = [null, 0, 0, 0, 0, 0]
+var talisman3Effect = [null, 0, 0, 0, 0, 0]
+var talisman4Effect = [null, 0, 0, 0, 0, 0]
+var talisman5Effect = [null, 0, 0, 0, 0, 0]
+var talisman6Effect = [null, 0, 0, 0, 0, 0]
+var talisman7Effect = [null, 0, 0, 0, 0, 0]
+
+var talisman6Power = 0;
+var talisman7Quarks = 0;
+
+var runescreen = "runes"
+var settingscreen = "settings"
+
+var talismanShardCost = 1e6
+var talismanFragmentObtainiumCosts = [null, 3e6, 1e7, 1e8, 1e9, 1e10, 1e11]
+var talismanFragmentOfferingCosts = [null, 0, 100, 1e3, 1e4, 1e5, 1e6]
+
+
+var talismanLevelCostMultiplier = [null, 1, 4, 9, 16, 25, 10, 100]
+
+var talismanPositiveModifier = [null, 0.25, 0.5, 0.75, 1, 1.25, 1.5]
+var talismanNegativeModifier = [null, 0.2, 0.4, 0.6, 0.8, 1, 1.2]
+
+var commonTalismanEnhanceCost = [null, 0, 3000, 1000, 0, 0, 0, 0]
+var uncommonTalismanEnchanceCost = [null, 0, 10000, 3000, 1000, 0, 0, 0]
+var rareTalismanEnchanceCost = [null, 0, 100000, 20000, 2000, 500, 0, 0]
+var epicTalismanEnhanceCost = [null, 0, 2e6, 2e5, 2e4, 2000, 1000, 0]
+var legendaryTalismanEnchanceCost = [null, 0, 4e7, 4e6, 1e5, 20000, 2500, 200]
+var mythicalTalismanEnchanceCost = [null, 0, 0, 0, 0, 0, 0, 0]
+
+var talismanRespec = 1;
+
+var obtainiumGain = 0;
+
+var mirrorTalismanStats = [null, 1, 1, 1, 1, 1];
+var antELO = 0;
+
+var timeWarp = false
+
+var divineBlessing1 = 1;
+var divineBlessing2 = 1;
+var divineBlessing3 = 1;
+var divineBlessing4 = 1;
+var divineBlessing5 = 0;
+
+var triggerChallenge = ""

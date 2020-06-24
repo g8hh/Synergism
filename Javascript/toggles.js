@@ -17,25 +17,24 @@ if (player.currentChallenge == "" && (i == 'one' || i == 'two' || i == 'three' |
     reset(2);
     player.transcendCount -= 1;
 }
-if (player.currentChallenge == "" && (i == 'six' || i == 'seven' || i == 'eight') && player.currentChallengeRein == "") {
+if (player.currentChallenge == "" && (i == 'six' || i == 'seven' || i == 'eight' || i == 'nine' || i== 'ten') && player.currentChallengeRein == "") {
     player.currentChallengeRein = i;
     reset(3);
     player.reincarnationCount -= 1;
 }
-    let x = ""
-    let y = ""
-    if (player.currentChallengeRein == 'six') {x = " || TAX+ [Reincarnation]"}
-    if (player.currentChallengeRein == 'seven') {x = " || MULTIPLIER/ACCELERATOR-- [Reincarnation]"}
-    if (player.currentChallengeRein == 'eight') {x = " || COST++ [Reincarnation]"}
-    if (player.currentChallengeRein !== "" && player.currentChallenge !== "") { y = "s"}
-    if (i == player.currentChallenge || i == player.currentChallengeRein){
-    if (i == 'one'){document.getElementById("currentchallenge").textContent = "Current Challenge" + y + ": No Multipliers [Transcension]" + x}
-    if (i == 'two'){document.getElementById("currentchallenge").textContent = "Current Challenge" + y + ": No Accelerators [Transcension]" + x}
-    if (i == 'three'){document.getElementById("currentchallenge").textContent = "Current Challenge" + y + ": No Shards [Transcension]" + x}
-    if (i == 'four'){document.getElementById("currentchallenge").textContent = "Current Challenge" + y + ": Fast Cost Growth [Transcension]" + x}
-    if (i == 'five'){document.getElementById("currentchallenge").textContent = "Current Challenge" + y + ": Reduced Diamonds [Transcension]" + x}
-    if (i !== 'one' && i !== 'two' && i !== 'three' && i !== 'four' && i !== 'five') {document.getElementById("currentchallenge").textContent = "Current Challenge: None [Transcension]" + x}
-    }
+
+    updateChallengeDisplay();
+
+
+        if (i == "nine"){
+        rune1level = 1;
+        rune2level = 1;
+        rune3level = 1;
+        rune4level = 1;
+        rune5level = 1;
+        player.crystalUpgrades = [0, 0, 0, 0, 0, 0, 0, 0]
+        }
+        calculateRuneLevels();
 }
 
 
@@ -88,7 +87,7 @@ var q = 3;
 if (player.unlocks.coinfour == true) {q += 1}
 if (player.unlocks.prestige == true) {q += 2}
 if (player.unlocks.transcend == true) {q += 2}
-if (player.unlocks.reincarnate == true) {q += 2}
+if (player.unlocks.reincarnate == true) {q += 3}
 player.tabnumber += i
 if (player.tabnumber == q) {player.tabnumber = 1}
 if (player.tabnumber == 0) {player.tabnumber = q - 1}
@@ -102,6 +101,7 @@ if (player.tabnumber == 6) {toggleTabs("transcension")}
 if (player.tabnumber == 7) {toggleTabs("challenges")}
 if (player.tabnumber == 8) {toggleTabs("reincarnation")}
 if (player.tabnumber == 9) {toggleTabs("researches")}
+if (player.tabnumber == 10) {toggleTabs("ants")}
 
 
 
@@ -197,6 +197,44 @@ function toggleAutoSacrifice(index) {
     }
     for(var i = 1; i <= 5; i++){
         if(player.autoSacrifice == i){document.getElementById("rune"+i).style.backgroundColor = "orange"}
-        else{document.getElementById("rune"+i).style.backgroundColor = "#171717"}
+        else{document.getElementById("rune"+i).style.backgroundColor = "black"}
     }
+    calculateRuneLevels();
+}
+
+function toggleRuneScreen(){
+    if (runescreen == "runes"){
+        runescreen = "talismans";
+        document.getElementById("runecontainer1").style.display = "none";
+        document.getElementById("runecontainer2").style.display = "block";
+        document.getElementById("togglerunesubtab").textContent = "GO BACK TO RUNES"
+        document.getElementById("togglerunesubtab").style.border = "2px solid orangered"
+    }
+    else{
+        runescreen = "runes";
+        document.getElementById("runecontainer1").style.display = "block";
+        document.getElementById("runecontainer2").style.display = "none";
+        document.getElementById("togglerunesubtab").textContent = "GO TO TALISMANS"
+        document.getElementById("togglerunesubtab").style.border = "2px solid grey"
+    };
+}
+function toggleSettingScreen(){
+    if (settingscreen == "settings"){
+        settingscreen = "credits";
+        document.getElementById("settingsubtab").style.display = "none";
+        document.getElementById("creditssubtab").style.display = "block";
+        document.getElementById("switchsettingtab").textContent = "Go back to Settings"
+    }
+    else{
+        settingscreen = "settings";
+        document.getElementById("settingsubtab").style.display = "block";
+        document.getElementById("creditssubtab").style.display = "none";
+        document.getElementById("switchsettingtab").textContent = "Credits & Acknowledgements"
+    };
+}
+
+function toggleShopConfirmation(){
+    let el = document.getElementById("toggleConfirmShop")
+    if(shopConfirmation){shopConfirmation = false; el.textContent = "Shop Confirmations: OFF"}
+    else{shopConfirmation = true; el.textContent = "Shop Confirmations: ON"}
 }

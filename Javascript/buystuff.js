@@ -79,14 +79,158 @@ function buyMultiplier(autobuyer){
         if (player.multiplierBought >= 100000 && player.achievements[161] == 0){achievementaward(161)}
 
 	}
+
+	function getCost(originalCost, buyingTo, type, num, r)
+	{
+		// It's 0 indexed by mistake so you have to subtract 1 somewhere.
+		--buyingTo;
+
+		// Prevents multiple recreations of this variable because .factorial() is the only one that doesn't create a clone (?)
+		let buyingToDec = new Decimal(buyingTo);
+		// Accounts for the multiplies by 1.25^num buyingTo times
+		let cost = originalCost.times(Decimal.pow(Math.pow(1.25, num), buyingTo));
+		
+		// Accounts for the add 1s
+		cost = cost.add(1 * buyingTo);
 	
+		// floored r value gets used a lot in removing calculations
+		var fr = Math.floor(r * 1000);
+		if (buyingTo >= r * 1000)
+		{
+			
+			// Accounts for all multiplications of itself up to buyingTo, while neglecting all multiplications of itself up to r*1000
+			cost = cost.times(buyingToDec.factorial().dividedBy((new Decimal(fr).factorial())));
+	
+			// Accounts for all divisions of itself buyingTo times, while neglecting all divisions up to r*1000 times
+			cost = cost.dividedBy(Decimal.pow(1000, buyingTo - fr));
+	
+			// Accounts for all multiplications of 1 + num/2, while neglecting all divisions up to r*1000 times
+			cost = cost.times(Decimal.pow(1 + num/2, buyingTo - fr));
+		}
+	
+		fr = Math.floor(r * 5000);
+		if (buyingTo >= r * 5000) {
+			cost = cost.times(buyingToDec.factorial().dividedBy(new Decimal(fr).factorial()));
+			cost = cost.times(Decimal.pow(10, buyingTo - fr));
+			cost = cost.times(Decimal.pow(10 + num * 10, buyingTo - fr));
+		} 
+	
+		fr = Math.floor(r * 20000);
+		if (buyingTo >= r * 20000) {
+			// To truncate this expression I used Decimal.pow(Decimal.factorial(buyingTo), 3) which suprisingly (to me anyways) does actually work
+			// So it takes all numbers up to buyingTo and pow3's them, then divides by all numbers up to r*20000 pow3'd 
+			cost = cost.times(Decimal.pow(buyingToDec.factorial(), 3)).dividedBy(Decimal.pow(new Decimal(fr).factorial(), 3));
+			cost = cost.times(Decimal.pow(100000, buyingTo - fr));
+			cost = cost.times(Decimal.pow(100 + num * 100, buyingTo - fr));  
+		}
+	
+		fr = Math.floor(r * 250000);
+		if (buyingTo >= r * 250000) {
+			//1.03^x*1.03^y = 1.03^(x+y), we'll abuse this for this section of the algorithm
+			// 1.03^(x+y-((number of terms)250000*r))
+			// up to 250003 case
+			// assume r = 1 for this case
+			// (1.03^250000-250000)(1.03^250001-250000)(1.03^250002-250000)(1.03^250003) = (1.03^0*1.03^1*1.03^2*1.03^3)
+			// so in reality we just need to take buyingTo - fr and sum the power up to it
+			// (1.03^(sum from 0 to buyingTo - fr)) is the multiplier
+			// so (1.03^( (buyingTo-fr)(buyingTo-fr+1)/2 )
+			// god damn that was hard to make an algo for
+			cost = cost.times(Decimal.pow(1.03, (buyingTo - fr) * ((buyingTo - fr + 1) / 2)));
+		}
+		if ((player.currentChallenge == "four") && (type == "Coin" || type == "Diamonds")) {
+			// you would not fucking believe how long it took me to figure this out
+			// (100*costofcurrent + 10000)^n = (((100+buyingTo)!/100!)*100^buyingTo)^n
+			cost = cost.times(Decimal.pow(new Decimal(buyingTo + 100).factorial().dividedBy(new Decimal(100).factorial()).times(Decimal.pow(100, buyingTo)), 1.25 + 1/4 * player.challengecompletions.four));
+			if (buyingTo >= (1000 - (10 * player.challengecompletions.four))) {
+				// and I changed this to be a summation of all the previous buys 1.25 to the sum from 1 to buyingTo 
+				cost = cost.times(Decimal.pow(1.25, (buyingTo * (buyingTo + 1) / 2)));
+			}
+		}
+		if ((player.currentChallengeRein == "ten") && (type == "Coin" || type == "Diamonds")) {
+			// you would not fucking believe how long it took me to figure this out
+			// (100*costofcurrent + 10000)^n = (((100+buyingTo)!/100!)*100^buyingTo)^n
+			cost = cost.times(Decimal.pow(new Decimal(buyingTo + 100).factorial().dividedBy(new Decimal(100).factorial()).times(Decimal.pow(100, buyingTo)), 1.25 + 1/4 * player.challengecompletions.four));
+			if (buyingTo >= (r * 25000)) {
+				// and I changed this to be a summation of all the previous buys 1.25 to the sum from 1 to buyingTo 
+				cost = cost.times(Decimal.pow(1.25, (buyingTo * (buyingTo + 1) / 2)));
+			}
+		}
+		fr = Math.floor(r * 1000 * player.challengecompletions.eight);
+		  if (player.currentChallengeRein == "eight" && (type == "Coin" || type == "Diamonds" || type == "Mythos") && buyingTo >= (1000 * player.challengecompletions.eight * r)){
+			  
+			var sumBuys = (buyingTo - (1000 * player.challengecompletions.eight * r)) * ((buyingTo - (1000 * player.challengecompletions.eight * r) + 1) / 2);
+			var negBuys = (fr       - (1000 * player.challengecompletions.eight * r)) * ((fr       - (1000 * player.challengecompletions.eight * r) + 1) / 2);
+			
+			cost = cost.times(Decimal.pow(2, sumBuys - negBuys));
+	
+			// divided by same amount buying to - fr times
+			cost = cost.dividedBy(Decimal.pow((1 + 1/2 * player.challengecompletions.eight), buyingTo - fr));
+		}
+	
+		return cost;
+	}
+	
+	function buyMax(pos, type, num, originalCost, autobuyer = false)
+	{
+		autobuyer = autobuyer || false;
+		originalCost = new Decimal(originalCost);
+		var tag = "";
+		var r = 1
+		r += 1/400 * rune4level * effectiveLevelMult;
+		r += 1/200 * (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59] + player.researches[60]);
+		r += 1/200 * player.challengecompletions.four;
+		r += 3/100 * (player.antUpgrades[7] + bonusant7);
+	
+		if (type == 'Diamonds'){tag = "prestigePoints";}
+		if (type == 'Mythos'){tag = "transcendPoints";}
+		if (type == 'Particles') {tag = "reincarnationPoints";}
+		if (type == "Coin") {tag = "coins";}
+	
+		// Start buying at the current amount bought + 1
+		var buyTo =  player[pos + 'Owned' + type] + 1;
+		var cashToBuy = getCost(originalCost, buyTo, type, num, r);
+		while (player[tag].greaterThanOrEqualTo(cashToBuy))
+		{
+			// then multiply by 4 until it reaches just above the amount needed
+			buyTo = buyTo * 4;
+			cashToBuy = getCost(originalCost, buyTo, type, num, r);
+		}
+		var stepdown = Math.floor(buyTo / 8);
+		while (stepdown !== 0)
+		{
+		 
+			// if step down would push it below out of expense range then divide step down by 2
+			if (getCost(originalCost, buyTo - stepdown, type, num, r).lessThanOrEqualTo(player[tag]))
+			{
+				stepdown = Math.floor(stepdown/2);
+			}
+			else
+			{
+				buyTo = buyTo - stepdown;
+			}
+		}
+		// go down by 7 steps below the last one able to be bought and spend the cost of 25 up to the one that you started with and stop if coin goes below requirement
+		var buyFrom = Math.max(buyTo - 7, player[pos + 'Owned' + type] + 1);
+		var thisCost = getCost(originalCost, buyFrom, type, num, r);
+		while (buyFrom < buyTo  && player[tag].greaterThanOrEqualTo(getCost(originalCost, buyFrom, type, num, r)))
+		{
+			player[tag] = player[tag].sub(thisCost);
+			player[pos + 'Owned' + type] = buyFrom;
+			buyFrom = buyFrom + 1;
+			thisCost = getCost(originalCost, buyFrom, type, num, r);
+			player[pos + 'Cost' + type] = thisCost;
+		}
+	}	
+	
+
 function buyProducer(pos,type,num,autobuyer) {
 	let buythisamount = 0;
     var r = 1;
     var tag = ""
-	r += 1/400 * player.runelevels[3] * effectiveLevelMult
+	r += 1/400 * rune4level * effectiveLevelMult
 	r += 1/200 * (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59] + player.researches[60])
 	r += 1/200 * player.challengecompletions.four
+	r += 3/100 * player.antUpgrades[7] + 3/100 * bonusant7
 	if (type == 'Diamonds'){tag = "prestigePoints"; var amounttype = "crystal"}
 	if (type == 'Mythos'){tag = "transcendPoints"; var amounttype = "mythos"}
 	if (type == 'Particles') {tag = "reincarnationPoints"; var amounttype = "particle"}
@@ -122,44 +266,10 @@ function buyProducer(pos,type,num,autobuyer) {
 				 ticker += 1;
 			 }
 			 ticker = 0;
-			if (player.firstOwnedCoin >= 1 && player.achievements[1] < 0.5) {achievementaward(1)}
-			if (player.firstOwnedCoin >= 10 && player.achievements[2] < 0.5) {achievementaward(2)}
-			if (player.firstOwnedCoin >= 100 && player.achievements[3] < 0.5) {achievementaward(3)}
-			if (player.firstOwnedCoin >= 1000 && player.achievements[4] < 0.5) {achievementaward(4)}
-			if (player.firstOwnedCoin >= 5000 && player.achievements[5] < 0.5) {achievementaward(5)}
-			if (player.firstOwnedCoin >= 10000 && player.achievements[6] < 0.5) {achievementaward(6)}
-			if (player.firstOwnedCoin >= 20000 && player.achievements[7] < 0.5) {achievementaward(7)}
-			if (player.secondOwnedCoin >= 1 && player.achievements[8] < 0.5) {achievementaward(8)}
-            if (player.secondOwnedCoin >= 10 && player.achievements[9] < 0.5) {achievementaward(9)}
-            if (player.secondOwnedCoin >= 100 && player.achievements[10] < 0.5) {achievementaward(10)}
-            if (player.secondOwnedCoin >= 1000 && player.achievements[11] < 0.5) {achievementaward(11)}
-            if (player.secondOwnedCoin >= 5000 && player.achievements[12] < 0.5) {achievementaward(12)}
-            if (player.secondOwnedCoin >= 10000 && player.achievements[13] < 0.5) {achievementaward(13)}
-			if (player.secondOwnedCoin >= 20000 && player.achievements[14] < 0.5) {achievementaward(14)}
-			if (player.thirdOwnedCoin >= 1 && player.achievements[15] < 0.5) {achievementaward(15)}
-            if (player.thirdOwnedCoin >= 10 && player.achievements[16] < 0.5) {achievementaward(16)}
-            if (player.thirdOwnedCoin >= 100 && player.achievements[17] < 0.5) {achievementaward(17)}
-            if (player.thirdOwnedCoin >= 1000 && player.achievements[18] < 0.5) {achievementaward(18)}
-            if (player.thirdOwnedCoin >= 5000 && player.achievements[19] < 0.5) {achievementaward(19)}
-            if (player.thirdOwnedCoin >= 10000 && player.achievements[20] < 0.5) {achievementaward(20)}
-			if (player.thirdOwnedCoin >= 20000 && player.achievements[21] < 0.5) {achievementaward(21)}
-			if (player.fourthOwnedCoin >= 1 && player.achievements[22] < 0.5) {achievementaward(22)}
-            if (player.fourthOwnedCoin >= 10 && player.achievements[23] < 0.5) {achievementaward(23)}
-            if (player.fourthOwnedCoin >= 100 && player.achievements[24] < 0.5) {achievementaward(24)}
-            if (player.fourthOwnedCoin >= 1000 && player.achievements[25] < 0.5) {achievementaward(25)}
-            if (player.fourthOwnedCoin >= 5000 && player.achievements[26] < 0.5) {achievementaward(26)}
-            if (player.fourthOwnedCoin >= 10000 && player.achievements[27] < 0.5) {achievementaward(27)}
-			if (player.fourthOwnedCoin >= 20000 && player.achievements[28] < 0.5) {achievementaward(28)}
-			if (player.fifthOwnedCoin >= 1 && player.achievements[29] < 0.5) {achievementaward(29)}
-            if (player.fifthOwnedCoin >= 10 && player.achievements[30] < 0.5) {achievementaward(30)}
-            if (player.fifthOwnedCoin >= 66 && player.achievements[31] < 0.5) {achievementaward(31)}
-            if (player.fifthOwnedCoin >= 666 && player.achievements[32] < 0.5) {achievementaward(32)}
-            if (player.fifthOwnedCoin >= 6666 && player.achievements[33] < 0.5) {achievementaward(33)}
-            if (player.fifthOwnedCoin >= 17777 && player.achievements[34] < 0.5) {achievementaward(34)}
-			if (player.fifthOwnedCoin >= 42777 && player.achievements[35] < 0.5) {achievementaward(35)}
 	}
 
-function buyResearch(index,auto=false) {
+function buyResearch(index,auto) {
+	auto = auto || false
 	if (player.autoResearchToggle && player.autoResearch > 0.5 && !auto){
 		let p = player.autoResearch
 		if (player.researches[p] == researchMaxLevels[p]){document.getElementById("res" + player.autoResearch).style.backgroundColor = "green"}
@@ -186,6 +296,8 @@ function buyResearch(index,auto=false) {
 		}
 		if (i > 1){revealStuff()}
 	}
+	calculateRuneLevels();
+	calculateAnts();
 }
 
 function buyUpgrades(type, pos, state) {
@@ -224,7 +336,7 @@ function buyUpgrades(type, pos, state) {
 function buyCrystalUpgrades(i) {
 	var u = i - 1
 	var c = 0
-	c += Math.floor(player.runelevels[2]/10 * (1 + player.researches[5] /10) * (1 + player.researches[21]/800)) * 100/100
+	c += Math.floor(rune3level/10 * (1 + player.researches[5] /10) * (1 + player.researches[21]/800)) * 100/100
 	if (player.upgrades[73] > 0.5 && player.currentChallengeRein !== "") {c += 10}
 	if (player.prestigeShards.greaterThanOrEqualTo(Decimal.pow(10, (crystalUpgradesCost[u] + crystalUpgradeCostIncrement[u] * Math.floor(Math.pow(player.crystalUpgrades[u] + 0.5 - c, 2) /2))))) {
 		player.prestigeShards = player.prestigeShards.sub(Decimal.pow(10, (crystalUpgradesCost[u] + crystalUpgradeCostIncrement[u] * Math.floor(Math.pow(player.crystalUpgrades[u] + 0.5 -c, 2)/2))));
@@ -243,7 +355,7 @@ function boostAccelerator(automated) {
 				if (player.prestigePoints.greaterThanOrEqualTo(player.acceleratorBoostCost)) {
 					player.acceleratorBoostBought += 1;
 					player.acceleratorBoostCost = player.acceleratorBoostCost.times(1e10).times(Decimal.pow(10, player.acceleratorBoostBought));
-					if (player.acceleratorBoostBought > 1000) {player.acceleratorBoostCost = player.acceleratorBoostCost.times(Decimal.pow(10, Math.pow(player.acceleratorBoostBought - 1000, 2)))}
+					if (player.acceleratorBoostBought > (1000 * divineBlessing4)) {player.acceleratorBoostCost = player.acceleratorBoostCost.times(Decimal.pow(10, Math.pow(player.acceleratorBoostBought - (1000 * divineBlessing4), 2) / divineBlessing4))}
 					player.transcendnoaccelerator = false;
 					player.reincarnatenoaccelerator = false;
 					if (player.upgrades[46] < 0.5) {

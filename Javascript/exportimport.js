@@ -64,7 +64,7 @@ function promocodes(i) {
 function exportSynergism() {
     player.offlinetick = Date.now();
     if (player.quarkstimer >= 3600){
-        player.worlds += (Math.floor(player.quarkstimer/3600) * (1 + player.researches[99] + player.researches[100]));
+        player.worlds += (Math.floor(player.quarkstimer/3600) * (1 + player.researches[99] + player.researches[100] + talisman7Quarks + player.researches[125]));
         player.quarkstimer = (player.quarkstimer % 3600)
     }
     saveSynergy();
@@ -86,7 +86,7 @@ function exportSynergism() {
 function importSynergism(input) {
     try {
         const data = JSON.parse(atob(input));
-        if (data.exporttest === "YES!" && data.kongregatetest !== "YES!") {
+        if (data.exporttest === "YES!" && data.kongregatetest !== "YES") {
             localStorage.setItem("Synergysave2", input);
             loadSynergy();
             document.getElementById("importinfo").textContent = "Successfully imported your savefile. Go nuts!"
@@ -108,6 +108,7 @@ function importSynergism(input) {
     }
 
     document.getElementById("exportinfo").textContent = '';
+    revealStuff();
 }
 
 function promocodes() {
@@ -119,30 +120,10 @@ function promocodes() {
         player.worlds += 50; 
         el.textContent = "Promo Code 'synergism2020' Applied! +25 Offerings, +50 Quarks"
     }
-    else if (input == "shopequalp2w" && (player.version == "1.009" || player.version == "1.0091" || player.version == "1.00911") && player.offerpromo18used == false){
-        player.offerpromo18used = true
-        player.worlds += 125;
-        player.shopUpgrades.offeringPotion += 2;
-        player.shopUpgrades.obtainiumPotion += 2;
-
-        el.textContent = "Platonic's a sellout, Amirite? I'm the shop owner. Here's a couple goodies for you! [125 Quarks, 2 of each Potion]"
-    }
-    else if (input == "buffgod" && (player.version == "1.0091" || player.version == "1.00911") && player.offerpromo19used == false){
-        player.offerpromo19used = true
-        player.worlds += 100;
-        player.shopUpgrades.offeringPotion += 1;
-        player.shopUpgrades.obtainiumPotion += 1;
-        el.textContent = "You're incredibly powerful now! [+100 Quarks, +1 of each Consumable]"
-    }
-    else if (input == "400000" && (player.version == "1.00911") && player.offerpromo20used == false){
-        player.offerpromo20used = true
-        player.shopUpgrades.offeringPotion += 3;
-        player.shopUpgrades.obtainiumPotion += 3;
-        if (player.shopUpgrades.obtainiumTimerLevel == 7){player.worlds += 300}
-        if (player.shopUpgrades.obtainiumTimerLevel < 7){player.shopUpgrades.obtainiumTimerLevel += 1}
-        if (player.shopUpgrades.obtainiumTimerLevel == 7){player.worlds += 275}
-        if (player.shopUpgrades.obtainiumTimerLevel < 7){player.shopUpgrades.obtainiumTimerLevel += 1}
-        el.textContent = "I can't believe it. 400,000 plays in less than a month! [+3 of each potion, +2 FREE levels to Obtainium Timer!]"
+    else if (input == "anticipation" && player.version == "1.010" && player.offerpromo21used == false){
+        player.offerpromo21used = true;
+        player.worlds += 250;
+        el.textContent = "It's finally here. Thank you for sticking with the game and playing it this long! [+250 Quarks]"
     }
     else {
         el.textContent = "Your code is either invalid or already used. Try again!"

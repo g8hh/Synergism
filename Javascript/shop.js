@@ -7,8 +7,8 @@ const obtainiumtimerdesc = "Each level increases the timer capacity for Obtainiu
 const obtainiumautodesc = "Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed."
 const instantchallengedesc = "Instead of needing enough coins to get autocompletions, and waiting to complete, you instantly completions up until highest ever completed! Does not work in R. Challenges."
 const cashgrabdesc = "This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium."
-
-
+const antspeeddesc = "Each level gives a 1.5x speed multiplier to all Ant tiers' production! Short and simple."
+const shoptalismandesc = "Permanently unlock a Shop talisman! [Warning: you can't refund this and this is VERY expensive to level. Be sure you want to buy it!]"
 function shopDescriptions(i) {
     let rofl = document.getElementById("quarkdescription");
     let lmao = document.getElementById("quarkcost");
@@ -54,12 +54,25 @@ function shopDescriptions(i) {
             lmao.textContent = "Cost: " + (shopBaseCosts.cashGrab + 100 * player.shopUpgrades.cashGrabLevel) + " Quarks."
             lol.textContent = "CURRENT Effect: All resources EXCEPT QUARKS increased by " + format(player.shopUpgrades.cashGrabLevel,2) + "%."
             break;
+        case 9:
+            rofl.textContent = antspeeddesc;
+            lmao.textContent = "Cost: " + (shopBaseCosts.antSpeed + 200 * player.shopUpgrades.antSpeedLevel) + " Quarks."
+            lol.textContent = "CURRENT Effect: All Ants' Speed x" + format(Math.pow(1.5, player.shopUpgrades.antSpeedLevel),2)
+            break;
+        case 10:
+            rofl.textContent = shoptalismandesc;
+            lmao.textContent = "Cost: " + (1500) + " Quarks."
+            lol.textContent = "CURRENT Effect: Even in a premium shop it's kinda obvious, right?"
+            break;
     }
 
 }
 
 function buyShopUpgrades(i) {
-    let p = confirm("Are you sure of your purchase?")
+    let p = true;
+    if (shopConfirmation){
+    p = confirm("Are you sure of your purchase?")
+    }
     if (p){
         switch(i){
             case 1: if(player.worlds >= shopBaseCosts.offerPotion) {player.worlds -= 35; player.shopUpgrades.offeringPotion += 1;}; break;
@@ -71,6 +84,8 @@ function buyShopUpgrades(i) {
 
             case 7: if(player.worlds >= shopBaseCosts.instantChallenge && !player.shopUpgrades.instantChallengeBought){player.worlds -= 300; player.shopUpgrades.instantChallengeBought = true;}; break;
             case 8: if(player.worlds >= (shopBaseCosts.cashGrab + 100 * player.shopUpgrades.cashGrabLevel) && player.shopUpgrades.cashGrabLevel < 7){player.worlds -=(shopBaseCosts.cashGrab + 100 * player.shopUpgrades.cashGrabLevel); player.shopUpgrades.cashGrabLevel += 1;}; break;
+            case 9: if(player.worlds >= (shopBaseCosts.antSpeed + 200 * player.shopUpgrades.antSpeedLevel) && player.shopUpgrades.antSpeedLevel < 3){player.worlds -=(shopBaseCosts.antSpeed + 200 * player.shopUpgrades.antSpeedLevel); player.shopUpgrades.antSpeedLevel += 1;}; break;
+            case 10: if(player.worlds >= 1500 && !player.shopUpgrades.talismanBought){player.worlds -= 1500; player.shopUpgrades.talismanBought = true;}; break;
 
         }
         revealStuff();
@@ -78,11 +93,43 @@ function buyShopUpgrades(i) {
 }
 
 function useConsumable(i) {
-    let p = confirm("Would you like to use this potion?")
+    let p = true
+    if (shopConfirmation){
+    p = confirm("Would you like to use this potion?")
+    }
     if (p) {
     switch(i){
         case 1: if(player.shopUpgrades.offeringPotion > 0.5){player.shopUpgrades.offeringPotion -= 1; player.runeshards += Math.floor(7200 * player.offeringpersecond);}; break;
         case 2: if(player.shopUpgrades.obtainiumPotion > 0.5){player.shopUpgrades.obtainiumPotion -=1 ; player.researchPoints += Math.floor(7200 * player.obtainiumpersecond);}; break;
     }
 }
+}
+
+function resetShopUpgrades(){
+    let p = true
+    if (shopConfirmation){
+    p = confirm("This will refund 100% of your permanent upgrades for an upfront cost of 15 Quarks. Would you like to do this?")
+    }
+
+    if (p && player.worlds >= 15) {
+        player.worlds -= 15;
+        for (var i=0; i<10; i++){
+            if(player.shopUpgrades.offeringTimerLevel > 0){player.shopUpgrades.offeringTimerLevel -= 1; player.worlds += (150 + 25 * i)}
+            if(player.shopUpgrades.offeringAutoLevel > 0){player.shopUpgrades.offeringAutoLevel -= 1; player.worlds += (150 + 25 * i)}
+            if(player.shopUpgrades.obtainiumTimerLevel > 0){player.shopUpgrades.obtainiumTimerLevel -= 1; player.worlds += (150 + 25 * i)}
+            if(player.shopUpgrades.obtainiumAutoLevel > 0){player.shopUpgrades.obtainiumAutoLevel -= 1; player.worlds += (150 + 25 * i)}
+            if(player.shopUpgrades.instantChallengeBought){player.shopUpgrades.instantChallengeBought = false; player.worlds += (300)}
+            if(player.shopUpgrades.antSpeedLevel > 0){player.shopUpgrades.antSpeedLevel -= 1; player.worlds += (200 + 200 * i)}
+            if(player.shopUpgrades.cashGrabLevel > 0){player.shopUpgrades.cashGrabLevel -= 1; player.worlds += (100 + 100 * i)}
+        }
+
+        if(player.autoResearch > 0.5){document.getElementById("res" + player.autoResearch).style.backgroundColor = "black"}
+        if(player.autoSacrifice > 0.5){document.getElementById("rune" + player.autoSacrifice).style.backgroundColor = "black"}
+        player.autoSacrificeToggle = false;
+        player.autoResearchToggle = false;
+        player.autoResearch = 0;
+        player.autoSacrifice = 0;
+        player.sacrificeTimer = 0;
+        revealStuff();
+    }
 }

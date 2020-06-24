@@ -35,9 +35,9 @@ var upgdesc34 = "Gain 3% more free Multipliers."
 var upgdesc35 = "Gain 2% more free Multipliers."
 var upgdesc36 = "Multiply crystal production by Diamonds, maximum 1e5000x."
 var upgdesc37 = "Multiply mythos shard production by the squared logarithm of Diamonds."
-var upgdesc38 = "Multiply Printer production by 1e+4000."
-var upgdesc39 = "Multiply Investment production by 1e+7000."
-var upgdesc40 = "Multiply Worker production by 1e+10000."
+var upgdesc38 = "Gain +20% more offerings thanks to generous Discord Server Boosters!"
+var upgdesc39 = "Gain +60% more Ant Speed thanks to generous Discord Server Boosters!"
+var upgdesc40 = "Gain +9% more Ant Sacrifice rewards thanks to generous Discord Server Boosters!"
 var upgdesc41 = "Multiply production based on unspent Mythos."
 var upgdesc42 = "Multiply Mythos Shard production based on unspent Diamonds."
 var upgdesc43 = "Multiply coin production by 1.01 per transcension (Max: 1e30x)."
@@ -73,11 +73,11 @@ var upgdesc72 = "Obtainium gain from Reincarnations is multiplied (1 + 2C) where
 var upgdesc73 = "Gain +100% free accelerator boosts and +10 free Crystal Upgrade levels, but only in Reincarnation Challenges."
 var upgdesc74 = "Obtainium gain is increased based on highest ever unspent offerings. [Max: 100,000 unspent]"
 var upgdesc75 = "Offering gain is increased based on highest ever unspent obtainium [Max: 30,000,000 obtainium]"
-var upgdesc76 = "This upgrade added in an update near you!"
-var upgdesc77 = "This upgrade added in an update near you!"
-var upgdesc78 = "This upgrade added in an update near you!"
-var upgdesc79 = "This upgrade added in an update near you!"
-var upgdesc80 = "This upgrade added in an update near you!"
+var upgdesc76 = "Ant generation kinda slow? I agree! Make all ant tiers 5x faster!"
+var upgdesc77 = "This is Synergism, right? Let's make each purchased ant make all ants 0.5% faster."
+var upgdesc78 = "Hate spam clicking? Autosacrifice AND Manual spending spends 1,000x more offerings at a time."
+var upgdesc79 = "The Ant God will accept an arbitrary number of Particles in order to give you 10% more from sacrifices."
+var upgdesc80 = "The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO."
 var upgdesc81 = "Automatically buy Workers if affordable." //Automation Upgrades 81-100
 var upgdesc82 = "Automatically buy Investments if affordable."
 var upgdesc83 = "Automatically buy Printers if affordable."
@@ -166,9 +166,9 @@ function() { return "+" + format(Math.floor(3/103 * freeMultiplier)) + " Multipl
 function() { return "+" + format(Math.floor(2/102 * freeMultiplier)) + " Multipliers"},
 function() { return "All Crystal producers x" + format(Decimal.min("1e5000", Decimal.pow(player.prestigePoints, 1/500)),2)},
 function() { return "All Mythos producers production x" + format(Decimal.pow(Decimal.log(player.prestigePoints.add(10),10),2),2)},
-function() { return "This upgrade is currently not finished, so in the meantime you get a multiplier to a building. Enjoy!"},
-function() { return "This upgrade is currently not finished, so in the meantime you get a multiplier to a building. Enjoy!"},
-function() { return "This upgrade is currently not finished, so in the meantime you get a multiplier to a building. Enjoy!"},
+function() { return "Gain +1% per Booster that the server has, up until 20!"},
+function() { return "Gain +2% per Booster that the server has, up until 30!"},
+function() { return "Every boost after 30 increases this reward by +1%, up until 50!"},
 function() { return "Welcome to Transcension! Coin production is multiplied by " + format(Decimal.min(1e30,Decimal.pow(player.transcendPoints.add(1), 1/2))) + "."},
 function() { return "All mythos shard producers are going into overdrive: x" + format(Decimal.min(1e50, Decimal.pow(player.prestigePoints.add(1), 1/50).dividedBy(2.5).add(1)),2) + " the production!"},
 function() { return "Multiply all coin production by " + format(Decimal.min(1e30, Decimal.pow(1.01, player.transcendCount)),2) + "!"},
@@ -198,17 +198,17 @@ function() { return "It's quite clear in the description!"},
 function() { return "The first particle-tier producer is " + format(Decimal.pow(1.03, player.firstOwnedParticles + player.secondOwnedParticles + player.thirdOwnedParticles + player.fourthOwnedParticles + player.fifthOwnedParticles),2) + "x as productive."},
 function() { return "Your compliance with tax laws provides you with " + format(Math.min(2500, Math.floor(1/1000 * Decimal.log(taxdivisor,10)))) + " free Multipliers, for some reason."},
 function() { return "Cosmic Magnetics will allow you to gain " + format(Math.min(10, Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5)),2) + "x as much Obtainium reincarnating, x" + format(Math.min(3,Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5)),2) + " automation gain."},
-function() { return "Your patience will allow you to gain " + format(Math.min(4, Math.max(1, Math.pow(player.reincarnationcounter/30,2))) * Math.pow(Math.min(19, 1 + 2 * player.reincarnationcounter / 400),2),2) + "x more Obtainium on Reincarnation."},
+function() { return "Your patience will allow you to gain " + format(Math.min(4, Math.max(1, Math.pow(player.reincarnationcounter/30,2))) * Math.pow(Math.min(19 + player.shopUpgrades.obtainiumTimerLevel * 0.6, 1 + player.reincarnationcounter / 200),2),2) + "x more Obtainium on Reincarnation."},
 function() { return "Writing's on the wall. Look above!"},
 function() { return "Obtainium multiplier: x" + Math.min(50, (1 + 2 * player.challengecompletions.six + 2 * player.challengecompletions.seven + 2 * player.challengecompletions.eight + 2 * player.challengecompletions.nine + 2 * player.challengecompletions.ten))},
 function() { return "Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular."},
 function() { return "Obtainium multiplier: x" + format((1 + 4 * Math.min(1, Math.pow(player.maxofferings / 100000, 0.5))),2)},
 function() { return "Offering Multiplier: x" + format((1 + 2 * Math.min(1, Math.pow(player.maxobtainium/30000000, 0.5))),2)},
-function() { return "Lorem ipsum"},
-function() { return "Lorem ipsum"},
-function() { return "Lorem ipsum"},
-function() { return "Lorem ipsum"},
-function() { return "Lorem ipsum"},
+function() { return "Epic 5x Ants!"},
+function() { return "Ant Speed Multiplier: x" + format((Decimal.pow(1.005 + 5/100000 * player.researches[96], player.firstOwnedAnts + player.secondOwnedAnts + player.thirdOwnedAnts + player.fourthOwnedAnts + player.fifthOwnedAnts + player.sixthOwnedAnts + player.seventhOwnedAnts + player.eighthOwnedAnts)),3)},
+function() { return "Look above please lol"},
+function() { return "You will gain +10% rewards =)"},
+function() { return "Ant Elo +75 if this upgrade is purchased."},
 function() { return "All you need to know is right above this message!"},
 function() { return "All you need to know is right above this message!"},
 function() { return "All you need to know is right above this message!"},
@@ -312,7 +312,7 @@ function crystalupgradedescriptions(i) {
     var p = player.crystalUpgrades[u]
     var c = 0;
     if (player.upgrades[73] > 0.5 && player.currentChallengeRein !== "") {c = 10}
-    c += Math.floor(player.runelevels[2] * (1 + player.researches[5] / 10) * (1 + player.researches[21]/800) / 10) * 100/100
+    c += Math.floor(rune3level * (1 + player.researches[5] / 10) * (1 + player.researches[21]/800) / 10) * 100/100
     var q = Decimal.pow(10, (crystalUpgradesCost[u] + crystalUpgradeCostIncrement[u] * Math.floor(Math.pow(player.crystalUpgrades[u] + 0.5 - c, 2) / 2)))
     document.getElementById("crystalupgradedescription").textContent = w
     document.getElementById("crystalupgradeslevel").textContent = "Level: " + p;
@@ -394,7 +394,7 @@ var resdesc46 = "Unlock the ability to automatically Reincarnate!"
 var resdesc47 = "Unlock Reincarnation upgrades 1-5. [Upgrades cost between 1 and 1,000 Particles]"
 var resdesc48 = "Unlock Reincarnation upgrades 6-10. [Upgrades cost between 100,000 and 1e22 Particles]"
 var resdesc49 = "Unlock Reincarnation upgrades 11-15. [Upgrades cost between 1e30 and 1e60 Particles]"
-var resdesc50 = "Unlock Reincarnation upgrades 16-20. (NOT ADDED IN GAME YET, upgrades do not do anything!)"
+var resdesc50 = "Unlock Reincarnation upgrades 16-20. [You might want to wait until challenge 8 is doable!]"
 var resdesc51 = "Taxation scales 5.0% slower per level. [Up to -50%]"
 var resdesc52 = "Taxation scales 2.5% slower per level. [Up to -75%]"
 var resdesc53 = "Taxation scales 1.25% slower per level. [Up to -87.5%]"
@@ -440,17 +440,43 @@ var resdesc92 = "Even lazier! Another simple +1% Rune EXP for all runes!"
 var resdesc93 = "It's like I wasn't even trying. +1 Accelerator Boost per 100 Summative Rune Levels, per level."
 var resdesc94 = "The power of laziness benefits you. +100 Multiplier per 100 Summative Rune Levels, per level."
 var resdesc95 = "Gain +40 base Offerings from Reincarnations by purchasing this. Math Nerds will love this!"
-var resdesc96 = "Bribe the ants to force certain warrior ants to produce new ants. [Unlocks T6 Ant Production in v1.010]"
-var resdesc97 = "Bribe the ants to force certain lieutenant ants to produce new ants. [Unlocks T7 Ant Production in v1.010]"
-var resdesc98 = "Bribe the ants to force the K I N G ant to produce new ants. [Unlocks T8 Ant Production in v1.010]"
+var resdesc96 = "Ants slow? Add +0.00005 to ant efficiency increase per ant purchased per level."
+var resdesc97 = "Add +1 level to the first six upgradable ants per level!"
+var resdesc98 = "Add +1 level to the next five upgradable ants per level!"
 var resdesc99 = "Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!"
 var resdesc100 = "Alright, Platonic is off his rocker. I don't expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!"
-function researchdescriptions(i,auto=false) {
+var resdesc101 = "Alright, you're past the big wall. How about adding +.001 to Inceptus Ant efficiency per level?"
+var resdesc102 = "Gain +1 bonus level to ALL ants per level! A rainbow attack!"
+var resdesc103 = "Pray to Ant God for +2% sacrifice rewards per level!"
+var resdesc104 = "You're beginning to feel like an ant god (ant god): +2% sacrifice reward per level!"
+var resdesc105 = "Buy this and be able to run the first five challenges infinitely! (Note that requirements scale a LOT faster after 75)"
+var resdesc106 = "Engrave your talismans with obtainium to get +0.01 Rune Levels per talisman level per level."
+var resdesc107 = "Refine your talismans with the powder of Obtainium to get +0.01 Rune Levels per talisman level per level again."
+var resdesc108 = "A simple trick makes your base ant ELO increase by 5 per level!"
+var resdesc109 = "A more convoluted trick makes your base ant ELO increase by 5 per level again!"
+var resdesc110 = "Gain +1% more ELO from ant sources per level because why not?"
+var resdesc111 = "Gotta go fast [+1 max Speed Rune Level per level]"
+var resdesc112 = "Double Trouble [+1 max Duplication Rune level per level]"
+var resdesc113 = "Newton's Delight [+1 max Prism Rune Level per level]"
+var resdesc114 = "Five-Finger discounts [+1 max Thrift Rune Level per level]"
+var resdesc115 = "Scientific Breakthrough [+1 max SI Rune Level per level]"
+var resdesc116 = "Permanently gain 10% of your Obtainium/sec automatically, without needing to Reincarnate!"
+var resdesc117 = "Add +2% to automatic Obtainium gain."
+var resdesc118 = "Add another +2% to automatic Obtainium gain!"
+var resdesc119 = "Gain +2% [Ascend reward] per level upon Ascension."
+var resdesc120 = "Gain another +2% [Ascend reward] per level upon Ascension."
+var resdesc121 = "Bend time to your will, making all ticks 2% faster each level."
+var resdesc122 = "Adds +1% ant sacrifice reward per level."
+var resdesc123 = "Adds +10 base ant ELO per level."
+var resdesc124 = "Unlock the automator for Ant Sacrifice! [Good luck buying this.]"
+var resdesc125 = "Good luck, buddy. [+1 Export Quark/hour]"
+function researchdescriptions(i,auto) {
+    auto = auto || false
     var x = "resdesc" + i
     var y = window[x]
     var z = ""
     var p = "res" + i
-    z = " Cost: " + (format(researchBaseCosts[i],0,false)) + " Obtainium" 
+    z = " Cost: " + (format(researchBaseCosts[i],0,true)) + " Obtainium" 
     if (player.researches[i] == researchMaxLevels[i]) {
         document.getElementById("researchcost").style.color = "Gold"
         document.getElementById("researchinfo3").style.color = "plum"

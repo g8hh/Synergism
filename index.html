@@ -11,6 +11,7 @@
     <script src="lz-string.js"></script>
     <script src="Synergism.js"></script>
     
+    <script src="Javascript/ants.js"></script>
     <script src="Javascript/shop.js"></script>
     <script src="Javascript/buystuff.js"></script>
     <script src="Javascript/toggles.js"></script>
@@ -26,17 +27,23 @@
     <script src="Javascript/exportimport.js"></script>
     <script src="Javascript/updatehtml.js"></script>
     <script src="Javascript/submit.js"></script>
+    <script src="Javascript/talismans.js"></script>
+    <script src="Javascript/calculate.js"></script>
     <!--<script src="Javascript/i18n.js"></script>-->
     </head>
-<main>
-   <script src="chs.js?20200601"></script>
-<script src="//likexia.gitee.io/game/zh/core.js?20200601"></script>
+<main>   <script src="chs.js?20200624"></script>
+<script src="//likexia.gitee.io/game/zh/core.js?20200624"></script>
 
     <div class="save">
         <button class="saveClose"></button>
     </div>
 
-<img src="Pictures/preloader.png" id="preload">    
+<img src="Pictures/preloader.png" id="preload">
+<div id="offlineprogressbar">
+<p id="offlineTimer" style="color: plum"></p>
+<p id="progressbardescription" style="color: yellow">Loading Offline Progress...</p>
+<div id="offlineprogressdone"></div>
+</div>    
 <div id="navbar">
 
     <div id="resourcesrow">
@@ -80,6 +87,7 @@
             <td><img class="transcendunlock" id="acceleratorboostbtn" src="Pictures/Transparent Pics/AcceleratorBoost.png" onmouseover="resetrepeat(5)" style="cursor:pointer" onclick="boostAccelerator()"></td>
             <td><img class="transcendunlock" id="challengebtn" src="Pictures/Transparent Pics/Challenge.png"  onmouseover="resetrepeat(3)" onclick="resetCheck('challenge')" style="cursor:pointer"></td>
             <td><img class="reincarnationunlock" id="reincarnatechallengebtn" src="Pictures/Transparent Pics/ChallengeReincarnation.png" onmouseover="resetrepeat(6)" onclick="resetCheck('reincarnationchallenge')" style="cursor:pointer"></td>
+            <td><img class="chal10" id="ascendbtn" src="Pictures/questionable.png" onmouseover="resetrepeat(7)" style="cursor:pointer"></td>
             </tr>
         </table>
         <p id="resetinfo"></p>
@@ -120,8 +128,8 @@
         <p class="transcendunlock" id="challengetab" style="color:white; cursor: pointer;" onclick="toggleTabs('challenges')">Challenges</p>  
         <p class="reincarnationunlock" id="reincarnationtab" style="color:white; cursor: pointer;" onclick="toggleTabs('reincarnation')">Reincarnation</p>
         <p class="reincarnationunlock" id="researchtab" style="color:white; cursor: pointer;" onclick="toggleTabs('researches')">Research</p>  
-        <p class="reincarnationunlock" id="shoptab" style="color: white; cursor: pointer;" onclick="toggleTabs('shop')">Shop [NEW]</p> 
-        
+        <p class="reincarnationunlock" id="shoptab" style="color: white; cursor: pointer;" onclick="toggleTabs('shop')">Shop</p> 
+        <p class="chal8" id="anttab" style="color: white; cursor: pointer;" onclick="toggleTabs('ants')">Anthill</p>
     </div>
 </div>
 
@@ -268,9 +276,9 @@
                     <tr style="text-align:center; border-collapse:collapse;">
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/Diamond16.png" id="upg36" onclick="buyUpgrades('prestige', 36)" onmouseover="upgradedescriptions(36)"></td> 
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/Diamond17.png" id="upg37" onclick="buyUpgrades('prestige', 37)" onmouseover="upgradedescriptions(37)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/Diamond18.png" id="upg38" onclick="buyUpgrades('prestige', 38)" onmouseover="upgradedescriptions(38)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/Diamond19.png" id="upg39" onclick="buyUpgrades('prestige', 39)" onmouseover="upgradedescriptions(39)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/Diamond20.png" id="upg40" onclick="buyUpgrades('prestige', 40)" onmouseover="upgradedescriptions(40)"></td>
+                        <td><img class="chal7" src="Pictures/Transparent Pics/Diamond18.png" id="upg38" onclick="buyUpgrades('prestige', 38)" onmouseover="upgradedescriptions(38)"></td>
+                        <td><img class="chal8" src="Pictures/Transparent Pics/Diamond19.png" id="upg39" onclick="buyUpgrades('prestige', 39)" onmouseover="upgradedescriptions(39)"></td>
+                        <td><img class="chal9" src="Pictures/Transparent Pics/Diamond20.png" id="upg40" onclick="buyUpgrades('prestige', 40)" onmouseover="upgradedescriptions(40)"></td>
                     </tr>
 
              </table>
@@ -329,11 +337,11 @@
                     <td><img class="reinrow3" src="Pictures/Transparent Pics/Particle15.png" id="upg75" onclick="buyUpgrades('reincarnation', 75)" onmouseover="upgradedescriptions(75)"></td>
                 </tr>
                 <tr style="text-align:center; border-collapse:collapse;">
-                    <td id="upg76"><img class="reinrow4" src="Pictures/Transparent Pics/Reincarnate.png" onclick="buyUpgrades('reincarnation', 76)" onmouseover="upgradedescriptions(76)"></td> 
-                    <td id="upg77"><img class="reinrow4" src="Pictures/Transparent Pics/Reincarnate.png" onclick="buyUpgrades('reincarnation', 77)" onmouseover="upgradedescriptions(77)"></td>
-                    <td id="upg78"><img class="reinrow4" src="Pictures/Transparent Pics/Reincarnate.png" onclick="buyUpgrades('reincarnation', 78)" onmouseover="upgradedescriptions(78)"></td>
-                    <td id="upg79"><img class="reinrow4" src="Pictures/Transparent Pics/Reincarnate.png" onclick="buyUpgrades('reincarnation', 79)" onmouseover="upgradedescriptions(79)"></td>
-                    <td id="upg80"><img class="reinrow4" src="Pictures/Transparent Pics/Reincarnate.png" onclick="buyUpgrades('reincarnation', 80)" onmouseover="upgradedescriptions(80)"></td>
+                    <td><img class="reinrow4" src="Pictures/Transparent Pics/Particle16.png" id="upg76" onclick="buyUpgrades('reincarnation', 76)" onmouseover="upgradedescriptions(76)"></td> 
+                    <td><img class="reinrow4" src="Pictures/Transparent Pics/Particle17.png" id="upg77" onclick="buyUpgrades('reincarnation', 77)" onmouseover="upgradedescriptions(77)"></td>
+                    <td><img class="reinrow4" src="Pictures/Transparent Pics/Particle18.png" id="upg78" onclick="buyUpgrades('reincarnation', 78)" onmouseover="upgradedescriptions(78)"></td>
+                    <td><img class="reinrow4" src="Pictures/Transparent Pics/Particle19.png" id="upg79" onclick="buyUpgrades('reincarnation', 79)" onmouseover="upgradedescriptions(79)"></td>
+                    <td><img class="reinrow4" src="Pictures/Transparent Pics/Particle20.png" id="upg80" onclick="buyUpgrades('reincarnation', 80)" onmouseover="upgradedescriptions(80)"></td>
                 </tr>
              </table>
              <table class="prestigeunlock" id="automationtable" style="padding: 0px; font-size:0;">
@@ -429,23 +437,25 @@
                         <td><img src="Pictures/Transparent Pics/ach5.png" id="ach29" onmouseover="achievementdescriptions(29)"></td>
                         <td><img src="Pictures/Transparent Pics/ach6.png" id="ach148" onmouseover="achievementdescriptions(148)"></td>
                         <td><img src="Pictures/Transparent Pics/ach7.png" id="ach155"  onmouseover="achievementdescriptions(155)"></td>
-                        <td><img style="background-color: purple;" class="prestigeunlock" src="Pictures/Transparent Pics/ach8.png" id="ach36" onmouseover="achievementdescriptions(36)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach8.png" id="ach36" onmouseover="achievementdescriptions(36)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach14.png" id="ach162" onmouseover="achievementdescriptions(162)"></td>
-                        <td><img style="background-color: purple;" class="prestigeunlock" src="Pictures/Transparent Pics/ach15.png" id="ach60" onmouseover="achievementdescriptions(60)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach15.png" id="ach60" onmouseover="achievementdescriptions(60)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach16.png" id="ach64" onmouseover="achievementdescriptions(64)"></td>
-                        <td><img style="background-color: maroon;" class="transcendunlock" src="Pictures/Transparent Pics/ach19.png" id="ach43"  onmouseover="achievementdescriptions(43)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach25.png" id="ach78"  onmouseover="achievementdescriptions(78)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach26.png" id="ach85"  onmouseover="achievementdescriptions(85)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach27.png" id="ach92"  onmouseover="achievementdescriptions(92)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach28.png" id="ach99"  onmouseover="achievementdescriptions(99)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach29.png" id="ach106" onmouseover="achievementdescriptions(106)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach31.png" id="ach71" onmouseover="achievementdescriptions(71)"></td>
-                        <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach32.png" id="ach50" onmouseover="achievementdescriptions(50)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach19.png" id="ach43"  onmouseover="achievementdescriptions(43)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach25.png" id="ach78"  onmouseover="achievementdescriptions(78)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach26.png" id="ach85"  onmouseover="achievementdescriptions(85)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach27.png" id="ach92"  onmouseover="achievementdescriptions(92)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach28.png" id="ach99"  onmouseover="achievementdescriptions(99)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach29.png" id="ach106" onmouseover="achievementdescriptions(106)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach31.png" id="ach71" onmouseover="achievementdescriptions(71)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach32.png" id="ach50" onmouseover="achievementdescriptions(50)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach38.png" id="ach113" onmouseover="achievementdescriptions(113)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach39.png" id="ach120" onmouseover="achievementdescriptions(120)"></td>
-                        <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach40.png" id="ach127" onmouseover="achievementdescriptions(127)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach288.png" id="ach134"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach295.png" id="ach141"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach40.png" id="ach127" onmouseover="achievementdescriptions(127)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach288.png" id="ach134" onmouseover="achievementdescriptions(134)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach295.png" id="ach141" onmouseover="achievementdescriptions(141)"></td>
+                        <td><img class="chal8 purpleach" src="Pictures/Transparent Pics/ach302.png" id="ach169" onmouseover="achievementdescriptions(169)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach309.png" id="ach176" onmouseover="achievementdescriptions(176)"></td>
                     </tr>
                     <tr>
                         <td><img src="Pictures/Transparent Pics/ach42.png" id="ach2" onmouseover="achievementdescriptions(2)"></td>
@@ -455,113 +465,126 @@
                         <td><img src="Pictures/Transparent Pics/ach46.png" id="ach30" onmouseover="achievementdescriptions(30)"></td>
                         <td><img src="Pictures/Transparent Pics/ach47.png" id="ach149" onmouseover="achievementdescriptions(149)"></td>
                         <td><img src="Pictures/Transparent Pics/ach48.png" id="ach156" onmouseover="achievementdescriptions(156)"></td>
-                        <td><img style="background-color: maroon" class="prestigeunlock" src="Pictures/Transparent Pics/ach49.png" id="ach37" onmouseover="achievementdescriptions(37)"></td>
+                        <td><img class="prestigeunlock redach" src="Pictures/Transparent Pics/ach49.png" id="ach37" onmouseover="achievementdescriptions(37)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach55.png" id="ach163" onmouseover="achievementdescriptions(163)"></td>
-                        <td><img style="background-color: purple" class="prestigeunlock" src="Pictures/Transparent Pics/ach56.png" id="ach57" onmouseover="achievementdescriptions(57)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach56.png" id="ach57" onmouseover="achievementdescriptions(57)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach57.png" id="ach65" onmouseover="achievementdescriptions(65)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach60.png" id="ach44" onmouseover="achievementdescriptions(44)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach66.png" id="ach79" onmouseover="achievementdescriptions(79)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach67.png" id="ach86" onmouseover="achievementdescriptions(86)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach68.png" id="ach93" onmouseover="achievementdescriptions(93)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach69.png" id="ach100" onmouseover="achievementdescriptions(100)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach70.png" id="ach107" onmouseover="achievementdescriptions(107)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach72.png" id="ach72" onmouseover="achievementdescriptions(72)"></td>
-                        <td><img style="background-color: maroon" class="reincarnationunlock" src="Pictures/Transparent Pics/ach73.png" id="ach51" onmouseover="achievementdescriptions(51)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach60.png" id="ach44" onmouseover="achievementdescriptions(44)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach66.png" id="ach79" onmouseover="achievementdescriptions(79)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach67.png" id="ach86" onmouseover="achievementdescriptions(86)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach68.png" id="ach93" onmouseover="achievementdescriptions(93)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach69.png" id="ach100" onmouseover="achievementdescriptions(100)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach70.png" id="ach107" onmouseover="achievementdescriptions(107)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach72.png" id="ach72" onmouseover="achievementdescriptions(72)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach73.png" id="ach51" onmouseover="achievementdescriptions(51)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach79.png" id="ach114" onmouseover="achievementdescriptions(114)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach80.png" id="ach121" onmouseover="achievementdescriptions(121)"></td>
-                        <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach81.png" id="ach128" onmouseover="achievementdescriptions(128)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach289.png" id="ach135"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach296.png" id="ach142"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach81.png" id="ach128" onmouseover="achievementdescriptions(128)"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach289.png" id="ach135" onmouseover="achievementdescriptions(135)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach296.png" id="ach142" onmouseover="achievementdescriptions(142)"></td>
+                        <td><img style="display: none;" class="chal8" src="Pictures/Transparent Pics/ach303.png" id="ach170" onmouseover="achievementdescriptions(170)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach310.png" id="ach177" onmouseover="achievementdescriptions(177)"></td>
+
                     </tr>
                     <tr>
-                        <td><img style="background-color: purple" src="Pictures/Transparent Pics/ach83.png" id="ach3" onmouseover="achievementdescriptions(3)"></td>
-                        <td><img style="background-color: purple" src="Pictures/Transparent Pics/ach84.png" id="ach10" onmouseover="achievementdescriptions(10)"></td>
-                        <td><img style="background-color: purple" src="Pictures/Transparent Pics/ach85.png" id="ach17" onmouseover="achievementdescriptions(17)"></td>
-                        <td><img style="background-color: purple" src="Pictures/Transparent Pics/ach86.png" id="ach24" onmouseover="achievementdescriptions(24)"></td>
-                        <td><img style="background-color: purple" src="Pictures/Transparent Pics/ach87.png" id="ach31" onmouseover="achievementdescriptions(31)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach83.png" id="ach3" class="purpleach" onmouseover="achievementdescriptions(3)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach84.png" id="ach10" class="purpleach" onmouseover="achievementdescriptions(10)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach85.png" id="ach17" class="purpleach" onmouseover="achievementdescriptions(17)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach86.png" id="ach24" class="purpleach" onmouseover="achievementdescriptions(24)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach87.png" id="ach31" class="purpleach" onmouseover="achievementdescriptions(31)"></td>
                         <td><img src="Pictures/Transparent Pics/ach88.png" id="ach150" onmouseover="achievementdescriptions(150)"></td>
                         <td><img src="Pictures/Transparent Pics/ach89.png" id="ach157" onmouseover="achievementdescriptions(157)"></td>
-                        <td><img style="background-color: maroon" class="prestigeunlock" src="Pictures/Transparent Pics/ach90.png" id="ach38" onmouseover="achievementdescriptions(38)"></td>
+                        <td><img class="prestigeunlock redach" src="Pictures/Transparent Pics/ach90.png" id="ach38" onmouseover="achievementdescriptions(38)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach96.png" id="ach164" onmouseover="achievementdescriptions(164)"></td>
-                        <td><img style="background-color: purple" class="prestigeunlock" src="Pictures/Transparent Pics/ach97.png" id="ach61" onmouseover="achievementdescriptions(61)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach97.png" id="ach61" onmouseover="achievementdescriptions(61)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach98.png" id="ach66" onmouseover="achievementdescriptions(66)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach101.png" id="ach45" onmouseover="achievementdescriptions(45)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach107.png" id="ach80" onmouseover="achievementdescriptions(80)"></td>
-                        <td><img style="background-color: maroon" class="transcendunlock" src="Pictures/Transparent Pics/ach108.png" id="ach87" onmouseover="achievementdescriptions(87)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach109.png" id="ach94" onmouseover="achievementdescriptions(94)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach110.png" id="ach101" onmouseover="achievementdescriptions(101)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach111.png" id="ach108" onmouseover="achievementdescriptions(108)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach113.png" id="ach73" onmouseover="achievementdescriptions(73)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach101.png" id="ach45" onmouseover="achievementdescriptions(45)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach107.png" id="ach80" onmouseover="achievementdescriptions(80)"></td>
+                        <td><img class="transcendunlock redach" src="Pictures/Transparent Pics/ach108.png" id="ach87" onmouseover="achievementdescriptions(87)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach109.png" id="ach94" onmouseover="achievementdescriptions(94)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach110.png" id="ach101" onmouseover="achievementdescriptions(101)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach111.png" id="ach108" onmouseover="achievementdescriptions(108)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach113.png" id="ach73" onmouseover="achievementdescriptions(73)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach114.png" id="ach52" onmouseover="achievementdescriptions(52)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach120.png" id="ach115" onmouseover="achievementdescriptions(115)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach121.png" id="ach122" onmouseover="achievementdescriptions(122)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach122.png" id="ach129" onmouseover="achievementdescriptions(129)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach290.png" id="ach136"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach297.png" id="ach143"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach120.png" id="ach115" onmouseover="achievementdescriptions(115)"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach121.png" id="ach122" onmouseover="achievementdescriptions(122)"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach122.png" id="ach129" onmouseover="achievementdescriptions(129)"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach290.png" id="ach136" onmouseover="achievementdescriptions(136)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach297.png" id="ach143" onmouseover="achievementdescriptions(143)"></td>
+                        <td><img class="chal8 purpleach" src="Pictures/Transparent Pics/ach304.png" id="ach171" onmouseover="achievementdescriptions(171)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach311.png" id="ach178" onmouseover="achievementdescriptions(178)"></td>
+
+
                     </tr>
                     <tr>
-                        <td><img style="background-color: maroon" src="Pictures/Transparent Pics/ach124.png" id="ach4" onmouseover="achievementdescriptions(4)"></td>
-                        <td><img style="background-color: maroon" src="Pictures/Transparent Pics/ach125.png" id="ach11" onmouseover="achievementdescriptions(11)"></td>
-                        <td><img style="background-color: maroon" src="Pictures/Transparent Pics/ach126.png" id="ach18" onmouseover="achievementdescriptions(18)"></td>
-                        <td><img style="background-color: maroon" src="Pictures/Transparent Pics/ach127.png" id="ach25" onmouseover="achievementdescriptions(25)"></td>
-                        <td><img style="background-color: maroon" src="Pictures/Transparent Pics/ach128.png" id="ach32" onmouseover="achievementdescriptions(32)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach124.png" id="ach4" class="redach" onmouseover="achievementdescriptions(4)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach125.png" id="ach11" class="redach" onmouseover="achievementdescriptions(11)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach126.png" id="ach18" class="redach" onmouseover="achievementdescriptions(18)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach127.png" id="ach25" class="redach" onmouseover="achievementdescriptions(25)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach128.png" id="ach32" class="redach" onmouseover="achievementdescriptions(32)"></td>
                         <td><img src="Pictures/Transparent Pics/ach129.png" id="ach151" onmouseover="achievementdescriptions(151)"></td>
                         <td><img src="Pictures/Transparent Pics/ach130.png" id="ach158" onmouseover="achievementdescriptions(158)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach131.png" id="ach39" onmouseover="achievementdescriptions(39)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach137.png" id="ach165" onmouseover="achievementdescriptions(165)"></td>
-                        <td><img style="background-color: purple" class="prestigeunlock" src="Pictures/Transparent Pics/ach138.png" id="ach58" onmouseover="achievementdescriptions(58)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach138.png" id="ach58" onmouseover="achievementdescriptions(58)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach139.png" id="ach67" onmouseover="achievementdescriptions(67)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach142.png" id="ach46" onmouseover="achievementdescriptions(46)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach142.png" id="ach46" onmouseover="achievementdescriptions(46)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach148.png" id="ach81" onmouseover="achievementdescriptions(81)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach149.png" id="ach88" onmouseover="achievementdescriptions(88)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach150.png" id="ach95" onmouseover="achievementdescriptions(95)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach151.png" id="ach102" onmouseover="achievementdescriptions(102)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach152.png" id="ach109" onmouseover="achievementdescriptions(109)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach154.png" id="ach74" onmouseover="achievementdescriptions(74)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach155.png" id="ach53" onmouseover="achievementdescriptions(53)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach154.png" id="ach74" onmouseover="achievementdescriptions(74)"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach155.png" id="ach53" onmouseover="achievementdescriptions(53)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach161.png" id="ach116" onmouseover="achievementdescriptions(116)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach162.png" id="ach123" onmouseover="achievementdescriptions(123)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach163.png" id="ach130" onmouseover="achievementdescriptions(130)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach291.png" id="ach137"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach298.png" id="ach144"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach291.png" id="ach137" onmouseover="achievementdescriptions(137)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach298.png" id="ach144" onmouseover="achievementdescriptions(144)"></td>
+                        <td><img class="chal8 purpleach" src="Pictures/Transparent Pics/ach305.png" id="ach172" onmouseover="achievementdescriptions(172)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach312.png" id="ach179" onmouseover="achievementdescriptions(179)"></td>
                     </tr>
                     <tr>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach165.png" id="ach5" onmouseover="achievementdescriptions(5)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach166.png" id="ach12" onmouseover="achievementdescriptions(12)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach167.png" id="ach19"  onmouseover="achievementdescriptions(19)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach168.png" id="ach26" onmouseover="achievementdescriptions(26)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach169.png" id="ach33" onmouseover="achievementdescriptions(33)"></td>
+                        <td><img class="purpleach" src="Pictures/Transparent Pics/ach165.png" id="ach5" onmouseover="achievementdescriptions(5)"></td>
+                        <td><img class="purpleach" src="Pictures/Transparent Pics/ach166.png" id="ach12" onmouseover="achievementdescriptions(12)"></td>
+                        <td><img class="purpleach" src="Pictures/Transparent Pics/ach167.png" id="ach19"  onmouseover="achievementdescriptions(19)"></td>
+                        <td><img class="purpleach" src="Pictures/Transparent Pics/ach168.png" id="ach26" onmouseover="achievementdescriptions(26)"></td>
+                        <td><img class="purpleach" src="Pictures/Transparent Pics/ach169.png" id="ach33" onmouseover="achievementdescriptions(33)"></td>
                         <td><img src="Pictures/Transparent Pics/ach170.png" id="ach152" onmouseover="achievementdescriptions(152)"></td>
                         <td><img src="Pictures/Transparent Pics/ach171.png" id="ach159" onmouseover="achievementdescriptions(159)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach172.png" id="ach40" onmouseover="achievementdescriptions(40)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach178.png" id="ach166" onmouseover="achievementdescriptions(166)"></td>
-                        <td><img style="background-color: purple;" class="prestigeunlock" src="Pictures/Transparent Pics/ach179.png" id="ach62" onmouseover="achievementdescriptions(62)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach179.png" id="ach62" onmouseover="achievementdescriptions(62)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach180.png" id="ach68" onmouseover="achievementdescriptions(68)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach183.png" id="ach47" onmouseover="achievementdescriptions(47)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach189.png" id="ach82" onmouseover="achievementdescriptions(82)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach190.png" id="ach89" onmouseover="achievementdescriptions(89)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach191.png" id="ach96" onmouseover="achievementdescriptions(96)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach192.png" id="ach103" onmouseover="achievementdescriptions(103)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach193.png" id="ach110" onmouseover="achievementdescriptions(110)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach195.png" id="ach75" onmouseover="achievementdescriptions(75)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach183.png" id="ach47" onmouseover="achievementdescriptions(47)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach189.png" id="ach82" onmouseover="achievementdescriptions(82)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach190.png" id="ach89" onmouseover="achievementdescriptions(89)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach191.png" id="ach96" onmouseover="achievementdescriptions(96)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach192.png" id="ach103" onmouseover="achievementdescriptions(103)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach193.png" id="ach110" onmouseover="achievementdescriptions(110)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach195.png" id="ach75" onmouseover="achievementdescriptions(75)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach196.png" id="ach54" onmouseover="achievementdescriptions(54)"></td>
-                        <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach202.png" id="ach117" onmouseover="achievementdescriptions(117)"></td>
-                        <td><img style="background-color: maroon;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach203.png" id="ach124" onmouseover="achievementdescriptions(124)"></td>
-                        <td><img style="background-color: purple;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach204.png" id="ach131" onmouseover="achievementdescriptions(131)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach292.png" id="ach138"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach299.png" id="ach145"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach202.png" id="ach117" onmouseover="achievementdescriptions(117)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach203.png" id="ach124" onmouseover="achievementdescriptions(124)"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach204.png" id="ach131" onmouseover="achievementdescriptions(131)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach292.png" id="ach138" onmouseover="achievementdescriptions(138)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach299.png" id="ach145" onmouseover="achievementdescriptions(145)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach306.png" id="ach173" onmouseover="achievementdescriptions(173)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach313.png" id="ach180" onmouseover="achievementdescriptions(180)"></td>
+
+
                     </tr>
                     <tr>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach206.png" id="ach6" onmouseover="achievementdescriptions(6)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach207.png" id="ach13" onmouseover="achievementdescriptions(13)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach208.png" id="ach20" onmouseover="achievementdescriptions(20)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach209.png" id="ach27" onmouseover="achievementdescriptions(27)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach210.png" id="ach34" onmouseover="achievementdescriptions(34)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach206.png" id="ach6" class="purpleach" onmouseover="achievementdescriptions(6)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach207.png" id="ach13" class="purpleach" onmouseover="achievementdescriptions(13)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach208.png" id="ach20" class="purpleach" onmouseover="achievementdescriptions(20)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach209.png" id="ach27" class="purpleach" onmouseover="achievementdescriptions(27)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach210.png" id="ach34" class="purpleach" onmouseover="achievementdescriptions(34)"></td>
                         <td><img src="Pictures/Transparent Pics/ach211.png" id="ach153" onmouseover="achievementdescriptions(153)"></td>
                         <td><img src="Pictures/Transparent Pics/ach212.png" id="ach160" onmouseover="achievementdescriptions(160)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach213.png" id="ach41" onmouseover="achievementdescriptions(41)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach219.png" id="ach167" onmouseover="achievementdescriptions(167)"></td>
-                        <td><img style="background-color: purple;" class="prestigeunlock" src="Pictures/Transparent Pics/ach220.png" id="ach59" onmouseover="achievementdescriptions(59)"></td>
+                        <td><img class="prestigeunlock purpleach" src="Pictures/Transparent Pics/ach220.png" id="ach59" onmouseover="achievementdescriptions(59)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach221.png" id="ach69" onmouseover="achievementdescriptions(69)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach224.png" id="ach48" onmouseover="achievementdescriptions(48)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach230.png" id="ach83" onmouseover="achievementdescriptions(83)"></td>
@@ -569,20 +592,23 @@
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach232.png" id="ach97" onmouseover="achievementdescriptions(97)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach233.png" id="ach104" onmouseover="achievementdescriptions(104)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach234.png" id="ach111" onmouseover="achievementdescriptions(111)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach236.png" id="ach76" onmouseover="achievementdescriptions(76)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach236.png" id="ach76" onmouseover="achievementdescriptions(76)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach237.png" id="ach55" onmouseover="achievementdescriptions(55)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach243.png" id="ach118" onmouseover="achievementdescriptions(118)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach244.png" id="ach125" onmouseover="achievementdescriptions(125)"></td>
-                        <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach245.png" id="ach132" onmouseover="achievementdescriptions(132)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach293.png" id="ach139"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach300.png" id="ach146"></td>
+                        <td><img class="reincarnationunlock purpleach" src="Pictures/Transparent Pics/ach245.png" id="ach132" onmouseover="achievementdescriptions(132)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach293.png" id="ach139" onmouseover="achievementdescriptions(139)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach300.png" id="ach146" onmouseover="achievementdescriptions(146)"></td>
+                        <td><img style="display: none;" class="chal8" src="Pictures/Transparent Pics/ach307.png" id="ach174" onmouseover="achievementdescriptions(174)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach314.png" id="ach181" onmouseover="achievementdescriptions(181)"></td>
+
                     </tr>
                     <tr>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach247.png" id="ach7" onmouseover="achievementdescriptions(7)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach248.png" id="ach14" onmouseover="achievementdescriptions(14)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach249.png" id="ach21" onmouseover="achievementdescriptions(21)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach250.png" id="ach28" onmouseover="achievementdescriptions(28)"></td>
-                        <td><img style="background-color: purple;" src="Pictures/Transparent Pics/ach251.png" id="ach35" onmouseover="achievementdescriptions(35)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach247.png" id="ach7" class="purpleach" onmouseover="achievementdescriptions(7)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach248.png" id="ach14" class="purpleach" onmouseover="achievementdescriptions(14)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach249.png" id="ach21" class="purpleach" onmouseover="achievementdescriptions(21)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach250.png" id="ach28" class="purpleach" onmouseover="achievementdescriptions(28)"></td>
+                        <td><img src="Pictures/Transparent Pics/ach251.png" id="ach35" class="purpleach" onmouseover="achievementdescriptions(35)"></td>
                         <td><img src="Pictures/Transparent Pics/ach252.png" id="ach154" onmouseover="achievementdescriptions(154)"></td>
                         <td><img src="Pictures/Transparent Pics/ach253.png" id="ach161" onmouseover="achievementdescriptions(161)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach254.png" id="ach42" onmouseover="achievementdescriptions(42)"></td>
@@ -590,18 +616,21 @@
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach261.png" id="ach63" onmouseover="achievementdescriptions(63)"></td>
                         <td><img class="prestigeunlock" src="Pictures/Transparent Pics/ach262.png" id="ach70" onmouseover="achievementdescriptions(70)"></td>
                         <td><img class="transcendunlock" src="Pictures/Transparent Pics/ach265.png" id="ach49" onmouseover="achievementdescriptions(49)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach271.png" id="ach84" onmouseover="achievementdescriptions(84)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach272.png" id="ach91" onmouseover="achievementdescriptions(91)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach273.png" id="ach98" onmouseover="achievementdescriptions(98)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach274.png" id="ach105" onmouseover="achievementdescriptions(105)"></td>
-                        <td><img style="background-color: purple" class="transcendunlock" src="Pictures/Transparent Pics/ach275.png" id="ach112" onmouseover="achievementdescriptions(112)"></td>
-                        <td><img style="background-color: purple;" class="transcendunlock" src="Pictures/Transparent Pics/ach277.png" id="ach77" onmouseover="achievementdescriptions(77)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach271.png" id="ach84" onmouseover="achievementdescriptions(84)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach272.png" id="ach91" onmouseover="achievementdescriptions(91)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach273.png" id="ach98" onmouseover="achievementdescriptions(98)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach274.png" id="ach105" onmouseover="achievementdescriptions(105)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach275.png" id="ach112" onmouseover="achievementdescriptions(112)"></td>
+                        <td><img class="transcendunlock purpleach" src="Pictures/Transparent Pics/ach277.png" id="ach77" onmouseover="achievementdescriptions(77)"></td>
                         <td><img class="reincarnationunlock" src="Pictures/Transparent Pics/ach278.png" id="ach56" onmouseover="achievementdescriptions(56)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach284.png" id="ach119" onmouseover="achievementdescriptions(119)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach285.png" id="ach126" onmouseover="achievementdescriptions(126)"></td>
-                        <td><img style="background-color: purple" class="reincarnationunlock" src="Pictures/Transparent Pics/ach286.png" id="ach133" onmouseover="achievementdescriptions(133)"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach294.png" id="ach140"></td>
-                        <td><img style="display: none;" class="reincarnationunlock" src="Pictures/Transparent Pics/ach301.png" id="ach147"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach284.png" id="ach119" onmouseover="achievementdescriptions(119)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach285.png" id="ach126" onmouseover="achievementdescriptions(126)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach286.png" id="ach133" onmouseover="achievementdescriptions(133)"></td>
+                        <td><img class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach294.png" id="ach140" onmouseover="achievementdescriptions(140)"></td>
+                        <td><img style="display: none;" class="reincarnationunlock redach" src="Pictures/Transparent Pics/ach301.png" id="ach147" onmouseover="achievementdescriptions(147)"></td>
+                        <td><img style="display: none;" class="chal8" src="Pictures/Transparent Pics/ach308.png" id="ach175" onmouseover="achievementdescriptions(175)"></td>
+                        <td><img class="chal8 redach" src="Pictures/Transparent Pics/ach315.png" id="ach182" onmouseover="achievementdescriptions(182)"></td>
+
                     </tr>
                                     
                     </table>
@@ -687,6 +716,8 @@
         </div>
 
         <div id="runes">
+            <button id="togglerunesubtab" style="border: 2px solid grey; color: white" onclick="toggleRuneScreen()">GO TO TALISMANS</button>
+            <div id="runecontainer1">
             <div id="buyamountoffering">
                 <table id="offeringbuyamount">
                     <tr>
@@ -705,46 +736,46 @@
             <div id="rune1area">
             <p id="speedrune" style="color: cyan">Speed Rune</p>
             <img id="rune1" src="Pictures/Transparent Pics/SpeedRune.png" onmouseover="displayruneinformation(1)" onclick="toggleAutoSacrifice(1)">
-            <p id="rune1level">Level: 1/200</p>
+            <p id="rune1level">Level: 166/500 <span id="bonusrune1" style="color: orange">[+100]</span></p>
             <p id="rune1exp">Exp: 0/40</p>
             <button id="activaterune1"  onclick="redeemshards(1)">SACRIFICE</button>
-            <p id="runeshowpower1"></p>
+            <p id="runeshowpower1">1<span id="divineblessing1" style="color: yellow"> </span></p>
             </div>
 
             <div id="rune2area">
             <p id="duplicationrune" style="color: plum">Duplication Rune</p>
             <img id="rune2" src="Pictures/Transparent Pics/DuplicationRune.png" onmouseover="displayruneinformation(2)" onclick="toggleAutoSacrifice(2)">
-            <p id="rune2level">Level: 1/200</p>
+            <p id="rune2level">Level: 1/500<span id="bonusrune2" style="color: orange"></span></p>
             <p id="rune2exp">Exp: 0/40</p>
             <button id="activaterune2" onclick="redeemshards(2)">SACRIFICE</button>
-            <p id="runeshowpower2"></p>
+            <p id="runeshowpower2">1<span id="divineblessing2" style="color: yellow"> </span></p>
             </div>
 
             <div id="rune3area">
             <p id="prismrune" style="color: lightblue">Prism Rune</p>
             <img id="rune3" src="Pictures/Transparent Pics/PrismRune.png" onmouseover="displayruneinformation(3)" onclick="toggleAutoSacrifice(3)">
-            <p id="rune3level">Level: 1/200</p>
+            <p id="rune3level">Level: 1/500<span id="bonusrune3" style="color: orange"></span></p>
             <p id="rune3exp">Exp: 0/40</p>
             <button id="activaterune3" onclick="redeemshards(3)">SACRIFICE</button>
-            <p id="runeshowpower3"></p>
+            <p id="runeshowpower3">1<span id="divineblessing3" style="color: yellow"> </span></p>
             </div>
 
             <div id="rune4area">
             <p id="thriftrune" style="color: limegreen">Thrift Rune</p>
             <img id="rune4" src="Pictures/Transparent Pics/ThriftRune.png" onmouseover="displayruneinformation(4)" onclick="toggleAutoSacrifice(4)">
-            <p id="rune4level">Level: 1/200</p>
+            <p id="rune4level">Level: 1/500<span id="bonusrune4" style="color: orange"></span></p>
             <p id="rune4exp">TNL: 0</p>
             <button id="activaterune4" onclick="redeemshards(4)">SACRIFICE</button>
-            <p id="runeshowpower4"></p>
+            <p id="runeshowpower4">1<span id="divineblessing4" style="color: yellow"> </span></p>
             </div>
 
             <div id="rune5area">
             <p id="intellectrune" style="color: crimson">Superior Intellect</p>
             <img id="rune5" src="Pictures/Transparent Pics/Rune of Superior Intellect.png" onmouseover="displayruneinformation(5)" onclick="toggleAutoSacrifice(5)">
-            <p id="rune5level">Level: 1/500</p>
+            <p id="rune5level">Level: 1/500<span id="bonusrune5" style="color: orange"></span></p>
             <p id="rune5exp">TNL: 0</p>
             <button id="activaterune5" onclick="redeemshards(5)">SACRIFICE</button>
-            <p id="runeshowpower5"></p>
+            <p id="runeshowpower5">1<span id="divineblessing5" style="color: yellow"> </span></p>
             </div>
 
             <p id="runedetails">Gain 25 rune experience per Offering.</p>
@@ -754,7 +785,167 @@
             <p id="bonussummation">=====RUNE EFFECT SUMMARY=====</p>
 
             <p class="reincarnationunlock" id="researchrunebonus">Thanks to researches, your effective levels are increased by 0%</p>
-            <p id="runehotkeys">Press [1], [2], [3], or [4] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!</p>
+            <p id="runehotkeys">Press [1], [2], [3], [4] or [5] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!</p>
+            </div>
+            <div id="runecontainer2">
+                <div id="buyamounttalisman">
+                <table id="talismanbuyamount">
+                    <tr>
+                        <td><img  id="talismanTen" src="Pictures/Transparent Pics/TalismanTen.png" style="cursor:pointer; background-color: green;" onclick="toggleTalismanBuy(10)"></td>
+                        <td><img  id="talismanTwentyFive" src="Pictures/Transparent Pics/TalismanTwentyFive.png"  style="cursor:pointer;" onclick="toggleTalismanBuy(25)"></td>    
+                        <td><img  id="talismanFifty" src="Pictures/Transparent Pics/TalismanFifty.png"  style="cursor:pointer;" onclick="toggleTalismanBuy(50)"></td>
+                        <td><img  id="talismanHundred" src="Pictures/Transparent Pics/TalismanHundred.png"  style="cursor:pointer;" onclick="toggleTalismanBuy(100)"></td>        
+                    </tr>
+                </table>
+                <p id="toggletalismanbuy">Toggle percent resources used</p>
+                </div>
+                <table id="talismancounter" style="table-layout: fixed;">
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/TalismanShard.png" alt=""></td>
+                        <td style="width: 66px; color: yellow"><p id="talismanShardInventory">0</p></td>
+                        <td><button class="talismanbtn" id="buyShard" style="border: 2px solid gold" onmouseover="updateCostDisplay(0)" onclick="buyTalismanStuff(0)">BUY</button></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/CommonTalisman.png" alt=""></td>
+                        <td style="width: 68px; color: white"><p id="commonFragmentInventory">0</p></td>
+                        <td><button class="talismanbtn" id="buyCommonFragment" style="border:2px solid white" onmouseover="updateCostDisplay(1)" onclick="buyTalismanStuff(1)">BUY</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/UncommonTalisman.png" alt=""></td>
+                        <td style="width: 68px; color: limegreen"><p id="uncommonFragmentInventory">0</p></td>
+                        <td><button class="talismanbtn" id="buyUncommonFragment" style="border:2px solid lime" onmouseover="updateCostDisplay(2)" onclick="buyTalismanStuff(2)">BUY</button></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/RareTalisman.png" alt=""></td>
+                        <td style="width: 68px; color: darkcyan"><p id="rareFragmentInventory">0</p></td>
+                        <td><button class="talismanbtn" id="buyRareFragment" style="border:2px solid aqua" onmouseover="updateCostDisplay(3)" onclick="buyTalismanStuff(3)">BUY</button></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/EpicTalisman.png" alt=""></td>
+                        <td style="width: 68px; color: plum"><p id="epicFragmentInventory">0</p></td>
+                        <td><button class="talismanbtn" id="buyEpicFragment" style="border:2px solid purple" onmouseover="updateCostDisplay(4)" onclick="buyTalismanStuff(4)">BUY</button></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/LegendaryTalisman.png" alt=""></td>
+                        <td style="width: 68px; color: orange"><p id="legendaryFragmentInventory">0</p></td>
+                        <td><button class="talismanbtn" id="buyLegendaryFragment" style="border:2px solid orange" onmouseover="updateCostDisplay(5)" onclick="buyTalismanStuff(5)">BUY</button></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0; width: 32px"><img src="Pictures/MythicalTalisman.png" alt=""></td>
+                        <td style="width: 68px; color: crimson"><p id="mythicalFragmentInventory">0</p></td> 
+                        <td><button class="talismanbtn" id="buyMythicalFragment" style="border:2px solid red" onmouseover="updateCostDisplay(6)" onclick="buyTalismanStuff(6)">BUY</button></td>
+                    </tr>
+                </table>
+                <table id="talismancounter" style="table-layout: fixed;">
+                   
+                </table>
+                <table id="buyfragments">
+
+                </table>
+                <p id="talismanFragmentCost">Cost for 1: 1e6 Obtainium</p>
+                <div id="talisman1area">
+                    <p id="TaxTalisman" style="color: limegreen;">Exemption</p>
+                    <img id="talisman1" src="Pictures/taxtalisman.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(1)">
+                    <p id="talisman1level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman1" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(1)" onclick="buyTalismanLevels(1)">FORTIFY</button>
+                    <button id="enhancetalisman1" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(1)" onclick="buyTalismanEnhance(1)">ENHANCE</button>
+                    <button id="respectalisman1" style="color: plum; border: 2px solid white" onclick="showRespecInformation(1)">RESPEC</button>
+                </div>
+                <div id="talisman2area">
+                    <p id="MultiplierAcceleratorTalisman" style="color: cyan">Chronos</p>
+                    <img id="talisman2" src="Pictures/noMA.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(2)">
+                    <p id="talisman2level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman2" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(2)" onclick="buyTalismanLevels(2)">FORTIFY</button>
+                    <button id="enhancetalisman2" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(2)" onclick="buyTalismanEnhance(2)">ENHANCE</button>
+                    <button id="respectalisman2" style="color: plum; border: 2px solid white" onclick="showRespecInformation(2)">RESPEC</button>
+                </div>
+                <div id="talisman3area">
+                    <p id="CostTalisman" style="color: orange">Midas</p>
+                    <img id="talisman3" src="Pictures/CostTalisman.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(3)">
+                    <p id="talisman3level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman3" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(3)" onclick="buyTalismanLevels(3)">FORTIFY</button>
+                    <button id="enhancetalisman3" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(3)" onclick="buyTalismanEnhance(3)">ENHANCE</button>
+                    <button id="respectalisman3" style="color: plum; border: 2px solid white" onclick="showRespecInformation(3)">RESPEC</button>
+                </div>
+                <div id="talisman4area">
+                    <p id="RunesTalisman" style="color: salmon">Metaphysics</p>
+                    <img id="talisman4" src="Pictures/RunesTalisman.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(4)">
+                    <p id="talisman4level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman4" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(4)" onclick="buyTalismanLevels(4)">FORTIFY</button>
+                    <button id="enhancetalisman4" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(4)" onclick="buyTalismanEnhance(4)">ENHANCE</button>
+                    <button id="respectalisman4" style="color: plum; border: 2px solid white" onclick="showRespecInformation(4)">RESPEC</button>
+                </div>
+                <div id="talisman5area">
+                    <p id="UnknownTalisman" style="color: crimson">Polymath</p>
+                    <img id="talisman5" src="Pictures/PolymathTalisman.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(5)">
+                    <p id="talisman5level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman5" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(5)" onclick="buyTalismanLevels(5)">FORTIFY</button>
+                    <button id="enhancetalisman5" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(5)" onclick="buyTalismanEnhance(5)">ENHANCE</button>
+                    <button id="respectalisman5" style="color: plum; border: 2px solid white" onclick="showRespecInformation(5)">RESPEC</button>
+                </div>
+                <div id="talisman6area">
+                    <p id="AntTalisman" style="color: burlywood">Mortuus Est</p>
+                    <img id="talisman6" src="Pictures/AntTalisman.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(6)">
+                    <p id="talisman6level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman6" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(6)" onclick="buyTalismanLevels(6)">FORTIFY</button>
+                    <button id="enhancetalisman6" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(6)" onclick="buyTalismanEnhance(6)">ENHANCE</button>
+                    <button id="respectalisman6" style="color: plum; border: 2px solid white" onclick="showRespecInformation(6)">RESPEC</button>
+                </div>
+                <div id="talisman7area">
+                    <p id="MoneyTalisman" style="color: chartreuse">Plastic</p>
+                    <img id="talisman7" src="Pictures/P2WTalisman.png" style="border: 4px solid white; cursor: pointer;" onmouseover="showTalismanEffect(7)">
+                    <p id="talisman7level" style="color: white">Level 0/30</p>
+                    <button id="leveluptalisman7" style="color: silver; border: 2px solid white;" onmouseover="showTalismanPrices(7)" onclick="buyTalismanLevels(7)">FORTIFY</button>
+                    <button id="enhancetalisman7" style="color: gold; border: 2px solid orangered" onmouseover="showEnhanceTalismanPrices(7)" onclick="buyTalismanEnhance(7)">ENHANCE</button>
+                    <button id="respectalisman7" style="color: plum; border: 2px solid white" onclick="showRespecInformation(7)">RESPEC</button>
+                </div>
+
+                <div id="talismanEffect">
+                    <p id="talismanSummary" style="color: silver"></p>
+                    <p id="talismanBonus" style="color: white"></p>
+                    <p id="talismanRune1Effect" style="color: cyan"></p>
+                    <p id="talismanRune2Effect" style="color: plum"></p>
+                    <p id="talismanRune3Effect" style="color: lightblue"></p>
+                    <p id="talismanRune4Effect" style="color: limegreen"></p>
+                    <p id="talismanRune5Effect" style="color: crimson"></p>
+                    <p id="talismanMythicEffect" style="color: gold"></p>
+                </div>
+
+                <div id="talismanlevelup" style="table-layout: fixed;">
+                    <p id="talismanLevelUpSummary" style="color: silver">-=-=- Resources Required to Level Up -=-=-</p>
+                    <table>
+                        <tr>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/TalismanShard.png"></td>
+                            <td style="width: 68px; color: yellow"><p id="talismanShardCost"></p></td>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/CommonTalisman.png"></td>
+                            <td style="width: 68px; color: white"><p id="talismanCommonFragmentCost"></p></td>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/UncommonTalisman.png"></td>
+                            <td style="width: 68px; color: limegreen"><p id="talismanUncommonFragmentCost"></p></td>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/RareTalisman.png"></td>
+                            <td style="width: 68px; color: darkcyan"><p id="talismanRareFragmentCost"></p></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/EpicTalisman.png"></td>
+                            <td style="width: 68px; color: plum"><p id="talismanEpicFragmentCost"></p></td>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/LegendaryTalisman.png"></td>
+                            <td style="width: 68px; color: orange"><p id="talismanLegendaryFragmentCost"></p></td>
+                            <td style="font-size: 0; width: 32px"><img src="Pictures/MythicalTalisman.png"></td>
+                            <td style="width: 68px; color: crimson"><p id="talismanMythicalFragmentCost"></p></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="talismanrespec">
+                    <p id="talismanRespecSummary" style="color: orchid">+-==-+ Select for 3 GREEN Runes, for Respec! +-==-+</p>
+                    <button class="talismanRespecBtn" id="talismanRespecButton1" onclick="changeTalismanModifier(1)">Speed Rune: POSITIVE</button>
+                    <button class="talismanRespecBtn" id="talismanRespecButton2" onclick="changeTalismanModifier(2)">Duplication Rune: POSITIVE</button>
+                    <button class="talismanRespecBtn" id="talismanRespecButton3" onclick="changeTalismanModifier(3)">Prism Rune: POSITIVE</button>
+                    <button class="talismanRespecBtn" id="talismanRespecButton4" onclick="changeTalismanModifier(4)">Thrift Rune: POSITIVE</button>
+                    <button class="talismanRespecBtn" id="talismanRespecButton5" onclick="changeTalismanModifier(5)">SI Rune: POSITIVE</button>
+                    <button class="talismanRespecBtn" id="confirmTalismanRespec" style="border: 2px solid plum" onclick="respecTalismanConfirm(talismanRespec)">Confirm for 100,000 Offerings.</button>
+                    <button class="talismanRespecBtn" id="cancelTalismanRespec" style="border: 2px solid red" onclick="respecTalismanCancel(talismanRespec)">Cancel respec changes</button>
+                </div>
+            </div>
         </div>
 
         <div id="transcension">
@@ -814,28 +1005,46 @@
 
 
         <div id="challenges">
-            <div id="challengebuttons">
-                <button id="challenge1" style="border: 1px solid plum; border-radius: 8px;" onclick="toggleChallenges('one')" onmouseover="challengeDisplay(1)">No Multiplier Challenge</button>
-                <button id="challenge2" style="border: 1px solid plum; border-radius: 8px;" onclick="toggleChallenges('two')" onmouseover="challengeDisplay(2)">No Accelerator Challenge</button>
-                <button id="challenge3" style="border: 1px solid plum; border-radius: 8px;" onclick="toggleChallenges('three')" onmouseover="challengeDisplay(3)">No Shards Challenge</button>
-                <button id="challenge4" style="border: 1px solid plum; border-radius: 8px;" onclick="toggleChallenges('four')" onmouseover="challengeDisplay(4)">Cost+ Challenge</button>
-                <button id="challenge5" style="border: 1px solid plum; border-radius: 8px;" onclick="toggleChallenges('five')" onmouseover="challengeDisplay(5)">Diamond- Challenge</button>
-                <button class="reincarnationunlock" id="challenge6" style="border: 1px solid green; border-radius: 8px;" onclick="toggleChallenges('six')" onmouseover="challengeDisplay(6)">Tax+</button>
-                <button class="reincarnationunlock" id="challenge7" style="border: 1px solid green; border-radius: 8px;" onclick="toggleChallenges('seven')" onmouseover="challengeDisplay(7)">Multiplier/Accelerator--</button>
-                <button class="reincarnationunlock" id="challenge8" style="border: 1px solid green; border-radius: 8px;" onclick="toggleChallenges('eight')" onmouseover="challengeDisplay(8)">Cost++ Challenge</button>
-                <button class="reincarnationunlock" id="challenge9" style="border: 1px solid green; border-radius: 8px;">TBA Challenge</button>
-                <button class="reincarnationunlock" id="challenge10" style="border: 1px solid green; border-radius: 8px;">TBA Challenge</button>
+            <p id="challengeIntroduction">Is the base game too easy? Try these situations! [Click the icons to view challenge details!]</p>
+            <div id="challengeSelection">
+                <table id="challengeIcons">
+                    <tr>
+                        <td><img id="challengeone" src="Pictures/Transparent Pics/ChallengeOne.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(1)"></td>
+                        <td><img id="challengetwo" src="Pictures/Transparent Pics/ChallengeTwo.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(2)"></td>
+                        <td><img id="challengethree" src="Pictures/Transparent Pics/ChallengeThree.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(3)"></td>
+                        <td><img id="challengefour" src="Pictures/Transparent Pics/ChallengeFour.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(4)"></td>
+                        <td><img id="challengefive" src="Pictures/Transparent Pics/ChallengeFive.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(5)"></td>
+                        <td><img id="challengesix" class="reincarnationunlock" src="Pictures/Transparent Pics/ChallengeSix.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(6)"></td>
+                        <td><img id="challengeseven" class="chal6" src="Pictures/Transparent Pics/ChallengeSeven.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(7)"></td>
+                        <td><img id="challengeeight" class="chal7" src="Pictures/Transparent Pics/ChallengeEight.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(8)"></td>
+                        <td><img id="challengenine" class="chal8" src="Pictures/Transparent Pics/ChallengeNine.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(9)"></td>
+                        <td><img id="challengeten" class="chal9" src="Pictures/Transparent Pics/ChallengeTen.png" style="cursor: pointer; font-size: 0;" onclick="challengeDisplay(10)"></td>
+                </tr>
+                </table>
             </div>
-            <div id="challengeinfo">
-            <p id="currentchallenge">Current Challenge: None</p>
-            <p id="challengetutorial">Click one of the buttons on the left to start a challenge!</p>
-            <p id="challengedescription">Do note that starting a challenge will reset your current transcension and there are NO confirmations for this.</p>
-            <p id="challengetotalscore"></p>
-            <p id="challengereward"></p>
+
+            <div id="challengeDetails" style="display:none">
+                <p id="challengeName">No Multiplier || Completions: 0/25</p>
+                <p id="challengeFlavor">Multipliers make the game a little fast, let's take them out!</p>
+                <p id="challengeRestrictions">Restriction: No Multipliers</p>
+                <p id="challengeGoal">Gain 1e10 Coins</p>
+                <p id="challengePerCompletionRewards">Per Completion Bonuses</p>
+                <p id="challengePer1">+10% Multiplier Boosts</p>
+                <p id="challengePer2">+10 base Multiplier Boosts</p>
+                <p id="challengePer3">---</p>
+                <p id="challengeFirstCompletionRewards">Bonus/Unlock for First Completion</p>
+                <p id="challengeFirst1">+1 Free Multiplier!</p>
+                <p id="challengeQuarkBonus">+1 Quarks</p>    
+
+                <button id="startChallenge" onclick="toggleChallenges(triggerChallenge)">Start Challenge 1</button>
+                <button id="retryChallenge" onclick="toggleRetryChallenges()">Retry Challenges: OFF</button>
+            </div>
+
+
             <p id="challengehotkeys">Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your transcension challenge if stuck!</p>
             <p id="challengewarning">If you are unable to finish the challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.</p>
             <p class="reincarnationunlock" id="challengewarningreincarnation">To leave a reincarnation challenge, press the grey Challenge "C" instead!</p>
-            </div>
+
         </div>
 
         <div id="reincarnation">
@@ -916,6 +1125,11 @@
                     <td><img id="res78" src="Pictures/Transparent Pics/Research78.png" alt="" onclick="buyResearch(78);" class="chal7" style="display:none" onmouseover="researchdescriptions(78)">                    </td>
                     <td><img id="res79" src="Pictures/Transparent Pics/Research79.png" alt="" onclick="buyResearch(79);" class="chal7" style="display:none" onmouseover="researchdescriptions(79)">                    </td>
                     <td><img id="res80" src="Pictures/Transparent Pics/Research80.png" alt="" onclick="buyResearch(80);" class="chal7" style="display:none" onmouseover="researchdescriptions(80)">                    </td>
+                    <td><img id="res101" src="Pictures/Transparent Pics/Research101.png" alt="" onclick="buyResearch(101);" class="chal9" style="display:none" onmouseover="researchdescriptions(101)">                    </td>
+                    <td><img id="res102" src="Pictures/Transparent Pics/Research102.png" alt="" onclick="buyResearch(102);" class="chal9" style="display:none" onmouseover="researchdescriptions(102)">                    </td>
+                    <td><img id="res103" src="Pictures/Transparent Pics/Research103.png" alt="" onclick="buyResearch(103);" class="chal9" style="display:none" onmouseover="researchdescriptions(103)">                    </td>
+                    <td><img id="res104" src="Pictures/Transparent Pics/Research104.png" alt="" onclick="buyResearch(104);" class="chal9" style="display:none" onmouseover="researchdescriptions(104)">                    </td>
+                    <td><img id="res105" src="Pictures/Transparent Pics/Research105.png" alt="" onclick="buyResearch(105);" class="chal9" style="display:none" onmouseover="researchdescriptions(105)">                    </td>
 
                 </tr>
                 <tr>
@@ -939,6 +1153,12 @@
                     <td><img id="res83" src="Pictures/Transparent Pics/Research83.png" alt="" onclick="buyResearch(83);" class="chal8" onmouseover="researchdescriptions(83)">                    </td>
                     <td><img id="res84" src="Pictures/Transparent Pics/Research84.png" alt="" onclick="buyResearch(84);" class="chal8" onmouseover="researchdescriptions(84)">                    </td>
                     <td><img id="res85" src="Pictures/Transparent Pics/Research85.png" alt="" onclick="buyResearch(85);" class="chal8" onmouseover="researchdescriptions(85)">                    </td>                  </td>
+                    <td><img id="res106" src="Pictures/Transparent Pics/Research106.png" alt="" onclick="buyResearch(106);" class="chal9" style="display:none" onmouseover="researchdescriptions(106)"></td>
+                    <td><img id="res107" src="Pictures/Transparent Pics/Research107.png" alt="" onclick="buyResearch(107);" class="chal9" style="display:none" onmouseover="researchdescriptions(107)"></td>
+                    <td><img id="res108" src="Pictures/Transparent Pics/Research108.png" alt="" onclick="buyResearch(108);" class="chal9" style="display:none" onmouseover="researchdescriptions(108)"></td>
+                    <td><img id="res109" src="Pictures/Transparent Pics/Research109.png" alt="" onclick="buyResearch(109);" class="chal9" style="display:none" onmouseover="researchdescriptions(109)"></td>
+                    <td><img id="res110" src="Pictures/Transparent Pics/Research110.png" alt="" onclick="buyResearch(110);" class="chal9" style="display:none" onmouseover="researchdescriptions(110)"></td>
+
                     </tr>
                 <tr>
                     <td><img id="res11" src="Pictures/Transparent Pics/Research11.png" alt="" onclick="buyResearch(11);" onmouseover="researchdescriptions(11)">                    </td>
@@ -961,6 +1181,11 @@
                     <td><img id="res88" src="Pictures/Transparent Pics/Research88.png" alt="" onclick="buyResearch(88);" class="chal8" onmouseover="researchdescriptions(88)">                    </td>
                     <td><img id="res89" src="Pictures/Transparent Pics/Research89.png" alt="" onclick="buyResearch(89);" class="chal8" onmouseover="researchdescriptions(89)">                    </td>
                     <td><img id="res90" src="Pictures/Transparent Pics/Research90.png" alt="" onclick="buyResearch(90);" class="chal8" onmouseover="researchdescriptions(90)">                    </td>                    </td>
+                    <td><img id="res111" src="Pictures/Transparent Pics/Research111.png" alt="" onclick="buyResearch(111);" class="chal10" onmouseover="researchdescriptions(111)"></td>
+                    <td><img id="res112" src="Pictures/Transparent Pics/Research112.png" alt="" onclick="buyResearch(112);" class="chal10" onmouseover="researchdescriptions(112)"></td>
+                    <td><img id="res113" src="Pictures/Transparent Pics/Research113.png" alt="" onclick="buyResearch(113);" class="chal10" onmouseover="researchdescriptions(113)"></td>
+                    <td><img id="res114" src="Pictures/Transparent Pics/Research114.png" alt="" onclick="buyResearch(114);" class="chal10" onmouseover="researchdescriptions(114)"></td>
+                    <td><img id="res115" src="Pictures/Transparent Pics/Research115.png" alt="" onclick="buyResearch(115);" class="chal10" onmouseover="researchdescriptions(115)"></td>
                 </tr>
                 <tr>
                     <td><img id="res16" src="Pictures/Transparent Pics/Research16.png" alt="" onclick="buyResearch(16);" onmouseover="researchdescriptions(16)">                    </td>
@@ -983,6 +1208,11 @@
                     <td><img id="res93" src="Pictures/Transparent Pics/Research93.png" alt="" onclick="buyResearch(93);" class="chal8" onmouseover="researchdescriptions(93)">                    </td>
                     <td><img id="res94" src="Pictures/Transparent Pics/Research94.png" alt="" onclick="buyResearch(94);" class="chal8" onmouseover="researchdescriptions(94)">                    </td>
                     <td><img id="res95" src="Pictures/Transparent Pics/Research95.png" alt="" onclick="buyResearch(95);" class="chal8" onmouseover="researchdescriptions(95)">                    </td>
+                    <td><img id="res116" src="Pictures/Transparent Pics/Research116.png" alt="" onclick="buyResearch(116);" class="chal10" onmouseover="researchdescriptions(116)"></td>
+                    <td><img id="res117" src="Pictures/Transparent Pics/Research117.png" alt="" onclick="buyResearch(117);" class="chal10" onmouseover="researchdescriptions(117)"></td>
+                    <td><img id="res118" src="Pictures/Transparent Pics/Research118.png" alt="" onclick="buyResearch(118);" class="chal10" onmouseover="researchdescriptions(118)"></td>
+                    <td><img id="res119" src="Pictures/Transparent Pics/Research119.png" alt="" onclick="buyResearch(119);" class="chal10" onmouseover="researchdescriptions(119)"></td>
+                    <td><img id="res120" src="Pictures/Transparent Pics/Research120.png" alt="" onclick="buyResearch(120);" class="chal10" onmouseover="researchdescriptions(120)"></td>
                 </tr>
                 <tr>
                     <td><img id="res21" src="Pictures/Transparent Pics/Research21.png" alt="" onclick="buyResearch(21);" onmouseover="researchdescriptions(21)">                    </td>
@@ -1005,6 +1235,11 @@
                     <td><img id="res98" src="Pictures/Transparent Pics/Research98.png" alt="" onclick="buyResearch(98);" class="chal8" onmouseover="researchdescriptions(98)">                    </td>
                     <td><img id="res99" src="Pictures/Transparent Pics/Research99.png" alt="" onclick="buyResearch(99);" class="chal8" onmouseover="researchdescriptions(99)">                    </td>
                     <td><img id="res100" src="Pictures/Transparent Pics/Research100.png" alt="" onclick="buyResearch(100);" class="chal8" onmouseover="researchdescriptions(100)">                    </td>
+                    <td><img id="res121" src="Pictures/Transparent Pics/Research121.png" alt="" onclick="buyResearch(121);" class="chal10" onmouseover="researchdescriptions(121)"></td>
+                    <td><img id="res122" src="Pictures/Transparent Pics/Research122.png" alt="" onclick="buyResearch(122);" class="chal10" onmouseover="researchdescriptions(122)"></td>
+                    <td><img id="res123" src="Pictures/Transparent Pics/Research123.png" alt="" onclick="buyResearch(123);" class="chal10" onmouseover="researchdescriptions(123)"></td>
+                    <td><img id="res124" src="Pictures/Transparent Pics/Research124.png" alt="" onclick="buyResearch(124);" class="chal10" onmouseover="researchdescriptions(124)"></td>
+                    <td><img id="res125" src="Pictures/Transparent Pics/Research125.png" alt="" onclick="buyResearch(125);" class="chal10" onmouseover="researchdescriptions(125)"></td>
                     </td>
                 </tr>
 
@@ -1021,11 +1256,109 @@
             <p id="researchhotkeys">Welcome to the future! I'd recommend studying the green-bordered researches first. The red-bordered researches are a one-and-done whereas the pink-bordered researches have multiple levels to study!</p>
         </div>
 
+        <div id="ants">
+            <p id="antwelcome" style="color: lightslategrey">The ants welcome you to their home.</p>
+            <p id="antdescription" style="color: plum">Hover over the icons for description. Click icons to buy!</p>
+
+            <div id="antrow1">
+                <img id="anttier1" src="Pictures/Transparent Pics/AntTierOne.png" onmouseover="updateAntDescription(1);antRepeat(1)" onclick="buyAnts(1)" style="cursor: pointer;">
+                <img id="anttier2" src="Pictures/Transparent Pics/AntTierTwo.png" onmouseover="updateAntDescription(2);antRepeat(2)" onclick="buyAnts(2)" style="cursor: pointer;">
+                <img id="anttier3" src="Pictures/Transparent Pics/AntTierThree.png" onmouseover="updateAntDescription(3);antRepeat(3)" onclick="buyAnts(3)" style="cursor: pointer;">
+                <img id="anttier4" src="Pictures/Transparent Pics/AntTierFour.png" onmouseover="updateAntDescription(4);antRepeat(4)" onclick="buyAnts(4)" style="cursor: pointer;">
+                <img id="anttier5" src="Pictures/Transparent Pics/AntTierFive.png" onmouseover="updateAntDescription(5);antRepeat(5)" onclick="buyAnts(5)" style="cursor: pointer;">
+                <img id="anttier6" src="Pictures/Transparent Pics/AntTierSix.png" onmouseover="updateAntDescription(6);antRepeat(6)" onclick="buyAnts(6)" style="cursor: pointer;">
+                <img id="anttier7" src="Pictures/Transparent Pics/AntTierSeven.png" onmouseover="updateAntDescription(7);antRepeat(7)" onclick="buyAnts(7)" style="cursor: pointer;">
+                <img id="anttier8" src="Pictures/Transparent Pics/AntTierEight.png" onmouseover="updateAntDescription(8);antRepeat(8)" onclick="buyAnts(8)" style="cursor: pointer;">
+            </div>
+           
+            <p id="crumbcount" style="color: crimson;">You have 0 Galactic Crumbs.</p>
+            <div id="antrow2" style="color: white">
+                <p id="anttierdescription"></p>
+                <p id="antprice"></p>
+                <p id="antquantity"></p>
+                <p id="generateant"></p>
+            </div>
+
+           <!-- <div id="antdivisor" style="border: 1px solid goldenrod"></div> -->
+
+            <div id="antrow3" style="color:plum">
+                <p id="antspecies" style="font-size: 1.2em; color:royalblue"> <span id="antlevelbonus" style="color: orange"> </span></p>
+                <p id="antupgradedescription"></p>
+                <p id="antupgradecost"></p>
+                <p id="antupgradeeffect"></p>
+            </div>
+
+            <div id="antrow4">
+                <img id="antUpgrade1" src="Pictures/Transparent Pics/AntUpgrade1.png" onmouseover="antUpgradeDescription(1)" onclick="buyAntUpgrade(1,false)" style="cursor: pointer;">
+                <img id="antUpgrade2" src="Pictures/Transparent Pics/AntUpgrade2.png" onmouseover="antUpgradeDescription(2)" onclick="buyAntUpgrade(2,false)" style="cursor: pointer;">
+                <img id="antUpgrade3" src="Pictures/Transparent Pics/AntUpgrade3.png" onmouseover="antUpgradeDescription(3)" onclick="buyAntUpgrade(3,false)" style="cursor: pointer;">
+                <img id="antUpgrade4" src="Pictures/Transparent Pics/AntUpgrade4.png" onmouseover="antUpgradeDescription(4)" onclick="buyAntUpgrade(4,false)" style="cursor: pointer;">
+                <img id="antUpgrade5" src="Pictures/Transparent Pics/AntUpgrade5.png" onmouseover="antUpgradeDescription(5)" onclick="buyAntUpgrade(5,false)" style="cursor: pointer;">
+                <img id="antUpgrade6" src="Pictures/Transparent Pics/AntUpgrade6.png" onmouseover="antUpgradeDescription(6)" onclick="buyAntUpgrade(6,false)" style="cursor: pointer;">
+                <img id="antUpgrade7" src="Pictures/Transparent Pics/AntUpgrade7.png" onmouseover="antUpgradeDescription(7)" onclick="buyAntUpgrade(7,false)" style="cursor: pointer;">
+                <img id="antUpgrade8" src="Pictures/Transparent Pics/AntUpgrade8.png" onmouseover="antUpgradeDescription(8)" onclick="buyAntUpgrade(8,false)" style="cursor: pointer;">
+                <img id="antUpgrade9" src="Pictures/Transparent Pics/AntUpgrade9.png" onmouseover="antUpgradeDescription(9)" onclick="buyAntUpgrade(9,false)" style="cursor: pointer;">
+                <img id="antUpgrade10" src="Pictures/Transparent Pics/AntUpgrade10.png" onmouseover="antUpgradeDescription(10)" onclick="buyAntUpgrade(10,false)" style="cursor: pointer;">
+                <img id="antUpgrade11" src="Pictures/Transparent Pics/AntUpgrade11.png" onmouseover="antUpgradeDescription(11)" onclick="buyAntUpgrade(11,false)" style="cursor: pointer;">
+                <img id="antUpgrade12" src="Pictures/Transparent Pics/AntUpgrade12.png" onmouseover="antUpgradeDescription(12)" onclick="buyAntUpgrade(12,false)" style="cursor: pointer;">
+            </div>
+
+            <div id="sacrificeAnts" style="display: none">
+            <p id="antSacrificeTimer" style="color: white">Last Sacrifice: 1s ago</p>
+            <img id="antSacrifice" src="Pictures/AntSacrifice.png" style="cursor: pointer;" onclick="sacrificeAnts()">
+            </div>
+
+            <div id="antSacrificeSummary" style="display: none">
+                <p id="antELO" style="color: plum">Your Sacrifice is Worth <span id="ELO" style="color: gold">0 ELO</span></p>
+                <p id="antTimeMultiplier" style="color: white">Time Multiplier: <span id="SacrificeTimeMultiplier" style="color: lightseagreen">0.01x</p>
+                <p id="antSacrificeTitle" style="color: crimson">Reset Anthill features for:</p>
+                <p id="antSacrificeMultiplier" style="color: white">Ant Sacrifice Multiplier: 1x --> <span id="SacrificeMultiplier" style="color: limegreen">x2</span></p>
+                <table id="antSacrificeTable">
+                    <tr style="height: 32px;">
+                        <td style="font-size: 0;"><img src="Pictures/Offering.png"></td>
+                        <td id="antSacrificeOffering" style="color: gold;"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img src="Pictures/Obtainium.png"></td>
+                        <td id="antSacrificeObtainium" style="color: pink"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/TalismanShard.png"></td>
+                        <td class="chal9" id="antSacrificeTalismanShard" style="color: gold"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/CommonTalisman.png"></td>
+                        <td class="chal9" id="antSacrificeCommonFragment" style="color: silver"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/UncommonTalisman.png"></td>
+                        <td class="chal9" id="antSacrificeUncommonFragment" style="color: limegreen"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/RareTalisman.png"></td>
+                        <td class="chal9" id="antSacrificeRareFragment" style="color: darkcyan"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/EpicTalisman.png"></td>
+                        <td class="chal9" id="antSacrificeEpicFragment" style="color: plum"><td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/LegendaryTalisman.png"></td>
+                        <td class="chal9" id="antSacrificeLegendaryFragment" style="color: orange"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 0;"><img class="chal9" src="Pictures/MythicalTalisman.png"></td>
+                        <td class="chal9" id="antSacrificeMythicalFragment" style="color: crimson"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
         <div id="settings">
-               
+            <button id="switchsettingtab" onclick="toggleSettingScreen()">Credits & Acknowledgements</button>
+            <div id="settingsubtab">
             <p class="prestigeunlock" id="settingtitle2" style="color: pink">Confirmation Toggles</p>
             <p class="prestigeunlock" id="settingtitle3" style="color: plum">Miscellaneous Stats</p>
-            <p class="transcendunlock" id="retrychallengesetting" style="color : crimson">Re-enter successfully completed challenges</p>
             <p class="prestigeunlock" id="confirmationdisclaimer" style="color: plum">These do not work with hotkeys. Too bad!</p>
             
             <p class="prestigeunlock" id="temporarystats1" style="color: lightblue"></p>
@@ -1037,6 +1370,7 @@
             <p class="prestigeunlock" id="temporarystats7" style="color: orangered"></p>
             <p class="reincarnationunlock" id="temporarystats8" style="color: pink"></p>
             <p class="reincarnationunlock" id="temporarystats9" style="color: crimson"></p>
+            <p class="reincarnationunlock" id="temporarystats11" style="color: crimson;"></p>
             <p class="prestigeunlock" id="temporarystats10" style="color: cyan"></p>
 
 
@@ -1052,7 +1386,7 @@
             <img class="reincarnationunlock" id="settingpic3" src = "Pictures/Reincarnate.png" style="border: 1px solid green">
             <button class="auto" id="toggle30" onclick="toggleSettings(29)" style="border:2px solid green">On</button>
         
-            <button class="transcendunlock" id="retrybutton" onclick="toggleRetryChallenges()" style="border: 2px solid green; background-color: #171717;"></button> 
+            
             <button id="exportgame" onclick="exportSynergism()" style="border:2px solid green">Export the game here.</button>
             <p id="importgame" style="color: limegreen">Load game below!</button>
             <button id="savegame" onclick="saveSynergy(true)" style="border: 2px solid plum">Save the game manually.</button>
@@ -1067,19 +1401,21 @@
             <input type="file" id="importfile" accept=".txt" style="color: transparent">
 
             <a href="https://www.discord.gg/ameCknq" target="_blank">
-            <img id="discord" src="Pictures/discordserveravatar.png" title="Click to join the official Discord!">
+            <img id="discord" src="Pictures/icon.gif" title="Click to join the official Discord!">
             </a>
-            <a href="https://docs.google.com/document/d/1BIo7V-Z-d9MrgHdAVOoR5-nbzjqvPei6Vq7MnQ0Xp10/edit?usp=sharing" target="_blank">
+            <a href="https://docs.google.com/document/d/1E59ynF2LuveMc_hW3-IMZh0sHEYcLWXm35lNvpZ7XAE/edit?usp=sharing" target="_blank">
             <img id="patchnotes" src="Pictures/patchnotes.png" title="Click to read the latest patch notes!">
             </a>
 
-            <p id="versionnumber" style="color: white">v1.00911. Click the icon above to join our discord server!</p>
-            <p id="credits" style="color: white">Special thanks to Omsi, Alberan, and Khafra for Art and/or improvements to code structure!</p>
-            
-            
-           
-                    
-            </div>
+            <p id="versionnumber" style="color: gold">You're playing on v1.010!</p>
+        </div>
+            <div id="creditssubtab" style="display: none">
+            <p id="programminghelp" style="color:white">People who helped with programming: Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup]</p>
+            <p id="artisthelp" style="color:white">People who helped with art/design: Omsi, Alberan, Blank, ThalainTheCat, Sneekxy</p>
+            <p id="boosters" style="color:white">People who Boosted the Discord Server: <span style="color: lightskyblue">earth [Legacy], Flame [Legacy], Kittelson [Legacy], PerspectiveTransform [Legacy], somepersondontask [Legacy]</span>,<span style="color: green"> Internet Car Man [2x!], Julius Dungworth [2x!], mdog245 [2x!], Nethlion [2x!], Slavderr [2x!], Sneekxy [2x!], Tony Tells you to CHECK THE PINS [2x!], Valorswift420 [2x!], Veritas [2x!], Zirios [2x!]</span>,<span style="color: pink"> Ace Rimmer, Arkanos80, BobMcKnob, jables, Mophtran, Schizogen, Stang, theefool, Voltana, Ximon.</span></p>
+            <p id="shameless" style="color: gold">And you, for playing my first ever project, Synergism!</p>             
+        </div>
+    </div>
 
     <div id="shop">
         <p id="shoptop">Welcome to the Quark Shop. You can't believe what's in stock!</p>
@@ -1087,6 +1423,13 @@
         <tr>
             <td style="font-size: 0; width: 32px;"><img src="Pictures/Quark.png"></td>
             <td><p id="quarkamount">You have 0 Quarks!</p> </td>
+        </tr>
+        </table>
+
+        <table id="shopToggles">
+        <tr>
+        <td><button id="resetShopUpgrades" style="border: 2px solid orangered; color: white" onclick="resetShopUpgrades()">Reset Perm Shop [Cost: 15 Quarks]</button></td>
+        <td><button id="toggleConfirmShop" style="border: 2px solid white" onclick="toggleShopConfirmation()">Shop Confirmations: ON</button></td>
         </tr>
         </table>
         <p id="consumables">Buy Yer' Potions!</p>
@@ -1116,7 +1459,9 @@
                 <td style="font-size: 0;"><img src="Pictures/Obtainium Upgrade.png" onmouseover="shopDescriptions(5)"></td>
                 <td style="font-size: 0;"><img src="Pictures/Obtainium Auto Upgrade.png" onmouseover="shopDescriptions(6)"></td>
                 <td style="font-size: 0;"><img src="Pictures/Instant Challenge.png" onmouseover="shopDescriptions(7)"></td>
+                <td style="font-size: 0;"><img src="Pictures/antspeed.png" onmouseover="shopDescriptions(9)"></td>
                 <td style="font-size: 0;"><img src="Pictures/cashgrab.png" onmouseover="shopDescriptions(8)"></td>
+                <td style="font-size: 0;"><img src="Pictures/shoptalisman.png" onmouseover="shopDescriptions(10)"></td>
             </tr>
             <tr>
                 <td id="offeringtimerlevel" onmouseover="shopDescriptions(3)">Level: 0/5</td>
@@ -1124,7 +1469,9 @@
                 <td id="obtainiumtimerlevel" onmouseover="shopDescriptions(5)">Level: 0/5</td>
                 <td id="obtainiumautolevel" onmouseover="shopDescriptions(6)">Level: 0/5</td>
                 <td id="instantchallenge" onmouseover="shopDescriptions(7)">Not Bought</td>
+                <td id="antspeed" onmouseover="shopDescriptions(9)">Level: 0/3</td>
                 <td id="cashgrab" onmouseover="shopDescriptions(8)">Level: 0/5</td>
+                <td id="shoptalisman" onmouseover="shopDescriptions(10)">Not Bought</td>
             </tr>
             <tr>
                 <td><button class="permshopbutton" id="offeringtimerbutton" style="border: 2px solid orange" onmouseover="shopDescriptions(3)" onclick="buyShopUpgrades(3)">Upgrade for 150 Quarks</button></td>
@@ -1132,7 +1479,9 @@
                 <td><button class="permshopbutton" id="obtainiumtimerbutton" style="border: 2px solid blue" onmouseover="shopDescriptions(5)" onclick="buyShopUpgrades(5)">Upgrade for 150 Quarks</button></td>
                 <td><button class="permshopbutton" id="obtainiumautobutton" style="border: 2px solid blue" onmouseover="shopDescriptions(6)" onclick="buyShopUpgrades(6)">Upgrade for 150 Quarks</button></td>
                 <td><button class="permshopbutton" id="instantchallengebutton" style="border: 2px solid plum" onmouseover="shopDescriptions(7)" onclick="buyShopUpgrades(7)">Buy for 300 Quarks</button>
+                <td><button class="permshopbutton" id="antspeedbutton" style="border: 2px solid maroon" onmouseover="shopDescriptions(9)" onclick="buyShopUpgrades(9)">Upgrade for 200 Quarks</button></td>
                 <td><button class="permshopbutton" id="cashgrabbutton" style="border: 2px solid limegreen" onmouseover="shopDescriptions(8)" onclick="buyShopUpgrades(8)">Upgrade for 100 Quarks</button></td>
+                <td><button class="permshopbutton" id="shoptalismanbutton" style="border: 2px solid chartreuse" onmouseover="shopDescriptions(10)" onclick="buyShopUpgrades(10)">Buy for 1,500 Quarks</td>
             </tr>
         </table>
 

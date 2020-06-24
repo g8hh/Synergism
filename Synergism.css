@@ -87,6 +87,45 @@ a {color: white;}
 	position:absolute;
 	z-index: 2
 }
+#offlineTimer{
+	position:absolute;
+	z-index: 5;
+	text-align: left;
+	width: 700px;
+	top: -85px;
+	left: 50%;
+	margin-left: -375px;
+	font-family: "system";
+	font-size: 1.4em
+}
+#offlineprogressbar{
+	position:absolute;
+	z-index: 3;
+	height: 30px;
+	width: 750px;
+	border: 3px solid red;
+	background-color: #171717;
+	top: 600px;
+	left: 50%;
+	margin-left: -375px;
+}
+#progressbardescription{
+	position:absolute;
+	z-index: 5;
+	text-align: left;
+	width: 700px;
+	top: -55px;
+	left: 50%;
+	margin-left: -375px;
+	font-family: "system";
+	font-size: 1.4em
+}
+#offlineprogressdone{
+	width: 1px;
+	height: 30px;
+	background-color: green;
+	z-index: 4;
+}
 #resourcestable {
 	position: absolute;
 	top: 20px;
@@ -164,7 +203,7 @@ a {color: white;}
 
 	text-align: center;
 	width: 100px;
-	left: 80%;
+	left: 88%;
 	margin-left: -50px;
 	
 
@@ -261,8 +300,18 @@ a {color: white;}
 	text-align: center;
 	width: 100px;
 	border: 1px solid white;
-	left: 88%;
+	left: 96%;
 	margin-left: -50px;
+}
+
+#anttab {
+	position: absolute;
+	text-align: center;
+	width: 100px;
+	border: 1px solid maroon;
+	left: 80%;
+	margin-left: -50px;
+
 }
 
 #buildingrow1 {
@@ -941,6 +990,13 @@ margin-left: -13px
 }
 #temporarystats10 {
 	position: absolute;
+	top: 230px;
+	width: 500px;
+	left: 75%;
+	margin-left: -250px;
+}
+#temporarystats11 {
+	position: absolute;
 	top: 210px;
 	width: 500px;
 	left: 75%;
@@ -948,7 +1004,7 @@ margin-left: -13px
 }
 #patchnotes {
 	position: absolute;
-	top: 270px;
+	top: 300px;
 	width: 128px;
 	left: 75%;
 	margin-left: -64px;
@@ -967,6 +1023,10 @@ margin-left: -13px
 	left: 75%;
 	margin-left: -200px;
 }
+
+
+
+
 #toggle1 {
 	position:absolute;
 	width: 80px;
@@ -1268,14 +1328,7 @@ margin-left: -13px
 	left: 50%;
 	margin-left: -450px;
 }
-#credits{
-	position: absolute;
-	width: 900px;
-	height: 100px;
-	top: 480px;
-	left: 50%;
-	margin-left: -450px;
-}
+
 
 #statistics {
 	position: relative;
@@ -1407,6 +1460,13 @@ margin-left: -13px
 	left: 80%;
 	top: 20px;
 }
+#buyamounttalisman {
+	position: absolute;
+	padding: 0px;
+	font-size: 0px;
+	left: 80%;
+	top: 20px;
+}
 #buyamountmythos {
 	position: absolute;
 	padding: 0px;
@@ -1438,6 +1498,15 @@ margin-left: -13px
 	left: 80%;
 	top: 30px;
 	margin-left: -120px;
+}
+#toggletalismanbuy{
+	color: white;
+	position: absolute;
+	font-size: 11px;
+	width: 220px;
+	left: 80%;
+	top: 30px;
+	margin-left: -118.5px;
 }
 #togglemythosbuy{
 	color: white;
@@ -1715,6 +1784,17 @@ margin-left: -13px
 	color: pink;
 	text-align: center;
 	font-size: 1.2em
+}
+
+#togglerunesubtab{
+	position: absolute;
+	padding: 5px;
+	top: 10px;
+	left: 65%;
+	width: 200px;
+	margin-left: -100px;
+	height: 30px;
+	text-align: center;
 }
 
 #toggleautosacrifice {
@@ -2107,6 +2187,523 @@ margin-left: -13px
 	color: gray;
 	text-align: center;
 }
+
+#talismancounter {
+	position: absolute;
+	top: 45px;
+	width: 800px;
+	left: 30%;
+	margin-left: -370px;
+	text-align: left;
+	font-size: 0.9em;
+}
+#buyfragments {
+	position: absolute;
+	top: 95px;
+	width: 800px;
+	left: 50%;
+	margin-left: -370px;
+	text-align: left;
+	font-size: 0.9em;
+}
+#talismanFragmentCost {
+	position: absolute;
+	top: 390px;
+	width: 250px;
+	left: 10.75%;
+	margin-left: -125px;
+	text-align: center;
+	font-size: 1.1em;
+	color: white
+}
+
+.talismanbtn {
+	height: 30px;
+	width: 108px;
+	text-align: center;
+	color: orange
+}
+#TaxTalisman{
+	position: absolute;
+	left: 28%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#MultiplierAcceleratorTalisman{
+	position: absolute;
+	left: 36%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#CostTalisman{
+	position: absolute;
+	left: 44%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#RunesTalisman{
+	position: absolute;
+	left: 52%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#UnknownTalisman{
+	position: absolute;
+	left: 60%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#AntTalisman{
+	position: absolute;
+	left: 68%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#MoneyTalisman{
+	position: absolute;
+	left: 76%;
+	width: 200px;
+	margin-left: -100px;
+	top: 45px;
+	text-align: center;
+	font-size: 1.2em;
+}
+#talisman1{
+	position: absolute;
+	left: 28%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman1level{
+	position: absolute;
+	left: 28%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman1 {
+	position: absolute;
+	height: 30px;
+	left: 28%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman1{
+	position: absolute;
+	height: 30px;
+	left: 28%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman1{
+	position: absolute;
+	height: 30px;
+	left: 28%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+
+#talisman2{
+	position: absolute;
+	left: 36%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman2level{
+	position: absolute;
+	left: 36%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman2 {
+	position: absolute;
+	height: 30px;
+	left: 36%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman2{
+	position: absolute;
+	height: 30px;
+	left: 36%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman2{
+	position: absolute;
+	height: 30px;
+	left: 36%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+#talisman3{
+	position: absolute;
+	left: 44%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman3level{
+	position: absolute;
+	left: 44%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman3 {
+	position: absolute;
+	height: 30px;
+	left: 44%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman3{
+	position: absolute;
+	height: 30px;
+	left: 44%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman3{
+	position: absolute;
+	height: 30px;
+	left: 44%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+#talisman4{
+	position: absolute;
+	left: 52%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman4level{
+	position: absolute;
+	left: 52%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman4 {
+	position: absolute;
+	height: 30px;
+	left: 52%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman4{
+	position: absolute;
+	height: 30px;
+	left: 52%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman4{
+	position: absolute;
+	height: 30px;
+	left: 52%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+#talisman5{
+	position: absolute;
+	left: 60%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman5level{
+	position: absolute;
+	left: 60%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman5 {
+	position: absolute;
+	height: 30px;
+	left: 60%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman5{
+	position: absolute;
+	height: 30px;
+	left: 60%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman5{
+	position: absolute;
+	height: 30px;
+	left: 60%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+#talisman6{
+	position: absolute;
+	left: 68%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman6level{
+	position: absolute;
+	left: 68%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman6 {
+	position: absolute;
+	height: 30px;
+	left: 68%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman6{
+	position: absolute;
+	height: 30px;
+	left: 68%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman6{
+	position: absolute;
+	height: 30px;
+	left: 68%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+#talisman7{
+	position: absolute;
+	left: 76%;
+	width: 72px;
+	margin-left: -41px;
+	top: 90px;
+	text-align: center;
+}
+
+#talisman7level{
+	position: absolute;
+	left: 76%;
+	width: 128px;
+	margin-left: -66px;
+	top: 155px;
+	text-align: center;
+}
+
+#leveluptalisman7 {
+	position: absolute;
+	height: 30px;
+	left: 76%;
+	width: 80px;
+	margin-left: -41px;
+	top: 195px;
+	text-align: center;
+}
+#enhancetalisman7{
+	position: absolute;
+	height: 30px;
+	left: 76%;
+	width: 80px;
+	margin-left: -41px;
+	top: 225px;
+	text-align: center;
+}
+#respectalisman7{
+	position: absolute;
+	height: 30px;
+	left: 76%;
+	width: 80px;
+	margin-left: -41px;
+	top: 255px;
+	text-align: center;
+}
+
+#talismanEffect {
+	position: absolute;
+	left: 50%;
+	width: 600px;
+	margin-left: -300px;
+	top: 290px;
+	text-align: center;
+}
+
+#talismanBonus{
+	position: absolute;
+	top: 20px;
+	left: 145px;
+}
+#talismanRune1Effect{
+	position: absolute;
+	top: 40px;
+	left: 145px;
+}
+#talismanRune2Effect{
+	position: absolute;
+	top: 60px;
+	left: 145px;
+}#talismanRune3Effect{
+	position: absolute;
+	top: 80px;
+	left: 145px;
+}#talismanRune4Effect{
+	position: absolute;
+	top: 100px;
+	left: 145px;
+}#talismanRune5Effect{
+	position: absolute;
+	top: 120px;
+	left: 145px;
+}#talismanMythicEffect{
+	position: absolute;
+	top: 140px;
+	left: 145px;
+}
+
+#talismanlevelup {
+	position: absolute;
+	left: 50%;
+	width: 600px;
+	margin-left: -200px;
+	top: 330px;
+	text-align: center;
+}
+
+#talismanLevelUpSummary {
+	position: absolute;
+	top: -40px;
+	left: 50px;
+}
+
+#talismanrespec {
+	position: absolute;
+	left: 50%;
+	width: 600px;
+	margin-left: -300px;
+	top: 290px;
+	text-align: center;
+}
+.talismanRespecBtn {
+	height: 30px;
+	width: 200px;
+	text-align: center;
+}
+#talismanRespecButton1{
+	position: absolute;
+	top: 50px;
+	left: 200px;
+}
+#talismanRespecButton2{
+	position: absolute;
+	top: 81px;
+	left: 200px;
+}#talismanRespecButton3{
+	position: absolute;
+	top: 112px;
+	left: 200px;
+}#talismanRespecButton4{
+	position: absolute;
+	top: 143px;
+	left: 200px;
+}#talismanRespecButton5{
+	position: absolute;
+	top: 174px;
+	left: 200px;
+}#confirmTalismanRespec{
+	position: absolute;
+	top: 112px;
+	left: 430px;
+}#cancelTalismanRespec{
+	position: absolute;
+	top: 143px;
+	left: 430px;
+}
+
+
 #transcension {
 	position: relative;
 	padding: 0px;
@@ -2335,154 +2932,133 @@ margin-left: -13px
 	border: 1px solid plum;
 }
 
-#challengebuttons {
+#challengeIntroduction {
 	position: absolute;
-	top: 10px;
-	left: 30%;
-}
-
-#challenge1 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 70px;
-	left: 30%;
-	margin-left: -75px;
-
-}
-#challenge2 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 100px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge3 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 130px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge4 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 160px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge5 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 190px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge6 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 220px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge7 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 250px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge8 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 280px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge9 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 310px;
-	left: 30%;
-	margin-left: -75px;
-}
-#challenge10 {
-	position:absolute;
-	height: 30px;
-	width: 150px;
-	top: 340px;
-	left: 30%;
-	margin-left: -75px;
-}
-
-#challengeinfo {
-	position: absolute;
-	top: 145px;
-	width: 500px;
-	left: 60%;
-	margin-left: -250px;
-	border: 1px solid plum
-}
-
-#currentchallenge {
-	position: absolute;
-	top: -40px;
-	width: 500px;
-	left: 60%;
-	margin-left: -250px;
-	color: pink;
-	font-size: 0.7em;
-}
-
-#challengetutorial {
-	position: absolute;
-	top: -10px;
-	width: 500px;
-	left: 61%;
-	margin-left: -250px;
+	text-align: center;
+	padding: 0px;
+	top: 0px;
 	color: white;
+	width: 1000px;
+	font-size: 1.2em;
+	margin-left: -500px;
+	left: 50%;
 }
-
-#challengedescription {
+#challengeIcons {
 	position: absolute;
-	top: 15px;
-	width: 500px;
-	color: pink;
+	font-size: 0;
+	padding: 0px;
+	top: 50px;
+	margin-left: -342px;
+	left: 50%;
+}
+#challengeDetails {
+	position: absolute;
 	text-align: left;
-	left: 10px;
+	padding: 0px;
+	top: 120px;
+	width: 1000px;
+	margin-left: -500px;
+	left: 50%;
 }
-
-#challengetotalscore {
-	position: absolute;
-	top: 85px;
+#startChallenge{
+	position:absolute;
+	border: 2px solid red;
+	height: 30px;
+	width: 200px;
+	top: 20px;
+	left: 16%;
+}
+#retryChallenge{
+	position:absolute;
+	border: 2px solid plum;
+	height: 30px;
+	width: 200px;
+	top: 51px;
+	left: 16%;
+}
+#challengeName{
+	position:absolute;
+	color: white;
+	top: 0px;
+	left: 38%;
+}
+#challengeFlavor{
+	position:absolute;
+	color:plum;
+	top: 20px;
+	left: 38%;
+}
+#challengeRestrictions{
+	position:absolute;
+	color:crimson;
 	width: 500px;
+	top: 50px;
+	left: 38%;
+
+}
+#challengeGoal{
+	position:absolute;
+	color: gold;
+	top: 90px;
+	left: 38%;
+
+}
+#challengePerCompletionRewards{
+	position:absolute;
+	color: white;
+	top: 120px;
+	left: 38%;
+
+}
+#challengePer1{
+	position:absolute;
+	color: pink;
+	top: 140px;
+	left: 38%;
+
+}
+#challengePer2{
+	position:absolute;
+	color: pink;
+	top: 160px;
+	left: 38%;
+
+}
+#challengePer3{
+	position:absolute;
+	color: pink;
+	top: 180px;
+	left: 38%;
+
+}
+#challengeFirstCompletionRewards{
+	position:absolute;
+	color: white;
+	top: 210px;
+	left: 38%;
+
+}
+#challengeFirst1{
+	position:absolute;
+	color: orange;
+	top: 230px;
+	left: 38%;
+
+}
+#challengeQuarkBonus{
+	position:absolute;
 	color: cyan;
-	text-align: left;
-	left: 10px;
+	top: 260px;
+	left: 38%;
+
 }
 
-#challengereward {
-	position: absolute;
-	top: 130px;
-	width: 500px;
-	color: pink;
-	text-align: left;
-	left: 10px;
-}
 
 #challengehotkeys {
 	position: absolute;
 	padding: 5px;
-	top: 260px;
-	left: 40%;
+	top: 400px;
+	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
 	height: 20px;
@@ -2492,8 +3068,8 @@ margin-left: -13px
 #challengewarning {
 	position: absolute;
 	padding: 5px;
-	top: 280px;
-	left: 40%;
+	top: 420px;
+	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
 	height: 20px;
@@ -2503,8 +3079,8 @@ margin-left: -13px
 #challengewarningreincarnation {
 	position: absolute;
 	padding: 5px;
-	top: 300px;
-	left: 40%;
+	top: 440px;
+	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
 	height: 20px;
@@ -2841,14 +3417,6 @@ margin-left: -13px
 	height: 20px;
 	text-align: center;
 }
-
-#retrychallengesetting {
-	position: absolute;
-	top: 0px;
-	width: 500px;
-	left: 50%;
-	margin-left: -250px;
-}
 #retrybutton {
 	position: absolute;
 	width: 70px;
@@ -2910,7 +3478,7 @@ margin-left: -13px
 }
 
 .permshopbutton {
-	width: 128px;
+	width: 100px;
 	height: 40px;
 }
 
@@ -2922,6 +3490,22 @@ margin-left: -13px
 	margin-left: -114px;
 	color: limegreen;
 	font-size: 1.2em;
+}
+
+#shopToggles{
+	position: absolute;
+	top: 113px;
+	left: 75%;
+	margin-left: -150px;
+
+}
+#resetShopUpgrades{
+	height: 30px;
+	width: 200px;
+}
+#toggleConfirmShop{
+	height: 30px;
+	width: 150px;
 }
 
 #permshopimage{
@@ -2941,4 +3525,252 @@ margin-left: -13px
 	width: 600px;
 	margin-left: -300px;
 	text-align: center;
+}
+
+#ants {
+	position:absolute;
+
+	position: relative;
+	padding: 0px;
+	border: 1px solid brown;
+	top: 118px;
+	text-align: center
+}
+
+#antwelcome {
+	position: absolute;
+	padding: 0px;
+	top: 10px;
+	width: 500px;
+	text-align: center;
+	left: 50%;
+	margin-left: -250px;
+	font-size: 1.3em;
+}
+#antdescription {
+	position: absolute;
+	padding: 0px;
+	top: 50px;
+	width: 500px;
+	text-align: center;
+	left: 50%;
+	margin-left: -250px;
+}
+#antrow1 {
+	position: absolute;
+	padding: 0px;
+	top: 100px;
+	width: 500px;
+	text-align: center;
+	left: 50%;
+	margin-left: -250px;
+}
+
+#crumbcount {
+	position: absolute;
+	padding: 0px;
+	top: 120px;
+	width: 1000px;
+	left: 50%;
+	text-align: center;
+	margin-left: -500px;
+	font-size: 1.2em;
+	height: 5px;
+}
+#antrow2 {
+	position: absolute;
+	padding: 0px;
+	top: 150px;
+	width: 750px;
+	text-align: center;
+	left: 50%;
+	margin-left: -375px;
+}
+
+#anttierdescription {
+	position: absolute;
+	padding: 0px;
+	width: 750px;
+	text-align: center;
+	left: 50%;
+	margin-left: -375px;
+}
+#antprice {
+	position: absolute;
+	padding: 0px;
+	top: 20px;
+	width: 750px;
+	text-align: center;
+	left: 50%;
+	margin-left: -375px;
+}
+#antquantity {
+	position: absolute;
+	padding: 0px;
+	top: 40px;
+	width: 750px;
+	text-align: center;
+	left: 50%;
+	margin-left: -375px;
+}
+#generateant {
+	position: absolute;
+	padding: 0px;
+	top: 60px;
+	width: 750px;
+	text-align: center;
+	left: 50%;
+	margin-left: -375px;
+}
+
+
+
+#antrow3 {
+	position: absolute;
+	padding: 0px;
+	top: 260px;
+	width: 1000px;
+	text-align: center;
+	left: 50%;
+	margin-left: -500px;
+}
+#antspecies {
+	position: absolute;
+	padding: 0px;
+	top: -5px;
+	width: 1000px;
+	text-align: center;
+	left: 50%;
+	margin-left: -500px;
+}
+#antupgradedescription {
+	position: absolute;
+	padding: 0px;
+	top: 25px;
+	width: 1000px;
+	text-align: center;
+	left: 50%;
+	margin-left: -500px;
+}
+#antupgradecost {
+	position: absolute;
+	padding: 0px;
+	top: 55px;
+	width: 1000px;
+	text-align: center;
+	left: 50%;
+	margin-left: -500px;
+}
+#antupgradeeffect {
+	position: absolute;
+	padding: 0px;
+	top: 85px;
+	width: 1000px;
+	text-align: center;
+	left: 50%;
+	margin-left: -500px;
+}
+
+#antrow4 {
+	position: absolute;
+	padding: 0px;
+	top: 410px;
+	width: 1000px;
+	text-align: center;
+	left: 50%;
+	margin-left: -500px;
+}
+
+#antSacrificeTimer{
+	position: absolute;
+	padding: 0px;
+	width: 300px;
+	margin-left: -118px;
+	top: 30px;
+	text-align: center;
+	left: 70%;
+}
+#antSacrifice{
+	position: absolute;
+	padding: 0px;
+	top: 70px;
+	text-align: center;
+	left: 70%;
+}
+
+
+#antSacrificeSummary {
+	position: absolute;
+	padding: 0px;
+	width: 300px;
+	top: 30px;
+	text-align: center;
+	left: 77%;
+}
+#antELO{
+	position: absolute;
+}
+#antTimeMultiplier {
+	position: absolute;
+	top: 20px;
+}
+#antSacrificeTitle{
+	position:absolute;
+	top: 40px;
+}
+#antSacrificeMultiplier{
+	position:absolute;
+	top: 60px;
+}
+#antSacrificeTable{
+	position:absolute;
+	top: 102px;
+	left: 100px;
+	padding: 0px;
+	border-spacing: 0px;
+}
+#switchsettingtab {
+	position: absolute;
+	height: 30px;
+	width: 200px;
+	left: 50%;
+	margin-left: -100px;
+	top: 40px;
+	border: 2px solid gold;
+}
+#programminghelp {
+	position: absolute;
+	text-align: center;
+	width: 1000px;
+	left: 50%;
+	margin-left: -500px;
+	top: 80px;
+	font-size: 1.2em;
+}
+#artisthelp {
+	position: absolute;
+	text-align: center;
+	width: 1000px;
+	left: 50%;
+	margin-left: -500px;
+	top: 130px;
+	font-size: 1.2em;
+}
+#boosters {
+	position: absolute;
+	text-align: center;
+	width: 1000px;
+	left: 50%;
+	margin-left: -500px;
+	top: 180px;
+	font-size: 1.2em;
+}
+#shameless {
+	position: absolute;
+	text-align: center;
+	width: 1000px;
+	left: 50%;
+	margin-left: -500px;
+	top: 280px;
+	font-size: 1.5em;
 }

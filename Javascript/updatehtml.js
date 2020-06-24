@@ -2,64 +2,72 @@ function revealStuff() {
     var c1 = document.getElementsByClassName("coinunlock1");
     for (var i = 0; i < c1.length; i++) {
       c1[i].style.display = "none";
-    }
+    };
     var c2 = document.getElementsByClassName("coinunlock2");
       for (var i = 0; i < c2.length; i++) {
     c2[i].style.display = "none";
-      }
+      };
       var c3 = document.getElementsByClassName("coinunlock3");
       for (var i = 0; i < c3.length; i++) {
     c3[i].style.display = "none";
-      }
+      };
       var c4 = document.getElementsByClassName("coinunlock4");
       for (var i = 0; i < c4.length; i++) {
     c4[i].style.display = "none";
-      }
+      };
 
     var a = document.getElementsByClassName("prestigeunlock");
       for (var i = 0; i < a.length; i++) {
     a[i].style.display = "none";
-  }
+  };
     var b = document.getElementsByClassName("generationunlock");
     for (var i = 0; i < b.length; i++) {
     b[i].style.display = "none";
-    }
+    };
     var c = document.getElementsByClassName("transcendunlock");
       for (var i = 0; i < c.length; i++) {
     c[i].style.display = "none";
-  }
+  };
     var d = document.getElementsByClassName("reincarnationunlock");
       for (var i = 0; i < d.length; i++) {
     d[i].style.display = "none";
-}
+};
     var e = document.getElementsByClassName("auto");
     for (var i = 0; i < e.length; i++) {
     e[i].style.display = "none";
-    }
+    };
     var f = document.getElementsByClassName("reinrow1");
     for (var i = 0; i < f.length; i++) {
     f[i].style.display = "none";
-    }
+    };
     var g = document.getElementsByClassName("reinrow2");
     for (var i = 0; i < g.length; i++) {
     g[i].style.display = "none";
-    }
+    };
     var h = document.getElementsByClassName("reinrow3");
     for (var i = 0; i < h.length; i++) {
     h[i].style.display = "none";
-    }
+    };
     var j = document.getElementsByClassName("reinrow4");
     for (var i = 0; i < j.length; i++) {
     j[i].style.display = "none";
-    }
+    };
     var k = document.getElementsByClassName("chal7");
     for (var i = 0; i < k.length; i++) {
     k[i].style.display = "none"
-    }
+    };
     let l = document.getElementsByClassName("chal8");
     for (var i = 0; i < l.length; i++){
     l[i].style.display = "none"
-    }
+    };
+    let m = document.getElementsByClassName("chal9");
+    for (var i = 0; i < m.length; i++){
+    m[i].style.display = "none"
+    };
+    let n = document.getElementsByClassName("chal10");
+    for (var i = 0; i < n.length; i++){
+    n[i].style.display = "none"
+    };
 
 
 document.getElementById("rune2area").style.display = "none"
@@ -71,6 +79,16 @@ document.getElementById("transcendautomation").style.display = "none"
 document.getElementById("reincarnateautomation").style.display = "none"
 document.getElementById("toggleautosacrifice").style.display = "none"
 document.getElementById("toggleautoresearch").style.display = "none"
+document.getElementById("antSacrificeSummary").style.display = "none"
+document.getElementById("sacrificeAnts").style.display = "none"
+document.getElementById("togglerunesubtab").style.display = "none"
+document.getElementById("talisman1area").style.display = "none"
+document.getElementById("talisman2area").style.display = "none"
+document.getElementById("talisman3area").style.display = "none"
+document.getElementById("talisman4area").style.display = "none"
+document.getElementById("talisman5area").style.display = "none"
+document.getElementById("talisman6area").style.display = "none"
+document.getElementById("talisman7area").style.display = "none"
 
 if(player.achievements[38] == 1) document.getElementById("rune2area").style.display = "block";
 if(player.achievements[44] == 1) document.getElementById("rune3area").style.display = "block";
@@ -81,6 +99,17 @@ if(player.upgrades[89] == 1) document.getElementById("transcendautomation").styl
 if(player.researches[46] == 1) document.getElementById("reincarnateautomation").style.display = "block";
 if(player.shopUpgrades.offeringAutoLevel > 0.5) document.getElementById("toggleautosacrifice").style.display = "block";
 if(player.shopUpgrades.obtainiumAutoLevel > 0.5) document.getElementById("toggleautoresearch").style.display = "block";
+if(player.achievements[173] == 1) document.getElementById("sacrificeAnts").style.display = "block";
+if(player.achievements[134] == 1) document.getElementById("togglerunesubtab").style.display = "block";
+if(player.achievements[119] == 1) document.getElementById("talisman1area").style.display = "block";
+if(player.achievements[126] == 1) document.getElementById("talisman2area").style.display = "block";
+if(player.achievements[133] == 1) document.getElementById("talisman3area").style.display = "block";
+if(player.achievements[140] == 1) document.getElementById("talisman4area").style.display = "block";
+if(player.achievements[147] == 1) document.getElementById("talisman5area").style.display = "block";
+if(player.antUpgrades[12] > 0) document.getElementById("talisman6area").style.display = "block";
+if(player.shopUpgrades.talismanBought) document.getElementById("talisman7area").style.display = "block";
+
+
 
 if (player.unlocks.coinone == true) {
     let c1 = document.getElementsByClassName("coinunlock1");
@@ -168,6 +197,18 @@ if (player.unlocks.rrow2 == true) {
                               e[i].style.display = "block"
                             }
                           }
+                          if (player.achievements[134] == 1){
+                            let e = document.getElementsByClassName("chal9");
+                            for (var i = 0; i < e.length; i++){
+                              e[i].style.display = "block"
+                            }
+                          }
+                          if (player.achievements[141] == 1){
+                            let e = document.getElementsByClassName("chal10");
+                            for (var i = 0; i < e.length; i++){
+                              e[i].style.display = "block"
+                            }
+                          }
 var e = document.getElementsByClassName("auto");
     if (player.upgrades[81] == 1){e[0].style.display = "block";}
     if (player.upgrades[82] == 1){e[1].style.display = "block";}
@@ -227,6 +268,8 @@ document.getElementById("research").style.display = "none"
 document.getElementById("researchtab").style.backgroundColor = "#171717"
 document.getElementById("shop").style.display = "none"
 document.getElementById("shoptab").style.backgroundColor = "purple"
+document.getElementById("ants").style.display = "none"
+document.getElementById("anttab").style.backgroundColor = "#171717"
 
 document.getElementById("activaterune2").style.display = "none"
 document.getElementById("activaterune3").style.display = "none"
@@ -254,7 +297,7 @@ if (currentTab == "achievements") {
     document.getElementById("statistics").style.display = "block"
     document.getElementById("achievementstab").style.backgroundColor = "white"
     document.getElementById("achievementstab").style.color = "black"
-    document.getElementById("achievementprogress").textContent = "Achivement Points: " + player.achievementPoints + "/" + totalachievementpoints + " [" + (100 * player.achievementPoints/totalachievementpoints).toPrecision(4) + "%]"
+    document.getElementById("achievementprogress").textContent = "Achievement Points: " + player.achievementPoints + "/" + totalachievementpoints + " [" + (100 * player.achievementPoints/totalachievementpoints).toPrecision(4) + "%]"
     player.tabnumber = 3;
 }
 if (currentTab == "prestige") {
@@ -298,6 +341,10 @@ if (currentTab == "researches") {
 if (currentTab == "shop") {
   document.getElementById("shop").style.display = "block"
   document.getElementById("shoptab").style.backgroundColor = "limegreen"
+}
+if (currentTab == "ants"){
+  document.getElementById("ants").style.display = "block"
+  document.getElementById("anttab").style.backgroundColor = "brown"
 }
 
 if (player.achievements[38] > 0.5) {
@@ -379,22 +426,41 @@ if (currentTab == "prestige") {
     }
 }
 if (currentTab == "runes"){
-    document.getElementById("runeshards").textContent = "You have " + format(player.runeshards,0,false) + " Offerings."
-    document.getElementById("rune1level").textContent = "Level: " + player.runelevels[0] + "/" + (500 + player.researches[78])
-    document.getElementById("rune2level").textContent = "Level: " + player.runelevels[1] + "/" + (500 + player.researches[80])
-    document.getElementById("rune3level").textContent = "Level: " + player.runelevels[2] + "/" + (500 + player.researches[79])
-    document.getElementById("rune4level").textContent = "Level: " + player.runelevels[3] + "/" + (500 + player.researches[77])
-    document.getElementById("rune5level").textContent = "Level: " + player.runelevels[4] + "/" + (500)
-    document.getElementById("rune1exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1 * Math.pow(player.runelevels[0] , 3) * (4 * player.runelevels[0] + 100)/500 * (Math.max(1, (player.runelevels[0]-500)/25)) * (Math.max(1, (player.runelevels[0]-600)/30)) * (Math.max(1, (player.runelevels[0]-700)/25)) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[0]))),2) + " EXP" 
-    document.getElementById("rune2exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (4 * Math.pow(player.runelevels[1] , 3) * (4 * player.runelevels[1] + 100)/500 * (Math.max(1, (player.runelevels[1]-500)/25)) * (Math.max(1, (player.runelevels[1]-600)/30)) * (Math.max(1, (player.runelevels[1]-700)/25)) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[1]))),2) + " EXP"
-    document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (Math.max(1, (player.runelevels[2]-500)/25)) * (Math.max(1, (player.runelevels[2]-600)/30)) * (Math.max(1, (player.runelevels[2]-700)/25))  - player.runeexp[2]))),2) + " EXP"
-    document.getElementById("rune4exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (16 * Math.pow(player.runelevels[3] , 3) * (4 * player.runelevels[3] + 100)/500 * (Math.max(1, (player.runelevels[3]-500)/25)) * (Math.max(1, (player.runelevels[3]-600)/30)) * (Math.max(1, (player.runelevels[3]-700)/25)) * (1 - 0.02 * player.challengecompletions.six) - player.runeexp[3]))),2) + " EXP"
-    document.getElementById("rune5exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1000 * Math.pow(player.runelevels[4] , 3) * (4 * player.runelevels[4] + 100)/500 * (Math.max(1, (player.runelevels[4]-500)/25)) * (Math.max(1, (player.runelevels[4]-600)/30)) * (Math.max(1, (player.runelevels[4]-700)/25)) - player.runeexp[4]))),2) + " EXP"
-    document.getElementById("runedetails").textContent = "Gain " + (25 + 3 * player.researches[22] + 2 * player.researches[23] + 3 * player.upgrades[66] + 5 * player.upgrades[61]) + "* EXP per offering sacrificed. Optimal Reset time for Offerings: " + format(600 + 0.4 * player.runelevels[4] + 6 * player.researches[85] + 120 * player.shopUpgrades.offeringTimerLevel) + " Seconds." 
+    if (runescreen == "runes"){
+    document.getElementById("runeshards").textContent = "You have " + format(player.runeshards,0,true) + " Offerings."
+  //  document.getElementById("rune1level").textContent = "Level: " + player.runelevels[0] + "/" + (500 + player.researches[78])
+    document.getElementById('rune1level').childNodes[0].textContent = "Level: " + player.runelevels[0] + "/" + (500 + player.researches[78] + player.researches[111])
+    document.getElementById("rune2level").childNodes[0].textContent = "Level: " + player.runelevels[1] + "/" + (500 + player.researches[80] + player.researches[112])
+    document.getElementById("rune3level").childNodes[0].textContent = "Level: " + player.runelevels[2] + "/" + (500 + player.researches[79] + player.researches[113])
+    document.getElementById("rune4level").childNodes[0].textContent = "Level: " + player.runelevels[3] + "/" + (500 + player.researches[77] + player.researches[114])
+    document.getElementById("rune5level").childNodes[0].textContent = "Level: " + player.runelevels[4] + "/" + (500 + player.researches[115])
+    document.getElementById("rune1exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1 * Math.pow(player.runelevels[0] , 3) * (4 * player.runelevels[0] + 100)/500 * (Math.max(1, (player.runelevels[0]-500)/25)) * (Math.max(1, (player.runelevels[0]-600)/30)) * (Math.max(1, (player.runelevels[0]-700)/25)) * (Math.max(1, Math.pow(1.03, player.runelevels[0] - 750))) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[0]))),2) + " EXP" 
+    document.getElementById("rune2exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (4 * Math.pow(player.runelevels[1] , 3) * (4 * player.runelevels[1] + 100)/500 * (Math.max(1, (player.runelevels[1]-500)/25)) * (Math.max(1, (player.runelevels[1]-600)/30)) * (Math.max(1, (player.runelevels[1]-700)/25)) * (Math.max(1, Math.pow(1.03, player.runelevels[1] - 750))) * (1 - 0.02 * player.challengecompletions.seven) - player.runeexp[1]))),2) + " EXP"
+    document.getElementById("rune3exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (9 * Math.pow(player.runelevels[2] , 3) * (4 * player.runelevels[2] + 100)/500 * (Math.max(1, (player.runelevels[2]-500)/25)) * (Math.max(1, (player.runelevels[2]-600)/30)) * (Math.max(1, (player.runelevels[2]-700)/25)) * (Math.max(1, Math.pow(1.03, player.runelevels[2] - 750)))  - player.runeexp[2]))),2) + " EXP"
+    document.getElementById("rune4exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (16 * Math.pow(player.runelevels[3] , 3) * (4 * player.runelevels[3] + 100)/500 * (Math.max(1, (player.runelevels[3]-500)/25)) * (Math.max(1, (player.runelevels[3]-600)/30)) * (Math.max(1, (player.runelevels[3]-700)/25)) * (Math.max(1, Math.pow(1.03, player.runelevels[3] - 750))) * (1 - 0.02 * player.challengecompletions.six) - player.runeexp[3]))),2) + " EXP"
+    document.getElementById("rune5exp").textContent = "+1 in " + format(Math.ceil(Math.max(0, (1000 * Math.pow(player.runelevels[4] , 3) * (4 * player.runelevels[4] + 100)/500 * (Math.max(1, (player.runelevels[4]-500)/25)) * (Math.max(1, (player.runelevels[4]-600)/30)) * (Math.max(1, (player.runelevels[4]-700)/25)) * (Math.max(1, Math.pow(1.03, player.runelevels[4] - 750))) - player.runeexp[4]))),2) + " EXP"
+    document.getElementById("runedetails").textContent = "Gain " + (25 + 3 * player.researches[22] + 2 * player.researches[23] + 3 * player.upgrades[66] + 5 * player.upgrades[61]) + "* EXP per offering sacrificed. Optimal Reset time for Offerings: " + format(600 + 0.4 * (rune5level) + 6 * player.researches[85] + 120 * player.shopUpgrades.offeringTimerLevel) + " Seconds." 
+
+    document.getElementById("bonusrune1").textContent = " [" + format(player.antUpgrades[9] + bonusant9 + rune1Talisman) + "]"
+    document.getElementById("bonusrune2").textContent = " [" + format(player.antUpgrades[9] + bonusant9 + rune2Talisman) + "]"
+    document.getElementById("bonusrune3").textContent = " [" + format(player.antUpgrades[9] + bonusant9 + rune3Talisman) + "]"
+    document.getElementById("bonusrune4").textContent = " [" + format(player.antUpgrades[9] + bonusant9 + rune4Talisman) + "]"
+    document.getElementById("bonusrune5").textContent = " [" + format(player.antUpgrades[9] + bonusant9 + rune5Talisman) + "]"
 
    
     
     document.getElementById("runerecycle").textContent = "You have " +(5 * player.achievements[80] + 5 * player.achievements[87] + 5 * player.achievements[94] + 5 * player.achievements[101] + 5 * player.achievements[108] + 5 * player.achievements[115] + 7.5 * player.achievements[122] + 7.5 * player.achievements[129] + 5 * player.upgrades[61] + Math.min(25, player.runelevels[3]/8))  + "% chance of recycling your offerings. This multiplies EXP gain by " + format(1/(1- .05 * player.achievements[80] -.05 * player.achievements[87] - 0.05 * player.achievements[94] -0.05 * player.achievements[101] -.05 * player.achievements[108] - .05 * player.achievements[115] - .075 * player.achievements[122] - .075 * player.achievements[129] - 0.05 * player.upgrades[61] - Math.min(.25, player.runelevels[3]/800)),2) + "!"
+    }
+    if (runescreen == "talismans"){
+      document.getElementById("talisman1level").textContent = "Level " + player.talismanLevels[1] + "/" + (30 * player.talismanRarity[1])
+      document.getElementById("talisman2level").textContent = "Level " + player.talismanLevels[2] + "/" + (30 * player.talismanRarity[2])
+    document.getElementById("talisman3level").textContent = "Level " + player.talismanLevels[3] + "/" + (30 * player.talismanRarity[3])
+    document.getElementById("talisman4level").textContent = "Level " + player.talismanLevels[4] + "/" + (30 * player.talismanRarity[4])
+    document.getElementById("talisman5level").textContent = "Level " + player.talismanLevels[5] + "/" + (30 * player.talismanRarity[5])
+    document.getElementById("talisman6level").textContent = "Level " + player.talismanLevels[6] + "/" + (30 * player.talismanRarity[6])
+    document.getElementById("talisman7level").textContent = "Level " + player.talismanLevels[7] + "/" + (30 * player.talismanRarity[7])
+
+    }
 }
 if (currentTab == "transcension") {
     document.getElementById("transcendshardinfo").textContent = "You have " + format(player.transcendShards,2) + " Mythos Shards, providing " + format(totalMultiplierBoost) + " Multiplier Power boosts."
@@ -451,7 +517,7 @@ if (currentTab == "reincarnation") {
 }
 
 if (currentTab == "researches") {
-    document.getElementById("researchinfo").textContent = "You have " + format(player.researchPoints,0,false) + " Obtainium"
+    document.getElementById("researchinfo").textContent = "You have " + format(player.researchPoints,0,true) + " Obtainium"
     document.getElementById("contentteaser1").textContent = "Optimal Reincarnation Time for Obtainium [Assuming e22 Upgrade bought]: " + format((3600 + 120 * player.shopUpgrades.obtainiumTimerLevel)) + " Seconds."
 }
 if (currentTab == "settings") {
@@ -463,8 +529,9 @@ if (currentTab == "settings") {
     document.getElementById("temporarystats6").textContent = "Fastest Reincarnation: " + format(1000 * player.fastestreincarnate) + "ms"
     document.getElementById("temporarystats7").textContent = "Most Offerings saved at once: " + format(player.maxofferings) 
     document.getElementById("temporarystats8").textContent = "Most Obtainium saved at once: " + format(player.maxobtainium)  
-    document.getElementById("temporarystats9").textContent = "Best Obtainium/sec: " + format(player.obtainiumpersecond)
-    document.getElementById("temporarystats10").textContent = "Summative Rune Levels: " + format(player.runelevels[0] + player.runelevels[1] + player.runelevels[2] + player.runelevels[3] + player.runelevels[4])
+    document.getElementById("temporarystats9").textContent = "Best Obtainium/sec: " + format(player.maxobtainiumpersecond,2,true)
+    document.getElementById("temporarystats10").textContent = "Summative Rune Levels: " + format(runeSum)
+    document.getElementById("temporarystats11").textContent = "Current Obtainium/sec " + format(player.obtainiumpersecond,2,true) 
 
 
     
@@ -480,21 +547,31 @@ if (currentTab == "shop") {
     document.getElementById("obtainiumtimerlevel").textContent = "Level: " + player.shopUpgrades.obtainiumTimerLevel + "/7"
     document.getElementById("offeringautolevel").textContent = "Level: " + player.shopUpgrades.offeringAutoLevel + "/7"
     document.getElementById("obtainiumautolevel").textContent = "Level: " + player.shopUpgrades.obtainiumAutoLevel + "/7"
+    document.getElementById("instantchallenge").textContent = "Not Bought"
+    document.getElementById("antspeed").textContent = "Level: " + player.shopUpgrades.antSpeedLevel + "/3"
     document.getElementById("cashgrab").textContent = "Level: " + player.shopUpgrades.cashGrabLevel + "/7"
+    document.getElementById("shoptalisman").textContent = "Not Bought"
 
     document.getElementById("offeringtimerbutton").textContent = "Upgrade for " + (shopBaseCosts.offerTimer + 25 * player.shopUpgrades.offeringTimerLevel) + " Quarks"
     document.getElementById("offeringautobutton").textContent = "Upgrade for " + (shopBaseCosts.offerAuto + 25 * player.shopUpgrades.offeringAutoLevel) + " Quarks"
     document.getElementById("obtainiumtimerbutton").textContent = "Upgrade for " + (shopBaseCosts.obtainiumTimer + 25 * player.shopUpgrades.obtainiumTimerLevel) + " Quarks"
     document.getElementById("obtainiumautobutton").textContent = "Upgrade for " + (shopBaseCosts.obtainiumAuto + 25 * player.shopUpgrades.obtainiumAutoLevel) + " Quarks"
     document.getElementById("instantchallengebutton").textContent = "Buy for " + (shopBaseCosts.instantChallenge) + " Quarks"
+    document.getElementById("antspeedbutton").textContent = "Upgrade for " + (shopBaseCosts.antSpeed + 200 * player.shopUpgrades.antSpeedLevel) + " Quarks"
     document.getElementById("cashgrabbutton").textContent = "Upgrade for " + (shopBaseCosts.cashGrab + 100 * player.shopUpgrades.cashGrabLevel) + " Quarks"
+    document.getElementById("shoptalismanbutton").textContent = "Buy for 1500 Quarks"
 
     if(player.shopUpgrades.offeringTimerLevel == 7){document.getElementById("offeringtimerbutton").textContent = "Maxed!"}
     if(player.shopUpgrades.offeringAutoLevel == 7){document.getElementById("offeringautobutton").textContent = "Maxed!"}
     if(player.shopUpgrades.obtainiumTimerLevel == 7){document.getElementById("obtainiumtimerbutton").textContent = "Maxed!"}
     if(player.shopUpgrades.obtainiumAutoLevel == 7){document.getElementById("obtainiumautobutton").textContent = "Maxed!"}
     if(player.shopUpgrades.instantChallengeBought){document.getElementById("instantchallengebutton").textContent = "Bought!"; document.getElementById("instantchallenge").textContent = "Bought!"}
+    if(player.shopUpgrades.antSpeedLevel == 3){document.getElementById("antspeedbutton").textContent = "Maxed!"}
     if(player.shopUpgrades.cashGrabLevel == 7){document.getElementById("cashgrabbutton").textContent = "Maxed!"}
+    if(player.shopUpgrades.talismanBought){document.getElementById("shoptalismanbutton").textContent = "Bought!"; document.getElementById("shoptalisman").textContent = "Bought!"}
+}
+if (currentTab == "ants"){
+  document.getElementById("crumbcount").textContent = "You have " + format(player.antPoints,2) + " Galactic Crumbs [" + format(antOneProduce,2) + "/s], providing a " + format(Decimal.pow(Decimal.max(1, player.antPoints),100000 + 900000 * (1 - Math.pow(2, -player.antUpgrades[2]/125)))) + "x Coin Multiplier."
 }
 
 }
@@ -511,8 +588,8 @@ if (player.currentChallengeRein !== ""){document.getElementById("reincarnatechal
 
 
 if (player.toggles.fifteen && player.achievements[43] > 0.5){document.getElementById("prestigebtn").style.backgroundColor = "green"}
-if (player.toggles.twentyone && player.upgrades[89] > 0.5){document.getElementById("transcendbtn").style.backgroundColor = "green"}
-if (player.toggles.twentyseven && player.researches[46] > 0.5){document.getElementById("reincarnatebtn").style.backgroundColor = "green"}
+if (player.toggles.twentyone && player.upgrades[89] > 0.5 && (player.currentChallenge == "")){document.getElementById("transcendbtn").style.backgroundColor = "green"}
+if (player.toggles.twentyseven && player.researches[46] > 0.5 && (player.currentChallenge == "" && player.currentChallengeRein == "")){document.getElementById("reincarnatebtn").style.backgroundColor = "green"}
 if (player.toggles.eight && player.upgrades[88] > 0.5){document.getElementById("acceleratorboostbtn").style.backgroundColor = "green"}
 if (player.currentChallenge ==""){document.getElementById("challengebtn").style.backgroundColor = "#171717"}
 if (player.currentChallengeRein == ""){document.getElementById("reincarnatechallengebtn").style.backgroundColor = "#171717"}
@@ -580,6 +657,7 @@ if (player.achievements[107] > 0.5){document.getElementById("buycrystalupgrade5"
 
 }
 if (currentTab == "runes") {
+if (runescreen == "runes") {
 document.getElementById("activaterune1").style.backgroundColor = "#171717"
 document.getElementById("activaterune2").style.backgroundColor = "#171717"
 document.getElementById("activaterune3").style.backgroundColor = "#171717"
@@ -593,6 +671,25 @@ if (player.runeshards > 0.5){
     document.getElementById("activaterune4").style.backgroundColor = "purple"	
     document.getElementById("activaterune5").style.backgroundColor = "purple"	
 }
+}
+if (runescreen == "talismans"){
+document.getElementById("buyShard").style.backgroundColor = "#171717"
+document.getElementById("buyCommonFragment").style.backgroundColor = "#171717"
+document.getElementById("buyUncommonFragment").style.backgroundColor = "#171717"
+document.getElementById("buyRareFragment").style.backgroundColor = "#171717"
+document.getElementById("buyEpicFragment").style.backgroundColor = "#171717"
+document.getElementById("buyLegendaryFragment").style.backgroundColor = "#171717"
+document.getElementById("buyMythicalFragment").style.backgroundColor = "#171717"
+
+if (player.researchPoints > 1e6){document.getElementById("buyShard").style.backgroundColor = "purple"}
+if (player.researchPoints > 3e6){document.getElementById("buyCommonFragment").style.backgroundColor = "purple"}
+if (player.researchPoints > 1e7 && player.runeshards > 100){document.getElementById("buyUncommonFragment").style.backgroundColor = "purple"}
+if (player.researchPoints > 1e8 && player.runeshards > 1000){document.getElementById("buyRareFragment").style.backgroundColor = "purple"}
+if (player.researchPoints > 1e9 && player.runeshards > 10000){document.getElementById("buyEpicFragment").style.backgroundColor = "purple"}
+if (player.researchPoints > 1e10 && player.runeshards > 100000){document.getElementById("buyLegendaryFragment").style.backgroundColor = "purple"}
+if (player.researchPoints > 1e11 && player.runeshards > 1e6){document.getElementById("buyMythicalFragment").style.backgroundColor = "purple"}
+}
+
 }
 if (currentTab == "transcension"){
 document.getElementById("buymythos1").style.backgroundColor = "#171717"
@@ -622,4 +719,74 @@ if (player.reincarnationPoints.greaterThanOrEqualTo(player.thirdCostParticles)){
 if (player.reincarnationPoints.greaterThanOrEqualTo(player.fourthCostParticles)){document.getElementById("buyparticles4").style.backgroundColor = "#555555"}
 if (player.reincarnationPoints.greaterThanOrEqualTo(player.fifthCostParticles)){document.getElementById("buyparticles5").style.backgroundColor = "#555555"}
 }
+
+if (currentTab == "ants"){
+document.getElementById("anttier1").style.backgroundColor = "#171717"
+document.getElementById("anttier2").style.backgroundColor = "#171717"
+document.getElementById("anttier3").style.backgroundColor = "#171717"
+document.getElementById("anttier4").style.backgroundColor = "#171717"
+document.getElementById("anttier5").style.backgroundColor = "#171717"
+document.getElementById("anttier6").style.backgroundColor = "#171717"
+document.getElementById("anttier7").style.backgroundColor = "#171717"
+document.getElementById("anttier8").style.backgroundColor = "#171717"
+
+for (var i = 1; i <= 12; i++){
+  if(player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[i] * player.antUpgrades[i]).times(antUpgradeBaseCost[i]))){
+  document.getElementById("antUpgrade" + i).style.backgroundColor = "silver"
+  }
+  else {
+  document.getElementById("antUpgrade" + i).style.backgroundColor = "#171717";
+  }
+}
+
+if(player.reincarnationPoints.greaterThanOrEqualTo(player.firstCostAnts)){document.getElementById("anttier1").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.secondCostAnts)){document.getElementById("anttier2").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.thirdCostAnts)){document.getElementById("anttier3").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.fourthCostAnts)){document.getElementById("anttier4").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.fifthCostAnts)){document.getElementById("anttier5").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.sixthCostAnts)){document.getElementById("anttier6").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.seventhCostAnts)){document.getElementById("anttier7").style.backgroundColor = "white"}
+if(player.antPoints.greaterThanOrEqualTo(player.eighthCostAnts)){document.getElementById("anttier8").style.backgroundColor = "white"}
+}
+}
+
+function updateChallengeDisplay(){
+  //Sets background colors on load/challenge initiation
+  let ordinals = [null,'one','two','three','four','five','six','seven','eight','nine','ten']
+  let el = ""
+  for (var k = 1; k <= 10; k++){
+    el = document.getElementById("challenge"+ordinals[k])
+    el.style.backgroundColor = "#171717"
+    if (player.currentChallenge == ordinals[k]){el.style.backgroundColor = "plum"}
+    if (player.currentChallengeRein == ordinals[k]){el.style.backgroundColor = "plum"}
+
+}
+  //Corrects HTML on retry challenges button
+  if(player.retrychallenges){document.getElementById("retryChallenge").textContent = "Retry Challenges: ON"}
+  else{document.getElementById("retryChallenge").textContent = "Retry Challenges: OFF"}
+}
+
+function updateAchievementBG(){
+  //When loading/importing, the game needs to correctly update achievement backgrounds.
+
+  
+  for (var i = 1; i <= 182; i++){ //Initiates by setting all to default
+    document.getElementById("ach"+i).style.backgroundColor = "black"
+  }
+  
+  var fixDisplay1 = document.getElementsByClassName('purpleach')
+  var fixDisplay2 = document.getElementsByClassName('redach')
+  
+  for (var i = 0; i < fixDisplay1.length; i++){
+    fixDisplay1[i].style.backgroundColor = "purple" //Sets the appropriate achs to purple
+  }
+  for (var i = 0; i < fixDisplay2.length; i++){
+    fixDisplay2[i].style.backgroundColor = "maroon" //Sets the appropriate achs to maroon (red)
+  }
+  
+  for (var i = 1; i < player.achievements.length; i++) {
+    if (player.achievements[i] > 0.5 && player.achievements[i] !== undefined) {
+      achievementaward(i, 0) //This sets all completed ach to green (0 in 2nd arg to prevent awarding quarks/pts again)
+    }
+  }
 }

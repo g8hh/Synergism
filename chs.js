@@ -682,7 +682,7 @@ var cnPrefix = {
     '0/5 Multipliers SUCK: +1% Multipliers/Level.': '0/5加倍器抽取:+1%加倍器/级',
     '1/5 A.Boosts SUCK: +1% Accelerator Boosts/Level.': '1/5加速器加成抽取:+1%加速器加成/级',
     '5/5 MULTIPLIERS STILL SUCK: +4% Multiplier Boosts/Level': '5/5加倍器持续抽取:+4%加倍器加成/级',
-    'Runes don\'t suck at all, but why not make them even BETTER? +1% Rune Effect/level!': '虽然符文并不能抽取,但是可以不能把它们变强吗?+1%符文有效等级/级',
+    'Runes don\'t suck at all, but why not make them even BETTER? +1% Rune Effect/level!': '虽然符文并不能抽取,但是不能把它们变强吗?+1%符文有效等级/级',
     'As lazy as this icon. A simple +1% Rune EXP for all runes!': '就像这个图标一样偷懒了,简单的+1%所有符文经验',
     'Even lazier! Another simple +1% Rune EXP for all runes!': '更多的偷懒!另一个简单的+1%所有符文经验',
     'Ants slow? Add +0.00005 to ant efficiency increase per ant purchased per level.': '蚂蚁太慢了?+0.00005蚂蚁产量每级',

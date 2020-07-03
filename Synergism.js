@@ -112,7 +112,7 @@ const player = {
 
    firstOwnedAnts: 0,
    firstGeneratedAnts: new Decimal("0"),
-   firstCostAnts: new Decimal("1e1600"),
+   firstCostAnts: new Decimal("1e800"),
    firstProduceAnts: .0001,
 
    secondOwnedAnts: 0,
@@ -412,11 +412,14 @@ const player = {
 			  offerpromo19used: false,
 			  offerpromo20used: false,
 			  offerpromo21used: false,
+			  offerpromo22used: false,
+			  offerpromo23used: false,
 
 			  loaded1009: false,
 			  loaded1009hotfix1: false,
 			  loaded10091: false,
 			  loaded1010: false,
+			  loaded10101: false,
 
 			  shopUpgrades: {
 				  offeringPotion: 1,
@@ -461,6 +464,9 @@ const player = {
 
 			  buyTalismanShardPercent: 10,
 
+			  autoAntSacrifice: false,
+			  antMax: false,
+
 			  brokenfile1: false,
 			  exporttest: "YES!",
 			  kongregatetest: "NO!"
@@ -469,7 +475,7 @@ const player = {
 Object.defineProperty(player, 'version', {
    configurable: false,
    enumerable: true,
-   value: '1.010'
+   value: '1.0101'
 });
 
 function saveSynergy(button) {
@@ -521,6 +527,8 @@ function loadSynergy() {
 	   if (data.loaded10091 === undefined){player.loaded10091 = false;}
 	   if (data.offerpromo20used === undefined){player.offerpromo20used = false;}
 	   if (data.loaded1010 === undefined){player.loaded1010 = false;}
+	   if (data.offerpromo22used === undefined){player.offerpromo22used = false;}
+	   if (data.loaded10101 === undefined){player.loaded10101 = false;}
 
 	   if (player.offerpromo6used === undefined){
 		player.offerpromo6used = false; 
@@ -648,7 +656,7 @@ function loadSynergy() {
 		player.offerpromo16used = false;
 		player.brokenfile1 = false;
 	}
-	if (player.offerpromo17used === undefined || player.researches[31] > 10){
+	if (player.offerpromo17used === undefined){
 		player.offerpromo17used = false;
 		player.offeringpersecond = 0;
 		player.obtainiumpersecond = 0;
@@ -790,9 +798,9 @@ function loadSynergy() {
 
 		player.unlocks.rrow4 = false;
 		player.researchPoints += 3e7 * player.researches[50];
-		player.researchPoints += 1e9 * player.researches[96];
-		player.researchPoints += 3e9 * player.researches[97];
-		player.researchPoints += 1.5e10 * player.researches[98];
+		player.researchPoints += 2e9 * player.researches[96];
+		player.researchPoints += 5e9 * player.researches[97];
+		player.researchPoints += 3e10 * player.researches[98];
 		player.researches[50] = 0;
 		player.researches[96] = 0;
 		player.researches[97] = 0;
@@ -825,6 +833,30 @@ function loadSynergy() {
 		player.obtainiumpersecond = 0;
 		player.maxobtainiumpersecond = 0;
 		
+	}
+
+	if(data.offerpromo22used === undefined || data.offerpromo22used === false){
+		player.offerpromo22used = false;
+	}
+
+	if(data.loaded10101 === undefined || data.loaded10101 === false){
+		player.offerpromo23used = false;
+		player.loaded10101 = true;
+
+		let refundThese = [0,31,32,61,62,63,64,76,77,78,79,80,
+							81, 98, 104, 105, 106, 107, 108,
+							109, 110, 111, 112, 113, 114, 115, 116,
+							117, 118, 119, 120, 121, 122, 123, 125];
+		let refundReward = [0, 2, 20, 5, 10, 80, 5e3, 1e7, 1e7, 2e7, 3e7, 4e7,
+							2e8, 3e10, 1e11, 1e12, 2e11, 1e12, 2e10,
+							2e11, 1e12, 2e13, 5e13, 1e14, 2e14, 5e14, 1e15,
+							2e15, 1e16, 1e15, 1e16, 1e14, 1e15, 1e15, 1e20];
+		for (var i = 1; i < refundThese.length; i++){
+			player.researchPoints += player.researches[refundThese[i]] * refundReward[i]
+			player.researches[refundThese[i]] = 0; 
+		}
+		player.autoAntSacrifice = false;
+		player.antMax = false;
 	}
 
 
@@ -949,6 +981,11 @@ if (!player.autoResearchToggle){document.getElementById("toggleautoresearch").te
 if (player.autoSacrificeToggle){document.getElementById("toggleautosacrifice").textContent = "Automatic: ON"}
 if (!player.autoSacrificeToggle){document.getElementById("toggleautosacrifice").textContent = "Automatic: OFF"}
 
+for(var i = 1; i<=2; i++){
+	toggleAntMaxBuy()
+	toggleAntAutoSacrifice()
+}
+
 if (player.autoResearchToggle && player.autoResearch > 0.5){document.getElementById("res" + player.autoResearch).style.backgroundColor = "orange"};
 if (player.autoSacrificeToggle && player.autoSacrifice > 0.5){document.getElementById("rune" + player.autoSacrifice).style.backgroundColor = "orange"};
 
@@ -977,71 +1014,128 @@ updateAchievementBG();
  })();
 
 function format(input,accuracy,long){
+	//This function displays the numbers such as 1,234 or 1.00e1234 or 1.00e1.234M.
+
+	//Input is the number to be formatted (string or value)
+	//Accuracy is how many decimal points that are to be displayed (Values <10 if !long, <1000 if long)
+	// Accuracy only works up to 305 (308 - 3), however it only worked up to ~14 due to rounding errors regardless
+	//Long dictates whether or not a given number displays as scientific at 1,000,000. This auto defaults to short if input >= 1e13
 	accuracy = accuracy || 0;
-	long = long || false
-	if (input instanceof Decimal) {
-		var power = input.e
-		var matissa = input.mantissa
+	long = long || false;
+	let power;
+	let mantissa;
+	// Gets power and mantissa if input is of type decimal
+	if (input instanceof Decimal)
+	{
+		power = input.e;
+		mantissa = input.mantissa;
 	}
-	else if (input != 0) {
-		var matissa = input / Math.pow(10, Math.floor(Math.log10(Math.abs(input))));
-		var power = Math.floor(Math.log10(Math.abs(input)));
+	// Gets power and mantissa if input is of type number and isnt 0
+	else if (typeof input === "number" && input !== 0)
+	{
+		power = Math.floor(Math.log10(Math.abs(input)));
+		mantissa = input / Math.pow(10, power);
 	}
-	if (input == 0 || matissa == 0) {
-		return (input)
-	}
-	//if (matissa < 0) {matissa *= -1}
-
-	if (!long || power > 12){
-	if(power > 5.5) {
-	 matissa = matissa.toFixed(2)
-	 if (matissa >= 10) {
-		 matissa /= 10;
-		 power++;
-	 }
-	 	if (power < -12){return ("0")}
-		if (power > 100000 && power < 1000000) return (matissa + "e" + power.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-		if (power >= 1000000 && power < 10000000) {power /= 1000; power = Math.floor(power); power /= 1000; return (matissa + "e" + power + "M".toString())}
-		if (power >= 10000000 && power < 100000000) {power /= 10000; power = Math.floor(power); power /= 100; return (matissa + "e" + power + "M".toString())}
-		if (power >= 100000000 && power < 1000000000) {power /= 100000; power = Math.floor(power); power /= 10; return (matissa + "e" + power + "M".toString())}
-		if (power >= 1000000000 && power < 10000000000) {power /= 1000000; power = Math.floor(power); power /= 1000; return (matissa + "e" + power + "B".toString())}
-		if (power >= 1e10 && power < 1e11) {power /= 1e7; power = Math.floor(power); power /= 100; return (matissa + "e" + power + "B".toString())}
-		if (power >= 1e11 && power < 1e12) {power /= 1e8; power = Math.floor(power); power /= 10; return (matissa + "e" + power + "B".toString())}
-		if (power >= 1e12 && power < 1e13) {power /= 1e9; power = Math.floor(power); power /= 1000; return (matissa + "e" + power + "T".toString())}
-		if (power >= 1e13 && power < 1e14) {power /= 1e10; power = Math.floor(power); power /= 100; return (matissa + "e" + power + "T".toString())}
-		if (power >= 1e14 && power < 1e15) {power /= 1e11; power = Math.floor(power); power /= 10; return (matissa + "e" + power + "T".toString())}
-		if (power >= 1e15 && power < 1e16) {power /= 1e12; power = Math.floor(power); power /= 1000; return (matissa + "e" + power + "Qa".toString())}
-
-
-	return (matissa + "e" + power);	 
-	}
-	if (power < 5.5 && power >= 1) {
-		var n = matissa * Math.pow(10, power);
-		n = n.toFixed(0);
-		return(n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-	}
-	if (power >= -11  && power <= 0) {
-		var n = matissa * Math.pow(10,power);
-		n = n.toFixed(accuracy)
-		return(n.toString())
-	}
-	if (power < (-308)){
-		return(0)
-	}
-	else {
-		var n = 0
-		return(n.toString())
-	}
+	// If it isn't one of those two it isn't formattable, return 0
+	else
+	{
+		return "0";
 	}
 
-	if(long && power <= 12){
-		let decimalSpots = accuracy
-		var n = matissa * Math.pow(10, power);
-		if(n >= 1000){decimalSpots = 0;}
-		n = n.toFixed(decimalSpots);
-		return(n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	// This prevents numbers from jittering between two different powers by rounding errors
+	if (mantissa > 9.999)
+	{
+		mantissa = 1;
+		++power;
+	}
+	if (mantissa < 1 && mantissa > 0.999)
+	{
+		mantissa = 1;
+	}
+
+	// If the power is less than 12 it's effectively 0
+	if (power < -12)
+	{
+		return "0";
+	}
+	// If the power is less than 6 or format long and less than 13 use standard formatting (123,456,789)
+	else if (power < 6 || (long && power < 13))
+	{
+		// Gets the standard representation of the number, safe as power is guaranteed to be > -12 and < 13
+		let standard = mantissa * Math.pow(10, power);
+		// If the power is less than 1 or format long and less than 3 apply toFixed(accuracy) to get decimal places
+		if ((power < 1 || (long && power < 3)) && accuracy > 0)
+		{
+			standard = standard.toFixed(accuracy);
 		}
-
+		// If it doesn't fit those criteria drop the decimal places
+		else
+		{
+			standard = Math.floor(standard);
+		}
+		// Turn the number to string
+		standard = standard.toString();
+		// Split it on the decimal place
+		let split = standard.split('.');
+		// Get the front half of the number (pre-decimal point)
+		let front = split[0];
+		// Get the back half of the number (post-decimal point)
+		let back = split[1];
+		// Apply a number group 3 comma regex to the front
+		front = front.replace(/(\d)(?=(\d{3})+$)/g, "$1,");
+		// if the back is undefined that means there are no decimals to display, return just the front
+		if (back === undefined)
+		{
+			return front;
+		}
+		// Else return the front.back
+		else
+		{
+			return front + "." + back;
+		}
+	}
+	// If the power is less than 1e6 then apply standard scientific notation
+	else if (power < 1e6)
+	{
+		// Makes mantissa be to 2 decimal places 
+		let mantissaLook = mantissa.toFixed(2);
+		mantissaLook = mantissaLook.toString();
+		// Makes the power group 3 with commas
+		let powerLook = power.toString();
+		powerLook = powerLook.replace(/(\d)(?=(\d{3})+$)/g, "$1,");
+		// returns format (1.23e456,789)
+		return mantissaLook + "e" + powerLook;
+	}
+	// if the power is greater than 1e6 apply notation scientific notation
+	else if (power >= 1e6)
+	{
+		// Makes mantissa be to 2 decimal places
+		let mantissaLook = mantissa.toFixed(2);
+		mantissaLook = mantissaLook.toString();
+		// Drops the power down to 4 digits total but never greater than 1000 in increments that equate to notations, (1234000 -> 1.234) ( 12340000 -> 12.34) (123400000 -> 123.4) (1234000000 -> 1.234) 
+		let powerDigits = Math.ceil(Math.log10(power));
+		let powerFront = ((powerDigits - 1) % 3) + 1;
+		let powerLook = power / Math.pow(10, powerDigits - powerFront );
+		if (powerLook === 1000)
+		{
+    	powerLook = 1;
+    	powerFront = 1;
+		}
+		powerLook = powerLook.toFixed(4 - powerFront);
+		powerLook = powerLook.toString();
+		// Return relevant notations alongside the "look" power based on what the power actually is
+		if (power < 1e9) { return mantissaLook + "e" + powerLook + "M"; }
+		if (power < 1e12) { return mantissaLook + "e" + powerLook + "B"; }
+		if (power < 1e15) { return mantissaLook + "e" + powerLook + "T"; }
+		if (power < 1e18) { return mantissaLook + "e" + powerLook + "Qa"; }
+		// If it doesn't fit a notation then default to mantissa e power
+		return mantissa + "e" + power;
+	}
+	// Failsafe
+	else
+	{
+		return "undefined";
+	}
 }
 // Update calculations for Accelerator/Multiplier as well as just Production modifiers in general [Lines 600-897]
 
@@ -1134,8 +1228,7 @@ function updateAllTick() {
 		acceleratorPower += 0.55
 	}
 	if (player.currentChallengeRein == "ten"){
-		acceleratorPower *= 0.001;
-		acceleratorPower += 0.999
+		acceleratorPower = 1;
 	}
 	if (player.currentChallenge !== "two" && player.currentChallengeRein !== "seven" && player.achievements[3] > 0.5) {acceleratorPower += 0.0005}
 	if (player.currentChallenge !== "two" && player.currentChallengeRein !== "seven" && player.achievements[10] > 0.5) {acceleratorPower += 0.001}
@@ -1155,7 +1248,9 @@ function updateAllTick() {
 		acceleratorEffect = Decimal.pow(acceleratorPower, totalAccelerator + totalMultiplier);
 	}
 		acceleratorEffectDisplay = acceleratorPower * 100 - 100
-
+	if (player.currentChallengeRein == "ten"){
+		acceleratorEffect = 1;
+	}
 	generatorPower = new Decimal(1);
 	if (player.upgrades[11] > 0.5  && player.currentChallengeRein !== "seven") {
 		generatorPower = Decimal.pow(1.02, totalAccelerator)
@@ -1667,7 +1762,6 @@ function resetCheck(i,manual) {
 			if (q == "four") {x = 69}
 			if (q == "five") {x = 70} 
 		if (player.currentChallenge !== "") {
-			console.log(player.coinsThisTranscension.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirements[q] * Math.pow(1 + player.challengecompletions[q], 2) * Math.pow(1.5, Math.max(0, player.challengecompletions[q] - 75)))) && player.challengecompletions[q] < (25 + player.researches[x] + 925 * player.researches[105]))
 
 			if (player.coinsThisTranscension.greaterThanOrEqualTo(Decimal.pow(10, challengebaserequirements[q] * Math.pow(1 + player.challengecompletions[q], 2) * Math.pow(1.5, Math.max(0, player.challengecompletions[q] - 75)))) && player.challengecompletions[q] < (25 + player.researches[x] + 925 * player.researches[105])) {
 			player.challengecompletions[q] += 1;
@@ -1704,8 +1798,14 @@ function resetCheck(i,manual) {
 	}
 	if (i == "reincarnationchallenge"){
 		if (player.currentChallengeRein !== ""){
+		var y = ""
 		var q = player.currentChallengeRein;
-		var s = player.currentChallenge
+			if (q == "six"){y = 6}
+			if (q == "seven"){y = 7}
+			if (q == "eight"){y = 8}
+			if (q == "nine"){y = 9}
+			if (q == "ten"){y = 10}
+			var s = player.currentChallenge
 		if (player.currentChallenge !== "") {
 			player.currentChallenge = ""
 			}
@@ -1719,6 +1819,7 @@ function resetCheck(i,manual) {
 			player.challengecompletions[q] += 1
 		}
 		}
+		challengeDisplay(y,true)
 		reset(3);
 		challengeachievementcheck(q);
 		player.reincarnationCount -= 1;
@@ -1728,7 +1829,6 @@ function resetCheck(i,manual) {
 		updateChallengeDisplay();
 		calculateRuneLevels();
 		calculateAnts();
-		document.getElementById("currentchallenge").textContent = "Current Challenge: None"
 		}
 	}	
 	}
@@ -1779,7 +1879,6 @@ function resetConfirmation(i) {
 // Functions which update the game each, roughly each tick. [Lines 1330 - 1766]
 
 function updateAll() {
-
 		uFourteenMulti = new Decimal(1);
 		uFifteenMulti = new Decimal(1);
 
@@ -1939,28 +2038,56 @@ function updateAll() {
 		effectiveLevelMult = (1 + player.researches[4]/10) * (1 + player.researches[21]/800) * (1 + player.researches[90]/100)
 		optimalOfferingTimer = 600 + 6 * player.researches[85] + 0.4 * rune5level + 120 * player.shopUpgrades.offeringTimerLevel
 		optimalObtainiumTimer = 3600 + 120 * player.shopUpgrades.obtainiumTimerLevel
-		if (player.achievements[176] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[1] * player.antUpgrades[1]).times(antUpgradeBaseCost[1]).times(2))){buyAntUpgrade(1,true)}
-		if (player.achievements[176] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[2] * player.antUpgrades[2]).times(antUpgradeBaseCost[2]).times(2))){buyAntUpgrade(2,true)}
-		if (player.achievements[177] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[3] * player.antUpgrades[3]).times(antUpgradeBaseCost[3]).times(2))){buyAntUpgrade(3,true)}
-		if (player.achievements[178] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[4] * player.antUpgrades[4]).times(antUpgradeBaseCost[4]).times(2))){buyAntUpgrade(4,true)}
-		if (player.achievements[178] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[5] * player.antUpgrades[5]).times(antUpgradeBaseCost[5]).times(2))){buyAntUpgrade(5,true)}
-		if (player.achievements[179] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[6] * player.antUpgrades[6]).times(antUpgradeBaseCost[6]).times(2))){buyAntUpgrade(6,true)}
-		if (player.achievements[180] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[7] * player.antUpgrades[7]).times(antUpgradeBaseCost[7]).times(2))){buyAntUpgrade(7,true)}
-		if (player.achievements[180] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[8] * player.antUpgrades[8]).times(antUpgradeBaseCost[8]).times(2))){buyAntUpgrade(8,true)}
-		if (player.achievements[181] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[9] * player.antUpgrades[9]).times(antUpgradeBaseCost[9]).times(2))){buyAntUpgrade(9,true)}
-		if (player.achievements[182] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[10] * player.antUpgrades[10]).times(antUpgradeBaseCost[10]).times(2))){buyAntUpgrade(10,true)}
-		if (player.achievements[182] && player.antPoints.greaterThanOrEqualTo(Decimal.pow(10, antUpgradeCostIncreases[11] * player.antUpgrades[11]).times(antUpgradeBaseCost[11]).times(2))){buyAntUpgrade(11,true)}
+		if (player.achievements[176] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[1], player.antUpgrades[1]).times(antUpgradeBaseCost[1]).times(2))){buyAntUpgrade('100',true,1)}
+		if (player.achievements[176] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[2], player.antUpgrades[2]).times(antUpgradeBaseCost[2]).times(2))){buyAntUpgrade('100',true,2)}
+		if (player.achievements[177] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[3], player.antUpgrades[3]).times(antUpgradeBaseCost[3]).times(2))){buyAntUpgrade('1000',true,3)}
+		if (player.achievements[178] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[4], player.antUpgrades[4]).times(antUpgradeBaseCost[4]).times(2))){buyAntUpgrade('1000',true,4)}
+		if (player.achievements[178] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[5], player.antUpgrades[5]).times(antUpgradeBaseCost[5]).times(2))){buyAntUpgrade('1e5',true,5)}
+		if (player.achievements[179] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[6], player.antUpgrades[6]).times(antUpgradeBaseCost[6]).times(2))){buyAntUpgrade('1e6',true,6)}
+		if (player.achievements[180] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[7], player.antUpgrades[7]).times(antUpgradeBaseCost[7]).times(2))){buyAntUpgrade('1e8',true,7)}
+		if (player.achievements[180] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[8], player.antUpgrades[8]).times(antUpgradeBaseCost[8]).times(2))){buyAntUpgrade('1e11',true,8)}
+		if (player.achievements[181] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[9], player.antUpgrades[9]).times(antUpgradeBaseCost[9]).times(2))){buyAntUpgrade('1e15',true,9)}
+		if (player.achievements[182] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[10], player.antUpgrades[10]).times(antUpgradeBaseCost[10]).times(2))){buyAntUpgrade('1e20',true,10)}
+		if (player.achievements[182] && player.antPoints.greaterThanOrEqualTo(Decimal.pow( antUpgradeCostIncreases[11], player.antUpgrades[11]).times(antUpgradeBaseCost[11]).times(2))){buyAntUpgrade('1e40',true,11)}
+	
+		if (player.achievements[173] == 1 && player.reincarnationPoints.greaterThanOrEqualTo(player.firstCostAnts)){buyAntProducers('first','Ants','1e800',1);}
+		if (player.achievements[176] == 1 && player.antPoints.greaterThanOrEqualTo(player.secondCostAnts.times(2))){buyAntProducers('second','Ants','3',2);}
+		if (player.achievements[177] == 1 && player.antPoints.greaterThanOrEqualTo(player.thirdCostAnts.times(2))){buyAntProducers('third','Ants','100',3);}
+		if (player.achievements[178] == 1 && player.antPoints.greaterThanOrEqualTo(player.fourthCostAnts.times(2))){buyAntProducers('fourth','Ants','10000',4);}
+		if (player.achievements[179] == 1 && player.antPoints.greaterThanOrEqualTo(player.fifthCostAnts.times(2))){buyAntProducers('fifth','Ants','1e12',5);}
+		if (player.achievements[180] == 1 && player.antPoints.greaterThanOrEqualTo(player.sixthCostAnts.times(2))){buyAntProducers('sixth','Ants','1e36',6);}
+		if (player.achievements[181] == 1 && player.antPoints.greaterThanOrEqualTo(player.seventhCostAnts.times(2))){buyAntProducers('seventh','Ants','1e100',7);}
+		if (player.achievements[182] == 1 && player.antPoints.greaterThanOrEqualTo(player.eighthCostAnts.times(2))){buyAntProducers('eighth','Ants','1e300',8);}
 
-		if (player.achievements[173] == 1 && player.reincarnationPoints.greaterThanOrEqualTo(player.firstCostAnts)){buyAnts(1);}
-		if (player.achievements[176] == 1 && player.antPoints.greaterThanOrEqualTo(player.secondCostAnts.times(2))){buyAnts(2);}
-		if (player.achievements[177] == 1 && player.antPoints.greaterThanOrEqualTo(player.thirdCostAnts.times(2))){buyAnts(3);}
-		if (player.achievements[178] == 1 && player.antPoints.greaterThanOrEqualTo(player.fourthCostAnts.times(2))){buyAnts(4);}
-		if (player.achievements[179] == 1 && player.antPoints.greaterThanOrEqualTo(player.fifthCostAnts.times(2))){buyAnts(5);}
-		if (player.achievements[180] == 1 && player.antPoints.greaterThanOrEqualTo(player.sixthCostAnts.times(2))){buyAnts(6);}
-		if (player.achievements[181] == 1 && player.antPoints.greaterThanOrEqualTo(player.seventhCostAnts.times(2))){buyAnts(7);}
-		if (player.achievements[182] == 1 && player.antPoints.greaterThanOrEqualTo(player.eighthCostAnts.times(2))){buyAnts(8);}
+		if (player.antSacrificeTimer >= 900 && player.researches[124] == 1 && player.autoAntSacrifice && player.antPoints.greaterThanOrEqualTo("1e40")){sacrificeAnts(true)}
 
+	let reductionValue = getReductionValue();
+	if (reductionValue !== prevReductionValue)
+	{
+		prevReductionValue = reductionValue;
+		let resources = ["Coin", "Diamonds", "Mythos"];
+		let scalings = [
+			function(value) {return value;},
+			function (value) {return value * (value + 1) / 2;},
+			function (value) {return value * (value + 1) / 2;},
+		];
+		let originalCosts = [
+			[100, 2e3, 4e4, 8e5, 1.6e7],
+			[1e2, 1e5, 1e15, 1e40, 1e100],
+			[1, 1e2, 1e4, 1e8, 1e16]
+		];
+
+		for (let res = 0; res < resources.length; ++res)
+		{
+			let resource = resources[res];
+			for (let ord = 0; ord < 5; ++ord)
+			{
+				let num = ordinals[ord];
+				player[num + "Cost" + resource] = getCost(originalCosts[res][ord], player[num + "Owned" + resource] + 1, resource, scalings[res](ord + 1), reductionValue);
+			}
+		}
 	}
+}
 
 // Functions which (try) to successfully load the game
 
@@ -1988,13 +2115,13 @@ function tick() {
 	if (!timeWarp){
 	var now = Date.now();
 	var dt = Math.max(0, Math.min(36000, (now - lastUpdate)/1000 * divineBlessing1));
-	dt *= (1 + player.researches[121]/50)
+	dt *= (1 + player.researches[121]/200)
 	lastUpdate = now;
 
 	player.quarkstimer += dt/(divineBlessing1 * (1 + player.researches[121]/50))
 	if(player.quarkstimer >= 90000){player.quarkstimer = 90000}
-	if(player.researches[61] > 0.5){player.obtainiumtimer += dt;}
-
+	if(player.researches[61] > 0){player.obtainiumtimer += dt;}
+	if(player.researches[61] > 0){document.getElementById("automaticobtainium").textContent = "Thanks to researches you automatically gain " + format(0.05 * (player.researches[61] + player.researches[62]) * player.maxobtainiumpersecond * divineBlessing1,3,true) + " Obtainium per second."}
 	document.getElementById("quarktimerdisplay").textContent = format((3600 - (player.quarkstimer % 3600.00001)),2) + "s until +" +(1 + player.researches[99] + player.researches[100] + talisman7Quarks + player.researches[125]) + " export Quark"
 	document.getElementById("quarktimeramount").textContent = "Quarks on export: " + (Math.floor(player.quarkstimer / 3600) * (1 + player.researches[99] + player.researches[100] + talisman7Quarks + player.researches[125])) + " [Max " + format((25 * (1 + player.researches[99] + player.researches[100] + talisman7Quarks + player.researches[125]))) +"]"
 
@@ -2002,23 +2129,9 @@ function tick() {
 	player.sacrificeTimer += dt
 	if (player.sacrificeTimer >= 10){
 		let rune = player.autoSacrifice;
-		redeemshards(rune,true);
+		redeemShards(rune,true);
 		player.sacrificeTimer -= 10;
 	}
-	}
-
-
-	if (player.researches[61] > 0.5) {
-		var u = 1;
-		var v = 0;
-		  if(player.upgrades[69] > 0.5){u = Math.min(3,Decimal.pow(Decimal.log(reincarnationPointGain.add(10), 10), 0.5))};
-		  u *= (1 + player.researches[76]/100);
-		  if(player.obtainiumtimer >= (60 - player.researches[62] - player.researches[63])) {
-		  player.researchPoints += Math.floor((1 + player.researches[64]) * u) * 100/100 * Math.floor((player.obtainiumtimer / (60 - player.researches[62] - player.researches[63])))
-		  v = player.obtainiumtimer % (60 - player.researches[62] - player.researches[63])
-		  player.obtainiumtimer = v;		
-		}
-		document.getElementById("automaticobtainium").textContent = "Thanks to research, you will automatically gain " + format(Math.floor((1 + player.researches[64]) * u)) + " obtainium in " + format((60 - player.researches[62] - player.researches[63] - player.obtainiumtimer),1) + " seconds." 
 	}
 
 	if (player.achievements[173] == 1){
@@ -2027,8 +2140,8 @@ function tick() {
 		showSacrifice();
 	}
 	calculateObtainium();
-	if (player.researches[116] == 1){
-	player.researchPoints += (player.obtainiumpersecond * dt) * (0.1 + 0.02 * player.researches[117] + 0.02 * player.researches[118])
+	if (player.researches[61] == 1){
+	player.researchPoints += (player.maxobtainiumpersecond * dt) * (0.05 + 0.05 * player.researches[62])
 	}
 	if (dt > 5) {
 		while(dt > 5){
@@ -2080,11 +2193,11 @@ document['addEventListener' in document ? 'addEventListener' : 'attachEvent']('k
 	var type = ""
 	var pos = ""
 	var num = 0
-	if (event.key === "1") {pos = "first"; num += 1; if (currentTab == "challenges") {toggleChallenges('one')}; if (currentTab == "runes"){redeemshards(1)}}
-	if (event.key === "2") {pos = "second"; num += 2; if (currentTab == "challenges") {toggleChallenges('two')}; if (currentTab == "runes"){redeemshards(2)}}
-	if (event.key === "3") {pos = "third"; num += 3; if (currentTab == "challenges") {toggleChallenges('three')}; if (currentTab == "runes"){redeemshards(3)}}
-	if (event.key === "4") {pos = "fourth"; num += 4; if (currentTab == "challenges") {toggleChallenges('four')}; if (currentTab == "runes"){redeemshards(4)}}
-	if (event.key === "5") {pos = "fifth"; num += 5; if (currentTab == "challenges") {toggleChallenges('five')}; if(currentTab == "runes"){redeemshards(5)}}
+	if (event.key === "1") {pos = "first"; num += 1; if (currentTab == "challenges") {toggleChallenges('one')}; if (currentTab == "runes"){redeemShards(1)}}
+	if (event.key === "2") {pos = "second"; num += 2; if (currentTab == "challenges") {toggleChallenges('two')}; if (currentTab == "runes"){redeemShards(2)}}
+	if (event.key === "3") {pos = "third"; num += 3; if (currentTab == "challenges") {toggleChallenges('three')}; if (currentTab == "runes"){redeemShards(3)}}
+	if (event.key === "4") {pos = "fourth"; num += 4; if (currentTab == "challenges") {toggleChallenges('four')}; if (currentTab == "runes"){redeemShards(4)}}
+	if (event.key === "5") {pos = "fifth"; num += 5; if (currentTab == "challenges") {toggleChallenges('five')}; if(currentTab == "runes"){redeemShards(5)}}
 	if (event.key === "6") {buyCrystalUpgrades(1)}
 	if (event.key === "7") {buyCrystalUpgrades(2)}
 	if (event.key === "8") {buyCrystalUpgrades(3)}
@@ -2114,8 +2227,6 @@ document['addEventListener' in document ? 'addEventListener' : 'attachEvent']('k
 		event.preventDefault();
 		keyboardtabchange(1);
 	}
-	console.log(event.key)
-
 });
 
 window['addEventListener' in window ? 'addEventListener' : 'attachEvent']('load', function() {

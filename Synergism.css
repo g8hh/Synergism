@@ -15,7 +15,7 @@ body {background-color: #111111 ;
 }
 
 body {
-	color: black;
+	color: white;
 	margin: 0;
 	box-sizing: border-box;
 }
@@ -44,7 +44,7 @@ input, button, select, textarea {
 	padding: 0.05em;
 	margin: 0 0 0.0em 0;
 	box-sizing: border-box;
-	border: 0px solid #ccc;
+	border: 0 solid #ccc;
 }
 
 input:disabled {
@@ -131,7 +131,7 @@ a {color: white;}
 	top: 20px;
 	left: 11%;
 	border-collapse: collapse;
-	padding: 0px;
+	padding: 0;
 }
 
 #resetrow {
@@ -144,7 +144,8 @@ a {color: white;}
 
 #resettable {
 	position: absolute;
-	font-size: 0px;
+	font-size: 0;
+	margin-left: -50px;
 }
 #resetrequirements {
 	position: absolute;
@@ -159,11 +160,12 @@ a {color: white;}
 	width: 500px;
 	text-align: center;
 	font-size: 15px;
+	font-variant-numeric: tabular-nums;
 }
 #resetrewards {
 	position: absolute;
-	top: -8.6px;
-	left: 250px;
+	top: -10px;
+	left: 240px;
 }
 
 #tabrow {
@@ -203,9 +205,9 @@ a {color: white;}
 
 	text-align: center;
 	width: 100px;
-	left: 88%;
+	left: 80%;
 	margin-left: -50px;
-	
+
 
 	border: 1px solid white;
 
@@ -225,7 +227,8 @@ a {color: white;}
 
 }
 
-#prestigetab{
+
+#runestab{
 	position:absolute;
 
 	text-align: center;
@@ -234,30 +237,6 @@ a {color: white;}
 	margin-left: -50px;
 
 	border: 1px solid cyan
-
-}
-
-#runestab{
-	position:absolute;
-
-	text-align: center;
-	width: 100px;
-	left: 40%;
-	margin-left: -50px;
-
-	border: 1px solid cyan
-
-}
-
-#transcensiontab {
-	position:absolute;
-
-	text-align: center;
-	width: 100px;
-	border: 1px solid plum;
-	left: 48%;
-	margin-left: -50px;
-
 }
 
 #challengetab {
@@ -266,20 +245,9 @@ a {color: white;}
 	text-align: center;
 	width: 100px;
 	border: 1px solid plum;
-	left: 56%;
+	left: 40%;
 	margin-left: -50px;
 
-
-}
-
-#reincarnationtab {
-	position:absolute;
-
-	text-align: center;
-	width: 100px;
-	border: 1px solid green;
-	left: 64%;
-	margin-left: -50px;
 
 }
 
@@ -289,7 +257,7 @@ a {color: white;}
 	text-align: center;
 	width: 100px;
 	border: 1px solid green;
-	left: 72%;
+	left: 48%;
 	margin-left: -50px;
 
 }
@@ -300,7 +268,7 @@ a {color: white;}
 	text-align: center;
 	width: 100px;
 	border: 1px solid white;
-	left: 96%;
+	left: 88%;
 	margin-left: -50px;
 }
 
@@ -309,23 +277,74 @@ a {color: white;}
 	text-align: center;
 	width: 100px;
 	border: 1px solid maroon;
-	left: 80%;
+	left: 56%;
 	margin-left: -50px;
 
 }
+
+#cubetab{
+	position: absolute;
+	text-align: center;
+	width: 100px;
+	border: 1px solid orange;
+	left: 64%;
+	margin-left: -50px;
+}
+
+#traitstab{
+	position: absolute;
+	text-align: center;
+	width: 100px;
+	border: 1px solid orange;
+	left: 72%;
+	margin-left: -50px;
+}
+
+.buildingTabs {
+	height: 30px;
+	width: 150px;
+	text-align: center;
+}
+
+
 
 #buildingrow1 {
 	position:absolute;
 
 	position: relative;
-	padding: 0px;
+	padding: 0;
 	border: 1px solid gold;
 	top: 118px;
 }
+#switchToCoinBuilding{
+	position: absolute;
+	top: 178px;
+	left: 8.75%;
+}
+#switchToDiamondBuilding{
+	position: absolute;
+	top: 178px;
+	left: 20.75%;
+}
+#switchToMythosBuilding{
+	position: absolute;
+	top: 178px;
+	left: 32.75%;
+}
+#switchToParticleBuilding{
+	position: absolute;
+	top: 178px;
+	left: 44.75%;
+}
+#switchToTesseractBuilding{	
+	position: absolute;	
+	top: 178px;	
+	left: 56.75%;	
+}
 #buyamountcoin {
 	position: absolute;
-	padding: 0px;
-	font-size: 0px;
+	padding: 0;
+	font-size: 0;
 	left: 80%;
 	top: 194.5px;
 }
@@ -343,7 +362,7 @@ a {color: white;}
 
 	position: absolute;
 	left: 10%;
-	top: 28px;
+	top: 58px;
 	margin-left: -18px;
 
 }
@@ -351,28 +370,28 @@ a {color: white;}
 #coin2 {
 	position: absolute;
 	left: 10%;
-	top: 83px;
+	top: 93px;
 	margin-left: -18px;
 }
 
 #coin3 {
 	position: absolute;
 	left: 10%;
-	top: 138px;
+	top: 128px;
 	margin-left: -18px;
 }
 
 #coin4 {
 	position: absolute;
 	left: 10%;
-	top: 193px;
+	top: 163px;
 	margin-left: -18px;
 }
 
 #coin5 {
 	position: absolute;
 	left: 10%;
-	top: 248px;
+	top: 198px;
 	margin-left: -18px;
 }
 
@@ -386,73 +405,73 @@ a {color: white;}
 #multiplier {
 	position: absolute;
 	left: 10%;
-	top: 358px;
+	top: 338px;
 	margin-left: -18px;
 }
 
 #acceleratorboost {
 	position: absolute;
 	left: 10%;
-	top: 413px;
+	top: 373px;
 	margin-left: -18px;
 }
 
 #buildingtext {
 	position: relative;
 	top: 118px;
-	padding: 0px;
+	padding: 0;
 }
 
 #buildtext1 {
 	position: absolute;
-	top: 15px;
+	top: 45px;
 	left: 13%;
 }
 
 #buildtext2 {
 	position: absolute;
-	top: 15px;
-	left: 52.5%
+	top: 45px;
+	left: 56.5%
 }
 #buildtext3 {
 	position: absolute;
-	top: 70px;
+	top: 80px;
 	left: 13%;
 }
 #buildtext4 {
 	position: absolute;
-	top: 70px;
-	left: 52.5%
+	top: 80px;
+	left: 56.5%
 }
 #buildtext5 {
 	position: absolute;
-	top: 125px;
+	top: 115px;
 	left: 13%;
 }
 #buildtext6 {
 	position: absolute;
-	top: 125px;
-	left: 52.5%
+	top: 115px;
+	left: 56.5%
 }
 #buildtext7 {
 	position: absolute;
-	top: 180px;
+	top: 150px;
 	left: 13%;
 }
 #buildtext8 {
 	position: absolute;
-	top: 180px;
-	left: 52.5%
+	top: 150px;
+	left: 56.5%
 }
 #buildtext9 {
 	position: absolute;
-	top: 235px;
+	top: 185px;
 	left: 13%;
 }
 #buildtext10 {
 	position: absolute;
-	top: 235px;
-	left: 52.5%
+	top: 185px;
+	left: 56.5%
 }
 #buildtext11 {
 	position: absolute;
@@ -462,35 +481,35 @@ a {color: white;}
 #buildtext12 {
 	position: absolute;
 	top: 290px;
-	left: 52.5%
+	left: 56.5%
 }
 #buildtext13 {
 	position: absolute;
-	top: 345px;
+	top: 325px;
 	left: 13%;
 }
 #buildtext14 {
 	position: absolute;
-	top: 345px;
-	left: 52.5%
+	top: 325px;
+	left: 56.5%
 }
 #buildtext15 {
 	position: absolute;
-	top: 400px;
+	top: 360px;
 	left: 13%;
 }
 #buildtext16 {
 	position: absolute;
-	top: 397px;
-	left: 52.5%
+	top: 360px;
+	left: 56.5%
 }
 
 #buycoin1 {
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 42px;
-	left: 33%;
+	top: 72px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -501,8 +520,8 @@ a {color: white;}
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 97px;
-	left: 33%;
+	top: 107px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -513,8 +532,8 @@ a {color: white;}
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 152px;
-	left: 33%;
+	top: 142px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -525,8 +544,8 @@ a {color: white;}
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 207px;
-	left: 33%;
+	top: 177px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -537,8 +556,8 @@ a {color: white;}
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 262px;
-	left: 33%;
+	top: 212px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -550,7 +569,7 @@ a {color: white;}
 	width: 150px;
 	height: 30px;
 	top: 317px;
-	left: 33%;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid maroon;
 	border-radius: 8px;
@@ -561,8 +580,8 @@ a {color: white;}
 	position:absolute;
 	width: 150px;
 	height: 30px;
-	top: 372px;
-	left: 33%;
+	top: 352px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid maroon;
 	border-radius: 8px;
@@ -572,8 +591,8 @@ a {color: white;}
 	position:absolute;
 	width: 150px;
 	height: 30px;
-	top: 427px;
-	left: 33%;
+	top: 387px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid maroon;
 	border-radius: 8px;
@@ -581,11 +600,12 @@ a {color: white;}
 
 #taxinfo {
 	position: absolute;
-	top: 450px;
+	top: 420px;
 	width: 1000px;
 	left: 50%;
 	margin-left: -500px;
 	text-align: center;
+	font-size: 1em;
 }
 #buildinghotkeys{
 position: absolute;
@@ -760,7 +780,7 @@ margin-left: -13px
 	top: 150px;
 	left: 70%;
 	margin-left: -88px;
-	
+
 }
 
 #generatortable {
@@ -778,9 +798,9 @@ margin-left: -13px
 #shoptogglecoin {
 	position:absolute;
 	width: 80px;
-	padding: 0px;
+	padding: 0;
 	height: 30px;
-	top: 25.5px;
+	top: 61.5px;
 	left: 8.4%;
 	margin-left: -16px;
 }
@@ -788,9 +808,9 @@ margin-left: -13px
 #shoptoggleprestige {
 	position:absolute;
 	width: 80px;
-	padding: 0px;
+	padding: 0;
 	height: 30px;
-	top: 25.5px;
+	top: 61.5px;
 	left: 23.3%;
 	margin-left: -16px;
 }
@@ -798,9 +818,9 @@ margin-left: -13px
 #shoptoggletranscend {
 	position:absolute;
 	width: 80px;
-	padding: 0px;
+	padding: 0;
 	height: 30px;
-	top: 25.5px;
+	top: 61.5px;
 	left: 38.2%;
 	margin-left: -16px;
 }
@@ -808,13 +828,21 @@ margin-left: -13px
 #shoptogglegenerator {
 	position:absolute;
 	width: 80px;
-	padding: 0px;
+	padding: 0;
 	height: 30px;
-	top: 25.5px;
+	top: 61.5px;
 	left: 53.1%;
 	margin-left: -16px;
 }
-
+#particleAutoUpgrade {
+	position:absolute;
+	width: 80px;
+	padding: 0;
+	height: 30px;
+	top: 61.5px;
+	left: 83%;
+	margin-left: -16px;
+}
 #upgradesrow3 {
 	position: relative;
 	top: 220px;
@@ -824,7 +852,7 @@ margin-left: -13px
 #upgradedescription {
 	position: absolute;
 	text-align: center;
-	top: 215px;
+	top: 251px;
 	width: 1000px;
 	left: 48%;
 	margin-left: -500px;
@@ -832,7 +860,7 @@ margin-left: -13px
 
 #upgradecost {
 	position: absolute;
-	top: 235px;
+	top: 271px;
 	width: 300px;
 	left: 48%;
 	margin-left: -150px;
@@ -840,7 +868,7 @@ margin-left: -13px
 
 #upgradeeffect {
 	position: absolute;
-	top: 255px;
+	top: 291px;
 	width: 400px;
 	left: 48%;
 	margin-left: -200px;
@@ -850,37 +878,23 @@ margin-left: -13px
 #settings {
 	position: relative;
 	top: 118px;
-	padding: 0px;
+	padding: 0;
 	text-align: center;
-	border: 1px solid white
+	border-top: 2px solid white
 }
 
 
-#settingtitle2 {
-	position: absolute;
-	top: 0px;
-	width: 500px;
-	left: 25%;
-	margin-left: -250px;
-}
 #settingtitle3 {
 	position: absolute;
-	top: 0px;
+	top: 0;
 	width: 500px;
 	left: 75%;
 	margin-left: -250px;
 }
-#confirmationdisclaimer {
-	position: absolute;
-	top: 120px;
-	width: 300px;
-	left: 25%;
-	margin-left: -150px;
-}
 
 #submitstats {
 	position: absolute;
-	top: 225px;
+	top: 241px;
 	width: 225px;
 	height: 30px;
 	left: 25%;
@@ -888,7 +902,7 @@ margin-left: -13px
 }
 #promocodes {
 	position: absolute;
-	top: 255px;
+	top: 210px;
 	width: 225px;
 	height: 30px;
 	left: 25%;
@@ -896,33 +910,48 @@ margin-left: -13px
 }
 #promocodeinfo {
 	position: absolute;
-	top: 285px;
+	top: 240px;
 	width: 225px;
 	height: 30px;
 	left: 25%;
 	margin-left: -112.5px;
 }
 
-
-#settingpic1 {
+#confirmationToggleBox {
 	position: absolute;
-	top: 60px;
-	left: 20%;
-	margin-left: -18px;
+	width: 400px;
+	left: 150px;
+	margin-top: 0px;
 }
-
-#settingpic2 {
-	position: absolute;
-	top: 60px;
-	left: 25%;
-	margin-left: -18px;
+.center {
+	margin: auto;
 }
-
-#settingpic3 {
-	position: absolute;
-	top: 60px;
-	left: 30%;
-	margin-left: -18px;
+.confirmationToggles {
+	display: flex;
+	flex-direction: row;
+	margin: auto;
+}
+.confirmationToggle {
+	display: flex;
+	flex-direction: column;
+	width: 40px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+#settingtitle2 {
+	width: 100%;
+	margin: 20px 0;
+}
+.settingpic {
+	flex-grow: unset;
+	margin: 3px;
+}
+.auto.square {
+	width: 40px;
+	height: 40px;
+}
+#confirmationdisclaimer {
+	width: 100%;
 }
 
 #temporarystats1 {
@@ -1011,10 +1040,10 @@ margin-left: -13px
 }
 #savegame{
 	position: absolute;
-	top: 230px;
-	width: 192px;
-	left: 100%;
-	margin-left: 125px;
+	top: 260px;
+	width: 180px;
+	left: 50%;
+	margin-left: -90px;
 }
 #saveinfo {
 	position: absolute;
@@ -1030,10 +1059,10 @@ margin-left: -13px
 #toggle1 {
 	position:absolute;
 	width: 80px;
-	padding: 0px;
+	padding: 0;
 	height: 30px;
-	top: 25.5px;
-	left: 47%;
+	top: 56px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1042,8 +1071,8 @@ margin-left: -13px
 	text-align:center;
 	width: 80px;
 	height: 30px;
-	top: 81px;
-	left: 47%;
+	top: 91px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1052,8 +1081,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 137px;
-	left: 47%;
+	top: 126px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1062,8 +1091,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 193px;
-	left: 47%;
+	top: 161px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1072,8 +1101,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 247px;
-	left: 47%;
+	top: 196px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1082,8 +1111,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 302px;
-	left: 47%;
+	top: 301px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1092,8 +1121,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 357px;
-	left: 47%;
+	top: 336px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1102,8 +1131,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 412px;
-	left: 47%;
+	top: 371px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1111,7 +1140,7 @@ margin-left: -13px
 	position:absolute;
 	height: 30px;
 	width: 130px;
-	top: 320px;
+	top: 356px;
 	left: 48%;
 	margin-left: -65px;
 }
@@ -1120,8 +1149,8 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 82px;
-	left: 47%;
+	top: 57px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1130,8 +1159,8 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 138px;
-	left: 47%;
+	top: 92px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1139,8 +1168,8 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 194px;
-	left: 47%;
+	top: 127px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1149,8 +1178,8 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 248px;
-	left: 47%;
+	top: 162px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1159,22 +1188,22 @@ margin-left: -13px
 	width: 80px;
 	height: 30px;
 
-	top: 303px;
-	left: 47%;
+	top: 197px;
+	left: 51%;
 	margin-left: -16px;
 }
 
 #toggle15 {
 	position:absolute;
 	width: 150px;
-	top: 374px;
+	top: 404px;
 	left: 50%;
 	margin-left: -75px;
 }
 #prestigeautotoggle {
 	position:absolute;
 	width: 150px;
-	top: 394px;
+	top: 424px;
 	left: 50%;
 	margin-left: -75px;
 }
@@ -1183,8 +1212,8 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 82px;
-	left: 47%;
+	top: 57px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1192,8 +1221,8 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 138px;
-	left: 47%;
+	top: 92px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1201,8 +1230,8 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 194px;
-	left: 47%;
+	top: 127px;
+	left: 51%;
 	margin-left: -16px;
 }
 
@@ -1210,72 +1239,101 @@ margin-left: -13px
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 248px;
-	left: 47%;
+	top: 162px;
+	left: 51%;
 	margin-left: -16px;
 }
 #toggle20 {
 	position:absolute;
 	width: 80px;
 	height: 30px;
-	top: 303px;
-	left: 47%;
+	top: 197px;
+	left: 51%;
 	margin-left: -16px;
 }
-#toggle28 {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	top: 95px;
-	left: 18.45%;
+#toggle22 {
+	position:absolute;
+	width: 80px;
+	height: 30px;
+	top: 57px;
+	left: 51%;
+	margin-left: -16px;
+}
+#toggle23 {
+	position:absolute;
+	width: 80px;
+	height: 30px;
+	top: 92px;
+	left: 51%;
+	margin-left: -16px;
+}
+#toggle24 {
+	position:absolute;
+	width: 80px;
+	height: 30px;
+	top: 127px;
+	left: 51%;
+	margin-left: -16px;
+}
+#toggle25 {
+	position:absolute;
+	width: 80px;
+	height: 30px;
+	top: 162px;
+	left: 51%;
+	margin-left: -16px;
+}
+#toggle26 {
+	position:absolute;
+	width: 80px;
+	height: 30px;
+	top: 197px;
+	left: 51%;
+	margin-left: -16px;
+}
 
-}
-#toggle29 {
+#exportButtons {
 	position: absolute;
-	width: 40px;
-	height: 40px;
-	top: 95px;
-	left: 23.45%
+	display: flex;
+	flex-direction: column;
+	width: 400px;
+	left: 485px;
+	height: 100px;
 }
-#toggle30 {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	top: 95px;
-	left: 28.45%
+.tightText {
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
 }
 #quarktimerdisplay {
-	position: absolute;
-	width: 250px;
-	height: 40px;
-	top: 85px;
-	left: 50%;
-	margin-left: -125px
+	height: 22px;
+	margin-top: 60px;
 }
 
 #quarktimeramount {
-	position: absolute;
-	width: 250px;
-	height: 40px;
-	top: 105px;
-	left: 50%;
-	margin-left: -125px
+	height: 22px;
 }
 
 #exportgame {
-	position: absolute;
 	width: 150px;
 	height: 40px;
-	top: 145px;
-	left: 50%;
-	margin-left: -75px
+	margin: 5px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#exportinfo {
+	height: 20px;
+}
+#saveStringInput {
+	width: 250px;
 }
 
 #importgame {
 	position: absolute;
 	width: 150px;
 	height: 40px;
-	top: 200px;
+	top: 185px;
 	left: 50%;
 	margin-left: -75px
 }
@@ -1283,25 +1341,17 @@ margin-left: -13px
 	position: absolute;
 	width: 150px;
 	height: 40px;
-	top: 240px;
+	top: 225px;
 	left: 50%;
 	margin-left: -40px
 }
-#exportinfo {
-	position: absolute;
-	width: 500px;
-	height: 40px;
-	top: 170px;
-	left: 50%;
-	margin-left: -250px
-}
 #exporttext {
 	position: absolute;
-	width: 0px;
-	height: 0px;
+	width: 0;
+	height: 0;
 	top: 180px;
 	left: 13324px;
-	margin-left: 0px
+	margin-left: 0
 }
 #importinfo {
 	position: absolute;
@@ -1313,12 +1363,38 @@ margin-left: -13px
 }
 
 #discord {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	position: absolute;
+	top: 335px;
+	left: 50%;
+	margin-left: -150px;
+	color: gold;
+}
+#discordhref {
 	width: 100px;
 	height: 100px;
-	top: 350px;
-	left: 50%;
-	margin-left: -50px;
+	border-radius: 50%;
+}
+#discordicon {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	margin-top: 5px;
+}
+#patreon{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: absolute;
+	top: 335px;
+	left: 25%;
+	margin-left: -150px;
+	color: gold;
+}
+#patreonicon{
+	cursor: pointer;
 }
 #versionnumber{
 	position: absolute;
@@ -1333,7 +1409,7 @@ margin-left: -13px
 #statistics {
 	position: relative;
 	text-align: center;
-	padding: 0px;
+	padding: 0;
 	top: 118px;
 	color: whitesmoke;
 }
@@ -1341,9 +1417,9 @@ margin-left: -13px
 #achievements {
 	position: relative;
 	text-align: center;
-	padding: 0px;
+	padding: 0;
 	border: 1px solid white
-	
+
 }
 #achievementprogress {
 	position: absolute;
@@ -1355,7 +1431,7 @@ margin-left: -13px
 #achievementstable {
 	position: absolute;
 	top: 55px;
-	margin-left: -420px;
+	margin-left: -618px;
 	left: 50%;
 }
 
@@ -1442,44 +1518,51 @@ margin-left: -13px
 
 #prestige {
     position: relative;
-    padding: 0px;
+    padding: 0;
     top: 118px;
     border: 1px solid cyan
 }
 #buyamountcrystal {
 	position: absolute;
-	padding: 0px;
-	font-size: 0px;
+	padding: 0;
+	font-size: 0;
 	left: 80%;
 	top: 20px;
 }
 #buyamountoffering {
 	position: absolute;
-	padding: 0px;
-	font-size: 0px;
+	padding: 0;
+	font-size: 0;
 	left: 80%;
 	top: 20px;
 }
 #buyamounttalisman {
 	position: absolute;
-	padding: 0px;
-	font-size: 0px;
+	padding: 0;
+	font-size: 0;
 	left: 80%;
 	top: 20px;
 }
 #buyamountmythos {
 	position: absolute;
-	padding: 0px;
-	font-size: 0px;
+	padding: 0;
+	font-size: 0;
 	left: 80%;
 	top: 20px;
 }
 #buyamountparticle {
 	position: absolute;
-	padding: 0px;
-	font-size: 0px;
+	padding: 0;
+	font-size: 0;
 	left: 80%;
 	top: 20px;
+}
+#buyAmountTesseract{	
+	position: absolute;	
+	padding: 0;
+	font-size: 0;
+	left: 80%;	
+	top: 20px;	
 }
 #togglecrystalbuy{
 	color: white;
@@ -1526,218 +1609,225 @@ margin-left: -13px
 	top: 30px;
 	margin-left: -87px;
 }
+#toggleTesseractBuy{	
+	color: white;	
+	position: absolute;	
+	font-size: 11px;	
+	width: 220px;	
+	left: 80%;	
+	top: 30px;	
+	margin-left: -87px;	
+}
 #prestigeshardinfo {
     position: absolute;
-    padding: 0px;
-    top: 20px;
+    padding: 0;
+    top: 220px;
     width: 700px;
     left: 50%;
     margin-left: -350px;
 }
- 
+
 #diamond1 {
     position: absolute;
-    top: 83px;
+    top: 58px;
     left: 10%;
     margin-left: -18px;
 }
- 
+
 #diamond2 {
     position: absolute;
-    top: 138px;
+    top: 93px;
+	
     left: 10%;
     margin-left: -18px;
- 
+
 }
- 
+
 #diamond3 {
     position: absolute;
-    top: 193px;
+    top: 128px;
     left: 10%;
     margin-left: -18px;
- 
+
 }
- 
+
 #diamond4 {
     position: absolute;
-    top: 248px;
+    top: 163px;
     left: 10%;
     margin-left: -18px;
- 
+
 }
- 
+
 #diamond5 {
     position: absolute;
-    top: 303px;
+    top: 198px;
     left: 10%;
     margin-left: -18px;
 }
- 
- 
+
+
 #prestigetext1 {
     position: absolute;
-    top: 70px;
+    top: 44px;
     left: 13%;
 }
 #prestigetext2 {
     position: absolute;
-    top: 70px;
-    left: 52.5%;
+    top: 44px;
+    left: 56.5%;
 }
 #prestigetext3 {
     position: absolute;
-    top: 125px;
+    top: 79px;
     left: 13%;
 }
 #prestigetext4 {
     position: absolute;
-    top: 125px;
-    left: 52.5%;
+    top: 79px;
+    left: 56.5%;
 }
 #prestigetext5 {
     position: absolute;
-    top: 180px;
+    top: 114px;
     left: 13%;
 }
 #prestigetext6 {
     position: absolute;
-    top: 180px;
-    left: 52.5%;
+    top: 114px;
+    left: 56.5%;
 }
 #prestigetext7 {
     position: absolute;
-    top: 235px;
+    top: 149px;
     left: 13%;
 }
 #prestigetext8 {
     position: absolute;
-    top: 235px;
-    left: 52.5%;
+    top: 149px;
+    left: 56.5%;
 }
- 
+
 #prestigetext9 {
     position: absolute;
-    top: 290px;
+    top: 184px;
     left: 13%;
 }
 #prestigetext10 {
     position: absolute;
-    top: 290px;
-    left: 52.5%;
+    top: 184px;
+    left: 56.5%;
 }
- 
+
 #buydiamond1 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 97px;
-    left: 33%;
+    top: 73px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buydiamond2 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 152px;
-    left: 33%;
+    top: 108px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buydiamond3 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 207px;
-    left: 33%;
+    top: 143px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buydiamond4 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 262px;
-    left: 33%;
+    top: 178px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buydiamond5 {
     position:absolute;
     width: 150px;
     height: 30px;
-    top: 317px;
-    left: 33%;
+    top: 213px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #prestigeinfo {
     color: cyan;
 }
 
 #prestige {
     position: relative;
-    padding: 0px;
+    padding: 0;
     top: 118px;
     border: 1px solid cyan
 }
 #crystalupgradestable {
 	position: absolute;
-	top: 81px;
-	padding: 0px;
-	left: 75%;
+	top: 260px;
+	padding: 0;
+	left: 50%;
 	margin-left: -100px;
 }
 #crystalupgradedescription {
 	position: absolute;
-	top: 110px;
-	padding: 0px;
-	left: 75%;
-	margin-left: -100px;
-	width: 300px;
+	top: 280px;
+	padding: 0;
+	left: 50%;
+	margin-left: -375px;
+	width: 750px;
 	height: 100px;
-	border: 1px solid cyan
 }
 #crystalupgradeslevel {
 	position: absolute;
-	top:244px;
-	padding: 0px;
-	left: 75%;
-	margin-left: 0px;
-	width: 100px;
+	top:320px;
+	padding: 0;
+	left: 50%;
+	margin-left: -120px;
+	width: 240px;
 	height: 30px;
-	border: 1px solid plum;
 }
 #crystalupgradescost {
 	position: absolute;
-	top: 212px;
-	padding: 0px;
-	left: 75%;
-	margin-left: -70px;
+	top: 300px;
+	padding: 0;
+	left: 50%;
+	margin-left: -120px;
 	width: 240px;
 	height: 30px;
-	border: 1px solid plum
 }
 
 #prestigeamount {
 	position: absolute;
-	top: 418px;
-	padding: 0px;
+	top: 448px;
+	padding: 0;
 	left: 50%;
 	width: 100px;
 	margin-left: -50px;
@@ -1748,8 +1838,8 @@ margin-left: -13px
 
 #autoprestige {
 	position: absolute;
-	top: 420px;
-	padding: 0px;
+	top: 450px;
+	padding: 0;
 	left: 50%;
 	width: 750px;
 	margin-left: -375px;
@@ -1759,7 +1849,7 @@ margin-left: -13px
 #prestigehotkeys{
 	position: absolute;
 	padding: 5px;
-	top: 460px;
+	top: 490px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -1770,7 +1860,7 @@ margin-left: -13px
 
 #runes {
 	position: relative;
-	padding: 0px;
+	padding: 0;
 	top: 118px;
 	border: 1px solid cyan;
 }
@@ -1786,23 +1876,52 @@ margin-left: -13px
 	font-size: 1.2em
 }
 
-#togglerunesubtab{
+#toggleRuneSubTab1{
 	position: absolute;
 	padding: 5px;
 	top: 10px;
-	left: 65%;
-	width: 200px;
+	left: 46%;
+	width: 100px;
 	margin-left: -100px;
 	height: 30px;
 	text-align: center;
 }
-
+#toggleRuneSubTab2{
+	position: absolute;
+	padding: 5px;
+	top: 10px;
+	left: 54%;
+	width: 100px;
+	margin-left: -100px;
+	height: 30px;
+	text-align: center;
+}
+#toggleRuneSubTab3{
+	position: absolute;
+	padding: 5px;
+	top: 10px;
+	left: 62%;
+	width: 100px;
+	margin-left: -100px;
+	height: 30px;
+	text-align: center;
+}
+#toggleRuneSubTab4{
+	position: absolute;
+	padding: 5px;
+	top: 10px;
+	left: 70%;
+	width: 100px;
+	margin-left: -100px;
+	height: 30px;
+	text-align: center;
+}
 #toggleautosacrifice {
 	position: absolute;
 	padding: 5px;
 	top: 10px;
-	left: 50%;
-	width: 200px;
+	left: 38%;
+	width: 100px;
 	margin-left: -100px;
 	height: 30px;
 	text-align: center;
@@ -1810,35 +1929,35 @@ margin-left: -13px
 
 #rune1 {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 145px;
 	left: 20%;
 	margin-left: -33px;
 }
 #rune2{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 145px;
 	left: 35%;
 	margin-left: -33px;
 }
 #rune3{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 145px;
 	left: 50%;
 	margin-left: -33px;
 }
 #rune4{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 145px;
 	left: 65%;
 	margin-left: -33px;
 }
 #rune5{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 145px;
 	left: 80%;
 	margin-left: -33px;
@@ -1846,7 +1965,7 @@ margin-left: -13px
 
 #rune1level {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 193px;
 	left: 20%;
 	width: 200px;
@@ -1854,9 +1973,18 @@ margin-left: -13px
 	color: plum;
 	text-align: center;
 }
+#bonusrune1{
+	position: absolute;
+	padding: 0;
+	top: 213px;
+	left: 20%;
+	width: 200px;
+	margin-left: -100px;
+	text-align: center;
+}
 #rune2level {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 193px;
 	left: 35%;
 	width: 200px;
@@ -1864,9 +1992,18 @@ margin-left: -13px
 	color: plum;
 	text-align: center;
 }
+#bonusrune2{
+	position: absolute;
+	padding: 0;
+	top: 213px;
+	left: 35%;
+	width: 200px;
+	margin-left: -100px;
+	text-align: center;
+}
 #rune3level {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 193px;
 	left: 50%;
 	width: 200px;
@@ -1874,9 +2011,18 @@ margin-left: -13px
 	color: plum;
 	text-align: center;
 }
+#bonusrune3{
+	position: absolute;
+	padding: 0;
+	top: 213px;
+	left: 50%;
+	width: 200px;
+	margin-left: -100px;
+	text-align: center;
+}
 #rune4level {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 193px;
 	left: 65%;
 	width: 200px;
@@ -1884,9 +2030,18 @@ margin-left: -13px
 	color: plum;
 	text-align: center;
 }
+#bonusrune4{
+	position: absolute;
+	padding: 0;
+	top: 213px;
+	left: 65%;
+	width: 200px;
+	margin-left: -100px;
+	text-align: center;
+}
 #rune5level {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 193px;
 	left: 80%;
 	width: 200px;
@@ -1894,10 +2049,19 @@ margin-left: -13px
 	color: plum;
 	text-align: center;
 }
+#bonusrune5{
+	position: absolute;
+	padding: 0;
+	top: 213px;
+	left: 80%;
+	width: 200px;
+	margin-left: -100px;
+	text-align: center;
+}
 #rune1exp {
 	position:absolute;
-	padding: 0px;
-	top: 212px;
+	padding: 0;
+	top: 232px;
 	left: 20%;
 	width: 200px;
 	margin-left: -100px;
@@ -1906,8 +2070,8 @@ margin-left: -13px
 }
 #rune2exp {
 	position:absolute;
-	padding: 0px;
-	top: 212px;
+	padding: 0;
+	top: 232px;
 	left: 35%;
 	width: 200px;
 	margin-left: -100px;
@@ -1916,8 +2080,8 @@ margin-left: -13px
 }
 #rune3exp {
 	position:absolute;
-	padding: 0px;
-	top: 212px;
+	padding: 0;
+	top: 232px;
 	left: 50%;
 	width: 200px;
 	margin-left: -100px;
@@ -1926,8 +2090,8 @@ margin-left: -13px
 }
 #rune4exp {
 	position:absolute;
-	padding: 0px;
-	top: 212px;
+	padding: 0;
+	top: 232px;
 	left: 65%;
 	width: 200px;
 	margin-left: -100px;
@@ -1936,8 +2100,8 @@ margin-left: -13px
 }
 #rune5exp {
 	position:absolute;
-	padding: 0px;
-	top: 212px;
+	padding: 0;
+	top: 232px;
 	left: 80%;
 	width: 200px;
 	margin-left: -100px;
@@ -1948,7 +2112,7 @@ margin-left: -13px
 #activaterune1 {
 	position: absolute;
 	padding: 5px;
-	top: 255px;
+	top: 275px;
 	left: 20%;
 	width: 111px;
 	height: 30px;
@@ -1960,7 +2124,7 @@ margin-left: -13px
 #activaterune2 {
 	position: absolute;
 	padding: 5px;
-	top: 255px;
+	top: 275px;
 	left: 35%;
 	width: 112px;
 	height: 30px;
@@ -1972,7 +2136,7 @@ margin-left: -13px
 #activaterune3 {
 	position: absolute;
 	padding: 5px;
-	top: 255px;
+	top: 275px;
 	left: 50%;
 	width: 112px;
 	height: 30px;
@@ -1984,7 +2148,7 @@ margin-left: -13px
 #activaterune4 {
 	position: absolute;
 	padding: 5px;
-	top: 255px;
+	top: 275px;
 	left: 65%;
 	width: 112px;
 	height: 30px;
@@ -1996,7 +2160,7 @@ margin-left: -13px
 #activaterune5 {
 	position: absolute;
 	padding: 5px;
-	top: 255px;
+	top: 275px;
 	left: 80%;
 	width: 112px;
 	height: 30px;
@@ -2021,7 +2185,7 @@ margin-left: -13px
 
 #speedrune {
 	position:absolute;
-	padding: 0px;
+	padding: 0;
 	top: 103px;
 	left: 20%;
 	width: 130px;
@@ -2030,7 +2194,7 @@ margin-left: -13px
 }
 #duplicationrune {
 	position:absolute;
-	padding: 0px;
+	padding: 0;
 	top: 103px;
 	left: 35%;
 	width: 130px;
@@ -2039,7 +2203,7 @@ margin-left: -13px
 }
 #prismrune {
 	position:absolute;
-	padding: 0px;
+	padding: 0;
 	top: 103px;
 	left: 50%;
 	width: 130px;
@@ -2048,7 +2212,7 @@ margin-left: -13px
 }
 #thriftrune {
 	position:absolute;
-	padding: 0px;
+	padding: 0;
 	top: 103px;
 	left: 65%;
 	width: 130px;
@@ -2057,7 +2221,7 @@ margin-left: -13px
 }
 #intellectrune {
 	position:absolute;
-	padding: 0px;
+	padding: 0;
 	top: 103px;
 	left: 80%;
 	width: 130px;
@@ -2079,7 +2243,7 @@ margin-left: -13px
 #runeshowlevelup {
 	position: absolute;
 	padding: 5px;
-	top: 275px;
+	top: 295px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2087,10 +2251,10 @@ margin-left: -13px
 	color: white;
 	text-align: center;
 }
-#runedisplayexp {
+#runeDisplayInfo {
 	position: absolute;
 	padding: 5px;
-	top: 295px;
+	top: 315px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2101,7 +2265,7 @@ margin-left: -13px
 #bonussummation {
 	position: absolute;
 	padding: 5px;
-	top: 315px;
+	top: 335px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2113,7 +2277,7 @@ margin-left: -13px
 #runeshowpower1 {
 	position: absolute;
 	padding: 5px;
-	top: 335px;
+	top: 355px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2124,7 +2288,7 @@ margin-left: -13px
 #runeshowpower2 {
 	position: absolute;
 	padding: 5px;
-	top: 355px;
+	top: 375px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2135,7 +2299,7 @@ margin-left: -13px
 #runeshowpower3 {
 	position: absolute;
 	padding: 5px;
-	top: 375px;
+	top: 395px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2146,7 +2310,7 @@ margin-left: -13px
 #runeshowpower4 {
 	position: absolute;
 	padding: 5px;
-	top: 395px;
+	top: 415px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2157,7 +2321,7 @@ margin-left: -13px
 #runeshowpower5 {
 	position: absolute;
 	padding: 5px;
-	top: 415px;
+	top: 435px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2168,7 +2332,7 @@ margin-left: -13px
 #researchrunebonus {
 	position: absolute;
 	padding: 5px;
-	top: 435px;
+	top: 455px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -2602,7 +2766,15 @@ margin-left: -13px
 	top: 255px;
 	text-align: center;
 }
-
+#respecAllTalismans{
+	position: absolute;
+	height: 30px;
+	left: 28%;
+	width: 80px;
+	margin-left: -41px;
+	top: 355px;
+	text-align: center;
+}
 #talismanEffect {
 	position: absolute;
 	left: 50%;
@@ -2706,15 +2878,23 @@ margin-left: -13px
 
 #transcension {
 	position: relative;
-	padding: 0px;
+	padding: 0;
 	top: 118px;
 	border: 1px solid plum
 }
 
 #transcendshardinfo {
 	position: absolute;
-	padding: 0px;
-	top: 20px;
+	padding: 0;
+	top: 220px;
+	width: 700px;
+	left: 50%;
+	margin-left: -350px;
+}
+#transcendshardbonus {
+	position: absolute;
+	padding: 0;
+	top: 240px;
 	width: 700px;
 	left: 50%;
 	margin-left: -350px;
@@ -2722,14 +2902,14 @@ margin-left: -13px
 
 #mythos1 {
 	position: absolute;
-	top: 83px;
+	top: 58px;
 	left: 10%;
 	margin-left: -18px;
 }
 
 #mythos2 {
 	position: absolute;
-	top: 138px;
+	top: 93px;
 	left: 10%;
 	margin-left: -18px;
 
@@ -2737,7 +2917,7 @@ margin-left: -13px
 
 #mythos3 {
 	position: absolute;
-	top: 193px;
+	top: 128px;
 	left: 10%;
 	margin-left: -18px;
 
@@ -2745,7 +2925,7 @@ margin-left: -13px
 
 #mythos4 {
 	position: absolute;
-	top: 248px;
+	top: 163px;
 	left: 10%;
 	margin-left: -18px;
 
@@ -2753,7 +2933,7 @@ margin-left: -13px
 
 #mythos5 {
 	position: absolute;
-	top: 303px;
+	top: 198px;
 	left: 10%;
 	margin-left: -18px;
 }
@@ -2761,62 +2941,62 @@ margin-left: -13px
 
 #transcendtext1 {
 	position: absolute;
-	top: 70px;
+	top: 43px;
 	left: 13%;
 }
 #transcendtext2 {
 	position: absolute;
-	top: 70px;
-	left: 52.5%;
+	top: 43px;
+	left: 56.5%;
 }
 #transcendtext3 {
 	position: absolute;
-	top: 125px;
+	top: 78px;
 	left: 13%;
 }
 #transcendtext4 {
 	position: absolute;
-	top: 125px;
-	left: 52.5%;
+	top: 78px;
+	left: 56.5%;
 }
 #transcendtext5 {
 	position: absolute;
-	top: 180px;
+	top: 113px;
 	left: 13%;
 }
 #transcendtext6 {
 	position: absolute;
-	top: 180px;
-	left: 52.5%;
+	top: 113px;
+	left: 56.5%;
 }
 #transcendtext7 {
 	position: absolute;
-	top: 235px;
+	top: 148px;
 	left: 13%;
 }
 #transcendtext8 {
 	position: absolute;
-	top: 235px;
-	left: 52.5%;
+	top: 148px;
+	left: 56.5%;
 }
 
 #transcendtext9 {
 	position: absolute;
-	top: 290px;
+	top: 183px;
 	left: 13%;
 }
 #transcendtext10 {
 	position: absolute;
-	top: 290px;
-	left: 52.5%;
+	top: 183px;
+	left: 56.5%;
 }
 
 #buymythos1 {
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 97px;
-	left: 33%;
+	top: 73px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -2827,8 +3007,8 @@ margin-left: -13px
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 152px;
-	left: 33%;
+	top: 108px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -2839,8 +3019,8 @@ margin-left: -13px
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 207px;
-	left: 33%;
+	top: 143px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -2851,8 +3031,8 @@ margin-left: -13px
 	position: absolute;
 	width: 150px;
 	height: 30px;
-	top: 262px;
-	left: 33%;
+	top: 178px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -2863,8 +3043,8 @@ margin-left: -13px
 	position:absolute;
 	width: 150px;
 	height: 30px;
-	top: 317px;
-	left: 33%;
+	top: 213px;
+	left: 37%;
 	margin-top: -15px;
 	border: 1px solid white;
 	border-radius: 8px;
@@ -2874,7 +3054,7 @@ margin-left: -13px
 #transcendamount {
 	position: absolute;
 	top: 418px;
-	padding: 0px;
+	padding: 0;
 	left: 50%;
 	width: 100px;
 	margin-left: -50px;
@@ -2886,7 +3066,7 @@ margin-left: -13px
 #autotranscend {
 	position: absolute;
 	top: 420px;
-	padding: 0px;
+	padding: 0;
 	left: 50%;
 	width: 750px;
 	margin-left: -375px;
@@ -2927,7 +3107,7 @@ margin-left: -13px
 
 #challenges {
 	position: relative;
-	padding: 0px;
+	padding: 0;
 	top: 118px;
 	border: 1px solid plum;
 }
@@ -2935,8 +3115,8 @@ margin-left: -13px
 #challengeIntroduction {
 	position: absolute;
 	text-align: center;
-	padding: 0px;
-	top: 0px;
+	padding: 0;
+	top: 0;
 	color: white;
 	width: 1000px;
 	font-size: 1.2em;
@@ -2946,15 +3126,15 @@ margin-left: -13px
 #challengeIcons {
 	position: absolute;
 	font-size: 0;
-	padding: 0px;
+	padding: 0;
 	top: 50px;
-	margin-left: -342px;
+	margin-left: -510px;
 	left: 50%;
 }
 #challengeDetails {
 	position: absolute;
 	text-align: left;
-	padding: 0px;
+	padding: 0;
 	top: 120px;
 	width: 1000px;
 	margin-left: -500px;
@@ -2976,10 +3156,73 @@ margin-left: -13px
 	top: 51px;
 	left: 16%;
 }
+#toggleAutoChallengeIgnore{
+	position: absolute;
+	border: 2px solid green;
+	height: 30px;
+	width: 200px;
+	top: 82px;
+	left: 16%
+}
+#toggleAutoChallengeStart{
+	position: absolute;
+	border: 2px solid gold;
+	height: 30px;
+	width: 200px;
+	top: 120px;
+	left: 16%
+}
+#startAutoChallengeTimer{
+	position: absolute;
+	color: white;
+	height: 30px;
+	width: 300px;
+	top: 152px;
+	left: 0
+}
+#startAutoChallengeTimerInput{
+	position: absolute;
+	top: 174px;
+	width: 50px;
+	left: 30%
+}
+#exitAutoChallengeTimer{
+	position: absolute;
+	color: white;
+	height: 30px;
+	width: 300px;
+	top: 172px;
+	left: 0
+}
+#exitAutoChallengeTimerInput{
+	position: absolute;
+	top: 194px;
+	width: 50px;
+	left: 30%
+}
+#enterAutoChallengeTimer{
+	position: absolute;
+	color: white;
+	height: 30px;
+	width: 300px;
+	top: 192px;
+	left: 0
+}
+#enterAutoChallengeTimerInput{
+	position: absolute;
+	top: 214px;
+	width: 50px;
+	left: 30%
+}
+#autoChallengeIncrementer{
+	position: absolute;
+	top: 234px;
+	font-size: 1.25em;
+}
 #challengeName{
 	position:absolute;
 	color: white;
-	top: 0px;
+	top: 0;
 	left: 38%;
 }
 #challengeFlavor{
@@ -2992,14 +3235,14 @@ margin-left: -13px
 	position:absolute;
 	color:crimson;
 	width: 500px;
-	top: 50px;
+	top: 40px;
 	left: 38%;
 
 }
 #challengeGoal{
 	position:absolute;
 	color: gold;
-	top: 90px;
+	top: 100px;
 	left: 38%;
 
 }
@@ -3090,169 +3333,185 @@ margin-left: -13px
 
 #reincarnation {
     position: relative;
-    padding: 0px;
+    padding: 0;
     top: 118px;
     border: 1px solid green
 }
- 
+
 #reincarnationshardinfo {
     position: absolute;
-    padding: 0px;
-    top: 20px;
+    padding: 0;
+    top: 240px;
     width: 1000px;
-    left: 38%;
+    left: 50%;
     margin-left: -500px;
 }
- 
+#reincarnationCrystalInfo{
+	position: absolute;
+    padding: 0;
+    top: 260px;
+    width: 1000px;
+    left: 50%;
+    margin-left: -500px;
+}
+#reincarnationMythosInfo{
+	position: absolute;
+    padding: 0;
+    top: 280px;
+    width: 1000px;
+    left: 50%;
+    margin-left: -500px;
+}
+
 #particles1 {
     position: absolute;
-    top: 83px;
+    top: 58px;
     left: 10%;
     margin-left: -18px;
 }
- 
+
 #particles2 {
     position: absolute;
-    top: 138px;
+    top: 93px;
     left: 10%;
     margin-left: -18px;
- 
+
 }
- 
+
 #particles3 {
     position: absolute;
-    top: 193px;
+    top: 128px;
     left: 10%;
     margin-left: -18px;
- 
+
 }
- 
+
 #particles4 {
     position: absolute;
-    top: 248px;
+    top: 163px;
     left: 10%;
     margin-left: -18px;
- 
+
 }
- 
+
 #particles5 {
     position: absolute;
-    top: 303px;
+    top: 198px;
     left: 10%;
     margin-left: -18px;
 }
- 
- 
+
+
 #reincarnationtext1 {
     position: absolute;
-    top: 70px;
+    top: 47px;
     left: 13%;
 }
 #reincarnationtext6 {
     position: absolute;
-    top: 70px;
-    left: 46.5%;
+    top: 47px;
+    left: 56.5%;
 }
 #reincarnationtext2 {
     position: absolute;
-    top: 125px;
+    top: 82px;
     left: 13%;
 }
 #reincarnationtext7 {
     position: absolute;
-    top: 125px;
-    left: 46.5%;
+    top: 82px;
+    left: 56.5%;
 }
 #reincarnationtext3 {
     position: absolute;
-    top: 180px;
+    top: 117px;
     left: 13%;
 }
 #reincarnationtext8 {
     position: absolute;
-    top: 180px;
-    left: 46.5%;
+    top: 117px;
+    left: 56.5%;
 }
 #reincarnationtext4 {
     position: absolute;
-    top: 235px;
+    top: 152px;
     left: 13%;
 }
 #reincarnationtext9 {
     position: absolute;
-    top: 235px;
-    left: 46.5%;
+    top: 152px;
+    left: 56.5%;
 }
- 
+
 #reincarnationtext5 {
     position: absolute;
-    top: 290px;
+    top: 187px;
     left: 13%;
 }
 #reincarnationtext10 {
     position: absolute;
-    top: 290px;
-    left: 46.5%;
+    top: 187px;
+    left: 56.5%;
 }
- 
+
 #buyparticles1 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 97px;
-    left: 33%;
+    top: 73px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buyparticles2 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 152px;
-    left: 33%;
+    top: 108px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buyparticles3 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 207px;
-    left: 33%;
+    top: 143px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buyparticles4 {
     position: absolute;
     width: 150px;
     height: 30px;
-    top: 262px;
-    left: 33%;
+    top: 178px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
- 
+
 #buyparticles5 {
     position:absolute;
     width: 150px;
     height: 30px;
-    top: 317px;
-    left: 33%;
+    top: 213px;
+    left: 37%;
     margin-top: -15px;
     border: 1px solid white;
     border-radius: 8px;
- 
+
 }
 
 #toggle27 {
@@ -3273,7 +3532,7 @@ margin-left: -13px
 #autoreincarnate {
 	position: absolute;
 	top: 420px;
-	padding: 0px;
+	padding: 0;
 	left: 50%;
 	width: 750px;
 	margin-left: -375px;
@@ -3284,7 +3543,7 @@ margin-left: -13px
 #reincarnationamount {
 	position: absolute;
 	top: 418px;
-	padding: 0px;
+	padding: 0;
 	left: 50%;
 	width: 100px;
 	margin-left: -50px;
@@ -3292,7 +3551,7 @@ margin-left: -13px
 	color: white;
 	background-color: black
 }
- 
+
 #reincarnationinfo {
     color: lime;
 }
@@ -3311,30 +3570,23 @@ margin-left: -13px
 #research {
 	position: relative;
 	top: 118px;
-	padding: 0px;
+	padding: 0;
 	border: 1px solid green
-}
-#researchinfo {
-	position:absolute;
-	top:20px;
-	width: 500px;
-	margin-left: -250px;
-	left: 50%;
 }
 
 #researchtable {
 	position:absolute;
-	padding: 0px;
-	top: 75px;
+	padding: 0;
+	top: 15px;
 	left: 50%;
-	margin-left: -340px;
+	margin-left: -427px;
 	border-collapse:collapse;
-	font-size: 0px;
+	font-size: 0;
 }
 
 #researchinfo2 {
 	position:absolute;
-	top:250px;
+	top:280px;
 	width:1000px;
 	height: 42px;
 	left:50%;
@@ -3344,7 +3596,7 @@ margin-left: -13px
 #researchcost {
 	position: absolute;
 	position:absolute;
-	top:273px;
+	top:323px;
 	width:400px;
 	height: 42px;
 	left:50%;
@@ -3353,15 +3605,15 @@ margin-left: -13px
 
 #researchinfo3 {
 	position:absolute;
-	top:296px;
-	width: 100px;
+	top:346px;
+	width: 200px;
 	left: 50%;
-	margin-left: -50px;
+	margin-left: -100px;
 }
 
 #researchpointinfo {
 	position:absolute;
-	top: 330px;
+	top: 366px;
 	width: 900px;
 	left: 50%;
 	margin-left: -450px;
@@ -3370,17 +3622,15 @@ margin-left: -13px
 	position: absolute;
 	padding: 5px;
 	top: 460px;
-	left: 50%;
-	width: 1200px;
-	margin-left: -600px;
-	height: 20px;
+	margin-left: 25%;
+	width: 50%;
 	color: plum;
 	text-align: center;
 }
 #automaticobtainium{
 	position: absolute;
 	padding: 5px;
-	top: 350px;
+	top: 385px;
 	left: 50%;
 	width: 1200px;
 	margin-left: -600px;
@@ -3390,7 +3640,7 @@ margin-left: -13px
 #toggleresearchbuy {
 	position: absolute;
 	padding: 5px;
-	top: 400px;
+	top: 440px;
 	left: 40%;
 	width: 200px;
 	margin-left: -100px;
@@ -3400,23 +3650,14 @@ margin-left: -13px
 #toggleautoresearch {
 	position: absolute;
 	padding: 5px;
-	top: 400px;
+	top: 440px;
 	left: 60%;
 	width: 200px;
 	margin-left: -100px;
 	height: 30px;
 	text-align: center;
 }
-#contentteaser1 {
-	position: absolute;
-	padding: 5px;
-	top: 430px;
-	left: 50%;
-	width: 1200px;
-	margin-left: -600px;
-	height: 20px;
-	text-align: center;
-}
+
 #retrybutton {
 	position: absolute;
 	width: 70px;
@@ -3429,7 +3670,7 @@ margin-left: -13px
 	position:absolute;
 
 	position: relative;
-	padding: 0px;
+	padding: 0;
 	border: 1px solid limegreen;
 	top: 118px;
 	text-align: center
@@ -3437,7 +3678,7 @@ margin-left: -13px
 
 #shoptop {
 	position: absolute;
-	top: 0px;
+	top: 0;
 	left: 50%;
 	width: 600px;
 	margin-left: -300px;
@@ -3447,7 +3688,7 @@ margin-left: -13px
 #displayquarks {
 	position: absolute;
 	top: 35px;
-	left: 50%;
+	left: 23.25%;
 	width: 600px;
 	margin-left: -268px;
 	color: cyan;
@@ -3461,7 +3702,7 @@ margin-left: -13px
 	width: 200px;
 	margin-left: -67px;
 	color: orangered;
-	font-size: 1.2em; 
+	font-size: 1.2em;
 }
 #consumablesimage{
 	position: absolute;
@@ -3482,21 +3723,13 @@ margin-left: -13px
 	height: 40px;
 }
 
-#permshopupgrades {
-	position: absolute;
-	top: 100px;
-	left: 57%;
-	width: 200px;
-	margin-left: -114px;
-	color: limegreen;
-	font-size: 1.2em;
-}
+
 
 #shopToggles{
 	position: absolute;
-	top: 113px;
+	top: 335px;
 	left: 75%;
-	margin-left: -150px;
+	margin-left: -169px;
 
 }
 #resetShopUpgrades{
@@ -3510,7 +3743,7 @@ margin-left: -13px
 
 #permshopimage{
 	position: absolute;
-	top: 145px;
+	top: 50px;
 	left: 47%;
 	width: 400px;
 	margin-left: -270px;
@@ -3531,7 +3764,7 @@ margin-left: -13px
 	position:absolute;
 
 	position: relative;
-	padding: 0px;
+	padding: 0;
 	border: 1px solid brown;
 	top: 118px;
 	text-align: center
@@ -3539,7 +3772,7 @@ margin-left: -13px
 
 #antwelcome {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 10px;
 	width: 500px;
 	text-align: center;
@@ -3549,7 +3782,7 @@ margin-left: -13px
 }
 #antdescription {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 50px;
 	width: 500px;
 	text-align: center;
@@ -3558,7 +3791,7 @@ margin-left: -13px
 }
 #antrow1 {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 100px;
 	width: 500px;
 	text-align: center;
@@ -3568,7 +3801,7 @@ margin-left: -13px
 
 #crumbcount {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 120px;
 	width: 1000px;
 	left: 50%;
@@ -3579,7 +3812,7 @@ margin-left: -13px
 }
 #antrow2 {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 150px;
 	width: 750px;
 	text-align: center;
@@ -3589,7 +3822,7 @@ margin-left: -13px
 
 #anttierdescription {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	width: 750px;
 	text-align: center;
 	left: 50%;
@@ -3597,7 +3830,7 @@ margin-left: -13px
 }
 #antprice {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 20px;
 	width: 750px;
 	text-align: center;
@@ -3606,7 +3839,7 @@ margin-left: -13px
 }
 #antquantity {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 40px;
 	width: 750px;
 	text-align: center;
@@ -3615,7 +3848,7 @@ margin-left: -13px
 }
 #generateant {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 60px;
 	width: 750px;
 	text-align: center;
@@ -3627,7 +3860,7 @@ margin-left: -13px
 
 #antrow3 {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 260px;
 	width: 1000px;
 	text-align: center;
@@ -3636,7 +3869,7 @@ margin-left: -13px
 }
 #antspecies {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: -5px;
 	width: 1000px;
 	text-align: center;
@@ -3645,7 +3878,7 @@ margin-left: -13px
 }
 #antupgradedescription {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 25px;
 	width: 1000px;
 	text-align: center;
@@ -3654,7 +3887,7 @@ margin-left: -13px
 }
 #antupgradecost {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 55px;
 	width: 1000px;
 	text-align: center;
@@ -3663,7 +3896,7 @@ margin-left: -13px
 }
 #antupgradeeffect {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 85px;
 	width: 1000px;
 	text-align: center;
@@ -3673,7 +3906,7 @@ margin-left: -13px
 
 #antrow4 {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 410px;
 	width: 1000px;
 	text-align: center;
@@ -3682,32 +3915,55 @@ margin-left: -13px
 }
 #antToggleFeatures{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 474px;
 	width: 1000px;
+	height: 100px;
 	text-align: center;
-	left: 50%;
-	margin-left: -500px;
+	margin-left: 200px;
 }
 
 #toggleAntMax{
 	position: absolute;
 	height: 30px;
 	width: 100px;
-	left: 50%;
-	margin-left: -50px;
+	right: 51%;
+	border: 1px solid gold;
 }
 #toggleAutoSacrificeAnt{
 	position: absolute;
 	height: 30px;
-	width: 250px;
-	left: 50%;
-	margin-left: 75px;
+	width: 150px;
+	top: 0;
+	left: 51%;
+	border: 1px solid crimson
+}
+#autoSacrificeAntMode {
+	position: absolute;
+	height: 20px;
+	width: 150px;
+	left: 51%;
+	margin-left: 155px;
+	top: 0;
+	border: 1px solid green;
+}
+#autoAntSacrificeAmount {
+	position: absolute;
+	width: 150px;
+	left: 51%;
+	margin-left: 155px;
+	top: 21px;
+}
+#autoAntSacrifice {
+	position: absolute;
+	top: 25px;
+	text-align: center;
+	width: 100%;
 }
 
 #antSacrificeTimer{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	width: 300px;
 	margin-left: -118px;
 	top: 30px;
@@ -3716,7 +3972,7 @@ margin-left: -13px
 }
 #antSacrifice{
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	top: 70px;
 	text-align: center;
 	left: 70%;
@@ -3725,7 +3981,7 @@ margin-left: -13px
 
 #antSacrificeSummary {
 	position: absolute;
-	padding: 0px;
+	padding: 0;
 	width: 300px;
 	top: 30px;
 	text-align: center;
@@ -3754,8 +4010,343 @@ margin-left: -13px
 	position:absolute;
 	top: 122px;
 	left: 100px;
-	padding: 0px;
-	border-spacing: 0px;
+	padding: 0;
+	border-spacing: 0;
+}
+
+#cubes{
+	position:relative;
+	top: 118px;
+	padding: 0;
+}
+.cubeSwitchTabBtn{
+	position: absolute;
+	text-align: center;
+	width: 250px;
+	height: 30px;
+}
+#cubeToQuarkTimer{
+	position: absolute;
+	text-align: center;
+	top: 230px;
+	width: 250px;
+	left: 65px;
+	font-size: 1.2em;
+}
+#cubeQuarksToday{
+	position: absolute;
+	text-align: center;
+	top: 280px;
+	width: 300px;
+	left: 40px;
+}
+#tesseractQuarksToday{
+	position: absolute;
+	text-align: center;
+	top: 350px;
+	width: 300px;
+	left: 40px;
+}
+#hypercubeQuarksToday{
+	position: absolute;
+	text-align: center;
+	top: 420px;
+	width: 300px;
+	left: 40px;
+}
+#cubeQuarksOpenRequirement{
+	position: absolute;
+	text-align: center;
+	top: 300px;
+	width: 340px;
+	left: 20px;
+}
+#tesseractQuarksOpenRequirement{
+	position: absolute;
+	text-align: center;
+	top: 370px;
+	width: 340px;
+	left: 20px;
+}
+#hypercubeQuarksOpenRequirement{
+	position: absolute;
+	text-align: center;
+	top: 440px;
+	width: 340px;
+	left: 20px;
+}
+#cubeQuarksOpenToday{
+	position: absolute;
+	text-align: center;
+	top: 320px;
+	width: 340px;
+	left: 20px;
+}
+#tesseractQuarksOpenToday{
+	position: absolute;
+	text-align: center;
+	top: 390px;
+	width: 340px;
+	left: 20px;
+}
+#hypercubeQuarksOpenToday{
+	position: absolute;
+	text-align: center;
+	top: 460px;
+	width: 340px;
+	left: 20px;
+}
+.cubePlacement1{
+	position:absolute;
+	text-align: center;
+	top: 0;
+	font-size: 1.2em;
+	width: 700px;
+	left: 50%;
+	margin-left: -350px;
+}
+.cubePlacement2{
+	position:absolute;
+	text-align: center;
+	top: 30px;
+	font-size: 1.0em;
+	width: 1000px;
+	left: 50%;
+	margin-left: -500px;
+}
+.cubePlacement3{
+	position:absolute;
+	text-align: center;
+	top: 50px;
+	font-size: 1.0em;
+	width: 1000px;
+	left: 50%;
+	margin-left: -500px;
+}
+.cubePlacement4{
+	position: absolute;
+	text-align: center;
+	top: 100px;
+	left: 30%;
+	margin-left: -32px;
+}
+.cubePlacement5{
+	position: absolute;
+	text-align: center;
+	top: 84px;
+	left: 40%;
+	margin-left: -96px;
+}
+.cubeBtn {
+	height: 30px;
+	width: 100px;
+	border: 1px solid gold;
+	color: white;
+	background-color: black;
+}
+#open1Cube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: -96px;
+}
+#open20Cube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 6px;
+}
+#open1000Cube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 108px;
+}
+#openMostCube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 210px;
+}
+#open1Tesseract{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: -96px;
+}
+#open20Tesseract{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 6px;
+}
+#open1000Tesseract{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 108px;
+}
+#open1Hypercube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: -96px;
+}
+#open20Hypercube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 6px;
+}
+#open1000Hypercube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 108px;
+}
+#openMostHypercube{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 210px;
+}
+#openMostTesseract{
+	position: absolute;
+	text-align: center;
+	top: 128px;
+	left: 40%;
+	margin-left: 210px;
+}
+.cubeBonus{
+	position:absolute;
+	top: 170px;
+	left: 30%;
+	margin-left: -16px;
+}
+.cubeIcon{
+	position:absolute;
+	padding: 0;
+	border-spacing: 0;
+}
+#cube1Bonus{
+	width: 1500px;
+}
+#tesseract1Bonus{
+	width: 1500px;
+}
+#hypercube1Bonus{
+	width: 1500px;
+}
+#cubeAmount2{
+	position:absolute;
+	padding: 0;
+	top: 20px;
+	left: 50%;
+	width: 1000px;
+	margin-left: -500px;
+	text-align: center;
+	color: white;
+}
+#cubeUpgradeTable {
+	position:absolute;
+	padding: 0;
+	top: 75px;
+	left: 50%;
+	margin-left: -170px;
+	border-collapse:collapse;
+	font-size: 0;
+}
+#cubeUpgradeName {
+	position:absolute;
+	top:250px;
+	width:600px;
+	height: 42px;
+	left:50%;
+	margin-left: -300px;
+}
+
+#cubeUpgradeDescription {
+	position: absolute;
+	position:absolute;
+	top:273px;
+	width:500px;
+	height: 42px;
+	left:50%;
+	margin-left: -250px;
+}
+
+#cubeUpgradeCost {
+	position:absolute;
+	top:336px;
+	width: 600px;
+	left: 50%;
+	margin-left: -300px;
+}
+#cubeUpgradeLevel {
+	position:absolute;
+	top:359px;
+	width: 200px;
+	left: 50%;
+	margin-left: -100px;
+}
+#toggleCubeBuy {
+	position:absolute;
+	top:414px;
+	width: 200px;
+	left: 50%;
+	margin-left: -100px;
+	height: 30px;
+}
+
+.gridImg{
+	cursor: pointer;
+}
+#ascensionAutoEnable {
+	position:absolute;
+	width: 150px;
+	top: 664px;
+	left: 50%;
+	margin-left: -75px;
+}
+#ascensionAutoToggle {
+	position:absolute;
+	width: 150px;
+	top: 684px;
+	left: 50%;
+	margin-left: -75px;
+}
+#autoAscend {
+	position: absolute;
+	top: 620px;
+	padding: 0;
+	left: 50%;
+	width: 750px;
+	margin-left: -375px;
+	text-align: center;
+	color: white
+}
+
+#ascensionAmount {
+	position: absolute;
+	top: 618px;
+	padding: 0;
+	left: 50%;
+	width: 100px;
+	margin-left: -50px;
+	border: 1px solid orange;
+	color: gold;
+	background-color: black
 }
 #switchsettingtab {
 	position: absolute;
@@ -3763,8 +4354,18 @@ margin-left: -13px
 	width: 200px;
 	left: 50%;
 	margin-left: -100px;
-	top: 40px;
+	top: 10px;
 	border: 2px solid gold;
+}
+#switchsettingtab2 {
+	position: absolute;
+	height: 30px;
+	width: 200px;
+	left: 50%;
+	margin-left: -100px;
+	top: 40px;
+	border: 2px solid orange;
+	
 }
 #programminghelp {
 	position: absolute;
@@ -3781,7 +4382,7 @@ margin-left: -13px
 	width: 1000px;
 	left: 50%;
 	margin-left: -500px;
-	top: 130px;
+	top: 190px;
 	font-size: 1.2em;
 }
 #boosters {
@@ -3790,7 +4391,7 @@ margin-left: -13px
 	width: 1000px;
 	left: 50%;
 	margin-left: -500px;
-	top: 180px;
+	top: 250px;
 	font-size: 1.2em;
 }
 #shameless {
@@ -3799,6 +4400,431 @@ margin-left: -13px
 	width: 1000px;
 	left: 50%;
 	margin-left: -500px;
-	top: 280px;
+	top: 400px;
 	font-size: 1.5em;
+}
+#ascension {
+	position: relative;
+	padding: 0;
+	top: 118px;
+	border: 1px solid orange
+}
+.ascendPics{
+	color: orange;
+	border: 1px solid yellow;
+	position: absolute;
+	margin-left: -18px;
+}
+.ascendTexts {
+	color: orange;
+	position: absolute;
+}
+.tesseractBuyBtn {
+	position: absolute;
+	width: 150px;
+	height: 30px;
+	left: 37%;
+	margin-top: -15px;
+	border: 1px solid white;
+	border-radius: 8px;
+}
+
+#tesseractInfo{
+	position: absolute;
+    padding: 0;
+    top: 240px;
+    width: 1000px;
+    left: 50%;
+    margin-left: -500px;
+}
+#ascendShardInfo{
+	position: absolute;
+    padding: 0;
+    top: 260px;
+    width: 1000px;
+    left: 50%;
+    margin-left: -500px;
+}
+#constantUpgradeTable{
+	position: absolute;
+    padding: 0;
+    top: 300px;
+    left: 50%;
+    margin-left: -180px;
+}
+#constUpgradeDescription{
+	position: absolute;
+    padding: 0;
+    top: 325px;
+    width: 1000px;
+	left: 50%;
+	margin-left: -180px;
+}
+#constUpgradeLevel{
+	position: absolute;
+    padding: 0;
+    top: 365px;
+    width: 1000px;
+	left: 50%;
+	margin-left: -180px;
+}
+#constUpgradeCost{
+	position: absolute;
+    padding: 0;
+    top: 345px;
+    width: 1000px;
+	left: 50%;
+	margin-left: -180px;
+}
+#constUpgradeEffect1{
+	position: absolute;
+    padding: 0;
+    top: 385px;
+    width: 1000px;
+	left: 50%;
+	margin-left: -180px;
+}
+#ascendHotKeys{
+	position: absolute;
+	padding: 5px;
+	top: 460px;
+	left: 50%;
+	width: 1200px;
+	margin-left: -600px;
+	height: 20px;
+	color: gray;
+	text-align: center;
+}
+
+
+#statisticsSubTab {
+	max-height: 800px;
+	padding-top: 52px;
+	flex-wrap: wrap;
+}
+.statContainer {
+	width: 400px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	margin-bottom: auto;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+.statPortion{
+	width: 380px;
+	height: auto;
+	margin: auto;
+	color: white;
+	text-align: left;
+	font-size: 1em;
+}
+.statPortion.indented{
+	width: 360px;
+	padding-left: 20px;
+}
+.statNumber{
+	color: yellow;
+	font-size: 0.9em;
+	float: right;
+}
+.statPortion.statTotal{
+	color: orange;
+	font-weight: bold;
+	font-size: 1em;
+}
+.statNumber.statTotal{
+	color: deepskyblue;
+}
+.constUpgrade{
+	cursor: pointer;
+}
+
+#settingsubtab {
+	position: relative;
+}
+
+.subtabSwitcher {
+	text-align: left;
+	margin: 9px 0;
+}
+
+.subtabSwitcher > button {
+	display: inline-block;
+	overflow: hidden;
+	height: 30px;
+	width: 150px;
+	text-align: center;
+	/* margins carefully chosen to be as close to buildings tab as possible */
+	margin-left: calc(12% - 154px);
+}
+.subtabSwitcher > button:first-child { margin-left: 8.75%; }
+
+.subtabSwitcher > button.buttonActive {
+	background-color: crimson;
+}
+
+.subtabContent {
+	display: none;
+}
+.subtabContent.subtabActive {
+	display: block;
+}
+.subtabContent.subtabActive.subtabDisplayFlex {
+	display: flex;
+}
+
+.historySubTab {
+	color: white;
+}
+
+.historySubTab p {
+	margin: 8px 0 12px 0;
+}
+
+.historySubTab table {
+	margin: auto;
+	border-collapse: collapse;
+	min-width: 100%;
+}
+
+.historySubTab tbody {
+	text-align: left;
+}
+
+.historySubTab tbody img {
+	vertical-align: middle;
+	height: 20px;
+	margin-right: 3px;
+}
+
+.historySubTab tbody td {
+	padding: 4px 6px;
+	margin-right: 10px;
+}
+.historySubTab tbody .history-gain:last-child { margin-right: 0; }
+.historySubTab tbody tr:nth-child(odd) {
+	background: #262626;
+}
+.historySubTab tbody .history-seconds {
+	max-width: 90px; /* fits "90d20h50m50s" */
+	white-space: nowrap;
+}
+.historySubTab tbody .history-filler {
+	padding: 0;
+}
+.historySubTab tbody *[title] {
+	text-decoration: underline;
+}
+
+#historyReset, #historyAnts {
+	margin-left: 20px;
+}
+#historyAscend {
+	margin: 0 auto;
+}
+
+
+#historyTogglePerSecondButton {
+	float: right;
+}
+
+.onOffToggle {
+	text-align: center;
+	padding: 5px;
+	border: 2px solid red;
+}
+
+#historyResetTable, #historyAntsTable {
+	min-width: 588px;
+}
+
+#historyAscendTable {
+	min-width: 1000px;
+}
+
+.historyTableWrap {
+	min-width: 620px;
+	max-height: 450px;
+	overflow-y: auto;
+}
+#historyAscend .historyTableWrap {
+	min-width: 1032px;
+}
+
+.runeIcons{
+	position: absolute;
+}
+.runeTexts{
+	position: absolute;
+}
+.runeButtons{
+	position: absolute;
+	height: 30px;
+	width: 325px;
+	border: 1px solid yellow;
+	color: gold;
+}
+.runeInputSettings{
+	top: 45px;
+	left: 40%;
+}
+#buyRuneBlessingInput{
+	position: absolute;
+	top: 64px;
+	left: 35%;
+	width: 60px;
+	border: 2px solid crimson;
+	background-color: #171717;
+	color: white
+}
+#buyRuneSpiritInput{
+	position: absolute;
+	top: 64px;
+	left: 35%;
+	width: 60px;
+	border: 2px solid orange;
+	background-color: #171717;
+	color: white
+}
+.ascendAuto{
+	position: absolute;
+	height: 30px;
+	width: 80px;
+	border: 2px solid red;
+	left: 49.85%;
+}
+
+#corruptionIntroduction{
+	position: absolute;
+	top: 190px;
+	font-size: 1.2em;
+	color: darkorchid;
+	left: 50%;
+	width: 600px;
+	margin-left: -300px;
+	text-align: center;
+}
+#corruptionInfo1{
+	position: absolute;
+	top: 210px;
+	color: yellow;
+	left: 50%;
+	width: 800px;
+	margin-left: -400px;
+	text-align: center;
+}
+#corruptionList{
+	position: absolute;
+	top: 240px;
+	left: 50%;
+	margin-left: -344px;
+}
+#corruptionDetails {
+	position: absolute;
+	top: 300px;
+	margin-left: -400px;
+	left: 50%;
+}
+#corruptionName{
+	position: absolute;
+	font-size: 1.2em;
+	text-align: center;
+	width: 800px;
+}
+#corruptionDescription{
+	position: absolute;
+	top: 25px;
+	text-align: center;
+	width: 800px;
+}
+#corruptionLevelCurrent{
+	position: absolute;
+	top: 45px;
+	text-align: center;
+	width: 800px;
+}
+#corruptionLevelPlanned{
+	position: absolute;
+	top: 65px;
+	text-align: center;
+	width: 800px;
+}
+#corruptionMultiplierContribution{
+	position: absolute;
+	top: 85px;
+	text-align: center;
+	width: 800px;
+}
+#corruptLevelUp{
+	position: absolute;
+	top: 135px;
+	height: 30px;
+	width: 200px;
+	margin-left: 180px;
+	border: 2px solid gold
+}
+#corruptLevelDown{
+	position: absolute;
+	top: 135px;
+	height: 30px;
+	width: 200px;
+	margin-left: 420px;
+	border: 2px solid gold
+}
+#corruptionCleanse{
+	position: absolute;
+	top: 135px;
+	height: 30px;
+	width: 200px;
+	margin-left: 300px;
+	border: 2px solid darkmagenta
+}
+#corruptionAntExponent{
+	position: absolute;
+	top: 450px;
+	left: 50%;
+	width: 800px;
+	margin-left: -400px;
+	text-align: center;
+}
+#corruptionBank{
+	position: absolute;
+	top: 480px;
+	left: 50%;
+	width: 800px;
+	margin-left: -400px;
+	text-align: center;
+}
+#corruptionScore{
+	position: absolute;
+	top: 500px;
+	left: 50%;
+	width: 900px;
+	margin-left: -450px;
+	text-align: center;
+}
+#corruptionCubes{
+	position: absolute;
+	top: 520px;
+	left: 50%;
+	width: 900px;
+	margin-left: -450px;
+	text-align: center;
+}
+#corruptionTesseracts{
+	position: absolute;
+	top: 540px;
+	left: 50%;
+	width: 900px;
+	margin-left: -450px;
+	text-align: center;
+}
+#corruptionHypercubes{
+	position: absolute;
+	top: 560px;
+	left: 50%;
+	width: 900px;
+	margin-left: -450px;
+	text-align: center;
 }

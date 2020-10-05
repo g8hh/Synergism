@@ -1186,7 +1186,6 @@ var cnPostfix = {
     'Particles': '粒子',
     'to pay taxes!': '来支付税金!',
     'the production!': '产量加成!',
-    'free Accelerators.': '免费的加速器',
     '[Stacks with upgrade 1]!': '[从第一级开始计算]!',
     'more Diamonds on prestige': '额外钻石在转生时',
     '[Enter a number above to toggle]': '[在上方输入一个数字来控制]',
@@ -1246,7 +1245,7 @@ var cnRegReplace = new Map([
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier: (.+)$/, '加速效果：$1 || 加速倍率：$2'], //主界面
     [/^Multipliers: (.+) \[(.+)\]$/, '加倍器：$1 [$2]'], //主界面
     [/^Multiplier Power: (.+) \|\| Multiplier: (.+)$/, '加倍效果：$1 || 加倍倍率：$2'], //主界面
-    [/^Accelerator Boosts: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
+    [/^Accelerator Boost: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
     [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速效果，并增加5个免费的加速器。'], //主界面
     [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'],
 

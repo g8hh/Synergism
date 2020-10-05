@@ -326,6 +326,16 @@ var cnItems = {
     'Duplication Spirit Power': '重叠魂灵能量',
     'Constant upgrade': '常数升级',
     'TOTAL CUBE MULTIPLIER': '方盒总倍率',
+    'Here\'s what you got from your last resets (except challenges)': '这就是您从之前重置中获得的东西(挑战除外)',
+    'Your sacrifices got you the following': '从献祭中您获得了以下内容',
+    'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
+    'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
+    'Own': '拥有',
+    'Buy Yer\' Potions!': '买点药剂！',
+    'Buy 1 for 100 Quarks': '花费100夸克购买1瓶',
+    'USE 1 [+2hr]': '使用1瓶[2小时效果]',
+    'Not Bought': '未购买',
+    'Maxed!': '达到最大等级！',
     '': '',
     '': '',
     '': '',
@@ -333,8 +343,9 @@ var cnItems = {
     '': '',
     '': '',
     '': '',
-    '': '',
-    '': '',
+    'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
+    'Shop Confirmations: ON': '商店确认框：开',
+    'Shop Confirmations: OFF': '商店确认框：关',
     //主界面结束
 
 
@@ -394,7 +405,6 @@ var cnItems = {
     'Instantly gain 2 hours of Obtainium, based on your all time best Obtainium/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高难得素/秒!',
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
-    'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店,你肯定想不到这里有些什么!',
     '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
     'Start [No Multipliers]': '开始[无加倍]',
     'Start [No Accelerators]': '开始[无加速]',
@@ -407,8 +417,6 @@ var cnItems = {
     'Start <No Runes>': '开始[无符文]',
     'None': '无',
     'Current': '当前',
-    'Duplication Spirit Power': '复制精神力量',
-    'Own': '拥有',
     'Start Challenge': '开始挑战',
     '': '',
     '': '',
@@ -897,7 +905,6 @@ var cnPrefix = {
     'Instead of needing enough coins to get autocompletions, and waiting to complete, you instantly completions up until highest ever completed! Does not work in R. Challenges.': '不再需要等待足够的金币使自动挑战完成所有挑战,你将立即获得等同于挑战最高等级的挑战完成次数!对转世挑战无效',
     'This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium.': '资金夺取但提供一个很酷的统计数据,+1%所有资源产出,包括难得素和祭品',
     'Permanent Upgrades!': '永久升级!',
-    'Buy Yer\' Potions!': '购买一些药剂',
     'Gain +20% more offerings thanks to generous Discord Server Boosters!': '获得+20%额外祭品,感谢discord慷慨的帮助',
     'Effect: Gain +1% per Booster that the server has, up until 20!': '效果:获得+1%每个discord获得的帮助,最多20!',
     'Gain +60% more Ant Speed thanks to generous Discord Server Boosters!': '获得+60%额外蚂蚁速度,感谢discord慷慨的帮助',
@@ -1056,7 +1063,6 @@ var cnPrefix = {
     'A more convoluted trick makes your base ant ELO increase by 5 per level again!': '一个有些复杂的把戏使你的基础蚂蚁ELO额外增加5每级',
     'Gain +1% more ELO from ant sources per level because why not?': '获得+1%额外蚂蚁ELO,因为...为什么不呢?',
     'Permanently unlock a Shop talisman! [Warning: you can\'t refund this and this is VERY expensive to level. Be sure you want to buy it!': '永久解锁一个商店护身符[警告:你无法重置这项升级,请确认你真的想购买它!',
-    'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[消耗:15夸克]',
     'Each level gives a 1.5x speed multiplier to all Ant tiers\' production! Short and simple.': '每级提供一个1.5x所有蚂蚁的速度加成!简单有效',
     'Sadistic Challenge I': '虐待狂挑战1',
     'I\'m sorry for what I\'ve unleashed onto the world.': '我觉得我活着就是个错误',
@@ -1320,7 +1326,6 @@ var cnPostfix = {
     '[Enter a number above to toggle]': '[在上方输入一个数字来控制]',
     'free Multipliers.': '免费的加倍器',
     'free multipliers from bought Alchemies.': '免费的加倍器基于已购买的炼金术',
-    'Quarks!': '夸克!',
     '           ': '',
     '          ': '',
     '         ': '',
@@ -1448,5 +1453,8 @@ var cnRegReplace = new Map([
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面
     [/^(\s+)Click the image below to join the Discord!$/, '$1点击下方的图片加入Discord频道！'], //主界面
     [/^(\s+)\[NEW!\] Support Development on Patreon!$/, '$1[新！]在Patreon上支持本游戏开发！'], //主界面
+    [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面
+    [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面
+    [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面
 
 ]);

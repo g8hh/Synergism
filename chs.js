@@ -163,7 +163,7 @@ var cnItems = {
     'Tesseract Gifts': '超立方的赠礼',
     'Hypercube Benedictions': '高阶立方的恩赐',
     'Cube Upgrades': '方盒升级',
-    '': '',
+    '=- Time Until Daily Refill -=-': '=- 直到每日重置的时间 -=-',
     '': '',
     '': '',
     '': '',
@@ -259,7 +259,6 @@ var cnItems = {
     'Start <Cost++>': '开始[价格暴增]',
     'Start <No Runes>': '开始[无符文]',
     'None': '无',
-    '=- Time Until Daily Refill -=-': '=-直到日常重开的时间-=-',
     'Current': '当前',
     'Duplication Spirit Power': '复制精神力量',
     'Hermes Gift power': '爱马仕的礼物能力',
@@ -1311,6 +1310,6 @@ var cnRegReplace = new Map([
     [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面
     [/^Sacrifice when the timer is at least (.+) seconds \(In-game time\), Currently$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为'], //主界面
     [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为'], //主界面
-
+    [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面
 
 ]);

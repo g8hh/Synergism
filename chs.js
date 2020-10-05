@@ -21,43 +21,47 @@ var cnItems = {
     'Per second: ON': '每秒产量：开',
     'Per second: OFF': '每秒产量：关',
     'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
     //主脚本结束
-    
-    //未分类：
+
+    //主界面
     'Buildings': '建筑',
+    'Upgrades': '升级',
+    'Settings': '设置',
+    'Achievements': '成就',
+    'Runes': '符文',
     'Challenges': '挑战',
+    'Research': '研究',
+    'Shop': '商店',
+    'Anthill': '蚁丘',
+    'WOW! Cubes': '惊奇方盒',
+    'Corruption': '腐化',
+    'Coin Buildings': '金币建筑',
+    'Diamond Buildings': '钻石建筑',
+    'Mythos Buildings': '神话建筑',
+    'Particle Buildings': '粒子建筑',
+    'Tesseract Buildings': '超立方建筑',
+    'Toggle amount to buy': '切换购买数量',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //主界面结束
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //未分类：
     'Click one of the buttons on the left to start a challenge!': '点击选择左侧一个挑战按钮来开启挑战!',
     'Current Challenge: None': '正在进行的挑战:无',
     'Current Challenges: No Accelerators [Transcension]': '正在进行的挑战:无加速（超越挑战）',
@@ -67,22 +71,16 @@ var cnItems = {
     'Prism Rune': '棱柱符文',
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景:未完成，提供加成',
     'Reincarnation': '转世',
-    'Research': '研究',
-    'Runes': '符文',
     'SACRIFICE': '献祭',
-    'Settings': '选项',
     'Speed Rune': '加速符文',
     'Successfully imported your savefile. Go nuts!': '存档已导入，去疯吧!',
     'Tax+': '税收增加挑战',
     'Thrift Rune': '节俭符文',
     'To leave a challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '想要退出挑战，你可以按列表里的快捷键或者点击上方转生按钮右边的C按钮',
     'To leave a reincarnation challenge, press the grey Challenge "C" instead!': '如果想要退出转世挑战，请按灰色的C',
-    'Toggle amount to buy': '批量购买',
     'Toggle amount to use per sacrifice': '批量献祭',
     'Transcension': '超越',
-    'Upgrades': '升级',
     'Hover over an achievement to view information.': '鼠标悬停在成就上查看详细信息',
-    'Achievements': '成就',
     'Copied to clickboard! Paste it somewhere safe.': '存档已导出至剪贴板!请把它粘贴在安全的地方',
     'Import the game here.': '在这里导入游戏',
     'Confirmation Toggles': '转生时的弹窗询问',
@@ -149,7 +147,6 @@ var cnItems = {
     'Start <No Runes>': '开始[无符文]',
     'None': '无',
     'The ants welcome you to their home.': '蚂蚁们欢迎你来到他们的家',
-    'Anthill': '蚁丘',
     'Hover over the icons for description. Click icons to buy!': '悬停在图标上获取信息,点击图标购买',
     'FORTIFY': '加固',
     'ENHANCE': '灌注',
@@ -172,7 +169,6 @@ var cnItems = {
     'Current Effect': '当前效果',
     'Current': '当前',
     'Current Level': '当前等级',
-    'Diamond Buildings': '钻石建筑',
     'Duplication Spirit Power': '复制精神力量',
     'Hermes Gift power': '爱马仕的礼物能力',
     'Open All': '全部打开',
@@ -913,15 +909,12 @@ var cnPrefix = {
     'Coal Rigs': '煤矿钻机',
     'Coal Plants': '煤电厂',
     'Refineries': '炼油厂',
-    'Cost:': '消耗:',
     'Effect: ': '效果:',
-    'Workers': '工人',
     'Accelerator Boost': '加速器加成',
     'Investments': '投资',
     'Printers': '打印机',
     'Coin Mints': '铸币厂',
     'Alchemies': '炼金术',
-    'Coins/Sec': '金币/秒',
     'Accelerators': '加速器',
     'Multipliers': '加倍器',
     'Shards/Sec:': '碎片/秒',
@@ -949,7 +942,6 @@ var cnPrefix = {
     'You have': '你有',
     'Thrift Rune Bonus:': '节俭符文加成:',
     'seconds.': '秒',
-    'Shop': '商店',
     'Loading Offline Progress...': '加载离线进度...',
     'BUY': '购买',
     'Chronos': '时光',
@@ -1215,8 +1207,6 @@ var cnPostfix = {
     'free Multipliers.': '免费的加倍器',
     'free multipliers from bought Alchemies.': '免费的加倍器基于已购买的炼金术',
     'Coins': '金币',
-    'coins.': '金币',
-    'Coins.': '金币',
     'Diamonds': '钻石',
     'Diamonds.': '钻石',
     'Mythos': '神话',
@@ -1264,9 +1254,11 @@ var cnExcludePostfix = [
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
-    [/^(.+)s until +(\d+) export Quark$/, '距离下次增加导出奖励$2夸克还有$1秒'], //主脚本
+    [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '夸克导出总奖励：$1[最大为$2]'], //主脚本
-
+    [/^Workers: (.+) \[(.+))\]$/, '工人：$1 [$2]'], //主界面
+    [/^Cost: (.+) Coins.$/, '花费：$1 金币'], //主界面
+    [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2]'], //主界面
 
 
 

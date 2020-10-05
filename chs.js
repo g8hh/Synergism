@@ -147,6 +147,23 @@ var cnItems = {
     'Gain Obtainium when you Reincarnate!': '转世以获得更多难得素!',
     'Upgrade: 1 Level': '升级：1级',
     'Upgrade: MAX [if possible]': '升级：最大[尽可能]',
+    'The ants welcome you to their home.': '蚂蚁们欢迎您来到它们的家',
+    'Hover over the icons for description. Click icons to buy!': '鼠标停在图标上可获取信息。点击图标来购买！',
+    'Buy Max: ON': '购买最大数量：开',
+    'Buy Max: OFF': '购买最大数量：关',
+    'Auto Sacrifice: ON': '自动献祭：开',
+    'Auto Sacrifice: OFF': '自动献祭：关',
+    'Mode: In-game time': '模式：游戏时间',
+    'Mode: Real time': '模式：现实时间',
+    'Your Ant ELO is': '您的蚂蚁强度分为',
+    'Upgrade Multiplier': '升级获取的倍率',
+    'Time Multiplier': '时间倍率',
+    'Reset Anthill features for': '重置蚁丘可获得',
+    'Cube Blessings': '方盒的祝福',
+    'Tesseract Gifts': '超立方的赠礼',
+    'Hypercube Benedictions': '高阶立方的恩赐',
+    'Cube Upgrades': '方盒升级',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -242,8 +259,6 @@ var cnItems = {
     'Start <Cost++>': '开始[价格暴增]',
     'Start <No Runes>': '开始[无符文]',
     'None': '无',
-    'The ants welcome you to their home.': '蚂蚁们欢迎你来到他们的家',
-    'Hover over the icons for description. Click icons to buy!': '悬停在图标上获取信息,点击图标购买',
     '=- Time Until Daily Refill -=-': '=-直到日常重开的时间-=-',
     'Current': '当前',
     'Duplication Spirit Power': '复制精神力量',
@@ -896,10 +911,6 @@ var cnPrefix = {
     'Mortuus Est Formicidae Level': '死神蚁学等级',
     'Sacrifices itself to allow you to equip [Unlocks the Ant Talisman!': '献祭它本身使你可以装备它[解锁蚂蚁护身符',
     'CURRENT EFFECT: Unlocks the talisman!': '当前效果:解锁护身符!',
-    'Your Ant ELO is': '你的蚂蚁ELO有',
-    'Time Multiplier': '时间奖励',
-    'Reset Anthill features for': '重置蚁丘进度以获得',
-    'Ant Multiplier': '蚂蚁倍率',
     'Current Obtainium/sec': '当前难得素/秒',
     'Alright, you\'re past the big wall. How about adding +.001 to Inceptus Ant efficiency per level?': '好吧,你现在已经突破了那座高墙,让我们来提升.001蚂蚁繁殖每级怎么样?',
     'Gain +1 bonus level to ALL ants per level! A rainbow attack!': '所有蚂蚁升级获得+1等级!一个彩虹攻击!',
@@ -1300,8 +1311,9 @@ var cnRegReplace = new Map([
     [/1 in (.+) EXP$/, '1级需要$1经验值'], //主界面
     [/Level (.+)\/(.*)$/, '等级 $1/$2'], //主界面
     [/Welcome to the future! I'd recommend studying the green-bordered researches first.(\s+)The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!$/, '欢迎来到研究！我建议先升级绿色边框的研究。红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！'], //主界面
-
-
+    [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面
+    [/Sacrifice when the timer is at least seconds \(In-game time\), Currently$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为'], //主界面
+    [/Sacrifice when the timer is at least seconds \(Real-time\), Currently$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为'], //主界面
 
 
 ]);

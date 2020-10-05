@@ -53,11 +53,11 @@ var cnItems = {
     'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer.': '按[1]，[2]，[3]，[4]或[5]来购买生产者。',
     'Auto Reincarnate [ON]': '自动转世[开]',
     'Auto Reincarnate [OFF]': '自动转世[关]',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Hover over an icon for a description of the upgrade. Click to buy it!': '将鼠标停在图标上可以获得升级描述。点击以购买！',
+    'Cost': '花费',
+    'Current Level': '当前等级',
+    'Current Effect': '当前效果',
+    'from your Constant': '数学常数',
     '': '',
     '': '',
     '': '',
@@ -190,9 +190,7 @@ var cnItems = {
     '=-=-= Effect': '=-=-= 效果',
     '=-=- Resources Required to Level Up -=-=-': '=-=-升级所需的资源-=-=-',
     '=- Time Until Daily Refill -=-': '=-直到日常重开的时间-=-',
-    'Current Effect': '当前效果',
     'Current': '当前',
-    'Current Level': '当前等级',
     'Duplication Spirit Power': '复制精神力量',
     'Hermes Gift power': '爱马仕的礼物能力',
     'Open All': '全部打开',
@@ -1237,14 +1235,20 @@ var cnRegReplace = new Map([
     [/^Elements\/sec(.*)$/, '元素每秒产量$1'], //主界面
     [/^Pulsars\/sec(.*)$/, '脉冲星每秒产量$1'], //主界面
     [/^Quasars\/sec(.*)$/, '类星体每秒产量$1'], //主界面
-    [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production: (.+)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为：$3倍'], //主界面
+    [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production(.+)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为$3'], //主界面
     [/^Thanks to Research 2x14, you also multiply Crystal production by(.*)$/, '由于研究2x14的效果，您还使水晶产量倍率变为$1'], //主界面
     [/^Thanks to Research 2x15, you also multiply Mythos Shard production by(.*)$/, '由于研究2x15的效果，您还使神话碎片产量倍率变为$1'], //主界面
     [/^Reincarnate when your Particles can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当粒子为之前的$1倍时转世[在上方输入设置数值]。当前倍率：$2。'], //主界面
     [/^Reincarnate when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转世[在上方输入设置数值]。当前时间：$2秒。'], //主界面
-
-
-
+    [/^Dot: (.+) \[(.+)\]$/, '点：$1 [$2]'], //主界面
+    [/^Vector: (.+) \[(.+)\]$/, '矢量：$1 [$2]'], //主界面
+    [/^Three-Space: (.+) \[(.+)\]$/, '三维空间：$1 [$2]'], //主界面
+    [/^Bent Time: (.+) \[(.+)\]$/, '时间扭曲：$1 [$2]'], //主界面
+    [/^Hilbert Space: (.+) \[(.+)\]$/, '希尔伯特空间：$1 [$2]'], //主界面
+    [/^Cost: (.+) Tesseracts$/, '花费：$1 超立方'], //主界面
+    [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面
+    [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$1。'], //主界面
+    [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面
 
 
 ]);

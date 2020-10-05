@@ -1246,6 +1246,11 @@ var cnRegReplace = new Map([
     [/^Bent Time: (.+) \[(.+)\]$/, '时间扭曲：$1 [$2]'], //主界面
     [/^Hilbert Space: (.+) \[(.+)\]$/, '希尔伯特空间：$1 [$2]'], //主界面
     [/^Cost: (.+) Tesseracts$/, '花费：$1 超立方'], //主界面
+    [/^\+Constant\/sec(.*)$/, '数学常数每秒产量$1'], //主界面
+    [/^Dot\/sec(.*)$/, '点每秒产量$1'], //主界面
+    [/^Vector\/sec(.*)$/, '矢量每秒产量$1'], //主界面
+    [/^Three-Space\/sec(.*)$/, '三维空间每秒产量$1'], //主界面
+    [/^Bent Time\/sec(.*)$/, '时间扭曲每秒产量$1'], //主界面
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面
     [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$1。'], //主界面
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面

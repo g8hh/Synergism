@@ -56,7 +56,7 @@ var cnItems = {
     'Enchantments/sec': '附魔每秒产量',
     'Wizards/sec': '法师每秒产量',
     'Oracles/sec': '先知每秒产量',
-    'Each Multiplier Boost increases the base effect of Multipliers by 0.005!': '每1点加倍器加成使加倍器的基础效果增加0.005！',
+    'Each Multiplier Boost increases the base effect of Multipliers by 0.005!': '每1个加倍器加成使加倍器的基础效果增加0.005！',
     'Auto Transcend [ON]': '自动超越[开]',
     'Auto Transcend [OFF]': '自动超越[关]',
     '': '',
@@ -1275,7 +1275,7 @@ var cnRegReplace = new Map([
     [/^Oracles: (.+) \[(.+)\]$/, '先知：$1 [$2]'], //主界面
     [/^Grandmasters: (.+) \[(.+)\]$/, '宗师：$1 [$2]'], //主界面
     [/^Cost: (.+) Mythos$/, '花费：$1 神话'], //主界面
-    [/^You have (.+) Mythos Shards, providing (.+)x Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此乘以$2倍。'], //主界面
+    [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面
     [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面
     [/^Transcend when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面
 

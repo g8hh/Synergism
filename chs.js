@@ -42,24 +42,15 @@ var cnItems = {
     'Tesseract Buildings': '超立方建筑',
     'Toggle amount to buy': '切换购买数量',
     'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!': '按[1]，[2]，[3]，[4]或[5]来购买生产者，按[A]来购买加速器，按[M]来购买加倍器，按[B]来购买加速器加成，用[←]和[→]来切换选项卡。祝您玩的开心！',
-    'Ref./sec': '炼油厂每秒产量',
-    'Plants/sec': '煤电厂每秒产量',
-    'Rigs/sec': '煤钻机每秒产量',
-    'Pickaxes/sec': '十字镐每秒产量',
     'Hover over a crystal upgrade to get information!': '将鼠标停在水晶升级上可以获得更多信息！',
     'Auto Prestige [ON]': '自动转生[开]',
     'Auto Prestige [OFF]': '自动转生[关]',
     'Level': '等级',
     'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer. Press [6], [7], [8], [9] or [0] to buy the corresponding Crystal upgrade starting on the left.': '按[1]，[2]，[3]，[4]或[5]来购买生产者，按[6]，[7]，[8]，[9]或[0]来购买从左往右数相应位置的水晶升级。',
-    'Shards/sec': '神话碎片每秒产量',
-    'Augments/sec': '强化每秒产量',
-    'Enchantments/sec': '附魔每秒产量',
-    'Wizards/sec': '法师每秒产量',
-    'Oracles/sec': '先知每秒产量',
     'Each Multiplier Boost increases the base effect of Multipliers by 0.005!': '每1个加倍器加成使加倍器的基础效果增加0.005！',
     'Auto Transcend [ON]': '自动超越[开]',
     'Auto Transcend [OFF]': '自动超越[关]',
-    '': '',
+    'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer.': '按[1]，[2]，[3]，[4]或[5]来购买生产者。',
     '': '',
     '': '',
     '': '',
@@ -131,7 +122,6 @@ var cnItems = {
     '~(1 + Level^2 * 2^Level / 256)x Crystal Production. +1 free level for each Crystal upgrade per 10 levels!': '~(1+等级^2*2^等级/256)倍水晶产量,每10级额外获得一级所有水晶升级',
     'Duplication Rune': '重叠符文',
     'Press [1], [2], [3], or [4] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1],[2],[3]或[4]使用祭品献祭对应符文,从左到右,必须解锁符文后才能献祭',
-    'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer.': '按[1],[2],[3],[4]或[5]来购买生产者',
     'Red background: Unachieved, provides content/feature unlock.': '红色背景:未完成,会提供特权/游戏内容解锁',
     'Green background: Achieved.': '绿色背景:已完成成就',
     'Each purchased Crystal producer increases generation of Crystal producers by .1% per level. [MAX: 12%]': '每级每个购买的水晶生产者增加总水晶产量.1%[最大:12%]',
@@ -1264,7 +1254,11 @@ var cnRegReplace = new Map([
     [/^Pickaxes: (.+) \[(.+)\]$/, '十字镐：$1 [$2]'], //主界面
     [/^Pandoras Boxes: (.+) \[(.+)\]$/, '潘多拉魔盒：$1 [$2]'], //主界面
     [/^Cost: (.+) Diamonds$/, '花费：$1 钻石'], //主界面
-    [/^Crystal\/sec: (.+)$/, '水晶每秒产量：$1'], //主界面
+    [/^Crystal\/sec(.*)$/, '水晶每秒产量$1'], //主界面
+    [/^Ref.\/sec(.*)$/, '炼油厂每秒产量$1'], //主界面
+    [/^Plants\/sec(.*)$/, '煤电厂每秒产量$1'], //主界面
+    [/^Rigs\/sec(.*)$/, '煤钻机每秒产量$1'], //主界面
+    [/^Pickaxes\/sec(.*)$/, '十字镐每秒产量$1'], //主界面
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面
     [/^Cost: (.+) crystals$/, '花费：$1 水晶'], //主界面
     [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面
@@ -1275,6 +1269,11 @@ var cnRegReplace = new Map([
     [/^Oracles: (.+) \[(.+)\]$/, '先知：$1 [$2]'], //主界面
     [/^Grandmasters: (.+) \[(.+)\]$/, '宗师：$1 [$2]'], //主界面
     [/^Cost: (.+) Mythos$/, '花费：$1 神话'], //主界面
+    [/^Shards\/sec(.*)$/, '神话碎片每秒产量$1'], //主界面
+    [/^Augments\/sec(.*)$/, '强化每秒产量$1'], //主界面
+    [/^Enchantments\/sec(.*)$/, '附魔每秒产量$1'], //主界面
+    [/^Wizards\/sec(.*)$/, '法师每秒产量$1'], //主界面
+    [/^Oracles\/sec(.*)$/, '先知每秒产量$1'], //主界面
     [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面
     [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面
     [/^Transcend when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面

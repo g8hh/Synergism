@@ -41,9 +41,10 @@ var cnItems = {
     'Particle Buildings': '粒子建筑',
     'Tesseract Buildings': '超立方建筑',
     'Toggle amount to buy': '切换购买数量',
-    '': '',
-    '': '',
-    '': '',
+    'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!': '按[1],[2],[3],[4]或[5]来购买生产者，按[A]来购买加速器，按[M]来购买加倍器，按[B]来购买加速器加成，用[←]和[→]来切换选项卡。祝您玩的开心！',
+    'Hover over a crystal upgrade to get information!': '将鼠标停在水晶升级上可以获得更多信息！',
+    'Auto Prestige[ON]': '自动转生[开]',
+    'Auto Prestige[OFF]': '自动转生[关]',
     '': '',
     '': '',
     '': '',
@@ -91,7 +92,6 @@ var cnItems = {
     'Go through a transcension, except prestiging rewards scale much more slowly. Diamond generation is also debuffed, and diamond-boosting upgrades are disabled. Gets harder each completion!': '立即完成一次超越,转生收益将变得非常低,钻石收益也被严重削减,并且所有增加钻石产量的升级无效,每次完成后都会变得更难!',
     'Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your current challenge!': '按[1],[2],[3],[4]或[5]来进入挑战,挑战在页面上方查看,按[E]或[e]来退出挑战!',
     'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer. Press [6], [7], [8], [9] or [0] to buy the corresponding Crystal upgrade starting on the left.': '按[1],[2],[3],[4]或[5]来购买生产者,按[6],[7],[8],[9]或[0]来购买右侧的水晶升级',
-    'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!': '按[1],[2],[3],[4]或[5]来购买生产者,按[A]来购买加速器,[M]来购买加倍器,[B]来购买加速器加成,用[←]和[→]来切换转生标签并用[P],[T],[R]转生',
     'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标悬停在符文上来查看它会给你带来什么',
     '1 Accelerator, +0.5% Accelerators per level. +1 Accelerator Boost every 10 levels!': '1加速器,+0.5%加速器每级,+1加速器加成每10级',
     '~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!': '~(向下取整(等级/10))加倍器每10级,+0.5%加倍器每级,每级都会降低税收',
@@ -894,18 +894,8 @@ var cnPrefix = {
     'Quacks on export': '导出可获得夸克',
     'Effect: Printer Prodction': '效果:打印机产量',
     'Effect: Obtainium multiplier': '效果:难得素倍率',
-    'Pickaxes/Sec': '十字镐/秒',
-    'Rigs/Sec': '煤矿钻机/秒',
-    'Plants/Sec': '煤电厂/秒',
-    'Ref./Sec': '炼油厂/秒',
-    'Crystal/sec': '水晶/秒',
     'free Accelerators': '免费加速器',
     'Effect: Gain': '效果:获得',
-    'Pandora\'s Boxes': '潘多拉的盒子',
-    'Pickaxes': '十字镐',
-    'Coal Rigs': '煤矿钻机',
-    'Coal Plants': '煤电厂',
-    'Refineries': '炼油厂',
     'Effect: ': '效果:',
     'Shards/Sec:': '碎片/秒',
     'Augments/Sec': '强化/秒',
@@ -929,14 +919,12 @@ var cnPrefix = {
     'Quasars': '类星体',
     'Galactic Nuclei': '星系核心',
     'Gain': '获得',
-    'You have': '你有',
     'Thrift Rune Bonus:': '节俭符文加成:',
     'seconds.': '秒',
     'Loading Offline Progress...': '加载离线进度...',
     'BUY': '购买',
     'Chronos': '时光',
     'Exemption': '豁免',
-    'Hover over a crystal upgrade to get information!': '将鼠标悬停在水晶升级上可获得信息！',
     'Hover over an upgrade icon to see details!': '将鼠标悬停在升级图标上可以查看详细信息！',
     'Hover over the grid to get details about researches!': '将鼠标悬停在网格上可获得有关研究的详细信息！',
     'Hover-To-Buy: Off': '鼠标悬浮购买：关闭',
@@ -1192,7 +1180,6 @@ var cnPostfix = {
     'free Multipliers.': '免费的加倍器',
     'free multipliers from bought Alchemies.': '免费的加倍器基于已购买的炼金术',
     'Quarks!': '夸克!',
-    'crystals': '水晶',
     'Obtainium': '难得素',
     'Obtainium.': '难得素',
     '           ': '',
@@ -1233,34 +1220,41 @@ var cnRegReplace = new Map([
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '夸克导出总奖励：$1[最大为$2]'], //主脚本
-    [/^Cost: (.+) coins.$/, '花费：$1 金币'], //主界面
-    [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面
-    [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2%]'], //主界面
     [/^Workers: (.+) \[(.+)\]$/, '工人：$1 [$2]'], //主界面
     [/^Investments: (.+) \[(.+)\]$/, '投资：$1 [$2]'], //主界面
     [/^Printers: (.+) \[(.+)\]$/, '打印机：$1 [$2]'], //主界面
     [/^Coin Mints: (.+) \[(.+)\]$/, '铸币厂：$1 [$2]'], //主界面
     [/^Alchemies: (.+) \[(.+)\]$/, '炼金术：$1 [$2]'], //主界面
+    [/^Cost: (.+) coins.$/, '花费：$1 金币'], //主界面
+    [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2%]'], //主界面
     [/^Accelerators: (.+) \[(.+)\]$/, '加速器：$1 [$2]'], //主界面
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier: (.+)$/, '加速效果：$1 || 加速倍率：$2'], //主界面
     [/^Multipliers: (.+) \[(.+)\]$/, '加倍器：$1 [$2]'], //主界面
     [/^Multiplier Power: (.+) \|\| Multiplier: (.+)$/, '加倍效果：$1 || 加倍倍率：$2'], //主界面
     [/^Accelerator Boost: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
+    [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面
     [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速效果，并增加5个免费的加速器。'], //主界面
     [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'],
-
-
-
-
-
-
-
-
+    [/^Refineries: (.+) \[(.+)\]$/, '炼油厂：$1 [$2]'], //主界面
+    [/^Coal Plants: (.+) \[(.+)\]$/, '煤电厂：$1 [$2]'], //主界面
+    [/^Coal Rigs: (.+) \[(.+)\]$/, '煤钻机：$1 [$2]'], //主界面
+    [/^Pickaxes: (.+) \[(.+)\]$/, '十字镐：$1 [$2]'], //主界面
+    [/^Pandora's Box: (.+) \[(.+)\]$/, '潘多拉之盒：$1 [$2]'], //主界面
+    [/^Cost: (.+) Diamonds$/, '花费：$1 钻石'], //主界面
+    [/^Crystal\/sec: (.+)$/, '水晶每秒产量：$1'], //主界面
+    [/^Ref.\/sec: (.+)$/, '炼油厂每秒产量：$1'], //主界面
+    [/^Plants\/sec: (.+)$/, '煤电厂每秒产量：$1'], //主界面
+    [/^Rigs\/sec: (.+)$/, '煤钻机每秒产量：$1'], //主界面
+    [/^Pickaxes\/sec: (.+)$/, '十字镐每秒产量：$1'], //主界面
+    [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，使金币产量乘以了$2倍。'], //主界面
+    [/^Cost: (.+) crystals$/, '花费：$1 水晶'], //主界面
+    [/^Level: (.+)$/, '等级：$1'], //主界面
+    [/^Prestige when your Diamonds can increase by a factor (.+) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面
+    [/^Prestige when the timer is at least (.+) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面
 
 
 
     [/^requires ([\d\.]+) more research points$/, '需要$1个研究点'],
-    [/^Level: (.+)\/$/, '等级: $1\/'],
     [/^(.+) Pulsars\/sec$/, '$1 脉冲星\/秒'],
     [/^(.+) Enhancements\/sec$/, '$1 附魔\/秒'],
     [/^(.+) Oracles\/sec$/, '$1 甲骨文\/秒'],

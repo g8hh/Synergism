@@ -67,8 +67,28 @@ var cnItems = {
     'Auto: ON': '自动：开',
     'Auto: OFF': '自动：关',
     'Hover over an upgrade icon to see details!': '鼠标停在升级图标上可以查看详情！',
-    'Hover-To-Buy [ON]': '鼠标停留购买[开]',
-    'Hover-To-Buy [OFF]': '鼠标停留购买[关]',
+    'Hover-to-Buy [ON]': '鼠标停留购买[开]',
+    'Hover-to-Buy [OFF]': '鼠标停留购买[关]',
+    'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
+    'Green background: Achieved.': '绿色背景：成就已完成。',
+    'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
+    'Red background: Unachieved, provides content/feature unlock.': '红色背景：成就可解锁游戏内容或特性，未完成。',
+    'No background: Unachieved, nothing special.': '无背景色：成就没有什么特别的，未完成。',
+    'Talismans': '护身符',
+    'Blessings': '祝福',
+    '[=-Spirits-=]': '[=-魂灵-=]',
+    'Toggle the number of levels to buy per sacrifice': '切换每次献祭时购买的符文等级',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -98,10 +118,8 @@ var cnItems = {
     'Current Challenge: None': '正在进行的挑战:无',
     'Current Challenges: No Accelerators [Transcension]': '正在进行的挑战:无加速（超越挑战）',
     'Export the game here.': '在这里导出游戏',
-    'No background: Unachieved, nothing special.': '没有背景色:未完成，没有加成',
     'Prestige': '转生',
     'Prism Rune': '棱柱符文',
-    'Purple background: Unachieved, provides bonus multiplier.': '紫色背景:未完成，提供加成',
     'Reincarnation': '转世',
     'SACRIFICE': '献祭',
     'Speed Rune': '加速符文',
@@ -112,7 +130,6 @@ var cnItems = {
     'To leave a reincarnation challenge, press the grey Challenge "C" instead!': '如果想要退出转世挑战，请按灰色的C',
     'Toggle amount to use per sacrifice': '批量献祭',
     'Transcension': '超越',
-    'Hover over an achievement to view information.': '鼠标悬停在成就上查看详细信息',
     'Copied to clickboard! Paste it somewhere safe.': '存档已导出至剪贴板!请把它粘贴在安全的地方',
     'Import the game here.': '在这里导入游戏',
     'Confirmation Toggles': '转生时的弹窗询问',
@@ -128,8 +145,6 @@ var cnItems = {
     '~(1 + Level^2 * 2^Level / 256)x Crystal Production. +1 free level for each Crystal upgrade per 10 levels!': '~(1+等级^2*2^等级/256)倍水晶产量,每10级额外获得一级所有水晶升级',
     'Duplication Rune': '重叠符文',
     'Press [1], [2], [3], or [4] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1],[2],[3]或[4]使用祭品献祭对应符文,从左到右,必须解锁符文后才能献祭',
-    'Red background: Unachieved, provides content/feature unlock.': '红色背景:未完成,会提供特权/游戏内容解锁',
-    'Green background: Achieved.': '绿色背景:已完成成就',
     'Each purchased Crystal producer increases generation of Crystal producers by .1% per level. [MAX: 12%]': '每级每个购买的水晶生产者增加总水晶产量.1%[最大:12%]',
     'Improve the multiplier to coin production by .05 exponent per level. [MAX: +10.00]': '增加水晶提供的金币产量指数.05每级[最大:+10.00]',
     'Every challenge completion increases crystal gain by 1% per level.': '每个完成的挑战提高水晶产量1%每级',
@@ -918,7 +933,6 @@ var cnPrefix = {
     'Effect: Gain': '效果:获得',
     'Effect: ': '效果:',
     'Reward:': '奖励:',
-    'Gain': '获得',
     'Thrift Rune Bonus:': '节俭符文加成:',
     'seconds.': '秒',
     'Loading Offline Progress...': '加载离线进度...',
@@ -1125,7 +1139,6 @@ var cnPostfix = {
     'free Multipliers, for some reason.': '免费加倍器',
     'as productive.': '产量',
     'Mythos Shards.': '神话碎片',
-    'Offerings.': '祭品',
     'as many Mythos Shards.': '额外神话碎片',
     'Challenge yourself!': '额外祭品!',
     'to pay taxes!': '来支付税金!',
@@ -1242,7 +1255,7 @@ var cnRegReplace = new Map([
     [/^Bent Time: (.+) \[(.+)\]$/, '时间扭曲：$1 [$2]'], //主界面
     [/^Hilbert Space: (.+) \[(.+)\]$/, '希尔伯特空间：$1 [$2]'], //主界面
     [/^Cost: (.+) Tesseracts$/, '花费：$1 超立方'], //主界面
-    [/^\+Constant\/sec(.*)$/, '数学常数每秒产量$1'], //主界面
+    [/^Constant\/sec(.*)$/, '数学常数每秒产量$1'], //主界面
     [/^Dot\/sec(.*)$/, '点每秒产量$1'], //主界面
     [/^Vector\/sec(.*)$/, '矢量每秒产量$1'], //主界面
     [/^Three-Space\/sec(.*)$/, '三维空间每秒产量$1'], //主界面
@@ -1250,6 +1263,16 @@ var cnRegReplace = new Map([
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面
     [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$1。'], //主界面
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面
+    [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面
+    [/^Gain (.+)* EXP per offering sacrificed.$/, '献祭祭品可以获得$1倍经验值。'], //主界面
+    [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面
+
+
+
+
+
+
+
 
 
 ]);

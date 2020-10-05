@@ -78,11 +78,11 @@ var cnItems = {
     'Blessings': '祝福',
     '[=-Spirits-=]': '[=-魂灵-=]',
     'Toggle the number of levels to buy per sacrifice': '切换每次献祭时购买的符文等级',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Speed Rune': '加速符文',
+    'Duplication Rune': '重叠符文',
+    'Prism Rune': '棱柱符文',
+    'Thrift Rune': '节俭符文',
+    'Superior Intellect': '卓越智慧',
     '': '',
     '': '',
     '': '',
@@ -119,13 +119,10 @@ var cnItems = {
     'Current Challenges: No Accelerators [Transcension]': '正在进行的挑战:无加速（超越挑战）',
     'Export the game here.': '在这里导出游戏',
     'Prestige': '转生',
-    'Prism Rune': '棱柱符文',
     'Reincarnation': '转世',
     'SACRIFICE': '献祭',
-    'Speed Rune': '加速符文',
     'Successfully imported your savefile. Go nuts!': '存档已导入，去疯吧!',
     'Tax+': '税收增加挑战',
-    'Thrift Rune': '节俭符文',
     'To leave a challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '想要退出挑战，你可以按列表里的快捷键或者点击上方转生按钮右边的C按钮',
     'To leave a reincarnation challenge, press the grey Challenge "C" instead!': '如果想要退出转世挑战，请按灰色的C',
     'Toggle amount to use per sacrifice': '批量献祭',
@@ -143,7 +140,6 @@ var cnItems = {
     '1 Accelerator, +0.5% Accelerators per level. +1 Accelerator Boost every 10 levels!': '1加速器,+0.5%加速器每级,+1加速器加成每10级',
     '~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!': '~(向下取整(等级/10))加倍器每10级,+0.5%加倍器每级,每级都会降低税收',
     '~(1 + Level^2 * 2^Level / 256)x Crystal Production. +1 free level for each Crystal upgrade per 10 levels!': '~(1+等级^2*2^等级/256)倍水晶产量,每10级额外获得一级所有水晶升级',
-    'Duplication Rune': '重叠符文',
     'Press [1], [2], [3], or [4] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1],[2],[3]或[4]使用祭品献祭对应符文,从左到右,必须解锁符文后才能献祭',
     'Each purchased Crystal producer increases generation of Crystal producers by .1% per level. [MAX: 12%]': '每级每个购买的水晶生产者增加总水晶产量.1%[最大:12%]',
     'Improve the multiplier to coin production by .05 exponent per level. [MAX: +10.00]': '增加水晶提供的金币产量指数.05每级[最大:+10.00]',
@@ -165,7 +161,6 @@ var cnItems = {
     'Load game below!': '在下方导入存档!',
     'These do not work with hotkeys. Too bad!': '这个切换对快捷键没有效果,太糟糕了',
     'Miscellaneous Stats': '统计数据',
-    'Superior Intellect': '卓越智慧',
     '(2^(level/250) * (1 + level/500))x Obtainium, Level^1.5 Ant Hatch Speed, +0.125 Base Reincarnation offerings': '(2^(等级/250)*(1+等级/500))倍难得素,等级^1.5 ANT 获取速度,+0.125转世基础祭品',
     'Cost++ Challenge': '价格暴增挑战',
     'Hover over each portion of the shop to see what each upgrade does!': '悬停在商店物品上查看详细介绍!',
@@ -1266,9 +1261,9 @@ var cnRegReplace = new Map([
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面
     [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭祭品可以获得$1倍经验值。'], //主界面
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面
-
-
-
+    [/Level: (.+)\/$/, '等级：$1/'], //主界面
+    [/\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面
+    [/1 in (.+) EXP$/, '提升1级需要$1经验值'], //主界面
 
 
 

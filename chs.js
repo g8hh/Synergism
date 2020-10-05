@@ -41,7 +41,7 @@ var cnItems = {
     'Particle Buildings': '粒子建筑',
     'Tesseract Buildings': '超立方建筑',
     'Toggle amount to buy': '切换购买数量',
-    'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!': '按[1],[2],[3],[4]或[5]来购买生产者，按[A]来购买加速器，按[M]来购买加倍器，按[B]来购买加速器加成，用[←]和[→]来切换选项卡。祝您玩的开心！',
+    'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!': '按[1]，[2]，[3]，[4]或[5]来购买生产者，按[A]来购买加速器，按[M]来购买加倍器，按[B]来购买加速器加成，用[←]和[→]来切换选项卡。祝您玩的开心！',
     'Ref./sec': '炼油厂每秒产量',
     'Plants/sec': '煤电厂每秒产量',
     'Rigs/sec': '煤钻机每秒产量',
@@ -49,6 +49,36 @@ var cnItems = {
     'Hover over a crystal upgrade to get information!': '将鼠标停在水晶升级上可以获得更多信息！',
     'Auto Prestige [ON]': '自动转生[开]',
     'Auto Prestige [OFF]': '自动转生[关]',
+    'Level': '等级',
+    'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer. Press [6], [7], [8], [9] or [0] to buy the corresponding Crystal upgrade starting on the left.': '按[1]，[2]，[3]，[4]或[5]来购买生产者，按[6]，[7]，[8]，[9]或[0]来购买从左往右数相应位置的水晶升级。',
+    'Shards/sec': '神话碎片每秒产量',
+    'Augments/sec': '强化每秒产量',
+    'Enchantments/sec': '附魔每秒产量',
+    'Wizards/sec': '法师每秒产量',
+    'Oracles/sec': '先知每秒产量',
+    'Auto Transcend [ON]': '自动超越[开]',
+    'Auto Transcend [OFF]': '自动超越[关]',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -95,7 +125,6 @@ var cnItems = {
     'Go through a transcension, except the cost of Coin buildings, Accelerators and Multipliers scales much faster and scales immediately. Gets harder each completion!': '立即完成一次超越,所有建筑,加速器和加倍器价格膨胀更快并且立即开始膨胀,每次完成后都会变得更难!',
     'Go through a transcension, except prestiging rewards scale much more slowly. Diamond generation is also debuffed, and diamond-boosting upgrades are disabled. Gets harder each completion!': '立即完成一次超越,转生收益将变得非常低,钻石收益也被严重削减,并且所有增加钻石产量的升级无效,每次完成后都会变得更难!',
     'Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your current challenge!': '按[1],[2],[3],[4]或[5]来进入挑战,挑战在页面上方查看,按[E]或[e]来退出挑战!',
-    'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer. Press [6], [7], [8], [9] or [0] to buy the corresponding Crystal upgrade starting on the left.': '按[1],[2],[3],[4]或[5]来购买生产者,按[6],[7],[8],[9]或[0]来购买右侧的水晶升级',
     'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标悬停在符文上来查看它会给你带来什么',
     '1 Accelerator, +0.5% Accelerators per level. +1 Accelerator Boost every 10 levels!': '1加速器,+0.5%加速器每级,+1加速器加成每10级',
     '~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!': '~(向下取整(等级/10))加倍器每10级,+0.5%加倍器每级,每级都会降低税收',
@@ -299,7 +328,7 @@ var cnPrefix = {
     'Automatically buy Augments if affordable.': '自动购买强化',
     'Automatically buy Enchantments if affordable.': '自动购买附魔',
     'Automatically buy Wizards if affordable.': '自动购买法师',
-    'Automatically buy Oracles if affordable.': '自动购买神谕',
+    'Automatically buy Oracles if affordable.': '自动购买先知',
     'Automatically buy Grandmasters if affordable.': '自动购买大师',
     'Automatically buy Transcend Upgrades if affordable.': '自动购买神话升级',
     'Generate 1% of Mythos Gain from transcending per second.': '每秒产出1%超越可获得神话',
@@ -452,7 +481,7 @@ var cnPrefix = {
     'Charitable Donation: Complete {[Tax+]} fifteen times.': '慈善捐款:完成十五次税收增加挑战',
     'IRS Audit: Complete {[Tax+]} twenty-five times.': '国税局审查:完成二十五次税收增加挑战',
     'Going back to your roots: Complete <Boost--> Once.': '回归本源:完成一次加成大幅减少挑战',
-    'Grandmasters produce more Oracles based on Building power.': '大师基于建筑产量产出更多的神谕',
+    'Grandmasters produce more Oracles based on Building power.': '大师基于建筑产量产出更多的先知',
     'Effect: Grandmasters will produce': '效果:大师会产出',
     'Multiply mythos shard production by the squared logarithm of Diamonds.': '以钻石对数的平方增加神话碎片的产量',
     'Effect: All Mythos producers production': '效果:所有神话生产者产量',
@@ -901,16 +930,6 @@ var cnPrefix = {
     'free Accelerators': '免费加速器',
     'Effect: Gain': '效果:获得',
     'Effect: ': '效果:',
-    'Shards/Sec:': '碎片/秒',
-    'Augments/Sec': '强化/秒',
-    'Enchantments/Sec': '附魔/秒',
-    'Wizards/Sec': '法师/秒',
-    'Oracles/Sec': '神谕/秒',
-    'Augments': '强化',
-    'Enchantments': '附魔',
-    'Wizards': '法师',
-    'Oracles': '神谕',
-    'Grandmasters': '大师',
     'Reward:': '奖励:',
     'Atoms/Sec': '原子/秒',
     'Protons/Sec': '质子/秒',
@@ -1248,18 +1267,30 @@ var cnRegReplace = new Map([
     [/^Crystal\/sec: (.+)$/, '水晶每秒产量：$1'], //主界面
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面
     [/^Cost: (.+) crystals$/, '花费：$1 水晶'], //主界面
-    [/^Level: (.+)$/, '等级：$1'], //主界面
     [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面
     [/^Prestige when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面
+    [/^Augments: (.+) \[(.+)\]$/, '强化：$1 [$2]'], //主界面
+    [/^Enchantments: (.+) \[(.+)\]$/, '附魔：$1 [$2]'], //主界面
+    [/^Wizards: (.+) \[(.+)\]$/, '法师：$1 [$2]'], //主界面
+    [/^Oracles: (.+) \[(.+)\]$/, '先知：$1 [$2]'], //主界面
+    [/^Grandmasters: (.+) \[(.+)\]$/, '宗师：$1 [$2]'], //主界面
+    [/^Cost: (.+) Mythos$/, '花费：$1 神话'], //主界面
+    [/^You have (.+) Mythos Shards, providing (.+)x Multiplier Power boosts.$/, '您有$1神话碎片，加倍效果因此乘以$2倍。'], //主界面
+    [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面
+    [/^Transcend when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面
+
+
+
+
+
+
 
 
 
     [/^requires ([\d\.]+) more research points$/, '需要$1个研究点'],
     [/^(.+) Pulsars\/sec$/, '$1 脉冲星\/秒'],
     [/^(.+) Enhancements\/sec$/, '$1 附魔\/秒'],
-    [/^(.+) Oracles\/sec$/, '$1 甲骨文\/秒'],
     [/^(.+) Protons\/sec$/, '$1 质子\/秒'],
-    [/^(.+) Augments\/sec$/, '$1 强化\/秒'],
     [/^(.+) Atoms\/sec$/, '$1 原子\/秒'],
     [/^(.+) Shards\/sec$/, '$1 碎片\/秒'],
     [/^(.+) Wizards\/sec$/, '$1 法师\/秒'],

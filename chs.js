@@ -11,6 +11,10 @@
 var cnItems = {
     _OTHER_: [],
 
+    //标点处理
+    '.': '。',
+    //标点处理结束
+
     //主脚本
     'Auto [ON]': '自动[开]',
     'Auto [OFF]': '自动[关]',
@@ -250,6 +254,25 @@ var cnItems = {
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
     'Upgrade: 1 Level wow': '升级：1级(惊奇)',
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
+    'The most rewarding ventures are those few would dare to embark.': '不入虎穴，焉得虎子。',
+    'Select the trait levels you wish to run with. Choose wisely!': '选择您想要使用的腐化等级。请明智地进行选择！',
+    'Don\'t bite off more than you can chew...': '切记，贪多嚼不烂……',
+    'Add 1 Level [Max 10]': '增加1级[最大10级]',
+    'Sub 1 Level [Min 0]': '减少1级[最大10级]',
+    'CLEANSE': '清除腐化',
+    'This Ascension\'s climate raises ant production to the power of': '此飞升的气候使蚂蚁产量指数上升，幂为',
+    'You have': '您有',
+    'Wow! Cubes in the Ascension bank. Gain more by finishing challenges! Ascend to redeem them.': '个惊奇方盒还存在飞升库中。完成挑战以获得更多！飞升后就可以获得它们了。',
+    'Your Ascension Score is': '您的飞升分数为',
+    '(base) *': '(基础值)*',
+    '(Corruption mult) =': '(腐化因子)=',
+    'If you ascend now, you will gain': '如果现在飞升，您可以获得 ',
+    'Wow! Cubes.': '个惊奇方盒。',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',

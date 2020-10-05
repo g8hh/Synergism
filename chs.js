@@ -1301,7 +1301,7 @@ var cnRegReplace = new Map([
     [/^Three-Space\/sec(.*)$/, '三维空间每秒产量$1'], //主界面
     [/^Bent Time\/sec(.*)$/, '时间扭曲每秒产量$1'], //主界面
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面
-    [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$1。'], //主界面
+    [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$2。'], //主界面
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面
     [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面

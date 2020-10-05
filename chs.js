@@ -51,7 +51,8 @@ var cnItems = {
     'Auto Transcend [ON]': '自动超越[开]',
     'Auto Transcend [OFF]': '自动超越[关]',
     'Press [1], [2], [3], [4], or [5] to buy the respective tiered producer.': '按[1]，[2]，[3]，[4]或[5]来购买生产者。',
-    '': '',
+    'Auto Reincarnate [ON]': '自动转世[开]',
+    'Auto Reincarnate [OFF]': '自动转世[关]',
     '': '',
     '': '',
     '': '',
@@ -921,16 +922,6 @@ var cnPrefix = {
     'Effect: Gain': '效果:获得',
     'Effect: ': '效果:',
     'Reward:': '奖励:',
-    'Atoms/Sec': '原子/秒',
-    'Protons/Sec': '质子/秒',
-    'Pulsars/Sec': '脉冲星/秒',
-    'Quasars/Sec': '类星体/秒',
-    'Protons': '质子',
-    'Pulsars': '脉冲星',
-    'Elements/Sec': '元素/秒',
-    'Elements': '元素',
-    'Quasars': '类星体',
-    'Galactic Nuclei': '星系核心',
     'Gain': '获得',
     'Thrift Rune Bonus:': '节俭符文加成:',
     'seconds.': '秒',
@@ -942,46 +933,6 @@ var cnPrefix = {
     'Hover over the grid to get details about researches!': '将鼠标悬停在网格上可获得有关研究的详细信息！',
     'Hover-To-Buy: Off': '鼠标悬浮购买：关闭',
     'If you are unable to finish the challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '如果您无法完成挑战，请按上面列出的热键，或者单击顶部的重置按钮上的红色“ C”挑战按钮。',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
     '': '',
     '': '',
     '': '',
@@ -1183,8 +1134,6 @@ var cnPostfix = {
     'Offerings.': '祭品',
     'as many Mythos Shards.': '额外神话碎片',
     'Challenge yourself!': '额外祭品!',
-    'Particles.': '粒子',
-    'Particles': '粒子',
     'to pay taxes!': '来支付税金!',
     'the production!': '产量加成!',
     '[Stacks with upgrade 1]!': '[从第一级开始计算]!',
@@ -1277,24 +1226,25 @@ var cnRegReplace = new Map([
     [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面
     [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面
     [/^Transcend when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面
+    [/^Protons: (.+) \[(.+)\]$/, '质子：$1 [$2]'], //主界面
+    [/^Elements: (.+) \[(.+)\]$/, '元素：$1 [$2]'], //主界面
+    [/^Pulsars: (.+) \[(.+)\]$/, '脉冲星：$1 [$2]'], //主界面
+    [/^Quasars: (.+) \[(.+)\]$/, '类星体：$1 [$2]'], //主界面
+    [/^Galactic Nuclei: (.+) \[(.+)\]$/, '星系核心：$1 [$2]'], //主界面
+    [/^Cost: (.+) Particles$/, '花费：$1 粒子'], //主界面
+    [/^Atoms\/sec(.*)$/, '原子每秒产量$1'], //主界面
+    [/^Protons\/sec(.*)$/, '质子每秒产量$1'], //主界面
+    [/^Elements\/sec(.*)$/, '元素每秒产量$1'], //主界面
+    [/^Pulsars\/sec(.*)$/, '脉冲星每秒产量$1'], //主界面
+    [/^Quasars\/sec(.*)$/, '类星体每秒产量$1'], //主界面
+    [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production: (.+)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为：$3倍'], //主界面
+    [/^Thanks to Research 2x14, you also multiply Crystal production by(.*)$/, '由于研究2x14的效果，您还使水晶产量倍率变为$1'], //主界面
+    [/^Thanks to Research 2x15, you also multiply Mythos Shard production by(.*)$/, '由于研究2x15的效果，您还使神话碎片产量倍率变为$1'], //主界面
+    [/^Reincarnate when your Particles can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当粒子为之前的$1倍时转世[在上方输入设置数值]。当前倍率：$2。'], //主界面
+    [/^Reincarnate when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转世[在上方输入设置数值]。当前时间：$2秒。'], //主界面
 
 
 
 
-
-
-
-
-
-    [/^requires ([\d\.]+) more research points$/, '需要$1个研究点'],
-    [/^(.+) Pulsars\/sec$/, '$1 脉冲星\/秒'],
-    [/^(.+) Enhancements\/sec$/, '$1 附魔\/秒'],
-    [/^(.+) Protons\/sec$/, '$1 质子\/秒'],
-    [/^(.+) Atoms\/sec$/, '$1 原子\/秒'],
-    [/^(.+) Shards\/sec$/, '$1 碎片\/秒'],
-    [/^(.+) Wizards\/sec$/, '$1 法师\/秒'],
-    [/^(.+) Elements\/sec$/, '$1 元素\/秒'],
-    [/^(.+) Black Holes\/sec$/, '$1 黑洞\/秒'],
-    [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+) $/, '重置硬币生产者/升级者，水晶和钻石，以增加加速器的功能。 需要：$1'],
 
 ]);

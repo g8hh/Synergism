@@ -11,6 +11,51 @@
 var cnItems = {
     _OTHER_: [],
 
+    //主脚本
+    'Auto [ON]': '自动[开]',
+    'Auto [OFF]': '自动[关]',
+    'Mode: AMOUNT': '模式：数量',
+    'Mode: TIME': '模式：时间',
+    'Automatic: ON': '自动：开',
+    'Automatic: OFF': '自动：关',
+    'Per second: ON': '每秒产量：开',
+    'Per second: OFF': '每秒产量：关',
+    'Are you absolutely sure that you want to exit the Ascension Challenge? You will need to clear challenge 10 again before you can attempt the challenge again!': '您确定要退出飞升挑战吗？退出后，将需要通过挑战10后才能再次尝试！',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //主脚本结束
+    
     //未分类：
     'Buildings': '建筑',
     'Challenges': '挑战',
@@ -30,7 +75,6 @@ var cnItems = {
     'Speed Rune': '加速符文',
     'Successfully imported your savefile. Go nuts!': '存档已导入，去疯吧!',
     'Tax+': '税收增加挑战',
-    'Thanks to researches, your effective levels are increased by': '通过研究，你的符文有效等级提高了',
     'Thrift Rune': '节俭符文',
     'To leave a challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '想要退出挑战，你可以按列表里的快捷键或者点击上方转生按钮右边的C按钮',
     'To leave a reincarnation challenge, press the grey Challenge "C" instead!': '如果想要退出转世挑战，请按灰色的C',
@@ -906,7 +950,6 @@ var cnPrefix = {
     'You have': '你有',
     'Thrift Rune Bonus:': '节俭符文加成:',
     'seconds.': '秒',
-    'Auto': '自动',
     'Shop': '商店',
     'Loading Offline Progress...': '加载离线进度...',
     'BUY': '购买',
@@ -1221,6 +1264,15 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
+    [/^Thanks to researches, your effective levels are increased by (.*)%$/, '由于研究效果，符文有效等级增加了$1%'], //主脚本
+
+
+
+
+
+
+
+
     [/^requires ([\d\.]+) more research points$/, '需要$1个研究点'],
     [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于你的过度财富，硬币产量要除以 $1 来交税!你的税收也限制了你的硬币收益$2\/秒。'],
     [/^ (.+)x \|\| Multiplier: (.+),$/, ' $1x \|\| 倍数: $2,'],

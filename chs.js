@@ -1306,14 +1306,14 @@ var cnRegReplace = new Map([
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面
     [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面
-    [/Level: (.+)\/(.*)$/, '等级：$1/$2'], //主界面
-    [/\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面
-    [/1 in (.+) EXP$/, '1级需要$1经验值'], //主界面
-    [/Level (.+)\/(.*)$/, '等级 $1/$2'], //主界面
-    [/Welcome to the future! I'd recommend studying the green-bordered researches first.(\s+)The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!$/, '欢迎来到研究！我建议先升级绿色边框的研究。红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！'], //主界面
+    [/^Level: (.+)\/(.*)$/, '等级：$1/$2'], //主界面
+    [/^\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面
+    [/^1 in (.+) EXP$/, '1级需要$1经验值'], //主界面
+    [/^Level (.+)\/(.*)$/, '等级 $1/$2'], //主界面
+    [/^Welcome to the future! I'd recommend studying the green-bordered researches first.(\s+)The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!$/, '欢迎来到研究！我建议先升级绿色边框的研究。红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！'], //主界面
     [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面
-    [/Sacrifice when the timer is at least seconds \(In-game time\), Currently$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为'], //主界面
-    [/Sacrifice when the timer is at least seconds \(Real-time\), Currently$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为'], //主界面
+    [/^Sacrifice when the timer is at least seconds \(In-game time\), Currently$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为'], //主界面
+    [/^Sacrifice when the timer is at least seconds \(Real-time\), Currently$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为'], //主界面
 
 
 ]);

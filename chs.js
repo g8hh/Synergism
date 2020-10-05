@@ -326,7 +326,7 @@ var cnItems = {
     'Duplication Spirit Power': '重叠魂灵能量',
     'Constant upgrade': '常数升级',
     'TOTAL CUBE MULTIPLIER': '方盒总倍率',
-    'Here\'s what you got from your last resets (except challenges)': '这就是您从之前重置中获得的东西(挑战除外)',
+    'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
     'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
     'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
@@ -336,20 +336,20 @@ var cnItems = {
     'USE 1 [+2hr]': '使用1瓶[2小时效果]',
     'Not Bought': '未购买',
     'Maxed!': '达到最大等级！',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Bought!': '已购买！',
     'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
     'Shop Confirmations: ON': '商店确认框：开',
     'Shop Confirmations: OFF': '商店确认框：关',
+    'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
     //主界面结束
 
-
-
+    //成就
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //成就结束
 
 
 
@@ -400,7 +400,6 @@ var cnItems = {
     'Savefile copied to file!': '存档已导出!',
     '(2^(level/250) * (1 + level/500))x Obtainium, Level^1.5 Ant Hatch Speed, +0.125 Base Reincarnation offerings': '(2^(等级/250)*(1+等级/500))倍难得素,等级^1.5 ANT 获取速度,+0.125转世基础祭品',
     'Cost++ Challenge': '价格暴增挑战',
-    'Hover over each portion of the shop to see what each upgrade does!': '悬停在商店物品上查看详细介绍!',
     'Instantly gain 2 hours of Offerings, based on your all time best Offerings/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高祭品/秒!',
     'Instantly gain 2 hours of Obtainium, based on your all time best Obtainium/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高难得素/秒!',
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
@@ -547,7 +546,6 @@ var cnPrefix = {
     'Multiply Worker production by 1e+10000.': '工人产量提高e10000',
     'Multiply Investment production by 1e+7000.': '投资产量提高e7000',
     'Effect: This upgrade is currently not finished, so in the meantime you get a multiplier to a building. Enjoy!': '效果:这个升级我还没有想好,所以暂时给建筑加成!祝你愉快!',
-    'Due to your excessive wealth, all coin production is divided by': '根据你已有的财产,所有金币产量降低',
     'Reward: Accelerator cost scaling starts 5 slower, and Multiplier cost scaling starts 2 slower per completion. Buildings scale 1% slower as well!': '奖励:每次完成挑战加速器价格膨胀减缓5级,加倍器价格膨胀减缓2级,建筑价格膨胀也会减缓1% ',
     'Reward: +10%, +10 Multiplier Power Boosts per completion. First Completion awards 1 multiplier.': '奖励:每次完成使加倍器+10,+10%加成,首次完成获得一个加倍器 ',
     'Reward: +5% Accel. Boost power, +5 free Accelerator per completion. Gain +0.5% higher Acceleration Power every 2 completions.': '奖励:每次完成+5%加速器加成效果,每次完成+5免费加速器,每两次完成提高0.5%加速器加成奖励 ',
@@ -1378,7 +1376,8 @@ var cnRegReplace = new Map([
     [/^Accelerator Boost: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
     [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面
     [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速效果，并增加5个免费的加速器。'], //主界面
-    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'],
+    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面
+    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes!$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！'], //主界面
     [/^Refineries: (.+) \[(.+)\]$/, '炼油厂：$1 [$2]'], //主界面
     [/^Coal Plants: (.+) \[(.+)\]$/, '煤电厂：$1 [$2]'], //主界面
     [/^Coal Rigs: (.+) \[(.+)\]$/, '煤钻机：$1 [$2]'], //主界面
@@ -1456,5 +1455,6 @@ var cnRegReplace = new Map([
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面
+    [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面
 
 ]);

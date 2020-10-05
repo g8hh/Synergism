@@ -83,9 +83,36 @@ var cnItems = {
     'Prism Rune': '棱柱符文',
     'Thrift Rune': '节俭符文',
     'Superior Intellect': '卓越智慧',
-    '': '',
-    '': '',
-    '': '',
+    'SACRIFICE': '献祭',
+    'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标停在符文上来查看它有什么作用！',
+    '=====RUNE EFFECT SUMMARY=====': '=====符文效果总结=====',
+    'Press [1], [2], [3], [4] or [5] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1]，[2]，[3]，[4]或[5]来为每个符文进行献祭，从加速符文开始从左往右依次对应。需要解锁了相应符文才可以使用快捷键献祭！',
+    'Toggle percent resources used': '切换使用的资源比例',
+    'BUY': '购买',
+    'Exemption': '免税',
+    'Chronos': '时光',
+    'Midas': '点金',
+    'Metaphysics': '玄学',
+    'Polymath': '博识',
+    'Mortuus Est': '虔蚁',
+    'Plastic': '信卡',
+    'FORTIFY': '强化',
+    'ENHANCE': '升阶',
+    'RESPEC': '洗点',
+    'RESPEC ALL': '全部洗点',
+    '=-=- Resources Required to Level Up -=-=-': '=-=- 强化所需的资源 -=-=-',
+    '=-=-= Resources Required to ENHANCE =-=-=': '=-=-= 升阶所需的资源 =-=-=',
+    '+-==-+ Select for 3 GREEN Runes, for Respec! +-==-+': '+-==-+ 请正好选择3个符文，否则无法洗点！ +-==-+',
+    'Speed Rune: Positive': '速度符文：获得加成',
+    'Speed Rune: Negative': '速度符文：无加成',
+    'Duplication Rune: Positive': '重叠符文：获得加成',
+    'Duplication Rune: Negative': '重叠符文：无加成',
+    'Prism Rune: Positive': '棱柱符文：获得加成',
+    'Prism Rune: Negative': '棱柱符文：无加成',
+    'Thrift Rune: Positive': '节俭符文：获得加成',
+    'Thrift Rune: Negative': '节俭符文：无加成',
+    'SI Rune: Positive': '卓越智慧：获得加成',
+    'SI Rune: Negative': '卓越智慧：无加成',
     '': '',
     '': '',
     '': '',
@@ -120,7 +147,6 @@ var cnItems = {
     'Export the game here.': '在这里导出游戏',
     'Prestige': '转生',
     'Reincarnation': '转世',
-    'SACRIFICE': '献祭',
     'Successfully imported your savefile. Go nuts!': '存档已导入，去疯吧!',
     'Tax+': '税收增加挑战',
     'To leave a challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '想要退出挑战，你可以按列表里的快捷键或者点击上方转生按钮右边的C按钮',
@@ -136,7 +162,6 @@ var cnItems = {
     'Go through a transcension, except the cost of Coin buildings, Accelerators and Multipliers scales much faster and scales immediately. Gets harder each completion!': '立即完成一次超越,所有建筑,加速器和加倍器价格膨胀更快并且立即开始膨胀,每次完成后都会变得更难!',
     'Go through a transcension, except prestiging rewards scale much more slowly. Diamond generation is also debuffed, and diamond-boosting upgrades are disabled. Gets harder each completion!': '立即完成一次超越,转生收益将变得非常低,钻石收益也被严重削减,并且所有增加钻石产量的升级无效,每次完成后都会变得更难!',
     'Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your current challenge!': '按[1],[2],[3],[4]或[5]来进入挑战,挑战在页面上方查看,按[E]或[e]来退出挑战!',
-    'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标悬停在符文上来查看它会给你带来什么',
     '1 Accelerator, +0.5% Accelerators per level. +1 Accelerator Boost every 10 levels!': '1加速器,+0.5%加速器每级,+1加速器加成每10级',
     '~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!': '~(向下取整(等级/10))加倍器每10级,+0.5%加倍器每级,每级都会降低税收',
     '~(1 + Level^2 * 2^Level / 256)x Crystal Production. +1 free level for each Crystal upgrade per 10 levels!': '~(1+等级^2*2^等级/256)倍水晶产量,每10级额外获得一级所有水晶升级',
@@ -182,23 +207,7 @@ var cnItems = {
     'None': '无',
     'The ants welcome you to their home.': '蚂蚁们欢迎你来到他们的家',
     'Hover over the icons for description. Click icons to buy!': '悬停在图标上获取信息,点击图标购买',
-    'FORTIFY': '加固',
-    'ENHANCE': '灌注',
-    'RESPEC': '洗点',
-    'SI Rune: Negative': '卓越智慧:减少',
-    'Speed Rune: Negative': '速度符文:减少',
-    'Speed Rune: Positive': '速度符文:提升',
-    'Duplication Rune: Negative': '重叠符文:减少',
-    'Duplication Rune: Positive': '重叠符文:提升',
-    'Prism Rune: Negative': '棱柱符文:减少',
-    'Prism Rune: Positive': '棱柱符文:提升',
-    'Thrift Rune: Negative': '节俭符文:减少',
-    'Thrift Rune: Positive': '节俭符文:提升',
-    'SI Rune: Positive': '卓越智慧:提升',
-    'Midas': '大富翁',
-    '=====RUNE EFFECT SUMMARY=====': '=====符文效果摘要=====',
     '=-=-= Effect': '=-=-= 效果',
-    '=-=- Resources Required to Level Up -=-=-': '=-=-升级所需的资源-=-=-',
     '=- Time Until Daily Refill -=-': '=-直到日常重开的时间-=-',
     'Current': '当前',
     'Duplication Spirit Power': '复制精神力量',
@@ -889,7 +898,6 @@ var cnPrefix = {
     'Bonus Prism Rune Levels:': '奖励棱柱符文等级:',
     'Bonus Duplication Rune Levels:': '奖励重叠符文等级:',
     'Bonus Speed Rune Levels:': '奖励速度符文等级:',
-    'Speed Rune': '速度符文',
     '': '',
     '': '',
     '': '',
@@ -931,9 +939,6 @@ var cnPrefix = {
     'Thrift Rune Bonus:': '节俭符文加成:',
     'seconds.': '秒',
     'Loading Offline Progress...': '加载离线进度...',
-    'BUY': '购买',
-    'Chronos': '时光',
-    'Exemption': '豁免',
     'Hover over the grid to get details about researches!': '将鼠标悬停在网格上可获得有关研究的详细信息！',
     'If you are unable to finish the challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '如果您无法完成挑战，请按上面列出的热键，或者单击顶部的重置按钮上的红色“ C”挑战按钮。',
     '': '',
@@ -1259,12 +1264,12 @@ var cnRegReplace = new Map([
     [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$1。'], //主界面
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面
-    [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭祭品可以获得$1倍经验值。'], //主界面
+    [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面
-    [/Level: (.+)\/$/, '等级：$1/'], //主界面
+    [/Level: (.+)\/(.*)$/, '等级：$1/$2'], //主界面
     [/\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面
-    [/1 in (.+) EXP$/, '提升1级需要$1经验值'], //主界面
-
+    [/1 in (.+) EXP$/, '1级需要$1经验值'], //主界面
+    [/Level (.+)\/(.*)$/, '等级 $1/$2'], //主界面
 
 
 

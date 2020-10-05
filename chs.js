@@ -1385,6 +1385,6 @@ var cnRegReplace = new Map([
     [/^Sacrifice when the timer is at least (.+) seconds \(In-game time\), Currently$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为'], //主界面
     [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为'], //主界面
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面
-    [/^You have (.+) Wow! Cubes \=\)$/, '您有$1个惊奇方盒=)'], //主界面
+    [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面
 
 ]);

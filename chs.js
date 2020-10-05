@@ -1264,7 +1264,7 @@ var cnRegReplace = new Map([
     [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$1。'], //主界面
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面
-    [/^Gain (.+)* EXP per offering sacrificed.$/, '献祭祭品可以获得$1倍经验值。'], //主界面
+    [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭祭品可以获得$1倍经验值。'], //主界面
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面
 
 

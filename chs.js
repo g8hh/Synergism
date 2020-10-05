@@ -247,8 +247,9 @@ var cnItems = {
     'Moloch Gift power': '摩洛克的赠礼能量',
     'Midas Gift power': '米达斯的赠礼能量',
     'Chronos Gift power': '柯罗诺斯的赠礼能量',
-    '': '',
-    '': '',
+    'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
+    'Upgrade: 1 Level wow': '升级：1级(惊奇)',
+    'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
     '': '',
     '': '',
     '': '',
@@ -1384,6 +1385,6 @@ var cnRegReplace = new Map([
     [/^Sacrifice when the timer is at least (.+) seconds \(In-game time\), Currently$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为'], //主界面
     [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为'], //主界面
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面
-    [/^You have (.+) Wow! Cubes =\)$/, '您有$1个惊奇方盒=)'], //主界面
+    [/^You have (.+) Wow! Cubes \=\)$/, '您有$1个惊奇方盒=)'], //主界面
 
 ]);

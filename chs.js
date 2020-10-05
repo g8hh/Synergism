@@ -1244,7 +1244,7 @@ var cnRegReplace = new Map([
     [/^Elements\/sec(.*)$/, '元素每秒产量$1'], //主界面
     [/^Pulsars\/sec(.*)$/, '脉冲星每秒产量$1'], //主界面
     [/^Quasars\/sec(.*)$/, '类星体每秒产量$1'], //主界面
-    [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production(.+)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为$3'], //主界面
+    [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production(.*)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为$3'], //主界面
     [/^Thanks to Research 2x14, you also multiply Crystal production by(.*)$/, '由于研究2x14的效果，您还使水晶产量倍率变为$1'], //主界面
     [/^Thanks to Research 2x15, you also multiply Mythos Shard production by(.*)$/, '由于研究2x15的效果，您还使神话碎片产量倍率变为$1'], //主界面
     [/^Reincarnate when your Particles can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当粒子为之前的$1倍时转世[在上方输入设置数值]。当前倍率：$2。'], //主界面

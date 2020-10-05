@@ -147,7 +147,6 @@ var cnItems = {
     'Gain Obtainium when you Reincarnate!': '转世以获得更多难得素!',
     'Upgrade: 1 Level': '升级：1级',
     'Upgrade: MAX [if possible]': '升级：最大[尽可能]',
-    'Welcome to the future! I\'d recommend studying the green-bordered researches first. The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!': '欢迎来到研究！我建议先升级绿色边框的研究。红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！',
     '': '',
     '': '',
     '': '',
@@ -1300,7 +1299,7 @@ var cnRegReplace = new Map([
     [/\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面
     [/1 in (.+) EXP$/, '1级需要$1经验值'], //主界面
     [/Level (.+)\/(.*)$/, '等级 $1/$2'], //主界面
-
+    [/Welcome to the future! I'd recommend studying the green-bordered researches first.(\s+)The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!$/, '欢迎来到研究！我建议先升级绿色边框的研究。红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！'], //主界面
 
 
 

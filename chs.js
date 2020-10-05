@@ -292,6 +292,26 @@ var cnItems = {
     'Enter a promotion code here!': '点击此处输入奖励代码！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
     'You\'re playing on v2.0.2 - The Great Reimagining [Last Update: 5:55PM UTC-8 Sept 27]': '您目前玩的版本为V2.0.2 - 大重构 [更新时间：9月27日西八区下午5:55]',
+    'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
+    'People who helped with art/design: Omsi, Alberan, Blank, ThalainTheCat, Sneekxy, Marblerunner64, Q00u, Cryptogrounds (splash screen), Buksss, illyria, Kiboy, Sean, Hexy': '帮忙美术方面的朋友们：Omsi，Alberan，Blank，ThalainTheCat，Sneekxy，Marblerunner64，Q00u，Cryptogrounds (启动画面)，Buksss，illyria，Kiboy，Sean，Hexy',
+    'People who Boosted the Discord Server': 'Discord上进行服务器助力的朋友们',
+    'earth [Legacy], Flame [Legacy], Kittelson [Legacy], PerspectiveTransform [Legacy], somepersondontask [Legacy]': 'earth [限定]，Flame [限定]，Kittelson [限定]，PerspectiveTransform [限定]，somepersondontask [限定]',
+    'Advocate for Pin Illiteracy [2x!], Balthasarx [2x!], Echoneer [2x!], Gnum [2x * 2!], illyria [2x!], Isaiah [2x!], Nethlion [2x * 2!], ShadowWalker227 [2x!], Sneekxy [2x * 2!], Tony Tells you to CHECK THE PINS [2x!], Vasicci [2x!]': 'Advocate for Pin Illiteracy [2倍！], Balthasarx [2倍！], Echoneer [2倍！], Gnum [2个2倍！], illyria [2倍！], Isaiah [2倍！], Nethlion [2个2倍！], ShadowWalker227 [2倍！], Sneekxy [2个2倍！], Tony Tells you to CHECK THE PINS [2倍！], Vasicci [2倍！]',
+    'Arkanos80 [1x * 2!], Blair, broisbrogosani, Chirality, Divinity, GrouchPlays, hreindeer, jables [1x * 2!], joshh, Kyrosiris, Liam, MattyD, Oblis, Orped, Stang [1x * 2!], strentax, theefool [1x * 2!], TheMan2494023, Toaster, Voltana [2个1倍！], Vovinia, Ximon [2个1倍！].': 'Arkanos80 [2个1倍！], Blair, broisbrogosani, Chirality, Divinity, GrouchPlays, hreindeer, jables [2个1倍！], joshh, Kyrosiris, Liam, MattyD, Oblis, Orped, Stang [2个1倍！], strentax, theefool [2个1倍！], TheMan2494023, Toaster, Voltana [2个1倍！], Vovinia, Ximon [2个1倍！]。',
+    'And you, for playing my first ever project, Synergism!': '还有您，感谢您游玩我的第一个作品，协同放置！',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -1418,6 +1438,6 @@ var cnRegReplace = new Map([
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面
     [/^(\s+)Click the image below to join the Discord!$/, '$1点击下方的图片加入Discord频道！'], //主界面
-    [/^(\s+)[NEW!] Support Development on Patreon!$/, '$1[新！]在Patreon上支持本游戏开发！'], //主界面
+    [/^(\s+)\[NEW!\] Support Development on Patreon!$/, '$1[新！]在Patreon上支持本游戏开发！'], //主界面
 
 ]);

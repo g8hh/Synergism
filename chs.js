@@ -899,7 +899,6 @@ var cnPrefix = {
     'Plants/Sec': '煤电厂/秒',
     'Ref./Sec': '炼油厂/秒',
     'Crystal/sec': '水晶/秒',
-    'Reset Diamonds and Prestige Upgrades, but add': '重置钻石和转生升级,但增加',
     'free Accelerators': '免费加速器',
     'Multiplier Power:': '加倍器效果:',
     'Acceleration Power:': '加速器效果:',
@@ -911,11 +910,6 @@ var cnPrefix = {
     'Refineries': '炼油厂',
     'Effect: ': '效果:',
     'Accelerator Boost': '加速器加成',
-    'Investments': '投资',
-    'Printers': '打印机',
-    'Coin Mints': '铸币厂',
-    'Alchemies': '炼金术',
-    'Accelerators': '加速器',
     'Multipliers': '加倍器',
     'Shards/Sec:': '碎片/秒',
     'Augments/Sec': '强化/秒',
@@ -1198,9 +1192,6 @@ var cnPostfix = {
     'to pay taxes!': '来支付税金!',
     'the production!': '产量加成!',
     'free Accelerators.': '免费的加速器',
-    'Accelerator Boosts': '加速器加成',
-    'Accelerator Boosts.': '加速器加成',
-    'Accelerators.': '加速器',
     '[Stacks with upgrade 1]!': '[从第一级开始计算]!',
     'more Diamonds on prestige': '额外钻石在转生时',
     '[Enter a number above to toggle]': '[在上方输入一个数字来控制]',
@@ -1213,7 +1204,6 @@ var cnPostfix = {
     'Multiplier': '加倍器',
     'Multipliers': '加倍器',
     'Multipliers.': '加倍器',
-    'Accelerators!': '加速器!',
     'Quarks!': '夸克!',
     'crystals': '水晶',
     'Obtainium': '难得素',
@@ -1256,9 +1246,26 @@ var cnRegReplace = new Map([
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '夸克导出总奖励：$1[最大为$2]'], //主脚本
-    [/^Workers: (.+) \[(.+)\]$/, '工人：$1 [$2]'], //主界面
-    [/^Cost: (.+) Coins.$/, '花费：$1 金币'], //主界面
+    [/^Cost: (.+) coins.$/, '花费：$1 金币'], //主界面
+    [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面
     [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2]'], //主界面
+    [/^Workers: (.+) \[(.+)\]$/, '工人：$1 [$2]'], //主界面
+    [/^Investments: (.+) \[(.+)\]$/, '投资：$1 [$2]'], //主界面
+    [/^Printers: (.+) \[(.+)\]$/, '打印机：$1 [$2]'], //主界面
+    [/^Coin Mints: (.+) \[(.+)\]$/, '铸币厂：$1 [$2]'], //主界面
+    [/^Alchemies: (.+) \[(.+)\]$/, '炼金术：$1 [$2]'], //主界面
+    [/^Accelerators: (.+) \[(.+)\]$/, '加速器：$1 [$2]'], //主界面
+    [/^Acceleration Power: (.+) \|\| Acceleration Multiplier: (.+)$/, '加速效果：$1 || 加速倍率：$2'], //主界面
+    [/^Multipliers: (.+) \[(.+)\]$/, '加倍器：$1 [$2]'], //主界面
+    [/^Multiplier Power: (.+) \|\| Multiplier: (.+)$/, '加倍效果：$1 || 加倍倍率：$2'], //主界面
+    [/^Accelerator Boosts: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
+    [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速效果，并增加5个免费的加速器。'], //主界面
+    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'],
+
+
+
+
+
 
 
 
@@ -1266,9 +1273,6 @@ var cnRegReplace = new Map([
 
 
     [/^requires ([\d\.]+) more research points$/, '需要$1个研究点'],
-    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于你的过度财富，硬币产量要除以 $1 来交税!你的税收也限制了你的硬币收益$2\/秒。'],
-    [/^ (.+)x \|\| Multiplier: (.+),$/, ' $1x \|\| 倍数: $2,'],
-    [/^ (.+) \|\| Acceleration Multiplier: (.+)$/, ' $1x \|\| 加速度倍数: $2'],
     [/^Level: (.+)\/$/, '等级: $1\/'],
     [/^(.+) Pulsars\/sec$/, '$1 脉冲星\/秒'],
     [/^(.+) Enhancements\/sec$/, '$1 附魔\/秒'],

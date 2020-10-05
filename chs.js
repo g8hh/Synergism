@@ -1256,7 +1256,7 @@ var cnRegReplace = new Map([
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '夸克导出总奖励：$1[最大为$2]'], //主脚本
-    [/^Workers: (.+) \[(.+))\]$/, '工人：$1 [$2]'], //主界面
+    [/^Workers: (.+) \[(.+)\]$/, '工人：$1 [$2]'], //主界面
     [/^Cost: (.+) Coins.$/, '花费：$1 金币'], //主界面
     [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2]'], //主界面
 

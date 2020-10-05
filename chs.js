@@ -42,6 +42,11 @@ var cnItems = {
     'Tesseract Buildings': '超立方建筑',
     'Toggle amount to buy': '切换购买数量',
     'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!': '按[1],[2],[3],[4]或[5]来购买生产者，按[A]来购买加速器，按[M]来购买加倍器，按[B]来购买加速器加成，用[←]和[→]来切换选项卡。祝您玩的开心！',
+    'Crystal/sec': '水晶每秒产量',
+    'Ref./sec': '炼油厂每秒产量',
+    'Plants/sec': '煤电厂每秒产量',
+    'Rigs/sec': '煤钻机每秒产量',
+    'Pickaxes/sec': '十字镐每秒产量',
     'Hover over a crystal upgrade to get information!': '将鼠标停在水晶升级上可以获得更多信息！',
     'Auto Prestige [ON]': '自动转生[开]',
     'Auto Prestige [OFF]': '自动转生[关]',
@@ -1241,11 +1246,6 @@ var cnRegReplace = new Map([
     [/^Pickaxes: (.+) \[(.+)\]$/, '十字镐：$1 [$2]'], //主界面
     [/^Pandoras Boxes: (.+) \[(.+)\]$/, '潘多拉魔盒：$1 [$2]'], //主界面
     [/^Cost: (.+) Diamonds$/, '花费：$1 钻石'], //主界面
-    [/^Crystal\/sec: (.+)$/, '水晶每秒产量：$1'], //主界面
-    [/^Ref.\/sec: (.+)$/, '炼油厂每秒产量：$1'], //主界面
-    [/^Plants\/sec: (.+)$/, '煤电厂每秒产量：$1'], //主界面
-    [/^Rigs\/sec: (.+)$/, '煤钻机每秒产量：$1'], //主界面
-    [/^Pickaxes\/sec: (.+)$/, '十字镐每秒产量：$1'], //主界面
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，使金币产量乘以了$2倍。'], //主界面
     [/^Cost: (.+) crystals$/, '花费：$1 水晶'], //主界面
     [/^Level: (.+)$/, '等级：$1'], //主界面

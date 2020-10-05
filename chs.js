@@ -20,8 +20,7 @@ var cnItems = {
     'Automatic: OFF': '自动：关',
     'Per second: ON': '每秒产量：开',
     'Per second: OFF': '每秒产量：关',
-    'Are you absolutely sure that you want to exit the Ascension Challenge? You will need to clear challenge 10 again before you can attempt the challenge again!': '您确定要退出飞升挑战吗？退出后，将需要通过挑战10后才能再次尝试！',
-    '': '',
+    'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
     '': '',
     '': '',
     '': '',
@@ -1264,7 +1263,7 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^Thanks to researches, your effective levels are increased by (.*)%$/, '由于研究效果，符文有效等级增加了$1%'], //主脚本
+    [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'],
 
 
 
@@ -1289,6 +1288,5 @@ var cnRegReplace = new Map([
     [/^(.+) Elements\/sec$/, '$1 元素\/秒'],
     [/^(.+) Black Holes\/sec$/, '$1 黑洞\/秒'],
     [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+) $/, '重置硬币生产者/升级者，水晶和钻石，以增加加速器的功能。 需要：$1'],
-    [/^Thanks to research, you will automatically gain (.+) obtainium in (.+) seconds.$/, '通过研究，你可以在$2秒内自动获得$1个元素。'],
 
 ]);

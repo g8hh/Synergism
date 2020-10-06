@@ -1188,10 +1188,6 @@ var cnPrefix = {
     'Add +1 level to the next five upgradable ants per level!': '后五种蚂蚁升级+1级',
     'Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!': '夸克商店过于热门?从导出获得的夸克+1每小时(上限增加到75)',
     'Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!': '好吧,Platonic没有灵感了,我不建议你尝试购买这个升级,它使你导出获得的夸克+1每小时(上限增加到100)',
-    'CURRENT EFFECT: ALL Ants work at': '当前效果:所有蚂蚁工作',
-    'CURRENT EFFECT: Crumb --> Coin exponent is ^': '当前效果:碎屑 --> 金币转化率^',
-    'CURRENT EFFECT: Tax growth is multiplied by': '当前效果:税收增长乘以',
-    'CURRENT EFFECT: Accelerator Boosts': '当前效果:加速器加成',
     'CURRENT EFFECT: Multipliers': '当前效果:加倍器',
     'CURRENT EFFECT: Offerings': '当前效果:祭品',
     'CURRENT EFFECT: Building Costs scale': '当前效果:建筑价格膨胀',
@@ -1330,7 +1326,6 @@ var cnPostfix = {
     '': '',
     '': '',
     'Taxes': '税收',
-    'speed.': '速度',
     'as effective': '效果',
     'effective levels.': '有效等级',
     'slower!': '减缓!',
@@ -1510,5 +1505,17 @@ var cnRegReplace = new Map([
     [/^Generates (.+) Queens\/sec$/, '每秒产生 $1 蚁后'], //蚂蚁
     [/^Generates (.+) Royals\/sec$/, '每秒产生 $1 国王蚁'], //蚂蚁
     [/^Generates (.+) ALMIGHTIES\/sec$/, '每秒产生 $1 全能蚁'], //蚂蚁
+    [/^CURRENT EFFECT: ALL Ants work at (.+)x speed.$/, '当前效果：所有蚂蚁工作速度变为$1倍。'], //蚂蚁
+    [/^CURRENT EFFECT: Crumb --> Coin exponent is ^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
+    [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁
+    [/^CURRENT EFFECT: Accelerator Boosts +(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: $/, ''], //蚂蚁
 
 ]);

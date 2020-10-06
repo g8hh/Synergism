@@ -1144,7 +1144,6 @@ var cnPrefix = {
     'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
     'The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO.': '蚂蚁之神认可你的庞大粒子数量并在ELO时给予你更多蚂蚁',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
-    '10% total Multiplier Boosts!': '10%总加倍器加成!',
     'Who needs accelerators? They do basically nothing now.': '谁需要加速器?它们现在没有基础效果了',
     'Transcend and reach the goal except Accelerators do nothing! Multipliers are nerfed a bit as well.': '立即超越并开始挑战,加速器没有效果!加倍器也被一定程度削弱',
     '5 Free Accelerators!': '5免费加速器',
@@ -1481,7 +1480,7 @@ var cnRegReplace = new Map([
     [/^Goal: Gain (.+) Coins in challenge.$/, '目标：在挑战中达到$1金币。'], //挑战
     [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战
     [/^([e\d\,\.\s]+) Boosts$/, '$1加倍器加成'], //挑战
-    [/^(.+) Rune EXP [Highest Completion]$/, '$1符文经验值[取最高完成次数]'], //挑战
+    [/^(.+) Rune EXP \[Highest Completion\]$/, '$1符文经验值[取最高完成次数]'], //挑战
     [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
     [/^Fortunae Formicidae Level(.*)$/, '财富蚁等级$1'], //蚂蚁
     [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁

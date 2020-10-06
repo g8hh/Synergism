@@ -1506,9 +1506,9 @@ var cnRegReplace = new Map([
     [/^Generates (.+) Royals\/sec$/, '每秒产生 $1 国王蚁'], //蚂蚁
     [/^Generates (.+) ALMIGHTIES\/sec$/, '每秒产生 $1 全能蚁'], //蚂蚁
     [/^CURRENT EFFECT: ALL Ants work at (.+)x speed.$/, '当前效果：所有蚂蚁工作速度变为$1倍。'], //蚂蚁
-    [/^CURRENT EFFECT: Crumb --> Coin exponent is ^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
+    [/^CURRENT EFFECT: Crumb --> Coin exponent is \^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
     [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁
-    [/^CURRENT EFFECT: Accelerator Boosts +(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
+    [/^CURRENT EFFECT: Accelerator Boosts \+(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
     [/^CURRENT EFFECT: $/, ''], //蚂蚁
     [/^CURRENT EFFECT: $/, ''], //蚂蚁
     [/^CURRENT EFFECT: $/, ''], //蚂蚁

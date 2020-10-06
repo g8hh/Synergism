@@ -1505,6 +1505,6 @@ var cnRegReplace = new Map([
     [/^CURRENT EFFECT: Sacrificing is (.+)x as effective$/, '当前效果：献祭效果变为$1倍'], //蚂蚁
     [/^CURRENT EFFECT: Global timer is sped up by a factor of(.*)$/, '当前效果：全局速率变为'], //蚂蚁
     [/^\[(.+) effective\]$/, '[有效分$1]'], //蚂蚁
-    [/^Ant Multiplier(.*$/, '蚂蚁倍率$1'], //蚂蚁
+    [/^Ant Multiplier(.*)$/, '蚂蚁倍率$1'], //蚂蚁
 
 ]);

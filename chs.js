@@ -717,8 +717,7 @@ var cnItems = {
     'Has big brain energy [Additional Obtainium!]': '有一个超级强大的大脑[获得额外难得素！]',
     'A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!]': '献给蚁神的贵重祭品[最高可以获得3倍献祭奖励！]',
     'Betray Ant God increasing the fragility of your dimension [Unlocks ant talisman, Up to 2x faster timers on most things]': '背叛蚁神将使您的维度更加脆弱[解锁蚂蚁护身符，全局速度最高为2倍]',
-    'Your Ant ELO is': '您的蚂蚁强度分为',
-    '': '',
+    'Your Ant ELO is': '蚂蚁强度分为',
     '': '',
     '': '',
     '': '',
@@ -1506,5 +1505,6 @@ var cnRegReplace = new Map([
     [/^CURRENT EFFECT: Sacrificing is (.+)x as effective$/, '当前效果：献祭效果变为$1倍'], //蚂蚁
     [/^CURRENT EFFECT: Global timer is sped up by a factor of(.*)$/, '当前效果：全局速率变为'], //蚂蚁
     [/^\[(.+) effective\]$/, '[有效分$1]'], //蚂蚁
+    [/^Ant Multiplier(.*$/, '蚂蚁倍率$1'], //蚂蚁
 
 ]);

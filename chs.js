@@ -688,7 +688,7 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! Gain more ants the longer your reincarnation lasts (max speed achieved in 2 hours': '奖励：10成就点数。10夸克！转世持续越久就可以获得越多蚂蚁(2小时的时候速度达到最大',
     'Reward: 10 AP. 10 Quarks! Unlock Ant Sacrifice, allowing you to reset your ants and ant upgrades in exchange for amazing rewards! Automatically buy Worker Ants.': '奖励：10成就点数。10夸克！解锁蚂蚁献祭，重置蚂蚁数量和蚂蚁升级以获取强大的奖励！自动购买工蚁。',
     'Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm (Multiply by 0.4 * log10(points + 1)': '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率(乘以0.4 * log10(强度分 + 1)',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 2 Ant autobuy, and autobuy Inceptus and Fortunae ants! Add +25 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T2蚂蚁自动购买，并且可以自动购买创始蚁和幸运蚁！基础蚂蚁强度分增加25。',
+    'Reward: 10 AP. 10 Quarks! Unlock Tier 2 Ant autobuy, and autobuy Inceptus and Fortunae ants! Add +25 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T2蚂蚁自动购买，并且可以自动购买创始蚁和财富蚁！基础蚂蚁强度分增加25。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 3 Ant autobuy, and autobuy Tributum ants! Add +50 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T3蚂蚁自动购买，并且可以自动购买示威蚁！基础蚂蚁强度分增加50。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 4 Ant autobuy, and autobuy Celeritas and Multa ants! Add +75 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T4蚂蚁自动购买，并且可以自动购买迅捷蚁和加倍蚁！基础蚂蚁强度分增加75。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 5 Ant autobuy, and autobuy Sacrificium ants! Add +100 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T5蚂蚁自动购买，并且可以自动购买献祭蚁！基础蚂蚁强度分增加100。',
@@ -707,8 +707,7 @@ var cnItems = {
     'Gain an ALMIGHTY ANT that produces Lord Royal ants automatically!': '获得一只全能蚁，它会自动产生国王蚁！',
     'Gain a DISCIPLE OF ANT GOD that produces ALMIGHTY ANTS automatically!': '获得一只神使蚁，它会自动产生全能蚁！',
     'Promotes romance and unity within the colony. [+12% Ant Speed / level]': '促进群落的爱意和团结。[每级增加12%蚂蚁速度]',
-    '': '',
-    '': '',
+    'Sweetens crumbs to increase their value [Each level increases Crumb --> Coin Conversion efficiency, up to ^50,000,000]': '使碎屑变得更美味以增加它们的价值[每级增加碎屑对金币产量加成效率，最大为^50000000]',
     '': '',
     '': '',
     '': '',
@@ -1184,7 +1183,6 @@ var cnPrefix = {
     'Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!': '夸克商店过于热门?从导出获得的夸克+1每小时(上限增加到75)',
     'Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!': '好吧,Platonic没有灵感了,我不建议你尝试购买这个升级,它使你导出获得的夸克+1每小时(上限增加到100)',
     'CURRENT EFFECT: ALL Ants work at': '当前效果:所有蚂蚁工作',
-    'Sweetens crumbs to increase their value [Each level increases Crumb --> Coin Conversion efficiency, up to ^1,000,000': '使碎屑更合心意来增加它们的价值[每级增加碎屑 --> 金币转化率,最大^1,000,000',
     'CURRENT EFFECT: Crumb --> Coin exponent is ^': '当前效果:碎屑 --> 金币转化率^',
     'Swarms the Taxman into submission [Up to -99% taxes!': '迫使税务人员屈服[最大-99%税收!',
     'CURRENT EFFECT: Tax growth is multiplied by': '当前效果:税收增长乘以',
@@ -1494,7 +1492,7 @@ var cnRegReplace = new Map([
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
-    [/^Fortunae Formicidae Level(.*)$/, '幸运蚁等级$1'], //蚂蚁
+    [/^Fortunae Formicidae Level(.*)$/, '财富蚁等级$1'], //蚂蚁
     [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁
     [/^Celeritas Formicidae Level(.*)$/, '迅捷蚁等级$1'], //蚂蚁
     [/^Multa Formicidae Level(.*)$/, '加倍蚁等级$1'], //蚂蚁

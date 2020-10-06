@@ -1326,9 +1326,6 @@ var cnPostfix = {
     '': '',
     '': '',
     'Taxes': '税收',
-    'as effective': '效果',
-    'effective levels.': '有效等级',
-    'slower!': '减缓!',
     'Mythos Shards in challenge.': '神话碎片在挑战中',
     'Completions': '完成次数',
     'Quarks.': '夸克',
@@ -1509,13 +1506,13 @@ var cnRegReplace = new Map([
     [/^CURRENT EFFECT: Crumb --> Coin exponent is \^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
     [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁
     [/^CURRENT EFFECT: Accelerator Boosts \+(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
-    [/^CURRENT EFFECT: $/, ''], //蚂蚁
+    [/^CURRENT EFFECT: Multipliers \+(.*)$/, '当前效果：加倍器增加$1'], //蚂蚁
+    [/^CURRENT EFFECT: Offerings x(.*)$/, '当前效果：祭品倍率为$1'], //蚂蚁
+    [/^CURRENT EFFECT: Building Costs scale (.+)% slower!$/, '当前效果：建筑成本减缓$1%！'], //蚂蚁
+    [/^CURRENT EFFECT: Rune EXP is multiplied by (.+)!$/, '当前效果：符文经验乘以$1倍！'], //蚂蚁
+    [/^CURRENT EFFECT: Each rune has +(.+) effective levels.$/, '当前效果：每个符文有效等级增加$1。'], //蚂蚁
+    [/^CURRENT EFFECT: Obtainium x(.*)$/, '当前效果：难得素倍率为$1'], //蚂蚁
+    [/^CURRENT EFFECT: Sacrificing is (.+)x as effective$/, '当前效果：献祭效果变为$1倍'], //蚂蚁
+    [/^CURRENT EFFECT: Global timer is sped up by a factor of(.*)$/, '当前效果：全局速率变为'], //蚂蚁
 
 ]);

@@ -697,8 +697,8 @@ var cnItems = {
     //成就结束
 
     //挑战
-    '|| Softcapped past 100! Effective completion count: ': '超过100次以后效果下降！有效的完成次数为：',
-    '|| Softcapped past 25! Effective completion count: ': '超过25次以后效果下降！有效的完成次数为：',
+    '|| Softcapped past 100! Effective completion count': '超过100次以后效果下降！有效的完成次数为',
+    '|| Softcapped past 25! Effective completion count': '超过25次以后效果下降！有效的完成次数为',
     '': '',
     '': '',
     '': '',

@@ -159,7 +159,6 @@ var cnItems = {
     'Auto Sacrifice: OFF': '自动献祭：关',
     'Mode: In-game time': '模式：游戏时间',
     'Mode: Real time': '模式：现实时间',
-    'Your Ant ELO is': '您的蚂蚁强度分为',
     'Upgrade Multiplier': '升级倍率',
     'Time Multiplier': '时间倍率',
     'Reset Anthill features for': '重置蚁丘可获得',
@@ -718,7 +717,7 @@ var cnItems = {
     'Has big brain energy [Additional Obtainium!]': '有一个超级强大的大脑[获得额外难得素！]',
     'A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!]': '献给蚁神的贵重祭品[最高可以获得3倍献祭奖励！]',
     'Betray Ant God increasing the fragility of your dimension [Unlocks ant talisman, Up to 2x faster timers on most things]': '背叛蚁神将使您的维度更加脆弱[解锁蚂蚁护身符，全局速度最高为2倍]',
-    '': '',
+    'Your Ant ELO is': '您的蚂蚁强度分为',
     '': '',
     '': '',
     '': '',
@@ -1499,12 +1498,13 @@ var cnRegReplace = new Map([
     [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁
     [/^CURRENT EFFECT: Accelerator Boosts \+(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
     [/^CURRENT EFFECT: Multipliers \+(.*)$/, '当前效果：加倍器增加$1'], //蚂蚁
-    [/^CURRENT EFFECT: Offerings x(.*)$/, '当前效果：祭品倍率为$1'], //蚂蚁
+    [/^CURRENT EFFECT: Offerings(.*)$/, '当前效果：祭品$1'], //蚂蚁
     [/^CURRENT EFFECT: Building Costs scale (.+)% slower!$/, '当前效果：建筑成本减缓$1%！'], //蚂蚁
     [/^CURRENT EFFECT: Rune EXP is multiplied by (.+)!$/, '当前效果：符文经验乘以$1倍！'], //蚂蚁
     [/^CURRENT EFFECT: Each rune has +(.+) effective levels.$/, '当前效果：每个符文有效等级增加$1。'], //蚂蚁
-    [/^CURRENT EFFECT: Obtainium x(.*)$/, '当前效果：难得素倍率为$1'], //蚂蚁
+    [/^CURRENT EFFECT: Obtainium(.*)$/, '当前效果：难得素$1'], //蚂蚁
     [/^CURRENT EFFECT: Sacrificing is (.+)x as effective$/, '当前效果：献祭效果变为$1倍'], //蚂蚁
     [/^CURRENT EFFECT: Global timer is sped up by a factor of(.*)$/, '当前效果：全局速率变为'], //蚂蚁
+    [/^\[(.+) effective\]$/, '[有效分$1]'], //蚂蚁
 
 ]);

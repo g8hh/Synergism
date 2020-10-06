@@ -697,10 +697,39 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T8蚂蚁自动购买，并且可以自动购买科学蚁和命匣蚁！基础蚂蚁强度分增加3%。',
     //成就结束
 
-
-
-
-
+    //蚂蚁
+    'Gain a worker ant for your everyday life. Gathers Galactic Crumbs. Essential!': '获得一只工蚁为您每日工作。它会采集银河碎屑。它很有用！',
+    'Gain a breeder ant that produces worker ants automatically!': '获得一只繁殖蚁，它会自动产生工蚁！',
+    'Gain a meta-breeder ant that produces breeder ants automatically!': '获得一只高级繁殖蚁，它会自动产生繁殖蚁！',
+    'Gain a mega-breeder ant that produces meta-breeder ants automatically!': '获得一只超级繁殖蚁，它会自动产生高级繁殖蚁！',
+    'Gain a Queen ant that produces mega-breeder ants automatically!': '获得一只蚁后，它会自动产生超级繁殖蚁！',
+    'Gain a Lord Royal ant that produces Queen ants automatically!': '获得一只国王蚁，它会自动产生蚁后！',
+    'Gain an ALMIGHTY ANT that produces Lord Royal ants automatically!': '获得一只全能蚁，它会自动产生国王蚁！',
+    'Gain a DISCIPLE OF ANT GOD that produces ALMIGHTY ANTS automatically!': '获得一只神使蚁，它会自动产生全能蚁！',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //蚂蚁结束
 
 
 
@@ -1155,49 +1184,28 @@ var cnPrefix = {
     'Add +1 level to the next five upgradable ants per level!': '后五种蚂蚁升级+1级',
     'Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!': '夸克商店过于热门?从导出获得的夸克+1每小时(上限增加到75)',
     'Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!': '好吧,Platonic没有灵感了,我不建议你尝试购买这个升级,它使你导出获得的夸克+1每小时(上限增加到100)',
-    'Gain a worker ant for your everyday life. Gathers Galactic Crumbs. Essential!': '获得一个工蚁为你每天工作,采集银河碎屑,这很重要!',
-    'Generates': '生产',
-    'Gain a breeder ant which can producer worker ants automatically!': '获得一个繁殖蚁来自动生产工蚁!',
-    'Gain a meta-breeder ant which can produce breeder ants automatically!': '获得一个高级繁殖蚁来自动生产繁殖蚁!',
-    'Gain a mega-breeder ant which can produce meta-breeder ants automatically!': '获得一个超级繁殖蚁来自动生产高级繁殖蚁!',
-    'Gain a Queen ant which can produce mega-breeder ants automatically!': '获得一个蚁后来自动生产超级繁殖蚁!',
-    'Gain a Lord Royal ant which can produce Queen ants automatically!': '获得一个国王蚁来自动生产蚁后!',
-    'Gain an ALMIGHTY ANT which can produce Lord Royal ants automatically!': '获得一个全能蚁来自动生产国王蚁!',
-    'Gain a DISCIPLE OF ANT GOD which can produce ALMIGHTY ANTS automatically!': '获得一个神使蚁来自动生产全能蚁!',
-    'Inceptus Formicidae Level': '创始蚁学等级',
     'Promotes romance and unity within the colony. [+11% Ant Speed / level': '促进聚落的团结与繁殖[+11%蚂蚁速度/等级',
     'CURRENT EFFECT: ALL Ants work at': '当前效果:所有蚂蚁工作',
-    'Fortunae Formicidae Level': '幸运蚁学等级',
     'Sweetens crumbs to increase their value [Each level increases Crumb --> Coin Conversion efficiency, up to ^1,000,000': '使碎屑更合心意来增加它们的价值[每级增加碎屑 --> 金币转化率,最大^1,000,000',
     'CURRENT EFFECT: Crumb --> Coin exponent is ^': '当前效果:碎屑 --> 金币转化率^',
-    'Tributum Formicidae Level': '示威蚁学等级',
     'Swarms the Taxman into submission [Up to -99% taxes!': '迫使税务人员屈服[最大-99%税收!',
     'CURRENT EFFECT: Tax growth is multiplied by': '当前效果:税收增长乘以',
-    'Celeritas Formicidae Level': '迅捷蚁学等级',
     'Scares you into running faster [+2% Accelerator Boosts / level': '惊吓使你跑得更快[+2%加速器加成/等级',
     'CURRENT EFFECT: Accelerator Boosts': '当前效果:加速器加成',
-    'Multa Formicidae Level': '加倍蚁学等级',
     'Imitates your body through magic shape-shifting powers [+4% Multipliers / level': '通过变形术模仿你的行动[+4%加倍器/等级',
     'CURRENT EFFECT: Multipliers': '当前效果:加倍器',
-    'Sacrificium Formicidae Level': '献祭蚁学等级',
     'Tries to please Ant God... but fails [Gain up to 5x Offerings!': '尝试使蚂蚁之神开心...但失败了[获得最高5x的祭品倍率',
     'CURRENT EFFECT: Offerings': '当前效果:祭品',
-    'Hic Formicidae Level': '建筑蚁学等级',
     'Helps you build a few things here and there [+3% Building Cost Delay / level': '帮助你四处建造一些东西[+3%建筑价格膨胀延缓/等级',
     'CURRENT EFFECT: Building Costs scale': '当前效果:建筑价格膨胀',
-    'Experientia Formicidae Level': '博学蚁学等级',
     'Knows how to salt and pepper food [+1% Rune EXP / level': '懂得如何给食物加盐和胡椒[+1%符文经验/等级',
     'CURRENT EFFECT: Rune EXP is multiplied by': '当前效果:符文经验乘以',
-    'Praemoenio Formicidae Level': '预言蚁学等级',
     'Can make your message to Ant God a little more clear [+1 all Rune Levels / level': '使你的信息更容易传达给蚂蚁之神[+1所有符文等级/等级',
     'CURRENT EFFECT: Each rune has': '当前效果:每个符文获得',
-    'Scientia Formicidae Level': '科学蚁学等级',
     'Has big brain energy [Gain up to 10x Obtainium!': '有一个超级强大的大脑[获得最多10x的难得素',
     'CURRENT EFFECT: Obtainium': '当前效果:难得素',
-    'Phylacterium Formicidae Level': '命匣蚁学等级',
     'A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!': '给予蚂蚁之神一个贵重的祭品[获得最多3x献祭奖励!',
     'CURRENT EFFECT: Sacrificing is': '当前效果:献祭获得',
-    'Mortuus Est Formicidae Level': '死神蚁学等级',
     'Sacrifices itself to allow you to equip [Unlocks the Ant Talisman!': '献祭它本身使你可以装备它[解锁蚂蚁护身符',
     'CURRENT EFFECT: Unlocks the talisman!': '当前效果:解锁护身符!',
     'Current Obtainium/sec': '当前难得素/秒',
@@ -1233,7 +1241,6 @@ var cnPrefix = {
     '': '',
     '': '',
     '': '',
-    'Owned:': '拥有:',
     'Goal: Gain': '目标:获得',
     'Retry Challenge': '重新开始挑战',
     'No Runes Challenge': '无符文挑战',
@@ -1308,7 +1315,7 @@ var cnPostfix = {
     'until +1 export Quark': '可以获得+1导出夸克',
     'until +2 export Quark': '可以获得+2导出夸克',
     'until +3 export Quark': '可以获得+3导出夸克',
-   'Offerings. +10% Offerings.': '祭品,+10%祭品',
+    'Offerings. +10% Offerings.': '祭品,+10%祭品',
     'Offerings. +0% Offerings.': '祭品,+0%祭品',
     'Offerings. +2% Offerings.': '祭品,+2%祭品',
     'Offerings. +4% Offerings.': '祭品,+4%祭品',
@@ -1334,15 +1341,6 @@ var cnPostfix = {
     'as effective': '效果',
     'effective levels.': '有效等级',
     'slower!': '减缓!',
-    'Crumbs/sec': '碎屑/秒',
-    'Workers/sec': '工蚁/秒',
-    'Breeders/sec': '繁殖蚁/秒',
-    'MetaBreeders/sec': '高级蚁/秒',
-    'MegaBreeders/sec': '超级蚁/秒',
-    'Queens/sec': '蚁后/秒',
-    'Royals/sec': '国王蚁/秒',
-    'ALMIGHTIES/sec': '全能蚁/秒',
-    'Galactic Crumbs': '银河碎屑',
     'Mythos Shards in challenge.': '神话碎片在挑战中',
     'Completions': '完成次数',
     'Quarks.': '夸克',
@@ -1497,5 +1495,27 @@ var cnRegReplace = new Map([
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
+    [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
+    [/^Fortunae Formicidae Level(.*)$/, '幸运蚁等级$1'], //蚂蚁
+    [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁
+    [/^Celeritas Formicidae Level(.*)$/, '迅捷蚁等级$1'], //蚂蚁
+    [/^Multa Formicidae Level(.*)$/, '加倍蚁等级$1'], //蚂蚁
+    [/^Sacrificium Formicidae Level(.*)$/, '献祭蚁等级$1'], //蚂蚁
+    [/^Hic Formicidae Level(.*)$/, '建筑蚁等级$1'], //蚂蚁
+    [/^Experientia Formicidae Level(.*)$/, '博学蚁等级$1'], //蚂蚁
+    [/^Praemoenio Formicidae Level(.*)$/, '预言蚁等级$1'], //蚂蚁
+    [/^Scientia Formicidae Level(.*)$/, '科学蚁等级$1'], //蚂蚁
+    [/^Phylacterium Formicidae Level(.*)$/, '命匣蚁等级$1'], //蚂蚁
+    [/^Mortuus Est Formicidae Level(.*)$/, '死神蚁等级$1'], //蚂蚁
+    [/^Cost: (.+) Galactic Crumbs$/, '花费：$1 银河碎屑'], //蚂蚁
+    [/^Owned: (.+) \[\+(.+)\]$/, '拥有：$1 [+$2]'], //蚂蚁
+    [/^Generates (.+) Crumbs\/sec$/, '每秒产生 $1 银河碎屑'], //蚂蚁
+    [/^Generates (.+) Workers\/sec$/, '每秒产生 $1 工蚁'], //蚂蚁
+    [/^Generates (.+) Breeders\/sec$/, '每秒产生 $1 繁殖蚁'], //蚂蚁
+    [/^Generates (.+) MetaBreeders\/sec$/, '每秒产生 $1 高级繁殖蚁'], //蚂蚁
+    [/^Generates (.+) MegaBreeders\/sec$/, '每秒产生 $1 超级繁殖蚁'], //蚂蚁
+    [/^Generates (.+) Queens\/sec$/, '每秒产生 $1 蚁后'], //蚂蚁
+    [/^Generates (.+) Royals\/sec$/, '每秒产生 $1 国王蚁'], //蚂蚁
+    [/^Generates (.+) ALMIGHTIES\/sec$/, '每秒产生 $1 全能蚁'], //蚂蚁
 
 ]);

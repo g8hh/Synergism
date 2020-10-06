@@ -696,6 +696,21 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T8蚂蚁自动购买，并且可以自动购买科学蚁和命匣蚁！基础蚂蚁强度分增加3%。',
     //成就结束
 
+    //挑战
+    '|| Softcapped past 100! Effective completion count: ': '超过100次以后效果下降！有效的完成次数为：',
+    '|| Softcapped past 25! Effective completion count: ': '超过25次以后效果下降！有效的完成次数为：',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //挑战结束
+
     //蚂蚁
     'Gain a worker ant for your everyday life. Gathers Galactic Crumbs. Essential!': '获得一只工蚁为您每日工作。它会采集银河碎屑。它很有用！',
     'Gain a breeder ant that produces worker ants automatically!': '获得一只繁殖蚁，它会自动产生工蚁！',
@@ -718,19 +733,6 @@ var cnItems = {
     'A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!]': '献给蚁神的贵重祭品[最高可以获得3倍献祭奖励！]',
     'Betray Ant God increasing the fragility of your dimension [Unlocks ant talisman, Up to 2x faster timers on most things]': '背叛蚁神将使您的维度更加脆弱[解锁蚂蚁护身符，全局速度最高为2倍]',
     'Your Ant ELO is': '蚂蚁强度分为',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
     //蚂蚁结束
 
 
@@ -1468,6 +1470,7 @@ var cnRegReplace = new Map([
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面
+    [/^You have (.+) real-life seconds of Offline Progress!$/, '您有$1秒的现实离线时间！'], //离线计算
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁

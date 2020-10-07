@@ -443,13 +443,13 @@ var cnItems = {
     'Summoning Enhancements: Complete [No Shards] twenty times.': '召唤附魔：完成二十次无碎片挑战。',
     'Magic 99/99: Complete [No Shards] fifty times.': '魔法99/99：完成五十次无碎片挑战。',
     'Perfect Foresight: Complete [No Shards] seventy-five times.': '完全预见：完成七十五次无碎片挑战。',
-    'Inflation: Complete [Cost+] once.': '通货膨胀：完成一次消耗增加挑战。',
-    'Hyperinflation: Complete [Cost+] three times.': '恶性通货膨胀：完成三次消耗增加挑战。',
-    'Market Bubble: Complete [Cost+] five times.': '市场泡沫：完成五次消耗增加挑战。',
-    'Bull Market: Complete [Cost+] ten times.': '牛市：完成十次消耗增加挑战。',
-    'Wealth Inequality: Complete [Cost+] twenty times.': '贫富不均：完成二十次消耗增加挑战。',
-    'Severe Overpay: Complete [Cost+] fifty times.': '工资虚高：完成五十次消耗增加挑战。',
-    'Societal Collapse: Complete [Cost+] seventy-five times.': '社会崩溃：完成七十五次消耗增加挑战。',
+    'Inflation: Complete [Cost+] once.': '通货膨胀：完成一次花费增加挑战。',
+    'Hyperinflation: Complete [Cost+] three times.': '恶性通货膨胀：完成三次花费增加挑战。',
+    'Market Bubble: Complete [Cost+] five times.': '市场泡沫：完成五次花费增加挑战。',
+    'Bull Market: Complete [Cost+] ten times.': '牛市：完成十次花费增加挑战。',
+    'Wealth Inequality: Complete [Cost+] twenty times.': '贫富不均：完成二十次花费增加挑战。',
+    'Severe Overpay: Complete [Cost+] fifty times.': '工资虚高：完成五十次花费增加挑战。',
+    'Societal Collapse: Complete [Cost+] seventy-five times.': '社会崩溃：完成七十五次花费增加挑战。',
     'Excavation: Complete [Reduced Diamonds] once.': '挖掘：完成一次钻石减少挑战。',
     'Digging Deep: Complete [Reduced Diamonds] three times.': '深挖：完成三次钻石减少挑战。',
     'Frack As Needed: Complete [Reduced Diamonds] five times.': '需要压碎：完成五次钻石减少挑战。',
@@ -723,6 +723,29 @@ var cnItems = {
     'Gain an offering automatically every 2 seconds!': '每2秒自动获得1个祭品！',
     'Start [No Shards]': '开始[无碎片挑战]',
     'Exponent +': '指数增加',
+    'You\'re getting rich now, but inflation hasn\'t happened yet? I don\'t think so!': '您越来越有钱了，但通货膨胀还没来？我可不这么觉得！',
+    'Transcend and reach the goal except Coin/Crystal producers, Accelerators and Multipliers cost more. [Gets harder each time!]': '立即超越开始挑战，金币/水晶生产者，加速器和加倍器的花费变得更高。[挑战难度会随着完成次数越来越高！]',
+    'Accelerator Cost scale slows down by +5 purchases. Current': '加速器花费增长速度减缓5次购买。当前效果',
+    'Multiplier Cost scale slows down by +2 purchases. Current': '加倍器花费增长速度减缓2次购买。当前效果',
+    'Building Cost Delay +0.5%. Current': '建筑成本减缓0.5%。当前效果',
+    'None': '无',
+    'Start [Cost+]': '开始[花费增加挑战]',
+    'Accelerator Delay +': '加速器减缓',
+    'Multiplier Delay +': '加倍器减缓',
+    'Building Cost Delay +': '建筑成本减缓',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -820,13 +843,11 @@ var cnItems = {
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
     '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
-    'Start [Cost+]': '开始[消耗增加]',
     'Start [Reduced Diamonds]': '开始[钻石减少]',
     'Start <Higher Tax>': '开始[税收暴增]',
     'Start <No Multipliers/Accelerators>': '开始[无加倍器/加速器]',
     'Start <Cost++>': '开始[价格暴增]',
     'Start <No Runes>': '开始[无符文]',
-    'None': '无',
     'Current': '当前',
     'Start Challenge': '开始挑战',
     '': '',
@@ -915,12 +936,12 @@ var cnPrefix = {
     'Start Reincarnations with 1 [No Multipliers] completion per level.': '每级使你转世后立即完成1次无加倍器挑战',
     'Start Reincarnations with 1 [No Accelerators] completion per level.': '每级使你转世后立即完成1次无加速器挑战',
     'Start Reincarnations with 1 [No Shards] completion per level.': '每级使你转世后立即完成1次无碎片挑战',
-    'Start Reincarnations with 1 [Cost+] completion per level.': '每级使你转世后立即完成1次消耗增加挑战',
+    'Start Reincarnations with 1 [Cost+] completion per level.': '每级使你转世后立即完成1次花费增加挑战',
     'Start Reincarnations with 1 [Reduced Diamonds] completion per level.': '每级使你转世后立即完成1次钻石减少挑战',
     'Increase the maximum number of [No Multipliers] completions by 1 per level.': '每级增加无加倍器挑战的等级上限1',
     'Increase the maximum number of [No Accelerators] completions by 1 per level.': '每级增加无加速器挑战的等级上限1',
     'Increase the maximum number of [No Shards] completions by 1 per level.': '每级增加无碎片挑战的等级上限1',
-    'Increase the maximum number of [Cost+] completions by 1 per level.': '每级增加消耗增加挑战的等级上限1',
+    'Increase the maximum number of [Cost+] completions by 1 per level.': '每级增加花费增加挑战的等级上限1',
     'Increase the maximum number of [Reduced Diamonds] completions by 1 per level.': '每级增加钻石减少挑战的等级上限1',
     'Automatically gain completions for Challenge 1, even without running it!': '自动完成挑战1,不需要手动启动它!',
     'Automatically gain completions for Challenge 2, even without running it!': '自动完成挑战2,不需要手动启动它!',
@@ -1164,11 +1185,6 @@ var cnPrefix = {
     'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
     'The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO.': '蚂蚁之神认可你的庞大粒子数量并在ELO时给予你更多蚂蚁',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
-    'You\'re getting rich now, but inflation hasn\'t happened yet? I don\'t think so!': '你现在越来越有钱了,但通货膨胀还没到来?我不这么认为!',
-    'Transcend and reach the goal except Coin/Crystal producers, Accelerators and Multipliers cost more. [Gets harder each time!': '立即超越并开始挑战,金币/水晶生产者、加速器和加倍器消耗更高[每次完成都会变得更难!',
-    'Accelerator Cost scale slows down by +5 purchases.': '加速器价格膨胀延后5个',
-    'Multiplier Cost scale slows down by +2 purchases.': '加倍器价格膨胀延后2个',
-    'All producer cost scale slows down by +0.5% of base.': '所有生产者价格膨胀延缓0.5%基础数量',
     'You ever wonder how you get so many diamonds?': '你是不是一直在疑惑你怎么会拿到这么多钻石?',
     'Transcend and reach the goal except you gain far fewer Diamonds from all sources [Gets harder each time!': '立即超越并开始挑战,你拿到的钻石大幅减少[每次完成都会变得更难!',
     '0.01 Coin --> Diamond conversion exponent on Prestige!': '0.01金币 --> 钻石转化率在转生时!',
@@ -1245,7 +1261,6 @@ var cnPrefix = {
     'Cost++ Challenge': '价格暴增挑战',
     'No Multipliers/Accelerators Challenge': '无加倍器/加速挑战',
     'Higher Tax Challenge': '税收暴增挑战',
-    'Cost+ Challenge': '消耗增加挑战',
     'Reduced Diamonds Challenge': '钻石减少挑战',
     'CURRENT Effect: All resources EXCEPT QUARKS increased by': '当前效果:除了夸克以外的所有资源产量提高',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '甚至在这个高档商店,它的效果也挺明显的,对吧?',
@@ -1495,7 +1510,7 @@ var cnRegReplace = new Map([
     [/^(.+)% Accelerator Power$/, '$1%加速器效果'], //挑战
     [/^No Shards Challenge \|\| (.+)\/(.+) Completions$/, '无碎片挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^([e\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
-
+    [/^Cost\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费增加挑战 || 完成$1次，次数上限为$2'], //挑战
 
 
 
@@ -1529,7 +1544,7 @@ var cnRegReplace = new Map([
     [/^CURRENT EFFECT: Accelerator Boosts \+(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
     [/^CURRENT EFFECT: Multipliers \+(.*)$/, '当前效果：加倍器增加$1'], //蚂蚁
     [/^CURRENT EFFECT: Offerings(.*)$/, '当前效果：祭品$1'], //蚂蚁
-    [/^CURRENT EFFECT: Building Costs scale (.+)% slower!$/, '当前效果：建筑成本减缓$1%！'], //蚂蚁
+    [/^CURRENT EFFECT: Building Costs scale (.+)% slower!$/, '当前效果：建筑成本增长速度减缓$1%！'], //蚂蚁
     [/^CURRENT EFFECT: Rune EXP is multiplied by (.+)!$/, '当前效果：符文经验乘以$1倍！'], //蚂蚁
     [/^CURRENT EFFECT: Each rune has +(.+) effective levels.$/, '当前效果：每个符文有效等级增加$1。'], //蚂蚁
     [/^CURRENT EFFECT: Obtainium(.*)$/, '当前效果：难得素$1'], //蚂蚁

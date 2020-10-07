@@ -1507,6 +1507,7 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
+    [/^([e\d\.]+),$/, '$1,'], //数字处理
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '夸克导出总奖励：$1[最大为$2]'], //主脚本
@@ -1719,8 +1720,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^([\d\.]+)s$/, '$1秒'], //历史统计
     [/^(\d+)m(\d+)s$/, '$1分$2秒'], //历史统计
-    [/^(\d+)h(\d+)m(\d+)s$/, '$1小时$2分$3秒'], //历史统计
-    [/^(\d+)d(\d+)h(\d+)m(\d+)s$/, '$1日$2小时$3分$4秒'], //历史统计
+    [/^(\d+)h(\d+)m(\d+)s$/, '$1时$2分$3秒'], //历史统计
+    [/^(\d+)d(\d+)h(\d+)m(\d+)s$/, '$1日$2时$3分$4秒'], //历史统计
     [/^([e\d\,\.]+)\/s$/, '$1/秒'], //历史统计
     [/^(.+) multi$/, '$1倍率'], //历史统计
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计

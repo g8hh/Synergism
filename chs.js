@@ -730,16 +730,16 @@ var cnItems = {
     'Building Cost Delay +0.5%. Current': '建筑成本减缓0.5%。当前效果',
     'None': '无',
     'Start [Cost+]': '开始[花费增加挑战]',
-    'Accelerator Delay +': '加速器减缓',
-    'Multiplier Delay +': '加倍器减缓',
+    'Accelerator Delay +': '加速器减缓次数',
+    'Multiplier Delay +': '加倍器减缓次数',
     'Building Cost Delay +': '建筑成本减缓',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'You ever wonder how you get so many diamonds?': '您有怀疑过是怎么获得这么多钻石的吗？',
+    'Transcend and reach the goal except you gain far fewer Diamonds from all sources [Gets harder each time!]': '立即超越开始挑战，您获得的钻石数量大幅度减少[挑战难度会随着完成次数越来越高！]',
+    '0.01 Coin --> Diamond conversion exponent on Prestige! Current': '0.01转生时金币对钻石的转换指数！当前效果',
+    'Multiply Crystal production by 10! Current': '水晶产量变为10倍！当前效果',
+    'Start [Reduced Diamonds]': '开始[钻石减少挑战]',
+    'Exponent = ^': '指数变为',
+    'Crystal production x': '水晶产量倍率变为',
     '': '',
     '': '',
     '': '',
@@ -843,7 +843,6 @@ var cnItems = {
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
     '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
-    'Start [Reduced Diamonds]': '开始[钻石减少]',
     'Start <Higher Tax>': '开始[税收暴增]',
     'Start <No Multipliers/Accelerators>': '开始[无加倍器/加速器]',
     'Start <Cost++>': '开始[价格暴增]',
@@ -1185,10 +1184,6 @@ var cnPrefix = {
     'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
     'The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO.': '蚂蚁之神认可你的庞大粒子数量并在ELO时给予你更多蚂蚁',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
-    'You ever wonder how you get so many diamonds?': '你是不是一直在疑惑你怎么会拿到这么多钻石?',
-    'Transcend and reach the goal except you gain far fewer Diamonds from all sources [Gets harder each time!': '立即超越并开始挑战,你拿到的钻石大幅减少[每次完成都会变得更难!',
-    '0.01 Coin --> Diamond conversion exponent on Prestige!': '0.01金币 --> 钻石转化率在转生时!',
-    'Multiply Crystal production by 10!': '水晶产量10倍!',
     'The tax man caught wind that you reincarnated recently...': '税务官发现了你最近在转世...',
     'Reincarnate and reach the goal except tax has a lower cap, and Coin production is divided by 1e250.': '立即转世并开始挑战,税收导致的产量上限更低,并且金币产量被削减了1e250',
     '3.5% Taxes [Multiplicative]!': '3.5%税收[乘法叠加]!',
@@ -1261,7 +1256,6 @@ var cnPrefix = {
     'Cost++ Challenge': '价格暴增挑战',
     'No Multipliers/Accelerators Challenge': '无加倍器/加速挑战',
     'Higher Tax Challenge': '税收暴增挑战',
-    'Reduced Diamonds Challenge': '钻石减少挑战',
     'CURRENT Effect: All resources EXCEPT QUARKS increased by': '当前效果:除了夸克以外的所有资源产量提高',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '甚至在这个高档商店,它的效果也挺明显的,对吧?',
     'CURRENT Effect: Try to upgrade research each reincarnation, and gain': '当前效果:每次转世尝试升级研究,并获得',
@@ -1511,7 +1505,7 @@ var cnRegReplace = new Map([
     [/^No Shards Challenge \|\| (.+)\/(.+) Completions$/, '无碎片挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^([e\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
     [/^Cost\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费增加挑战 || 完成$1次，次数上限为$2'], //挑战
-
+    [/^Reduced Diamonds Challenge \|\| (.+)\/(.+) Completions$/, '钻石减少挑战 || 完成$1次，次数上限为$2'], //挑战
 
 
 

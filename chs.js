@@ -702,20 +702,19 @@ var cnItems = {
     '|| Softcapped past 100! Effective completion count': '|| 超过100次以后效果下降！有效的完成次数为',
     '|| Softcapped past 25! Effective completion count': '|| 超过25次以后效果下降！有效的完成次数为',
     'Multipliers make the game a little too fast. Let\'s take them out!': '加倍器让游戏的进度有点太快了。把它移除了看看！',
-    'Transcend and reach the goal except Multipliers do nothing but act like Accelerators, which are nerfed by 50%!': '超越后挑战开始，加倍器失去加倍效果，变为与加速器作用相同，且效果削弱50%！',
+    'Transcend and reach the goal except Multipliers do nothing but act like Accelerators, which are nerfed by 50%!': '立即超越开始挑战，加倍器失去加倍效果，变为与加速器作用相同，且效果削弱50%！',
     '10 base Multiplier Boosts! \[\+0.05 to power!\] Current': '10个基础加倍器加成！[增加0.05加倍器效果！]当前效果',
     '10% total Multiplier Boosts! Current': '10%总加倍器加成！当前效果',
     '0.04 base Rune exp per Offering! Current': '0.04每个祭品的基础符文经验值！当前效果',
     '1 free Multiplier! +1 Base EXP per offering used!': '1个免费加倍器！每个祭品的基础符文经验值增加1！',
     'Start [No Multipliers]': '开始[无加倍器挑战]',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Who needs accelerators? They do basically nothing now.': '现在谁还需要加速器吗？它们什么用处都没有了。',
+    'Transcend and reach the goal except Accelerators do nothing! Multipliers are nerfed a bit as well.': '立即超越开始挑战，加速器完全无效，加倍器也被削弱了。',
+    '5 Free Accelerators! Current': '5个免费加速器！当前效果',
+    '5% Accelerator Boost Power! Current': '5%加速器加成效果！当前效果',
+    '0.25% Accelerator Power! Current': '0.25%加速器效果！当前效果',
+    '1 base offering for Prestige and Transcensions.': '1转生和超越的基础祭品获取数量。',
+    'Start [No Accelerators]': '开始[无加速器挑战]',
     '': '',
     '': '',
     '': '',
@@ -798,7 +797,6 @@ var cnItems = {
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
     '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
-    'Start [No Accelerators]': '开始[无加速]',
     'Start [No Shards]': '开始[无碎片]',
     'Start [Cost+]': '开始[消耗增加]',
     'Start [Reduced Diamonds]': '开始[钻石减少]',
@@ -1144,11 +1142,6 @@ var cnPrefix = {
     'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
     'The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO.': '蚂蚁之神认可你的庞大粒子数量并在ELO时给予你更多蚂蚁',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
-    'Who needs accelerators? They do basically nothing now.': '谁需要加速器?它们现在没有基础效果了',
-    'Transcend and reach the goal except Accelerators do nothing! Multipliers are nerfed a bit as well.': '立即超越并开始挑战,加速器没有效果!加倍器也被一定程度削弱',
-    '5 Free Accelerators!': '5免费加速器',
-    '5% Accelerator Boost Power!': '5%加速器加成!',
-    '0.25% Accelerator Power!': '0.25%加速器效果!',
     'Alright, now you\'re thinking, how else can I make the game harder?': '好吧,现在你是不是在想,我还能把游戏变得多难呢?',
     'Transcend and reach the goal except you do not produce Crystals or Mythos Shards.': '立即超越并开始挑战,你不能生产水晶或神话碎片',
     'Crystal --> Coin conversion exponent +0.04!': '水晶 --> 金币的转换指数增加0.04',
@@ -1234,7 +1227,6 @@ var cnPrefix = {
     'Cost++ Challenge': '价格暴增挑战',
     'No Multipliers/Accelerators Challenge': '无加倍器/加速挑战',
     'Higher Tax Challenge': '税收暴增挑战',
-    'No Accelerators Challenge': '无加速挑战',
     'No Shards Challenge': '无碎片挑战',
     'Cost+ Challenge': '消耗增加挑战',
     'Reduced Diamonds Challenge': '钻石减少挑战',
@@ -1481,6 +1473,13 @@ var cnRegReplace = new Map([
     [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战
     [/^([e\d\,\.\s]+) Boosts$/, '$1加倍器加成'], //挑战
     [/^(.+) Rune EXP \[Highest Completion\]$/, '$1符文经验值[取最高完成次数]'], //挑战
+    [/^No Accelerators Challenge \|\| (.+)\/(.+) Completions$/, '无加速器挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^([e\d\,\.\s]+) Accelerators$/, '$1加速器'], //挑战
+    [/^(.+)% A.Boost Power$/, '$1%加速器加成效果'], //挑战
+    [/^(.+)% Accelerator Power$/, '$1%加速器效果'], //挑战
+
+
+
     [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
     [/^Fortunae Formicidae Level(.*)$/, '财富蚁等级$1'], //蚂蚁
     [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁
@@ -1524,9 +1523,4 @@ var cnRegReplace = new Map([
     [/^(.+) \[>2,000 ELO\]$/, '$1[分>2000]'], //蚂蚁
     [/^(.+) \[>3,000 ELO\]$/, '$1[分>3000]'], //蚂蚁
     [/^(.+) \[>5,000 ELO\]$/, '$1[分>5000]'], //蚂蚁
-
-
-
-
-
 ]);

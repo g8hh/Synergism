@@ -763,13 +763,13 @@ var cnItems = {
     'Transcend Offerings +4%! Current': '超越获得的祭品数量增加4%！当前效果',
     'Unlock the Anthill feature! Includes 20 new Researches. A Global Diamond Upgrade.': '解锁蚁丘特性！解锁20个新研究。另外还解锁了一个全局钻石升级。',
     'Start <Cost++>': '开始<花费暴增挑战>',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'You\'ll never complain about Prism being bad again.': '您大概不会再抱怨棱柱符文没用了。',
+    'Reincarnate and reach the goal except runes always have level 1 effects. All coin production is divided by e2,000,000.': '立即转世开始挑战，所有符文只有1级的效果。金币产量将除以1e2000000。',
+    '1 free Ant level! Current': '1免费蚂蚁等级！当前效果',
+    '10% Ant speed [Multiplicative!] Current': '10%蚂蚁速度[效果叠乘！]当前效果',
+    'SI Rune Exp +20%! Current': '卓越智慧符文经验值增加20%！当前效果',
+    'Unlock the Talismans feature! [In Runes tab]. A Global Diamond Upgrade.': '解锁护身符特性！[在符文选项卡下]。另外还解锁了一个全局钻石升级。',
+    'Start <No Runes>': '开始[无符文挑战]',
     '': '',
     '': '',
     '': '',
@@ -869,7 +869,6 @@ var cnItems = {
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
     '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
-    'Start <No Runes>': '开始[无符文]',
     'Current': '当前',
     'Start Challenge': '开始挑战',
     '': '',
@@ -1207,11 +1206,6 @@ var cnPrefix = {
     'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
     'The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO.': '蚂蚁之神认可你的庞大粒子数量并在ELO时给予你更多蚂蚁',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
-    'You\'ll never complain about Prism being bad again.': '在这挑战里你大概不会再抱怨棱镜没用了',
-    'Reincarnate and reach the goal except runes always have level 1 effects. All coin production is divided by e2,000,000.': '立即转世并开始挑战,所有符文都只有一级的效果,所有金币产量降低e2,000,000',
-    '1 free Ant level!': '1免费蚂蚁等级',
-    '10% Ant speed [Multiplicative!]': '10%蚂蚁速度[乘法叠加!]',
-    'Unlock the Talismans feature! [In Runes tab]. A Global Diamond Upgrade.': '解锁护身符标签![在符文标签里]还有一个全局的钻石升级',
     'Does the new rune kinda suck? Power it up! +0.1% level effectiveness for SI rune per level!': '这符文好像不厉害?加强它!+0.1%卓越智慧符文的有效等级每级',
     'Yeah, going back to basics. +1% Accelerators/Level.': '好的,我们回到基础,+1%加速器/级',
     '0/5 Multipliers SUCK: +1% Multipliers/Level.': '0/5加倍器抽取:+1%加倍器/级',
@@ -1503,6 +1497,11 @@ var cnRegReplace = new Map([
     [/^No Multipliers\/Accelerators Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器/加速器挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Cost\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费暴增挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+)% Transcend-based offerings$/, '$1%超越相关的祭品数量'], //挑战
+    [/^No Runes Challenge \|\| (.+)\/(.+) Completions$/, '无符文挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^(.+) free levels$/, '$1免费等级'], //挑战
+    [/^(.+) Ant Speed$/, '$1蚂蚁速度'], //挑战
+
+
 
 
 

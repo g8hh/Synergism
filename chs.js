@@ -852,21 +852,15 @@ var cnItems = {
     'Diamond Mine destroyed... no more monopolies!': '钻石矿被摧毁了……没有垄断了！',
     'Corruption VII: Extinction': '腐化 VII：灭绝',
     'It killed the dinosaurs too, ya dingus.': '它连恐龙都干掉了，憨憨。',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Corruption VIII: Drought': '腐化 VIII：干旱',
+    'More like California, am I right?': '更像加州了，对吧？',
+    'Corruption IX: Financial Recession': '腐化 IX：经济衰退',
+    '2008.exe has stopped working.': '2008.exe已停止工作。',
+    'CLEANSE THE CORRUPTION': '清除腐化',
+    'Free this world of sin.': '这个罪恶的世界解脱了。',
+    'Reset all Corruptions to level 0 for your current ascension. Does not reset your current ascension.': '使当前飞升的所有腐化等级回到0级。不会重置当前的飞升。',
+    'Push that big \'Reset Corruptions\' button to confirm your decision.': '按下中间的按钮来清除腐化。',
+    'Note: if you need to do this, you may have bitten off more than you can chew.': '注意：如果您需要这么做的话，显然您是贪多嚼不烂了。',
     //腐化结束
 
 
@@ -1619,4 +1613,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：水晶获取数量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Ant Production \^$/, '本次飞升，此腐化等级为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Ant Production \^$/, '下次飞升，此腐化等级将变为$1。效果为：蚂蚁产量指数变为'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
 ]);

@@ -837,6 +837,60 @@ var cnItems = {
     'Your Ant ELO is': '蚂蚁强度分为',
     //蚂蚁结束
 
+    //惊奇方盒
+    'Wow! I want more Cubes.': '真惊奇！我想要更多方盒。',
+    'Wow! I want passive Offering gain too.': '真惊奇！我也想被动获得祭品。',
+    'Wow! I want better passive Obtainium': '真惊奇！我想更好地被动获得难得素',
+    'Wow! I want to keep mythos building autobuyers.': '真惊奇！我想要保留神话建筑自动购买。',
+    'Wow! I want to keep mythos upgrade autobuyer.': '真惊奇！我想要保留神话升级自动购买。',
+    'Wow! I want to keep auto mythos gain.': '真惊奇！我还想保留自动获得神话。',
+    'Wow! I want the particle building automators.': '真惊奇！我想获得粒子建筑自动购买。',
+    'Wow! I want to automate Particle Upgrades.': '真惊奇！我想要自动升级粒子升级。',
+    'Wow! I want to automate researches better dangit.': '真惊奇！我想要自动研究变得更好。',
+    'Wow! This is pretty good but expensive.': '真惊奇！这很棒，但是好贵。',
+    'Wow! I want more cubes 2.': '真惊奇！我想要更多方盒2。',
+    'Wow! I want building power to be useful 1.': '真惊奇！我想让建筑能量更有用1。',
+    'Wow! I want opened cubes to give more blessings 1.': '真惊奇！我想让方盒给予更多祝福1。',
+    'Wow! I want Iris blessing bonuses to scale better 1.': '真惊奇！我想让伊丽丝的祝福加成更高1。',
+    'Wow! I want Ares blessing bonuses to scale better 1.': '真惊奇！我想让阿瑞斯的祝福加成更高1。',
+    'Wow! I want more rune levels 1.': '真惊奇！我想要更多的符文等级1。',
+    'Wow! I want just a little bit more crystal power.': '真惊奇！我想要更多一点的水晶效果。',
+    'Wow! I want to accelerate time!': '真惊奇！我想要加速时间！',
+    'Wow! I want to unlock a couple more coin upgrades.': '真惊奇！我想解锁更多的金币升级。',
+    'Wow! I want to improve automatic rune tools.': '真惊奇！我想要自动符文变得更好。',
+    'Wow! I want more cubes 3.': '真惊奇！我想要更多方盒3。',
+    'Wow! I wish my Artemis was a little better': '真惊奇！我希望阿尔忒弥斯能更好一点',
+    'Wow! I want opened cubes to give more blessings 2.': '真惊奇！我想让方盒给予更多祝福2。',
+    'Wow! I want Plutus blessing bonuses to scale better': '真惊奇！我想让普路托斯的祝福加成更高',
+    'Wow! I want Moloch blessing bonuses to scale better': '真惊奇！我想让摩洛克的祝福加成更高',
+    'Wow! I want to start Ascensions with rune levels.': '真惊奇！我想要在飞升后就有符文等级。',
+    'Wow! I want to start Ascensions with one of each reincarnation building.': '真惊奇！我想要在飞升后就有各1个粒子建筑。',
+    'Wow! I want to finally render Reincarnating obsolete.': '真惊奇！我想让转世从此过时。',
+    'Wow! I want to increase maximum Reincarnation Challenge completions.': '真惊奇！我想要增加转世挑战的完成次数上限。',
+    'Wow! I want to arbitrarily increase my cube and tesseract gain.': '真惊奇！我想要随意增加方盒和超立方的获取数量。',
+    'Wow! I want more cubes 4.': '真惊奇！我想要更多方盒4。',
+    'Wow! I want runes to be easier to level up over time.': '真惊奇！我想要符文随着时间推移更容易升级。',
+    'Wow! I want opened cubes to give more blessings 3.': '真惊奇！我想让方盒给予更多祝福3。',
+    'Wow! I want Chronus blessing bonuses to scale better': '真惊奇！我想让柯罗诺斯的祝福加成更高',
+    'Wow! I want Aphrodite blessing bonuses to scale better': '真惊奇！我想让阿佛洛狄忒的祝福加成更高',
+    'Wow! I want building power to be useful 2.': '真惊奇！我想让建筑能量更有用2。',
+    'Wow! I want more rune levels 2.': '真惊奇！我想要更多的符文等级2。',
+    'Wow! I want more tesseracts while corrupted!': '真惊奇！我想要在腐化时获得更多超立方！',
+    'Wow! I want more score from challenge 10 completions.': '真惊奇！我想要让完成挑战10给予的分数更高。',
+    'Wow! I want Athena blessing bonuses to scale better 1.': '真惊奇！我想让雅典娜的祝福加成更高1。',
+    'Wow! I want more cubes 5.': '真惊奇！我想要更多方盒5。',
+    'Wow! I want some Uncorruptable Obtainium.': '真惊奇！我想要一些无法腐化的难得素。',
+    'Wow! I want even more Uncorruptable Obtainium!': '真惊奇！我还想要一些无法腐化的难得素！',
+    'Wow! I want Midas Blessing bonus to scale better 1.': '真惊奇！我想让米达斯的祝福加成更高1。',
+    'Wow! I want Hermes Blessing bonus to scale better 1.': '真惊奇！我想让赫尔墨斯的祝福加成更高1。',
+    'Wow! I want even MORE offerings!': '真惊奇！我想要更多更多的祭品！',
+    'Wow! I want even MORE obtainium!': '真惊奇！我想要更多更多的难得素！',
+    'Wow! I want to start ascension with an ant.': '真惊奇！我想要在飞升后就有一只蚂蚁。',
+    'Wow! I want to start ascension with a challenge 6-8 completion.': '真惊奇！我想要在飞升后就已经各完成了挑战6至挑战8一次。',
+    'Wow! I want to be enlightened by the power of a thousand suns.': '真惊奇！我想要获得静月千阴的启迪。',
+    '': '',
+    //惊奇方盒结束
+
     //腐化
     'Corruption I: Divisiveness': '腐化 I：分歧',
     'The Ant God\'s found out how to ruin your duplicator!': '蚁神发现了影响加倍的方法！',
@@ -1613,8 +1667,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：水晶获取数量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Ant Production \^$/, '本次飞升，此腐化等级为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Ant Production \^$/, '下次飞升，此腐化等级将变为$1。效果为：蚂蚁产量指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以$2'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
 ]);

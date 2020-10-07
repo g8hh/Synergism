@@ -1259,9 +1259,6 @@ var cnPrefix = {
     '': '',
     '': '',
     '': '',
-    'Retry Challenge': '重新开始挑战',
-    'No Runes Challenge': '无符文挑战',
-    'Cost++ Challenge': '花费暴增挑战',
     'CURRENT Effect: All resources EXCEPT QUARKS increased by': '当前效果:除了夸克以外的所有资源产量提高',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '甚至在这个高档商店,它的效果也挺明显的,对吧?',
     'CURRENT Effect: Try to upgrade research each reincarnation, and gain': '当前效果:每次转世尝试升级研究,并获得',
@@ -1505,7 +1502,7 @@ var cnRegReplace = new Map([
     [/^(.+)% Prestige-based Offerings$/, '$1%转生相关的祭品数量'], //挑战
     [/^No Multipliers\/Accelerators Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器/加速器挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Cost\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费暴增挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+)% Transcend-based Offerings$/, '$1%超越相关的祭品数量'], //挑战
+    [/^(.+)% Transcend-based offerings$/, '$1%超越相关的祭品数量'], //挑战
 
 
 

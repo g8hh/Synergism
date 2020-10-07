@@ -838,12 +838,12 @@ var cnItems = {
     //蚂蚁结束
 
     //腐化
-    'Corruption I: Divisiveness': '腐化 I：不和',
+    'Corruption I: Divisiveness': '腐化 I：分歧',
     'The Ant God\'s found out how to ruin your duplicator!': '蚁神发现了影响加倍的方法！',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Corruption II: Maladaption': '腐化 II：适应不良',
+    'Insert Cool Text Here.': '此处可以插入有趣的文本。',
+    'Corruption III: Spacial Dilation': '腐化 III：空间膨胀',
+    'Way to go, Albert.': '干得好，阿尔伯特。',
     '': '',
     '': '',
     '': '',
@@ -1662,4 +1662,8 @@ var cnRegReplace = new Map([
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Free Accel. Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加速器指数变为'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器指数变为'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by$/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以'], //腐化
 ]);

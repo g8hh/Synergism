@@ -1723,7 +1723,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
+    [/^([\d\,\.]+)s$/, '$1秒'], //历史统计
     [/^(.+) multi$/, '$1倍率'], //历史统计
-    [/^([e\d\,\.]+) ELO$/, '$1强度分'], //历史统计
+    [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
     [/^Score(.+)$/, '分数$1'], //历史统计
 ]);

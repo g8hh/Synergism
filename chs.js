@@ -1519,9 +1519,9 @@ var cnRegReplace = new Map([
     [/^Cost: (.+) coins.$/, '花费：$1 金币'], //主界面
     [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2%]'], //主界面
     [/^Accelerators: (.+) \[(.+)\]$/, '加速器：$1 [$2]'], //主界面
-    [/^Acceleration Power: (.+) \|\| Acceleration Multiplier: (.+)$/, '加速效果：$1 || 加速倍率：$2'], //主界面
+    [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速效果: $1 || 加速倍率$2'], //主界面
     [/^Multipliers: (.+) \[(.+)\]$/, '加倍器：$1 [$2]'], //主界面
-    [/^Multiplier Power: (.+) \|\| Multiplier: (.+)$/, '加倍效果：$1 || 加倍倍率：$2'], //主界面
+    [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍效果: $1 || 加倍倍率$2'], //主界面
     [/^Accelerator Boost: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
     [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面
     [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速效果，并增加5个免费的加速器。'], //主界面

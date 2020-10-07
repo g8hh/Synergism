@@ -1518,7 +1518,7 @@ var cnPostfix = {
     ")": ")",
     "%": "%",
     " COMPLETED!": "已完成！",
-    "|| MAXED!": "|| 已满级！",
+    " || MAXED!": " || 已满级！",
     'Multipliers through magic!': '加倍器',
     'It\'s like inception, or something.': '这是个开始,或者是别的什么',
     'as many Enchantments; what productive spirits!': '额外强化,如此多产!',

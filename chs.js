@@ -471,13 +471,13 @@ var cnItems = {
     'Multipliers don\'t even work 0/5: Complete {[No Accelerator/Multiplier]} ten times.': '加倍器没效果，游戏评分0/5：完成十次无加倍器/加速器挑战。',
     'Accelerators don\'t even work -5/5: Complete {[No Accelerator/Multiplier]} fifteen times.': '加速器也没效果，游戏评分-5/5：完成十五次无加倍器/加速器挑战。',
     'ACCELERATOR BOOSTS DON\'T EVEN WORK -100/5: Complete {[No Accelerator/Multiplier]} twenty-five times.': '连加速器加成都没效果，游戏评分-100/5：完成二十五次无加倍器/加速器挑战。',
-    'I hate this challenge: Complete Cost++ Once.': '我恨这个挑战：完成一次价格暴增挑战。',
-    'A costly mistake: Complete Cost++ Twice.': '代价高昂的错误：完成两次价格暴增挑战。',
-    'Impetus: Complete Cost++ Three Times.': '原动力：完成三次价格暴增挑战。',
-    'Are you broke yet? Complete Cost++ Five Times.': '您破产了吗？：完成五次价格暴增挑战。',
-    'The world of Finance: Complete Cost++ Ten Times.': '金融世界：完成十次价格暴增挑战。',
-    'Marginal Gains: Complete Cost++ Twenty Times.': '边际收益：完成二十次价格暴增挑战。',
-    'I buy these: Complete Cost++ Twenty-Five Times.': '这些我买了：完成二十五次价格暴增挑战。',
+    'I hate this challenge: Complete Cost++ Once.': '我恨这个挑战：完成一次花费暴增挑战。',
+    'A costly mistake: Complete Cost++ Twice.': '代价高昂的错误：完成两次花费暴增挑战。',
+    'Impetus: Complete Cost++ Three Times.': '原动力：完成三次花费暴增挑战。',
+    'Are you broke yet? Complete Cost++ Five Times.': '您破产了吗？：完成五次花费暴增挑战。',
+    'The world of Finance: Complete Cost++ Ten Times.': '金融世界：完成十次花费暴增挑战。',
+    'Marginal Gains: Complete Cost++ Twenty Times.': '边际收益：完成二十次花费暴增挑战。',
+    'I buy these: Complete Cost++ Twenty-Five Times.': '这些我买了：完成二十五次花费暴增挑战。',
     'Agnostic: Complete No Runes Once.': '不可知论：完成一次无符文挑战。',
     'Ant-i Runes: Complete No Runes Twice.': '反蚁符文：完成两次无符文挑战。',
     'Isn\'t it getting tiresome?: Complete No Runes Three Times.': '是不是有点厌烦了？：完成三次无符文挑战。',
@@ -756,6 +756,33 @@ var cnItems = {
     'Duplication Rune Exp +10%! Current': '重叠符文经验值增加10%！当前效果',
     'Multiplier Boost power +25%! The first Discord-Booster Global Diamond Upgrade.': '加倍器加成效果增加25%！解锁第一个由Discord助力而出现的全局钻石升级。',
     'Start <No Multipliers/Accelerators>': '开始<无加倍器/加速器挑战>',
+    'You thought you could outgrow inflation by Reincarnating?': '您不会天真到以为转世了就可以逃脱通货膨胀了吧？',
+    'Reincarnate and reach the goal except Cost Scaling for producers and Accelerators/Multipliers scale much, much faster.': '立即转世开始挑战，生产者，加速器和加倍器的花费变得高得多。',
+    'Base Building Power +0.25! Current': '基础建筑能量增加0.25！当前效果',
+    'Prism Rune Exp +20%! Current': '棱柱符文经验值增加20%！当前效果',
+    'Transcend Offerings +4%! Current': '超越获得的祭品数量增加4%！当前效果',
+    'Unlock the Anthill feature! Includes 20 new Researches. A Global Diamond Upgrade.': '解锁蚁丘特性！解锁20个新研究。另外还解锁了一个全局钻石升级。',
+    'Start <Cost++>': '开始<花费暴增挑战>',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -837,13 +864,11 @@ var cnItems = {
     'Reincarnate and reach your target, except building power is stuck at 1, and the cost growth is insanely high all the time!': '转世并立即开始挑战,你的建筑强度被锁定在1,并且价格膨胀始终非常高',
     'Savefile copied to file!': '存档已导出!',
     '(2^(level/250) * (1 + level/500))x Obtainium, Level^1.5 Ant Hatch Speed, +0.125 Base Reincarnation offerings': '(2^(等级/250)*(1+等级/500))倍难得素,等级^1.5 ANT 获取速度,+0.125转世基础祭品',
-    'Cost++ Challenge': '价格暴增挑战',
     'Instantly gain 2 hours of Offerings, based on your all time best Offerings/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高祭品/秒!',
     'Instantly gain 2 hours of Obtainium, based on your all time best Obtainium/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高难得素/秒!',
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
     '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
-    'Start <Cost++>': '开始[价格暴增]',
     'Start <No Runes>': '开始[无符文]',
     'Current': '当前',
     'Start Challenge': '开始挑战',
@@ -1182,10 +1207,6 @@ var cnPrefix = {
     'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
     'The Ant God will accept a larger arbitrary number of Particles to give you more ant ELO.': '蚂蚁之神认可你的庞大粒子数量并在ELO时给予你更多蚂蚁',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
-    'You thought you could outgrow inflation by Reincarnating?': '你以为转世就能逃脱通货膨胀?',
-    'Reincarnate and reach the goal except Cost Scaling for producers and Accelerators/Multipliers scale much, much faster.': '立即转世并开始挑战,生产者和加速器/加倍器的价格膨胀会变得非常非常快',
-    'Base Building Power +0.25!': '基础建筑效果+0.25!',
-    'Unlock the Anthill feature! Includes 20 new Researches. A Global Diamond Upgrade.': '解锁蚁丘!解锁20项新研究!还有一个全局的钻石升级!',
     'You\'ll never complain about Prism being bad again.': '在这挑战里你大概不会再抱怨棱镜没用了',
     'Reincarnate and reach the goal except runes always have level 1 effects. All coin production is divided by e2,000,000.': '立即转世并开始挑战,所有符文都只有一级的效果,所有金币产量降低e2,000,000',
     '1 free Ant level!': '1免费蚂蚁等级',
@@ -1240,7 +1261,7 @@ var cnPrefix = {
     '': '',
     'Retry Challenge': '重新开始挑战',
     'No Runes Challenge': '无符文挑战',
-    'Cost++ Challenge': '价格暴增挑战',
+    'Cost++ Challenge': '花费暴增挑战',
     'CURRENT Effect: All resources EXCEPT QUARKS increased by': '当前效果:除了夸克以外的所有资源产量提高',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '甚至在这个高档商店,它的效果也挺明显的,对吧?',
     'CURRENT Effect: Try to upgrade research each reincarnation, and gain': '当前效果:每次转世尝试升级研究,并获得',
@@ -1476,15 +1497,15 @@ var cnRegReplace = new Map([
     [/^(.+)% A.Boost Power$/, '$1%加速器加成效果'], //挑战
     [/^(.+)% Accelerator Power$/, '$1%加速器效果'], //挑战
     [/^No Shards Challenge \|\| (.+)\/(.+) Completions$/, '无碎片挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^([e\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
+    [/^([e%\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
     [/^Cost\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费增加挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Reduced Diamonds Challenge \|\| (.+)\/(.+) Completions$/, '钻石减少挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Higher Tax Challenge \|\| (.+)\/(.+) Completions$/, '税收增加挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Goal: Gain (.+) Mythos Shards in challenge.$/, '目标：在挑战中达到$1神话碎片。'], //挑战
     [/^(.+)% Prestige-based Offerings$/, '$1%转生相关的祭品数量'], //挑战
     [/^No Multipliers\/Accelerators Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器/加速器挑战 || 完成$1次，次数上限为$2'], //挑战
-
-
+    [/^Cost\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费暴增挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^(.+)% Transcend-based Offerings$/, '$1%超越相关的祭品数量'], //挑战
 
 
 

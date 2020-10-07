@@ -291,6 +291,7 @@ var cnItems = {
     'Load game below!': '从下方导入存档！',
     'Save the game manually.': '手动保存游戏。',
     'Enter a promotion code here!': '点击此处输入奖励代码！',
+    'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
     'You\'re playing on v2.0.2 - The Great Reimagining [Last Update: 5:55PM UTC-8 Sept 27]': '您目前玩的版本为V2.0.2 - 大重构 [更新时间：9月27日西八区下午5:55]',
     'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
@@ -1722,4 +1723,7 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
+    [/^(.+) multi$/, '$1倍率'], //历史统计
+    [/^([e\d\,\.]+) ELO$/, '$1强度分'], //历史统计
+    [/^Score(.+)$/, '分数$1'], //历史统计
 ]);

@@ -805,16 +805,11 @@ var cnItems = {
     '200 to Rune Caps! Current': '200级符文等级上限！当前效果',
     'Unlock 15 Researches, and a way to coalesce your power into the Singularity.': '解锁15个研究，并且解锁将能量注入奇点的方法。',
     'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Gain 1 Wow! HYPERCUBE for completing this challenge (First Time Bonus': '完成挑战后可以获得1个惊奇高阶立方(首次完成奖励',
+    'Auto Challenge Sweep [ON]': '自动扫荡挑战[开]',
+    'Auto Challenge Sweep [OFF]': '自动扫荡挑战[关]',
+    'Retry Challenges: ON': '重新尝试挑战：开',
+    'Retry Challenges: OFF': '重新尝试挑战：关',
     //挑战结束
 
     //蚂蚁
@@ -1334,7 +1329,6 @@ var cnPostfix = {
     'Offerings. +4% Offerings.': '祭品,+4%祭品',
     'Offerings. +6% Offerings.': '祭品,+6%祭品',
     'Offerings. +8% Offerings.': '祭品,+8%祭品',
-    'Quarks for completing this challenge [First Time Bonus]!': '夸克奖励在完成挑战后[首通奖励]!',
     '': '',
     '': '',
     '': '',
@@ -1531,9 +1525,11 @@ var cnRegReplace = new Map([
     [/^No Research Challenge \|\| (.+)\/(.+) Completions$/, '无研究挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+)% Power$/, '$1%效果'], //挑战
     [/^(.+) per Tick$/, '$1个研究于每次自动购买'], //挑战
-
-
-
+    [/^SADISTIC CHALLENGE II \|\| (.+)\/(.+) Completions$/, '虐待狂挑战 II || 完成$1次，次数上限为$2'], //挑战
+    [/^Gain (.+) Quarks for completing this challenge [First Time Bonus]!$/, '完成挑战后可以获得$1夸克[首次完成奖励]！'], //挑战
+    [/^Completing the challenge adds (.+) to Ascension Bank and increase base Score by (.+).$/, '完成挑战后飞升库增加$1个惊奇方盒，飞升基础分数增加$2。'], //挑战
+    [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
+    [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
     [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
     [/^Fortunae Formicidae Level(.*)$/, '财富蚁等级$1'], //蚂蚁
     [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁

@@ -798,13 +798,13 @@ var cnItems = {
     '3% Spirit Power effectiveness! Current': '3%魂灵能量效果！当前效果',
     'Unlock 15 Researches, and unlock the power of the Hypercube!': '解锁15个研究，并且解锁高阶立方的力量！',
     'Start <[(Tax+++)]>': '开始<[(税收激增挑战)]>',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'The dimension that never progressed past the dark ages. Many fear to even step foot.': '这个维度没能跨越黑暗时代。很多人连尝试一下都不敢。',
+    'Ascend and reach the goal but you do not gain Obtainium nor are any researches purchasable. Ant production ^0.2.': '立即飞升开始挑战，您无法获得难得素，也无法进行研究。蚂蚁产量^0.2。',
+    '50% stronger effect on researches 1x1 through 1x5. Current': '50%研究1x1至研究1x5的效果。当前效果',
+    '1 research purchased per roomba tick! Current': '1每次自动购买的研究数量！当前效果',
+    '200 to Rune Caps! Current': '200级符文等级上限！当前效果',
+    'Unlock 15 Researches, and a way to coalesce your power into the Singularity.': '解锁15个研究，并且解锁将能量注入奇点的方法。',
+    'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
     '': '',
     '': '',
     '': '',
@@ -1524,13 +1524,13 @@ var cnRegReplace = new Map([
     [/^(.+)% Obtainium$/, '$1%难得素'], //挑战
     [/^(.+)% Offerings$/, '$1%祭品'], //挑战
     [/^(.+) additional Cube Blessings$/, '$1额外的方盒祝福'], //挑战
-    [/^Tax\+\+\+ Challenge Challenge \|\| (.+)\/(.+) Completions$/, '税收激增挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^Tax\+\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '税收激增挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+)% Corruption Tax$/, '$1%腐化税收'], //挑战
     [/^(.+) Talisman Level Cap$/, '$1护身符等级上限'], //挑战
     [/^(.+)% Effectiveness$/, '$1%效果'], //挑战
-
-
-
+    [/^No Research Challenge \|\| (.+)\/(.+) Completions$/, '无研究挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^(.+)% Power$/, '$1%效果'], //挑战
+    [/^(.+) per Tick$/, '$1个研究于每次自动购买'], //挑战
 
 
 

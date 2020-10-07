@@ -325,7 +325,7 @@ var cnItems = {
     'Cube multipliers': '方盒倍率',
     'Season pass': '季票',
     'Cube upgrade': '方盒升级',
-    'Bought Mortuus Est ants (R8x17': '死神蚁加成(研究8x17',
+    'Bought Mortuus Est ants (R8x': '死神蚁加成(研究8x',
     'Duplication Spirit Power': '重叠魂灵能量',
     'Constant upgrade': '常数升级',
     'TOTAL CUBE MULTIPLIER': '方盒总倍率',

@@ -844,10 +844,10 @@ var cnItems = {
     'Insert Cool Text Here.': '此处可以插入有趣的文本。',
     'Corruption III: Spacial Dilation': '腐化 III：空间膨胀',
     'Way to go, Albert.': '干得好，阿尔伯特。',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Corruption IV: Hyperchallenged': '腐化 IV：极致挑战',
+    'What\'s in a challenge?': '翻译翻译，什么叫挑战？',
+    'Corruption V: Scientific Illiteracy': '腐化 V：科盲',
+    'Maybe Albert wouldn\'t have theorized Dilation after all.': '至少阿尔伯特不会提出膨胀理论了。',
     '': '',
     '': '',
     '': '',
@@ -1666,4 +1666,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by$/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Obtainium gain \^$/, '本次飞升，此腐化等级为$1。效果为：难得素指数变为'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Obtainium gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：难得素指数变为'], //腐化
 ]);

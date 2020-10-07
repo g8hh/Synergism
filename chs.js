@@ -1522,8 +1522,6 @@ var cnPostfix = {
     'It\'s like inception, or something.': '这是个开始,或者是别的什么',
     'as many Enchantments; what productive spirits!': '额外强化,如此多产!',
     'as many Oracles!': '额外神谕!',
-    'Obtanium || MAXED!': '难得素 || 已满',
-    'Obtanium': '难得素',
     'This will be the your highest ever completions so you will also gain 1x Quarks!': '这是你达到的最高挑战次数所以你将额外获得1夸克',
     'This will be the your highest ever completions so you will also gain 2x Quarks!': '这是你达到的最高挑战次数所以你将额外获得2夸克',
     'This will be the your highest ever completions so you will also gain 3x Quarks!': '这是你达到的最高挑战次数所以你将额外获得3夸克',

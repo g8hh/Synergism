@@ -789,15 +789,15 @@ var cnItems = {
     '50% Obtainium! Current': '50%难得素获取数量！当前效果',
     '12% Offerings! Current': '12%祭品获取数量！当前效果',
     '1 Cube Blessing per opening! Current': '1打开每个方盒时获得的祝福数量！当前效果',
-    'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab.': '解锁15个研究，并且解锁了神秘的魂灵能量！在符文选项卡下可以找到它们，',
+    'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab.': '解锁15个研究，并且解锁神秘的魂灵能量！在符文选项卡下可以找到它们。',
     'Start <[(No Reincarnation)]>': '开始<[(无转世挑战)]>',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Good luck with the IRS, buddy.': '又要跟税务局斗，这次只能祝您好运了。',
+    'Ascend and reach the goal, but taxes are much higher and grow with challenge completions. Ant production ^': '立即飞升开始挑战，税收高得多，而且随着完成次数越来越高。蚂蚁产量^',
+    'Taxes -3.33%! Multiplicative! Current': '税收减少3.33%！效果叠乘！当前效果',
+    '6 maximum to Talisman Level Cap! Current': '6护身符等级上限！当前效果',
+    '3% Spirit Power effectiveness! Current': '3%魂灵能量效果！当前效果',
+    'Unlock 15 Researches, and unlock the power of the Hypercube!': '解锁15个研究，并且解锁高阶立方的力量！',
+    'Start <[(Tax+++)]>': '开始<[(税收激增挑战)]>',
     '': '',
     '': '',
     '': '',
@@ -1524,6 +1524,13 @@ var cnRegReplace = new Map([
     [/^(.+)% Obtainium$/, '$1%难得素'], //挑战
     [/^(.+)% Offerings$/, '$1%祭品'], //挑战
     [/^(.+) additional Cube Blessings$/, '$1额外的方盒祝福'], //挑战
+    [/^Tax\+\+\+ Challenge Challenge \|\| (.+)\/(.+) Completions$/, '税收激增挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^(.+)% Corruption Tax$/, '$1%腐化税收'], //挑战
+    [/^(.+) Talisman Level Cap$/, '$1护身符等级上限'], //挑战
+    [/^(.+)% Effectiveness$/, '$1%效果'], //挑战
+
+
+
 
 
 

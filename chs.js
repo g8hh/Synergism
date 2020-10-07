@@ -778,19 +778,19 @@ var cnItems = {
     'Unlock the Ascension Reset Tier!': '解锁飞升，下一阶的重置！',
     'Start <Sadistic I>': '开始<虐待狂挑战 I>',
     'The great Ant War of \'21 wiped off all of the skilled ants.': '二十一世纪的蚂蚁大战将所有技艺娴熟的蚂蚁都抹杀了。',
-    'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.': '立即飞升开始挑战，您只能获得免费的蚂蚁升级，完成挑战9也可以获得免费的蚂蚁升级。请注意，飞升挑战需要先完成挑战10以后才可以进行。',
+    'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.': '立即飞升开始挑战，您只能获得免费的蚂蚁升级，完成挑战9也可以获得免费的蚂蚁升级。请注意，所有飞升挑战需要先完成挑战10以后才可以进行。',
     '12 free Ant Levels! Current': '12免费蚂蚁等级！当前效果',
     'Ant Speed x(1e5)^completions! Current': '蚂蚁速度每完成1次变为1e5倍！当前效果',
     '80 to Rune Caps! Current': '80级符文等级上限！当前效果',
     'Unlock 15 Researches, and unlock the ability to open Tesseracts!': '解锁15个研究，并且解锁开启超立方的能力！',
     'Start <[(Reduced Ants)]>': '开始<[(蚂蚁减少挑战)]>',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'For some reason, you just can\'t do it.': '因为某些原因，您无法那么做了。',
+    'Ascend and reach the goal but you do not gain Particles and you cannot Reincarnate at all! Ant production ^0.5.': '立即飞升开始挑战，您无法获得粒子，也无法转世！蚂蚁产量^0.5。',
+    '50% Obtainium! Current': '50%难得素获取数量！当前效果',
+    '12% Offerings! Current': '12%祭品获取数量！当前效果',
+    '1 Cube Blessing per opening! Current': '1打开每个方盒时获得的祝福数量！当前效果',
+    'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab.': '解锁15个研究，并且解锁了神秘的魂灵能量！在符文选项卡下可以找到它们，',
+    'Start <[(No Reincarnation)]>': '开始<[(无转世挑战)]>',
     '': '',
     '': '',
     '': '',
@@ -1517,13 +1517,13 @@ var cnRegReplace = new Map([
     [/^(.+)% Ant Sacrifice reward$/, '$1%蚂蚁献祭奖励'], //挑战
     [/^(.+)% Reincarnate-based offerings$/, '$1%转世相关的祭品数量'], //挑战
     [/^Reduced Ants Challenge \|\| (.+)\/(.+) Completions$/, '蚂蚁减少挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Goal: Complete Challenge 10 [Sadistic Challenge I] times.$/, '目标：在挑战中完成$1次挑战10<虐待狂挑战 I>。'], //挑战
+    [/^Goal: Complete Challenge 10 \[Sadistic Challenge I\] (.+) times.$/, '目标：在挑战中完成$1次挑战10<虐待狂挑战 I>。'], //挑战
     [/^(.+) free ant levels$/, '$1免费蚂蚁等级'], //挑战
     [/^(.+) to Rune Caps$/, '$1级符文等级上限'], //挑战
-
-
-
-
+    [/^No Reincarnation Challenge \|\| (.+)\/(.+) Completions$/, '无转世挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^(.+)% Obtainium$/, '$1%难得素'], //挑战
+    [/^(.+)% Offerings$/, '$1%祭品'], //挑战
+    [/^(.+) additional Cube Blessings$/, '$1额外的方盒祝福'], //挑战
 
 
 

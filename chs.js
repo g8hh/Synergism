@@ -485,13 +485,13 @@ var cnItems = {
     'Runes Suck 1/5: Complete No Runes Ten Times.': '符文弱爆了，游戏评分1/5：完成十次无符文挑战。',
     'I didn\'t even notice Prism was gone: Complete No Runes Twenty Times.': '棱镜符文什么时候不见了：完成二十次无符文挑战。',
     'Atheist: Complete No Runes Twenty-Five Times.': '无神论：完成二十五次无符文挑战。',
-    'Sadism: Complete {[Sadistic I]} Once.': '抖S：完成一次虐待狂挑战1。',
-    'Masochism: Complete {[Sadistic I]} Twice.': '抖M：完成两次虐待狂挑战1。',
-    'Insanity: Complete {[Sadistic I]} Three Times.': '精神错乱：完成三次虐待狂挑战1。',
-    'How? Complete {[Sadistic I]} Five Times.': '怎么？完成五次虐待狂挑战1。',
-    'Why? Complete {[Sadistic I]} Ten Times.': '为何？完成十次虐待狂挑战1。',
-    'Descend: Complete {[Sadistic I]} Twenty Times.': '落凡：完成二十次虐待狂挑战1。',
-    'End of the Universe: Complete {[Sadistic I]} Twenty-Five Times.': '宇宙的尽头：完成二十五次虐待狂挑战1。',
+    'Sadism: Complete {[Sadistic I]} Once.': '抖S：完成一次虐待狂挑战 I。',
+    'Masochism: Complete {[Sadistic I]} Twice.': '抖M：完成两次虐待狂挑战 I。',
+    'Insanity: Complete {[Sadistic I]} Three Times.': '精神错乱：完成三次虐待狂挑战 I。',
+    'How? Complete {[Sadistic I]} Five Times.': '怎么？完成五次虐待狂挑战 I。',
+    'Why? Complete {[Sadistic I]} Ten Times.': '为何？完成十次虐待狂挑战 I。',
+    'Descend: Complete {[Sadistic I]} Twenty Times.': '落凡：完成二十次虐待狂挑战 I。',
+    'End of the Universe: Complete {[Sadistic I]} Twenty-Five Times.': '宇宙的尽头：完成二十五次虐待狂挑战 I。',
     'Gas gas gas: Purchase 5 Accelerators.': 'Gas gas gas(头文字D主题曲)：购买5个加速器。',
     '0 to 25: Purchase 25 Accelerators.': '从0到25：购买25个加速器。',
     '0 to 100: Purchase 100 Accelerators': '从0到100：购买100个加速器。',
@@ -596,7 +596,7 @@ var cnItems = {
     'Overtaxed: [Hint: It might pay not to read!]': '课税过重：[提示：在某个税收增加极快的挑战，当然不是那种转转世就能完成的挑战中，由于税收，金币产量连1后面跟着1，2，3……等等，多少来着，哦，100……1000？不不，100000个0都达不到]',
     'The Thousand Suns: [Hint: You need to fully research into becoming GOD]': '烈日千阳：[提示：将某个最后出现的研究提升至最大]',
     'The Thousand Moons: [Hint: You may need to cube yourself up]': '静月千阴：[提示：将方盒最后的某个升级提升至最大]',
-    'Ultimate: Complete \'SADISTIC II\' challenge.': '终级挑战：完成虐待狂挑战2。',
+    'Ultimate: Complete \'SADISTIC II\' challenge.': '终级挑战：完成虐待狂挑战 II。',
     'Reward: 4 AP. 4 Quarks! Gain +.05% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.05%的加速效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Worker Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁工人自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Workers owned.': '奖励：8成就点数。8夸克！每拥有500个工人，就获得1个加速器。',
@@ -776,7 +776,26 @@ var cnItems = {
     '2% Ant Sacrifice Reward! Current': '2%蚂蚁献祭奖励！当前效果',
     'Reincarnation Offerings +10%! Current': '转世获得的祭品数量增加10%！当前效果',
     'Unlock the Ascension Reset Tier!': '解锁飞升，下一阶的重置！',
-    'Start <Sadistic I>': '开始<虐待狂挑战1>',
+    'Start <Sadistic I>': '开始<虐待狂挑战 I>',
+    'The great Ant War of \'21 wiped off all of the skilled ants.': '二十一世纪的蚂蚁大战将所有技艺娴熟的蚂蚁都抹杀了。',
+    'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.': '立即飞升开始挑战，您只能获得免费的蚂蚁升级，完成挑战9也可以获得免费的蚂蚁升级。请注意，飞升挑战需要先完成挑战10以后才可以进行。',
+    '12 free Ant Levels! Current': '12免费蚂蚁等级！当前效果',
+    'Ant Speed x(1e5)^completions! Current': '蚂蚁速度每完成1次变为1e5倍！当前效果',
+    '80 to Rune Caps! Current': '80级符文等级上限！当前效果',
+    'Unlock 15 Researches, and unlock the ability to open Tesseracts!': '解锁15个研究，并且解锁开启超立方的能力！',
+    'Start <[(Reduced Ants)]>': '开始<[(蚂蚁减少挑战)]>',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -1493,14 +1512,14 @@ var cnRegReplace = new Map([
     [/^No Runes Challenge \|\| (.+)\/(.+) Completions$/, '无符文挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+) free levels$/, '$1免费等级'], //挑战
     [/^(.+) Ant Speed$/, '$1蚂蚁速度'], //挑战
-    [/^Sadistic Challenge I \|\| (.+)\/(.+) Completions$/, '虐待狂挑战1 || 完成$1次，次数上限为$2'], //挑战
+    [/^Sadistic Challenge I \|\| (.+)\/(.+) Completions$/, '虐待狂挑战 I || 完成$1次，次数上限为$2'], //挑战
     [/^(.+) Ant ELO$/, '$1蚂蚁强度分'], //挑战
     [/^(.+)% Ant Sacrifice reward$/, '$1%蚂蚁献祭奖励'], //挑战
     [/^(.+)% Reincarnate-based offerings$/, '$1%转世相关的祭品数量'], //挑战
-
-
-
-
+    [/^Reduced Ants Challenge \|\| (.+)\/(.+) Completions$/, '蚂蚁减少挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^Goal: Complete Challenge 10 [Sadistic Challenge I] times.$/, '目标：在挑战中完成$1次挑战10<虐待狂挑战 I>。'], //挑战
+    [/^(.+) free ant levels$/, '$1免费蚂蚁等级'], //挑战
+    [/^(.+) to Rune Caps$/, '$1级符文等级上限'], //挑战
 
 
 

@@ -769,14 +769,14 @@ var cnItems = {
     '10% Ant speed [Multiplicative!] Current': '10%蚂蚁速度[效果叠乘！]当前效果',
     'SI Rune Exp +20%! Current': '卓越智慧符文经验值增加20%！当前效果',
     'Unlock the Talismans feature! [In Runes tab]. A Global Diamond Upgrade.': '解锁护身符特性！[在符文选项卡下]。另外还解锁了一个全局钻石升级。',
-    'Start <No Runes>': '开始[无符文挑战]',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Start <No Runes>': '开始<无符文挑战>',
+    'I\'m sorry for what I\'ve unleashed onto the world.': '生而为人，我很抱歉。',
+    'Reincarnate and reach the goal except run the first five challenges AT THE SAME TIME! Coin Production /e12,500,000.': '立即转世开始挑战，前五个挑战的限制同时生效！金币产量将除以1e12500000。',
+    '100 base ELO for sacrificing ants! Current': '100蚂蚁基础强度分！当前效果',
+    '2% Ant Sacrifice Reward! Current': '2%蚂蚁献祭奖励！当前效果',
+    'Reincarnation Offerings +10%! Current': '转世获得的祭品数量增加10%！当前效果',
+    'Unlock the Ascension Reset Tier!': '解锁飞升，下一阶的重置！',
+    'Start <Sadistic I>': '开始<虐待狂挑战1>',
     '': '',
     '': '',
     '': '',
@@ -1233,13 +1233,6 @@ var cnPrefix = {
     'Gain +1% more ELO from ant sources per level because why not?': '获得+1%额外蚂蚁ELO,因为...为什么不呢?',
     'Permanently unlock a Shop talisman! [Warning: you can\'t refund this and this is VERY expensive to level. Be sure you want to buy it!': '永久解锁一个商店护身符[警告:你无法重置这项升级,请确认你真的想购买它!',
     'Each level gives a 1.5x speed multiplier to all Ant tiers\' production! Short and simple.': '每级提供一个1.5x所有蚂蚁的速度加成!简单有效',
-    'Sadistic Challenge I': '虐待狂挑战1',
-    'I\'m sorry for what I\'ve unleashed onto the world.': '我觉得我活着就是个错误',
-    'Reincarnate and reach the goal except run the first five challenges AT THE SAME TIME! Coin Production /e12,500,000.': '立即转世并开始挑战,你同时运行前五个挑战!金币产量减少e12,500,000',
-    '100 base ELO for sacrificing ants!': '100基础蚂蚁BLO',
-    '2% Ant Sacrifice Reward!': '2%蚂蚁献祭奖励',
-    'Unlock the [??????] Reset Tier [v1.011]!': '解锁[??????]重置等级[v1.011]',
-    'Start <Sadistic I>': '开始[虐待狂挑战1]',
     'Gain +9% more Ant Sacrifice rewards thanks to generous Discord Server Boosters! ': '获得+9%额外蚂蚁献祭奖励,感谢discord的支持者!',
     'Effect: Every boost after 30 increases this reward by +1%, up until 50!': '效果:第三十个支持者之后的每个支持者增加这个加成1%,最高50!',
     'Gain 1x normal production': '获得1x普通产量',
@@ -1500,6 +1493,16 @@ var cnRegReplace = new Map([
     [/^No Runes Challenge \|\| (.+)\/(.+) Completions$/, '无符文挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+) free levels$/, '$1免费等级'], //挑战
     [/^(.+) Ant Speed$/, '$1蚂蚁速度'], //挑战
+    [/^Sadistic Challenge I \|\| (.+)\/(.+) Completions$/, '虐待狂挑战1 || 完成$1次，次数上限为$2'], //挑战
+    [/^(.+) Ant ELO$/, '$1蚂蚁强度分'], //挑战
+    [/^(.+)% Ant Sacrifice reward$/, '$1%蚂蚁献祭奖励'], //挑战
+    [/^(.+)% Reincarnate-based offerings$/, '$1%转世相关的祭品数量'], //挑战
+
+
+
+
+
+
 
 
 

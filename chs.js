@@ -92,8 +92,8 @@ var cnItems = {
     'Accelerators improve generation production by 2% each.': '每个加速器使发生器产量增加2%。',
     'Each prestige multiplies production by 1.01, multiplicatively (Max: 1e4x).': '每次转生使产量变为1.01倍，相互叠乘(上限：1e4倍)。',
     'Augments buff the production of Investments.': '强化可增加投资的产量。',
-    'Free Accelerators buff generation of Printers.': '免费加速器增加打印机的发生器产量。',
-    'Free Accelerators buff generation of Mints.': '免费加速器增加铸币厂的发生器产量。',
+    'Free Accelerators buff generation of Printers.': '免费加速器增加产生打印机的发生器产量。',
+    'Free Accelerators buff generation of Mints.': '免费加速器增加产生铸币厂的发生器产量。',
     'Acceleration Multiplier buffs Diamond gain.': '加速器倍率可以增加钻石产量。',
     'Multiply Mint production by 1e+100.': '将铸币厂产量变为1e100倍。',
     'Multiply Printer production based on Mythos Shards.': '根据神话碎片数量增加打印机产量。',
@@ -219,7 +219,7 @@ var cnItems = {
     'Increase the rune EXP given by offerings by 10% per level [Additive]': '每级使祭品提供的符文经验值增加10%[相互叠加]',
     'When bought, rune effectiveness is increased by Log4(Talisman Shards +1) ': '(译者注：注意，与升级等级无关)购买后，符文效果增加 log4(护身符灰底碎片 +1)',
     'When bought, gain Log4(Constant + 1)% more Wow! Cubes and Tesseracts on ascension.': '(译者注：注意，与升级等级无关)购买后，飞升的惊奇方盒和惊奇超立方获取数量增加 log4(数学常数数量 + 1)%',
-    '': '',
+    'Effect: Mint Production x1e100 (Duh': '效果：铸币厂产量 x1e100 (废话',
     '': '',
     '': '',
     '': '',
@@ -1414,17 +1414,6 @@ var cnPrefix = {
     'Effect: in Black and White': '效果:黑道和白道',
     'Effect: It\'s all there': '效果:都在那儿',
     'Effect: Wiazrds will produce': '效果:法师会产出',
-    'Effect: Investment Production': '效果:投资产量',
-    'Effect: Printer Production': '效果:打印机产量',
-    'Effect: Mint Production': '效果:铸币厂产量',
-    'Effect: Alchemy Production': '效果:炼金术产量',
-    'Effect: All Coin production': '效果:所有金币产量',
-    'Effect: Gain': '效果:获得',
-    'Effect: Generator efficiency': '效果:发生器效果',
-    'Effect: All Coin production': '效果:所有金币产出',
-    'Effect: Printer Generation': '效果:打印机繁衍效果',
-    'Effect: Mint Generation': '效果:铸币厂繁衍效果',
-    'Effect: All coin production is further multiplied by': '效果:大幅提升所有金币产量',
     'Effect: Welcome to Transcension! Coin production is multiplied by': '效果:欢迎来到超越!提高金币产出',
     'Effect: All mythos shard producers are going into overdrive:': '效果:所有神话碎片生产者都超载了:',
     'Effect: Multiply all coin production by': '效果:所有金币产量提高',
@@ -1601,7 +1590,56 @@ var cnRegReplace = new Map([
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Mythos Shards. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3神话碎片。花费时间：$4秒。'], //重置
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
+    [/^Cost: (.+) Coins$/, '花费：$1 金币'], //升级
     [/^Effect: Worker Production(.*)$/, '效果：工人产量$1'], //升级
+    [/^Effect: Investment Production(.*)$/, '效果：投资产量$1'], //升级
+    [/^Effect: Printer Production(.*)$/, '效果：打印机产量$1'], //升级
+    [/^Effect: Mint Production(.*)$/, '效果：铸币厂产量$1'], //升级
+    [/^Effect: Alchemy Production(.*)$/, '效果：炼金术产量$1'], //升级
+    [/^Effect: All Coin production(.*)$/, '效果：所有金币产量$1'], //升级
+    [/^Effect: Gain (.+) free multipliers from bought Alchemies.$/, '效果：根据已购买的炼金术数量获得$1个免费加倍器。'], //升级
+    [/^Effect: \+(.+) free Accelerators.$/, '效果：增加$1个免费加速器。'], //升级
+    [/^Effect: \+(.+) free Multipliers.$/, '效果：增加$1个免费加倍器。'], //升级
+    [/^Effect: Generator efficiency(.*)$/, '效果：发生器产量$1'], //升级
+    [/^Effect: Printer Generation(.*)$/, '效果：产生打印机的发生器产量$1'], //升级
+    [/^Effect: Mint Generation(.*)$/, '效果：产生铸币厂的发生器产量$1'], //升级
+    [/^Effect: Gain (.+)x more Diamonds on prestige$/, '效果：转生的钻石产量增加$1倍'], //升级
+    [/^Effect: All coin production is further multiplied by (.+) [Stacks with upgrade 1]!$/, '效果：金币产量再增加$1倍[前面为不算上第一个升级原来效果时的数字]！'], //升级
+    [/^Effect: \+(.+) Multipliers, \+(.+) Accelerators.$/, '效果：增加$1个加倍器，$2个加速器。'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

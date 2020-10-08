@@ -709,7 +709,7 @@ var cnItems = {
     //符文
     '(Level/4)^1.25 Accelerator, +0.25% Accelerators per level. +1 Accelerator Boost every 20 levels!': '(等级/4)^1.25的加速器数量，每级再+0.25%的加速器数量。每20级加速器加成数量+1！',
     '(Level/10) Multipliers every 10th level, +0.25% Multipliers per level. Tax growth is delayed more for each level!': '(等级/10)加倍器数量于每10级，每级再+0.25%的加倍器数量。每级使税收增长减缓更多！',
-    '': '',
+    '~(1 + (Level/2)^2 * 2^(Level/2) / 256)x Crystal Production. +1 free level for each Crystal upgrade per 16 levels!': '水晶产量变为[1+(等级/2)^2*2^(等级/2)/256]倍。每16级使每个水晶升级免费+1级！',
     '': '',
     '': '',
     '': '',
@@ -1672,7 +1672,8 @@ var cnRegReplace = new Map([
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器数量+$1，加速器数量再+$2%，加速器加成数量+$3。'], //符文
-    [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量+$1个，加倍器数量再+$2%，税收增长减缓$3%。'], //符文
+    [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量+$1，加倍器数量再+$2%，税收增长减缓$3%。'], //符文
+    [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费+$2级。'], //符文
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Goal: Gain (.+) Coins in challenge.$/, '目标：在挑战中达到$1金币。'], //挑战
     [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战

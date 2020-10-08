@@ -232,7 +232,7 @@ var cnItems = {
     'Effect: Writing\'s on the wall. Look above!': '效果：在那写着呢。看上面！',
     'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '效果：跟第十个神话升级的效果类似，但只能在转世挑战中生效。',
     'Effect: Epic 5x Ants!': '效果：蚂蚁速度变为史诗般的5倍！',
-    'Effect: You will gain +10% rewards': '效果：献祭奖励增加10%',
+    'Effect: You will gain +10% rewards =': '效果：献祭奖励增加10% =',
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果：蚂蚁强度分增加75。',
     'Effect: All you need to know is right above this message!': '效果：想要知道的，都在上面了！',
     'Effect: -50% Taxes duh!': '效果：减少50%税收，又开始废话了！',
@@ -1615,7 +1615,7 @@ var cnRegReplace = new Map([
     [/^Effect: Obtainium multiplier(.*)$/, '效果：难得素倍率$1'], //升级
     [/^Effect: Offering Multiplier(.*)$/, '效果：祭品倍率$1'], //升级
     [/^Effect: Ant Speed Multiplier(.*)$/, '效果：蚂蚁速度$1'], //升级
-    [/^Effect: +(.+)% Constant Divisor power.$/, '效果：增加$1%数学常数的税收除数效果。'], //升级
+    [/^Effect: \+(.+)% Constant Divisor power.$/, '效果：增加$1%数学常数的税收除数效果。'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

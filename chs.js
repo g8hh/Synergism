@@ -1439,7 +1439,6 @@ var cnPrefix = {
     'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
     'Sacrifices itself to allow you to equip [Unlocks the Ant Talisman!': '献祭它本身使你可以装备它[解锁蚂蚁护身符',
     'Current Obtainium/sec': '当前难得素/秒',
-    'Permanently unlock a Shop talisman! [Warning: you can\'t refund this and this is VERY expensive to level. Be sure you want to buy it!': '永久解锁一个商店护身符[警告:你无法重置这项升级,请确认你真的想购买它!',
     'Gain +9% more Ant Sacrifice rewards thanks to generous Discord Server Boosters! ': '获得+9%额外蚂蚁献祭奖励,感谢discord的支持者!',
     'Effect: Every boost after 30 increases this reward by +1%, up until 50!': '效果:第三十个支持者之后的每个支持者增加这个加成1%,最高50!',
     'Gain 1x normal production': '获得1x普通产量',
@@ -1453,11 +1452,6 @@ var cnPrefix = {
     '': '',
     '': '',
     '': '',
-    'CURRENT Effect: All resources EXCEPT QUARKS increased by': '当前效果:除了夸克以外的所有资源产量提高',
-    'CURRENT Effect: Try to upgrade research each reincarnation, and gain': '当前效果:每次转世尝试升级研究,并获得',
-    'CURRENT Effect: Obtainium Timer': '当前效果:难得素计时器',
-    'CURRENT Effect: Per 10 seconds, pour': '当前效果:每10秒献祭',
-    'CURRENT Effect: Offering Timer': '当前效果:祭品计时器',
     'Summative Rune Levels:': '符文总等级:',
     'Best Obtainium/sec:': '最大难得素/秒:',
     'Most Obtainium saved at once:': '最大持有难得素:',
@@ -1799,4 +1793,10 @@ var cnRegReplace = new Map([
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
     [/^Score(.+)$/, '分数$1'], //历史统计
     [/^Cost: (.+) Quarks.$/, '花费：$1夸克。'], //商店
+    [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店
+    [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
+    [/^CURRENT Effect: Offering gain \+(.+)%!$/, '当前效果：祭品获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Per 10 seconds, pour (.+) Offerings. \+(.+)% Offerings.$/, '当前效果：每秒最多使符文增加$1级。祭品获取数量增加$2%。'], //商店
+    [/^CURRENT Effect: Obtainium gain \+(.+)%!$/, '当前效果：难得素获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain \+(.+)% more Obtainium.$/, '当前效果：每次转生都尝试研究，并且难得素获取数量增加$2%。'], //商店
 ]);

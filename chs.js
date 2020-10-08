@@ -1203,6 +1203,7 @@ var cnItems = {
     'Instead of a daily cap of 25 Quarks by opening Wow! Tesseracts, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇超立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'Instead of a daily cap of 25 Quarks by opening Wow! Hypercubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇高阶立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
+    'CURRENT Effect: All Ants\' Speed x': '当前效果：所有蚂蚁速度倍率变为',
     //商店结束
 
     //未分类：
@@ -1514,7 +1515,6 @@ var cnPostfix = {
     '': '',
     '': '',
     '': '',
-    'more Obtainium.': '更多难得素',
     'Obtainium || MAXED!': '难得素 || 已满!',
     'more Obtainium on Reincarnation.': '难得素在转世时',
     'as much Obtainium.': '额外难得素',
@@ -1797,6 +1797,7 @@ var cnRegReplace = new Map([
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
     [/^CURRENT Effect: Offering gain \+(.+)%!$/, '当前效果：祭品获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Per 10 seconds, pour (.+) Offerings. \+(.+)% Offerings.$/, '当前效果：每秒最多使符文增加$1级。祭品获取数量增加$2%。'], //商店
-    [/^CURRENT Effect: Obtainium gain \+(.+)%!$/, '当前效果：难得素获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Obtainium gain \+(.+) %!$/, '当前效果：难得素获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain \+(.+)% more Obtainium.$/, '当前效果：每次转生都尝试研究，并且难得素获取数量增加$2%。'], //商店
+    [/^CURRENT Effect: All resources EXCEPT QUARKS increased by (.+)%.$/, '当前效果：除了夸克以外的所有资源获取数量增加$1%。'], //商店
 ]);

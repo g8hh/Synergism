@@ -890,8 +890,8 @@ var cnItems = {
     '[3x8] Building Cost Scale is delayed by 0.5% per level.': '[3x8]每级使建筑成本增长减缓0.5%。',
     '[3x9] Building Cost Scale is delayed by 0.5% per level.': '[3x9]每级使建筑成本增长减缓0.5%。',
     '[3x10] Building Cost Scale is delayed by 0.5% per level.': '[3x10]每级使建筑成本增长减缓0.5%。',
-    '[3x11] Gain +50% of your best obtainium per second AUTOMATICALLY!': '[3x11]每秒自动获得难得素，数量为最大难得素/秒的50%！',
-    '[3x12] Gain an additional +10% of your best obtainium per second automatically.': '[3x12]每秒再自动获得难得素，数量为最大难得素/秒的10%。',
+    '[3x11] Gain +50% of your best obtainium per second AUTOMATICALLY!': '[3x11]每秒自动获得难得素，数量为最佳难得素/秒的50%！',
+    '[3x12] Gain an additional +10% of your best obtainium per second automatically.': '[3x12]每秒再自动获得难得素，数量为最佳难得素/秒的10%。',
     '[3x13] If your Reincarnation lasts at least 2 seconds you gain +1 obtainium per level.': '[3x13]如果转世持续时间超过2秒，则每级使难得素获取数量增加1。',
     '[3x14] If your Reincarnation lasts at least 5 seconds you gain +2 obtainium per level.': '[3x14]如果转世持续时间超过5秒，则每级使难得素获取数量增加2。',
     '[3x15] Increase the rate of gaining obtainium through reincarnations by 20% per level.': '[3x15]每级使转世时获得的难得素增加20%。',
@@ -1185,7 +1185,25 @@ var cnItems = {
     'Note: if you need to do this, you may have bitten off more than you can chew.': '注意：如果您需要这么做的话，显然您是贪多嚼不烂了。',
     //腐化结束
 
-
+    //商店
+    'Instantly gain 2 real life hours of Offerings, based on your all time best Offerings/sec and speed acceleration!': '立刻获得相当于现实时间2小时产量的祭品，数量基于您的最佳祭品/秒和加速效果！',
+    'Instantly gain 2 real life hours of Obtainium, based on your all time best Obtainium/sec and speed acceleration!': '立刻获得相当于现实时间2小时产量的难得素，数量基于您的最佳难得素/秒和加速效果！',
+    'Gain +(level)^2 /4% more offerings from all sources!': '祭品获取数量增加(等级^2)/4%！',
+    'Automatically pour Offerings into a rune. 1st level unlocks feature, and each level increases Offering gain by 2%. Every second, 2^(Level) levels worth of offerings are spent. TO ACTIVATE: Click on the rune icon (PICTURE) and it will turn orange just for you!': '自动献祭祭品至符文中。第一级解锁特性，之后的每一级使祭品获取数量增加2%。只要祭品足够，每秒最多献祭祭品使符文增加2^(等级)的等级。激活方式：点击符文的图标(图片)，然后它的底色会变成橙色，表明已经激活自动献祭！',
+    'Gain +(level)^2 /2% more obtainium from all sources!': '难得素获取数量增加(等级^2)/2%！',
+    'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed.': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。',
+    'T and R challenges don\'t cause resets if retry is enabled and gain up to 10 completions per tick. Addtionally, instantly gain T challenge completions up to highest completed when exiting R challenges.': '只要开启重新尝试挑战，超越和转世挑战将不再重置资源，且每个时刻可以完成10次。另外，在退出转世挑战时，立刻使超越挑战的完成次数达到之前的完成次数上限。',
+    'This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使所有东西的产量增加1%，包括祭品和难得素。',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //商店结束
 
     //未分类：
     'Click one of the buttons on the left to start a challenge!': '点击选择左侧一个挑战按钮来开启挑战!',
@@ -1197,8 +1215,6 @@ var cnItems = {
     'Every challenge completion increases crystal gain by 1% per level.': '每个完成的挑战提高水晶产量1%每级',
     'Hover over an upgrade to view details!': '悬停在升级上查看详细信息',
     'Savefile copied to file!': '存档已导出!',
-    'Instantly gain 2 hours of Offerings, based on your all time best Offerings/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高祭品/秒!',
-    'Instantly gain 2 hours of Obtainium, based on your all time best Obtainium/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高难得素/秒!',
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
     'Current': '当前',
@@ -1404,10 +1420,7 @@ var cnPrefix = {
     'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '',
     'Effect: Look above!': '效果:往上看!',
     'The power of laziness benefits you. +100 Multiplier per 100 Summative Rune Levels, per level.': '懒惰淹没了你,+100加倍器/100符文总等级,每等级',
-    'Automatically pour Offerings into a rune. 1st level unlocks feature, and each level increases Offering gain by 2%. Every 10 seconds, 2^(Level + 1) offerings are spent. TO ACTIVATE: Click on the rune icon (PICTURE) and it will turn orange just for you!': '自动为一个符文献祭,第一级解锁功能,并且每级提高2%祭品获取,每10秒献祭2^(等级 + 1)祭品,点击符文的图标使它变成黄色来激活自动献祭',
-    'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed.': '自动使用难得素研究,第一级解锁功能,并且每级提高2%难得素获取,每次转世时会把所有难得素尽可能加在目标研究上直到它满级',
     'Instead of needing enough coins to get autocompletions, and waiting to complete, you instantly completions up until highest ever completed! Does not work in R. Challenges.': '不再需要等待足够的金币使自动挑战完成所有挑战,你将立即获得等同于挑战最高等级的挑战完成次数!对转世挑战无效',
-    'This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium.': '资金夺取但提供一个很酷的统计数据,+1%所有资源产出,包括难得素和祭品',
     'Permanent Upgrades!': '永久升级!',
     'Gain +20% more offerings thanks to generous Discord Server Boosters!': '获得+20%额外祭品,感谢discord慷慨的帮助',
     'Effect: Gain +1% per Booster that the server has, up until 20!': '效果:获得+1%每个discord获得的帮助,最多20!',

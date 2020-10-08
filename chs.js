@@ -1545,11 +1545,6 @@ var cnExcludeWhole = [
     /^x?\d+(\.\d+)?(e[+\-]?\d+)?\s*\-?$/, //12.34e+4
     /^\s*$/, //纯空格
     /^\s*[A-Za-z]\s*$/, //带单字母的纯空格
-    /^速度符文奖励：加速器数量\+(.+)，加速器数量再\+(.+)，加速器加成数量\+(.+)$/, //控制台信息处理
-    /^重叠符文奖励：加倍器数量\+(.+)，加倍器数量再\+(.+)%，税收增长减缓(.+)%。$/, //控制台信息处理
-    /^棱柱符文奖励：水晶产量变为(.+)倍，水晶升级免费\+(.+)级。$/, //控制台信息处理
-    /^节俭符文奖励：所有建筑成本增长减缓(.+)%。祭品回收概率：\+(.+)%。税收增长减缓(.+)%。$/, //控制台信息处理
-    /^卓越智慧符文奖励：难得素获取数量变为(.+)倍。蚂蚁速度变为(.+)倍。基础祭品：\+(.+)$/, //控制台信息处理
 ];
 var cnExcludePostfix = [
     /:?\s*x?\d+(\.\d+)?(e[+\-]?\d+)?\s*$/, //12.34e+4
@@ -1563,7 +1558,7 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^([e\d\,\.]+),$/, '$1,'], //数字处理
+    [/^([e\d\s\,\.]+),$/, '$1,'], //数字处理
     [/^([e\d\.]+)$/, '$1'], //数字处理
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励：$2夸克还有$1秒'], //主脚本
@@ -1673,11 +1668,11 @@ var cnRegReplace = new Map([
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
-    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器数量+$1，加速器数量再+$2%，加速器加成数量+$3。'], //符文
-    [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量+$1，加倍器数量再+$2%，税收增长减缓$3%。'], //符文
-    [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费+$2级。'], //符文
-    [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：+$2%。税收增长减缓$3%。'], //符文
-    [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品：+$3'], //符文
+    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文
+    [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量增加$1，加倍器数量再增加$2%，税收增长减缓$3%。'], //符文
+    [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费增加$2级。'], //符文
+    [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文
+    [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品：增加$3'], //符文
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战

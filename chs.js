@@ -108,8 +108,8 @@ var cnItems = {
     '=-=- Resources Required to Level Up -=-=-': '=-=- 强化所需的资源 -=-=-',
     '=-=-= Resources Required to ENHANCE =-=-=': '=-=-= 升阶所需的资源 =-=-=',
     '-==-+ Select for 3 GREEN Runes, for Respec! +-==-+': '-==-+ 请正好选择3个符文，否则无法洗点！ +-==-+',
-    'Speed Rune: Positive': '速度符文：获得加成',
-    'Speed Rune: Negative': '速度符文：无加成',
+    'Speed Rune: Positive': '加速符文：获得加成',
+    'Speed Rune: Negative': '加速符文：无加成',
     'Duplication Rune: Positive': '重叠符文：获得加成',
     'Duplication Rune: Negative': '重叠符文：无加成',
     'Prism Rune: Positive': '棱柱符文：获得加成',
@@ -584,12 +584,12 @@ var cnItems = {
     'Ant-i-trust: Clear an Ascension with above 1 billion score.': '蚁之反垄断：以十亿以上的分数完成飞升。',
     'This is pretty unfair: Clear an Ascension with above 5 billion score.': '这一点也不公平：以五十亿以上的分数完成飞升。',
     'Antichrist: Clear an Ascension with above 25 billion score.': '反基督者：以二百五十亿以上的分数完成飞升。',
-    'Highly Blessed: Level your Speed Rune blessing to 100,000.': '高度祝福：将速度符文的祝福等级提升到十万。',
-    'Divine Blessing: Level your Speed Rune blessing to 100,000,000.': '神圣祝福：将速度符文的祝福等级提升到一亿。',
-    'Blessing III: Level your Speed Rune blessing to 100 billion.': '祝福 III：将速度符文的祝福等级提升到一千亿。',
-    'Spirit I: Level your Speed Spirit to 1 Million.': '魂灵 I：将速度符文的魂灵等级提升到一百万。',
-    'Spirit II: Level your Speed Spirit to 1 Billion.': '魂灵 II：将速度符文的魂灵等级提升到十亿。',
-    'Spirit III: Level your Speed Spirit to 1 Trillion.': '魂灵 III：将速度符文的魂灵等级提升到一万亿。',
+    'Highly Blessed: Level your Speed Rune blessing to 100,000.': '高度祝福：将加速符文的祝福等级提升到十万。',
+    'Divine Blessing: Level your Speed Rune blessing to 100,000,000.': '神圣祝福：将加速符文的祝福等级提升到一亿。',
+    'Blessing III: Level your Speed Rune blessing to 100 billion.': '祝福 III：将加速符文的祝福等级提升到一千亿。',
+    'Spirit I: Level your Speed Spirit to 1 Million.': '魂灵 I：将加速符文的魂灵等级提升到一百万。',
+    'Spirit II: Level your Speed Spirit to 1 Billion.': '魂灵 II：将加速符文的魂灵等级提升到十亿。',
+    'Spirit III: Level your Speed Spirit to 1 Trillion.': '魂灵 III：将加速符文的魂灵等级提升到一万亿。',
     'Three-folded: [Hint: you may want to look into the inception]': '三次折扣：[提示：想想一路走来，有什么刚好可以三重叠加的]',
     'Seeing red: [Hint: you may need a lot of red items]': '红色危机：[提示：这个游戏中，有什么资源基本全是红色的，当然不是说什么立方，您需要很多那种资源，有多少？应该不是1后面跟25个0啥的了]',
     'ASCENDED: [Hint: you may need a LOT of ascensions]': '多次飞升：[提示：在之前飞升成就的基础上，再多一位，至于是哪一位？肯定跟根号2没关系的]',
@@ -597,7 +597,7 @@ var cnItems = {
     'Aesop\'s Revenge: [Hint: you gotta be pretty dang fast]': '伊索的复仇：[提示：某个地方的时间倍率需要大于一个数字，当然不是大于1小时的秒数]',
     'Unsmith: [Hint: unsmith emoji :unsmith: can be a pretty good input]': '面无表情：[提示：奖励代码输入 :unsmith: ]',
     'Smith: [Hint: :antismith: looks promising as well]': '反色面无表情：[提示：奖励代码输入 :antismith: ]',
-    'BLESSED: [Hint: Your Speed Blessing best be unreasonably high!]': '彻底祝福：[提示：速度符文的祝福等级需要大到离谱，甚至是1e14的一亿倍]',
+    'BLESSED: [Hint: Your Speed Blessing best be unreasonably high!]': '彻底祝福：[提示：加速符文的祝福等级需要大到离谱，甚至是1e14的一亿倍]',
     'Why? [Hint: Sometimes even 1 in over a Trillion counts!]': '意义何在？[提示：在赫尔墨斯的祝福等级已经比一千万的两万倍还多时，再去开一个方盒又有什么意义呢，对不对？]',
     'Challenging! [Hint: Challenge 11 is calling your name, but with even less ants]': '真正的挑战！[提示：使用某个跟蚂蚁产量有关的腐化以后，完成挑战11，且本次完成挑战10的次数不能低于49，也不需要高于51？什么，腐化要多少级？挑战10至少需要次数的第一位就是了]',
     'Seeing Red but not Blue: [Hint: Can you get red stuff without getting blue stuff?]': '无蓝见红：[提示：在某个见不到发亮蓝石的挑战中，获得1后面跟着10个0……哦不好意思还少了个0的某种红色资源。什么资源？前面不是有一个一样的吗，就那个]',
@@ -714,6 +714,12 @@ var cnItems = {
     '~(1 + level/200)x Obtainium, (1 + Level^2/2500)x Ant Hatch Speed, +0.005 base offerings for each tier per level': '难得素获取数量变为(1+等级/200)倍，蚂蚁速度变为(1+等级^2/2500)倍，每级使每一阶重置的基础祭品数量+0.005',
     //符文结束
 
+    //护身符
+    'Taxes -': '税收减少',
+    'Mythic Effect: +400 Duplication Rune Levels!': '神秘效果：重叠符文等级增加400！',
+    'Mythic Effect: +400 Speed Rune Levels!': '神秘效果：加速符文等级增加400！',
+    //护身符结束
+
     //挑战
     '|| Softcapped past 100! Effective completion count': '|| 超过100次以后效果下降！有效的完成次数为',
     '|| Softcapped past 25! Effective completion count': '|| 超过25次以后效果下降！有效的完成次数为',
@@ -768,7 +774,7 @@ var cnItems = {
     'You\'re really going to hate this one.': '您会讨厌这个的。',
     'Reincarnate and reach the goal except Accelerators and Multipliers do nothing. Coin Production is divided by 1e1,250.': '立即转世开始挑战，加速器和加倍器完全无效。金币产量将除以1e1250。',
     'Accelerator/Multiplier boost power exponent +0.04! Current': '加速器加成及加倍器加成效果指数增加0.04！当前效果',
-    'Speed Rune Exp +10%! Current': '速度符文经验值增加10%！当前效果',
+    'Speed Rune Exp +10%! Current': '加速符文经验值增加10%！当前效果',
     'Duplication Rune Exp +10%! Current': '重叠符文经验值增加10%！当前效果',
     'Multiplier Boost power +25%! The first Discord-Booster Global Diamond Upgrade.': '加倍器加成效果增加25%！解锁第一个由Discord助力而出现的全局钻石升级。',
     'Start <No Multipliers/Accelerators>': '开始<无加倍器/加速器挑战>',
@@ -907,7 +913,7 @@ var cnItems = {
     '[3x25] Automatically gain completions for Challenge 5, even without running it!': '[3x25]无须进行挑战5也可以自动完成它。',
     '[4x1] Welcome to the land of expensive researches. Here\'s +10% obtainium per level to help you out!': '[4x1]欢迎来到昂贵研究的领域。此研究每级可以增加10%难得素获取数量，希望能帮到您！',
     '[4x2] Increase the level cap of Thrift rune by 10 per level, and +2% exp for that rune in particular.': '[4x2]每级增加10级节俭符文等级上限，并且使此符文经验值获取数量增加2%。',
-    '[4x3] Increase the level cap of Speed rune by 10 per level, and +2% exp for that rune in particular.': '[4x3]每级增加10级速度符文等级上限，并且使此符文经验值获取数量增加2%。',
+    '[4x3] Increase the level cap of Speed rune by 10 per level, and +2% exp for that rune in particular.': '[4x3]每级增加10级加速符文等级上限，并且使此符文经验值获取数量增加2%。',
     '[4x4] Increase the level cap of Prism rune by 10 per level, and +2% exp for that rune in particular.': '[4x4]每级增加10级棱柱符文等级上限，并且使此符文经验值获取数量增加2%。',
     '[4x5] Increase the level cap of Duplication rune by 10 per level, and +2% exp for that rune in particular.': '[4x5]每级增加10级重叠符文等级上限，并且使此符文经验值获取数量增加2%。',
     '[4x6] You thought the previous researches are expensive? You\'re going to need this! [+10% Obtainium/level]': '[4x6]您觉得前面的研究太贵了？您会需要这个的！[每级增加10%难得素获取数量]',
@@ -940,7 +946,7 @@ var cnItems = {
     '[5x8] A simple trick makes your base ant ELO increase by 25 per level!': '[5x8]一个简单的小把戏就可以每级使蚂蚁基础强度分增加25！',
     '[5x9] A more convoluted trick makes your base ant ELO increase by 25 per level again!': '[5x9]一个更复杂一点的小把戏就可以每级再次使蚂蚁基础强度分增加25！',
     '[5x10] Gain +1% more ELO from ant sources per level because why not?': '[5x10]每级使蚂蚁增加1%强度分，因为，为什么不呢？',
-    '[5x11] Gotta go fast [+10 max Speed Rune Level per level, +1% EXP to that rune]': '[5x11]得快点了[每级使速度符文等级上限增加10，且此符文经验值获取数量增加1%]',
+    '[5x11] Gotta go fast [+10 max Speed Rune Level per level, +1% EXP to that rune]': '[5x11]得快点了[每级使加速符文等级上限增加10，且此符文经验值获取数量增加1%]',
     '[5x12] Double Trouble [+10 max Duplication Rune level per level, +1% EXP to that rune]': '[5x12]难上加难[每级使重叠符文等级上限增加10，且此符文经验值获取数量增加1%]',
     '[5x13] Newton\'s Delight [+10 max Prism Rune Level per level, +1% EXP to that rune]': '[5x13]牛顿的愉悦[每级使棱柱符文等级上限增加10，且此符文经验值获取数量增加1%]',
     '[5x14] Five-Finger discounts [+10 max Thrift Rune Level per level, +1% EXP to that rune]': '[5x14]顺手牵羊[每级使节俭符文等级上限增加10，且此符文经验值获取数量增加1%]',
@@ -1445,11 +1451,6 @@ var cnPrefix = {
     'Gain 1x normal production': '获得1x普通产量',
     'Gain +10% more multiplier boosts.': '获得+10%加倍器加成',
     'Get Max Enhance for a Mythical bonus effect!': '提升到最大注魔以获得神话级的加成!',
-    'Bonus SI Rune Levels:': '奖励卓越智慧等级:',
-    'Bonus Thrift Rune Levels:': '奖励节俭符文等级:',
-    'Bonus Prism Rune Levels:': '奖励棱柱符文等级:',
-    'Bonus Duplication Rune Levels:': '奖励重叠符文等级:',
-    'Bonus Speed Rune Levels:': '奖励速度符文等级:',
     '': '',
     '': '',
     '': '',
@@ -1668,13 +1669,20 @@ var cnRegReplace = new Map([
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
-    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文
+    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文
     [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量增加$1，加倍器数量再增加$2%，税收增长减缓$3%。'], //符文
     [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费增加$2级。'], //符文
     [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文
     [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品数量：增加$3'], //符文
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文
+    [/^Cost to buy (.+): (.+) Obtainium and (.+) offerings.$/, '购买$1的花费：$2难得素及$3祭品。'], //护身符
+    [/^Bonus Speed Rune Levels(.*)$/, '加速符文额外等级$1'], //护身符
+    [/^Bonus Duplication Rune Levels(.*)$/, '重叠符文额外等级$1'], //护身符
+    [/^Bonus Prism Rune Levels(.*)$/, '棱柱符文额外等级$1'], //护身符
+    [/^Bonus Thrift Rune Levels(.*)$/, '节俭符文额外等级$1'], //护身符
+    [/^Bonus SI Rune Levels(.*)$/, '卓越智慧额外等级$1'], //护身符
+    [/^Gain \+(.+)% Global Speed Acceleration.$/, '全局速度增加$1%。'], //护身符
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Goal: Gain (.+) Coins in challenge.$/, '目标：在挑战中达到$1金币。'], //挑战
     [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战

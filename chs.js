@@ -1135,7 +1135,7 @@ var cnItems = {
     '[3x6] Start ascensions with 3 additional rune levels [Does not decrease EXP requirement] per level.': '[3x6]每级使您飞升后直接获得3级符文[不减少经验值需求]。',
     '[3x7] Upon an ascension, you will start with 1 of each reincarnation building to speed up Ascensions.': '[3x7]飞升后，您直接获得各一个粒子建筑。',
     '[3x8] Well, I think you got it? Gain +1% of particles on Reincarnation per second.': '[3x8]嗯，如您所愿？每秒获得粒子，数量为转世1%的粒子获取数量。',
-    '[3x9] Add +5 to Reincarnation Challenge cap per level. Completions after 25 scale faster in requirement!': '[3x9]每级增加5级转世挑战次数上限。超过25次以后，挑战的目标将大幅上升！',
+    '[3x9] Add +5 to Reincarnation Challenge cap per level. Completions after 25 scale faster in requirement!': '[3x9]每级增加5次转世挑战次数上限。超过25次以后，挑战的目标将大幅上升！',
     '[3x10] You now get +25% Cubes and Tesseracts forever!': '[3x10]从现在起，您永久多获得25%的方盒和超立方体！',
     '[4x1] You again? +7% cubes from Ascending per level.': '[4x1]又是你啊？每级增加飞升时方盒7%获取数量。',
     '[4x2] Gain +0.1% Rune EXP per second you have spent in an Ascension. This has no cap!': '[4x2]本次飞升每经过一秒，符文经验值获取数量就增加0.1%。此效果没有上限！',
@@ -1194,15 +1194,15 @@ var cnItems = {
     'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed.': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。',
     'T and R challenges don\'t cause resets if retry is enabled and gain up to 10 completions per tick. Addtionally, instantly gain T challenge completions up to highest completed when exiting R challenges.': '只要开启重新尝试挑战，超越和转世挑战将不再重置资源，且每个时刻可以完成10次。另外，在退出转世挑战时，立刻使超越挑战的完成次数达到之前的完成次数上限。',
     'This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使所有东西的产量增加1%，包括祭品和难得素。',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Each level gives a 1.5x speed multiplier to all Ant tiers\' production! Short and simple.': '每级使蚂蚁速度变为1.5倍！简单有效。',
+    'Permanently unlock a Shop talisman! [Warning: you can\'t refund this and this is VERY expensive to level. Be sure you want to buy it!]': '永久解锁一个商店护身符！[警告：您无法重置此项购买，而且升级花费非常高昂。买之前想清楚了！]',
+    'Using some amazing trick, you manage to increase your Reincarnation Challenge cap by 2 for each level! [Cannot be Refunded!]': '耍点漂亮的小把戏，每级增加2次转世挑战次数上限！[无法重置此项购买！]',
+    'The extended cut: This fifth forgotten tome gives you an additional -20M exponent reduction on the Challenge 10 requirement per level.': '后传来了：第五部后传虽然有点被遗忘了，但每级还是可以使挑战10的基础目标再次减少1e20M。',
+    'Wow! Cubes is giving you a deal: Buy this totally fair Season Pass and gain +3% cubes per level when you ascend!': '惊奇方盒提出交易：购买这个完全公平的季票以后，每级使您飞升时的方盒获取数量增加3%！',
+    'Instead of a daily cap of 25 Quarks by opening Wow! Cubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇方盒获取夸克的上限从25提升到100！[无法重置此项购买！]',
+    'Instead of a daily cap of 25 Quarks by opening Wow! Tesseracts, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇超立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
+    'Instead of a daily cap of 25 Quarks by opening Wow! Hypercubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇高阶立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
+    'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     //商店结束
 
     //未分类：
@@ -1440,7 +1440,6 @@ var cnPrefix = {
     'Sacrifices itself to allow you to equip [Unlocks the Ant Talisman!': '献祭它本身使你可以装备它[解锁蚂蚁护身符',
     'Current Obtainium/sec': '当前难得素/秒',
     'Permanently unlock a Shop talisman! [Warning: you can\'t refund this and this is VERY expensive to level. Be sure you want to buy it!': '永久解锁一个商店护身符[警告:你无法重置这项升级,请确认你真的想购买它!',
-    'Each level gives a 1.5x speed multiplier to all Ant tiers\' production! Short and simple.': '每级提供一个1.5x所有蚂蚁的速度加成!简单有效',
     'Gain +9% more Ant Sacrifice rewards thanks to generous Discord Server Boosters! ': '获得+9%额外蚂蚁献祭奖励,感谢discord的支持者!',
     'Effect: Every boost after 30 increases this reward by +1%, up until 50!': '效果:第三十个支持者之后的每个支持者增加这个加成1%,最高50!',
     'Gain 1x normal production': '获得1x普通产量',
@@ -1455,7 +1454,6 @@ var cnPrefix = {
     '': '',
     '': '',
     'CURRENT Effect: All resources EXCEPT QUARKS increased by': '当前效果:除了夸克以外的所有资源产量提高',
-    'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '甚至在这个高档商店,它的效果也挺明显的,对吧?',
     'CURRENT Effect: Try to upgrade research each reincarnation, and gain': '当前效果:每次转世尝试升级研究,并获得',
     'CURRENT Effect: Obtainium Timer': '当前效果:难得素计时器',
     'CURRENT Effect: Per 10 seconds, pour': '当前效果:每10秒献祭',
@@ -1522,7 +1520,6 @@ var cnPostfix = {
     '': '',
     '': '',
     '': '',
-    'Quarks.': '夸克',
     'more Obtainium.': '更多难得素',
     'Obtainium || MAXED!': '难得素 || 已满!',
     'more Obtainium on Reincarnation.': '难得素在转世时',
@@ -1801,4 +1798,5 @@ var cnRegReplace = new Map([
     [/^(.+) multi$/, '$1倍率'], //历史统计
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
     [/^Score(.+)$/, '分数$1'], //历史统计
+    [/^Cost: (.+) Quarks.$/, '花费：$1夸克。'], //商店
 ]);

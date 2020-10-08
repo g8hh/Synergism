@@ -239,9 +239,6 @@ var cnItems = {
     'Effect: +88% cap to Crystal Upgrade 3, duh!': '效果：水晶升级3的上限增加88%，还是废话！',
     'Effect: Coin Production ^1.025, duh!': '效果：金币产量^1.025，废话废话！',
     'Effect: +3% Effective Ant ELO, duh!': '效果：蚂蚁有效分增加3%，废话废话废话！',
-    '': '',
-    '': '',
-    '': '',
     'Auto: ON': '自动：开',
     'Auto: OFF': '自动：关',
     'Hover over an upgrade to view details!': '鼠标停在升级上可以查看详细信息！',
@@ -1100,9 +1097,7 @@ var cnItems = {
     'Chronos\' Blessing': '柯罗诺斯的祝福',
     'Accelerators per Accelerator Boost': '每个加速器加成提供的加速器数',
     'Multipliers': '加倍器数量',
-    'Offering Gain': '祭品获取数量',
     'Rune EXP': '符文经验值',
-    'Obtainium Gain': '难得素获取数量',
     'Ant Speed': '蚂蚁速度',
     'Sacrifice Reward': '献祭奖励',
     'Effective ELO': '有效强度分',
@@ -1414,18 +1409,6 @@ var cnPrefix = {
     "+": "+",
     " ": " ",
     ": ": "： ",
-    'Effect: Your patience will allow you to gain': '效果:你的耐心使你获得',
-    'Effect: Good day sir! -Willy Wonka': '效果:早上好!-威利·旺克(出自电影 欢乐糖果屋)',
-    'Effect: you LOSE! you get NOTHING!': '效果:你输了!你什么也得不到!',
-    'Effect: clear as Crystal!': '效果:像水晶一样漂亮!',
-    'Effect: in Black and White': '效果:黑道和白道',
-    'Effect: It\'s all there': '效果:都在那儿',
-    'Effect: Wiazrds will produce': '效果:法师会产出',
-    'Effect: Look above please lol': '效果:往上看lol',
-    'Effect: Printer Prodction': '效果:打印机产量',
-    '': '',
-    '': '',
-    '': '',
 }
 
 //需处理的后缀
@@ -1616,6 +1599,13 @@ var cnRegReplace = new Map([
     [/^Effect: Offering Multiplier(.*)$/, '效果：祭品倍率$1'], //升级
     [/^Effect: Ant Speed Multiplier(.*)$/, '效果：蚂蚁速度$1'], //升级
     [/^Effect: \+(.+)% Constant Divisor power.$/, '效果：增加$1%数学常数的税收除数效果。'], //升级
+    [/^Tesseract building production(.*)$/, '超立方建筑产量$1'], //升级
+    [/^Offering gain(.*)$/, '祭品获取数量$1'], //升级
+    [/^Obtainium gain(.*)$/, '难得素获取数量$1'], //升级
+    [/^(.+) free Ant Levels$/, '$1免费蚂蚁等级'], //升级
+    [/^(.+) free Rune Levels, \+(.+) to Rune Cap"$/, '$1免费符文等级，+$2符文等级上限'], //升级
+    [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
+    [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

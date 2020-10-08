@@ -707,8 +707,8 @@ var cnItems = {
     //成就结束
 
     //符文
-    '(Level/4)^1.25 Accelerator, +0.25% Accelerators per level. +1 Accelerator Boost every 20 levels!': '(等级/4)^1.25的加速器数量，每级再+0.25%的加速器数量。每20级+1个加速器加成！',
-    '': '',
+    '(Level/4)^1.25 Accelerator, +0.25% Accelerators per level. +1 Accelerator Boost every 20 levels!': '(等级/4)^1.25的加速器数量，每级再+0.25%的加速器数量。每20级加速器加成数量+1！',
+    '(Level/10) Multipliers every 10th level, +0.25% Multipliers per level. Tax growth is delayed more for each level!': '(等级/10)加倍器数量于每10级，每级再+0.25%的加倍器数量。每级使税收增长减缓更多！',
     '': '',
     '': '',
     '': '',
@@ -1195,13 +1195,9 @@ var cnItems = {
 
     //未分类：
     'Click one of the buttons on the left to start a challenge!': '点击选择左侧一个挑战按钮来开启挑战!',
-    'Current Challenge: None': '正在进行的挑战:无',
-    'Current Challenges: No Accelerators [Transcension]': '正在进行的挑战:无加速器（超越挑战）',
     'Prestige': '转生',
     'Reincarnation': '转世',
     'Transcension': '超越',
-    '~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!': '~(向下取整(等级/10))加倍器每10级,+0.5%加倍器每级,每级都会降低税收',
-    '~(1 + Level^2 * 2^Level / 256)x Crystal Production. +1 free level for each Crystal upgrade per 10 levels!': '~(1+等级^2*2^等级/256)倍水晶产量,每10级额外获得一级所有水晶升级',
     'Each purchased Crystal producer increases generation of Crystal producers by .1% per level. [MAX: 12%]': '每级每个购买的水晶生产者增加总水晶产量.1%[最大:12%]',
     'Improve the multiplier to coin production by .05 exponent per level. [MAX: +10.00]': '增加水晶提供的金币产量指数.05每级[最大:+10.00]',
     'Every challenge completion increases crystal gain by 1% per level.': '每个完成的挑战提高水晶产量1%每级',
@@ -1210,12 +1206,10 @@ var cnItems = {
     '+0.25% building cost growth delay per level, +0.125% offering recycle chance per level [MAX: 25%], 2^((200 - Level)/550) Tax growth multiplier AFTER level 200': '0.25%建筑价格成长削减,+0.125%回收祭品概率[最高25%],2^((200 - 等级)/550)税收增长倍率加成在200级以后',
     'Hover over an upgrade to view details!': '悬停在升级上查看详细信息',
     'Savefile copied to file!': '存档已导出!',
-    '(2^(level/250) * (1 + level/500))x Obtainium, Level^1.5 Ant Hatch Speed, +0.125 Base Reincarnation offerings': '(2^(等级/250)*(1+等级/500))倍难得素,等级^1.5 ANT 获取速度,+0.125转世基础祭品',
     'Instantly gain 2 hours of Offerings, based on your all time best Offerings/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高祭品/秒!',
     'Instantly gain 2 hours of Obtainium, based on your all time best Obtainium/sec!': '立即获得2小时祭品产量,基于你曾经到过的最高难得素/秒!',
     'Each level increases the timer capacity for Offerings by 120 seconds per level!': '每级提高祭品计时器120秒上限!',
     'Each level increases the timer capacity for Obtainium by 120 seconds per level!': '每级提高难得素计时器120秒上限!',
-    '~(2^(level/300) * (1 + level/150))x Obtainium, 1 + Level^2/1440 Ant Hatch Speed, +0.4 * level seconds of offering timer extension.': '~(2^(等级/300) * (1 + 等级/150))倍难得素,1+等级^2/1440蚂蚁孵化速度,+0.4*等级 秒的祭品计时器',
     'Current': '当前',
     'Start Challenge': '开始挑战',
 
@@ -1677,7 +1671,8 @@ var cnRegReplace = new Map([
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
-    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器+$1个，加速器再+$2个，加速器加成+$3个。'], //成就
+    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器数量+$1，加速器数量再+$2%，加速器加成数量+$3。'], //符文
+    [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量+$1个，加倍器数量再+$2%，税收增长减缓$3%。'], //符文
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Goal: Gain (.+) Coins in challenge.$/, '目标：在挑战中达到$1金币。'], //挑战
     [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战

@@ -1594,7 +1594,7 @@ var cnRegReplace = new Map([
     [/^Effect: Worker Production(.*)$/, '效果：工人产量$1'], //升级
     [/^Effect: Investment Production(.*)$/, '效果：投资产量$1'], //升级
     [/^Effect: Printer Production(.*)$/, '效果：打印机产量$1'], //升级
-    [/^Effect: Mint Production(.*)$/, '效果：铸币厂产量$1'], //升级
+    [/^Effect: Mint Production(.*)(?!Duh)$/, '效果：铸币厂产量$1'], //升级
     [/^Effect: Alchemy Production(.*)$/, '效果：炼金术产量$1'], //升级
     [/^Effect: All Coin production(.*)$/, '效果：所有金币产量$1'], //升级
     [/^Effect: Gain (.+) free multipliers from bought Alchemies.$/, '效果：根据已购买的炼金术数量获得$1个免费加倍器。'], //升级
@@ -1604,7 +1604,7 @@ var cnRegReplace = new Map([
     [/^Effect: Printer Generation(.*)$/, '效果：产生打印机的发生器产量$1'], //升级
     [/^Effect: Mint Generation(.*)$/, '效果：产生铸币厂的发生器产量$1'], //升级
     [/^Effect: Gain (.+)x more Diamonds on prestige$/, '效果：转生的钻石产量增加$1倍'], //升级
-    [/^Effect: All coin production is further multiplied by (.+) [Stacks with upgrade 1]!$/, '效果：金币产量再增加$1倍[前面为不算上第一个升级原来效果时的数字]！'], //升级
+    [/^Effect: All coin production is further multiplied by (.+) \[Stacks with upgrade 1\]!$/, '效果：金币产量再增加$1倍[前面为不算上第一个升级原来效果时的数字]！'], //升级
     [/^Effect: \+(.+) Multipliers, \+(.+) Accelerators.$/, '效果：增加$1个加倍器，$2个加速器。'], //升级
     [/^Effect:$/, '效果：'], //升级
     [/^Effect:$/, '效果：'], //升级

@@ -1713,6 +1713,7 @@ var cnRegReplace = new Map([
     [/^Completing the challenge adds (.+) to Ascension Bank and increase base Score by (.+).$/, '完成挑战后飞升库增加$1个惊奇方盒，飞升基础分数增加$2。'], //挑战
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
     [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
+    [/^Cost: (.*) Obtainium$/, '花费：$1难得素'], //研究
     [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
     [/^Fortunae Formicidae Level(.*)$/, '财富蚁等级$1'], //蚂蚁
     [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁

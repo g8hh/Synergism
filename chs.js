@@ -1557,7 +1557,7 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^([e\d\.]+),$/, '$1,'], //数字处理
+    [/^([e,\d\.]+),$/, '$1,'], //数字处理
     [/^([e\d\.]+)$/, '$1'], //数字处理
     [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励：$2夸克还有$1秒'], //主脚本

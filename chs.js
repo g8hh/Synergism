@@ -346,6 +346,21 @@ var cnItems = {
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
     //主界面结束
 
+    //重置
+    'You\'re not in a challenge right now. Get in one before you can leave it, duh!': '您目前并没有在进行挑战。进行挑战后再来考虑离开的事，懂了吧！',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //重置结束
+
     //成就
     'A Loyal Employee: Hire your first worker.': '一个忠实的雇员：雇佣第1个工人。',
     'Small Business: Hire 10 workers.': '小生意：雇佣10个工人。',
@@ -1239,7 +1254,6 @@ var cnPrefix = {
     'Automatically buy Grandmasters if affordable.': '自动购买大师',
     'Automatically buy Transcend Upgrades if affordable.': '自动购买神话升级',
     'Generate 1% of Mythos Gain from transcending per second.': '每秒产出1%超越可获得神话',
-    'Reset all Coin and Diamond Upgrades/Features, Crystal Upgrades & Producers, for Mythos/Offerings.': '重置所有金币和钻石升级/特权,水晶升级和生产者,获得神话/祭品',
     'You\'re not in a reincarnation challenge right now. Why would you need to leave it?': '你并没有开启一个转世挑战,你想离开什么?',
     'When you use an Offering, every unlocked rune will get 3 free experience.': '当你进行一次献祭,每一个已解锁的符文都会获得3经验',
     'Effect: It\'s quite clear in the description!': '效果:描述的很清楚了!',
@@ -1253,11 +1267,7 @@ var cnPrefix = {
     'Effect: Your patience will allow you to gain': '效果:你的耐心使你获得',
     'Multiply Worker production by 1e+10000.': '工人产量提高e10000',
     'Multiply Investment production by 1e+7000.': '投资产量提高e7000',
-    'Effect: This upgrade is currently not finished, so in the meantime you get a multiplier to a building. Enjoy!': '效果:这个升级我还没有想好,所以暂时给建筑加成!祝你愉快!',
-    'Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings.': '金币,金币生产者,金币升级,水晶都会被重置,但你可以获得钻石和少量祭品',
-    'Reset Diamond, Crystals and Coin Producers in order to increase the power of your Accelerators.': '重置钻石,水晶和金币生产者来提高加速器效果',
     'Are you done or tired of being in your challenge? Click to leave challenge': '你已经厌倦了这个挑战了吗?点击以离开挑战',
-    'Going back to your roots: Complete <Boost--> Once.': '回归本源:完成一次加成大幅减少挑战',
     'Grandmasters produce more Oracles based on Building power.': '大师基于建筑产量产出更多的先知',
     'Effect: Grandmasters will produce': '效果:大师会产出',
     'Multiply mythos shard production by the squared logarithm of Diamonds.': '以钻石对数的平方增加神话碎片的产量',
@@ -1378,12 +1388,10 @@ var cnPrefix = {
     'Automatically buy Coin Upgrades.': '自动购买金币升级',
     'Automatically buy Prestige Upgrades.': '自动购买钻石升级',
     'Generate 1% of Diamond Gain from prestiging per second.': '每秒产出1%转生可获得的钻石',
-    'Reset all Coin and Diamond upgrades/features, Crystal Upgrades & Producers, for Mythos/Offerings.': '重置所有金币和钻石升级/特权,水晶升级以及生产者,获得神话/祭品',
     'Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings!': '重置所有前面等级的项目,但获得粒子,难得素和祭品!',
     'Speed Rune Bonus:': '速度符文加成:',
     'Duplication Rune Bonus:': '重叠符文加成:',
     'Prism Rune Bonus:': '棱柱符文加成:',
-    'Reincarnate when you can gain': '自动转世当你获得',
     'Effect: +5% Offering Recycle/+5EXP per Offerings. Duh!': '效果:+5%祭品回收率/+5祭品经验,太棒了!',
     'Completing challenges, automatically or manually, increase offerings gained in Reincarnation. Bonus subject to time multiplier!': '已完成的挑战,无论自动或手动,都会增加你转世时获得的祭品数,会受到转世时间的影响!',
     'Effect: Base offering amount for Reincarnations': '效果:基于挑战次数是你转世时获得',
@@ -1665,6 +1673,10 @@ var cnRegReplace = new Map([
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面
     [/^You have (.+) real-life seconds of Offline Progress!$/, '您有$1秒的现实离线时间！'], //离线计算
+    [/^Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings. Required: (.+)\/1e16 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置金币、金币生产者、金币升级、水晶，获得钻石和一些祭品。需要：$1/1e16金币 || 花费时间：$2秒。'], //重置
+    [/^Reset all Coin and Diamond Upgrades\/Features, Crystal Upgrades & Producers, for Mythos\/Offerings. Required: (.+)\/1e100 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：$1/1e100金币 || 花费时间：$2秒。'], //重置
+    [/^Are you tired of being in your challenge or stuck? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) seconds.$/, '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
+    [/^Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings! Required: (.+)\/1e300 Mythos Shards \|\| TIME SPENT: (.+) seconds.$/, '重置之前的所有低阶资源，获得粒子，难得素和一些祭品！需要：$1/1e300神话碎片 || 花费时间：$2秒。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战

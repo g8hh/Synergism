@@ -348,17 +348,8 @@ var cnItems = {
 
     //重置
     'You\'re not in a challenge right now. Get in one before you can leave it, duh!': '您目前并没有在进行挑战。进行挑战后再来考虑离开的事，懂了吧！',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'You\'re not in a reincarnation challenge right now. Why would you need to leave it?': '您目前并没有在进行转世挑战。为什么您会想要离开挑战的？',
+    'Click this if you\'re in an Ascension Challenge and want to leave. You get it already!': '如果您想要退出飞升挑战，请点击这里。您懂的！',
     //重置结束
 
     //成就
@@ -1030,7 +1021,7 @@ var cnItems = {
     '[8x22] +0.6% cubes in Ascension Bank / level. No one knows how. Bank error perhaps.': '[8x22]每级增加飞升库中0.6%的惊奇方盒数量。没人知道发生了什么。或许是银行内部故障。',
     '[8x23] +0.06% blessings when using cubes / level!. Wow! Cubes really has a lot of manufacturing errors in your favor.': '[8x23]每级使惊奇方盒获得的祝福数量增加0.06%！惊奇方盒真的有很多对您有利的制造错误。',
     '[8x24] +10% faster Tesseract Buildings / level. THE ARISEN. WITH THE PRAISE OF THE SINGULARITY.': '[8x24]每级使超立方建筑的产量增加10%。它觉醒了。赞美奇点。',
-    '[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants.': '[8x25]获得烈日千阳的力量！每级使加速器、加速器加成、加倍器、祭品获取数量增加0.01%，盒子获取数量增加0.004%，符文等级上限增加0.04，另外，护身符等级上限增加 此研究等级/400，数字向下取整，免费蚂蚁等级增加 此研究等级/200，数字向下取整。',
+    '[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants.': '[8x25]获得烈日千阳的力量！每级使加速器、加速器加成、加倍器、祭品获取数量增加0.01%，方盒获取数量增加0.004%，符文等级上限增加0.04，另外，护身符等级上限增加 此研究等级/400，数字向下取整，免费蚂蚁等级增加 此研究等级/200，数字向下取整。',
     //研究结束
 
     //蚂蚁
@@ -1254,7 +1245,6 @@ var cnPrefix = {
     'Automatically buy Grandmasters if affordable.': '自动购买大师',
     'Automatically buy Transcend Upgrades if affordable.': '自动购买神话升级',
     'Generate 1% of Mythos Gain from transcending per second.': '每秒产出1%超越可获得神话',
-    'You\'re not in a reincarnation challenge right now. Why would you need to leave it?': '你并没有开启一个转世挑战,你想离开什么?',
     'When you use an Offering, every unlocked rune will get 3 free experience.': '当你进行一次献祭,每一个已解锁的符文都会获得3经验',
     'Effect: It\'s quite clear in the description!': '效果:描述的很清楚了!',
     'Atom gain is increased by 3% per Particle producer purchased!': '每个购买的原子生产者提高原子产量3%',
@@ -1267,7 +1257,6 @@ var cnPrefix = {
     'Effect: Your patience will allow you to gain': '效果:你的耐心使你获得',
     'Multiply Worker production by 1e+10000.': '工人产量提高e10000',
     'Multiply Investment production by 1e+7000.': '投资产量提高e7000',
-    'Are you done or tired of being in your challenge? Click to leave challenge': '你已经厌倦了这个挑战了吗?点击以离开挑战',
     'Grandmasters produce more Oracles based on Building power.': '大师基于建筑产量产出更多的先知',
     'Effect: Grandmasters will produce': '效果:大师会产出',
     'Multiply mythos shard production by the squared logarithm of Diamonds.': '以钻石对数的平方增加神话碎片的产量',
@@ -1679,6 +1668,7 @@ var cnRegReplace = new Map([
     [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+)\/(.+) Diamonds.$/, '重置所有金币的生产者和升级，以及水晶和钻石，增加加速器效果。需要：$1/$2钻石。'], //重置
     [/^Are you done or tired of being in your challenge? Click to leave challenge (.+). Progress: (.+)\/(.+) Mythos Shards. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3神话碎片。花费时间：$4秒。'], //重置
     [/^Are you done or tired of being in your challenge? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
+    [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战

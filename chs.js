@@ -615,6 +615,7 @@ var cnItems = {
     'Press [1], [2], [3], [4] or [5] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1]，[2]，[3]，[4]或[5]来为每个符文进行献祭，从加速符文开始从左往右依次对应。需要解锁了相应符文才可以使用快捷键献祭！',
     'Toggle percent resources used': '切换使用的资源比例',
     'BUY': '购买',
+    'Cost for 1: 1e6 Obtainium': '',
     'Exemption': '免税',
     'Chronos': '时光',
     'Midas': '点金',
@@ -1413,7 +1414,6 @@ var cnPrefix = {
     'Effect: in Black and White': '效果:黑道和白道',
     'Effect: It\'s all there': '效果:都在那儿',
     'Effect: Wiazrds will produce': '效果:法师会产出',
-    'Effect: Worker Production': '效果:工人产量',
     'Effect: Investment Production': '效果:投资产量',
     'Effect: Printer Production': '效果:打印机产量',
     'Effect: Mint Production': '效果:铸币厂产量',
@@ -1601,6 +1601,7 @@ var cnRegReplace = new Map([
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Mythos Shards. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3神话碎片。花费时间：$4秒。'], //重置
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
+    [/^Effect: Worker Production x(.*)$/, '效果：工人产量乘以$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

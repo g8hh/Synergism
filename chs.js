@@ -222,6 +222,16 @@ var cnItems = {
     'Effect: Mint Production x1e100 (Duh': '效果：铸币厂产量 x1e100 (废话',
     'Effect: +1 Accelerator Boost.': '效果：增加1个加速器加成。',
     'Effect: Thank you for getting the server above 30 boosts!': '效果：感谢您让服务器助力超过了30！',
+    'Effect: It\'s kinda self-evident, ain\'t it?': '效果：明摆着的效果，不是么？',
+    'Effect: It\'s quite obvious what the benefit is, but you must be in a challenge for it to be in use!': '效果：好处很明显，但必须在挑战中才能生效！',
+    'Effect: It\'s quite obvious, ain\'t it?': '效果：很明显，不是么？',
+    'Effect: Look above!': '效果：看上面！',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     '': '',
     '': '',
     '': '',
@@ -1411,26 +1421,16 @@ var cnPrefix = {
     'Effect: in Black and White': '效果:黑道和白道',
     'Effect: It\'s all there': '效果:都在那儿',
     'Effect: Wiazrds will produce': '效果:法师会产出',
-    'Effect: Welcome to Transcension! Coin production is multiplied by': '效果:欢迎来到超越!提高金币产出',
-    'Effect: All mythos shard producers are going into overdrive:': '效果:所有神话碎片生产者都超载了:',
-    'Effect: Multiply all coin production by': '效果:所有金币产量提高',
-    'Effect: Multiply Mythos gained in Transcension by': '效果:超越获得的神话加成',
-    'Effect: It\'s kinda self-evident, ain\'t it?': '效果:这真是个亲切的升级,不是吗',
-    'Effect: Mythos-tier producers production': '效果:神话碎片生产者产量提高',
-    'Effect: Multiply coin production by a factor of': '效果:大幅提升金币产量',
-    'Effect: It\'s quite obvious what the benefit is, but you must be in a challenge for it to be in use!': '一个相当巨大的加成,但你必须在挑战中才能使用它',
     'Effect: All you need to know is right above this message!': '效果:你想要知道的东西都在这条信息上面!',
     'Effect: +5% Offering Recycle/+5EXP per Offerings. Duh!': '效果:+5%祭品回收率/+5祭品经验,太棒了!',
     'Effect: Base offering amount for Reincarnations': '效果:基于挑战次数是你转世时获得',
     'Effect: All crystal production': '效果:所有水晶产量',
     'Effect: All mythos shard production': '效果:所有神话碎片产量',
     'Effect: 5x Particle gain from Reincarnations. Duh!': '效果:转世获得的粒子提高五倍,棒极了!',
-    'Effect: Augments will produce': '效果:强化产出',
     'Effect: Writing\'s on the wall. Look above!': '效果:都写在上面了,往上看!',
     'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '效果:和超越升级第十项一样,你必须在转世挑战中才会生效',
     'Effect: Offering Multiplier': '效果:祭品倍率',
     'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '',
-    'Effect: Look above!': '效果:往上看!',
     'Effect: Gain +1% per Booster that the server has, up until 20!': '效果:获得+1%每个discord获得的帮助,最多20!',
     'Effect: Gain +2% per Booster that the server has, up until 30!': '效果:获得+2%每个discord获得的帮助,最多30!',
     'Effect: Epic 5x Ants!': '效果:蚂蚁5x加成!',
@@ -1606,8 +1606,29 @@ var cnRegReplace = new Map([
     [/^Effect: \+(.+) Accelerators.$/, '效果：增加$1个加速器。'], //升级
     [/^Effect: \+(.+) Multipliers.$/, '效果：增加$1个加倍器。'], //升级
     [/^Effect: \+(.+) Accelerator Boosts$/, '效果：增加$1个加速器加成'], //升级
+    [/^Effect: \+(.+) Accelerators$/, '效果：增加$1个加速器'], //升级
+    [/^Effect: \+(.+) Multipliers$/, '效果：增加$1个加倍器'], //升级
     [/^Effect: All Crystal producers(.*)$/, '效果：所有水晶生产者产量$1'], //升级
     [/^Effect: All Mythos producers production(.*)$/, '效果：所有神话生产者产量$1'], //升级
+    [/^Effect: Welcome to Transcension! Coin production is multiplied by (.+).$/, '效果：欢迎进入超越时代！金币产量变为$1倍。'], //升级
+    [/^Effect: All mythos shard producers are going into overdrive: x(.+) the production!$/, '效果：所有神话碎片生产者都在超速运转：产量变为$1倍！'], //升级
+    [/^Effect: Multiply all coin production by (.+)!$/, '效果：金币产量变为$1倍！'], //升级
+    [/^Effect: Multiply Mythos gained in Transcension by (.+)!$/, '效果：超越的神话产量变为$1倍！'], //升级
+    [/^Effect: Mythos-tier producers production x(.+)! It's like inception, or something.$/, '效果：神话生产者产量变为$1倍！这就像开始了什么一样。'], //升级，位置前置
+    [/^Effect: Mythos-tier producers production x(.+)!$/, '效果：神话生产者产量变为$1倍！'], //升级，位置前置
+    [/^Effect: Mythos-tier producers production(.*)$/, '效果：神话生产者产量$1'], //升级
+    [/^Effect: Multiply coin production by a factor of (.+)!$/, '效果：金币产量变为$1倍！'], //升级
+    [/^Effect: \+(.+) Multipliers through magic!$/, '效果：通过魔法获得了$1加倍器！'], //升级
+    [/^Effect: Augments will produce (.+)x as many Mythos Shards.$/, '效果：强化的神话碎片产量变为$1倍。'], //升级
+    [/^Effect: Wizards will produce (.+)x as many Enchantments; what productive spirits!$/, '效果：法师的附魔产量变为$1倍。真是一群干劲十足的家伙们！'], //升级
+    [/^Effect: Grandmasters will produce (.+)x as many Oracles!$/, '效果：宗师的先知产量变为$1倍！'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
+    [/^Effect:$/, '效果：'], //升级
     [/^Effect:$/, '效果：'], //升级
     [/^Effect:$/, '效果：'], //升级
     [/^Effect:$/, '效果：'], //升级

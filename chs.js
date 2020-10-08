@@ -706,6 +706,20 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T8蚂蚁自动购买，并且可以自动购买科学蚁和命匣蚁！基础蚂蚁强度分增加3%。',
     //成就结束
 
+    //符文
+    '(Level/4)^1.25 Accelerator, +0.25% Accelerators per level. +1 Accelerator Boost every 20 levels!': '(等级/4)^1.25的加速器数量，每级再+0.25%的加速器数量。每20级+1个加速器加成！',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    //符文结束
+
     //挑战
     '|| Softcapped past 100! Effective completion count': '|| 超过100次以后效果下降！有效的完成次数为',
     '|| Softcapped past 25! Effective completion count': '|| 超过25次以后效果下降！有效的完成次数为',
@@ -1186,7 +1200,6 @@ var cnItems = {
     'Prestige': '转生',
     'Reincarnation': '转世',
     'Transcension': '超越',
-    '1 Accelerator, +0.5% Accelerators per level. +1 Accelerator Boost every 10 levels!': '1加速器,+0.5%加速器每级,+1加速器加成每10级',
     '~(floor(Level/10)) Multipliers every 10 levels, +0.5% Multipliers per level. Tax growth is delayed more for each level!': '~(向下取整(等级/10))加倍器每10级,+0.5%加倍器每级,每级都会降低税收',
     '~(1 + Level^2 * 2^Level / 256)x Crystal Production. +1 free level for each Crystal upgrade per 10 levels!': '~(1+等级^2*2^等级/256)倍水晶产量,每10级额外获得一级所有水晶升级',
     'Each purchased Crystal producer increases generation of Crystal producers by .1% per level. [MAX: 12%]': '每级每个购买的水晶生产者增加总水晶产量.1%[最大:12%]',
@@ -1377,9 +1390,6 @@ var cnPrefix = {
     'Automatically buy Coin Upgrades.': '自动购买金币升级',
     'Automatically buy Prestige Upgrades.': '自动购买钻石升级',
     'Generate 1% of Diamond Gain from prestiging per second.': '每秒产出1%转生可获得的钻石',
-    'Speed Rune Bonus:': '速度符文加成:',
-    'Duplication Rune Bonus:': '重叠符文加成:',
-    'Prism Rune Bonus:': '棱柱符文加成:',
     'Effect: +5% Offering Recycle/+5EXP per Offerings. Duh!': '效果:+5%祭品回收率/+5祭品经验,太棒了!',
     'Completing challenges, automatically or manually, increase offerings gained in Reincarnation. Bonus subject to time multiplier!': '已完成的挑战,无论自动或手动,都会增加你转世时获得的祭品数,会受到转世时间的影响!',
     'Effect: Base offering amount for Reincarnations': '效果:基于挑战次数是你转世时获得',
@@ -1468,7 +1478,6 @@ var cnPrefix = {
     'free Accelerators': '免费加速器',
     'Effect: Gain': '效果:获得',
     'Effect: ': '效果:',
-    'Thrift Rune Bonus:': '节俭符文加成:',
     'Loading Offline Progress...': '加载离线进度...',
     '': '',
     '': '',
@@ -1668,6 +1677,7 @@ var cnRegReplace = new Map([
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
+    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '速度符文奖励：加速器+$1个，加速器再+$2个，加速器加成+$3个。'], //成就
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Goal: Gain (.+) Coins in challenge.$/, '目标：在挑战中达到$1金币。'], //挑战
     [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战

@@ -1586,8 +1586,8 @@ var cnRegReplace = new Map([
     [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently(.*)$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面及建筑
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面及建筑
-    [/^(\s+)Click the image below to join the Discord!$/, '$1点击下方的图片加入Discord频道！'], //主界面及建筑
-    [/^(\s+)\[NEW!\] Support Development on Patreon!$/, '$1[新！]在Patreon上支持本游戏开发！'], //主界面及建筑
+    [/^(\s+)Click the image below to join the Discord!(\s+)$/, '$1点击下方的图片加入Discord频道！$2'], //主界面及建筑
+    [/^(\s+)\[NEW!\] Support Development on Patreon!(\s+)$/, '$1[新！]在Patreon上支持本游戏开发！$2'], //主界面及建筑
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑

@@ -1203,7 +1203,7 @@ var cnItems = {
     'Instead of a daily cap of 25 Quarks by opening Wow! Tesseracts, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇超立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'Instead of a daily cap of 25 Quarks by opening Wow! Hypercubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇高阶立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
-    'CURRENT Effect: All Ants\' Speed x': '当前效果：所有蚂蚁速度倍率变为',
+    'CURRENT Effect: All Ants\' Speed': '当前效果：所有蚂蚁速度倍率',
     //商店结束
 
     //未分类：

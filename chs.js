@@ -614,27 +614,27 @@ var cnItems = {
     'The Thousand Suns: [Hint: You need to fully research into becoming GOD]': '烈日千阳：[提示：将某个最后出现的研究提升至最大]',
     'The Thousand Moons: [Hint: You may need to cube yourself up]': '静月千阴：[提示：将方盒最后的某个升级提升至最大]',
     'Ultimate: Complete \'SADISTIC II\' challenge.': '终级挑战：完成虐待狂挑战 II。',
-    'Reward: 4 AP. 4 Quarks! Gain +.05% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.05%的加速效果。',
+    'Reward: 4 AP. 4 Quarks! Gain +.05% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.05%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Worker Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁工人自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Workers owned.': '奖励：8成就点数。8夸克！每拥有500个工人，就获得1个加速器。',
     'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Workers owned.': '奖励：9成就点数。9夸克！每拥有1000个工人，就获得1个加倍器。',
     'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 workers owned.': '奖励：10成就点数。10夸克！每拥有2000个工人，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.10% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.10%的加速效果。',
+    'Reward: 4 AP. 4 Quarks! Gain +.10% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.10%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Investment Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁投资自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Investments owned.': '奖励：8成就点数。8夸克！每拥有500个投资，就获得1个加速器。',
     'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Investments owned.': '奖励：9成就点数。9夸克！每拥有1000个投资，就获得1个加倍器。',
     'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 Investments owned.': '奖励：10成就点数。10夸克！每拥有2000个投资，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.15% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.15%的加速效果。',
+    'Reward: 4 AP. 4 Quarks! Gain +.15% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.15%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Printer Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁打印机自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Printers owned.': '奖励：8成就点数。8夸克！每拥有500台打印机，就获得1个加速器。',
     'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Printers owned.': '奖励：9成就点数。9夸克！每拥有1000台打印机，就获得1个加倍器。',
     'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 Printers owned.': '奖励：10成就点数。10夸克！每拥有2000台打印机，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.20% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.20%的加速效果。',
+    'Reward: 4 AP. 4 Quarks! Gain +.20% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.20%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Coin Mint Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁铸币厂自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Mints owned.': '奖励：8成就点数。8夸克！每拥有500个铸币厂，就获得1个加速器。',
     'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Mints owned.': '奖励：9成就点数。9夸克！每拥有1000个铸币厂，就获得1个加倍器。',
     'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 Mints owned.': '奖励：10成就点数。10夸克！每拥有2000个铸币厂，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.25% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.25%的加速效果。',
+    'Reward: 4 AP. 4 Quarks! Gain +.25% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.25%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Alchemy Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁炼金术自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain 10% more offerings from resets || +1 Accelerator per 500 Alchemies!': '奖励：8成就点数。8夸克！重置时多获得10%祭品 || 每拥有500个炼金术，就获得1个加速器！',
     'Reward: 9 AP. 9 Quarks! Gain 15% more offerings from resets (stacks multiplicatively!) || +1 Multiplier per 1,000 Alchemies!': '奖励：9成就点数。9夸克！重置时多获得15%祭品(效果叠乘！) || 每拥有1000个炼金术，就获得1个加倍器！',
@@ -719,7 +719,7 @@ var cnItems = {
     '|| Softcapped past 100! Effective completion count': '|| 超过100次以后效果下降！有效的完成次数为',
     '|| Softcapped past 25! Effective completion count': '|| 超过25次以后效果下降！有效的完成次数为',
     'Multipliers make the game a little too fast. Let\'s take them out!': '加倍器让游戏的进度有点太快了。把它移除了看看！',
-    'Transcend and reach the goal except Multipliers do nothing but act like Accelerators, which are nerfed by 50%!': '立即超越开始挑战，加倍器失去加倍效果，变为与加速器作用相同，且效果削弱50%！',
+    'Transcend and reach the goal except Multipliers do nothing but act like Accelerators, which are nerfed by 50%!': '立即超越开始挑战，加倍器失去加倍器效果，变为与加速器作用相同，且效果削弱50%！',
     '10 base Multiplier Boosts! \[\+0.05 to power!\] Current': '10个基础加倍器加成！[增加0.05加倍器效果！]当前效果',
     '10% total Multiplier Boosts! Current': '10%总加倍器加成！当前效果',
     '0.04 base Rune exp per Offering! Current': '0.04每个祭品的基础符文经验值！当前效果',
@@ -1388,7 +1388,6 @@ var cnPrefix = {
     'Automatically buy Coin Upgrades.': '自动购买金币升级',
     'Automatically buy Prestige Upgrades.': '自动购买钻石升级',
     'Generate 1% of Diamond Gain from prestiging per second.': '每秒产出1%转生可获得的钻石',
-    'Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings!': '重置所有前面等级的项目,但获得粒子,难得素和祭品!',
     'Speed Rune Bonus:': '速度符文加成:',
     'Duplication Rune Bonus:': '重叠符文加成:',
     'Prism Rune Bonus:': '棱柱符文加成:',
@@ -1586,12 +1585,12 @@ var cnRegReplace = new Map([
     [/^Cost: (.+) coins.$/, '花费：$1 金币'], //主界面
     [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2%]'], //主界面
     [/^Accelerators: (.+) \[(.+)\]$/, '加速器：$1 [$2]'], //主界面
-    [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速效果: $1 || 加速倍率$2'], //主界面
+    [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面
     [/^Multipliers: (.+) \[(.+)\]$/, '加倍器：$1 [$2]'], //主界面
-    [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍效果: $1 || 加倍倍率$2'], //主界面
+    [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面
     [/^Accelerator Boost: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面
     [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面
-    [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速效果，并增加5个免费的加速器。'], //主界面
+    [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速器效果，并增加5个免费的加速器。'], //主界面
     [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面
     [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes!$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！'], //主界面
     [/^Refineries: (.+) \[(.+)\]$/, '炼油厂：$1 [$2]'], //主界面
@@ -1675,8 +1674,9 @@ var cnRegReplace = new Map([
     [/^You have (.+) real-life seconds of Offline Progress!$/, '您有$1秒的现实离线时间！'], //离线计算
     [/^Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings. Required: (.+)\/1e16 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置金币、金币生产者、金币升级、水晶，获得钻石和一些祭品。需要：$1/1e16金币 || 花费时间：$2秒。'], //重置
     [/^Reset all Coin and Diamond Upgrades\/Features, Crystal Upgrades & Producers, for Mythos\/Offerings. Required: (.+)\/1e100 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：$1/1e100金币 || 花费时间：$2秒。'], //重置
-    [/^Are you tired of being in your challenge or stuck? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) seconds.$/, '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
+    [/^Are you tired of being in your challenge or stuck\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) seconds.$/, '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
     [/^Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings! Required: (.+)\/1e300 Mythos Shards \|\| TIME SPENT: (.+) seconds.$/, '重置之前的所有低阶资源，获得粒子，难得素和一些祭品！需要：$1/1e300神话碎片 || 花费时间：$2秒。'], //重置
+    [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+)\/(.+) Diamonds.$/, '重置所有金币的生产者和升级，以及水晶和钻石，增加加速器效果。需要：$1/$2钻石。'], //重置
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战

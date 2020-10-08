@@ -1097,7 +1097,9 @@ var cnItems = {
     'Chronos\' Blessing': '柯罗诺斯的祝福',
     'Accelerators per Accelerator Boost': '每个加速器加成提供的加速器数',
     'Multipliers': '加倍器数量',
+    'Offering Gain': '祭品获取数量',
     'Rune EXP': '符文经验值',
+    'Obtainium Gain': '难得素获取数量',
     'Ant Speed': '蚂蚁速度',
     'Sacrifice Reward': '献祭奖励',
     'Effective ELO': '有效强度分',
@@ -1603,7 +1605,7 @@ var cnRegReplace = new Map([
     [/^Offering gain(.*)$/, '祭品获取数量$1'], //升级
     [/^Obtainium gain(.*)$/, '难得素获取数量$1'], //升级
     [/^(.+) free Ant Levels$/, '$1免费蚂蚁等级'], //升级
-    [/^(.+) free Rune Levels, \+(.+) to Rune Cap"$/, '$1免费符文等级，+$2符文等级上限'], //升级
+    [/^(.+) free Rune Levels, \+(.+) to Rune Cap$/, '$1免费符文等级，+$2符文等级上限'], //升级
     [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就

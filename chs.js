@@ -226,14 +226,19 @@ var cnItems = {
     'Effect: It\'s quite obvious what the benefit is, but you must be in a challenge for it to be in use!': '效果：好处很明显，但必须在挑战中才能生效！',
     'Effect: It\'s quite obvious, ain\'t it?': '效果：很明显，不是么？',
     'Effect: Look above!': '效果：看上面！',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
-    '': '',
+    'Effect: +5% Offering Recycle/+5EXP per Offerings. Duh!': '效果：祭品回收概率增加5%，每个祭品提供的经验值增加5。废话！',
+    'Effect: 5x Particle gain from Reincarnations. Duh!': '效果：转世的粒子获取数量变为5倍。又是废话！',
+    'Effect: It\'s quite clear in the description!': '效果：看描述，写得很清楚！',
+    'Effect: Writing\'s on the wall. Look above!': '效果：在那写着呢。看上面！',
+    'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '效果：跟第十个神话升级的效果类似，但只能在转世挑战中生效。',
+    'Effect: Epic 5x Ants!': '效果：蚂蚁速度变为史诗般的5倍！',
+    'Effect: You will gain +10% rewards': '效果：献祭奖励增加10%',
+    'Effect: Ant Elo +75 if this upgrade is purchased.': '效果：蚂蚁强度分增加75。',
+    'Effect: All you need to know is right above this message!': '效果：想要知道的，都在上面了！',
+    'Effect: -50% Taxes duh!': '效果：减少50%税收，又开始废话了！',
+    'Effect: +88% cap to Crystal Upgrade 3, duh!': '效果：水晶升级3的上限增加88%，还是废话！',
+    'Effect: Coin Production ^1.025, duh!': '效果：金币产量^1.025，废话废话！',
+    'Effect: +3% Effective Ant ELO, duh!': '效果：蚂蚁有效分增加3%，废话废话废话！',
     '': '',
     '': '',
     '': '',
@@ -1409,37 +1414,15 @@ var cnPrefix = {
     "+": "+",
     " ": " ",
     ": ": "： ",
-    'Effect: It\'s quite clear in the description!': '效果:描述的很清楚了!',
-    'Effect: The first particle-tier producer is': '效果:第一个原子生产者获得',
-    'Effect: Your compliance with tax laws provides you with': '效果:由于某些税收规定使你的税收为你带来了',
-    'Effect: Cosmic Magnetics will allow you to gain': '效果:宇宙磁学允许你获得',
     'Effect: Your patience will allow you to gain': '效果:你的耐心使你获得',
-    'Effect: Grandmasters will produce': '效果:大师会产出',
     'Effect: Good day sir! -Willy Wonka': '效果:早上好!-威利·旺克(出自电影 欢乐糖果屋)',
     'Effect: you LOSE! you get NOTHING!': '效果:你输了!你什么也得不到!',
     'Effect: clear as Crystal!': '效果:像水晶一样漂亮!',
     'Effect: in Black and White': '效果:黑道和白道',
     'Effect: It\'s all there': '效果:都在那儿',
     'Effect: Wiazrds will produce': '效果:法师会产出',
-    'Effect: All you need to know is right above this message!': '效果:你想要知道的东西都在这条信息上面!',
-    'Effect: +5% Offering Recycle/+5EXP per Offerings. Duh!': '效果:+5%祭品回收率/+5祭品经验,太棒了!',
-    'Effect: Base offering amount for Reincarnations': '效果:基于挑战次数是你转世时获得',
-    'Effect: All crystal production': '效果:所有水晶产量',
-    'Effect: All mythos shard production': '效果:所有神话碎片产量',
-    'Effect: 5x Particle gain from Reincarnations. Duh!': '效果:转世获得的粒子提高五倍,棒极了!',
-    'Effect: Writing\'s on the wall. Look above!': '效果:都写在上面了,往上看!',
-    'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '效果:和超越升级第十项一样,你必须在转世挑战中才会生效',
-    'Effect: Offering Multiplier': '效果:祭品倍率',
-    'Effect: Same as Transcend upgrade 10, except you MUST be in a Reincarnation challenge in particular.': '',
-    'Effect: Gain +1% per Booster that the server has, up until 20!': '效果:获得+1%每个discord获得的帮助,最多20!',
-    'Effect: Gain +2% per Booster that the server has, up until 30!': '效果:获得+2%每个discord获得的帮助,最多30!',
-    'Effect: Epic 5x Ants!': '效果:蚂蚁5x加成!',
-    'Effect: Ant Speed Multiplier:': '效果:蚂蚁速度加成:',
     'Effect: Look above please lol': '效果:往上看lol',
-    'Effect: You will gain +10% rewards': '效果:你获得+10%奖励',
-    'Effect: Ant Elo +75 if this upgrade is purchased.': '效果:蚂蚁ELO+75',
     'Effect: Printer Prodction': '效果:打印机产量',
-    'Effect: Obtainium multiplier': '效果:难得素倍率',
     '': '',
     '': '',
     '': '',
@@ -1622,42 +1605,17 @@ var cnRegReplace = new Map([
     [/^Effect: Augments will produce (.+)x as many Mythos Shards.$/, '效果：强化的神话碎片产量变为$1倍。'], //升级
     [/^Effect: Wizards will produce (.+)x as many Enchantments; what productive spirits!$/, '效果：法师的附魔产量变为$1倍。真是一群干劲十足的家伙们！'], //升级
     [/^Effect: Grandmasters will produce (.+)x as many Oracles!$/, '效果：宗师的先知产量变为$1倍！'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-    [/^Effect:$/, '效果：'], //升级
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    [/^Effect: Base offering amount for Reincarnations \+(.+). Challenge yourself!$/, '效果：转世的基础祭品获取数量增加$1。是时候挑战自我了！'], //升级
+    [/^Effect: All crystal production(.*)$/, '效果：所有水晶产量$1'], //升级
+    [/^Effect: All mythos shard production(.*)$/, '效果：所有神话碎片产量$1'], //升级
+    [/^Effect: The first particle-tier producer is (.+)x as productive.$/, '效果：第一级粒子生产者的效率变为$1倍。'], //升级
+    [/^Effect: Your compliance with tax laws provides you with (.+) free Multipliers, for some reason.$/, '效果：您遵守法律法规，足额纳税，由于某种原因获得了$1个免费加倍器。'], //升级
+    [/^Effect: Cosmic Magnetics will allow you to gain (.+)x as much Obtainium reincarnating, x(.+) automation gain.$/, '效果：由于宇宙磁体的作用，转世的难得素获取数量变为$1倍，自动难得素获取数量变为$2倍。'], //升级
+    [/^Effect: Contracted time makes your game timers run (.+)% more quickly.$/, '效果：时间收缩使游戏时间加快了$1%。'], //升级
+    [/^Effect: Obtainium multiplier(.*)$/, '效果：难得素倍率$1'], //升级
+    [/^Effect: Offering Multiplier(.*)$/, '效果：祭品倍率$1'], //升级
+    [/^Effect: Ant Speed Multiplier(.*)$/, '效果：蚂蚁速度$1'], //升级
+    [/^Effect: +(.+)% Constant Divisor power.$/, '效果：增加$1%数学常数的税收除数效果。'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

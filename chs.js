@@ -1203,7 +1203,7 @@ var cnItems = {
     'Instead of a daily cap of 25 Quarks by opening Wow! Tesseracts, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇超立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'Instead of a daily cap of 25 Quarks by opening Wow! Hypercubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇高阶立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
-    'CURRENT Effect: All Ants\' Speed': '当前效果：所有蚂蚁速度倍率',
+    'CURRENT Effect: All Ants\' Speed': '当前效果：所有蚂蚁速度',
     //商店结束
 
     //未分类：
@@ -1672,7 +1672,7 @@ var cnRegReplace = new Map([
     [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量增加$1，加倍器数量再增加$2%，税收增长减缓$3%。'], //符文
     [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费增加$2级。'], //符文
     [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文
-    [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品：增加$3'], //符文
+    [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品数量：增加$3'], //符文
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
@@ -1802,4 +1802,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Obtainium gain \+(.+) %!$/, '当前效果：难得素获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain \+(.+)% more Obtainium.$/, '当前效果：每次转生都尝试研究，并且难得素获取数量增加$1%。'], //商店
     [/^CURRENT Effect: All resources EXCEPT QUARKS increased by (.+)%.$/, '当前效果：除了夸克以外的所有资源获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Reincarnation Challenges may be completed an additional (.+) times.$/, '当前效果：转世挑战完成次数上限额外增加$1次。'], //商店
+    [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+)M.$/, '当前效果：挑战10的基础目标减少1e$1M。'], //商店
+    [/^CURRENT Effect: Ascensions give  \+(.+)% cubes.$/, '当前效果：飞升时的方盒获取数量增加$1%。'], //商店
 ]);

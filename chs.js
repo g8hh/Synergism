@@ -219,6 +219,7 @@ var cnItems = {
     'Increase the rune EXP given by offerings by 10% per level [Additive]': '每级使祭品提供的符文经验值增加10%[相互叠加]',
     'When bought, rune effectiveness is increased by Log4(Talisman Shards +1) ': '(译者注：注意，与升级等级无关)购买后，符文效果增加 log4(护身符灰底碎片 +1)',
     'When bought, gain Log4(Constant + 1)% more Wow! Cubes and Tesseracts on ascension.': '(译者注：注意，与升级等级无关)购买后，飞升的惊奇方盒和惊奇超立方获取数量增加 log4(数学常数数量 + 1)%',
+    'Rune EXP': '符文经验',
     'Effect: Mint Production x1e100 (Duh': '效果：铸币厂产量 x1e100 (废话',
     'Effect: +1 Accelerator Boost.': '效果：增加1个加速器加成。',
     'Effect: Thank you for getting the server above 30 boosts!': '效果：感谢您让服务器助力超过了30！',
@@ -1098,7 +1099,7 @@ var cnItems = {
     'Accelerators per Accelerator Boost': '每个加速器加成提供的加速器数',
     'Multipliers': '加倍器数量',
     'Offering Gain': '祭品获取数量',
-    'Rune EXP': '符文经验值',
+    'Rune': '符文',
     'Obtainium Gain': '难得素获取数量',
     'Ant Speed': '蚂蚁速度',
     'Sacrifice Reward': '献祭奖励',
@@ -1404,6 +1405,106 @@ var cnItems = {
 
 //需处理的前缀
 var cnPrefix = {
+    "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
+    "Workers: ": "工人：", //主界面及建筑
+    "Investments: ": "投资：", //主界面及建筑
+    "Printers: ": "打印机：", //主界面及建筑
+    "Coin Mints: ": "铸币厂：", //主界面及建筑
+    "Alchemies: ": "炼金术：", //主界面及建筑
+    "Cost: ": "花费：", //主界面及建筑
+    "Coins/Sec: ": "金币每秒产量：", //主界面及建筑
+    "Accelerators: ": "加速器：", //主界面及建筑
+    "Multipliers: ": "加倍器：", //主界面及建筑
+    "Accelerator Boost: ": "加速器加成：", //主界面及建筑
+    "Reset Diamonds and Prestige Upgrades, but add ": "重置钻石及转生升级，但将增加", //主界面及建筑
+    "Due to your excessive wealth, coin production is divided by ": "由于您的财富过多，需要减少", //主界面及建筑
+    "Refineries: ": "炼油厂：", //主界面及建筑
+    "Coal Plants: ": "煤电厂：", //主界面及建筑
+    "Coal Rigs: ": "煤钻机：", //主界面及建筑
+    "Pickaxes: ": "十字镐：", //主界面及建筑
+    "Pandoras Boxes: ": "潘多拉魔盒：", //主界面及建筑
+    "Crystal/sec: ": "水晶每秒产量：", //主界面及建筑
+    "Ref./sec: ": "炼油厂每秒产量：", //主界面及建筑
+    "Plants/sec: ": "煤电厂每秒产量：", //主界面及建筑
+    "Rigs/sec: ": "煤钻机每秒产量：", //主界面及建筑
+    "Pickaxes/sec: ": "十字镐每秒产量：", //主界面及建筑
+    "Augments: ": "强化：", //主界面及建筑
+    "Enchantments: ": "附魔：", //主界面及建筑
+    "Wizards: ": "法师：", //主界面及建筑
+    "Oracles: ": "先知：", //主界面及建筑
+    "Grandmasters: ": "宗师：", //主界面及建筑
+    "Shards/sec: ": "神话碎片每秒产量：", //主界面及建筑
+    "Augments/sec: ": "强化每秒产量：", //主界面及建筑
+    "Enchantments/sec: ": "附魔每秒产量：", //主界面及建筑
+    "Wizards/sec: ": "法师每秒产量：", //主界面及建筑
+    "Oracles/sec: ": "先知每秒产量：", //主界面及建筑
+    "Protons: ": "质子：", //主界面及建筑
+    "Elements: ": "元素：", //主界面及建筑
+    "Pulsars: ": "脉冲星：", //主界面及建筑
+    "Quasars: ": "类星体：", //主界面及建筑
+    "Galactic Nuclei: ": "星系核心：", //主界面及建筑
+    "Atoms/sec: ": "原子每秒产量：", //主界面及建筑
+    "Protons/sec: ": "质子每秒产量：", //主界面及建筑
+    "Elements/sec: ": "元素每秒产量：", //主界面及建筑
+    "Pulsars/sec: ": "脉冲星每秒产量：", //主界面及建筑
+    "Quasars/sec: ": "类星体每秒产量：", //主界面及建筑
+    "Thanks to Research 2x14, you also multiply Crystal production by ": "由于研究2x14的效果，您还使水晶产量乘以", //主界面及建筑
+    "Thanks to Research 2x15, you also multiply Mythos Shard production by ": "由于研究2x15的效果，您还使神话碎片产量乘以", //主界面及建筑
+    "Dot: ": "点：", //主界面及建筑
+    "Vector: ": "矢量：", //主界面及建筑
+    "Three-Space: ": "三维空间：", //主界面及建筑
+    "Bent Time: ": "时间扭曲：", //主界面及建筑
+    "Hilbert Space: ": "希尔伯特空间：", //主界面及建筑
+    "+Constant/sec: ": "数学常数每秒产量：", //主界面及建筑
+    "Dot/sec: ": "点每秒产量：", //主界面及建筑
+    "Vector/sec: ": "矢量每秒产量：", //主界面及建筑
+    "Three-Space/sec: ": "三维空间每秒产量：", //主界面及建筑
+    "Bent Time/sec: ": "时间扭曲每秒产量：", //主界面及建筑
+    "Level: ": "等级：", //主界面及建筑
+    "+1 in ": "升1级需要", //主界面及建筑
+    "Level ": "等级：", //主界面及建筑
+    "Welcome to the future! I'd recommend studying the green-bordered researches first.": "欢迎来到研究！我建议先升级绿色边框的研究。", //主界面及建筑
+    "Achievement Points: ": "成就点数：", //成就
+    "Bonus Speed Rune Levels: ": "加速符文额外等级：", //符文等
+    "Bonus Duplication Rune Levels: ": "重叠符文额外等级：", //符文等
+    "Bonus Prism Rune Levels: ": "棱柱符文额外等级：", //符文等
+    "Bonus Thrift Rune Levels: ": "节俭符文额外等级：", //符文等
+    "Bonus SI Rune Levels: ": "卓越智慧额外等级：", //符文等
+    "Inceptus Formicidae Level ": "创始蚁等级 ", //蚂蚁
+    "Fortunae Formicidae Level ": "财富蚁等级 ", //蚂蚁
+    "Tributum Formicidae Level ": "示威蚁等级 ", //蚂蚁
+    "Celeritas Formicidae Level ": "迅捷蚁等级 ", //蚂蚁
+    "Multa Formicidae Level ": "加倍蚁等级 ", //蚂蚁
+    "Sacrificium Formicidae Level ": "献祭蚁等级 ", //蚂蚁
+    "Hic Formicidae Level ": "建筑蚁等级 ", //蚂蚁
+    "Experientia Formicidae Level ": "博学蚁等级 ", //蚂蚁
+    "Praemoenio Formicidae Level ": "预言蚁等级 ", //蚂蚁
+    "Scientia Formicidae Level ": "科学蚁等级 ", //蚂蚁
+    "Phylacterium Formicidae Level ": "命匣蚁等级 ", //蚂蚁
+    "Mortuus Est Formicidae Level ": "死神蚁等级 ", //蚂蚁
+    "Owned: ": "拥有：", //蚂蚁
+    "Generates ": "每秒产生", //蚂蚁
+    "Ant Multiplier ": "蚂蚁倍率", //蚂蚁
+    "Prestige count: ": "转生次数：", //统计数据
+    "Transcend count: ": "超越次数：", //统计数据
+    "Reincarnation count: ": "转世次数：", //统计数据
+    "Most Offerings saved at once: ": "最大持有的祭品数量：", //统计数据
+    "Most Obtainium saved at once: ": "最大持有的难得素数量：", //统计数据
+    "Best Obtainium/sec: ": "最佳难得素/秒：", //统计数据
+    "Summative Rune Levels: ": "符文总等级：", //统计数据
+    "Current Obtainium/sec ": "当前难得素/秒：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+    ": ": "：", //统计数据
+
     "(-": "(-",
     "(+": "(+",
     "(": "(",
@@ -1415,6 +1516,30 @@ var cnPrefix = {
 
 //需处理的后缀
 var cnPostfix = {
+    " Obtainium per real life second.": "难得素。", //主脚本
+    " coins.": "金币。", //主界面及建筑
+    " Diamonds.": "钻石。", //主界面及建筑
+    "% Acceleration Power and 5 free Accelerators.": "加速器效果，并增加5个免费的加速器。", //主界面及建筑
+    " to pay taxes!": "的金币产量用于缴税！", //主界面及建筑
+    " Diamonds": "钻石", //主界面及建筑
+    " crystals": "水晶", //主界面及建筑
+    " Mythos": "神话", //主界面及建筑
+    " Particles": "粒子", //主界面及建筑
+    " Tesseracts": "超立方", //主界面及建筑
+    " EXP": "经验值", //主界面及建筑
+    "The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!": "红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！", //主界面及建筑
+    " Coins": "金币", //升级
+    " Galactic Crumbs": "银河碎屑", //蚂蚁
+    " Crumbs/sec": "银河碎屑", //蚂蚁
+    " Workers/sec": "工蚁", //蚂蚁
+    " Breeders/sec": "繁殖蚁", //蚂蚁
+    " MetaBreeders/sec": "高级繁殖蚁", //蚂蚁
+    " MegaBreeders/sec": "超级繁殖蚁", //蚂蚁
+    " Queens/sec": "蚁后", //蚂蚁
+    " Royals/sec": "国王蚁", //蚂蚁
+    " ALMIGHTIES/sec": "全能蚁", //蚂蚁
+    " Wow! Cubes": "惊奇方盒", //惊奇方盒
+    " Quarks.": "夸克。", //商店
     ":": "：",
     "：": "：",
     ": ": "： ",
@@ -1447,94 +1572,27 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^([e\d\s\,\.]+),$/, '$1,'], //数字处理
-    [/^([e\d\.]+)$/, '$1'], //数字处理
-    [/^Thanks to researches you automatically gain (.+) Obtainium per real life second.$/, '由于研究效果，您在现实时间每秒自动获得$1难得素。'], //主脚本
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励：$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
-    [/^Workers: (.+) \[(.+)\]$/, '工人：$1 [$2]'], //主界面及建筑
-    [/^Investments: (.+) \[(.+)\]$/, '投资：$1 [$2]'], //主界面及建筑
-    [/^Printers: (.+) \[(.+)\]$/, '打印机：$1 [$2]'], //主界面及建筑
-    [/^Coin Mints: (.+) \[(.+)\]$/, '铸币厂：$1 [$2]'], //主界面及建筑
-    [/^Alchemies: (.+) \[(.+)\]$/, '炼金术：$1 [$2]'], //主界面及建筑
-    [/^Cost: (.+) coins.$/, '花费：$1 金币'], //主界面及建筑
-    [/^Coins\/Sec: (.+) \[(.+)%\]$/, '金币每秒产量：$1 [$2%]'], //主界面及建筑
-    [/^Accelerators: (.+) \[(.+)\]$/, '加速器：$1 [$2]'], //主界面及建筑
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
-    [/^Multipliers: (.+) \[(.+)\]$/, '加倍器：$1 [$2]'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
-    [/^Accelerator Boost: (.+) \[(.+)\]$/, '加速器加成：$1 [$2]'], //主界面及建筑
-    [/^Cost: (.+) Diamonds.$/, '花费：$1 钻石'], //主界面及建筑
-    [/^Reset Diamonds and Prestige Upgrades, but add (.+)% Acceleration Power and 5 free Accelerators.$/, '重置钻石及转生升级，但将增加$1%加速器效果，并增加5个免费的加速器。'], //主界面及建筑
-    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面及建筑
-    [/^Due to your excessive wealth, coin production is divided by (.+) to pay taxes!$/, '由于您的财富过多，需要减少$1的金币产量用于缴税！'], //主界面及建筑
-    [/^Refineries: (.+) \[(.+)\]$/, '炼油厂：$1 [$2]'], //主界面及建筑
-    [/^Coal Plants: (.+) \[(.+)\]$/, '煤电厂：$1 [$2]'], //主界面及建筑
-    [/^Coal Rigs: (.+) \[(.+)\]$/, '煤钻机：$1 [$2]'], //主界面及建筑
-    [/^Pickaxes: (.+) \[(.+)\]$/, '十字镐：$1 [$2]'], //主界面及建筑
-    [/^Pandoras Boxes: (.+) \[(.+)\]$/, '潘多拉魔盒：$1 [$2]'], //主界面及建筑
-    [/^Cost: (.+) Diamonds$/, '花费：$1 钻石'], //主界面及建筑
-    [/^Crystal\/sec(.*)$/, '水晶每秒产量$1'], //主界面及建筑
-    [/^Ref.\/sec(.*)$/, '炼油厂每秒产量$1'], //主界面及建筑
-    [/^Plants\/sec(.*)$/, '煤电厂每秒产量$1'], //主界面及建筑
-    [/^Rigs\/sec(.*)$/, '煤钻机每秒产量$1'], //主界面及建筑
-    [/^Pickaxes\/sec(.*)$/, '十字镐每秒产量$1'], //主界面及建筑
+    [/^(.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面及建筑
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面及建筑
-    [/^Cost: (.+) crystals$/, '花费：$1 水晶'], //主界面及建筑
     [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
     [/^Prestige when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
-    [/^Augments: (.+) \[(.+)\]$/, '强化：$1 [$2]'], //主界面及建筑
-    [/^Enchantments: (.+) \[(.+)\]$/, '附魔：$1 [$2]'], //主界面及建筑
-    [/^Wizards: (.+) \[(.+)\]$/, '法师：$1 [$2]'], //主界面及建筑
-    [/^Oracles: (.+) \[(.+)\]$/, '先知：$1 [$2]'], //主界面及建筑
-    [/^Grandmasters: (.+) \[(.+)\]$/, '宗师：$1 [$2]'], //主界面及建筑
-    [/^Cost: (.+) Mythos$/, '花费：$1 神话'], //主界面及建筑
-    [/^Shards\/sec(.*)$/, '神话碎片每秒产量$1'], //主界面及建筑
-    [/^Augments\/sec(.*)$/, '强化每秒产量$1'], //主界面及建筑
-    [/^Enchantments\/sec(.*)$/, '附魔每秒产量$1'], //主界面及建筑
-    [/^Wizards\/sec(.*)$/, '法师每秒产量$1'], //主界面及建筑
-    [/^Oracles\/sec(.*)$/, '先知每秒产量$1'], //主界面及建筑
     [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面及建筑
     [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
     [/^Transcend when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
-    [/^Protons: (.+) \[(.+)\]$/, '质子：$1 [$2]'], //主界面及建筑
-    [/^Elements: (.+) \[(.+)\]$/, '元素：$1 [$2]'], //主界面及建筑
-    [/^Pulsars: (.+) \[(.+)\]$/, '脉冲星：$1 [$2]'], //主界面及建筑
-    [/^Quasars: (.+) \[(.+)\]$/, '类星体：$1 [$2]'], //主界面及建筑
-    [/^Galactic Nuclei: (.+) \[(.+)\]$/, '星系核心：$1 [$2]'], //主界面及建筑
-    [/^Cost: (.+) Particles$/, '花费：$1 粒子'], //主界面及建筑
-    [/^Atoms\/sec(.*)$/, '原子每秒产量$1'], //主界面及建筑
-    [/^Protons\/sec(.*)$/, '质子每秒产量$1'], //主界面及建筑
-    [/^Elements\/sec(.*)$/, '元素每秒产量$1'], //主界面及建筑
-    [/^Pulsars\/sec(.*)$/, '脉冲星每秒产量$1'], //主界面及建筑
-    [/^Quasars\/sec(.*)$/, '类星体每秒产量$1'], //主界面及建筑
     [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production(.*)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为$3'], //主界面及建筑
-    [/^Thanks to Research 2x14, you also multiply Crystal production by(.*)$/, '由于研究2x14的效果，您还使水晶产量倍率变为$1'], //主界面及建筑
-    [/^Thanks to Research 2x15, you also multiply Mythos Shard production by(.*)$/, '由于研究2x15的效果，您还使神话碎片产量倍率变为$1'], //主界面及建筑
     [/^Reincarnate when your Particles can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当粒子为之前的$1倍时转世[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
     [/^Reincarnate when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转世[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
-    [/^Dot: (.+) \[(.+)\]$/, '点：$1 [$2]'], //主界面及建筑
-    [/^Vector: (.+) \[(.+)\]$/, '矢量：$1 [$2]'], //主界面及建筑
-    [/^Three-Space: (.+) \[(.+)\]$/, '三维空间：$1 [$2]'], //主界面及建筑
-    [/^Bent Time: (.+) \[(.+)\]$/, '时间扭曲：$1 [$2]'], //主界面及建筑
-    [/^Hilbert Space: (.+) \[(.+)\]$/, '希尔伯特空间：$1 [$2]'], //主界面及建筑
-    [/^Cost: (.+) Tesseracts$/, '花费：$1 超立方'], //主界面及建筑
-    [/^Constant\/sec(.*)$/, '数学常数每秒产量$1'], //主界面及建筑
-    [/^Dot\/sec(.*)$/, '点每秒产量$1'], //主界面及建筑
-    [/^Vector\/sec(.*)$/, '矢量每秒产量$1'], //主界面及建筑
-    [/^Three-Space\/sec(.*)$/, '三维空间每秒产量$1'], //主界面及建筑
-    [/^Bent Time\/sec(.*)$/, '时间扭曲每秒产量$1'], //主界面及建筑
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面及建筑
     [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$2。'], //主界面及建筑
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面及建筑
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面及建筑
     [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面及建筑
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面及建筑
-    [/^Level: (.+)\/(.*)$/, '等级：$1/$2'], //主界面及建筑
     [/^\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面及建筑
-    [/^1 in (.+) EXP$/, '1级需要$1经验值'], //主界面及建筑
-    [/^Level (.+)\/(.*)$/, '等级 $1/$2'], //主界面及建筑
-    [/^Welcome to the future! I'd recommend studying the green-bordered researches first.(\s+)The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!$/, '欢迎来到研究！我建议先升级绿色边框的研究。红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！'], //主界面及建筑
     [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面及建筑
     [/^Sacrifice when the timer is at least (.+) seconds \(In-game time\), Currently(.*)$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑
     [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently(.*)$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑
@@ -1542,7 +1600,6 @@ var cnRegReplace = new Map([
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面及建筑
     [/^(\s+)Click the image below to join the Discord!(\s+)$/, '$1点击下方的图片加入Discord频道！$2'], //主界面及建筑
     [/^(\s+)\[NEW!\] Support Development on Patreon!(\s+)$/, '$1[新！]在Patreon上支持本游戏开发！$2'], //主界面及建筑
-    [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面及建筑
@@ -1555,7 +1612,6 @@ var cnRegReplace = new Map([
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Mythos Shards. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3神话碎片。花费时间：$4秒。'], //重置
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
-    [/^Cost: (.+) Coins$/, '花费：$1 金币'], //升级
     [/^Effect: Worker Production(.*)$/, '效果：工人产量$1'], //升级
     [/^Effect: Investment Production(.*)$/, '效果：投资产量$1'], //升级
     [/^Effect: Printer Production(.*)$/, '效果：打印机产量$1'], //升级
@@ -1602,27 +1658,21 @@ var cnRegReplace = new Map([
     [/^Effect: Ant Speed Multiplier(.*)$/, '效果：蚂蚁速度$1'], //升级
     [/^Effect: \+(.+)% Constant Divisor power.$/, '效果：增加$1%数学常数的税收除数效果。'], //升级
     [/^Tesseract building production(.*)$/, '超立方建筑产量$1'], //升级
-    [/^Offering gain(.*)$/, '祭品获取数量$1'], //升级
-    [/^Obtainium gain(.*)$/, '难得素获取数量$1'], //升级
+    [/^Offering gain(?! is)(.*)$/, '祭品获取数量$1'], //升级
+    [/^Obtainium gain(?! is)(?! from)(.*)$/, '难得素获取数量$1'], //升级
     [/^(.+) free Ant Levels$/, '$1免费蚂蚁等级'], //升级
     [/^(.+) free Rune Levels, \+(.+) to Rune Cap$/, '$1免费符文等级，+$2符文等级上限'], //升级
     [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
-    [/^Achievement Points: (.+)\/(.+) \[(.+)%\]$/, '成就点数：$1/$2[$3%]'], //成就
+    [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
+    [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等
     [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量增加$1，加倍器数量再增加$2%，税收增长减缓$3%。'], //符文等
     [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费增加$2级。'], //符文等
     [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文等
     [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品数量：增加$3'], //符文等
-    [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
-    [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
     [/^Cost to buy (.+): (.+) Obtainium and (.+) offerings.$/, '购买$1个的花费：$2难得素及$3祭品。'], //符文等
-    [/^Bonus Speed Rune Levels(.*)$/, '加速符文额外等级$1'], //符文等
-    [/^Bonus Duplication Rune Levels(.*)$/, '重叠符文额外等级$1'], //符文等
-    [/^Bonus Prism Rune Levels(.*)$/, '棱柱符文额外等级$1'], //符文等
-    [/^Bonus Thrift Rune Levels(.*)$/, '节俭符文额外等级$1'], //符文等
-    [/^Bonus SI Rune Levels(.*)$/, '卓越智慧额外等级$1'], //符文等
     [/^Gain \+(.+)% Global Speed Acceleration.$/, '全局速度增加$1%。'], //符文等
     [/^Talismans' Bonus Rune Levels \+(.+) per level$/, '护身符的符文额外等级每级多增加$1'], //符文等
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
@@ -1672,28 +1722,6 @@ var cnRegReplace = new Map([
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
     [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
     [/^Cost: (.*) Obtainium$/, '花费：$1难得素'], //研究
-    [/^Inceptus Formicidae Level(.*)$/, '创始蚁等级$1'], //蚂蚁
-    [/^Fortunae Formicidae Level(.*)$/, '财富蚁等级$1'], //蚂蚁
-    [/^Tributum Formicidae Level(.*)$/, '示威蚁等级$1'], //蚂蚁
-    [/^Celeritas Formicidae Level(.*)$/, '迅捷蚁等级$1'], //蚂蚁
-    [/^Multa Formicidae Level(.*)$/, '加倍蚁等级$1'], //蚂蚁
-    [/^Sacrificium Formicidae Level(.*)$/, '献祭蚁等级$1'], //蚂蚁
-    [/^Hic Formicidae Level(.*)$/, '建筑蚁等级$1'], //蚂蚁
-    [/^Experientia Formicidae Level(.*)$/, '博学蚁等级$1'], //蚂蚁
-    [/^Praemoenio Formicidae Level(.*)$/, '预言蚁等级$1'], //蚂蚁
-    [/^Scientia Formicidae Level(.*)$/, '科学蚁等级$1'], //蚂蚁
-    [/^Phylacterium Formicidae Level(.*)$/, '命匣蚁等级$1'], //蚂蚁
-    [/^Mortuus Est Formicidae Level(.*)$/, '死神蚁等级$1'], //蚂蚁
-    [/^Cost: (.+) Galactic Crumbs$/, '花费：$1 银河碎屑'], //蚂蚁
-    [/^Owned: (.+) \[\+(.+)\]$/, '拥有：$1 [+$2]'], //蚂蚁
-    [/^Generates (.+) Crumbs\/sec$/, '每秒产生 $1 银河碎屑'], //蚂蚁
-    [/^Generates (.+) Workers\/sec$/, '每秒产生 $1 工蚁'], //蚂蚁
-    [/^Generates (.+) Breeders\/sec$/, '每秒产生 $1 繁殖蚁'], //蚂蚁
-    [/^Generates (.+) MetaBreeders\/sec$/, '每秒产生 $1 高级繁殖蚁'], //蚂蚁
-    [/^Generates (.+) MegaBreeders\/sec$/, '每秒产生 $1 超级繁殖蚁'], //蚂蚁
-    [/^Generates (.+) Queens\/sec$/, '每秒产生 $1 蚁后'], //蚂蚁
-    [/^Generates (.+) Royals\/sec$/, '每秒产生 $1 国王蚁'], //蚂蚁
-    [/^Generates (.+) ALMIGHTIES\/sec$/, '每秒产生 $1 全能蚁'], //蚂蚁
     [/^CURRENT EFFECT: ALL Ants work at (.+)x speed.$/, '当前效果：所有蚂蚁工作速度变为$1倍。'], //蚂蚁
     [/^CURRENT EFFECT: Crumb --> Coin exponent is \^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
     [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁
@@ -1707,7 +1735,6 @@ var cnRegReplace = new Map([
     [/^CURRENT EFFECT: Sacrificing is (.+)x as effective$/, '当前效果：献祭效果变为$1倍'], //蚂蚁
     [/^CURRENT EFFECT: Global timer is sped up by a factor of(.*)$/, '当前效果：全局速率变为'], //蚂蚁
     [/^\[(.+) effective\]$/, '[有效分$1]'], //蚂蚁
-    [/^Ant Multiplier(.*)$/, '蚂蚁倍率$1'], //蚂蚁
     [/^(.+) \[>500 ELO\]$/, '$1[分>500]'], //蚂蚁
     [/^(.+) \[>750 ELO\]$/, '$1[分>750]'], //蚂蚁
     [/^(.+) \[>1,000 ELO\]$/, '$1[分>1000]'], //蚂蚁
@@ -1715,8 +1742,7 @@ var cnRegReplace = new Map([
     [/^(.+) \[>2,000 ELO\]$/, '$1[分>2000]'], //蚂蚁
     [/^(.+) \[>3,000 ELO\]$/, '$1[分>3000]'], //蚂蚁
     [/^(.+) \[>5,000 ELO\]$/, '$1[分>5000]'], //蚂蚁
-    [/^Cost: (.+) Wow! Cubes$/, '花费：$1惊奇方盒'], //惊奇方盒
-    [/^Cost: (.+) Wow Cubes! \[\+(.+) Levels\]$/, '花费：$1惊奇方盒[可提升$2级]'], //惊奇方盒
+    [/^(.+) Wow Cubes! \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化
@@ -1736,17 +1762,9 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
-    [/^Prestige count(.*)$/, '转生次数$1'], //统计数据
-    [/^Transcend count(.*)$/, '超越次数$1'], //统计数据
-    [/^Reincarnation count(.*)$/, '转世次数$1'], //统计数据
     [/^Fastest Prestige: (.+)ms$/, '最快转生时间：$1毫秒'], //统计数据
     [/^Fastest Transcend: (.+)ms$/, '最快超越时间：$1毫秒'], //统计数据
     [/^Fastest Reincarnation: (.+)ms$/, '最快转世时间：$1毫秒'], //统计数据
-    [/^Most Offerings saved at once(.*)$/, '最大持有的祭品数量$1'], //统计数据
-    [/^Most Obtainium saved at once(.*)$/, '最大持有的难得素数量$1'], //统计数据
-    [/^Best Obtainium\/sec(.*)$/, '最佳难得素/秒$1'], //统计数据
-    [/^Summative Rune Levels(.*)$/, '符文总等级$1'], //统计数据
-    [/^Current Obtainium\/sec(.*)$/, '当前难得素/秒$1'], //统计数据
     [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
     [/^([\d\.]+)s$/, '$1秒'], //历史统计
     [/^(\d+)m(\d+)s$/, '$1分$2秒'], //历史统计
@@ -1756,7 +1774,6 @@ var cnRegReplace = new Map([
     [/^(.+) multi$/, '$1倍率'], //历史统计
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
     [/^Score(.+)$/, '分数$1'], //历史统计
-    [/^Cost: (.+) Quarks.$/, '花费：$1夸克。'], //商店
     [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
     [/^CURRENT Effect: Offering gain \+(.+)%!$/, '当前效果：祭品获取数量增加$1%。'], //商店

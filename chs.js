@@ -1520,18 +1520,6 @@ var cnPrefix = {
     "Best Obtainium/sec: ": "最佳难得素/秒：", //统计数据
     "Summative Rune Levels: ": "符文总等级：", //统计数据
     "Current Obtainium/sec ": "当前难得素/秒：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-    ": ": "：", //统计数据
-
     "(-": "(-",
     "(+": "(+",
     "(": "(",
@@ -1634,7 +1622,7 @@ var cnRegReplace = new Map([
     [/^Reset all Coin and Diamond Upgrades\/Features, Crystal Upgrades & Producers, for Mythos\/Offerings. Required: (.+)\/1e100 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：$1/1e100金币 || 花费时间：$2秒。'], //重置
     [/^Are you tired of being in your challenge or stuck\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) seconds.$/, '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
     [/^Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings! Required: (.+)\/1e300 Mythos Shards \|\| TIME SPENT: (.+) seconds.$/, '重置之前的所有低阶资源，获得粒子，难得素和一些祭品！需要：$1/1e300神话碎片 || 花费时间：$2秒。'], //重置
-    [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+)\/(.+) Diamonds.$/, '重置所有金币的生产者和升级，以及水晶和钻石，增加加速器效果。需要：$1/$2钻石。'], //重置
+    [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+)\/(.*)$/, '重置所有金币的生产者和升级，以及水晶和钻石，增加加速器效果。需要：$1/$2'], //重置
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Mythos Shards. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3神话碎片。花费时间：$4秒。'], //重置
     [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
     [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置

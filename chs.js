@@ -1489,7 +1489,7 @@ var cnPrefix = {
     "Bent Time/sec: ": "时间扭曲每秒产量：", //主界面及建筑
     "Level: ": "等级：", //主界面及建筑
     "+1 in ": "升1级需要", //主界面及建筑
-    "Level ": "等级：", //主界面及建筑
+    "Level ": "等级 ", //主界面及建筑
     "Welcome to the future! I'd recommend studying the green-bordered researches first.": "欢迎来到研究！我建议先升级绿色边框的研究。", //主界面及建筑
     "Achievement Points: ": "成就点数：", //成就
     "Bonus Speed Rune Levels: ": "加速符文额外等级：", //符文等

@@ -1535,7 +1535,6 @@ var cnPostfix = {
     " coins.": "金币。", //主界面及建筑
     " Diamonds.": "钻石。", //主界面及建筑
     "% Acceleration Power and 5 free Accelerators.": "加速器效果，并增加5个免费的加速器。", //主界面及建筑
-    " to pay taxes!": "的金币产量用于缴税！", //主界面及建筑
     " Diamonds": "钻石", //主界面及建筑
     " crystals": "水晶", //主界面及建筑
     " Mythos": "神话", //主界面及建筑
@@ -1599,6 +1598,7 @@ var cnRegReplace = new Map([
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
+    [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑
     [/^(.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面及建筑
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面及建筑
     [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑

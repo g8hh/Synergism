@@ -1686,6 +1686,7 @@ var cnRegReplace = new Map([
     [/^Offering gain(?! is)(.*)$/, '祭品获取数量$1'], //升级
     [/^Obtainium gain(?! is)(?! from)(.*)$/, '难得素获取数量$1'], //升级
     [/^(.+) free Ant Levels$/, '$1免费蚂蚁等级'], //升级
+    [/^Ant Speed (.+)$/, '蚂蚁速度$1'], //升级
     [/^(.+) free Rune Levels, \+(.+) to Rune Cap$/, '$1免费符文等级，+$2符文等级上限'], //升级
     [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级

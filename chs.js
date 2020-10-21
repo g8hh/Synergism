@@ -1243,7 +1243,7 @@ var cnItems = {
     '[3x2] The exponent of the bonus of Artemis is increased by 0.05 per level.': '[3x2]每级使阿尔忒弥斯的加成指数增加0.05。',
     '[3x3] For each 20 cubes opened at once, you get 1 additional blessing at random.': '[3x3]每开启20个方盒，就额外获得1个随机祝福。',
     '[3x4] Plutus teaches you the Art of the Deal. The effect power is now increased by +0.01 (+0.0033 if >1000 blessings) per level.': '[3x4]普路托斯教导了您生意经。每级使效果的幂增加0.01(如果超过1000祝福则改为增加0.0033)。',
-    '[3x5] Moloch lends you a hand in communicating with Ant God. The effect power is now increased by +0.01 (+0.0033 if >1000 blessings) per level.': '[3x5]米达斯帮助您更好地与蚁神沟通。每级使效果的幂增加0.01(如果超过1000祝福则改为增加0.0033)。',
+    '[3x5] Moloch lends you a hand in communicating with Ant God. The effect power is now increased by +0.01 (+0.0033 if >1000 blessings) per level.': '[3x5]摩洛克帮助您更好地与蚁神沟通。每级使效果的幂增加0.01(如果超过1000祝福则改为增加0.0033)。',
     '[3x6] Start ascensions with 3 additional rune levels [Does not decrease EXP requirement] per level.': '[3x6]每级使您飞升后直接获得3级符文[不减少经验值需求]。',
     '[3x7] Upon an ascension, you will start with 1 of each reincarnation building to speed up Ascensions.': '[3x7]飞升后，您直接获得各一个粒子建筑。',
     '[3x8] Well, I think you got it? Gain +1% of particles on Reincarnation per second.': '[3x8]嗯，如您所愿？每秒获得粒子，数量为转世的粒子每秒产量的1%。',

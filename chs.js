@@ -1775,17 +1775,17 @@ var cnRegReplace = new Map([
     [/^On this Ascension, this corruption is level (.+). Effect: Free Accel. Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加速器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by$/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by\s?(.*)/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以$3'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.\s?$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.\s?$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Obtainium gain \^$/, '本次飞升，此腐化等级为$1。效果为：难得素获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Obtainium gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：难得素获取数量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Diamond gain \^$/, '本次飞升，此腐化等级为$1。效果为：水晶获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：水晶获取数量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Ant Production \^$/, '本次飞升，此腐化等级为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Ant Production \^$/, '下次飞升，此腐化等级将变为$1。效果为：蚂蚁产量指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以$2'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$2'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by\s?(.*)$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以$3'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by\s?(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$3'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^Fastest Prestige: (.+)ms$/, '最快转生时间：$1毫秒'], //统计数据

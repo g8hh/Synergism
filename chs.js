@@ -1124,7 +1124,7 @@ var cnItems = {
     'Effective ELO': '有效强度分',
     'Bonus Rune Levels on Talismans': '每级护身符的额外符文等级',
     'Global Time Acceleration': '全局时间加速',
-    'You have a total of': '您一共有 ',
+    'You have a total of': '您一共有',
     'Cube blessings!': '方盒的祝福！',
     'You obtain guidance from beings in another dimension!': '您从另一个维度的生物那边获得了指引！',
     'Open up some Lootb-- er, Wow! Tesseracts, to boost blessings from the previous tier.': '开启一些秘——呃，我是说惊奇超立方，来加成上一阶的祝福。',
@@ -1605,6 +1605,9 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
+    [/^([e\d\,\.]+) C\/s$/, '$1方/秒'], //飞升统计追踪
+    [/^([e\d\,\.]+) T\/s$/, '$1超/秒'], //飞升统计追踪
+    [/^([e\d\,\.]+) H\/s$/, '$1高/秒'], //飞升统计追踪
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励：$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑

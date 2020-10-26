@@ -466,7 +466,7 @@ var cnItems = {
     'Fiscal Policy: Clear \'Tax+++\' challenge twice.': '财政政策：完成两次税收激增挑战。',
     'Economic Boom: Clear \'Tax+++\' challenge three times.': '经济繁荣：完成三次税收激增挑战。',
     'Ant-onomics: Clear \'Tax+++\' challenge five times.': '蚂蚁经济学：完成五次税收激增挑战。',
-    '\'Wow Platonic Tax sucks 1/5\': Clear \'Tax+++\' challenge ten times.': '\'惊奇方盒弱爆了，游戏评分1/5\'：完成十次税收激增挑战。',
+    '\'Wow Platonic Tax sucks 1/5\': Clear \'Tax+++\' challenge ten times.': '\'Platonic的税收弱爆了，游戏评分1/5\'：完成十次税收激增挑战。',
     'Haha this is hard for some reason: Clear \'Tax+++\' challenge twenty times.': '哈哈因为某些原因这是有点难：完成二十次税收激增挑战。',
     'Taxes are hard: Clear \'Tax+++\' challenge thirty times.': '严苛的税收：完成三十次税收激增挑战。',
     'Shiny Blue Rock: Clear \'No Research\' once.': '发亮的蓝石：完成一次无研究挑战。',
@@ -939,7 +939,7 @@ var cnItems = {
     '[4x22] Add +4 level to the first six upgradable ants per level!': '[4x22]每级使前六个蚂蚁升级的等级增加4级！',
     '[4x23] Add +4 level to the next five upgradable ants per level!': '[4x23]每级使后五个蚂蚁升级的等级增加4级！',
     '[4x24] Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!': '[4x24]夸克商店的诱惑太强无法自制了？每级使每小时导出奖励增加1夸克(上限为75)！',
-    '[4x25] Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!': '[4x25]好吧，这游戏作者怕是石乐志了。本来不指望您能购买这个的，总之，它会使每小时导出奖励再增加1夸克(上限为100)！',
+    '[4x25] Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!': '[4x25]好吧，这游戏作者Platonic怕是石乐志了。本来不指望您能购买这个的，总之，它会使每小时导出奖励再增加1夸克(上限为100)！',
     '[5x1] Alright, you\'re past the big wall. How about adding +.001 to Inceptus Ant efficiency per level?': '[5x1]很好，您穿过了高墙。每级增加0.001创始蚁效率，听起来如何？',
     '[5x2] Gain +1 bonus level to ALL ants per level! A rainbow attack!': '[5x2]每级使所有蚂蚁额外增加1级！这就是彩虹攻击！',
     '[5x3] Pray to Ant God for +5% sacrifice rewards per level!': '[5x3]向蚁神祈祷，每级增加5%的献祭奖励！',
@@ -1124,6 +1124,8 @@ var cnItems = {
     'Effective ELO': '有效强度分',
     'Bonus Rune Levels on Talismans': '每级护身符的额外符文等级',
     'Global Time Acceleration': '全局时间加速',
+    'You have a total of': '您一共有 ',
+    'Cube blessings!': '方盒的祝福！',
     'You obtain guidance from beings in another dimension!': '您从另一个维度的生物那边获得了指引！',
     'Open up some Lootb-- er, Wow! Tesseracts, to boost blessings from the previous tier.': '开启一些秘——呃，我是说惊奇超立方，来加成上一阶的祝福。',
     'Wow! TESSERACTS. Get more from harder Ascensions and other stuff.': '惊奇超立方。您可以通过更高难度的飞升或者其他途径获取更多。',
@@ -1147,6 +1149,7 @@ var cnItems = {
     'Moloch Blessing power': '摩洛克的祝福效果',
     'Midas Blessing power': '米达斯的祝福效果',
     'Chronos Blessing power': '柯罗诺斯的祝福效果',
+    'Tesseract gifts!': '超立方的赠礼！',
     'I didn\'t know that Wow! enterprises made 5-Dimensional Objects.': '我之前可不知道惊奇公司居然有五维的产品。',
     'Open up some Lootb-- er, Wow! Hypercubes, to boost blessings from the previous tier.': '开启一些嫩牛五——呃，我是说惊奇高阶立方，来加成上一阶的赠礼。',
     'Wow! HYPERCUBES. Get more from harder Ascensions and other stuff.': '惊奇高阶立方。您可以通过更高难度的飞升或者其他途径获取更多。',
@@ -1170,6 +1173,7 @@ var cnItems = {
     'Moloch Gift power': '摩洛克的赠礼效果',
     'Midas Gift power': '米达斯的赠礼效果',
     'Chronos Gift power': '柯罗诺斯的赠礼效果',
+    'Hypercube benedictions!': '高阶立方的恩赐！',
     'Wow! I want more Cubes.': '真惊奇！我想要更多方盒。',
     'Wow! I want passive Offering gain too.': '真惊奇！我也想被动获得祭品。',
     'Wow! I want better passive Obtainium': '真惊奇！我想更好地被动获得难得素',
@@ -1324,6 +1328,8 @@ var cnItems = {
     'Get more if Score >100,': '可以获得更多，只要分数大于100,',
     'Wow! Hypercubes. [': '个惊奇高阶立方。[',
     'Req Score: >1,000,000,': '需要分数大于1,000,000,',
+    'PLATONIC CUBES. [': '个PLATONIC方盒。[',
+    'Req Score: >1,337,000,000,': '需要分数大于1,337,000,000,',
     'Auto Ascend [ON]': '自动飞升[开]',
     'Auto Ascend [OFF]': '自动飞升[关]',
     'Mode: C10 Completions': '模式：挑战10完成数',
@@ -1776,7 +1782,7 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Accel. Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加速器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以$2'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by(.*)/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化

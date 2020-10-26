@@ -8,10 +8,10 @@ html {
 
 }
 body {background-color: #111111 ;
-	transform: scale(0.8);
+	transform: scale(0.9);
 	transform-origin: 0 0;
-	overflow-x: hidden;
-	overflow-y: hidden;
+	/*overflow-x: hidden;
+	overflow-y: hidden;*/
 }
 
 body {
@@ -99,7 +99,6 @@ a {color: white;}
 	margin-top: 0;
 	margin-bottom: 0;
 }
-
 #resourcesrow {
 	position: relative;
 	font-size: 16px;
@@ -169,7 +168,6 @@ a {color: white;}
 #resettable {
 	position: absolute;
 	font-size: 0;
-	margin-left: -50px;
 }
 #resetrequirements {
 	position: absolute;
@@ -189,7 +187,7 @@ a {color: white;}
 #resetrewards {
 	position: absolute;
 	top: -10px;
-	left: 240px;
+	left: 288px;
 }
 
 #tabrow {
@@ -1329,7 +1327,7 @@ margin-left: -13px
 	margin-bottom: 0;
 	margin-left: auto;
 	margin-right: auto;
-	text-align: center;
+    text-align: center;
 }
 #quarktimerdisplay {
 	height: 22px;
@@ -4169,6 +4167,33 @@ margin-left: -13px
 	color: white;
 	background-color: black;
 }
+#cubeBlessingsTotal{
+	position: absolute;
+	padding: 5px;
+	top: 500px;
+	margin-left: 25%;
+	width: 50%;
+	color: orange;
+	text-align: center;
+}
+#tesseractBlessingsTotal{
+	position: absolute;
+	padding: 5px;
+	top: 500px;
+	margin-left: 25%;
+	width: 50%;
+	color: orchid;
+	text-align: center;
+}
+#hypercubeBlessingsTotal{
+	position: absolute;
+	padding: 5px;
+	top: 500px;
+	margin-left: 25%;
+	width: 50%;
+	color: rgb(255, 0, 76);
+	text-align: center;
+}
 #open1Cube{
 	position: absolute;
 	text-align: center;
@@ -4720,23 +4745,25 @@ margin-left: -13px
 }
 #corruptionName{
 	font-size: 1.2em;
-	color: red;
+    color: red;
 }
 #corruptionDescription{
-	color: darkviolet;
+    color: darkviolet;
 }
 #corruptionLevelCurrent{
-	color: orchid
+    color: orchid
 }
 #corruptionLevelPlanned{
-	color: lime
+    color: lime
 }
+
 #ascensionAutomation {
 	position: relative;
 	top: 20px;
 	width: 100%;
 	min-height: 100px;
 }
+
 #ascensionAmount {
 	width: 150px;
 	border: 1px solid orange;
@@ -4807,6 +4834,7 @@ margin-left: -13px
 .corruptionReset {
 	border: 2px solid red;
 }
+
 #corruptionLoadouts {
 	height: 410px;
 	padding-top: 30px;
@@ -4840,4 +4868,32 @@ img.small {
 	margin: auto;
 	border: 2px solid green;
 	visibility: hidden;
+}
+
+#ascensionStats {
+	display: flex;
+	flex-flow: row;
+	flex-direction: row;
+	justify-content: center;
+	height: 20px;
+	padding-top: 10px;
+	margin-bottom: -10px;
+}
+#AscLen {
+	color: darkcyan;
+}
+#AscC10 {
+	color: limegreen;
+}
+#AscCubes {
+	color: yellow;
+}
+#AscTess {
+	color: orchid;
+}
+#AscHyper {
+	color: crimson;
+}
+#AscTimeAccel {
+	color: royalblue;
 }

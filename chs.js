@@ -29,6 +29,10 @@ var cnItems = {
     //主脚本结束
 
     //主界面及建筑
+    'C': '方',
+    'T': '超',
+    'H': '高',
+    '/s': '/秒',
     'Buildings': '建筑',
     'Upgrades': '升级',
     'Settings': '设置',
@@ -1605,9 +1609,6 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^([e\d\,\.]+) C\/s$/, '$1方/秒'], //飞升统计追踪
-    [/^([e\d\,\.]+) T\/s$/, '$1超/秒'], //飞升统计追踪
-    [/^([e\d\,\.]+) H\/s$/, '$1高/秒'], //飞升统计追踪
     [/^(.+)s until \+(\d+) export Quark$/, '距离下次增加导出奖励：$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑

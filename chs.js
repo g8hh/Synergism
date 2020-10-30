@@ -318,7 +318,7 @@ var cnItems = {
     'Coinless Pursuit: Reincarnate without purchasing Coin Upgrades.': '无金币的追求：不购买金币升级进行一次转世。',
     'Diamonds don\'t matter to me!: Reincarnate without purchasing Coin or Diamond Upgrades.': '钻石无用！：不购买金币升级和钻石升级进行一次转世。',
     'Leave nothing behind: Reincarnate without purchasing Coin, Diamond or Mythos Upgrades.': '空手而来：不购买金币升级，钻石升级和神话升级进行一次转世。',
-    'Leave NOTHING behind.: Reincarnate without purchasing Coin, Diamond, Mythos, or Generator Upgrades.': '空手而归：购买金币升级，钻石升级，神话升级和发生器升级进行一次转世。',
+    'Leave NOTHING behind.: Reincarnate without purchasing Coin, Diamond, Mythos, or Generator Upgrades.': '空手而归：不购买金币升级，钻石升级，神话升级和发生器升级进行一次转世。',
     'Out of Order: Buy Generator Upgrade Row 1, #2 first in a transcension (IV -> III)': '顺序错乱：在发生器升级中，首先购买第一排第二项的前提下完成一次超越(图标为IV->III)',
     'Out of Order: Buy Generator Upgrade Row 1, #2 first in a transcension (IV -> III': '顺序错乱：在发生器升级中，首先购买第一排第二项的前提下完成一次超越(图标为IV->III',
     'More Out of Order: Buy Generator Upgrade Row 1, #3 first in a transcension (III -> II)': '更严重的错乱：在发生器升级中，首先购买第一排第三项的前提下完成一次超越(图标为III->II)',

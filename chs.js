@@ -1360,7 +1360,7 @@ var cnItems = {
     'Hey, isn\'t this just a reference to Antimatter Dimensions? Shh. [Awarded an achievement!!!]': '这不是玩的反物质维度的梗吗？切。[获得一个成就！！！]',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
-    'You\'re playing on v2.0.8~beta2 - The Great Reimagining [Last Update: 02:35 PM UTC-5 Nov 7]': '您目前玩的版本为V2.0.6 - 大重构 [更新时间：11月07日西八区下午2:35]',
+    'You\'re playing on v2.0.8~beta2 - The Great Reimagining [Last Update: 02:35 PM UTC-5 Nov 7]': '您目前玩的版本为V2.0.8~beta2 - 大重构 [更新时间：11月07日西八区下午2:35]',
     'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
     'People who helped with art/design: Omsi, Alberan, Blank, ThalainTheCat, Sneekxy, Marblerunner64, Q00u, Cryptogrounds (splash screen), Buksss, illyria, Kiboy, Sean, Hexy': '帮忙美术方面的朋友们：Omsi，Alberan，Blank，ThalainTheCat，Sneekxy，Marblerunner64，Q00u，Cryptogrounds (启动画面)，Buksss，illyria，Kiboy，Sean，Hexy',
     'People who Boosted the Discord Server': 'Discord上进行服务器助力的朋友们',

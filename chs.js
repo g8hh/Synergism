@@ -1353,6 +1353,7 @@ var cnItems = {
     'Copied save to your clipboard!': '存档已导出到剪贴板！',
     'Savefile copied to file!': '存档已导出！',
     'Load game below!': '从下方导入存档！',
+    'Choose File': '选择文件',
     'Save the game manually.': '手动保存游戏。',
     'Enter a promotion code here!': '点击此处输入奖励代码！',
     'It\'s Spaghetti Time! [Awarded an achievement!!!]': '意面时间！[获得一个成就！！！]',

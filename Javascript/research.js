@@ -107,7 +107,6 @@ function isResearchMaxed(index) {
 }
 
 
-// TODO: move this trash to i18n
 let resdesc;
 resdesc = [null,
     "[1x1] Increase the number of free Accelerators gained by 20% from all sources.",

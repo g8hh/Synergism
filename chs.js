@@ -630,10 +630,10 @@ var cnItems = {
     'Reward: 60 AP. 60 Quarks! Gain +3% Tesseracts on ascension!': '奖励：60成就点数。60夸克！飞升时超立方获取数量增加3%！',
     'Reward: 60 AP. 60 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions.': '奖励：60成就点数。60夸克！飞升时间超过10秒以后，超出部分的时间的20%将变为飞升奖励的倍率。',
     'Reward: 40 AP. 40 Quarks! You will gain 25% MORE excess time (Total: 50%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。40夸克！飞升时间超过10秒以后，超出部分的时间的25%将再次变为飞升奖励的倍率(总和：50%)。',
-    'Reward: 40 AP. 40 Quarks! Gain +4% Hypercubes on ascension!': '奖励：40成就点数。40夸克！飞升时高阶立方获取数量增加4%！',
-    'Reward: 60 AP. 60 Quarks! Gain +4% Hypercubes on ascension!': '奖励：60成就点数。60夸克！飞升时高阶立方获取数量增加4%！',
-    'Reward: 60 AP. 60 Quarks! Gain +3% Hypercubes on ascension!': '奖励：60成就点数。60夸克！飞升时高阶立方获取数量增加3%！',
-    'Reward: 100 AP. 100 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions. Gain +0.1% Hypercubes per 1,000,000 ascensions, up to +25%!': '奖励：100成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间的20%将变为飞升奖励的倍率。且每1000000次飞升使高阶立方获取量增加0.1%，最大为25%！',
+    'Reward: 40 AP. 40 Quarks! Gain +4% Hypercubes on ascension!': '奖励：40成就点数。40夸克！飞升时五阶立方获取数量增加4%！',
+    'Reward: 60 AP. 60 Quarks! Gain +4% Hypercubes on ascension!': '奖励：60成就点数。60夸克！飞升时五阶立方获取数量增加4%！',
+    'Reward: 60 AP. 60 Quarks! Gain +3% Hypercubes on ascension!': '奖励：60成就点数。60夸克！飞升时五阶立方获取数量增加3%！',
+    'Reward: 100 AP. 100 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions. Gain +0.1% Hypercubes per 1,000,000 ascensions, up to +25%!': '奖励：100成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间的20%将变为飞升奖励的倍率。且每1000000次飞升使五阶立方获取量增加0.1%，最大为25%！',
     'Reward: 40 AP. 40 Quarks! You gain gain 50% MORE MORE excess time (Total: 100%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。40夸克！飞升时间超过10秒以后，超出部分的时间的50%将再次变为飞升奖励的倍率(总和：100%)。',
     'Reward: 40 AP. 40 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：40成就点数。40夸克！飞升时PLATONIC方盒获取数量增加4%！',
     'Reward: 60 AP. 60 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：60成就点数。60夸克！飞升时PLATONIC方盒获取数量增加4%！',
@@ -841,7 +841,7 @@ var cnItems = {
     'Taxes -3.33%! Multiplicative! Current': '税收减少3.33%！效果叠乘！当前效果',
     '6 maximum to Talisman Level Cap! Current': '6护身符等级上限！当前效果',
     '3% Spirit Power effectiveness! Current': '3%魂灵能量效果！当前效果',
-    'Unlock 15 Researches, and unlock the power of the Hypercube!': '解锁15个研究，并且解锁高阶立方的力量！',
+    'Unlock 15 Researches, and unlock the power of the Hypercube!': '解锁15个研究，并且解锁五阶立方的力量！',
     'Start <[(Tax+++)]>': '开始<[(税收激增挑战)]>',
     'The dimension that never progressed past the dark ages. Many fear to even step foot.': '这个维度没能跨越黑暗时代。很多人甚至不敢越雷池一步。',
     'Ascend and reach the goal but you do not gain Obtainium nor are any researches purchasable. Ant production ^0.2.': '立即飞升开始挑战，您无法获得难得素，也无法进行研究。蚂蚁产量^0.2。',
@@ -858,7 +858,7 @@ var cnItems = {
     'the ant god shakes their mighty head': '蚁神摇着巨大的脑袋如是说',
     'Enter the singularity.': '进入奇点。',
     'Start <[(Sadistic Challenge II)]>': '开始<[(虐待狂挑战 II)]>',
-    'Gain 1 Wow! HYPERCUBE for completing this challenge (First Time Bonus': '完成挑战后可以获得1个惊奇高阶立方(首次完成奖励',
+    'Gain 1 Wow! HYPERCUBE for completing this challenge (First Time Bonus': '完成挑战后可以获得1个惊奇五阶立方(首次完成奖励',
     'Retry Challenges: ON': '重新尝试挑战：开',
     'Retry Challenges: OFF': '重新尝试挑战：关',
     'Auto Challenge Sweep [ON]': '自动扫荡挑战[开]',
@@ -1055,7 +1055,7 @@ var cnItems = {
     '[8x5] +1 Export Quark per hour, yet again.': '[8x5]每小时导出奖励增加1夸克，是的，又是这个。',
     '[8x6] +0.6% faster ticks / level because why not? You\'re already the speed of light.': '[8x6]每级使所有速度加快0.6%，因为，为什么不呢？我是说，您已经是光速一样了。',
     '[8x7] +0.7% cubes in ascension bank / level, from dividends in Wow! Stock.': '[8x7]由于惊奇公司的分红，每级增加飞升库中0.7%的惊奇方盒数量。',
-    '[8x8] When you open a Hypercube, you also open 100 Tesseracts! (This works with 7x3, if you were curious.': '[8x8]开启一个高阶立方时，获得100个超立方的奖励！(此研究与研究7x3可以一起生效',
+    '[8x8] When you open a Hypercube, you also open 100 Tesseracts! (This works with 7x3, if you were curious.': '[8x8]开启一个五阶立方时，获得100个超立方的奖励！(此研究与研究7x3可以一起生效',
     '[8x9] +5% faster Tesseract Buildings / level. ASCENDED.': '[8x9]每级使超立方建筑的产量增加5%。它快要上天了。',
     '[8x10] Tome 4 of 4: You need to prepare for your ascent. e100m divisor!': '[8x10]四部曲的第四部：为了前进做好准备吧。挑战10的基础目标再次减少1e100M！',
     '[8x11] Something something +0.2% Accelerators pretty cool!': '[8x11]那啥那啥，总之每级增加0.2%加速器数量，很棒！',
@@ -1117,7 +1117,7 @@ var cnItems = {
     //惊奇方盒
     'Cube Blessings': '方盒的祝福',
     'Tesseract Gifts': '超立方的赠礼',
-    'Hypercube Benedictions': '高阶立方的恩赐',
+    'Hypercube Benedictions': '五阶立方的恩赐',
     'Cube Upgrades': '方盒升级',
     '=- Time Until Daily Refill -=-': '=- 直到每日重置的时间 -=-',
     'Quarks gained from Cubes': '从方盒获取的夸克数量',
@@ -1127,9 +1127,9 @@ var cnItems = {
     'Quarks gained from Tesseracts': '从超立方获取的夸克数量',
     'tesseracts for next quark.': '个超立方后可获取下一个夸克。',
     'Tesseracts opened today': '今日开启超立方数量',
-    'Quarks gained from Hypercubes': '从高阶立方获取的夸克数量',
-    'hypercubes for next quark.': '个高阶立方后可获取下一个夸克。',
-    'Hypercubes opened today': '今日开启高阶立方数量',
+    'Quarks gained from Hypercubes': '从五阶立方获取的夸克数量',
+    'hypercubes for next quark.': '个五阶立方后可获取下一个夸克。',
+    'Hypercubes opened today': '今日开启五阶立方数量',
     'You feel a sense of Pride and Accomplishment... and a hunger for power.': '您感到了自豪和成就感……还有对力量的渴求。',
     'Open up some Lootb-- er, Wow! Cubes, to get one of ten permanent bonuses.': '开启一些盲——呃，我是说惊奇方盒，来获取十种永久加成中的一种。',
     'You can also spend them on upgrades that persist through Ascension.': '您也可以将它们用来购买升级，这些升级不会因为飞升而重置。',
@@ -1184,8 +1184,8 @@ var cnItems = {
     'Chronos Blessing power': '柯罗诺斯的祝福效果',
     'Tesseract gifts!': '超立方的赠礼！',
     'I didn\'t know that Wow! enterprises made 5-Dimensional Objects.': '我之前可不知道惊奇公司居然有五维的产品。',
-    'Open up some Lootb-- er, Wow! Hypercubes, to boost blessings from the previous tier.': '开启一些嫩牛五——呃，我是说惊奇高阶立方，来加成上一阶的赠礼。',
-    'Wow! HYPERCUBES. Get more from harder Ascensions and other stuff.': '惊奇高阶立方。您可以通过更高难度的飞升或者其他途径获取更多。',
+    'Open up some Lootb-- er, Wow! Hypercubes, to boost blessings from the previous tier.': '开启一些嫩牛五——呃，我是说惊奇五阶立方，来加成上一阶的赠礼。',
+    'Wow! HYPERCUBES. Get more from harder Ascensions and other stuff.': '惊奇五阶立方。您可以通过更高难度的飞升或者其他途径获取更多。',
     'Hermes\' Benediction': '赫尔墨斯的恩赐',
     'Aphrodite\'s Benediction': '阿佛洛狄忒的恩赐',
     'Plutus\' Benediction': '普路托斯的恩赐',
@@ -1206,7 +1206,7 @@ var cnItems = {
     'Moloch Gift power': '摩洛克的赠礼效果',
     'Midas Gift power': '米达斯的赠礼效果',
     'Chronos Gift power': '柯罗诺斯的赠礼效果',
-    'Hypercube benedictions!': '高阶立方的恩赐！',
+    'Hypercube benedictions!': '五阶立方的恩赐！',
     'This seems very familiar.': '这看上去总感觉……很眼熟。',
     'Open up some Lootb-- er, Platonic! Cubes, for epic perks!.': '开启一些作者方——呃，我是说PLATONIC方盒，来获得一些强大的特权！',
     'Platonic! Cubes. Get more from really hard ascensions.': 'PLATONIC方盒。您可以通过超高难度的飞升获取更多。',
@@ -1317,14 +1317,17 @@ var cnItems = {
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
     '0.01% cubes per corruption level per level!': '0.01%飞升时方盒获取数量于每腐化等级每级此升级！',
     '0.02% tesseracts per corruption level per level!': '0.02%飞升时超立方获取数量于每腐化等级每级此升级！',
-    '0.03% hypercubes per corruption level per level!': '0.03%飞升时高阶立方获取数量于每腐化等级每级此升级！',
-    'Gain +1% platonic cubes per level if >2.5 Trillion Score!': '如果飞升分数大于2500000000000，则每级此升级增加1%的PLATONIC方盒获取数量！',
+    '0.03% hypercubes per corruption level per level!': '0.03%飞升时五阶立方获取数量于每腐化等级每级此升级！',
+    'Gain +1% platonic cubes per level if >2.5 Trillion Score!': '如果飞升分数大于250,0000,000,000，则每级此升级增加1%的PLATONIC方盒获取数量！',
     'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster constant production, +5/+3 Challenge caps, +100% Obtainium/Offerings, ^1.10 coin gain in C15!': '在挑战15中获得以下效果：C10的分数倍率的幂从1.035变为变为1.0375，数学常数减缓税收的幂增加0.1，数学常数产量变为2倍，挑战上限次数分别增加5和3，难得素和祭品获取数量增加100%，金币产量变为金币产量^1.10！',
     'Raises corruption 1 and 2 exponent ^(1 + level/10), capacity of ^1 on Mult/Accel.': '将腐化 I和腐化 II的效果指数乘以(1+此升级等级数/10)，但效果指数不能超过1。',
     'Raises speed below 1x to the power of ^(1 - level/20).': '全局速度低于1倍时，将速度变为速度的(1-(等级/20))次方。',
     'Divides Hyperchallenged by its level, with a minimum 1x challenge req. multiplier!': '将腐化：极致挑战的效果指数除以此升级等级，但效果指数不能低于1！',
     'Gain more obtainium with the illiteracy corruption, up until 1e50 obtainium!': '腐化：科盲中可以获得更多难得素，最高到1e50难得素！',
-    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +5/+3 Challenge caps, +250% Obtainium and Offerings, +100% Cubes/Tesseracts/Hypercubes/Platonics for 5T/7.5T/10T/20T score. ^1.25 ant exponent in C15!': '在挑战15中获得以下效果：C10的分数倍率的幂从1.0375变为1.04，数学常数减缓税收的幂增加0.2，数学常数产量变为10倍，挑战上限次数分别增加5和3，难得素和祭品获取数量增加250%，分别在5000000000/7500000000/10000000000/20000000000飞升分数时使方盒/超立方/高阶立方/PLATONIC方盒获取数量增加100%，蚂蚁产量变为蚂蚁产量^1.25！',
+    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +5/+3 Challenge caps, +250% Obtainium and Offerings, +100% Cubes/Tesseracts/Hypercubes/Platonics for 5T/7.5T/10T/20T score. ^1.25 ant exponent in C15!': '在挑战15中获得以下效果：C10的分数倍率的幂从1.0375变为1.04，数学常数减缓税收的幂增加0.2，数学常数产量变为10倍，挑战上限次数分别增加5和3，难得素和祭品获取数量增加250%，分别在5,000,000,000/7,500,000,000/10,000,000,000/20,000,000,000飞升分数时使方盒/超立方/五阶立方/PLATONIC方盒获取数量增加100%，蚂蚁产量变为蚂蚁产量^1.25！',
+    '===Affordable! Click to buy!===': '===资源充足！点击购买！===',
+    '===You cannot afford this!===': '===资源不足，无法购买===',
+    '===Maxed===': '===等级已达最大===',
     //惊奇方盒结束
 
     //腐化
@@ -1374,7 +1377,7 @@ var cnItems = {
     'Wow! Cubes.': '个惊奇方盒。',
     'Wow! Tesseracts. [': '个惊奇超立方。[',
     'Get more if Score >100,': '可以获得更多，只要分数大于100,',
-    'Wow! Hypercubes. [': '个惊奇高阶立方。[',
+    'Wow! Hypercubes. [': '个惊奇五阶立方。[',
     'Req Score: >1,000,000,': '需要分数大于1,000,000,',
     'PLATONIC CUBES. [': '个PLATONIC方盒。[',
     'Req Score: >1,337,000,000,': '需要分数大于1,337,000,000,',
@@ -1474,7 +1477,7 @@ var cnItems = {
     'Wow! Cubes is giving you a deal: Buy this totally fair Season Pass and gain +3% cubes per level when you ascend!': '惊奇方盒提出交易：购买这个完全公平的季票以后，每级使您飞升的方盒获取数量增加3%！',
     'Instead of a daily cap of 25 Quarks by opening Wow! Cubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇方盒获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'Instead of a daily cap of 25 Quarks by opening Wow! Tesseracts, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇超立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
-    'Instead of a daily cap of 25 Quarks by opening Wow! Hypercubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇高阶立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
+    'Instead of a daily cap of 25 Quarks by opening Wow! Hypercubes, how about 100 instead? This adds 75 to the daily cap! [Cannot be Refunded!]': '将每天开启惊奇五阶立方获取夸克的上限从25提升到100！[无法重置此项购买！]',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: All Ants\' Speed': '当前效果：所有蚂蚁速度',
     'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
@@ -1828,6 +1831,13 @@ var cnRegReplace = new Map([
     [/^(.+) \[>5,000 ELO\]$/, '$1[分>5000]'], //蚂蚁
     [/^(.+) Wow! Cubes \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
     [/^(\d+)\/(\d+) \[MAX\]$/, '$1/$2 [最大]'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Offerings$/, '$1/$2 祭品'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Obtainium$/, '$1/$2 难得素'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Wow! Cubes$/, '$1/$2 惊奇方盒'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Wow! Hypercubes$/, '$1/$2 惊奇五阶立方'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Wow!$/, '$1/$2 惊奇'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Platonic! Cubes$/, '$1/$2 PLATONIC方盒'], //惊奇方盒
+    [/^([e\,\.\d]+)\/([e\,\.\d]+) Hepteracts of the Abyss$/, '$1/$2 深渊七阶立方'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化

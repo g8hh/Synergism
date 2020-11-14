@@ -1096,9 +1096,9 @@ var cnItems = {
     'Scares you into running faster [up to x20]': '恐惧使您跑得更快[最高为20倍]',
     'Imitates your body through magic shape-shifting powers [up to x40]': '通过神奇的变形效果模仿您的行动[最高为40倍]',
     'Tries to please Ant God... but fails [Additional Offerings!]': '尝试取悦蚁神……但很遗憾地失败了[获得额外祭品！]',
-    'Helps you build a few things here and there [+3% Building Cost Delay / level]': '帮助您到处建造一些东西[每级使建筑成本减缓3%]',
+    'Helps you build a few things here and there [+3% Building Cost Delay / level, Cap 9,999,999%]': '帮助您到处建造一些东西[每级使建筑成本减缓3%，最高为9999999%]',
     'Knows how to salt and pepper food [Up to 1,000x Rune EXP!]': '懂得如何给食物加盐和胡椒[最高为1000倍符文经验！]',
-    'Can make your message to Ant God a little more clear [+1 all Rune Levels / level]': '使您的信息更容易传达给蚁神[每级使所有符文增加1级]',
+    'Can make your message to Ant God a little more clear [+1 all Rune Levels / level, Cap 10 Million]': '使您的信息更容易传达给蚁神[每级使所有符文增加1级，最高为10000000级]',
     'Has big brain energy [Additional Obtainium!]': '有一个超级强大的大脑[获得额外难得素！]',
     'A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!]': '献给蚁神的贵重祭品[最高可以获得3倍献祭奖励！]',
     'Betray Ant God increasing the fragility of your dimension [Unlocks ant talisman, Up to 2x faster timers on most things]': '背叛蚁神将使您的维度更加脆弱[解锁蚂蚁护身符，全局速度最高为2倍]',
@@ -1315,6 +1315,16 @@ var cnItems = {
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
     'Upgrade: 1 Level wow': '升级：1级(惊奇)',
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
+    '0.01% cubes per corruption level per level!': '0.01%飞升时方盒获取数量于每腐化等级每级此升级！',
+    '0.02% tesseracts per corruption level per level!': '0.02%飞升时超立方获取数量于每腐化等级每级此升级！',
+    '0.03% hypercubes per corruption level per level!': '0.03%飞升时高阶立方获取数量于每腐化等级每级此升级！',
+    'Gain +1% platonic cubes per level if >2.5 Trillion Score!': '如果飞升分数大于2500000000000，则每级此升级增加1%的PLATONIC方盒获取数量！',
+    'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster constant production, +5/+3 Challenge caps, +100% Obtainium/Offerings, ^1.10 coin gain in C15!': '在挑战15中获得以下效果：C10的分数倍率的幂从1.035变为变为1.0375，数学常数减缓税收的幂增加0.1，数学常数产量变为2倍，挑战上限次数分别增加5和3，难得素和祭品获取数量增加100%，金币产量变为金币产量^1.10！',
+    'Raises corruption 1 and 2 exponent ^(1 + level/10), capacity of ^1 on Mult/Accel.': '将腐化 I和腐化 II的效果指数乘以(1+此升级等级数/10)，但效果指数不能超过1。',
+    'Raises speed below 1x to the power of ^(1 - level/20).': '全局速度低于1倍时，将速度变为速度的(1-(等级/20))次方。',
+    'Divides Hyperchallenged by its level, with a minimum 1x challenge req. multiplier!': '将腐化：极致挑战的效果指数除以此升级等级，但效果指数不能低于1！',
+    'Gain more obtainium with the illiteracy corruption, up until 1e50 obtainium!': '腐化：科盲中可以获得更多难得素，最高到1e50难得素！',
+    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +5/+3 Challenge caps, +250% Obtainium and Offerings, +100% Cubes/Tesseracts/Hypercubes/Platonics for 5T/7.5T/10T/20T score. ^1.25 ant exponent in C15!': '在挑战15中获得以下效果：C10的分数倍率的幂从1.0375变为1.04，数学常数减缓税收的幂增加0.2，数学常数产量变为10倍，挑战上限次数分别增加5和3，难得素和祭品获取数量增加250%，分别在5000000000/7500000000/10000000000/20000000000飞升分数时使方盒/超立方/高阶立方/PLATONIC方盒获取数量增加100%，蚂蚁产量变为蚂蚁产量^1.25！',
     //惊奇方盒结束
 
     //腐化
@@ -1817,6 +1827,7 @@ var cnRegReplace = new Map([
     [/^(.+) \[>3,000 ELO\]$/, '$1[分>3000]'], //蚂蚁
     [/^(.+) \[>5,000 ELO\]$/, '$1[分>5000]'], //蚂蚁
     [/^(.+) Wow! Cubes \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
+    [/^(\d+)\/(\d+) \[MAX\]$/, '$1/$2 [最大]'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化

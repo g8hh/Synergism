@@ -613,7 +613,7 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! Unlock Tier 6 Ant autobuy, and autobuy Hic and Experientia ants! Add +1% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T6蚂蚁自动购买，并且可以自动购买建筑蚁和博学蚁！基础蚂蚁强度分增加1%。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 7 Ant autobuy, and autobuy Praemoenio ants! Add +2% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T7蚂蚁自动购买，并且可以自动购买预言蚁！基础蚂蚁强度分增加2%。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T8蚂蚁自动购买，并且可以自动购买科学蚁和命匣蚁！基础蚂蚁强度分增加3%。',
-    'Reward: 60 AP. 60 Quarks! Gain an ascension gain multiplier based on your score (log10(score) - 7)x for Corruption Score > 100 Million. Gain +1% Offerings per 10,000 ascensions, up to +100%!': '奖励：60成就点数。60夸克！腐化后分数大于100000000时，飞升分数乘以(log10(分数) - 7)。且每10000次飞升使祭品获取量增加1%，最大为100%！',
+    'Reward: 60 AP. 60 Quarks! Gain an ascension gain multiplier based on your score (log10(score) - 7)x for Corruption Score > 100 Million. Gain +1% Offerings per 10,000 ascensions, up to +100%!': '奖励：60成就点数。60夸克！腐化后分数大于100000000时，飞升次数乘以(log10(分数) - 7)。且每10000次飞升使祭品获取量增加1%，最大为100%！',
     'Reward: 60 AP. 60 Quarks! Gain +100 ascension count for all ascensions longer than 10 seconds. Gain +1% Obtainium per 50,000 ascensions, up to +100%!': '奖励：60成就点数。60夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。且每50000次飞升使难得素获取量增加1%，最大为100%！',
     'Reward: 100 AP. 100 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascensions. Gain +0.1% Cubes per 250,000 ascensions, up to +25%!': '奖励：100成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。且每250000次飞升使方盒获取量增加0.1%，最大为25%！',
     'Reward: 40 AP. 40 Quarks! Gain (log10(Constant+1)/4)% more Cubes on ascension!': '奖励：40成就点数。40夸克！飞升时方盒获取数量增加 (log10(数学常数数量+1)/4)% ！',

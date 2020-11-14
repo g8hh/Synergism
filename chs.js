@@ -1442,12 +1442,34 @@ var cnItems = {
     'Ascension Timer Multiplier': '飞升时间倍率',
     'Season pass': '季票',
     'Cube upgrade': '方盒升级',
+    'Ascension Count Achievement': '飞升次数成就',
     'Bought Mortuus Est ants (R': '死神蚁加成(研究',
     'Duplication Spirit Power': '重叠魂灵能量',
     'Constant upgrade': '数学常数升级',
     'Number Achievement 4 Bonus': '第4个数学常数成就奖励',
     'Number Achievement 6 Bonus': '第6个数学常数成就奖励',
+    'Challenge 11 Ach': '挑战11相关成就',
+    'ASCENDED Achievement': '[多次飞升]成就',
+    'Sun & Moon Achievements': '[烈日千阳]及[静月千阴]成就',
+    'Cube Shards': '方盒碎片',
+    'Challenge 15 Reward': '挑战15奖励',
     'TOTAL CUBE MULTIPLIER': '方盒总倍率',
+    'Alchemy Achievement': '炼金术成就',
+    'Diamond Upgrade': '钻石升级',
+    'Particle Upgrade': '粒子升级',
+    'Auto Offering Shop Upgrade': '商店AUTO自动献祭祭品升级',
+    'Offering EX Shop Upgrade': '商店EX额外祭品升级',
+    'Cash Grab Shop Upgrade': '商店昂贵物品升级',
+    'Sacrificium Formicidae': '献祭蚁',
+    'Brutus Cube Blessing': '普路托斯方盒祝福',
+    'Constant Upgrade': '数学常数升级',
+    'Research 6x24,': '研究 6x24，',
+    'Challenge': '挑战',
+    'Cube Upgrade': '方盒升级',
+    'Platonic ALPHA': 'PLATONIC ALPHA升级(第一排最后一个)',
+    'Platonic BETA': 'PLATONIC BETA升级(第二排最后一个)',
+    'Platonic OMEGA': 'PLATONIC OMEGA升级(第三排最后一个)',
+    'You have unlocked all reward types from Challenge 15!': '您解锁了挑战15的所有奖励类型！',
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
     'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
@@ -1469,7 +1491,7 @@ var cnItems = {
     'Gain +(level)^2 /2% more obtainium from all sources!': '难得素获取数量增加(等级^2)/2%！',
     'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed.': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。',
     'T and R challenges don\'t cause resets if retry is enabled and gain up to 10 completions per tick. Addtionally, instantly gain T challenge completions up to highest completed when exiting R challenges.': '只要开启重新尝试挑战，超越和转世挑战将不再重置资源，且每个时刻可以完成10次。另外，在退出转世挑战时，立刻使超越挑战的完成次数达到之前的完成次数上限。',
-    'This is a cash grab but it gives a couple cool stats. +1% production per level to everything, including Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使所有东西的产量增加1%，包括祭品和难得素。',
+    'This is a cash grab but it gives a couple cool stats. +1% production per level to Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使祭品和难得素的产量增加1%。',
     'Each level gives a 1.5x speed multiplier to all Ant tiers\' production! Short and simple.': '每级使蚂蚁速度变为1.5倍！简单有效。',
     'Permanently unlock a Shop talisman! [Warning: you can\'t refund this and this is VERY expensive to level. Be sure you want to buy it!]': '永久解锁一个商店护身符！[警告：您无法重置此项购买，而且升级花费非常高昂。买之前想清楚了！]',
     'Using some amazing trick, you manage to increase your Reincarnation Challenge cap by 2 for each level! [Cannot be Refunded!]': '耍点漂亮的小把戏，每级增加2次转世挑战次数上限！[无法重置此项购买！]',
@@ -1838,6 +1860,7 @@ var cnRegReplace = new Map([
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Wow!$/, '$1/$2 惊奇'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Platonic! Cubes$/, '$1/$2 PLATONIC方盒'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Hepteracts of the Abyss$/, '$1/$2 深渊七阶立方'], //惊奇方盒
+    [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数到达$1。'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化
@@ -1873,9 +1896,9 @@ var cnRegReplace = new Map([
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
     [/^CURRENT Effect: Offering gain \+(.+)%!$/, '当前效果：祭品获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Per 10 seconds, pour (.+) Offerings. \+(.+)% Offerings.$/, '当前效果：每秒最多使符文增加$1级。祭品获取数量增加$2%。'], //商店
-    [/^CURRENT Effect: Obtainium gain \+(.+) %!$/, '当前效果：难得素获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Obtainium gain \+(.+)%!$/, '当前效果：难得素获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain \+(.+)% more Obtainium.$/, '当前效果：每次转生都尝试研究，并且难得素获取数量增加$1%。'], //商店
-    [/^CURRENT Effect: All resources EXCEPT QUARKS increased by (.+)%.$/, '当前效果：除了夸克以外的所有资源获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Obtainium and Offerings increased by (.+)%.$/, '当前效果：难得素和祭品的获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Reincarnation Challenges may be completed an additional (.+) times.$/, '当前效果：转世挑战完成次数上限额外增加$1次。'], //商店
     [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+)M.$/, '当前效果：挑战10的基础目标减少1e$1M。'], //商店
     [/^CURRENT Effect: Ascensions give  \+(.+)% cubes.$/, '当前效果：飞升的方盒获取数量增加$1%。'], //商店

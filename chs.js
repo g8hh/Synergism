@@ -1382,7 +1382,7 @@ var cnItems = {
     'Corruption I: Divisiveness': '腐化 I：分歧',
     'Your multipliers get disintegrated! Is extra devious without also using Maladaption Corruption': '您的加倍器崩坏了！如果与适应不良等级不同，将变得更难',
     'Corruption II: Maladaption': '腐化 II：适应不良',
-    'Insert Cool Text Here.': '此处可以插入有趣的文本。',
+    'Insert Cool Text Here. Is extra devious without also using Divisiveness Corruption. Yin/Yang!': '此处可以插入有趣的文本。如果与分歧等级不同，将变得更难。这就是阴阳相生！',
     'Corruption III: Spacial Dilation': '腐化 III：空间膨胀',
     'Way to go, Albert.': '干得好，阿尔伯特。',
     'Corruption IV: Hyperchallenged': '腐化 IV：极致挑战',

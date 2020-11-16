@@ -1833,13 +1833,13 @@ var cnRegReplace = new Map([
     [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费增加$2级。'], //符文等
     [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文等
     [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品数量：增加$3'], //符文等
-    [/^Cost to buy (.+) Talisman Shard: (.+) Obtainium and (.+) offerings.$/, '购买$1个护身符碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Common Fragment: (.+) Obtainium and (.+) offerings.$/, '购买$1个普通碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Uncommon Fragment: (.+) Obtainium and (.+) offerings.$/, '购买$1个罕见碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Rare Fragment: (.+) Obtainium and (.+) offerings.$/, '购买$1个稀有碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Epic Fragment: (.+) Obtainium and (.+) offerings.$/, '购买$1个史诗碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Legendary Fragment: (.+) Obtainium and (.+) offerings.$/, '购买$1个传奇碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Mythical Fragment: (.+) Obtainium and (.+) offerings.$/, '购买$1个神秘碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Talisman Shards?: (.+) Obtainium and (.+) offerings.$/, '购买$1个护身符碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Common Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个普通碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Uncommon Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个罕见碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Rare Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个稀有碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Epic Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个史诗碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Legendary Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个传奇碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Mythical Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个神秘碎片的花费：$2难得素及$3祭品。'], //符文等
     [/^Gain \+(.+)% Global Speed Acceleration.$/, '全局速度增加$1%。'], //符文等
     [/^Talismans' Bonus Rune Levels \+(.+) per level$/, '护身符的符文额外等级每级多增加$1'], //符文等
     [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战

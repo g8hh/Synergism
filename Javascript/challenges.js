@@ -224,12 +224,12 @@ function challengeDisplay(i, changefocus, automated) {
         d.textContent = "Goal: Complete Challenge 10 [Sadistic Challenge I] " + format(challengeRequirement(i, player.challengecompletions[i])) + " times."
         e.textContent = "+50% Obtainium! Current: "
         f.textContent = "+12% Offerings! Current: "
-        g.textContent = "+1 Cube Blessing per opening! Current: "
+        g.textContent = "+1 Cube Tribute per opening! Current: "
         h.textContent = "Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab."
         k.textContent = "Start <[(No Reincarnation)]>"
         l.textContent = "+" + format(50 * CalcECC('ascension', player.challengecompletions[12])) + "% Obtainium"
         m.textContent = "+" + format(12 * CalcECC('ascension', player.challengecompletions[12])) + "% Offerings"
-        n.textContent = "+" + format(CalcECC('ascension', player.challengecompletions[12])) + " additional Cube Blessings"
+        n.textContent = "+" + format(CalcECC('ascension', player.challengecompletions[12])) + " additional Cube Tributes"
     }
     if (i === 13 && challengefocus === 13) {
         a.textContent = "Tax+++ Challenge || " + player.challengecompletions[13] + "/" + format(maxChallenges) + " Completions"
@@ -321,7 +321,7 @@ function challengeDisplay(i, changefocus, automated) {
         (ella.textContent = "Auto Challenge Sweep [OFF]", ella.style.border = "2px solid red");
 }
 
-function getChallengeConditions() {
+function getChallengeConditions(i) {
     if (player.currentChallenge.reincarnation === 9) {
         rune1level = 1;
         rune2level = 1;
@@ -329,6 +329,13 @@ function getChallengeConditions() {
         rune4level = 1;
         rune5level = 1;
         player.crystalUpgrades = [0, 0, 0, 0, 0, 0, 0, 0]
+    }
+    prestigePointGain = new Decimal('0')
+    if (i >= 6){
+        transcendPointGain = new Decimal('0')
+    }
+    if (i >= 11){
+        reincarnationPointGain = new Decimal('0')
     }
     calculateRuneLevels();
 }

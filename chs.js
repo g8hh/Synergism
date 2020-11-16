@@ -833,7 +833,7 @@ var cnItems = {
     'Ascend and reach the goal but you do not gain Particles and you cannot Reincarnate at all! Ant production ^0.5.': '立即飞升开始挑战，您无法获得粒子，也无法转世！蚂蚁产量^0.5。',
     '50% Obtainium! Current': '50%难得素获取数量！当前效果',
     '12% Offerings! Current': '12%祭品获取数量！当前效果',
-    '1 Cube Blessing per opening! Current': '1打开每个方盒的祝福获取数量！当前效果',
+    '1 Cube Tribute per opening! Current': '1打开每个方盒的贡品获取数量！当前效果',
     'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab.': '解锁15个研究，并且解锁神秘的魂灵能量！在符文选项卡下可以找到它们。',
     'Start <[(No Reincarnation)]>': '开始<[(无转世挑战)]>',
     'Good luck with the IRS, buddy.': '祝您好运，税务局又归来了。',
@@ -1380,7 +1380,7 @@ var cnItems = {
     'Select the trait levels you wish to run with. Choose wisely!': '选择您想要使用的腐化等级。请明智地进行选择！',
     'Don\'t bite off more than you can chew...': '切记，贪多嚼不烂……',
     'Corruption I: Divisiveness': '腐化 I：分歧',
-    'The Ant God\'s found out how to ruin your duplicator!': '蚁神发现了影响加倍的方法！',
+    'Your multipliers get disintegrated! Is extra devious without also using Maladaption Corruption': '您的加倍器崩坏了！如果与适应不良等级不同，将变得更难',
     'Corruption II: Maladaption': '腐化 II：适应不良',
     'Insert Cool Text Here.': '此处可以插入有趣的文本。',
     'Corruption III: Spacial Dilation': '腐化 III：空间膨胀',
@@ -1866,7 +1866,7 @@ var cnRegReplace = new Map([
     [/^No Reincarnation Challenge \|\| (.+)\/(.+) Completions$/, '无转世挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+)% Obtainium$/, '$1%难得素'], //挑战
     [/^(.+)% Offerings$/, '$1%祭品'], //挑战
-    [/^(.+) additional Cube Blessings$/, '$1额外的方盒祝福'], //挑战
+    [/^(.+) additional Cube Tributes$/, '$1额外的方盒贡品'], //挑战
     [/^Tax\+\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '税收激增挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^(.+)% Corruption Tax$/, '$1%腐化税收'], //挑战
     [/^(.+) Talisman Level Cap$/, '$1护身符等级上限'], //挑战

@@ -1738,13 +1738,13 @@ var cnRegReplace = new Map([
     [/^(.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面及建筑
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面及建筑
     [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
-    [/^Prestige when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
+    [/^Prestige when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
     [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面及建筑
     [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
-    [/^Transcend when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
+    [/^Transcend when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
     [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production(.*)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为$3'], //主界面及建筑
     [/^Reincarnate when your Particles can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当粒子为之前的$1倍时转世[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
-    [/^Reincarnate when the timer is at least (.*) seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当时间经过$1秒后转世[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
+    [/^Reincarnate when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后转世[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面及建筑
     [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$2。'], //主界面及建筑
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面及建筑

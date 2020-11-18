@@ -851,7 +851,7 @@ var cnItems = {
     'Unlock 15 Researches, and a way to coalesce your power into the Singularity.': '解锁15个研究，并且解锁将能量与奇点结合的方法。',
     'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
     'The worst sin a man can do is making others suffer.': '折磨他人，是人类最大的原罪。',
-    'Ascend and reach the goal but you\'re FULLY corrupt and must stay that way.': '立即飞升开始挑战，腐化全部为10级，并且无法清除。',
+    'Ascend and reach the goal but you\'re FULLY corrupt and must stay that way.': '立即飞升开始挑战，腐化全部为最大级别，并且无法清除。',
     'Goal: 1e4T Coins, but get bonuses based on your best attempt.': '目标：1e4T金币，根据您在此挑战中的最高金币数量获得奖励。',
     'You have no idea': '你根本不知道',
     'what you have just done': '你做了些什么',

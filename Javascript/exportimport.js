@@ -175,7 +175,7 @@ function promocodes() {
         const amount = window.crypto.getRandomValues(new Uint16Array(1))[0] % 16; // [0, 15]
         const first = window.crypto.getRandomValues(new Uint8Array(1))[0];
         const second = window.crypto.getRandomValues(new Uint8Array(1))[0];
-        const addPrompt = prompt(`What is ${first} + ${second}?`);
+        const addPrompt = prompt(`${first} + ${second} 等于多少？`);
 
         if(first + second === +addPrompt) {
             player.worlds += amount;

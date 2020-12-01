@@ -1939,6 +1939,9 @@ var cnRegReplace = new Map([
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
+    [/^What is (.+) \+ (.+)\?$/, '$1+$2等于多少？'], //每小时奖励代码
+    [/^You were awarded (.+) quarks! Wait an hour to use this code again!$/, '您获得了$1夸克！请在一小时后再来！'], //每小时奖励代码
+    [/^You guessed (.+), but the answer was (.+). Try again in an hour!$/, '您输入的数字为$1，但正确结果是$2。请在一小时后再来！'], //每小时奖励代码
     [/^Fastest Prestige: (.+)ms$/, '最快转生时间：$1毫秒'], //统计数据
     [/^Fastest Transcend: (.+)ms$/, '最快超越时间：$1毫秒'], //统计数据
     [/^Fastest Reincarnation: (.+)ms$/, '最快转世时间：$1毫秒'], //统计数据

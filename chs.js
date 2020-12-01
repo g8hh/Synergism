@@ -1454,6 +1454,7 @@ var cnItems = {
     'Enter a promotion code here!': '点击此处输入奖励代码！',
     'It\'s Spaghetti Time! [Awarded an achievement!!!]': '意面时间！[获得一个成就！！！]',
     'Hey, isn\'t this just a reference to Antimatter Dimensions? Shh. [Awarded an achievement!!!]': '这不是玩的反物质维度的梗吗？切。[获得一个成就！！！]',
+    'You already used this promocode in the last hour!': '距离上次使用此奖励代码未超过1小时！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
     'You\'re playing on v2.1.1 - The Abyss [Last Update: 5:30 PM UTC-8 Nov 13]': '您目前玩的版本为V2.1.1 - 深渊 [更新时间：11月15日西八区下午5:30]',

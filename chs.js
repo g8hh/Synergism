@@ -784,7 +784,6 @@ var cnItems = {
     'Multiply Crystal production by 10! Current': '水晶产量变为10倍！当前效果',
     'Start [Reduced Diamonds]': '开始[钻石减少挑战]',
     'Exponent = ^': '指数变为',
-    'Crystal production': '水晶产量倍率变为',
     'The tax man caught wind that you reincarnated recently...': '据说，您最近在转世……税务官如是说',
     'Reincarnate and reach the goal except tax has a lower cap, and Coin production is divided by 1e250.': '立即转世开始挑战，税收将金币上限限制得更低，并且金币产量将除以1e250。',
     '3.5% Taxes [Multiplicative]! Current': '3.5%税收[效果叠乘]！当前效果',
@@ -1856,6 +1855,7 @@ var cnRegReplace = new Map([
     [/^([e%\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
     [/^Cost\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费增加挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Reduced Diamonds Challenge \|\| (.+)\/(.+) Completions$/, '钻石减少挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^Crystal production(?! is)(.*)$/, '水晶产量倍率变为$1'], //挑战
     [/^Higher Tax Challenge \|\| (.+)\/(.+) Completions$/, '税收增加挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Goal: Gain (.+) Mythos Shards in challenge.$/, '目标：在挑战中达到$1神话碎片。'], //挑战
     [/^(.+)% Prestige-based Offerings$/, '$1%转生相关的祭品数量'], //挑战

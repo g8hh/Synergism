@@ -1970,7 +1970,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Offering gain \+(.+)%!$/, '当前效果：祭品获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Per 10 seconds, pour (.+) Offerings. \+(.+)% Offerings.$/, '当前效果：每秒最多使符文增加$1级。祭品获取数量增加$2%。'], //商店
     [/^CURRENT Effect: Obtainium gain \+(.+)%!$/, '当前效果：难得素获取数量增加$1%。'], //商店
-    [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain \+(.+)% more Obtainium.$/, '当前效果：每次转生都尝试研究，并且难得素获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain \+(.+)% more Obtainium.$/, '当前效果：每次转世都尝试研究，并且难得素获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Obtainium and Offerings increased by (.+)%.$/, '当前效果：难得素和祭品的获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Reincarnation Challenges may be completed an additional (.+) times.$/, '当前效果：转世挑战完成次数上限额外增加$1次。'], //商店
     [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+)M.$/, '当前效果：挑战10的基础目标减少1e$1M。'], //商店

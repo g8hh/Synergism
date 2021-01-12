@@ -561,9 +561,9 @@ function calculateRuneBonuses() {
     spiritMultiplier = 1
 
     blessingMultiplier *= (1 + 6.9 * player.researches[134] / 100)
-    blessingMultiplier *= (1 + player.talismanRarity[3] / 10)
+    blessingMultiplier *= (1 + (player.talismanRarity[3] - 1) / 10)
     blessingMultiplier *= (1 + 0.10 * Math.log(player.epicFragments + 1) / Math.log(10) * player.researches[174])
-    blessingMultiplier *= (1 + player.researches[194] / 100)
+    blessingMultiplier *= (1 + 2 * player.researches[194] / 100)
     if (player.researches[160] > 0) {
         blessingMultiplier *= Math.pow(1.25, 8)
     }
@@ -571,8 +571,9 @@ function calculateRuneBonuses() {
     if (player.researches[165] > 0 && player.currentChallenge.ascension !== 0) {
         spiritMultiplier *= Math.pow(2, 8)
     }
-    spiritMultiplier *= (1 + 0.15 * Math.log(player.legendaryFragments + 1) / Math.log(10))
+    spiritMultiplier *= (1 + 0.15 * Math.log(player.legendaryFragments + 1) / Math.log(10) * player.researches[189])
     spiritMultiplier *= (1 + 2 * player.researches[194] / 100)
+    spiritMultiplier *= (1 + (player.talismanRarity[5] - 1) / 100)
 
     for (let i = 1; i <= 5; i++) {
         runeBlessings[i] = blessingMultiplier * player.runelevels[i - 1] * player.runeBlessingLevels[i]
@@ -766,7 +767,7 @@ function calculateOffline(forceTime) {
     timeWarp = true;
 
     //Variable Declarations i guess
-    let maximumTimer = 86400 + 7200 * player.researches[31] + 7200 + player.researches[32];
+    let maximumTimer = 86400 + 7200 * player.researches[31] + 7200 * player.researches[32];
     const updatedTime = Date.now();
     let timeAdd = Math.min(maximumTimer, Math.max(forceTime, (updatedTime - player.offlinetick) / 1000))
     document.getElementById("offlineTimer").textContent = "You have " + format(timeAdd, 0) + " real-life seconds of Offline Progress!";
@@ -1135,7 +1136,7 @@ function CalcCorruptionStuff() {
     }
     platonicGain *= platonicBonusMultiplier[3]
     platonicGain *= (challenge15Rewards.cube1 * challenge15Rewards.cube2 * challenge15Rewards.cube3 * challenge15Rewards.cube4)
-    platonicGain *= (1 + player.achievements[223] * Math.min(0.25, player.ascensionCount / 1.337e9))
+    platonicGain *= (1 + player.achievements[223] * Math.min(2, player.ascensionCount / 1.337e9))
     platonicGain *= (1 + 4 / 100 * (player.achievements[219] + player.achievements[220] + player.achievements[221]) + 3 / 100 * player.achievements[222])
     platonicGain *= (1 + player.achievements[196] * 1 / 5000 * Decimal.log(player.ascendShards.add(1), 10))
     platonicGain *= (1 + player.achievements[240] * Math.max(0.1, 1 / 20 * Math.log(speed + 0.01) / Math.log(10)))

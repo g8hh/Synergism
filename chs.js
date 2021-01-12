@@ -1557,7 +1557,7 @@ var cnItems = {
     'Gain +(level)^2 /4% more offerings from all sources!': '祭品获取数量增加(等级^2)/4%！',
     'Automatically pour Offerings into a rune. 1st level unlocks feature, and each level increases Offering gain by 2%. Every second, 2^(Level) levels worth of offerings are spent. [First Level Cannot be refunded!]': '自动献祭祭品至符文中。第一级解锁特性，之后的每一级使祭品获取数量增加2%。只要祭品足够，每秒最多献祭祭品使符文增加2^(等级)的等级。[无法重置此项的第一级购买！]',
     'Gain +(level)^2 /2% more obtainium from all sources!': '难得素获取数量增加(等级^2)/2%！',
-    'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed. [First Level Cannot be refunded!]': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。[无法重置此项的第一级购买！]',
+    'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed. [First Level Cannot be Refunded!]': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。[无法重置此项的第一级购买！]',
     'T and R challenges don\'t cause resets if retry is enabled and gain up to 10 completions per tick. Addtionally, instantly gain T challenge completions up to highest completed when exiting R challenges. [Cannot be Refunded!]': '只要开启重新尝试挑战，超越和转世挑战将不再重置资源，且每个时刻可以完成10次。另外，在退出转世挑战时，立刻使超越挑战的完成次数达到之前的完成次数上限。[无法重置此项购买！]',
     'This is a cash grab but it gives a couple cool stats. +1% production per level to Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使祭品和难得素的产量增加1%。',
     'Each level gives a 1.5x speed multiplier to all Ant tiers\' production! Short and simple.': '每级使蚂蚁速度变为1.5倍！简单有效。',

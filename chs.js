@@ -511,7 +511,7 @@ var cnItems = {
     'Spirit III: Level your Speed Spirit to 1 Trillion.': '魂灵 III：将加速符文的魂灵等级提升到一万亿。',
     'Three-folded: [Hint: you may want to look into the inception]': '三次折扣：[提示：想想一路走来，有什么刚好可以三重叠加的]',
     'Seeing red: [Hint: you may need a lot of red items]': '红色危机：[提示：这个游戏中，有什么资源基本全是红色的，当然不是说什么立方，您需要很多那种资源，有多少？应该不是1后面跟25个0啥的了]',
-    'ASCENDED: [Hint: you may need a LOT of ascensions OR an particularly amazing ascension]': '多次飞升：[提示：在之前飞升成就的基础上，再多一位，至于是哪一位？肯定跟根号2没关系的]',
+    'ASCENDED: [Hint: you may need a LOT of ascensions OR a particularly amazing ascension]': '多次飞升：[提示：在之前飞升成就的基础上，再多一位，至于是哪一位？肯定跟根号2没关系的]',
     'Aesop: [Hint: you gotta be pretty dang slow]': '伊索：[提示：想想哪个腐化会减慢速度，不要低于6级]',
     'Aesop\'s Revenge: [Hint: you gotta be pretty dang fast]': '伊索的复仇：[提示：与上个成就相反，速度的倍率需要大于一个数字，当然不是大于1小时的秒数]',
     'Unsmith: [Hint: unsmith emoji :unsmith: can be a pretty good input]': '面无表情：[提示：奖励代码输入 :unsmith: ]',

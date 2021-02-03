@@ -1835,7 +1835,7 @@ var cnRegReplace = new Map([
     [/^Tesseract building production(.*)$/, '超立方建筑产量$1'], //升级
     [/^Offering gain is increased based on highest ever unspent obtainium \[Max: 30,000,000 obtainium\]$/, '根据最大持有的难得素数量增加祭品获取数量。[难得素数量效果上限：30000000]'], //升级，前置
     [/^Offering gain(.*)$/, '祭品获取数量$1'], //升级
-    [/^Obtainium gain from Reincarnations is multiplied \(1 + 2C\) where C is #Reincarnation Challenges completed, up to 50x!$/, '转世的难得素获取数量变为 (1+2C) 倍，上限为50倍，C为转世挑战完成次数！'], //升级，前置
+    [/^Obtainium gain from Reincarnations is multiplied \(1 \+ 2C\) where C is #Reincarnation Challenges completed, up to 50x!$/, '转世的难得素获取数量变为 (1+2C) 倍，上限为50倍，C为转世挑战完成次数！'], //升级，前置
     [/^Obtainium gain is increased based on highest ever unspent offerings. \[Max: 100,000 unspent\]$/, '根据最大持有的祭品数量增加难得素获取数量。[祭品数量效果上限：100000]'], //升级，前置
     [/^Obtainium gain(.*)$/, '难得素获取数量$1'], //升级
     [/^(.+) free Ant Levels$/, '$1免费蚂蚁等级'], //升级

@@ -231,7 +231,6 @@ var cnItems = {
     'When bought, rune effectiveness is increased by Log4(Talisman Shards +1) ': '(译者注：注意，与升级等级无关)购买后，符文效果增加 log4(护身符碎片 +1)',
     'When bought, gain Log4(Constant + 1)% more Wow! Cubes and Tesseracts on ascension.': '(译者注：注意，与升级等级无关)购买后，飞升的惊奇方盒和惊奇超立方获取数量增加 log4(数学常数数量 + 1)%',
     'Rune EXP': '符文经验',
-    'Effect: Mint Production x1e100 (Duh': '效果：铸币厂产量 x1e100 (废话',
     'Effect: +1 Accelerator Boost.': '效果：增加1个加速器加成。',
     'Effect: Thank you for getting the server above 30 boosts!': '效果：感谢您让服务器助力超过了30！',
     'Effect: It\'s kinda self-evident, ain\'t it?': '效果：明摆着的效果，不是么？',
@@ -1790,7 +1789,8 @@ var cnRegReplace = new Map([
     [/^Effect: Worker Production(.*)$/, '效果：工人产量$1'], //升级
     [/^Effect: Investment Production(.*)$/, '效果：投资产量$1'], //升级
     [/^Effect: Printer Production(.*)$/, '效果：打印机产量$1'], //升级
-    [/^Effect: Mint Production(.*)(?<!Duh)$/, '效果：铸币厂产量$1'], //升级
+    [/^Effect: Mint Production x1e100 \(Duh$/, '效果：铸币厂产量 x1e100 (废话'], //升级，前置
+    [/^Effect: Mint Production(.*)$/, '效果：铸币厂产量$1'], //升级
     [/^Effect: Alchemy Production(.*)$/, '效果：炼金术产量$1'], //升级
     [/^Effect: All Coin production(.*)$/, '效果：所有金币产量$1'], //升级
     [/^Effect: Gain (.+) free multipliers from bought Alchemies.$/, '效果：根据已购买的炼金术数量获得$1个免费加倍器。'], //升级

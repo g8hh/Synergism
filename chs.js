@@ -1470,7 +1470,6 @@ var cnItems = {
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
     'You\'re playing on GITHUB v2.1.2 - The Abyss [Last Update: 5:00 UTC-8 11-Jan-2021]. This version is NOT on Kongregate!': '您目前玩的版本为GITHUB V2.1.2 - 深渊 [更新时间：2021年1月11日西八区5:00]。此版本未在Kongregate上推出！',
     'Event Status': '活动状态',
-    'ACTIVE UNTIL 02/28/2021 23:59:59': '活动持续到2021年2月28日 23:59:59',
     '2.5x Ascension Rewards, 1.5x Global Speed, 3x Quark Gain Speed and Caps!': '飞升奖励变为2.5倍，全局速度变为1.5倍，导出夸克的获取速度和上限变为3倍！',
     'Game saved successfully!': '游戏已保存！',
     'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
@@ -1747,8 +1746,9 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^(.+)s until next export Quark. \[(.+) s\/Quark\]$/, '距离下次增加导出奖励夸克还有$1秒[每$2秒获得一次夸克]'], //主脚本
-    [/^Quarks on export: (\d+) \[Max (\d+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
+    [/^(.+)s until next export Quark. \[(.+) s\/Quark\]$/, '距离增加导出奖励夸克还有$1秒[每$2秒增加一次]'], //主脚本
+    [/^Quarks on export: (\d+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
+    [/^ACTIVE UNTIL Sun Feb 28 2021 23:59:59 GMT+0800 \((.+)$/, '活动持续到2021年2月28日 23:59:59 东八区 ($1'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
     [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑

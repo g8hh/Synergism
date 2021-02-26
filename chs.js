@@ -1583,6 +1583,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
+    "ACTIVE UNTIL Sun Feb 28 2021 23:59:59 GMT+0800 (": "活动持续到2021年2月28日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑
@@ -1748,7 +1749,6 @@ var cnExcludePostfix = [
 var cnRegReplace = new Map([
     [/^(.+)s until next export Quark. \[(.+) s\/Quark\]$/, '距离增加导出奖励夸克还有$1秒[每$2秒增加一次]'], //主脚本
     [/^Quarks on export: (\d+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
-    [/^ACTIVE UNTIL Sun Feb 28 2021 23:59:59 GMT+0800 \((.+)$/, '活动持续到2021年2月28日 23:59:59 东八区 ($1'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
     [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑

@@ -1585,7 +1585,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sun Feb 28 2021 23:59:59 GMT+0800 (": "活动持续到2021年2月28日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Mon Mar 01 2021 23:59:59 GMT+0800 (": "活动持续到2021年3月1日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

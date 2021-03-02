@@ -1472,6 +1472,7 @@ var cnItems = {
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
     'You\'re playing on Github v2.1.2 - The Abyss [Last Update: 11:30P UTC-8 27-Feb-2021].': '您目前玩的版本为Github V2.1.2 - 深渊 [更新时间：2021年2月27日西八区23:30]。',
     'Event Status': '活动状态',
+    'INACTIVE': '暂无活动',
     '2.5x Ascension Rewards, 1.5x Global Speed, 3x Quark Gain Speed and Caps!': '飞升奖励变为2.5倍，全局速度变为1.5倍，导出夸克的获取速度和上限变为3倍！',
     'Game saved successfully!': '游戏已保存！',
     'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',

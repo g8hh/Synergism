@@ -1470,7 +1470,7 @@ var cnItems = {
     'You already used this promocode in the last hour!': '距离上次使用此奖励代码未超过1小时！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
-    'You\'re playing on Github v2.1.2 - The Abyss [Last Update: 11:30P UTC-8 27-Feb-2021].': '您目前玩的版本为Github V2.1.2 - 深渊 [更新时间：2021年2月27日西八区23:30]。',
+    'You\'re playing on Github v2.1.2 - The Abyss [Last Update: 01:00 UTC-5 01-Apr-2021].': '您目前玩的版本为Github V2.1.2 - 深渊 [更新时间：2021年4月1日西五区01:00]。',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
     '2.5x Ascension Rewards, 1.5x Global Speed, 3x Quark Gain Speed and Caps!': '飞升奖励变为2.5倍，全局速度变为1.5倍，导出夸克的获取速度和上限变为3倍！',

@@ -1473,7 +1473,7 @@ var cnItems = {
     'You\'re playing on Github v2.1.2 - The Abyss [Last Update: 01:00 UTC-5 01-Apr-2021].': '您目前玩的版本为Github V2.1.2 - 深渊 [更新时间：2021年4月1日西五区01:00]。',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    '2.5x Ascension Rewards, 1.5x Global Speed, 3x Quark Gain Speed and Caps!': '飞升奖励变为2.5倍，全局速度变为1.5倍，导出夸克的获取速度和上限变为3倍！',
+    '2x Global Speed, 3x Offerings, 2.021x All Cube Gain, Triple Export Quark Gain and Caps!': '全局速度变为2倍，祭品获取数量变为3倍，所有类型方盒的获取数量变为2.021倍，导出夸克的获取速度和上限变为3倍！',
     'Game saved successfully!': '游戏已保存！',
     'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
     'People who helped with art/design: Omsi, Alberan, Blank, Sneekxy, Marblerunner64, Q00u, Cryptogrounds (splash screen), Buksss, illyria, Kiboy, Sean, Hexy': '帮忙美术方面的朋友们：Omsi，Alberan，Blank，Sneekxy，Marblerunner64，Q00u，Cryptogrounds (启动画面)，Buksss，illyria，Kiboy，Sean，Hexy',
@@ -1586,7 +1586,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Mon Mar 01 2021 23:59:59 GMT+0800 (": "活动持续到2021年3月1日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Tue May 04 2021 23:59:59 GMT+0800 (": "活动持续到2021年5月4日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

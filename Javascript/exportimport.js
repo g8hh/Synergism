@@ -106,12 +106,9 @@ function importSynergism(input) {
     const d = LZString.decompressFromBase64(input);
     const f = d ? JSON.parse(d) : JSON.parse(atob(input));
     if (f.exporttest === "YES!") {
-        intervalHold.forEach(clearInt);
-        intervalHold.length = 0;
         localStorage.setItem('Synergysave2', btoa(JSON.stringify(f)));
-        constantIntervals();
-        createTimer();
-        loadSynergy();
+        
+        return reloadShit();
     }
 }
 
@@ -200,7 +197,6 @@ function promocodes() {
         el.textContent = "Happy Event #1! Gained 1,000 Quarks, 24 hours of Quark Timer and 24 hours of Ascension Timer!"
     } else if (
         date.getMonth() === 4 && // 0-based; May
-        date.getDate() === 1 &&
         input === 'anniversary' && 
         !player.codes.get(33)
     ) {

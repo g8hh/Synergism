@@ -230,7 +230,6 @@ var cnItems = {
     'Increase the rune EXP given by offerings by 10% per level [Additive]': '每级使祭品提供的符文经验值增加10%[相互叠加]',
     'When bought, rune effectiveness is increased by Log4(Talisman Shards +1) ': '(译者注：注意，与升级等级无关)购买后，符文效果增加 log4(护身符碎片 +1)',
     'When bought, gain Log4(Constant + 1)% more Wow! Cubes and Tesseracts on ascension.': '(译者注：注意，与升级等级无关)购买后，飞升的惊奇方盒和惊奇超立方获取数量增加 log4(数学常数数量 + 1)%',
-    'Rune EXP': '符文经验',
     'Effect: +1 Accelerator Boost.': '效果：增加1个加速器加成。',
     'Effect: Thank you for getting the server above 30 boosts!': '效果：感谢您让服务器助力超过了30！',
     'Effect: It\'s kinda self-evident, ain\'t it?': '效果：明摆着的效果，不是么？',
@@ -1470,7 +1469,7 @@ var cnItems = {
     'You already used this promocode in the last hour!': '距离上次使用此奖励代码未超过1小时！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
-    'You\'re playing on Github v2.1.2 - The Abyss [Last Update: 01:00 UTC-5 01-Apr-2021].': '您目前玩的版本为Github V2.1.2 - 深渊 [更新时间：2021年4月1日西五区01:00]。',
+    'You\'re playing on Github v2.1.2 - The Abyss [05-May-2021 (Blame Platonic for breakage)].': '您目前玩的版本为Github V2.1.2 - 深渊 [2021年5月5日更新(强烈谴责Platonic就这么鸽了)]。',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
     '2x Global Speed, 3x Offerings, 2.021x All Cube Gain, Triple Export Quark Gain and Caps!': '全局速度变为2倍，祭品获取数量变为3倍，所有类型方盒的获取数量变为2.021倍，导出夸克的获取速度和上限变为3倍！',
@@ -1848,6 +1847,7 @@ var cnRegReplace = new Map([
     [/^Ant Speed x\(1e5\)\^completions! Current$/, '蚂蚁速度每完成1次变为1e5倍！当前效果'], //挑战，前置
     [/^Ant Speed (.+)$/, '蚂蚁速度$1'], //升级
     [/^(.+) free Rune Levels, \+(.+) to Rune Cap$/, '$1免费符文等级，+$2符文等级上限'], //升级
+    [/^Rune EXP(.*)$/, '符文经验$1'], //升级
     [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就

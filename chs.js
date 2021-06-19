@@ -1162,6 +1162,7 @@ var cnItems = {
     'Upgrade Multiplier': '升级倍率',
     'Time Multiplier': '时间倍率',
     'Reset Anthill features for': '重置蚁丘可获得(下方 分 指强度分)',
+    'This resets your Crumbs, Ants and Ant Upgrades in exchange for some multiplier and resources. Continue?': '这么做将重置银河碎屑，蚂蚁以及蚂蚁升级，但可以获得更高的倍率和一些其他资源。您确定要继续吗？',
     //蚂蚁结束
 
     //惊奇方盒

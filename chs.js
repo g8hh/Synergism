@@ -894,7 +894,6 @@ var cnItems = {
     'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
     'The worst sin a man can do is making others suffer.': '折磨他人，是人类最大的原罪。',
     'Ascend and reach the goal but you\'re FULLY corrupt and must stay that way.': '立即飞升开始挑战，腐化全部为最大级别，并且无法清除。',
-    'Goal: 1e4T Coins, but get bonuses based on your best attempt.': '目标：1e4T金币，根据您在此挑战中的最高金币数量获得奖励。',
     'You have no idea': '你根本不知道',
     'what you have just done': '你做了些什么',
     'the ant god shakes their mighty head': '蚁神摇着巨大的脑袋如是说',
@@ -2046,6 +2045,7 @@ var cnRegReplace = new Map([
     [/^(.+)% Power$/, '$1%效果'], //挑战
     [/^(.+) per Tick$/, '$1个研究于每次自动购买'], //挑战
     [/^SADISTIC CHALLENGE II \|\| (.+)\/(.+) Completions$/, '虐待狂挑战 II || 完成$1次，次数上限为$2'], //挑战
+    [/^Goal: (.+) Coins, but get bonuses based on your best attempt.$/, '目标：$1金币，根据您在此挑战中的最高金币数量获得奖励。'], //挑战
     [/^Gain (.+) Quarks for completing this challenge \[First Time Bonus\]!$/, '完成挑战后可以获得$1夸克[首次完成奖励]！'], //挑战
     [/^Completing the challenge adds (.+) to Ascension Bank and increase base Score by (.+).$/, '完成挑战后飞升库增加$1个惊奇方盒，飞升基础分数增加$2。'], //挑战
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
@@ -2092,8 +2092,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Obtainium gain \^$/, '本次飞升，此腐化等级为$1。效果为：难得素获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Obtainium gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：难得素获取数量指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Diamond gain \^$/, '本次飞升，此腐化等级为$1。效果为：水晶获取数量指数变为'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：水晶获取数量指数变为'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Diamond gain \^(.*)$/, '本次飞升，此腐化等级为$1。效果为：水晶获取数量指数变为$2'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：水晶获取数量指数变为$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Ant Production \^$/, '本次飞升，此腐化等级为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Ant Production \^$/, '下次飞升，此腐化等级将变为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以$2'], //腐化

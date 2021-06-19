@@ -764,9 +764,10 @@ var cnItems = {
     //挑战
     'Is the base game too easy? Try these situations! [Click the icons to view challenge details!]': '正常游戏是不是已经让您觉得太简单了？试试这些吧！[点击图标以查看挑战详情！]',
     'Mode: OFF': '模式：关闭',
-    'Mode: START': '模式：开始',
-    'Mode: ENTER': '模式：进入',
-    'Mode: EXIT': '模式：退出',
+    'MODE: OFF': '模式：关闭',
+    'MODE: START': '模式：开始',
+    'MODE: ENTER': '模式：进入',
+    'MODE: EXIT': '模式：退出',
     'Per Completion Bonuses': '每次完成奖励',
     'Bonus/Unlock for First Completion': '首次完成奖励',
     '|| Softcapped past 100! Effective completion count': '|| 超过100次以后效果下降！有效的完成次数为',
@@ -897,6 +898,8 @@ var cnItems = {
     //挑战结束
 
     //研究
+    'Upgrade: 1 Level': '升级：1级',
+    'Upgrade: MAX [if possible]': '升级：最大[尽可能]',
     '[1x1] Increase the number of free Accelerators gained by 20% from all sources.': '[1x1]免费加速器数量增加20%。',
     '[1x2] Increase the number of free Multipliers gained by 20% from all sources.': '[1x2]免费加倍器数量增加20%。',
     '[1x3] Increase the number of free Accelerator Boosts gained by 20% from all sources.': '[1x3]免费加速器加成数量增加20%。',
@@ -1098,8 +1101,7 @@ var cnItems = {
     '[8x24] +10% faster Tesseract Buildings / level. THE ARISEN. WITH THE PRAISE OF THE SINGULARITY.': '[8x24]每级使超立方建筑的产量增加10%。它觉醒了。赞美奇点。',
     '[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants.': '[8x25]获得烈日千阳的力量！每级使加速器、加速器加成、加倍器、祭品获取数量增加0.01%，方盒获取数量增加0.004%，符文等级上限增加0.04，另外，护身符等级上限增加 此研究等级/400，数字向下取整，免费蚂蚁等级增加 此研究等级/200，数字向下取整。',
     'Hover over the grid to get details about researches!': '将鼠标停在网格上可获得有关研究的详情！',
-    'Upgrade: 1 Level': '升级：1级',
-    'Upgrade: MAX [if possible]': '升级：最大[尽可能]',
+    '[LOCKED - Buy Research 3x11]': '[未解锁 - 请先购买研究3x11]',
     'Welcome to the future! Obtainium is gained through': '欢迎来到研究！难得素可以通过',
     ' Reincarnations': '转世',
     '. I\'d recommend studying the': '获得。我个人建议优先研究',
@@ -1939,7 +1941,7 @@ var cnRegReplace = new Map([
     [/^Completing the challenge adds (.+) to Ascension Bank and increase base Score by (.+).$/, '完成挑战后飞升库增加$1个惊奇方盒，飞升基础分数增加$2。'], //挑战
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
     [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
-    [/^Cost: (.*) Obtainium \[\+(.+) Levels\]$/, '花费：$1难得素[可提升$2级]'], //研究
+    [/^ Cost: (.*) Obtainium \[\+(.+) Levels\]$/, '花费：$1难得素[可提升$2级]'], //研究
     [/^CURRENT EFFECT: ALL Ants work at (.+)x speed.$/, '当前效果：所有蚂蚁工作速度变为$1倍。'], //蚂蚁
     [/^CURRENT EFFECT: Crumb --> Coin exponent is \^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
     [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁

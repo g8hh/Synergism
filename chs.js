@@ -2119,6 +2119,20 @@ var cnRegReplace = new Map([
     [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
     [/^Inventory: (.+)\/(.*)$/, '库存：$1 /$2'], //惊奇方盒
     [/^Current Effect: Ascension Speed \+(.*)$/, '当前效果：飞升的速度增加$1'], //惊奇方盒
+    [/^Current Effect: Hypercubes \+(.*)$/, '当前效果：五阶立方获取数量增加$1'], //惊奇方盒
+    [/^Current Effect: Quarks \+(.*)$/, '当前效果：夸克获取数量增加$1'], //惊奇方盒
+    [/^Current Effect: C15 Exponent \+(.*)$/, '当前效果：挑战15的指数获取数量增加$1'], //惊奇方盒
+    [/^Current Effect: Uncorruptable Accelerators \+(.*)$/, '当前效果：不受腐化影响的加速器数量增加$1'], //惊奇方盒
+    [/^Current Effect: Uncorruptable Accelerator Boosts \+(.*)$/, '当前效果：不受腐化影响的加速器加成数量增加$1'], //惊奇方盒
+    [/^Current Effect: Uncorruptable Multipliers \+(.*)$/, '当前效果：不受腐化影响的加倍器数量增加$1'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e115 Obtainium \[WIP\]$/, '锻造一个将消耗$1七阶立方及1e115难得素[暂定]'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e80 Offerings.$/, '锻造一个将消耗$1七阶立方及1e80祭品。'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 100 Quarks.$/, '锻造一个将消耗$1七阶立方及100夸克。'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts, 1e11 Platonic Cubes and 1e22 Cubes.$/, '锻造一个将消耗$1七阶立方，1e11 PLATONIC方盒及1e22惊奇方盒。'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 69 Wow! Cubes \(lol$/, '锻造一个将消耗$1七阶立方及69惊奇方盒(笑'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e14 Wow! Tesseracts$/, '锻造一个将消耗$1七阶立方及1e14惊奇超立方'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e10 Hypercubes$/, '锻造一个将消耗$1七阶立方及1e10惊奇五阶立方'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e130 Obtainium$/, '锻造一个将消耗$1七阶立方及1e130难得素'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化

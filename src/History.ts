@@ -130,48 +130,48 @@ const historyGains: Record<
     offerings: {
         img: "Pictures/Offering.png", 
         formatter: formatDecimalSource,
-        imgTitle: "Offerings"
+        imgTitle: "祭品"
     },
     obtainium: {
         img: "Pictures/Obtainium.png", 
         formatter: formatDecimalSource,
-        imgTitle: "Obtainium"
+        imgTitle: "难得素"
     },
     particles: {
         img: "Pictures/Particle.png",
         formatter: formatDecimalSource,
-        imgTitle: "Particles"
+        imgTitle: "粒子"
     },
     diamonds: {
         img: "Pictures/Diamond.png",
         formatter: formatDecimalSource,
-        imgTitle: "Diamonds"
+        imgTitle: "钻石"
     },
     mythos: {
         img: "Pictures/Mythos.png",
         formatter: formatDecimalSource,
-        imgTitle: "Mythos"
+        imgTitle: "神话"
     },
     wowTesseracts: {
         img: "Pictures/WowTessaract.png",
         formatter: conditionalFormatPerSecond,
-        imgTitle: "Wow! Tesseracts"
+        imgTitle: "惊奇超立方"
     },
     wowHypercubes: {
         img: "Pictures/WowHypercube.png",
         formatter: conditionalFormatPerSecond,
-        imgTitle: "Wow! Hypercubes",
+        imgTitle: "惊奇五阶立方",
         onlyif: () => player.challengecompletions[13] > 0
     },
     wowCubes: {
         img: "Pictures/WowCube.png",
         formatter: conditionalFormatPerSecond,
-        imgTitle: "Wow! Cubes"
+        imgTitle: "惊奇方盒"
     },
     wowPlatonicCubes: {
         img: "Pictures/Platonic Cube.png",
         formatter: conditionalFormatPerSecond,
-        imgTitle: "Platonic Cubes",
+        imgTitle: "PLATONIC方盒",
         onlyif: () => player.challengecompletions[14] > 0,
     },
 };
@@ -213,15 +213,15 @@ const resetHistoryCorruptionImages = [
 ];
 
 const resetHistoryCorruptionTitles = [
-    "Divisiveness [Multipliers]",
-    "Maladaption [Accelerators]",
-    "Spacial Dilation [Time]",
-    "Hyperchallenged [Challenge Requirements]",
-    "Scientific Illiteracy [Obtainium]",
-    "Market Deflation [Diamonds]",
-    "Extinction [Ants]",
-    "Drought [Offering EXP]",
-    "Financial Recession [Coins]"
+    "腐化：分歧[加倍器]",
+    "腐化：适应不良[加速器]",
+    "腐化：空间膨胀[时间速度]",
+    "腐化：极致挑战[挑战需求]",
+    "腐化：科盲[难得素]",
+    "腐化：市场通缩[钻石]",
+    "腐化：灭绝[蚂蚁]",
+    "腐化：干旱[祭品经验值]",
+    "腐化：经济衰退[金币]"
 ];
 
 // A formatting aid that removes the mantissa from a formatted string. Converts "2.5e1000" to "e1000".
@@ -295,13 +295,13 @@ const resetHistoryRenderRow = (
         const newMulti = antSacrificePointsToMultiplier(data.antSacrificePointsAfter);
         const diff = newMulti - oldMulti;
         extra.push(
-            `<span title="Ant Multiplier: ${format(oldMulti, 3, false)}--&gt;${format(newMulti, 3, false)}"><img src="Pictures/Multiplier.png" alt="Ant Multiplier">+${format(diff, 3, false)}</span>`,
-            `<span title="+${formatDecimalSource(data.crumbsPerSecond)} crumbs/s"><img src="Pictures/GalacticCrumbs.png" alt="Crumbs">${extractStringExponent(formatDecimalSource(data.crumbs))}</span>`,
-            `<span title="${format(data.baseELO)} base"><img src="Pictures/Transparent Pics/ELO.png" alt="ELO">${format(data.effectiveELO)}</span>`
+            `<span title="蚂蚁倍率：${format(oldMulti, 3, false)}--&gt;${format(newMulti, 3, false)}"><img src="Pictures/Multiplier.png" alt="Ant Multiplier">+${format(diff, 3, false)}</span>`,
+            `<span title="每秒增加${formatDecimalSource(data.crumbsPerSecond)}银河碎屑"><img src="Pictures/GalacticCrumbs.png" alt="Crumbs">${extractStringExponent(formatDecimalSource(data.crumbs))}</span>`,
+            `<span title="基础值为${format(data.baseELO)}"><img src="Pictures/Transparent Pics/ELO.png" alt="ELO">${format(data.effectiveELO)}</span>`
         );
     } else if (data.kind === "ascend") {
         extra.push(
-            `<img alt="C10" src="Pictures/Transparent Pics/ChallengeTen.png" title="Challenge 10 completions">${data.c10Completions}`
+            `<img alt="C10" src="Pictures/Transparent Pics/ChallengeTen.png" title="挑战10完成次数">${data.c10Completions}`
         );
 
         const corruptions = resetHistoryFormatCorruptions(data);

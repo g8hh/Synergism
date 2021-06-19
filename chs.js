@@ -1944,7 +1944,7 @@ var cnRegReplace = new Map([
     [/^Reward: 40 AP. 200 Quarks! Gain (.*)% more Cubes on ascension!$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量增加$1%！'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限25000%]。'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限2000%]。'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% [Max: 200% at 1B Ascensions]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000次飞升时达到上限：200%]'], //成就
+    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000次飞升时达到上限：200%]'], //成就
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

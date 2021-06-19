@@ -1173,7 +1173,7 @@ var cnItems = {
     'Cube Upgrades': '方盒升级',
     'Challenge 15/Platonic Upgrades': '挑战15/PLATONIC方盒升级',
     'Hepteract Forge': '七阶立方的锻炉',
-    '=- Time Until Daily Refill -=-': '=- 直到每日重置的时间 -=-',
+    '=- Time Until Daily Refill -=-': '=- 离每日重置剩余时间 -=-',
     'Quarks gained from Cubes': '从方盒获取的夸克数量',
     'Open': '开启',
     ' cubes for next quark.': '个方盒后可获取下一个夸克。',
@@ -1481,6 +1481,12 @@ var cnItems = {
     'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerators per \'Way too many accelerators\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器可以使不受腐化影响的加速器数量增加0.03%。',
     'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerator Boosts per \'Way too many accelerator boosts\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器加成可以使不受腐化影响的加速器加成数量增加0.03%。',
     'Haha, stupid Corruptions. +0.03% Uncorruptable Multipliers per \'Way too many multipliers\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加倍器可以使不受腐化影响的加倍器数量增加0.03%。',
+    'You can amalgamate Overflux Orbs here. [NOTE: these expire at the end of your current day]': '您可以在此处融合出超通量珠。[注意：所有超通量珠将在当天后粉碎]',
+    'Sorry, but you need 25 powder to operate the warp machine.': '抱歉，您需要25超通量粉才可以进行时空跃迁。',
+    'Sorry, but this machine is on cooldown.': '抱歉，机器目前还无法使用。',
+    'You stumble upon a mysterious machine. A note attached says that you can reset daily Cube openings for 25 Powder. However it only works once each real life day. You in?': '您偶然发现了一台神秘的机器。上面附着一张说明，您可以使用25超通量粉来重置当天开启方盒及立方获得的夸克计数。但现实时间一天只能使用一次。您要使用它吗？',
+    'You walk away from the machine, powder intact.': '您离开了那台机器，超通量粉分毫未少。',
+    'Upon using the machine, your cubes feel just a little more rewarding. Daily cube opening counts have been reset! [-25 Powder]': '使用机器后，当天开启方盒及立方获得的夸克计数被重置了！[消耗25超通量粉]',
     'Congratulations. You have unlocked the ability to craft Hepteract of Challenge in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·挑战了！',
     'Congratulations. You have unlocked the ability to craft Hepteract of The Abyssal in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·深渊了！',
     'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Accelerator in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
@@ -2111,6 +2117,8 @@ var cnRegReplace = new Map([
     [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数到达$1。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
     [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
+    [/^Inventory: (.+)\/(.*)$/, '库存：$1 /$2'], //惊奇方盒
+    [/^Current Effect: Ascension Speed \+(.*)$/, '当前效果：飞升的速度增加$1'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化

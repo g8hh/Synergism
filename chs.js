@@ -678,6 +678,9 @@ var cnItems = {
     'Prism Rune': '棱柱符文',
     'Thrift Rune': '节俭符文',
     'Superior Intellect': '卓越智慧',
+    'Infinite Ascent': '无限晋升',
+    'Grandiloquence': '豪言壮语',
+    '[Bonus: Nope!]': '[额外加成：无！]',
     'SACRIFICE': '献祭',
     'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标停在符文上来查看它有什么作用！',
     '=====RUNE EFFECT SUMMARY=====': '=====符文效果总结=====',
@@ -1389,7 +1392,7 @@ var cnItems = {
     'Raises speed below 1x to the power of ^(1 - level/30).': '全局速度低于1倍时，将速度变为速度的(1-(此升级等级/30))次方。',
     'Divides Hyperchallenged by (1 + 0.4 * level), with a minimum 1x challenge req. multiplier!': '将腐化：极致挑战的效果指数除以(1+0.4*此升级等级)，但效果指数不能低于1！',
     'Raise Obtainium to the power of (1+(0.09*log10(Obt owned))) and add another x2.5 multiplier (uncorruptable), up until 1e100 Obtainium!': '难得素获取数量变为原来的(1+(0.09*log10(难得素当前数量)))次方，并且使难得素获取数量变为2.5倍(不受腐化影响)，最高到1e100难得素！',
-    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +5/+3 Challenge caps, 3.5x Obtainium and Offerings, 2x All Cubes. ^1.25 ant exponent in C15!': 'C10的分数倍率的指数从1.0375变为1.04，数学常数减缓税收的指数增加0.2，数学常数产量变为10倍，挑战上限次数分别增加5和3，难得素和祭品获取数量变为3.5倍，所有类型方盒的获取数量翻倍，在挑战15中蚂蚁产量变为蚂蚁产量^1.25！',
+    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +5/+3 Challenge caps, 3.5x Obtainium and Offerings, 2x All Cubes. ^1.25 ant exponent in C15!': 'C10的分数倍率的指数从1.0375变为1.04，数学常数减缓税收的指数增加0.2，数学常数产量变为10倍，挑战上限次数分别增加5和3，难得素和祭品获取数量变为3.5倍，所有类型的方盒及立方的获取数量翻倍，在挑战15中蚂蚁产量变为蚂蚁产量^1.25！',
     'With this upgrade, you will gain diamonds equal to particle gain on reincarnation while using Market Deflation 11 or higher! Does not work with cube upgrade [3x8]!': '在11级及以上的腐化：市场通缩中，使转世时的钻石获取数量等于粒子获取数量！无法对方盒升级[3x8]生效！',
     'Gain (1 + lvl/100)x ant multiplier per challenge completion, ignoring corruptions to ants.': '每完成1次挑战，蚂蚁倍率就增加(1+此升级等级/100)倍，此效果无视腐化。',
     'Effect of Drought is raised to the power of 0.5.': '将腐化：干旱的效果变为原来的0.5次方。',
@@ -1486,7 +1489,7 @@ var cnItems = {
     'You\'re playing on Github v2.1.2 - The Abyss [05-May-2021 (Blame Platonic for breakage)].': '您目前玩的版本为Github V2.1.2 - 深渊 [2021年5月5日更新(强烈谴责Platonic就这么鸽了)]。',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    '2x Global Speed, 3x Offerings, 2.021x All Cube Gain, Triple Export Quark Gain and Caps!': '全局速度变为2倍，祭品获取数量变为3倍，所有类型方盒的获取数量变为2.021倍，导出夸克的获取速度和上限变为3倍！',
+    '2x Global Speed, 3x Offerings, 2.021x All Cube Gain, Triple Export Quark Gain and Caps!': '全局速度变为2倍，祭品获取数量变为3倍，所有类型的方盒及立方的获取数量变为2.021倍，导出夸克的获取速度和上限变为3倍！',
     'Game saved successfully!': '游戏已保存！',
     'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
     'People who helped with art/design: Omsi, Alberan, Blank, Sneekxy, Marblerunner64, Q00u, Cryptogrounds (splash screen), Buksss, illyria, Kiboy, Sean, Hexy': '帮忙美术方面的朋友们：Omsi，Alberan，Blank，Sneekxy，Marblerunner64，Q00u，Cryptogrounds (启动画面)，Buksss，illyria，Kiboy，Sean，Hexy',
@@ -1719,6 +1722,7 @@ var cnPostfix = {
     " Queens/sec": "蚁后", //蚂蚁
     " Royals/sec": "国王蚁", //蚂蚁
     " ALMIGHTIES/sec": "全能蚁", //蚂蚁
+    "0.2% Quarks, +1% all cube types per level! Start with +10% Quarks.": "0.2%夸克获取数量，+1%所有类型的方盒及立方获取数量于每级！初始+10%夸克获取数量。", //符文等
     " Quarks.": "夸克。", //商店
     ":": "：",
     "：": "：",
@@ -1780,7 +1784,7 @@ var cnRegReplace = new Map([
     [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面及建筑
     [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面及建筑
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面及建筑
-    [/^\[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面及建筑
+    [/^ \[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面及建筑
     [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面及建筑
     [/^Sacrifice when the timer is at least (.+) seconds \(In-game time\), Currently(.*)$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑
     [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently(.*)$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑

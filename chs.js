@@ -647,8 +647,12 @@ var cnItems = {
     'Reward: 40 AP. 200 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：40成就点数。200夸克！飞升时PLATONIC方盒获取数量增加4%！',
     'Reward: 60 AP. 300 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：60成就点数。300夸克！飞升时PLATONIC方盒获取数量增加4%！',
     'Reward: 100 AP. 500 Quarks! Gain +3% Platonic Cubes on ascension!': '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加3%！',
-    'Reward: 100 AP. 500 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types! You also get +10% Quarks forever (additive)!': '奖励：100成就点数。500夸克！难得素和祭品获得数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！另外，夸克获取数量永久增加10%(相互叠加)！',
-    'Reward: 100 AP. 500 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types! You also get +10% Quarks forever (additive)!': '奖励：100成就点数。500夸克！难得素和祭品获得数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！另外，夸克获取数量永久增加10%(相互叠加)！',
+    'Reward: 100 AP. 500 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！',
+    'Reward: 100 AP. 500 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！',
+    'Reward: 50 AP. 2,000 Quarks! You will gain +10% Hypercubes! Why? I don\'t know.': '奖励：50成就点数。2000夸克！五阶立方获取数量增加10%！原因？我也不知道。',
+    'Reward: 150 AP. 6,000 Quarks! Ascensions are 25% faster, forever!': '奖励：150成就点数。6000夸克！飞升的速度永久增加25%！',
+    'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
+    'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
     'Green background: Achieved.': '绿色背景：成就已完成。',
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
@@ -1615,12 +1619,12 @@ var cnItems = {
     'Achievement 265 Bonus': '成就265的加成',
     'Hyperreal Hepteract Bonus': '七阶立方·超真实的加成',
     'TOTAL HYPERCUBE MULTIPLIER': '五阶立方总倍率',
-    'Platonic multipliers': 'Platonic方盒倍率',
+    'Platonic multipliers': 'PLATONIC方盒倍率',
     'Achievement 196 Bonus': '成就196的加成',
     'Achievement 219-222 Bonus': '成就219-222的加成',
     'Achievement 223 Bonus': '成就223的加成',
     'Achievement 257 Bonus': '成就257的加成',
-    'TOTAL PLATONIC MULTIPLIER': 'Platonic方盒总倍率',
+    'TOTAL PLATONIC MULTIPLIER': 'PLATONIC方盒总倍率',
     'Hepteract multipliers': '七阶立方倍率',
     'Achievement 258 Bonus': '成就258的加成',
     'Achievement 264 Bonus': '成就264的加成',
@@ -1939,12 +1943,21 @@ var cnRegReplace = new Map([
     [/^Reward: 60 AP. 300 Quarks! Gain \+100 ascension count for all ascensions longer than 10 seconds. Also: Obtainium \+(.*)% \[Max: 100% at 5M Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。另外，难得素获取数量增加$1%[与飞升次数有关，在5000000次飞升时达到上限：100%]'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascensions \(max 24 hours\). Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000次飞升时达到上限：200%]'], //成就
     [/^Reward: 40 AP. 200 Quarks! Gain (.*)% more Cubes on ascension!$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量增加$1%！'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限25000%]。'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限2000%]。'], //成就
+    [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限：25000%]。'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限：2000%]。'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000次飞升时达到上限：200%]'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000次飞升时达到上限：200%]'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000次飞升时达到上限：200%]'], //成就
-    [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量受到全局速度轻微的影响：乘以$1 (最小值: 1.10x，最大值'], //成就
+    [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量受到全局速度轻微的影响：乘以$1(最小值: 1.10x，最大值'], //成就
+    [/^Reward: 75 AP. 3,000 Quarks! Cube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：75成就点数。3000夸克！方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
+    [/^Reward: 75 AP. 3,000 Quarks! Tesseract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\], and allow gain of Hepteracts.$/, '奖励：75成就点数。3000夸克！超立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]，并且解锁七阶立方。'], //成就
+    [/^Reward: 75 AP. 3,000 Quarks! Hypercube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]. Also, Overflux Powder conversion rate is 5% better!$/, '奖励：75成就点数。3000夸克！五阶立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]。另外，超通量粉的转化效率增加5%。'], //成就
+    [/^Reward: 100 AP. 4,000 Quarks! Platonic Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]. Also, Overflux Powder conversion rate is 5% better!$/, '奖励：100成就点数。4000夸克！PLATONIC方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]。另外，超通量粉的转化效率增加5%。'], //成就
+    [/^Reward: 100 AP. 4,000 Quarks! Hepteract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
+    [/^Reward: 75 AP. 3,000 Quarks! Ascensions are (.*) faster! Max: \+$/, '奖励：75成就点数。3000夸克！飞升的速度增加$1%！上限：增加'], //成就
+    [/^Reward: 100 AP. 4,000 Quarks! Hepteracts \+(.*)% \[Max: 40% at 8T Ascensions\]!$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在8000000000000次飞升时达到上限：40%]！'], //成就
+    [/^Reward: 100 AP. 4,000 Quarks! Hepteracts \+(.*)% \[Max: 20% at 160T Ascensions\]!$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在160000000000000次飞升时达到上限：20%]！'], //成就
+    [/^Reward: 150 AP. 6,000 Quarks! Quarks \+(.*)% \[Max: 10% at 1Qa Ascensions\]!$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在1000000000000000次飞升时达到上限：10%]！'], //成就
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

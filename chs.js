@@ -1402,7 +1402,7 @@ var cnItems = {
     '21. All Cube Types IV: +': '21. 所有类型的方盒及立方产量IV：+',
     '22. Spirit Effectiveness: +': '22. 魂灵效果：+',
     '23. Ascension Score: +': '23. 飞升分数：+',
-    '24. Quark: +': '24. 夸克获取数量：+',
+    '24. Quarks: +': '24. 夸克获取数量：+',
     '25. Hepteracts': '25. 惊奇七阶立方',
     '26. Challenge Hepteract': '26. 惊奇七阶立方·挑战',
     '27. All Cube Types V: +': '27. 所有类型的方盒及立方产量V：+',
@@ -1510,36 +1510,46 @@ var cnItems = {
     'Stats for Nerds': '高玩特供统计',
     'Reset History': '重置历史数据',
     'Ascend History': '飞升历史数据',
-    'Miscellaneous Stats': '统计数据',
+    'Hotkeys': '快捷键',
     'Confirmation Toggles': '相应重置时是否弹窗确认',
     '[ON]': '[开]',
     '[OFF]': '[关]',
     'These do not work with hotkeys. Too bad!': '这些对快捷键无效。糟透了！',
     'Copy to Clipboard': '是否将存档导出到剪贴板',
-    'Export the game here.': '点击此处导出游戏存档',
+    'Export the game here': '点击此处导出游戏存档',
     'Copied save to your clipboard!': '存档已导出到剪贴板！',
     'Savefile copied to file!': '存档已导出！',
     'Load game below!': '从下方导入存档！',
-    'Choose File': '选择文件',
-    'Save the game manually.': '手动保存游戏。',
+    'Load from file': '从文件导入',
+    'Save the game manually': '手动保存游戏',
+    'Delete savefile': '删除存档',
     'Enter a promotion code here!': '点击此处输入奖励代码！',
     'It\'s Spaghetti Time! [Awarded an achievement!!!]': '意面时间！[获得一个成就！！！]',
     'Hey, isn\'t this just a reference to Antimatter Dimensions? Shh. [Awarded an achievement!!!]': '这不是玩的反物质维度的梗吗？切。[获得一个成就！！！]',
     'You already used this promocode in the last hour!': '距离上次使用此奖励代码未超过1小时！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
-    'You\'re playing on Github v2.1.2 - The Abyss [05-May-2021 (Blame Platonic for breakage)].': '您目前玩的版本为Github V2.1.2 - 深渊 [2021年5月5日更新(强烈谴责Platonic就这么鸽了)]。',
+    'You\'re playing on v2.5.0 - Seal of the Merchant [Last Update: 8:22PM UTC-8 18-Jun-2021].': '您目前玩的版本为V2.5.0 - 商人的印记 [2021年6月18日 西八区 下午8:22更新]。',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
     '2x Global Speed, 3x Offerings, 2.021x All Cube Gain, Triple Export Quark Gain and Caps!': '全局速度变为2倍，祭品获取数量变为3倍，所有类型的方盒及立方的获取数量变为2.021倍，导出夸克的获取速度和上限变为3倍！',
     'Game saved successfully!': '游戏已保存！',
-    'People who helped with programming: AlienC4 [A ton of bug fixes, content changes and improved performance, Statistics help], Kewne [History tab] Khafra [General, Saving], Halo [Buying Features], Nyan Cat [Some Optimizations/Cleanup], Kino [Contribution to runes.js], Jahwsuf [Testing and other files], Bigwhupdude [Major tester], Yasmir, Jacobnlsn, PassMeTheCobb [Idea for revamps], Xander374 among others!': '帮忙编程的朋友们：AlienC4[修了一堆BUG，搞了不少内容变更和调整的工作，还帮忙做了统计]，Kewne[历史选项卡]，Khafra[很多东西，还包括存档]，Halo[商店内容]，Nyan Cat[部分优化和清理]，Kino[贡献了runes.js]，Jahwsuf[测试等]，Bigwhupdude[主力测试员]，Yasmir，Jacobnlsn，PassMeTheCobb[提出外观变更的意见]，Xander374，还有其他很多人！',
-    'People who helped with art/design: Omsi, Alberan, Blank, Sneekxy, Marblerunner64, Q00u, Cryptogrounds (splash screen), Buksss, illyria, Kiboy, Sean, Hexy': '帮忙美术方面的朋友们：Omsi，Alberan，Blank，Sneekxy，Marblerunner64，Q00u，Cryptogrounds (启动画面)，Buksss，illyria，Kiboy，Sean，Hexy',
-    'People who Boosted the Discord Server': 'Discord上进行服务器助力的朋友们',
-    'earth [Legacy], Flame [Legacy], Kittelson [Legacy], PerspectiveTransform [Legacy], somepersondontask [Legacy]': 'earth [限定]，Flame [限定]，Kittelson [限定]，PerspectiveTransform [限定]，somepersondontask [限定]',
-    'Advocate for Pin Illiteracy [2x!], Balthasarx [2x!], Echoneer [2x!], Gnum [2x * 2!], illyria [2x!], Isaiah [2x!], Nethlion [2x * 2!], ShadowWalker227 [2x!], Sneekxy [2x * 2!], Tony Tells you to CHECK THE PINS [2x!], Vasicci [2x!]': 'Advocate for Pin Illiteracy [2倍！], Balthasarx [2倍！], Echoneer [2倍！], Gnum [2个2倍！], illyria [2倍！], Isaiah [2倍！], Nethlion [2个2倍！], ShadowWalker227 [2倍！], Sneekxy [2个2倍！], Tony Tells you to CHECK THE PINS [2倍！], Vasicci [2倍！]',
-    'Arkanos80 [1x * 2!], Blair, broisbrogosani, Chirality, Divinity, GrouchPlays, hreindeer, jables [1x * 2!], joshh, Kyrosiris, Liam, MattyD, Oblis, Orped, Stang [1x * 2!], strentax, theefool [1x * 2!], TheMan2494023, Toaster, Voltana [1x * 2!], Vovinia, Ximon [1x * 2!].': 'Arkanos80 [2个1倍！], Blair, broisbrogosani, Chirality, Divinity, GrouchPlays, hreindeer, jables [2个1倍！], joshh, Kyrosiris, Liam, MattyD, Oblis, Orped, Stang [2个1倍！], strentax, theefool [2个1倍！], TheMan2494023, Toaster, Voltana [2个1倍！], Vovinia, Ximon [2个1倍！]。',
-    'And you, for playing my first ever project, Synergism!': '还有您，感谢您游玩我的第一个作品，协同放置！',
+    'Coders': '码农',
+    'Artists': '画师',
+    'Miscellaneous Stats': '统计数据',
+    'Prestige Count': '转生次数',
+    'Fastest Prestige': '最快转生时间',
+    'Most Offerings Saved at Once': '最大持有的祭品数量',
+    'Summative Rune Levels': '符文总等级',
+    'Transcension Count': '超越次数',
+    'Fastest Transcension': '最快超越时间',
+    'Reincarnation Count': '转世次数',
+    'Fastest Reincarnation': '最快转世时间',
+    'Most Obtainium Saved at Once': '最大持有的难得素数量',
+    'Best Obtainium/sec': '最佳难得素/秒',
+    'Current Obtainium/sec': '当前难得素/秒',
+    'Ascension Count': '飞升次数',
+    'Free Accelerators': '免费加速器',
     'Accelerators from Upgrades/Misc': '来自升级和杂项的加速器',
     'Accelerators from Boosts': '来自加速器加成的加速器',
     'Accelerators from Speed Rune': '来自加速符文的加速器',
@@ -1551,6 +1561,7 @@ var cnItems = {
     'Challenge Multiplier': '挑战倍率',
     'Corruption Exponent': '腐化指数',
     'TOTAL FREE ACCELERATORS': '免费加速器总和',
+    'Free Multipliers': '免费加倍器',
     'Multipliers from upgrades/misc': '来自升级和杂项的加倍器',
     'Multipliers from Duplication Rune': '来自重叠符文的加倍器',
     'Duplication Rune Multiplier': '重叠符文倍率',
@@ -1560,22 +1571,6 @@ var cnItems = {
     'Multa Formicidae Ant Multiplier': '加倍蚁倍率',
     'Aphrodite Tribute Multiplier': '阿佛洛狄忒的贡品倍率',
     'TOTAL FREE MULTIPLIERS': '免费加倍器总和',
-    'Cube multipliers': '方盒倍率',
-    'Ascension Timer Multiplier': '飞升时间倍率',
-    'Season pass': '季票',
-    'Cube upgrade': '方盒升级',
-    'Ascension Count Achievement': '飞升次数成就',
-    'Bought Mortuus Est ants (R': '死神蚁加成(研究',
-    'Duplication Spirit Power': '重叠魂灵能量',
-    'Constant upgrade': '数学常数升级',
-    'Number Achievement 4 Bonus': '第4个数学常数成就奖励',
-    'Number Achievement 6 Bonus': '第6个数学常数成就奖励',
-    'Challenge 11 Ach': '挑战11相关成就',
-    'ASCENDED Achievement': '[多次飞升]成就',
-    'Sun & Moon Achievements': '[烈日千阳]及[静月千阴]成就',
-    'Cube Shards': '方盒碎片',
-    'Challenge 15 Reward': '挑战15奖励',
-    'TOTAL CUBE MULTIPLIER': '方盒总倍率',
     'Offering Multipliers': '祭品倍率',
     'Alchemy Achievement': '炼金术成就',
     'Diamond Upgrade': '钻石升级',
@@ -1594,6 +1589,30 @@ var cnItems = {
     'Platonic BETA': 'PLATONIC BETA升级(第二排最后一个)',
     'Platonic OMEGA': 'PLATONIC OMEGA升级(第三排最后一个)',
     'TOTAL OFFERING MULTIPLIER': '祭品总倍率',
+    'Global Cube multipliers': '所有类型的方盒及立方倍率',
+    'Ascend Time Multi': '飞升时间倍率',
+    'Speed Achievement': '成就的全局速度加成',
+    'Challenge 15 All Cube Bonus': '挑战15的所有类型的方盒及立方产量加成',
+    'Rune 6 - Infinite Ascent': '符文6 - 无限晋升',
+    'Platonic Beta': 'Platonic Beta升级',
+    'Platonic Omega': 'Platonic Omega升级',
+    'Overflux Powder': '超通量粉',
+    'Cube multipliers': '方盒倍率',
+    'Ascension Timer Multiplier': '飞升时间倍率',
+    'Season pass': '季票',
+    'Cube upgrade': '方盒升级',
+    'Ascension Count Achievement': '飞升次数成就',
+    'Bought Mortuus Est ants (R': '死神蚁加成(研究',
+    'Duplication Spirit Power': '重叠魂灵能量',
+    'Constant upgrade': '数学常数升级',
+    'Number Achievement 4 Bonus': '第4个数学常数成就奖励',
+    'Number Achievement 6 Bonus': '第6个数学常数成就奖励',
+    'Challenge 11 Ach': '挑战11相关成就',
+    'ASCENDED Achievement': '[多次飞升]成就',
+    'Sun & Moon Achievements': '[烈日千阳]及[静月千阴]成就',
+    'Cube Shards': '方盒碎片',
+    'Challenge 15 Reward': '挑战15奖励',
+    'TOTAL CUBE MULTIPLIER': '方盒总倍率',
     'You have unlocked all reward types from Challenge 15!': '您解锁了挑战15的所有奖励类型！',
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
@@ -1723,15 +1742,6 @@ var cnPrefix = {
     "Owned: ": "拥有：", //蚂蚁
     "Generates ": "每秒产生", //蚂蚁
     "Ant Multiplier ": "蚂蚁倍率", //蚂蚁
-    "Prestige count: ": "转生次数：", //统计数据
-    "Transcend count: ": "超越次数：", //统计数据
-    "Reincarnation count: ": "转世次数：", //统计数据
-    "Most Offerings saved at once: ": "最大持有的祭品数量：", //统计数据
-    "Most Obtainium saved at once: ": "最大持有的难得素数量：", //统计数据
-    "Best Obtainium/sec: ": "最佳难得素/秒：", //统计数据
-    "Summative Rune Levels: ": "符文总等级：", //统计数据
-    "Current Obtainium/sec ": "当前难得素/秒：", //统计数据
-    "Ascension Count: ": "飞升次数：", //统计数据
     "(-": "(-",
     "(+": "(+",
     "(": "(",
@@ -1802,7 +1812,7 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^(.+)s until next export Quark. \[(.+) s\/Quark\]$/, '距离增加导出奖励夸克还有$1秒[每$2秒增加一次]'], //主脚本
+    [/^(.+)s until \+(.+) export Quark$/, '距离增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (\d+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
@@ -2022,9 +2032,7 @@ var cnRegReplace = new Map([
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
     [/^You were awarded (.+) quarks! Wait an hour to use this code again!$/, '您获得了$1夸克！请在一小时后再来！'], //每小时奖励代码
     [/^You guessed (.+), but the answer was (.+). Try again in an hour!$/, '您输入的数字为$1，但正确结果是$2。请在一小时后再来！'], //每小时奖励代码
-    [/^Fastest Prestige: (.+)ms$/, '最快转生时间：$1毫秒'], //统计数据
-    [/^Fastest Transcend: (.+)ms$/, '最快超越时间：$1毫秒'], //统计数据
-    [/^Fastest Reincarnation: (.+)ms$/, '最快转世时间：$1毫秒'], //统计数据
+    [/^([e\d\.\,]+)ms$/, '$1毫秒'], //统计数据
     [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
     [/^([\d\.]+)s$/, '$1秒'], //历史统计
     [/^(\d+)m(\d+)s$/, '$1分$2秒'], //历史统计

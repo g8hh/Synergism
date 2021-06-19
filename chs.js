@@ -1482,6 +1482,9 @@ var cnItems = {
     'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerator Boosts per \'Way too many accelerator boosts\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器加成可以使不受腐化影响的加速器加成数量增加0.03%。',
     'Haha, stupid Corruptions. +0.03% Uncorruptable Multipliers per \'Way too many multipliers\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加倍器可以使不受腐化影响的加倍器数量增加0.03%。',
     'You can amalgamate Overflux Orbs here. [NOTE: these expire at the end of your current day]': '您可以在此处融合出超通量珠。[注意：所有超通量珠将在当天后粉碎]',
+    '250,000 Hepteracts per Overflux Orb': '每超通量珠需要250000七阶立方',
+    'Hey! That\'s not a valid number!': '哈？不，这不是个有效的数字。',
+    'Day Warps remaining today': '今日剩余的时空跃迁次数',
     'Sorry, but you need 25 powder to operate the warp machine.': '抱歉，您需要25超通量粉才可以进行时空跃迁。',
     'Sorry, but this machine is on cooldown.': '抱歉，机器目前还无法使用。',
     'You stumble upon a mysterious machine. A note attached says that you can reset daily Cube openings for 25 Powder. However it only works once each real life day. You in?': '您偶然发现了一台神秘的机器。上面附着一张说明，您可以使用25超通量粉来重置当天开启方盒及立方获得的夸克计数。但现实时间一天只能使用一次。您要使用它吗？',
@@ -2132,7 +2135,14 @@ var cnRegReplace = new Map([
     [/^One of these will cost you (.*) Hepteracts and 1e14 Wow!$/, '锻造一个将消耗$1七阶立方及1e14惊奇'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e10 Hypercubes$/, '锻造一个将消耗$1七阶立方及1e10惊奇五阶立方'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e130 Obtainium$/, '锻造一个将消耗$1七阶立方及1e130难得素'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and$/, '锻造一个将消耗$1七阶立方'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and$/, '锻造一个将消耗$1七阶立方及'], //惊奇方盒
+    [/^Orb Effect: Opening Cubes gives (.*)% more Quarks.$/, '超通量珠效果：开启方盒及立方时额外获得%1%夸克。'], //惊奇方盒
+    [/^Orbs Purchased Today: (.*).$/, '今日购买的超通量珠数量：%1。'], //惊奇方盒
+    [/^How many Orbs would you like to purchase\? You can buy up to (.*) with your hepteracts.$/, '您要购买多少超通量珠？现有的七阶立方最多可以购买$1。'], //惊奇方盒
+    [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。祝您开心！'], //惊奇方盒
+    [/^Expired Overflux Orbs become powder at a rate of (.+) Orbs per powder lump!$/, '粉碎的超通量珠可以转化为超通量粉，比率为：每超通量粉块需要$1超通量珠！'], //惊奇方盒
+    [/^Powder effect: ALL Cube Gain \+(.+)% and Quarks \+(.+)% \[Max effect at 10,000 Powder\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%，夸克获取数量增加$2%[在10000超通量粉块时达到上限]'], //惊奇方盒
+    [/^You have (.+) lumps of Overflux Powder.$/, '您拥有$1超通量粉块。'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化

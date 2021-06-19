@@ -520,7 +520,7 @@ var cnItems = {
     '[237] Spirit III: Level your Speed Spirit to 1 Trillion.':'[237]魂灵 III：将加速符文的魂灵等级提升到一万亿。',
     '[238] Three-folded: [Hint: you may want to look into the inception]':'[238]三次折扣：[提示：想想一路走来，有什么刚好可以三重叠加的]',
     '[239] Seeing red: [Hint: you may need a lot of red items]':'[239]红色危机：[提示：这个游戏中，有什么资源基本全是红色的，当然不是说什么立方，您需要很多那种资源，有多少？应该不是1后面跟25个0啥的了]',
-    '[240] ASCENDED: [Hint: you may need a LOT of ascensions OR a particularly amazing ascension]':'[240]多次飞升：[提示：在之前飞升成就的基础上，再多一位，至于是哪一位？肯定跟根号2没关系的]',
+    '[240] ASCENDED: [Hint: you may need a LOT of ascensions OR an particularly amazing ascension]':'[240]多次飞升：[提示：在之前飞升成就的基础上，再多一位，至于是哪一位？肯定跟根号2没关系的]',
     '[241] Aesop: [Hint: you gotta be pretty dang slow]':'[241]伊索：[提示：想想哪个腐化会减慢速度，不要低于6级]',
     '[242] Aesop\'s Revenge: [Hint: you gotta be pretty dang fast]':'[242]伊索的复仇：[提示：与上个成就相反，速度的倍率需要大于一个数字，当然不是大于1小时的秒数]',
     '[243] Unsmith: [Hint: unsmith emoji :unsmith: can be a pretty good input]':'[243]面无表情：[提示：奖励代码输入 :unsmith: ]',
@@ -639,19 +639,16 @@ var cnItems = {
     'Reward: 40 AP. 200 Quarks! Gain +4% Tesseracts on ascension!': '奖励：40成就点数。200夸克！飞升时超立方获取数量增加4%！',
     'Reward: 60 AP. 300 Quarks! Gain +3% Tesseracts on ascension!': '奖励：60成就点数。300夸克！飞升时超立方获取数量增加3%！',
     'Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions (max 24 hours).': '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。',
-    'Reward: 40 AP. 40 Quarks! You will gain 25% MORE excess time (Total: 50%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。40夸克！飞升时间超过10秒以后，超出部分的时间的25%将再次变为飞升奖励的倍率(总和：50%)。',
-    'Reward: 40 AP. 40 Quarks! Gain +4% Hypercubes on ascension!': '奖励：40成就点数。40夸克！飞升时五阶立方获取数量增加4%！',
-    'Reward: 60 AP. 60 Quarks! Gain +4% Hypercubes on ascension!': '奖励：60成就点数。60夸克！飞升时五阶立方获取数量增加4%！',
-    'Reward: 60 AP. 60 Quarks! Gain +3% Hypercubes on ascension!': '奖励：60成就点数。60夸克！飞升时五阶立方获取数量增加3%！',
-    'Reward: 100 AP. 100 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions (max 24 hours). Gain +0.1% Hypercubes per 1,000,000 ascensions, up to +200%!': '奖励：100成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。且每1000000次飞升使五阶立方获取数量增加0.1%，最大为200%！',
-    'Reward: 40 AP. 40 Quarks! You gain gain 50% MORE MORE excess time (Total: 100%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。40夸克！飞升时间超过10秒以后，超出部分的时间的50%将再次变为飞升奖励的倍率(总和：100%)。',
-    'Reward: 40 AP. 40 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：40成就点数。40夸克！飞升时PLATONIC方盒获取数量增加4%！',
-    'Reward: 60 AP. 60 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：60成就点数。60夸克！飞升时PLATONIC方盒获取数量增加4%！',
-    'Reward: 100 AP. 100 Quarks! Gain +3% Platonic Cubes on ascension!': '奖励：100成就点数。100夸克！飞升时PLATONIC方盒获取数量增加3%！',
-    'Reward: 100 AP. 100 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions (max 24 hours). Gain +0.1% Platonic Cubes per 1,337,000 ascensions, up to +200%!': '奖励：100成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。且每1337000次飞升使PLATONIC方盒获取数量增加0.1%，最大为200%！',
-    'Reward: 40 AP. 40 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: 1 + log10(Speed)/20 (Min: 1.10x, Max': '奖励：40成就点数。40夸克！飞升时方盒获取数量受到全局速度轻微的影响，公式为：1 + log10(全局速度)/20 (最小值: 1.10x，最大值',
-    'Reward: 100 AP. 100 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types! You also get +10% Quarks forever (additive)!': '奖励：100成就点数。100夸克！难得素和祭品获得数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！另外，夸克获取数量永久增加10%(相互叠加)！',
-    'Reward: 100 AP. 100 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types! You also get +10% Quarks forever (additive)!': '奖励：100成就点数。100夸克！难得素和祭品获得数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！另外，夸克获取数量永久增加10%(相互叠加)！',
+    'Reward: 40 AP. 200 Quarks! You will gain 25% MORE excess time (Total: 50%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。200夸克！飞升时间超过10秒以后，超出部分的时间的25%将再次变为飞升奖励的倍率(总和：50%)。',
+    'Reward: 40 AP. 200 Quarks! Gain +4% Hypercubes on ascension!': '奖励：40成就点数。200夸克！飞升时五阶立方获取数量增加4%！',
+    'Reward: 60 AP. 300 Quarks! Gain +4% Hypercubes on ascension!': '奖励：60成就点数。300夸克！飞升时五阶立方获取数量增加4%！',
+    'Reward: 60 AP. 300 Quarks! Gain +3% Hypercubes on ascension!': '奖励：60成就点数。300夸克！飞升时五阶立方获取数量增加3%！',
+    'Reward: 40 AP. 200 Quarks! You gain gain 50% MORE MORE excess time (Total: 100%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。200夸克！飞升时间超过10秒以后，超出部分的时间的50%将再次变为飞升奖励的倍率(总和：100%)。',
+    'Reward: 40 AP. 200 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：40成就点数。200夸克！飞升时PLATONIC方盒获取数量增加4%！',
+    'Reward: 60 AP. 300 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：60成就点数。300夸克！飞升时PLATONIC方盒获取数量增加4%！',
+    'Reward: 100 AP. 500 Quarks! Gain +3% Platonic Cubes on ascension!': '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加3%！',
+    'Reward: 100 AP. 500 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types! You also get +10% Quarks forever (additive)!': '奖励：100成就点数。500夸克！难得素和祭品获得数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！另外，夸克获取数量永久增加10%(相互叠加)！',
+    'Reward: 100 AP. 500 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types! You also get +10% Quarks forever (additive)!': '奖励：100成就点数。500夸克！难得素和祭品获得数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！另外，夸克获取数量永久增加10%(相互叠加)！',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
     'Green background: Achieved.': '绿色背景：成就已完成。',
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
@@ -1945,6 +1942,9 @@ var cnRegReplace = new Map([
     [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限25000%]。'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限2000%]。'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000次飞升时达到上限：200%]'], //成就
+    [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量受到全局速度轻微的影响：乘以$1 (最小值: 1.10x，最大值'], //成就
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

@@ -1490,11 +1490,11 @@ var cnItems = {
     'You stumble upon a mysterious machine. A note attached says that you can reset daily Cube openings for 25 Powder. However it only works once each real life day. You in?': '您偶然发现了一台神秘的机器。上面附着一张说明，您可以使用25超通量粉来重置当天开启方盒及立方获得的夸克计数。但现实时间一天只能使用一次。您要使用它吗？',
     'You walk away from the machine, powder intact.': '您离开了那台机器，超通量粉分毫未少。',
     'Upon using the machine, your cubes feel just a little more rewarding. Daily cube opening counts have been reset! [-25 Powder]': '使用机器后，当天开启方盒及立方获得的夸克计数被重置了！[消耗25超通量粉]',
-    'Congratulations. You have unlocked the ability to craft Hepteract of Challenge in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·挑战了！',
-    'Congratulations. You have unlocked the ability to craft Hepteract of The Abyssal in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·深渊了！',
-    'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Accelerator in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
-    'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Accelerator Boost in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器加成了！',
-    'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Multiplier in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加倍器了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Challenge in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·挑战了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of The Abyssal in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·深渊了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Too Many Accelerator in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Too Many Accelerator Boost in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器加成了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Too Many Multiplier in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加倍器了！',
     //惊奇方盒结束
 
     //腐化

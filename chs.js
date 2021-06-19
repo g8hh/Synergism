@@ -19,6 +19,7 @@ var cnItems = {
     'OK': '确定',
     'Cancel': '取消',
     'Loading Offline Progress...': '加载离线进度...',
+    'You have gained the following from offline progression!': '离线时您获得了以下内容！',
     ' seconds': '秒',
     'Prestige Count: +': '转生次数：+',
     'Current Prestige Timer: +': '当前转生时间：+',
@@ -1457,8 +1458,8 @@ var cnItems = {
     'Craft': '锻造',
     'Expand': '延展',
     'Warp': '时间跃迁',
-    '': '',
-    '': '',
+    'How far in the future would you like to go into the future? Anything awaits when it is testing season.': '您想要跃迁到多久以后？',
+    'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
     //惊奇方盒结束
 
     //腐化
@@ -1891,7 +1892,7 @@ var cnRegReplace = new Map([
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面及建筑
-    [/^You have (.+) real-life seconds of Offline Progress!$/, '您有$1秒的现实离线时间！'], //离线计算
+    [/^You have (.+) seconds of Offline Progress!$/, '您的离线时间为$1秒！'], //离线计算
     [/^Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings. Required: (.+)\/1e16 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置金币、金币生产者、金币升级、水晶，获得钻石和一些祭品。需要：$1/1e16金币 || 花费时间：$2秒。'], //重置
     [/^Reset all Coin and Diamond Upgrades\/Features, Crystal Upgrades & Producers, for Mythos\/Offerings. Required: (.+)\/1e100 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：$1/1e100金币 || 花费时间：$2秒。'], //重置
     [/^Are you tired of being in your challenge or stuck\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) seconds.$/, '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置

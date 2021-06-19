@@ -1576,12 +1576,19 @@ var cnItems = {
     'Load from file': '从文件导入',
     'Save the game manually': '手动保存游戏',
     'Delete savefile': '删除存档',
+    'Answer was wrong, not resetting!': '回答错误，不会删除存档！',
     'Enter a promotion code here!': '点击此处输入奖励代码！',
+    'Got a code? Great! Enter it in (CaSe SeNsItIvE). [Note to viewer: this is for events and certain always-active codes. May I suggest you type in "synergism2021" or "add" perchance?]': '有奖励代码吗？很好！在这里输入就可以了(注意大小写)。[注意：此处可以输入活动代码或者一些常时代码。您可以考虑输入“synergism2021”或者“add”。]',
     'It\'s Spaghetti Time! [Awarded an achievement!!!]': '意面时间！[获得一个成就！！！]',
     'Hey, isn\'t this just a reference to Antimatter Dimensions? Shh. [Awarded an achievement!!!]': '这不是玩的反物质维度的梗吗？切。[获得一个成就！！！]',
-    'You already used this promocode in the last hour!': '距离上次使用此奖励代码未超过1小时！',
+    'Code was canceled, took no uses away from you!': '您放弃使用代码，因此没有消耗任何次数！',
+    'Wait a little bit. We\'ll get back to you when you\'re ready to lose again.': '稍等片刻，等您准备好再输一次的时候再来吧。',
+    'Are you sure? The house always wins!': '您确定吗？要知道，庄家总是赢家！',
+    'Scared? You should be!': '怂了吗？也不失为明智之举！',
+    'How many quarks are you putting up?': '您要下注多少夸克？',
+    'Can\'t bet that!': '无法下注那个数量！',
+    'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
-    'Submit your stats to Kongregate!': '将数据上传至Kongregate！',
     'You\'re playing v2.5.0 - Seal of the Merchant [Last Update: 8:22PM UTC-8 18-Jun-2021].': '您目前玩的版本为V2.5.0 - 商人的印记 [2021年6月18日 西八区 下午8:22更新]。',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
@@ -1696,6 +1703,20 @@ var cnItems = {
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
     'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
+    'Buy Accelerators': '购买加速器',
+    'Boost Accelerator': '加速器加成',
+    'Exit Challenge': '退出挑战',
+    'Multipliers': '加倍器',
+    'Reset Prestige': '转生重置',
+    'Reset Reincarnate': '转世重置',
+    'Sacrifice Ants': '蚂蚁献祭',
+    'Reset Transcend': '超越重置',
+    'Back a tab': '切换到前一个选项卡',
+    'Next tab': '切换到后一个选项卡',
+    'Back a subtab': '切换到前一个子选项卡',
+    'Next subtab': '切换到后一个子选项卡',
+    'You didn\'t enter anything, canceled!': '您什么也没有输入，因此不会有任何效果！',
+    'That key is already binded to an action, use another key instead!': '这个按键已经被其他动作绑定了，请换一个按键！',
     'Why don\'t you try clicking on one of the item\'s': '为何不尝试点击上方的',
     'gold': '金色',
     ' text above to get started? You can always cancel!': '文本来进行设置？反正您还可以取消的。',
@@ -1824,6 +1845,7 @@ var cnPrefix = {
     "Owned: ": "拥有：", //蚂蚁
     "Generates ": "每秒产生", //蚂蚁
     "Ant Multiplier ": "蚂蚁倍率", //蚂蚁
+    "Enter the new key you want to activate ": "输入您想要为", //快捷键
     "(-": "(-",
     "(+": "(+",
     "(": "(",
@@ -1855,6 +1877,7 @@ var cnPostfix = {
     " Royals/sec": "国王蚁", //蚂蚁
     " ALMIGHTIES/sec": "全能蚁", //蚂蚁
     "0.2% Quarks, +1% all cube types per level! Start with +10% Quarks.": "0.2%夸克获取数量，+1%所有类型的方盒及立方获取数量于每级！初始+10%夸克获取数量。", //符文等
+    " with. MDN has a list of values for \"special keys\" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values": "绑定的新按键。Mozilla开发者网络上列出了一系列特殊按键的名称：https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values", //快捷键
     " Quarks.": "夸克。", //商店
     ":": "：",
     "：": "：",
@@ -2163,8 +2186,18 @@ var cnRegReplace = new Map([
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
-    [/^You were awarded (.+) quarks! Wait an hour to use this code again!$/, '您获得了$1夸克！请在一小时后再来！'], //每小时奖励代码
-    [/^You guessed (.+), but the answer was (.+). Try again in an hour!$/, '您输入的数字为$1，但正确结果是$2。请在一小时后再来！'], //每小时奖励代码
+    [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
+    [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
+    [/^You can use up to (.+) attempts at once. How many would you like to use$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克！由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克！您还有$5次“Add”代码的使用机会。$6秒后可以获得1次。'], //每小时奖励代码
+    [/^For (.+) quarks or for nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
+    [/^For (.+) quarks or for nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
+    [/^You were awarded (.+) quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！由于PL-AT Ω的效果，您同时获得了$2秒的飞升时间！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
+    [/^You were awarded (.+) quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！您还有$2次“Add”代码的使用机会。$3秒后可以获得1次。'], //每小时奖励代码
+    [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
+    [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //每小时奖励代码
+    [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //每小时奖励代码
     [/^([e\d\.\,]+)ms$/, '$1毫秒'], //统计数据
     [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
     [/^([\d\.]+)s$/, '$1秒'], //历史统计

@@ -16,6 +16,8 @@ var cnItems = {
     //标点处理结束
 
     //主脚本
+    'OK': '确定',
+    'Cancel': '取消',
     'Loading Offline Progress...': '加载离线进度...',
     'Auto [ON]': '自动[开]',
     'Auto [OFF]': '自动[关]',

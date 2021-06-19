@@ -2136,8 +2136,8 @@ var cnRegReplace = new Map([
     [/^One of these will cost you (.*) Hepteracts and 1e10 Hypercubes$/, '锻造一个将消耗$1七阶立方及1e10惊奇五阶立方'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e130 Obtainium$/, '锻造一个将消耗$1七阶立方及1e130难得素'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and$/, '锻造一个将消耗$1七阶立方及'], //惊奇方盒
-    [/^Orb Effect: Opening Cubes gives (.*)% more Quarks.$/, '超通量珠效果：开启方盒及立方时额外获得%1%夸克。'], //惊奇方盒
-    [/^Orbs Purchased Today: (.*).$/, '今日购买的超通量珠数量：%1。'], //惊奇方盒
+    [/^Orb Effect: Opening Cubes gives (.*)% more$/, '超通量珠效果：开启方盒及立方时额外获得$1%'], //惊奇方盒
+    [/^Orbs Purchased Today: (.*).$/, '今日购买的超通量珠数量：$1。'], //惊奇方盒
     [/^How many Orbs would you like to purchase\? You can buy up to (.*) with your hepteracts.$/, '您要购买多少超通量珠？现有的七阶立方最多可以购买$1。'], //惊奇方盒
     [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。祝您开心！'], //惊奇方盒
     [/^Expired Overflux Orbs become powder at a rate of (.+) Orbs per powder lump!$/, '粉碎的超通量珠可以转化为超通量粉，比率为：每超通量粉块需要$1超通量珠！'], //惊奇方盒

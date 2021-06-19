@@ -763,6 +763,10 @@ var cnItems = {
 
     //挑战
     'Is the base game too easy? Try these situations! [Click the icons to view challenge details!]': '正常游戏是不是已经让您觉得太简单了？试试这些吧！[点击图标以查看挑战详情！]',
+    'Mode: OFF': '模式：关闭',
+    'Mode: START': '模式：开始',
+    'Mode: ENTER': '模式：进入',
+    'Mode: EXIT': '模式：退出',
     'Per Completion Bonuses': '每次完成奖励',
     'Bonus/Unlock for First Completion': '首次完成奖励',
     '|| Softcapped past 100! Effective completion count': '|| 超过100次以后效果下降！有效的完成次数为',
@@ -1094,9 +1098,17 @@ var cnItems = {
     '[8x24] +10% faster Tesseract Buildings / level. THE ARISEN. WITH THE PRAISE OF THE SINGULARITY.': '[8x24]每级使超立方建筑的产量增加10%。它觉醒了。赞美奇点。',
     '[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants.': '[8x25]获得烈日千阳的力量！每级使加速器、加速器加成、加倍器、祭品获取数量增加0.01%，方盒获取数量增加0.004%，符文等级上限增加0.04，另外，护身符等级上限增加 此研究等级/400，数字向下取整，免费蚂蚁等级增加 此研究等级/200，数字向下取整。',
     'Hover over the grid to get details about researches!': '将鼠标停在网格上可获得有关研究的详情！',
-    'Gain Obtainium when you Reincarnate!': '转世以获得更多难得素!',
     'Upgrade: 1 Level': '升级：1级',
     'Upgrade: MAX [if possible]': '升级：最大[尽可能]',
+    'Welcome to the future! Obtainium is gained through': '欢迎来到研究！难得素可以通过',
+    ' Reincarnations': '转世',
+    '. I\'d recommend studying the': '获得。我个人建议优先研究',
+    'green-bordered': '绿色边框',
+    ' researches first. The': '的升级。',
+    'red-bordered': '红色边框',
+    ' researches are never reset whereas the': '的升级不会被重置，',
+    'white-bordered': '白色边框',
+    ' researches will reset upon the next reset tier!': '的升级在下一阶重置时将被重置！',
     //研究结束
 
     //蚂蚁
@@ -1660,7 +1672,6 @@ var cnPrefix = {
     "Level: ": "等级：", //主界面及建筑
     "+1 in ": "升1级需要", //主界面及建筑
     "Level ": "等级 ", //主界面及建筑
-    "Welcome to the future! I'd recommend studying the green-bordered researches first.": "欢迎来到研究！我建议先升级绿色边框的研究。", //主界面及建筑
     "Achievement Points: ": "成就点数：", //成就
     "Bonus Speed Rune Levels: ": "加速符文额外等级：", //符文等
     "Bonus Duplication Rune Levels: ": "重叠符文额外等级：", //符文等
@@ -1711,7 +1722,6 @@ var cnPostfix = {
     " Particles": "粒子", //主界面及建筑
     " Tesseracts": "超立方", //主界面及建筑
     " EXP": "经验值", //主界面及建筑
-    "The red-bordered researches are never reset whereas the white-bordered researches will reset upon the next reset tier!": "红色边框的升级不会被重置，白色边框的升级在下一阶重置时将被重置！", //主界面及建筑
     " Coins": "金币", //升级
     " Galactic Crumbs": "银河碎屑", //蚂蚁
     " Crumbs/sec": "银河碎屑", //蚂蚁

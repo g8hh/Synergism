@@ -1194,6 +1194,10 @@ var cnItems = {
     ' Wow! Cubes. Get more from harder Ascensions and other stuff.': '惊奇方盒。您可以通过更高难度的飞升或者其他途径获取更多。',
     'Open x1,': '开启 x1',
     'Custom Amount': '自定数量',
+    'OK. No cubes opened.': '好吧。不开了。',
+    'Value must be a finite number!': '这不是有效的数字啊。',
+    'You don\'t have enough cubes to open!': '您目前拥有的数量小于想要开启的数量！',
+    'You can\'t open a negative number of cubes.': '您无法开启负数数量。',
     'Open All': '开启全部',
     'Hermes\' Tribute': '赫尔墨斯的贡品',
     'Aphrodite\'s Tribute': '阿佛洛狄忒的贡品',
@@ -1264,7 +1268,7 @@ var cnItems = {
     ' Moloch Gift power': '摩洛克的赠礼效果',
     ' Midas Gift power': '米达斯的赠礼效果',
     ' Chronos Gift power': '柯罗诺斯的赠礼效果',
-    'Hypercube benedictions!': '五阶立方的恩赐！',
+    ' Hypercube benedictions!': '五阶立方的恩赐！',
     'This seems very familiar.': '这看上去总感觉……很眼熟。',
     'Open up some Lootb-- er, Platonic! Cubes, for epic perks!.': '开启一些作者方——呃，我是说PLATONIC方盒，来获得一些强大的特权！',
     ' Platonic! Cubes. Get more from really hard ascensions.': 'PLATONIC方盒。您可以通过超高难度的飞升获取更多。',
@@ -1365,7 +1369,7 @@ var cnItems = {
     '[3x6] Start ascensions with 3 additional rune levels [Does not decrease EXP requirement] per level.': '[3x6]每级使您飞升后直接获得3级符文[不减少经验值需求]。',
     '[3x7] Upon an ascension, you will start with 1 of each reincarnation building to speed up Ascensions.': '[3x7]飞升后，您直接获得各一个粒子建筑。',
     '[3x8] Well, I think you got it? Gain +1% of particles on Reincarnation per second.': '[3x8]嗯，如您所愿？每秒获得粒子，数量为转世的粒子每秒产量的1%。',
-    '[3x9] Add +5 to Reincarnation Challenge cap per level. Completions after 25 scale faster in requirement!': '[3x9]每级增加5次转世挑战次数上限。超过25次以后，挑战的目标将大幅上升！',
+    '[3x9] Add +4 to Reincarnation Challenge cap per level. Completions after 25 scale faster in requirement!': '[3x9]每级增加4次转世挑战次数上限。超过25次以后，挑战的目标将大幅上升！',
     '[3x10] You now get +25% Cubes and Tesseracts forever!': '[3x10]从现在起，您永久多获得25%的方盒和超立方体！',
     '[4x1] You again? +7% cubes from Ascending per level.': '[4x1]又是你啊？每级增加飞升时方盒7%获取数量。',
     '[4x2] Gain +0.1% Rune EXP per second you have spent in an Ascension. This has no cap!': '[4x2]本次飞升每经过一秒，符文经验值获取数量就增加0.1%。此效果没有上限！',
@@ -2071,6 +2075,7 @@ var cnRegReplace = new Map([
     [/^(.+) \[>2,000 ELO\]$/, '$1[分>2000]'], //蚂蚁
     [/^(.+) \[>3,000 ELO\]$/, '$1[分>3000]'], //蚂蚁
     [/^(.+) \[>5,000 ELO\]$/, '$1[分>5000]'], //蚂蚁
+    [/^How many cubes would you like to open\? You have (.+)!$/, '您想要开启多少？您目前拥有$1！'], //惊奇方盒
     [/^(.+) Wow! Cubes \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
     [/^(\d+)\/(\d+) \[MAX\]$/, '$1/$2 [最大]'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Offerings$/, '$1/$2 祭品'], //惊奇方盒
@@ -2088,8 +2093,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以$2'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by(.*)/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以$2'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.(.*)$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数$2'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Obtainium gain \^$/, '本次飞升，此腐化等级为$1。效果为：难得素获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Obtainium gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：难得素获取数量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Diamond gain \^(.*)$/, '本次飞升，此腐化等级为$1。效果为：钻石获取数量指数变为$2'], //腐化

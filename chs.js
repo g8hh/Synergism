@@ -19,7 +19,7 @@ var cnItems = {
     'OK': '确定',
     'Cancel': '取消',
     'Loading Offline Progress...': '加载离线进度...',
-    ' seconds': '秒',
+    'seconds': '秒',
     'Prestige Count: +': '转生次数：+',
     'Current Prestige Timer: +': '当前转生时间：+',
     'Offerings Generated': '产生的祭品数量',
@@ -1693,7 +1693,6 @@ var cnPrefix = {
     "(": "(",
     "-": "-",
     "+": "+",
-    " ": " ",
     ": ": "： ",
 }
 

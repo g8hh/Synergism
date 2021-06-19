@@ -533,6 +533,27 @@ var cnItems = {
     '[250] The Thousand Suns: [Hint: You need to fully research into becoming GOD]':'[250]烈日千阳：[提示：将某个最后出现的研究提升至最大]',
     '[251] The Thousand Moons: [Hint: You may need to cube yourself up]':'[251]静月千阴：[提示：将方盒最后的某个升级提升至最大]',
     '[252] Ultimate: Complete \'SADISTIC II\' challenge.':'[252]终级挑战：完成虐待狂挑战 II。',
+    '[253] Platonicism: Clear an ascension with 1e12 score.':'[253]Platonic主义：以1e12以上的分数完成飞升。',
+    '[254] That\'s a handful!: Clear an ascension with 1e14 score.':' [254]屈指可数：以1e14以上的分数完成飞升。',
+    '[255] The game where everything is made up: Clear an ascension with 1e17 score.':'[255]万物皆为虚妄：以1e17以上的分数完成飞升。',
+    '[256] ... and the points don\'t matter: Clear an ascension with 2e18 score.':'[256]……千古即是一瞬：以2e18以上的分数完成飞升。',
+    '[257] Arguably moral: Clear an ascension with 4e19 score.':'[257]可谓正直了：以4e19以上的分数完成飞升。',
+    '[258] Khafra\'s Personal Best: Clear an ascension with 1e21 score.':'[258]Khafra的最高纪录：以1e21以上的分数完成飞升。',
+    '[259] 100 million million million!: Clear an ascension with 1e23 score.':'[259]一千万亿亿！：以1e23以上的分数完成飞升。',
+    '[260] Highly Dimensional Being: Ascend a total of 10 million times.':'[260]高维度的存在：进行一千万次飞升。',
+    '[261] Ant God\'s upheaval: Ascend a total of 100 million times.':'[261]蚁神惊变：进行一亿次飞升。',
+    '[262] Did you forget about ant god?: Ascend a total of 2 billion times.':'[262]您忘记蚁神了吗？：进行二十亿次飞升。',
+    '[263] Ant god is unemployed thanks to you: Ascend a total of 40 billion times.':'[263]拜您所赐，蚁神失业了：进行四百亿次飞升。',
+    '[264] I hope you\'re happy with yourself: Ascend a total of 800 billion times.':'[264]希望您对自己感到满意：进行八千亿次飞升。',
+    '[265] Oh well: Ascend a total of 16 trillion times.':'[265]好吧：进行十六万亿(1.6e13)次飞升。',
+    '[266] Keep up the gradual numerical increase: Ascend a total of 100 trillion times.':'[266]数字还在逐渐增长，保持住这个势头：进行一百万亿(1e14)次飞升。',
+    '[267] Eigenvalued: Achieve a constant of 1e1,000.':'[267]特征值：达到1e1000的数学常数。',
+    '[268] Achieve Mathematics: Achieve a constant of 1e5,000.':'[268]达到数学：达到1e5000的数学常数。',
+    '[269] Ramsay (5,5): Achieve a constant of 1e15,000.':'[269]拉姆齐数R(5,5)(译者注：此数不存在)：达到1e15000的数学常数。',
+    '[270] What comes after this?: Achieve a constant of 1e50,000.':'[270]下一个是什么？：达到1e50000的数学常数。',
+    '[271] LARGE BOY: Achieve a constant of 1e100,000.':'[271]小伙子：达到1e100000的数学常数。',
+    '[272] LARGER BOY: Achieve a constant of 1e300,000.':'[272]中伙子：达到1e300000的数学常数。',
+    '[273] LARGEST BOY: Achieve a constant of 1e1,000,000.':'[273]大伙子：达到1e1000000的数学常数。',
     'Reward: 4 AP. 4 Quarks! Gain +.05% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.05%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Worker Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁工人自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Workers owned.': '奖励：8成就点数。8夸克！每拥有500个工人，就获得1个加速器。',
@@ -658,6 +679,7 @@ var cnItems = {
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
     'Red background: Unachieved, provides content/feature unlock.': '红色背景：成就可解锁游戏内容或特性，未完成。',
     'No background: Unachieved, nothing special.': '无背景色：成就没有什么特别的，未完成。',
+    'Congratulations on your first prestige. The first of many. You obtain offerings. You can use them in the new Runes tab! [Unlocked Runes, Achievements, Diamond Buildings and some Upgrades!]': '恭喜您完成了第一次转生。当然，有一次，就会有无数次。您获得了祭品，您可以在新解锁的符文选项卡中使用它们！[解锁了符文，成就，钻石建筑和一些其他升级！]',
     //成就结束
 
     //符文等
@@ -1941,13 +1963,13 @@ var cnRegReplace = new Map([
     [/^Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm: x(.*)$/, '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率：乘以$1'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain an Ascension cubes multiplier based on your score: x(.*). Also: Offerings \+(.*)% \[Max: 100% at 1M Ascensions\]$/, '奖励：60成就点数。300夸克！根据您的飞升分数，使飞升的方盒及立方倍率乘以$1。另外，祭品获取数量增加$2%[与飞升次数有关，在1000000次飞升时达到上限：100%]'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain \+100 ascension count for all ascensions longer than 10 seconds. Also: Obtainium \+(.*)% \[Max: 100% at 5M Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。另外，难得素获取数量增加$1%[与飞升次数有关，在5000000次飞升时达到上限：100%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascensions \(max 24 hours\). Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascensions \(max 24 hours\). Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000(5e8)次飞升时达到上限：200%]'], //成就
     [/^Reward: 40 AP. 200 Quarks! Gain (.*)% more Cubes on ascension!$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量增加$1%！'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限：25000%]。'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限：2000%]。'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000次飞升时达到上限：200%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000次飞升时达到上限：200%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000次飞升时达到上限：200%]'], //成就
+    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000(1e9)次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000(2e9)次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000(2.674e9)次飞升时达到上限：200%]'], //成就
     [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量受到全局速度轻微的影响：乘以$1(最小值: 1.10x，最大值'], //成就
     [/^Reward: 75 AP. 3,000 Quarks! Cube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：75成就点数。3000夸克！方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
     [/^Reward: 75 AP. 3,000 Quarks! Tesseract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\], and allow gain of Hepteracts.$/, '奖励：75成就点数。3000夸克！超立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]，并且解锁七阶立方。'], //成就

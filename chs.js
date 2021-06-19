@@ -19,6 +19,19 @@ var cnItems = {
     'OK': '确定',
     'Cancel': '取消',
     'Loading Offline Progress...': '加载离线进度...',
+    'Prestige Count: +': '转生次数：+',
+    'Current Prestige Timer: +': '当前转生时间：+',
+    'Offerings Generated': '产生的祭品数量',
+    'Transcension Count: +': '超越次数：+',
+    'Current Transcension Timer: +': '当前超越时间：+',
+    'Reincarnation Count: +': '转世次数：+',
+    'Current Reincarnation Timer: +': '当前转世时间：+',
+    'Obtainium Generated': '产生的难得素数量',
+    'In-Game Ant Sacrifice Timer: +': '游戏内的蚂蚁计时：+',
+    'Real-Life Ant Sacrifice Timer: +': '现实中的蚂蚁计时：+',
+    'Current Ascension Timer: +': '当前飞升时间：+',
+    'Export Quarks: +': '导出可获得的夸克数量：+',
+    'That\'s cool. Take me to the game!': '非常棒。开始游戏吧！',
     'Auto [ON]': '自动[开]',
     'Auto [OFF]': '自动[关]',
     'Mode: AMOUNT': '模式：数量',
@@ -1734,11 +1747,7 @@ var cnExcludeWhole = [
     /^([e\d\,\.]+)$/, //数字处理
     /^([e\d\,\.]+)[A-Za-rt-z]{0,2} \[([e%\d\,\.\+]+)[A-Za-rt-z]{0,2}\]$/, //数字处理
     /^(\d+)\s\/$/, //数字处理    
-    /^加速符文奖励：加速器数量增加(.*)，加速器数量再增加(.*)%，加速器加成数量增加(.*)。$/, //数字处理
-    /^重叠符文奖励：加倍器数量增加(.*)，加倍器数量再增加(.*)%，税收增长减缓(.*)%。$/, //数字处理
-    /^节俭符文奖励：所有建筑成本增长减缓(.*)%。祭品回收概率：(.*)%。税收增长减缓(.*)%。$/, //数字处理
-    /^棱柱符文奖励：水晶产量变为(.*)倍，水晶升级免费增加(.*)级。$/, //数字处理
-    /^卓越智慧符文奖励：难得素获取数量变为(.*)倍。蚂蚁速度变为(.*)倍。基础祭品数量：增加(.*)$/, //数字处理
+    /^(.*)[\u4E00-\u9FFF]+(.*)$/, //不抓取内容
 ];
 var cnExcludePostfix = [
     /:?\s*x?\d+(\.\d+)?(e[+\-]?\d+)?\s*$/, //12.34e+4

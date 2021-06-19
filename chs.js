@@ -682,7 +682,7 @@ var cnItems = {
     'No background: Unachieved, nothing special.': '无背景色：成就没有什么特别的，未完成。',
     'Congratulations on your first prestige. The first of many. You obtain offerings. You can use them in the new Runes tab! [Unlocked Runes, Achievements, Diamond Buildings and some Upgrades!]': '恭喜您完成了第一次转生。当然，有一次，就会有无数次。您获得了祭品，您可以在新解锁的符文选项卡中使用它们！[解锁了符文，成就，钻石建筑和一些其他升级！]',
     'Hmm, it seems you are getting richer, being able to get 1 Googol diamonds in a single prestige. How about we give you another rune? [Unlocked Duplication rune in Runes tab!]': '嗯，您越来越有钱了，一次转生中就能获得1e100的钻石了。不如，我们再给您一个符文吧？[解锁重叠符文！]',
-    'Wow! You gained 1e17 (100 Quadrillion) score in a single Ascension. For that, you can now generate Hepteracts if you get above 6.66e16 (66.6 Quadrillion) score in an Ascension. Good luck!': '哇哦！您在这一次飞升中获得了1e17的飞升分数。因此从现在起，只要您的飞升分数大于6.66e16，您就可以获得七阶立方了。祝您好运！',
+    'Wow! You gained 1e17 (100 Quadrillion) score in a single Ascension. For that, you can now generate Hepteracts if you get above 6.66e16 (66.6 Quadrillion) score in an Ascension. Good luck!': '哇哦！您在这一次飞升中获得了1e17的飞升分数。因此从现在起，只要您的飞升分数大于6.66e16，您就可以获得惊奇七阶立方了。祝您好运！',
     //成就结束
 
     //符文等
@@ -1464,7 +1464,7 @@ var cnItems = {
     'You can\'t craft a nonpositive amount of these fucks, lol!': '您没法锻造负数数量啊。',
     'This is not an unlocked craft, thus you cannot craft this item!': '这还没有解锁，您要怎么锻造呢？',
     'Expand': '延展',
-    'This will empty your balance, but double your capacity. Agree to the terms and conditions and stuff?': '延展将清空您目前此类七阶立方，但可以使上限翻倍。您确定这么做没问题吧？',
+    'This will empty your balance, but double your capacity. Agree to the terms and conditions and stuff?': '延展将清空此类惊奇七阶立方，但可以使上限翻倍。您确定这么做没问题吧？',
     'This is not an unlocked craft. Sorry!': '您还没有解锁它，所以，抱歉了。',
     'Insufficient inventory to expand. 404 909 error.': '未达上限，无法延展。404 909错误。',
     'Warp': '时间跃迁',
@@ -1472,7 +1472,20 @@ var cnItems = {
     'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
     '< UNLOCKED >': '< 已解锁 >',
     '< LOCKED >': '< 未解锁 >',
-    'Congratulations. You have unlocked the ability to craft Hepteract in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造七阶立方了！',
+    'This hepteract bends time, in your favor. +0.06% Ascension Speed per Chronos Hepteract.': '此类惊奇七阶立方可以扭曲时间，为您所用。每个惊奇七阶立方·时光可以使飞升的速度增加0.06%。',
+    'This bad boy can make hypercube gain skyrocket. +0.06% Hypercubes per Hyperreal Hepteract.': '这货可以使五阶立方获取速度变得更快。每个惊奇七阶立方·超真实可以使五阶立方的获取数量增加0.06%。',
+    'One pound, two pound fish, fishy grant +0.03% Quarks per Quark Hepteract fish fish.': '一磅鱼，两磅鱼，鱼鱼鱼。每个惊奇七阶立方·夸克可以使夸克的获取数量增加0.03%。',
+    'That\'s preposterous. How are you going to gain +0.05% C15 Exponent per Challenge Hepteract? How!?': '这不是扯淡吗？每个惊奇七阶立方·挑战可以使挑战15的指数获取数量增加0.05%？怎么可能？怎么可能！？',
+    'It seems like this holds the power to be at the End of Time. Do you remember why you need this?': '似乎它拥有时间尽头的力量。还记得有哪里出现过类似的东西吗？',
+    '<[You will submit to the Omega Entity of Time]>': '<[服从于时间的欧米伽形态吧]>',
+    'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerators per \'Way too many accelerators\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器可以使不受腐化影响的加速器数量增加0.03%。',
+    'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerator Boosts per \'Way too many accelerator boosts\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器加成可以使不受腐化影响的加速器加成数量增加0.03%。',
+    'Haha, stupid Corruptions. +0.03% Uncorruptable Multipliers per \'Way too many multipliers\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加倍器可以使不受腐化影响的加倍器数量增加0.03%。',
+    'Congratulations. You have unlocked the ability to craft Hepteract of Challenge in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·挑战了！',
+    'Congratulations. You have unlocked the ability to craft Hepteract of The Abyssal in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·深渊了！',
+    'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Accelerator in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
+    'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Accelerator Boost in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器加成了！',
+    'Congratulations. You have unlocked the ability to craft Hepteract of Too Many Multiplier in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加倍器了！',
     //惊奇方盒结束
 
     //腐化
@@ -1989,7 +2002,7 @@ var cnRegReplace = new Map([
     [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000(2.674e9)次飞升时达到上限：200%]'], //成就
     [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量受到全局速度轻微的影响：乘以$1(最小值: 1.10x，最大值'], //成就
     [/^Reward: 75 AP. 3,000 Quarks! Cube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：75成就点数。3000夸克！方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
-    [/^Reward: 75 AP. 3,000 Quarks! Tesseract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\], and allow gain of Hepteracts.$/, '奖励：75成就点数。3000夸克！超立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]，并且解锁七阶立方。'], //成就
+    [/^Reward: 75 AP. 3,000 Quarks! Tesseract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\], and allow gain of Hepteracts.$/, '奖励：75成就点数。3000夸克！超立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]，并且解锁惊奇七阶立方。'], //成就
     [/^Reward: 75 AP. 3,000 Quarks! Hypercube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]. Also, Overflux Powder conversion rate is 5% better!$/, '奖励：75成就点数。3000夸克！五阶立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]。另外，超通量粉的转化效率增加5%。'], //成就
     [/^Reward: 100 AP. 4,000 Quarks! Platonic Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]. Also, Overflux Powder conversion rate is 5% better!$/, '奖励：100成就点数。4000夸克！PLATONIC方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]。另外，超通量粉的转化效率增加5%。'], //成就
     [/^Reward: 100 AP. 4,000 Quarks! Hepteract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就

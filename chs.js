@@ -90,7 +90,7 @@ var cnItems = {
     'Cost': '花费',
     'Current Level': '当前等级',
     'Current Effect': '当前效果',
-    'from your Constant': '数学常数',
+    ' from your Constant': '数学常数',
     //主界面及建筑结束
 
     //重置
@@ -235,7 +235,7 @@ var cnItems = {
     'Gain a boost to crystals based on held coins per level.': '每级根据未花费的金币数量增加水晶产量。',
     'Every challenge completion increases crystal gain by 1% per level.': '每级使每次挑战完成次数增加水晶产量1%。',
     'Make all Tesseract buildings 5% more productive per level.': '每级使所有超立方建筑产量增加5%。',
-    'Each Tesseract building bought increases the production of all of them by 0.1% per level [Max 10%].': '每级使每购买一个超立方建筑增加0.1%的超立方建筑产量[上限10%]。',
+    'Each Tesseract building bought increases the production of all of them by 0.1% per level [Max 10.00%].': '每级使每购买一个超立方建筑增加0.1%的超立方建筑产量[上限10.00%]。',
     'Increase offering gain +2% per level.': '每级使祭品获取数量增加2%。',
     'Increase obtainium gain +4% per level.': '每级使难得素获取数量增加4%。',
     'Multiply ant speed by (1 + log10(Constant + 1)/10)^level': '蚂蚁速度变为 (1 + log10(数学常数数量 + 1)/10)^升级等级 倍。',

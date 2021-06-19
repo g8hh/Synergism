@@ -603,7 +603,7 @@ var cnItems = {
     'Reward: 2 AP. 2 Quarks! Automatically buy the fifth crystal upgrade if you can afford it!': '奖励：2成就点数。2夸克！自动购买第五个水晶升级！',
     'Reward: 10 AP. 10 Quarks! +9% obtainium (stacks additively with other achievement rewards': '奖励：10成就点数。10夸克！难得素的获取数量增加9%(与其他成就的同类效果叠加',
     'Reward: 8 AP. 8 Quarks! Delay tax growth by 5.66%.': '奖励：8成就点数。8夸克！税收增长减缓5.66%。',
-    'Reward: 9 AP. 9 Quarks! Each Reincarnation challenge completion delays tax growth by 0.75% per level, multiplicative': '奖励：9成就点数。9夸克！每完成一次任意转世挑战，税收增长就减缓0.75%，效果叠乘',
+    'Reward: 9 AP. 9 Quarks! Each Reincarnation challenge completion delays tax growth by 0.75% per level, multiplicative. Effect': '奖励：9成就点数。9夸克！每完成一次任意转世挑战，税收增长就减缓0.75%，效果叠乘。效果',
     'Reward: 10 AP. 10 Quarks! +11% obtainium. Unlock a nice trinket somewhere...': '奖励：10成就点数。10夸克！难得素的获取数量增加11%。某个地方解锁了一个很不错的饰品……',
     'Reward: 4 AP. 4 Quarks! +7.5% offering recycle.': '奖励：4成就点数。4夸克！祭品回收概率增加7.5%。',
     'Reward: 8 AP. 8 Quarks! Delay tax growth by 5.66%. Unlock 5 new incredibly powerful researches!': '奖励：8成就点数。8夸克！税收增长减缓5.66%。解锁5个非常强大的研究！',
@@ -620,11 +620,9 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! +17% obtainium. Lazy joke about not leaking talismans here [You get a new one]': '奖励：10成就点数。10夸克！难得素的获取数量增加17%。懒得拿不泄露护身符来开玩笑了[您可以获得一个新的护身符]',
     'Reward: 1 AP. 1 Quarks! Unlock a new reset tier!': '奖励：1成就点数。1夸克！解锁下一阶的重置！',
     'Reward: 10 AP. 10 Quarks! +19% obtainium (Achievement total is up to 100%!). Gain the Polymath Talisman!': '奖励：10成就点数。10夸克！难得素的获取数量增加19%(成就同类型加成总和为100%！)。获得博识护身符！',
-    'Reward: 10 AP. 10 Quarks! ALL Ant speed multiplied by log10(crumbs +': '奖励：10成就点数。10夸克！所有蚂蚁的速度都乘以log10(银河碎屑数量 +',
     'Reward: 10 AP. 10 Quarks! +16.666% ALL Ant speed!': '奖励：10成就点数。10夸克！所有蚂蚁的速度增加16.666%！',
     'Reward: 10 AP. 10 Quarks! Gain more ants the longer your reincarnation lasts (max speed achieved in 2 hours': '奖励：10成就点数。10夸克！转世持续越久就可以获得越多蚂蚁(2小时的时候速度达到最大',
     'Reward: 10 AP. 10 Quarks! Unlock Ant Sacrifice, allowing you to reset your ants and ant upgrades in exchange for amazing rewards! Automatically buy Worker Ants.': '奖励：10成就点数。10夸克！解锁蚂蚁献祭，重置蚂蚁数量和蚂蚁升级以获取强大的奖励！自动购买工蚁。',
-    'Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm (Multiply by 0.4 * log10(points + 1)': '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率(乘以0.4 * log10(强度分 + 1)',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 2 Ant autobuy, and autobuy Inceptus and Fortunae ants! Add +25 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T2蚂蚁自动购买，并且可以自动购买创始蚁和财富蚁！基础蚂蚁强度分增加25。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 3 Ant autobuy, and autobuy Tributum ants! Add +50 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T3蚂蚁自动购买，并且可以自动购买示威蚁！基础蚂蚁强度分增加50。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 4 Ant autobuy, and autobuy Celeritas and Multa ants! Add +75 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T4蚂蚁自动购买，并且可以自动购买迅捷蚁和加倍蚁！基础蚂蚁强度分增加75。',
@@ -632,8 +630,6 @@ var cnItems = {
     'Reward: 10 AP. 10 Quarks! Unlock Tier 6 Ant autobuy, and autobuy Hic and Experientia ants! Add +1% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T6蚂蚁自动购买，并且可以自动购买建筑蚁和博学蚁！基础蚂蚁强度分增加1%。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 7 Ant autobuy, and autobuy Praemoenio ants! Add +2% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T7蚂蚁自动购买，并且可以自动购买预言蚁！基础蚂蚁强度分增加2%。',
     'Reward: 10 AP. 10 Quarks! Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T8蚂蚁自动购买，并且可以自动购买科学蚁和命匣蚁！基础蚂蚁强度分增加3%。',
-    'Reward: 60 AP. 60 Quarks! Gain an ascension gain multiplier based on your score (log10(score) - 7)x for Corruption Score > 100 Million. Gain +1% Offerings per 10,000 ascensions, up to +100%!': '奖励：60成就点数。60夸克！腐化后分数大于100000000时，飞升次数乘以(log10(分数) - 7)。且每10000次飞升使祭品获取数量增加1%，最大为100%！',
-    'Reward: 60 AP. 60 Quarks! Gain +100 ascension count for all ascensions longer than 10 seconds. Gain +1% Obtainium per 50,000 ascensions, up to +100%!': '奖励：60成就点数。60夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。且每50000次飞升使难得素获取数量增加1%，最大为100%！',
     'Reward: 100 AP. 100 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascensions (max 24 hours). Gain +0.1% Cubes per 250,000 ascensions, up to +200%!': '奖励：100成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。且每250000次飞升使方盒获取数量增加0.1%，最大为200%！',
     'Reward: 40 AP. 40 Quarks! Gain (log10(Constant+1)/4)% more Cubes on ascension!': '奖励：40成就点数。40夸克！飞升时方盒获取数量增加 (log10(数学常数数量+1)/4)% ！',
     'Reward: 60 AP. 60 Quarks! Gain (log10(Constant+1)/4)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus.': '奖励：60成就点数。60夸克！飞升时方盒和超立方获取数量增加 (log10(数学常数数量+1)/4)% ！与其他成就的加成相互叠乘。',
@@ -1945,6 +1941,10 @@ var cnRegReplace = new Map([
     [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
+    [/^Reward: 10 AP. 10 Quarks! ALL Ant speed multiplied by(.*)$/, '奖励：10成就点数。10夸克！所有蚂蚁的速度都乘以$1'], //成就
+    [/^Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm: x(.*)$/, '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率：乘以$1'], //成就
+    [/^Reward: 60 AP. 300 Quarks! Gain an Ascension cubes multiplier based on your score: x(.*). Also: Offerings \+(.*)% \[Max: 100% at 1M Ascensions\]$/, '奖励：60成就点数。300夸克！根据您的飞升分数，使飞升的方盒及立方倍率乘以$1。另外，祭品获取数量增加$2%[与飞升次数有关，在1000000次飞升时达到上限：100%]'], //成就
+    [/^Reward: 60 AP. 300 Quarks! Gain \+100 ascension count for all ascensions longer than 10 seconds. Also: Obtainium \+(.*)% \[Max: 100% at 5M Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。另外，难得素获取数量增加$1[与飞升次数有关，在5000000次飞升时达到上限：100%]'], //成就
     [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
     [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
     [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等

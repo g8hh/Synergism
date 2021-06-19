@@ -1459,10 +1459,20 @@ var cnItems = {
     'Hepteracts do not provide passive bonuses. They must be made useful through crafting.': '惊奇七阶立方没有任何被动加成。必须通过锻造才能变得有用。',
     ' Hepteracts! You know where to get these, right?': '惊奇七阶立方！您应该已经知道这些是哪来的了吧？',
     'Craft': '锻造',
+    'How many would you like to craft?': '您想要锻造多少？',
+    'Okay, maybe next time.': '好吧，下次再说。',
+    'You can\'t craft a nonpositive amount of these fucks, lol!': '您没法锻造负数数量啊。',
+    'This is not an unlocked craft, thus you cannot craft this item!': '这还没有解锁，您要怎么锻造呢？',
     'Expand': '延展',
+    'This will empty your balance, but double your capacity. Agree to the terms and conditions and stuff?': '延展将清空您目前此类七阶立方，但可以使上限翻倍。您确定这么做没问题吧？',
+    'This is not an unlocked craft. Sorry!': '您还没有解锁它，所以，抱歉了。',
+    'Insufficient inventory to expand. 404 909 error.': '未达上限，无法延展。404 909错误。',
     'Warp': '时间跃迁',
     'How far in the future would you like to go into the future? Anything awaits when it is testing season.': '您想要跃迁到多久以后？',
     'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
+    '< UNLOCKED >': '< 已解锁 >',
+    '< LOCKED >': '< 未解锁 >',
+    'Congratulations. You have unlocked the ability to craft Hepteract in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造七阶立方了！',
     //惊奇方盒结束
 
     //腐化
@@ -2086,6 +2096,8 @@ var cnRegReplace = new Map([
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Platonic! Cubes$/, '$1/$2 PLATONIC方盒'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Hepteracts of the Abyss$/, '$1/$2 惊奇七阶立方·深渊'], //惊奇方盒
     [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数到达$1。'], //惊奇方盒
+    [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
+    [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化

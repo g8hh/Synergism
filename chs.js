@@ -1865,7 +1865,7 @@ var cnRegReplace = new Map([
     [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑
     [/^(.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面及建筑
     [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面及建筑
-    [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当水晶为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
+    [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当钻石为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
     [/^Prestige when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
     [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面及建筑
     [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
@@ -2092,8 +2092,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Obtainium gain \^$/, '本次飞升，此腐化等级为$1。效果为：难得素获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Obtainium gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：难得素获取数量指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Diamond gain \^(.*)$/, '本次飞升，此腐化等级为$1。效果为：水晶获取数量指数变为$2'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：水晶获取数量指数变为$2'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Diamond gain \^(.*)$/, '本次飞升，此腐化等级为$1。效果为：钻石获取数量指数变为$2'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Diamond gain \^(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：钻石获取数量指数变为$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Ant Production \^$/, '本次飞升，此腐化等级为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Ant Production \^$/, '下次飞升，此腐化等级将变为$1。效果为：蚂蚁产量指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Offering EXP divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：祭品经验值除以$2'], //腐化

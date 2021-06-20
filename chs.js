@@ -98,6 +98,11 @@ var cnItems = {
     'You\'re not in a Transcension Challenge right now. Get in one before you can leave it, duh!': '您目前并没有在进行超越挑战。进行挑战后再来考虑离开的事，懂了吧！',
     'You\'re not in a Reincarnation Challenge right now. How could you leave what you are not in?': '您目前并没有在进行转世挑战。如果您都没在进行挑战，你又要怎么离开？',
     'Click this if you\'re in an Ascension Challenge and want to leave. You get it already!': '如果您想要退出飞升挑战，请点击这里。您懂的！',
+    'Prestige will reset coin upgrades, coin producers AND crystals. The first prestige unlocks new features. Would you like to prestige? [Toggle this message in settings.]': '转生后金币升级，金币生产者和水晶都将被重置。首次转生可以解锁新的游戏机制。您确定要转生吗？[您可以在设置中调整是否弹出此对话框。]',
+    'Transcends will reset coin and prestige upgrades, coin producers, crystal producers AND diamonds. The first transcension unlocks new features. Would you like to prestige? [Toggle this message in settings.]': '超越后金币、钻石升级，金币生产者，水晶生产者和钻石都将被重置。首次超越可以解锁新的游戏机制。您确定要超越吗？[您可以在设置中调整是否弹出此对话框。]',
+    'Reincarnating will reset EVERYTHING but in return you will get extraordinarily powerful Particles, and unlock some very strong upgrades and some new features. would you like to Reincarnate? [Disable this message in settings]': '转世后之前的所有低阶资源都将被重置，但您可以获得强大的粒子，以及解锁一些非常强大的升级和新的游戏机制。您确定要转世吗？[您可以在设置中调整是否弹出此对话框。]',
+    'Ascending will reset all buildings, rune levels [NOT CAP!], talismans, most researches, and the anthill feature for Cubes of Power. Continue? [It is strongly advised you get R5x24 first.]': '飞升后，之前的所有低阶资源，符文等级[非上限！]，护身符，大部分研究，以及蚁丘都将被重置，但您可以获得方盒的力量。您确定要继续吗？[强烈建议您先获得研究5x24。]',
+    'Are you absolutely sure that you want to exit the Ascension Challenge? You will need to clear challenge 10 again before you can attempt the challenge again!': '您真的确定要退出飞升挑战吗？退出后，您必须完成挑战10以后才能再次进行飞升挑战！',
     //重置结束
 
     //升级
@@ -191,7 +196,7 @@ var cnItems = {
     'Automatically buy Investments if affordable.': '自动购买投资。',
     'Automatically buy Printers if affordable.': '自动购买打印机。',
     'Automatically buy Coin Mints if affordable.': '自动购买铸币厂。',
-    'Automatically buy Alchemies if affordable.': '自动购买炼金术',
+    'Automatically buy Alchemies if affordable.': '自动购买炼金术。',
     'Automatically buy Accelerators if affordable.': '自动购买加速器。',
     'Automatically buy Multipliers if affordable.': '自动购买加倍器。',
     'Automatically buy Accelerator Boosts if affordable.': '自动购买加速器加成。',
@@ -236,7 +241,6 @@ var cnItems = {
     'Gain a boost to crystals based on held coins per level.': '每级根据未花费的金币数量增加水晶产量。',
     'Every challenge completion increases crystal gain by 1% per level.': '每级使每次挑战完成次数增加水晶产量1%。',
     'Make all Tesseract buildings 5% more productive per level.': '每级使所有超立方建筑产量增加5%。',
-    'Each Tesseract building bought increases the production of all of them by 0.1% per level [Max 10.00%].': '每级使每购买一个超立方建筑增加0.1%的超立方建筑产量[上限10.00%]。',
     'Increase offering gain +2% per level.': '每级使祭品获取数量增加2%。',
     'Increase obtainium gain +4% per level.': '每级使难得素获取数量增加4%。',
     'Multiply ant speed by (1 + log10(Constant + 1)/10)^level': '蚂蚁速度变为 (1 + log10(数学常数数量 + 1)/10)^升级等级 倍。',
@@ -1762,7 +1766,9 @@ var cnItems = {
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: All Ants\' Speed': '当前效果：所有蚂蚁速度',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
+    'Would you like to use this potion?': '您想要使用此药剂吗？',
     'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
+    'This will fully refund most of your permanent upgrades for an upfront cost of 15 Quarks. Would you like to do this?': '这么做将重置大部分永久升级，但需要花费15夸克。您确定要这么做吗？',
     'Shop Confirmations: ON': '商店确认框：开',
     'Shop Confirmations: OFF': '商店确认框：关',
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
@@ -1930,7 +1936,7 @@ var cnExcludePostfix = [
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
     [/^(.+)s until \+(.+) export Quark$/, '距离增加导出奖励$2夸克还有$1秒'], //主脚本
-    [/^Quarks on export: (\d+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
+    [/^Quarks on export: (.+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
     [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑
@@ -2019,6 +2025,7 @@ var cnRegReplace = new Map([
     [/^Effect: \+(.+)% Constant Divisor power.$/, '效果：增加$1%数学常数的税收除数效果。'], //升级
     [/^Each purchased Crystal producer increases generation of Crystal producers by .1% per level. \[MAX: (.*)%\]$/, '每级使每购买一个水晶生产者增加0.1%的水晶生产者产量。[上限：$1%]'], //升级
     [/^Improve the multiplier to coin production by .05 exponent per level. \[MAX: \+(.*)\]$/, '每级使水晶对金币产量提升的指数增加0.05。[上限：增加$1]'], //升级
+    [/^Each Tesseract building bought increases the production of all of them by 0.1% per level \[Max (.+)%\].$/, '每级使每购买一个超立方建筑增加0.1%的超立方建筑产量[上限$1%]。'], //升级
     [/^Tesseract building production(.*)$/, '超立方建筑产量$1'], //升级
     [/^Offering gain is increased based on highest ever unspent obtainium \[Max: 30,000,000 obtainium\]$/, '根据最大持有的难得素数量增加祭品获取数量。[难得素数量效果上限：30000000]'], //升级，前置
     [/^Offering gain(.*)$/, '祭品获取数量$1'], //升级
@@ -2242,4 +2249,29 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Code 'add' variance -(.+)%, Each use gives (.+) seconds to Ascension Timer.$/, '当前效果：使用“add”代码获得的夸克数量变化范围减少$1%，使用“add”代码时同时增加$2秒飞升时间。'], //商店
     [/^CURRENT Effect: \+(.+) effect on Constant Upgrade 2.$/, '当前效果：数学常数升级2的效果再增加$1。'], //商店
     [/^CURRENT Effect: \+(.+)% Overflux Powder gained when Overflux Orbs expire.$/, '当前效果：超通量粉转换效率增加$1%。'], //商店
+    [/^Are you sure you'd like to purchase offeringPotion for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买祭品药剂吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase obtainiumPotion for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买难得素药剂吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase offeringEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX额外祭品吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase offeringAuto for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买AUTO自动献祭祭品吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase obtainiumEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX额外难得素吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase obtainiumAuto for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买AUTO难得素自动研究吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase instantChallenge for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买立即挑战吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase antSpeed for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买蚂蚁速度吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase cashGrab for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买昂贵物品吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase shopTalisman for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买商店护身符吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase seasonPass for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买季票 1吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase challengeExtension for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买挑战上限吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase challengeTome for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买挑战后传吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase cubeToQuark for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买方盒转夸克吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase tesseractToQuark for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买超立方转夸克吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase hypercubeToQuark for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买五阶立方转夸克吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase seasonPass2 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买季票 2吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase seasonPass3 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买季票 3吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase chronometer for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买时计吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase infiniteAscent for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买无限晋升吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase calculator for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买计算器 1吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase calculator2 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买计算器 2吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase calculator3 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买计算器 3吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase constantEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX数学常数吗？点击确定后才会购买。'], //商店
+    [/^Are you sure you'd like to purchase powderEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX超通量粉吗？点击确定后才会购买。'], //商店
 ]);

@@ -350,7 +350,7 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
             lol.textContent = "CURRENT Effect: Code 'add' variance -" + format(10 * player.shopUpgrades.calculator3) + "%, Each use gives " + format(60 * player.shopUpgrades.calculator3) + " seconds to Ascension Timer.";
             break;
         case "constantEX":
-            lol.textContent = "CURRENT Effect: +" + format(0.01 * player.shopUpgrades.constantEX, 2, true) + " effect on Constant Upgrade 2";
+            lol.textContent = "CURRENT Effect: +" + format(0.01 * player.shopUpgrades.constantEX, 2, true) + " effect on Constant Upgrade 2.";
             break;
         case "powderEX":
             lol.textContent = "CURRENT Effect: +" + format(2 * player.shopUpgrades.powderEX) + "% Overflux Powder gained when Overflux Orbs expire."

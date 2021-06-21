@@ -566,8 +566,24 @@ TODO: Fix this entire tab it's utter shit
 
     // Import button
     document.getElementById('importfile').addEventListener('change', async e => {
-        const { files } = e.target as HTMLInputElement;
-        const save = await files[0].text();
+        const element = e.target as HTMLInputElement;
+        const file = element.files[0];
+        let save = '';
+        // https://developer.mozilla.org/en-US/docs/Web/API/Blob/text
+        // not available in (bad) browsers like Safari 11
+        if (typeof Blob.prototype.text === 'function') {
+            save = await file.text();
+        } else {
+            const reader = new FileReader();
+            reader.readAsText(file);
+            const text = await new Promise<string>(res => {
+                reader.addEventListener('load', () => res(reader.result.toString()));
+            });
+            
+            save = text;
+        }
+
+        element.value = null;
 
         return importSynergism(save);
     });

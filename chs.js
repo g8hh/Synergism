@@ -1593,10 +1593,11 @@ var cnItems = {
     'Can\'t bet that!': '无法下注那个数量！',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
-    'You\'re playing v2.5.0 - Seal of the Merchant [Last Update: 8:22PM UTC-8 18-Jun-2021].': '您目前玩的版本为V2.5.0 - 商人的印记 [2021年6月18日 西八区 下午8:22更新]。',
+    'You\'re playing v2.5.1 - Seal of the Merchant [Last Update: 8:22PM UTC-8 18-Jun-2021].': '您目前玩的版本为V2.5.0 - 商人的印记 [2021年6月18日 西八区 下午8:22更新]。',
+    'Current Bonus: N/A (offline)%!': '当前加成：无(因为离线)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    '2x Global Speed, 3x Offerings, 2.021x All Cube Gain, Triple Export Quark Gain and Caps!': '全局速度变为2倍，祭品获取数量变为3倍，所有类型的方盒及立方获取数量变为2.021倍，导出夸克的获取速度和上限变为3倍！',
+    'Current Buffs: +13 Base Export Quarks per hour, +13% all Cube types, +31% Powder Conversion!': '当前加成：每小时导出夸克的基础获取数量增加13，所有类型的方盒及立方获取数量增加13%，超通量粉的转化效率增加31%！',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1663,6 +1664,7 @@ var cnItems = {
     'Platonic Beta': 'Platonic Beta升级',
     'Platonic Omega': 'Platonic Omega升级',
     'Overflux Powder': '超通量粉',
+    'Event [Most Recent: June 20 - June 27]': '活动加成[最近一次活动时间：6月20日至6月27日]',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube multipliers': '方盒倍率',
     'Ascension Score Multiplier': '飞升分数倍率',
@@ -1703,6 +1705,11 @@ var cnItems = {
     'Achievement 265 Bonus': '成就265的加成',
     'Achievement 270 Bonus': '成就270的加成',
     'TOTAL HEPTERACT MULTIPLIER': '七阶立方总倍率',
+    'Orb to Powder multipliers': '超通量粉转化效率',
+    'Base': '基础值',
+    'Challenge 15 Bonus': '挑战15的加成',
+    'Powder EX': '商店EX超通量粉升级',
+    'Achievement': '成就',
     'You have unlocked all reward types from Challenge 15!': '您解锁了挑战15的所有奖励类型！',
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
@@ -1784,7 +1791,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Tue May 04 2021 23:59:59 GMT+0800 (": "活动持续到2021年5月4日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sun Jun 27 2021 23:59:59 GMT+0800 (": "活动持续到2021年6月27日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑
@@ -1964,7 +1971,8 @@ var cnRegReplace = new Map([
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面及建筑
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面及建筑
     [/^(\s+)Click the image below to join the Discord!(\s+)$/, '$1点击下方的图片加入Discord频道！$2'], //主界面及建筑
-    [/^(\s+)\[NEW!\] Support Development on Patreon!(\s+)$/, '$1[新！]在Patreon上支持本游戏开发！$2'], //主界面及建筑
+    [/^(\s+)Support Development on Patreon!(\s+)$/, '$1[新！]在Patreon上支持本游戏开发！$2'], //主界面及建筑
+    [/^Generous patrons give you a bonus of (.+)% more quarks!$/, '由于Patron上的慷慨相助，夸克获取数量增加了$1%！'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面及建筑
@@ -2209,12 +2217,12 @@ var cnRegReplace = new Map([
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克！由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克！您还有$5次“Add”代码的使用机会。$6秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！由于PL-AT Ω的效果，您同时获得了$6秒的飞升时间！您还有$7次“Add”代码的使用机会。$8秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
     [/^For (.+) quarks or for nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
     [/^For (.+) quarks or for nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
-    [/^You were awarded (.+) quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！由于PL-AT Ω的效果，您同时获得了$2秒的飞升时间！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
-    [/^You were awarded (.+) quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！您还有$2次“Add”代码的使用机会。$3秒后可以获得1次。'], //每小时奖励代码
+    [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！由于PL-AT Ω的效果，您同时获得了$3秒的飞升时间！您还有$4次“Add”代码的使用机会。$5秒后可以获得1次。'], //每小时奖励代码
+    [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //每小时奖励代码
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //每小时奖励代码

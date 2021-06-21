@@ -2219,8 +2219,8 @@ var cnRegReplace = new Map([
     [/^You can use up to (.+) attempts at once. How many would you like to use$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
     [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！由于PL-AT Ω的效果，您同时获得了$6秒的飞升时间！您还有$7次“Add”代码的使用机会。$8秒后可以获得1次。'], //每小时奖励代码
     [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
-    [/^For (.+) quarks or for nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
-    [/^For (.+) quarks or for nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
+    [/^For (.+) quarks or nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
+    [/^For (.+) quarks or nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
     [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！由于PL-AT Ω的效果，您同时获得了$3秒的飞升时间！您还有$4次“Add”代码的使用机会。$5秒后可以获得1次。'], //每小时奖励代码
     [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码

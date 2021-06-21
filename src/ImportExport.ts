@@ -271,7 +271,7 @@ export const promocodes = async () => {
             await Alert(`I gave you ${amount - quarks} quarks so I could take ${amount} away.`);
 
         player.worlds.sub(quarks < amount ? amount - quarks : amount);
-    } else if (input === 'gamble') {
+    /*} else if (input === 'gamble') {
         if (
             typeof player.skillCode === 'number' ||
             typeof localStorage.getItem('saveScumIsCheating') === 'string'
@@ -304,7 +304,7 @@ export const promocodes = async () => {
         }
         
         player.worlds.sub(bet);
-        el.textContent = `Try again... you can do it! [-${bet} quarks]`;
+        el.textContent = `Try again... you can do it! [-${bet} quarks]`;*/
     } else {
         el.textContent = "Your code is either invalid or already used. Try again!"
     }

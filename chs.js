@@ -1710,6 +1710,7 @@ var cnItems = {
     'Challenge 15 Bonus': '挑战15的加成',
     'Powder EX': '商店EX超通量粉升级',
     'Achievement': '成就',
+    'FINAL COEFFICIENT': '最终系数',
     'You have unlocked all reward types from Challenge 15!': '您解锁了挑战15的所有奖励类型！',
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',

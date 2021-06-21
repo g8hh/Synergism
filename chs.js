@@ -1664,7 +1664,7 @@ var cnItems = {
     'Platonic Beta': 'Platonic Beta升级',
     'Platonic Omega': 'Platonic Omega升级',
     'Overflux Powder': '超通量粉',
-    'Event [Most Recent: June 20 - June 27]': '活动加成[最近一次活动时间：6月20日至6月27日]',
+    'Event [Most Recent: June 20 - June 27]': '活动加成[最近时间：6月20日至6月27日]',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube multipliers': '方盒倍率',
     'Ascension Score Multiplier': '飞升分数倍率',
@@ -1971,7 +1971,7 @@ var cnRegReplace = new Map([
     [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面及建筑
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面及建筑
     [/^(\s+)Click the image below to join the Discord!(\s+)$/, '$1点击下方的图片加入Discord频道！$2'], //主界面及建筑
-    [/^(\s+)Support Development on Patreon!(\s+)$/, '$1[新！]在Patreon上支持本游戏开发！$2'], //主界面及建筑
+    [/^(\s+)Support Development on Patreon!(\s+)$/, '$1在Patreon上支持本游戏开发！$2'], //主界面及建筑
     [/^Generous patrons give you a bonus of (.+)% more quarks!$/, '由于Patron上的慷慨相助，夸克获取数量增加了$1%！'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑

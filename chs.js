@@ -1495,10 +1495,10 @@ var cnItems = {
     'You walk away from the machine, powder intact.': '您离开了那台机器，超通量粉分毫未少。',
     'Upon using the machine, your cubes feel just a little more rewarding. Daily cube opening counts have been reset! [-25 Powder]': '使用机器后，当天开启方盒及立方获得的夸克计数被重置了！[消耗25超通量粉]',
     'Congratulations. You have unlocked the ability to craft the Hepteract of Challenge in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·挑战了！',
-    'Congratulations. You have unlocked the ability to craft the Hepteract of The Abyssal in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·深渊了！',
-    'Congratulations. You have unlocked the ability to craft the Hepteract of Too Many Accelerator in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
-    'Congratulations. You have unlocked the ability to craft the Hepteract of Too Many Accelerator Boost in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器加成了！',
-    'Congratulations. You have unlocked the ability to craft the Hepteract of Too Many Multiplier in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加倍器了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of the Abyss in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·深渊了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Way Too Many Accelerators in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Way Too Many Accelerator Boosts in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器加成了！',
+    'Congratulations. You have unlocked the ability to craft the Hepteract of Way Too Many Multipliers in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加倍器了！',
     //惊奇方盒结束
 
     //腐化

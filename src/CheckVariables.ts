@@ -24,6 +24,9 @@ export const checkVariablesOnLoad = (data: Player) => {
         }
     }
 
+    data.shopUpgrades ??= { ...blankSave.shopUpgrades };
+    data.ascStatToggles ??= { ...blankSave.ascStatToggles };
+
     // backwards compatibility for v1.0101 (and possibly older) saves
     if (!Array.isArray(data.challengecompletions)) {
         player.challengecompletions = Object.values(data.challengecompletions);
@@ -398,7 +401,7 @@ export const checkVariablesOnLoad = (data: Player) => {
     }
     
     if (data.overfluxOrbs === undefined) {
-        player.overflubOrbs = 0;
+        player.overfluxOrbs = 0;
     } 
     if (data.overfluxPowder === undefined) {
         player.overfluxPowder = 0;
@@ -408,5 +411,9 @@ export const checkVariablesOnLoad = (data: Player) => {
 
     if (data.ascStatToggles[5] === undefined) {
         player.ascStatToggles[5] = false;
+    }
+
+    while (player.platonicUpgrades[20] === undefined) {
+        player.platonicUpgrades.push(0)
     }
 }

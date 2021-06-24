@@ -6,6 +6,7 @@ import { achievementaward, totalachievementpoints } from './Achievements';
 import { displayRuneInformation } from './Runes';
 import { visualUpdateBuildings, visualUpdateUpgrades, visualUpdateAchievements, visualUpdateRunes, visualUpdateChallenges, visualUpdateResearch, visualUpdateSettings, visualUpdateShop, visualUpdateAnts, visualUpdateCubes, visualUpdateCorruptions } from './UpdateVisuals';
 import { getMaxChallenges } from './Challenges';
+import { OneToFive, ZeroToFour, ZeroToSeven } from './types/Synergism';
 
 export const revealStuff = () => {
     const example = document.getElementsByClassName("coinunlock1") as HTMLCollectionOf<HTMLElement>;
@@ -205,7 +206,7 @@ export const revealStuff = () => {
         (document.getElementById("rune2area").style.display = "flex", document.getElementById("runeshowpower2").style.display = "flex") :
         (document.getElementById("rune2area").style.display = "none", document.getElementById("runeshowpower2").style.display = "none");
 
-    if (player.achievements[43] === 1) { // Trasncend Mythos Achievement 1
+    if (player.achievements[43] === 1) { // Transcend Mythos Achievement 1
         document.getElementById('prestigeautotoggle').style.display = 'block';
         document.getElementById('prestigeamount').style.display = 'block';
         document.getElementById('autoprestige').style.display = 'block';
@@ -317,10 +318,9 @@ export const revealStuff = () => {
         (document.getElementById('rune6area').style.display = 'flex', document.getElementById('runeshowpower6').style.display = "flex") :
         (document.getElementById('rune6area').style.display = 'none', document.getElementById('runeshowpower6').style.display = "none");
 
-    // false ? // TODO: When 7th rune is implementable change this with the unlock condition
-    //    (document.getElementById('rune7area').style.display = 'flex', document.getElementById('runeshowpower7').style.display = "flex") :
-    document.getElementById('rune7area').style.display = 'none';
-    document.getElementById('runeshowpower7').style.display = 'none';
+    player.platonicUpgrades[20] > 0 ?
+        (document.getElementById('rune7area').style.display = 'flex', document.getElementById('runeshowpower7').style.display = "flex") :
+        (document.getElementById('rune7area').style.display = 'none', document.getElementById('runeshowpower7').style.display = "none") ;
 
     document.getElementById("ascensionStats").style.visibility = player.achievements[197] > 0 ? "visible" : "hidden";
     document.getElementById("ascHyperStats").style.display = player.challengecompletions[13] > 0 ? "" : "none";
@@ -633,7 +633,7 @@ export const buttoncolorchange = () => {
     if (G['currentTab'] === "buildings" && G['buildingSubTab'] === "mythos") {
         for (let i = 1; i <= 5; i++) {
             const toggle = player.toggles[i + 15];
-            const mythos = player[`${G['ordinals'][i - 1]}CostMythos`];
+            const mythos = player[`${G['ordinals'][i - 1 as ZeroToFour]}CostMythos` as const];
             (!toggle || !player.upgrades[93 + i]) && player.transcendPoints.gte(mythos) 
                 ? document.getElementById(`buymythos${i}`).classList.add("buildingPurchaseBtnAvailable")
                 : document.getElementById(`buymythos${i}`).classList.remove("buildingPurchaseBtnAvailable");
@@ -642,7 +642,7 @@ export const buttoncolorchange = () => {
 
     if (G['currentTab'] === "buildings" && G['buildingSubTab'] === "particle") {
         for (let i = 1; i <= 5; i++) {
-            const costParticles = player[G['ordinals'][i - 1] + 'CostParticles'] as Decimal;
+            const costParticles = player[`${G['ordinals'][i - 1 as ZeroToFour]}CostParticles` as const];
             player.reincarnationPoints.gte(costParticles) 
                 ? document.getElementById(`buyparticles${i}`).classList.add("buildingPurchaseBtnAvailable")
                 : document.getElementById(`buyparticles${i}`).classList.remove("buildingPurchaseBtnAvailable");
@@ -651,7 +651,7 @@ export const buttoncolorchange = () => {
 
     if (G['currentTab'] === "buildings" && G['buildingSubTab'] === "tesseract") {
         for (let i = 1; i <= 5; i++) {
-            const ascendBuilding = player['ascendBuilding' + i]['cost'] as number;
+            const ascendBuilding = player[`ascendBuilding${i as OneToFive}` as const]['cost'];
             Number(player.wowTesseracts) >= ascendBuilding
                 ? document.getElementById(`buyTesseracts${i}`).classList.add("buildingPurchaseBtnAvailable")
                 : document.getElementById(`buyTesseracts${i}`).classList.remove("buildingPurchaseBtnAvailable");
@@ -677,7 +677,7 @@ export const buttoncolorchange = () => {
     if (G['currentTab'] === "ants") {
         (player.reincarnationPoints.gte(player.firstCostAnts)) ? document.getElementById(`anttier1`).classList.add("antTierBtnAvailable") : document.getElementById(`anttier1`).classList.remove("antTierBtnAvailable");
         for (let i = 2; i <= 8; i++) {
-            const costAnts = player[G['ordinals'][i - 1] + 'CostAnts'] as Decimal | number;
+            const costAnts = player[`${G['ordinals'][(i - 1) as ZeroToSeven]}CostAnts` as const];
             player.antPoints.gte(costAnts)
                 ? document.getElementById(`anttier${i}`).classList.add("antTierBtnAvailable")
                 : document.getElementById(`anttier${i}`).classList.remove("antTierBtnAvailable")

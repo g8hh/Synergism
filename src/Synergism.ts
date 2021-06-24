@@ -1,11 +1,11 @@
 import Decimal from 'break_infinity.js';
 import LZString from 'lz-string';
 
-import { isDecimal, getElementById, sortWithIndeces, sumContents } from './Utility';
+import { isDecimal, getElementById, sortWithIndices, sumContents } from './Utility';
 import { blankGlobals, Globals as G } from './Variables';
 import { CalcECC, getChallengeConditions, challengeDisplay, highestChallengeRewards, challengeRequirement, runChallengeSweep, getMaxChallenges, challenge15ScoreMultiplier } from './Challenges';
 
-import type { Player } from './types/Synergism';
+import type { OneToFive, Player, ZeroToFour } from './types/Synergism';
 import { upgradeupdate, getConstUpgradeMetadata, buyConstantUpgrades, ascendBuildingDR } from './Upgrades';
 import { updateResearchBG, maxRoombaResearchIndex, buyResearch } from './Research';
 import { updateChallengeDisplay, revealStuff, showCorruptionStatsLoadouts, CSSAscend, updateAchievementBG, updateChallengeLevel, buttoncolorchange, htmlInserts, hideStuff, changeTabColor, Confirm, Alert } from './UpdateHTML';
@@ -21,7 +21,7 @@ import { antSacrificePointsToMultiplier, autoBuyAnts, calculateCrumbToCoinExp } 
 import { calculatetax } from './Tax';
 import { ascensionAchievementCheck, challengeachievementcheck, achievementaward, resetachievementcheck, buildingAchievementCheck } from './Achievements';
 import { reset } from './Reset';
-import { buyMax, buyAccelerator, buyMultiplier, boostAccelerator, buyCrystalUpgrades, buyParticleBuilding, getReductionValue, getCost, buyRuneBonusLevels, buyTesseractBuilding, getTesseractCost } from './Buy';
+import { buyMax, buyAccelerator, buyMultiplier, boostAccelerator, buyCrystalUpgrades, buyParticleBuilding, getReductionValue, getCost, buyRuneBonusLevels, buyTesseractBuilding, getTesseractCost, tesseractBuildingCosts } from './Buy';
 import { autoUpgrades } from './Automation';
 import { redeemShards } from './Runes';
 import { updateCubeUpgradeBG } from './Cubes';
@@ -42,7 +42,7 @@ import { startHotkeys } from './Hotkeys';
  * This should be detected when importing a file.
  */
 export const isTesting = false;
-export const version = '2.5.1';
+export const version = '2.5.2';
 
 export const intervalHold = new Set<ReturnType<typeof setInterval>>();
 export const interval = new Proxy(setInterval, {
@@ -490,7 +490,7 @@ export const player: Player = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    platonicUpgrades: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    platonicUpgrades: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     wowCubes: new WowCubes(0),
     wowTesseracts: new WowTesseracts(0),
     wowHypercubes: new WowHypercubes(0),
@@ -700,13 +700,14 @@ const loadSynergy = (reset = false) => {
             });
         }
 
-        Object.keys(data).forEach((prop) => {
+        Object.keys(data).forEach((stringProp) => {
+            const prop = stringProp as keyof Player;
             if (toAdapt.has(prop)) {
-                return player[prop] = toAdapt.get(prop)(data);
+                return ((player[prop] as unknown) = toAdapt.get(prop)(data));
             }
 
             if (isDecimal(player[prop])) {
-                return (player[prop] = new Decimal(data[prop]));
+                return ((player[prop] as Decimal) = new Decimal(data[prop]));
             } else if (prop === 'codes') {
                 return (player.codes = new Map(data[prop]));
             } else if (oldCodesUsed.includes(prop)) {
@@ -716,12 +717,12 @@ const loadSynergy = (reset = false) => {
                 // so if the lengths of the savefile key is greater than that of the player obj
                 // it means a key was removed; likely a 1-based index where array[0] was null
                 // so we can get rid of it entirely.
-                if (player[prop].length < data[prop].length) {
-                    return player[prop] = data[prop].slice(data[prop].length - player[prop].length);
+                if ((player[prop] as unknown[]).length < data[prop].length) {
+                    return (player[prop] as unknown[]) = data[prop].slice(data[prop].length - (player[prop] as unknown[]).length);
                 }
             }
 
-            return (player[prop] = data[prop]);
+            return ((player[prop] as unknown) = data[prop]);
         });
 
         if (data.offerpromo24used !== undefined) {
@@ -1081,7 +1082,8 @@ const loadSynergy = (reset = false) => {
         }
 
         for (let i = 1; i <= 5; i++) {
-            player['ascendBuilding' + i].generated = new Decimal(player['ascendBuilding' + i].generated)
+            const ascendBuildingI = `ascendBuilding${i as OneToFive}` as const;
+            player[ascendBuildingI].generated = new Decimal(player[ascendBuildingI].generated)
         }
 
         while (player.achievements[252] === undefined) {
@@ -1119,7 +1121,7 @@ const loadSynergy = (reset = false) => {
         document.getElementById("toggleRuneSubTab1").style.border = '2px solid gold'
 
 
-        const q = ['coin', 'crystal', 'mythos', 'particle', 'offering', 'tesseract'];
+        const q = ['coin', 'crystal', 'mythos', 'particle', 'offering', 'tesseract'] as const;
         if (player.coinbuyamount !== 1 && player.coinbuyamount !== 10 && player.coinbuyamount !== 100 && player.coinbuyamount !== 1000) {
             player.coinbuyamount = 1;
         }
@@ -1157,16 +1159,17 @@ const loadSynergy = (reset = false) => {
                 document.getElementById(e).style.backgroundColor = ""
             }
             let c;
-            if (player[q[j] + 'buyamount'] === 1) {
+            const curBuyAmount = player[`${q[j]}buyamount` as const];
+            if (curBuyAmount === 1) {
                 c = 'one'
             }
-            if (player[q[j] + 'buyamount'] === 10) {
+            if (curBuyAmount === 10) {
                 c = 'ten'
             }
-            if (player[q[j] + 'buyamount'] === 100) {
+            if (curBuyAmount === 100) {
                 c = 'hundred'
             }
-            if (player[q[j] + 'buyamount'] === 1000) {
+            if (curBuyAmount === 1000) {
                 c = 'thousand'
             }
 
@@ -1181,7 +1184,7 @@ const loadSynergy = (reset = false) => {
             testArray.push(G['researchBaseCosts'][i]);
         }
         //Sorts the above array, and returns the index order of sorted array
-        G['researchOrderByCost'] = sortWithIndeces(testArray)
+        G['researchOrderByCost'] = sortWithIndices(testArray)
         player.roombaResearchIndex = 0;
 
         // June 09, 2021: Updated toggleShops() and removed boilerplate - Platonic
@@ -2139,8 +2142,8 @@ export const multipliers = (): void => {
     } */
 
     G['globalConstantMult'] = new Decimal("1")
-    G['globalConstantMult'] = G['globalConstantMult'].times(Decimal.pow(1.05 + 0.01 * player.achievements[270], player.constantUpgrades[1]))
-    G['globalConstantMult'] = G['globalConstantMult'].times(Decimal.pow(1 + 0.001 * Math.min(100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX + 1000 * (G['challenge15Rewards'].exponent - 1), player.constantUpgrades[2]), ascendBuildingDR()))
+    G['globalConstantMult'] = G['globalConstantMult'].times(Decimal.pow(1.05 + 0.01 * player.achievements[270] + 0.001 * player.platonicUpgrades[18], player.constantUpgrades[1]))
+    G['globalConstantMult'] = G['globalConstantMult'].times(Decimal.pow(1 + 0.001 * Math.min(100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX + 1000 * (G['challenge15Rewards'].exponent - 1) + 3 * player.platonicUpgrades[18], player.constantUpgrades[2]), ascendBuildingDR()))
     G['globalConstantMult'] = G['globalConstantMult'].times(1 + 2 / 100 * player.researches[139])
     G['globalConstantMult'] = G['globalConstantMult'].times(1 + 3 / 100 * player.researches[154])
     G['globalConstantMult'] = G['globalConstantMult'].times(1 + 4 / 100 * player.researches[169])
@@ -2154,8 +2157,9 @@ export const multipliers = (): void => {
         G['globalConstantMult'] = G['globalConstantMult'].times(10)
     }
     if (player.platonicUpgrades[15] > 0) {
-        G['globalConstantMult'] = G['globalConstantMult'].times(1e66)
+        G['globalConstantMult'] = G['globalConstantMult'].times(1e250)
     }
+    G['globalConstantMult'] = G['globalConstantMult'].times(Decimal.pow(player.overfluxPowder + 1, 10 * player.platonicUpgrades[16]))
 }
 
 export const resourceGain = (dt: number): void => {
@@ -2244,11 +2248,12 @@ export const resourceGain = (dt: number): void => {
 
     createAnts(dt);
     for (let i = 1; i <= 5; i++) {
-        G['ascendBuildingProduction'][G['ordinals'][5 - i] as keyof typeof G['ascendBuildingProduction']] = (player['ascendBuilding' + (6 - i)]['generated']).add(player['ascendBuilding' + (6 - i)]['owned']).times(player['ascendBuilding' + i]['multiplier']).times(G['globalConstantMult'])
+        G['ascendBuildingProduction'][G['ordinals'][5 - i as ZeroToFour]] = (player[`ascendBuilding${6 - i as OneToFive}` as const]['generated']).add(player[`ascendBuilding${6 - i as OneToFive}` as const]['owned']).times(player[`ascendBuilding${i as OneToFive}` as const]['multiplier']).times(G['globalConstantMult'])
 
         if (i !== 5) {
-            player['ascendBuilding' + (5 - i)]['generated'] = player['ascendBuilding' + (5 - i)]['generated']
-                .add(G['ascendBuildingProduction'][G['ordinals'][5 - i] as keyof typeof G['ascendBuildingProduction']].times(dt))
+            const fiveMinusI = 5 - i as 1|2|3|4;
+            player[`ascendBuilding${fiveMinusI}` as const]['generated'] = player[`ascendBuilding${fiveMinusI}` as const]['generated']
+                .add(G['ascendBuildingProduction'][G['ordinals'][fiveMinusI]].times(dt))
         }
     }
 
@@ -2753,19 +2758,19 @@ export const updateAll = (): void => {
 //Autobuy "Building" Tab
 
     if (player.toggles[1] === true && player.upgrades[81] === 1 && player.coins.gte(player.firstCostCoin)) {
-        buyMax('first', 'Coin', 1, 100)
+        buyMax(1, 'Coin')
     }
     if (player.toggles[2] === true && player.upgrades[82] === 1 && player.coins.gte(player.secondCostCoin)) {
-        buyMax('second', 'Coin', 2, 2e3)
+        buyMax(2, 'Coin')
     }
     if (player.toggles[3] === true && player.upgrades[83] === 1 && player.coins.gte(player.thirdCostCoin)) {
-        buyMax('third', 'Coin', 3, 4e4)
+        buyMax(3, 'Coin')
     }
     if (player.toggles[4] === true && player.upgrades[84] === 1 && player.coins.gte(player.fourthCostCoin)) {
-        buyMax('fourth', 'Coin', 4, 8e5)
+        buyMax(4, 'Coin')
     }
     if (player.toggles[5] === true && player.upgrades[85] === 1 && player.coins.gte(player.fifthCostCoin)) {
-        buyMax('fifth', 'Coin', 5, 1.6e7)
+        buyMax(5, 'Coin')
     }
     if (player.toggles[6] === true && player.upgrades[86] === 1 && player.coins.gte(player.acceleratorCost)) {
         buyAccelerator(true);
@@ -2780,19 +2785,19 @@ export const updateAll = (): void => {
 //Autobuy "Prestige" Tab
 
     if (player.toggles[10] === true && player.achievements[78] === 1 && player.prestigePoints.gte(player.firstCostDiamonds)) {
-        buyMax('first', 'Diamonds', 1, 1e2)
+        buyMax(1, 'Diamonds')
     }
     if (player.toggles[11] === true && player.achievements[85] === 1 && player.prestigePoints.gte(player.secondCostDiamonds)) {
-        buyMax('second', 'Diamonds', 3, 1e5)
+        buyMax(2, 'Diamonds')
     }
     if (player.toggles[12] === true && player.achievements[92] === 1 && player.prestigePoints.gte(player.thirdCostDiamonds)) {
-        buyMax('third', 'Diamonds', 6, 1e15)
+        buyMax(3, 'Diamonds')
     }
     if (player.toggles[13] === true && player.achievements[99] === 1 && player.prestigePoints.gte(player.fourthCostDiamonds)) {
-        buyMax('fourth', 'Diamonds', 10, 1e40)
+        buyMax(4, 'Diamonds')
     }
     if (player.toggles[14] === true && player.achievements[106] === 1 && player.prestigePoints.gte(player.fifthCostDiamonds)) {
-        buyMax('fifth', 'Diamonds', 15, 1e100)
+        buyMax(5, 'Diamonds')
     }
 
     let c = 0;
@@ -2819,37 +2824,37 @@ export const updateAll = (): void => {
 //Autobuy "Transcension" Tab
 
     if (player.toggles[16] === true && player.upgrades[94] === 1 && player.transcendPoints.gte(player.firstCostMythos)) {
-        buyMax('first', 'Mythos', 1, 1)
+        buyMax(1, 'Mythos')
     }
     if (player.toggles[17] === true && player.upgrades[95] === 1 && player.transcendPoints.gte(player.secondCostMythos)) {
-        buyMax('second', 'Mythos', 3, 1e2)
+        buyMax(2, 'Mythos')
     }
     if (player.toggles[18] === true && player.upgrades[96] === 1 && player.transcendPoints.gte(player.thirdCostMythos)) {
-        buyMax('third', 'Mythos', 6, 1e4)
+        buyMax(3, 'Mythos')
     }
     if (player.toggles[19] === true && player.upgrades[97] === 1 && player.transcendPoints.gte(player.fourthCostMythos)) {
-        buyMax('fourth', 'Mythos', 10, 1e8)
+        buyMax(4, 'Mythos')
     }
     if (player.toggles[20] === true && player.upgrades[98] === 1 && player.transcendPoints.gte(player.fifthCostMythos)) {
-        buyMax('fifth', 'Mythos', 15, 1e16)
+        buyMax(5, 'Mythos')
     }
 
 //Autobuy "Reincarnation" Tab
 
     if (player.toggles[22] === true && player.reincarnationPoints.gte(player.firstCostParticles)) {
-        buyParticleBuilding('first', 1, true)
+        buyParticleBuilding(1, true)
     }
     if (player.toggles[23] === true && player.reincarnationPoints.gte(player.secondCostParticles)) {
-        buyParticleBuilding('second', 1e2, true)
+        buyParticleBuilding(2, true)
     }
     if (player.toggles[24] === true && player.reincarnationPoints.gte(player.thirdCostParticles)) {
-        buyParticleBuilding('third', 1e4, true)
+        buyParticleBuilding(3, true)
     }
     if (player.toggles[25] === true && player.reincarnationPoints.gte(player.fourthCostParticles)) {
-        buyParticleBuilding('fourth', 1e8, true)
+        buyParticleBuilding(4, true)
     }
     if (player.toggles[26] === true && player.reincarnationPoints.gte(player.fifthCostParticles)) {
-        buyParticleBuilding('fifth', 1e16, true)
+        buyParticleBuilding(5, true)
     }
 
 //Autobuy "ascension" tab
@@ -2863,18 +2868,18 @@ export const updateAll = (): void => {
 
 //Loops through all buildings which have AutoBuy turned 'on' and purchases the cheapest available building that player can afford
     if ((player.researches[190] > 0) && (player.tesseractAutoBuyerToggle == 1)) {
-        const cheapestTesseractBuilding = { cost:0, intCost:0, index:0, intCostArray: [1,10,100,1000,10000] };
-        for (let i = 0; i < cheapestTesseractBuilding.intCostArray.length; i++){
-            if ((Number(player.wowTesseracts) >= cheapestTesseractBuilding.intCostArray[i] * Math.pow(1 + player['ascendBuilding' + (i+1)]['owned'], 3) + player.tesseractAutoBuyerAmount) && player.autoTesseracts[i+1]) {
-                if ((getTesseractCost(cheapestTesseractBuilding.intCostArray[i], i+1)[1] < cheapestTesseractBuilding.cost) || (cheapestTesseractBuilding.cost == 0)){
-                    cheapestTesseractBuilding.cost = getTesseractCost(cheapestTesseractBuilding.intCostArray[i], i+1)[1];
-                    cheapestTesseractBuilding.intCost = cheapestTesseractBuilding.intCostArray[i];
-                    cheapestTesseractBuilding.index = i+1;
+        const cheapestTesseractBuilding: {cost: number, index: 0|OneToFive} = { cost:0, index:0 };
+        for (let i = 0; i < tesseractBuildingCosts.length; i++){
+            const iPlusOne = i+1 as OneToFive;
+            if ((Number(player.wowTesseracts) >= tesseractBuildingCosts[i] * Math.pow(1 + player[`ascendBuilding${iPlusOne}` as const]['owned'], 3) + player.tesseractAutoBuyerAmount) && player.autoTesseracts[iPlusOne]) {
+                if ((getTesseractCost(iPlusOne)[1] < cheapestTesseractBuilding.cost) || (cheapestTesseractBuilding.cost == 0)){
+                    cheapestTesseractBuilding.cost = getTesseractCost(iPlusOne)[1];
+                    cheapestTesseractBuilding.index = iPlusOne;
                 }
             }
         }
-        if (cheapestTesseractBuilding.index > 0){
-            buyTesseractBuilding(cheapestTesseractBuilding.intCost, cheapestTesseractBuilding.index, true);
+        if (cheapestTesseractBuilding.index !== 0){
+            buyTesseractBuilding(cheapestTesseractBuilding.index, true);
         }
     }
 
@@ -3005,31 +3010,21 @@ export const updateAll = (): void => {
     const reductionValue = getReductionValue();
     if (reductionValue !== G['prevReductionValue']) {
         G['prevReductionValue'] = reductionValue;
-        const resources = ["Coin", "Diamonds", "Mythos"];
-        const scalings = [
-            (value: number) => value,
-            (value: number) => value * (value + 1) / 2,
-            (value: number) => value * (value + 1) / 2
-        ];
-        const originalCosts = [
-            [100, 2e3, 4e4, 8e5, 1.6e7],
-            [1e2, 1e5, 1e15, 1e40, 1e100],
-            [1, 1e2, 1e4, 1e8, 1e16],
-        ];
+        const resources = ["Coin", "Diamonds", "Mythos"] as const;
 
         for (let res = 0; res < resources.length; ++res) {
             const resource = resources[res];
             for (let ord = 0; ord < 5; ++ord) {
-                const num = G['ordinals'][ord];
-                player[num + "Cost" + resource] = getCost(originalCosts[res][ord], player[num + "Owned" + resource] + 1, resource, scalings[res](ord + 1), reductionValue);
+                const num = G['ordinals'][ord as ZeroToFour];
+                player[`${num}Cost${resource}` as const] = getCost(ord+1 as OneToFive, resource, player[`${num}Owned${resource}` as const] + 1, reductionValue);
             }
         }
 
         for (let i = 0; i <= 4; i++) {
-            const particleOriginalCost = [1, 1e2, 1e4, 1e8, 1e16]
-            const array = ['first', 'second', 'third', 'fourth', 'fifth']
-            const buyTo = player[array[i] + 'OwnedParticles'] + 1
-            player[array[i] + 'CostParticles'] = new Decimal(Decimal.pow(2, buyTo - 1).times(Decimal.pow(1.001, Math.max(0, (buyTo - 325000)) * Math.max(0, (buyTo - 325000) + 1) / 2))).times(particleOriginalCost[i])
+            const particleOriginalCost = [1, 1e2, 1e4, 1e8, 1e16];
+            const num = G['ordinals'][i as ZeroToFour];
+            const buyTo = player[`${num}OwnedParticles` as const] + 1
+            player[`${num}CostParticles` as const] = new Decimal(Decimal.pow(2, buyTo - 1).times(Decimal.pow(1.001, Math.max(0, (buyTo - 325000)) * Math.max(0, (buyTo - 325000) + 1) / 2))).times(particleOriginalCost[i])
         }
     }
 }
@@ -3246,132 +3241,52 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
-    const costs = {
-        default: [1, 100, 1e4, 1e8, 1e16],
-        coin: [100, 2000, 4e4, 8e5, 1.6e7],
-        diamond: [100, 1e5, 1e15, 1e40, 1e100]
-    } as const;
-
     const types = {
         coin: 'Coin',
         diamond: 'Diamonds',
-        mythos: 'Mythos'
+        mythos: 'Mythos',
+        particle: 'Particles',
+        tesseract: 'Tesseracts',
     } as const;
 
-    const cost = costs[G['buildingSubTab'] as keyof typeof costs] ?? costs.default;
-    const type = types[G['buildingSubTab'] as keyof typeof types] ?? '';
+    const type = types[G['buildingSubTab']];
 
     const key = event.key.toUpperCase();
     switch (key) {
         case "1":
-            if (G['currentTab'] === "buildings") {
-                G['buildingSubTab'] === "particle" ? buyParticleBuilding('first', cost[0]) : buyMax('first', type, 1, cost[0])
-            }
-            if (G['currentTab'] === "runes") {
-                if (G['runescreen'] === "runes") {
-                    redeemShards(1)
-                }
-                if (G['runescreen'] === "blessings") {
-                    buyRuneBonusLevels('Blessings', 1)
-                }
-                if (G['runescreen'] === "spirits") {
-                    buyRuneBonusLevels('Spirits', 1)
-                }
-            }
-            if (G['currentTab'] === "challenges") {
-                toggleChallenges(1)
-                challengeDisplay(1);
-            }
-            break;
-
         case "2":
-            if (G['currentTab'] === "buildings") {
-                G['buildingSubTab'] === "particle" 
-                    ? buyParticleBuilding('second', cost[1]) 
-                    : buyMax('second', type, G['buildingSubTab'] === "coin" ? 2 : 3, cost[1])
-            }
-            if (G['currentTab'] === "runes") {
-                if (G['runescreen'] === "runes") {
-                    redeemShards(2)
-                }
-                if (G['runescreen'] === "blessings") {
-                    buyRuneBonusLevels('Blessings', 2)
-                }
-                if (G['runescreen'] === "spirits") {
-                    buyRuneBonusLevels('Spirits', 2)
-                }
-            }
-            if (G['currentTab'] === "challenges") {
-                toggleChallenges(2)
-                challengeDisplay(2);
-            }
-            break;
         case "3":
-            if (G['currentTab'] === "buildings") {
-                G['buildingSubTab'] === "particle" 
-                    ? buyParticleBuilding('third', cost[2]) 
-                    : buyMax('third', type, G['buildingSubTab'] === "coin" ? 3 : 6, cost[2])
-            }
-            if (G['currentTab'] === "runes") {
-                if (G['runescreen'] === "runes") {
-                    redeemShards(3)
-                }
-                if (G['runescreen'] === "blessings") {
-                    buyRuneBonusLevels('Blessings', 3)
-                }
-                if (G['runescreen'] === "spirits") {
-                    buyRuneBonusLevels('Spirits', 3)
-                }
-            }
-            if (G['currentTab'] === "challenges") {
-                toggleChallenges(3)
-                challengeDisplay(3);
-            }
-            break;
         case "4":
+        case "5": {
+            const num = Number(key) as OneToFive;
+
             if (G['currentTab'] === "buildings") {
-                G['buildingSubTab'] === "particle" 
-                    ? buyParticleBuilding('fourth', cost[3]) 
-                    : buyMax('fourth', type, G['buildingSubTab'] === "coin" ? 4 : 10, cost[3])
+                if (type === 'Particles') {
+                    buyParticleBuilding(num);
+                } else if (type === 'Tesseracts') {
+                    buyTesseractBuilding(num);
+                } else {
+                    buyMax(num, type);
+                }
             }
             if (G['currentTab'] === "runes") {
                 if (G['runescreen'] === "runes") {
-                    redeemShards(4)
+                    redeemShards(num)
                 }
                 if (G['runescreen'] === "blessings") {
-                    buyRuneBonusLevels('Blessings', 4)
+                    buyRuneBonusLevels('Blessings', num)
                 }
                 if (G['runescreen'] === "spirits") {
-                    buyRuneBonusLevels('Spirits', 4)
+                    buyRuneBonusLevels('Spirits', num)
                 }
             }
             if (G['currentTab'] === "challenges") {
-                toggleChallenges(4)
-                challengeDisplay(4);
+                toggleChallenges(num)
+                challengeDisplay(num);
             }
             break;
-        case "5":
-            if (G['currentTab'] === "buildings") {
-                G['buildingSubTab'] === "particle" 
-                    ? buyParticleBuilding('fifth', cost[4]) 
-                    : buyMax('fifth', type, G['buildingSubTab'] === "coin" ? 5 : 15, cost[4])
-            }
-            if (G['currentTab'] === "runes") {
-                if (G['runescreen'] === "runes") {
-                    redeemShards(5)
-                }
-                if (G['runescreen'] === "blessings") {
-                    buyRuneBonusLevels('Blessings', 5)
-                }
-                if (G['runescreen'] === "spirits") {
-                    buyRuneBonusLevels('Spirits', 5)
-                }
-            }
-            if (G['currentTab'] === "challenges") {
-                toggleChallenges(5)
-                challengeDisplay(5);
-            }
-            break;
+        }
+
         case "6":
             if (G['currentTab'] === "buildings" && G['buildingSubTab'] === "diamond") {
                 buyCrystalUpgrades(1)
@@ -3454,7 +3369,7 @@ export const reloadShit = async (reset = false) => {
 window.addEventListener('load', () => {
     const ver = document.getElementById('versionnumber');
     ver && (ver.textContent = 
-        `You're ${isTesting ? 'testing' : 'playing'} v${version} - Seal of the Merchant [Last Update: 8:22PM UTC-8 18-Jun-2021].` + 
+        `You're ${isTesting ? 'testing' : 'playing'} v${version} - Seal of the Merchant [Last Update: 5:00 UTC-8 22-Jun-2021].` + 
         ` ${isTesting ? 'Savefiles cannot be used in live!' : ''}`
     );
     document.title = `协同放置 - Synergism v${version}`;

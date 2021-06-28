@@ -1588,6 +1588,7 @@ var cnItems = {
     'Answer was wrong, not resetting!': '回答错误，不会删除存档！',
     'Enter a promotion code here!': '点击此处输入奖励代码！',
     'Got a code? Great! Enter it in (CaSe SeNsItIvE). [Note to viewer: this is for events and certain always-active codes. May I suggest you type in "synergism2021" or "add" perchance?]': '有奖励代码吗？很好！在这里输入就可以了(注意大小写)。[注意：此处可以输入活动代码或者一些常时代码。您可以考虑输入“synergism2021”或者“add”。]',
+    'Alright, come back soon!': '好吧，下次再说！',
     'It\'s Spaghetti Time! [Awarded an achievement!!!]': '意面时间！[获得一个成就！！！]',
     'Hey, isn\'t this just a reference to Antimatter Dimensions? Shh. [Awarded an achievement!!!]': '这不是玩的反物质维度的梗吗？切。[获得一个成就！！！]',
     'Code was canceled, took no uses away from you!': '您放弃使用代码，因此没有消耗任何次数！',
@@ -1798,7 +1799,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sun Jun 27 2021 23:59:59 GMT+0800 (": "活动持续到2021年6月27日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Thu Jul 01 2021 23:59:59 GMT+0800 (": "活动持续到2021年7月1日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

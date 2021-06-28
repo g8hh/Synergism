@@ -262,7 +262,7 @@ const resdesc = [
     "[5x17] Talismans have another +0.015 Rune levels per talisman level per level!",
     "[5x18] For 'neutral' talisman effects, increase by +0.06 per level!",
     "[5x19] Gain +0.25% Wow! Cubes per level upon Ascension.",
-    "[5x20] Gain another +0.25% Wow! per level upon Ascension.",
+    "[5x20] Gain another +0.25% Wow! Cubes per level upon Ascension.",
     "[5x21] Bend time to your will, making all ticks 2% faster each level.",
     "[5x22] Adds +2% ant sacrifice reward per level.",
     "[5x23] Adds +40 base ant ELO per level.",
@@ -342,7 +342,7 @@ const resdesc = [
     "[8x22] +0.6% cubes in Ascension Bank / level. No one knows how. Bank error perhaps.",
     "[8x23] +0.06% tributes from cubes / level!. Wow! Cubes really has a lot of manufacturing errors in your favor.",
     "[8x24] +10% faster Tesseract Buildings / level. THE ARISEN. WITH THE PRAISE OF THE SINGULARITY.",
-    "[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants."
+    "[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, +(level/400) max Talisman Level, +(level/200) free ants, 0.000666% Tax reduction per level."
 ];
 
 export const researchDescriptions = (i: number, auto = false, linGrowth = 0) => {

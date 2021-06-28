@@ -2769,6 +2769,7 @@ header #obtainiumDisplay {
 
 #ascensionStats {
     display: flex;
+    gap: 10px;
     padding-top: 10px;
     margin-bottom: 15px;
     line-height: 20px;
@@ -2778,6 +2779,7 @@ header #obtainiumDisplay {
 
 #ascensionStats > span {
     display: flex;
+    white-space: pre;
     align-items: center;
 }
 
@@ -2812,7 +2814,7 @@ header #obtainiumDisplay {
 }
 
 #ascHepteract {
-    color: pink
+    color: pink;
 }
 
 #ascTimeAccel {
@@ -2820,7 +2822,7 @@ header #obtainiumDisplay {
 }
 
 #ascAscensionTimeAccel {
-    color: orange
+    color: orange;
 }
 
 #tabBorder {
@@ -2978,6 +2980,7 @@ header #obtainiumDisplay {
 
 #currentBonus {
     color: springgreen;
+
     /* Remove padding */
-    margin: 0; 
+    margin: 0;
 }

@@ -972,8 +972,8 @@ export const calculateAllCubeMultiplier = () => {
         Math.pow(1.01, player.platonicUpgrades[15] * player.challengecompletions[9]),
         // Powder Bonus [Max: 2x at 10,000 powder]
         1 + Math.min(1, player.overfluxPowder / 1e4),
-        // Event (currently, +13%)
-        1 + 0.13 * +G['isEvent'],
+        // Event (currently, +20.21%)
+        1 + 0.2021 * +G['isEvent'],
         // Total Global Cube Multipliers: 9
     ]
     return {
@@ -1022,7 +1022,7 @@ export const calculateCubeMultiplier = (score = -1) => {
         // Achievement 198-201 Bonus
         1 + 4 / 100 * (player.achievements[198] + player.achievements[199] + player.achievements[200]) + 3 / 100 * player.achievements[201],
         // Achievement 254 Bonus
-        1 + Math.min(15/100 * Math.log10(score + 1)) * player.achievements[254],
+        1 + (Math.min(0.15, 0.6/100 * Math.log10(score + 1))) * player.achievements[254],
         // Spirit Power
         1 + calculateCorruptionPoints() / 400 * G['effectiveRuneSpiritPower'][2],
         // Platonic Cube Opening Bonus
@@ -1061,7 +1061,7 @@ export const calculateTesseractMultiplier = (score = -1) => {
         // Achievement 205-208 Bonus
         1 + 4 / 100 * (player.achievements[205] + player.achievements[206] + player.achievements[207]) + 3 / 100 * player.achievements[208],
         // Achievement 255 Bonus
-        1 + Math.min(0.15, 1/100 * Math.log10(score + 1)) * player.achievements[255],
+        1 + Math.min(0.15, 0.6/100 * Math.log10(score + 1)) * player.achievements[255],
         // Platonic Cube Bonus
         G['platonicBonusMultiplier'][1],
         // Platonic Upgrade 1x2 
@@ -1091,7 +1091,7 @@ export const calculateHypercubeMultiplier = (score = -1) => {
         // Achievement 253 Bonus
         1 + 1 / 10 * player.achievements[253],
         // Achievement 256 Bonus
-        1 + Math.min(0.15, 1/100 * Math.log10(score + 1)),
+        1 + Math.min(0.15, 0.6/100 * Math.log10(score + 1)),
         // Achievement 265 Bonus
         1 + Math.min(2, player.ascensionCount / 2.5e10) * player.achievements[265],
         // Platonic Cubes Opened Bonus
@@ -1125,7 +1125,7 @@ export const calculatePlatonicMultiplier = (score = -1) => {
         // Achievement 223 Bonus
         1 + player.achievements[223] * Math.min(2, player.ascensionCount / 1.337e9),
         // Achievement 257 Bonus
-        1 + Math.min(0.15, 1/100 * Math.log10(score + 1)) * player.achievements[257],
+        1 + Math.min(0.15, 0.6/100 * Math.log10(score + 1)) * player.achievements[257],
         // Platonic Cube Opening Bonus
         G['platonicBonusMultiplier'][3],
         // Platonic Upgrade 1x4
@@ -1149,7 +1149,7 @@ export const calculateHepteractMultiplier = (score = -1) => {
         // Season Pass 3
         1 + 1 / 100 * player.shopUpgrades.seasonPass3,
         // Achievement 258 Bonus
-        1 + Math.min(0.15, 1/100 * Math.log10(score + 1)) * player.achievements[258],
+        1 + Math.min(0.15, 0.6/100 * Math.log10(score + 1)) * player.achievements[258],
         // Achievement 264 Bonus [Max: 8T Asc]
         1 + Math.min(0.4, player.ascensionCount / 2e13) * player.achievements[264],
         // Achievement 265 Bonus [Max: 160T Asc]
@@ -1366,7 +1366,7 @@ export const calculatePowderConversion = () => {
         (1 + player.achievements[256] / 20), // Achievement 256, 5%
         (1 + player.achievements[257] / 20), // Achievement 257, 5%
         1 + 0.01 * player.platonicUpgrades[16], // Platonic Upgrade 4x1
-        1 + 0.31 * +G['isEvent'] // Event!
+        1 // Event!
     ]
     
     return {
@@ -1435,8 +1435,8 @@ export const forcedDailyReset = (testing = false) => {
     }
 }
 
-const eventStart = "06/18/2021 17:00:00"
-const eventEnd = "06/27/2021 23:59:59"
+const eventStart = "06/26/2021 00:00:00"
+const eventEnd = "07/01/2021 23:59:59"
 
 export const eventCheck = () => {
     const start = new Date(eventStart);
@@ -1446,7 +1446,7 @@ export const eventCheck = () => {
     if(now.getTime() >= start.getTime() && now.getTime() <= end.getTime()){
         G['isEvent'] = true
         document.getElementById('eventCurrent').textContent = "ACTIVE UNTIL " + end
-        document.getElementById('eventBuffs').textContent = "Current Buffs: +13 Base Export Quarks per hour, +13% all Cube types, +31% Powder Conversion!"
+        document.getElementById('eventBuffs').textContent = "Current Buffs: +100% Quarks from code 'Add', +20.21% All Cube Types"
     }
     else{
         G['isEvent'] = false

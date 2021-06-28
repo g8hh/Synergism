@@ -663,7 +663,7 @@ var cnItems = {
     'Reward: 20 AP. 100 Quarks! You will gain 25% of excess time after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：20成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间的25%将变为飞升奖励的倍率。',
     'Reward: 40 AP. 200 Quarks! Gain +4% Tesseracts on ascension!': '奖励：40成就点数。200夸克！飞升时超立方获取数量增加4%！',
     'Reward: 60 AP. 300 Quarks! Gain +3% Tesseracts on ascension!': '奖励：60成就点数。300夸克！飞升时超立方获取数量增加3%！',
-    'Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions (max 24 hours).': '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。',
+    'Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count.': '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。',
     'Reward: 40 AP. 200 Quarks! You will gain 25% MORE excess time (Total: 50%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。200夸克！飞升时间超过10秒以后，超出部分的时间的25%将再次变为飞升奖励的倍率(总和：50%)。',
     'Reward: 40 AP. 200 Quarks! Gain +4% Hypercubes on ascension!': '奖励：40成就点数。200夸克！飞升时五阶立方获取数量增加4%！',
     'Reward: 60 AP. 300 Quarks! Gain +4% Hypercubes on ascension!': '奖励：60成就点数。300夸克！飞升时五阶立方获取数量增加4%！',
@@ -1038,7 +1038,7 @@ var cnItems = {
     '[5x17] Talismans have another +0.015 Rune levels per talisman level per level!': '[5x17]每级使每级护身符再次多增加0.015级符文。',
     '[5x18] For \'neutral\' talisman effects, increase by +0.06 per level!': '[5x18]每级使每级护身符无加成的符文增加0.06级！',
     '[5x19] Gain +0.25% Wow! Cubes per level upon Ascension.': '[5x19]每级使飞升的惊奇方盒获取数量增加0.25%。',
-    '[5x20] Gain another +0.25% Wow! per level upon Ascension.': '[5x20]每级再次使飞升的惊奇方盒获取数量增加0.25%。',
+    '[5x20] Gain another +0.25% Wow! Cubes per level upon Ascension.': '[5x20]每级再次使飞升的惊奇方盒获取数量增加0.25%。',
     '[5x21] Bend time to your will, making all ticks 2% faster each level.': '[5x21]使时间屈从于您的意志，每级使所有速度加快2%。',
     '[5x22] Adds +2% ant sacrifice reward per level.': '[5x22]每级使蚂蚁献祭奖励增加2%。',
     '[5x23] Adds +40 base ant ELO per level.': '[5x23]每级使蚂蚁基础强度分增加40。',
@@ -1118,7 +1118,7 @@ var cnItems = {
     '[8x22] +0.6% cubes in Ascension Bank / level. No one knows how. Bank error perhaps.': '[8x22]每级增加飞升库中0.6%的惊奇方盒数量。没人知道发生了什么。或许是银行内部故障。',
     '[8x23] +0.06% tributes from cubes / level!. Wow! Cubes really has a lot of manufacturing errors in your favor.': '[8x23]每级使惊奇方盒的贡品获取数量增加0.06%！惊奇方盒真的有很多对您有利的制造错误。',
     '[8x24] +10% faster Tesseract Buildings / level. THE ARISEN. WITH THE PRAISE OF THE SINGULARITY.': '[8x24]每级使超立方建筑的产量增加10%。它觉醒了。赞美奇点。',
-    '[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants.': '[8x25]获得烈日千阳的力量！每级使加速器、加速器加成、加倍器、祭品获取数量增加0.01%，方盒获取数量增加0.004%，符文等级上限增加0.04，另外，护身符等级上限增加 此研究等级/400，数字向下取整，免费蚂蚁等级增加 此研究等级/200，数字向下取整。',
+    '[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, +(level/400) max Talisman Level, +(level/200) free ants, 0.000666% Tax reduction per level.': '[8x25]获得烈日千阳的力量！每级使加速器、加速器加成、加倍器、祭品获取数量增加0.01%，方盒获取数量增加0.004%，符文等级上限增加0.04，税收减少0.00066%。护身符等级上限增加 此研究等级/400，免费蚂蚁等级增加 此研究等级/200。',
     'Hover over the grid to get details about researches!': '将鼠标停在网格上可获得有关研究的详情！',
     '[LOCKED - Buy Research 3x11]': '[未解锁 - 请先购买研究3x11]',
     'Welcome to the future! Obtainium is gained through': '欢迎来到研究！难得素可以通过',
@@ -1442,19 +1442,19 @@ var cnItems = {
     '0.015% tesseracts per corruption level per level!': '0.015%飞升时超立方获取数量于每腐化等级每级此升级！',
     '0.045% hypercubes per corruption level per level!': '0.045%飞升时五阶立方获取数量于每腐化等级每级此升级！',
     'Gain +2% Platonic Cubes per level! It is that simple.': '每级此升级增加2%的PLATONIC方盒获取数量！简单明了。',
-    'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster constant production, +5/+3 Challenge caps, 2x Obtainium/Offerings, ^1.10 coin gain in C15!': 'C10的分数倍率的指数从1.035变为变为1.0375，数学常数减缓税收的指数增加0.1，数学常数产量变为2倍，挑战上限次数分别增加5和3，难得素和祭品获取数量翻倍，在挑战15中金币产量变为金币产量^1.10！',
+    'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster constant production, +10/+5 Challenge caps, 2x Obtainium/Offerings, ^1.10 coin gain in C15!': 'C10的分数倍率的指数从1.035变为变为1.0375，数学常数减缓税收的指数增加0.1，数学常数产量变为2倍，挑战上限次数分别增加10和5，难得素和祭品获取数量翻倍，在挑战15中金币产量变为金币产量^1.10！',
     'Raises corruption 1 and 2 exponent ^(1 + level/30), capacity of ^1 on Mult/Accel.': '将腐化：分歧和腐化：适应不良的效果指数乘以(1+此升级等级/30)，但效果指数不能超过1。',
     'Raises speed below 1x to the power of ^(1 - level/30).': '全局速度低于1倍时，将速度变为速度的(1-(此升级等级/30))次方。',
     'Divides Hyperchallenged by (1 + 0.4 * level), with a minimum 1x challenge req. multiplier!': '将腐化：极致挑战的效果指数除以(1+0.4*此升级等级)，但效果指数不能低于1！',
     'Raise Obtainium to the power of (1+(0.09*log10(Obt owned))) and add another x2.5 multiplier (uncorruptable), up until 1e100 Obtainium!': '难得素获取数量变为原来的(1+(0.09*log10(难得素当前数量)))次方，并且使难得素获取数量变为2.5倍(不受腐化影响)，最高到1e100难得素！',
-    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +5/+3 Challenge caps, 3.5x Obtainium and Offerings, 2x All Cubes. ^1.25 ant exponent in C15!': 'C10的分数倍率的指数从1.0375变为1.04，数学常数减缓税收的指数增加0.2，数学常数产量变为10倍，挑战上限次数分别增加5和3，难得素和祭品获取数量变为3.5倍，所有类型的方盒及立方获取数量翻倍，在挑战15中蚂蚁产量变为蚂蚁产量^1.25！',
+    'C10 Exponent: 1.0375 --> 1.04, Const. tax exponent +0.20 and 10x faster constant production, +10/+5 Challenge caps, 3.5x Obtainium and Offerings, 2x All Cubes. ^1.25 ant exponent in C15!': 'C10的分数倍率的指数从1.0375变为1.04，数学常数减缓税收的指数增加0.2，数学常数产量变为10倍，挑战上限次数分别增加10和5，难得素和祭品获取数量变为3.5倍，所有类型的方盒及立方获取数量翻倍，在挑战15中蚂蚁产量变为蚂蚁产量^1.25！',
     'With this upgrade, you will gain diamonds equal to particle gain on reincarnation while using Market Deflation 11 or higher! Does not work with cube upgrade [3x8]!': '在11级及以上的腐化：市场通缩中，使转世时的钻石获取数量等于粒子获取数量！无法对方盒升级[3x8]生效！',
     'Gain (1 + lvl/100)x ant multiplier per challenge completion, ignoring corruptions to ants.': '每完成1次挑战，蚂蚁倍率就增加(1+此升级等级/100)倍，此效果无视腐化。',
     'Effect of Drought is raised to the power of 0.5.': '将腐化：干旱的效果变为原来的0.5次方。',
     'Reduce the effect of Financial Recession in challenge 15, multiplying the coin exponent by 1.55.': '挑战15中腐化：经济衰退的效果减少，即金币的指数乘以1.55。',
     'You begin to find the start of the abyss. Coin Exponent +0.10 in Challenge 15, Challenge 15 Score +25%, Ascension Speed +0.2% per Corruption Level (Max: 20%), +1% all Cube types per C9 Completion (multiplicative), +20% Quarks, 1e250x Tesseract Building Multiplier, 2x Ascension Count, +30 Reincarnation Challenge Cap, +20 Ascension Challenge Cap, 6x Offerings and Obtainium (Uncorruptable)! Talk about a deep dive.': '您开始找寻深渊的起始了。在挑战15中金币指数增加0.10。挑战15的分数增加25%。每级腐化使飞升的速度增加0.2%(上限：20%)。每次完成挑战9就使所有类型的方盒及立方获取数量增加1%(相互叠乘)。夸克获取数量增加20%。超立方建筑产量变为1e250倍。飞升次数获取数量翻倍。转世挑战上限次数增加30，飞升挑战上限次数增加20。祭品和难得素的获取数量变为6倍(不受腐化影响)！聊聊继续深入的事吧。',
     'Increase powder conversion rate by 1% per level, gain +2% ascension count per level and gain up to 2% more ascension count per level based on powder, up to 10,000. This will also multiply Tesseract Building production by (Powder^(10 * level)).': '每级此升级增加1%的超通量粉转化效率，使飞升次数获取数量增加2%，并且根据超通量粉的数量(上限10000)最多还可以使飞升次数获取数量再增加2%。另外，超立方建筑产量变为(超通量粉数量^(10*等级))倍。',
-    'The Score Multiplier from Maladaptive and Divisiveness corruption is raised to the power of (1 + level / 20), if they are set at level 10 or higher!': '如果腐化：分歧和腐化：适应不良的等级不低于10级，则将它们的分数倍率乘以(1+此升级等级/20)！',
+    'If Divisiveness or Maladaptive is set to level 10 or higher, score multiplier is raised by an exponent. That exponent is 1.75 + 0.02 per level of this upgrade.': '如果腐化：分歧和腐化：适应不良的等级不低于10级，则将它们的分数倍率变为原来的(1.75+0.02*此升级等级)次方。',
     'Raise the base percentage of Constant Upgrade 1 by 0.1% and increase the base percentage cap of Constant Upgrade 2 by 0.3% per level!': '每级将数学常数升级1的基础效果百分比增加0.1%，并将数学常数升级2的基础上限百分比增加0.3%！',
     'The diminishing return power on Chronos Hepteract changes from 0.166 to (0.166 + 0.0033 * level).': '惊奇七阶立方·时光超过软上限后的效果从0.166变为(0.166+0.0033*等级)。',
     'You know, maybe some things should be left unbought.': '有些东西，最好还是不要买的好。',
@@ -1483,7 +1483,7 @@ var cnItems = {
     '< LOCKED >': '< 未解锁 >',
     'This hepteract bends time, in your favor. +0.06% Ascension Speed per Chronos Hepteract.': '此类惊奇七阶立方可以扭曲时间，为您所用。每个惊奇七阶立方·时光可以使飞升的速度增加0.06%。',
     'This bad boy can make hypercube gain skyrocket. +0.06% Hypercubes per Hyperreal Hepteract.': '这货可以使五阶立方获取速度变得更快。每个惊奇七阶立方·超真实可以使五阶立方的获取数量增加0.06%。',
-    'One pound, two pound fish, fishy grant +0.03% Quarks per Quark Hepteract fish fish.': '一磅鱼，两磅鱼，鱼鱼鱼。每个惊奇七阶立方·夸克可以使夸克的获取数量增加0.03%。',
+    'One pound, two pound fish, fishy grant +0.05% Quarks per Quark Hepteract fish fish.': '一磅鱼，两磅鱼，鱼鱼鱼。每个惊奇七阶立方·夸克可以使夸克的获取数量增加0.05%。',
     'That\'s preposterous. How are you going to gain +0.05% C15 Exponent per Challenge Hepteract? How!?': '这不是扯淡吗？每个惊奇七阶立方·挑战可以使挑战15的指数获取数量增加0.05%？怎么可能？怎么可能！？',
     'It seems like this holds the power to be at the End of Time. Do you remember why you need this?': '似乎它拥有时间尽头的力量。还记得有哪里出现过类似的东西吗？',
     '<[You will submit to the Omega Entity of Time]>': '<[服从于时间的欧米伽形态吧]>',
@@ -1598,11 +1598,11 @@ var cnItems = {
     'Can\'t bet that!': '无法下注那个数量！',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
-    'You\'re playing v2.5.2 - Seal of the Merchant [Last Update: 5:00 UTC-8 22-Jun-2021].': '您目前玩的版本为V2.5.2 - 商人的印记 [2021年6月22日 西八区 5:00更新]。',
+    'You\'re playing v2.5.3 - Seal of the Merchant [Last Update: 04:00 UTC-8 28-Jun-2021].': '您目前玩的版本为V2.5.3 - 商人的印记 [2021年6月28日 西八区 04:00更新]。',
     'Current Bonus: N/A (offline)%!': '当前加成：无(因为离线)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +13 Base Export Quarks per hour, +13% all Cube types, +31% Powder Conversion!': '当前加成：每小时导出夸克的基础获取数量增加13，所有类型的方盒及立方获取数量增加13%，超通量粉的转化效率增加31%！',
+    'Current Buffs: +100% Quarks from code \'Add\', +20.21% All Cube Types': '当前加成：输入Add代码获取的夸克数量翻倍，所有类型的方盒及立方获取数量增加20.21%',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1669,7 +1669,7 @@ var cnItems = {
     'Platonic Beta': 'Platonic Beta升级',
     'Platonic Omega': 'Platonic Omega升级',
     'Overflux Powder': '超通量粉',
-    'Event [Most Recent: June 20 - June 27]': '活动加成[最近时间：6月20日至6月27日]',
+    'Event [Most Recent: June 28 - July 01]': '活动加成[最近时间：6月28日至7月1日]',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube multipliers': '方盒倍率',
     'Ascension Score Multiplier': '飞升分数倍率',
@@ -1758,12 +1758,12 @@ var cnItems = {
     'Gain +4% more obtainium from all sources!': '难得素获取数量增加4%！',
     'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed.': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。',
     'T and R challenges don\'t cause resets if retry is enabled and gain up to 10 completions per tick. Additionally, instantly gain T challenge completions up to highest completed when exiting R challenges.': '只要开启重新尝试挑战，超越和转世挑战将不再重置资源，且每个时刻可以完成10次。另外，在退出转世挑战时，立刻使超越挑战的完成次数达到之前的完成次数上限。',
-    'Each level gives a 1.125x speed multiplier to all Ant tiers\' production! Short and simple.': '每级使蚂蚁速度变为1.125倍！简单有效。',
+    'Each level gives a 1.125x speed multiplier to all Ant tiers\' production! (Uncorruptable!) Short and simple.': '每级使蚂蚁速度变为1.125倍！(不受腐化影响！)简单有效。',
     'This is a cash grab but it gives a couple cool stats. +1% production per level to Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使祭品和难得素的产量增加1%。',
     'Permanently unlock a Shop talisman!': '永久解锁一个商店护身符！',
     'Wow! Cubes is giving you a deal: Buy this totally fair Season Pass and gain +1.5% cubes and tesseracts per level when you ascend!': '惊奇方盒提出交易：购买这个完全公平的季票以后，每级使您飞升的方盒和超立方获取数量增加1.5%！',
     'Using some amazing trick, you manage to increase your Reincarnation Challenge cap by 2 for each level!': '耍点漂亮的小把戏，每级增加2次转世挑战次数上限！',
-    'The extended cut: This fifth forgotten tome gives you an additional 20 Million exponent reduction on the Challenge 10 requirement per level.': '后传来了：第五部后传虽然有点被遗忘了，但每级还是可以使挑战10的基础目标再次减少1e20M。',
+    'The extended cut: This fifth forgotten tome gives you an additional 20 Million exponent reduction on the Challenge 10 requirement per level. Past 60 completions of challenge 9 or 10, this will also reduce the scaling factor by 1% per level.': '后传来了：第五部后传虽然有点被遗忘了，但每级还是可以使挑战10的基础目标再次减少1e20M。如果挑战9或挑战10的完成次数超过了60次，则每级还可以使挑战目标增长因子减小1%。',
     'Are your quark gains from Cubes wimpy? Well, buy this for +50% quarks from opening Wow! Cubes, forever!': '是不是觉得开启惊奇方盒获得的夸克太少了？此项升级可以使开启惊奇方盒获得的夸克永久增加50%！',
     'Are your quark gains from Tesseracts wimpy? Well, buy this for +50% quarks from opening Wow! Tesseracts, forever!': '是不是觉得开启惊奇超立方获得的夸克太少了？此项升级可以使开启惊奇超立方获得的夸克永久增加50%！',
     'Are your quark gains from Hypercubes wimpy? Well, buy this for +50% quarks from opening Wow! Hypercubes, forever!': '是不是觉得开启惊奇五阶立方获得的夸克太少了？此项升级可以使开启惊奇五阶立方获得的夸克永久增加50%！',
@@ -1771,7 +1771,7 @@ var cnItems = {
     'Okay, now this is just ridiculous. +1% Wow! Hepteracts and Octeracts per level!': '好吧，越来离谱了。每级使七阶立方和八阶立方获取数量增加1%！',
     'You know, those ascensions are kinda slow. Why don\'t I give you a +1% speedup to the timer per level?': '您知道的，飞升慢的很。不如，每级使飞升的速度增加1%？',
     'Okay, for an exorbitant amount, you can obtain the 6th rune, which gives +20% Quarks and +75% all cube types when maxed!': '嗯，支付高昂的费用以后，您就可以获得第六个符文了，满级时可以增加20%夸克获取数量及75%所有类型的方盒及立方获取数量!',
-    'The PL-AT can do addition in the blink of an eye. Not much else though. +10% Quarks from using code \'add\' per level, the first level provides the answer and the final level does it automatically!': 'PL-AT在眨眼间就能做完加法。不过它也没其他什么用途了。每级使您使用“add”代码获取的夸克数量增加10%，另外，第一级可以直接显示答案，而最后一级可以自动完成加法！',
+    'The PL-AT can do addition in the blink of an eye. Not much else though. +14% Quarks from using code \'add\' per level, the first level provides the answer and the final level does it automatically!': 'PL-AT在眨眼间就能做完加法。不过它也没其他什么用途了。每级使您使用“add”代码获取的夸克数量增加14%，另外，第一级可以直接显示答案，而最后一级可以自动完成加法！',
     'The PL-AT X has improved memory capacity, allowing you to store 2 additional uses to code \'add\' per level. Final level makes \'add\' give 25% more Quarks!': 'PL-AT X提升了内存容量，每级使您使用“add”代码的次数上限增加2。另外，最后一级可以使您使用“add”代码获取的夸克数量增加25%！',
     'The PL-AT Ω is infused with some Unobtainium, which is epic! But furthermore, it reduces the variance of Quarks by code \'add\' by 10% per level, which makes you more likely to get the maximum multiplier. It also has the ability to give +60 seconds to Ascension Timer per level using that code.': 'PL-AT Ω注入了难得素，这使它的性能进一步提升了！每级使您使用“add”代码获得的夸克数量变化范围减少10%，因此您更有可能获得最高的数值。另外，每级可以使您使用“add”代码时同时增加60秒飞升时间。',
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
@@ -2060,13 +2060,13 @@ var cnRegReplace = new Map([
     [/^Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm: x(.*)$/, '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率：乘以$1'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain an Ascension cubes multiplier based on your score: x(.*). Also: Offerings \+(.*)% \[Max: 100% at 1M Ascensions\]$/, '奖励：60成就点数。300夸克！根据您的飞升分数，使飞升的方盒及立方倍率乘以$1。另外，祭品获取数量增加$2%[与飞升次数有关，在1000000次飞升时达到上限：100%]'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain \+100 ascension count for all ascensions longer than 10 seconds. Also: Obtainium \+(.*)% \[Max: 100% at 5M Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。另外，难得素获取数量增加$1%[与飞升次数有关，在5000000次飞升时达到上限：100%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascensions \(max 24 hours\). Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000(5e8)次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascension count. Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000(5e8)次飞升时达到上限：200%]'], //成就
     [/^Reward: 40 AP. 200 Quarks! Gain (.*)% more Cubes on ascension!$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量增加$1%！'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限：25000%]。'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限：2000%]。'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000(1e9)次飞升时达到上限：200%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000(2e9)次飞升时达到上限：200%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascensions \(max 24 hours\). Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间(最高24小时)的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000(2.674e9)次飞升时达到上限：200%]'], //成就
+    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count. Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000(1e9)次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count. Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000(2e9)次飞升时达到上限：200%]'], //成就
+    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count. Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000(2.674e9)次飞升时达到上限：200%]'], //成就
     [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量受到全局速度轻微的影响：乘以$1(最小值: 1.10x，最大值'], //成就
     [/^Reward: 75 AP. 3,000 Quarks! Cube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：75成就点数。3000夸克！方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
     [/^Reward: 75 AP. 3,000 Quarks! Tesseract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\], and allow gain of Hepteracts.$/, '奖励：75成就点数。3000夸克！超立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]，并且解锁惊奇七阶立方。'], //成就
@@ -2254,7 +2254,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: You will gain (.+)% more Obtainium and Offerings!$/, '当前效果：难得素和祭品的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Wow! Cubes and Tesseracts.$/, '当前效果：飞升的方盒和超立方获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Reincarnation Challenges may be completed an additional (.+) times.$/, '当前效果：转世挑战完成次数上限额外增加$1次。'], //商店
-    [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+) Million.$/, '当前效果：挑战10的基础目标减少1e$1M。'], //商店
+    [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+) Million. Past 60 completions of C9 or C10 the scaling multiplier is \[completions * (.*)\]$/, '当前效果：挑战10的基础目标减少1e$1M。超过60次以后的挑战9或挑战10的挑战目标增长因子变为[挑战次数*$2]'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Hypercubes and Platonic Cubes.$/, '当前效果：飞升的五阶立方和PLATONIC方盒获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Hepteracts and Octarets.$/, '当前效果：飞升的七阶立方和八阶立方获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Ascension timer runs (.+)% faster.$/, '当前效果：飞升的速度增加$1%。'], //商店

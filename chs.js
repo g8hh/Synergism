@@ -1476,7 +1476,7 @@ var cnItems = {
     'This will empty your balance, but double your capacity. Agree to the terms and conditions and stuff?': '延展将清空此类惊奇七阶立方，但可以使上限翻倍。您确定这么做没问题吧？',
     'This is not an unlocked craft. Sorry!': '您还没有解锁它，所以，抱歉了。',
     'Insufficient inventory to expand. 404 909 error.': '未达上限，无法延展。404 909错误。',
-    'Warp': '时间跃迁',
+    'Warp': '时空跃迁',
     'How far in the future would you like to go into the future? Anything awaits when it is testing season.': '您想要跃迁到多久以后？',
     'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
     '< UNLOCKED >': '< 已解锁 >',

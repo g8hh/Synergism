@@ -1456,7 +1456,7 @@ var cnItems = {
     'Effect of Drought is raised to the power of 0.5.': '将腐化：干旱的效果变为原来的0.5次方。',
     'Reduce the effect of Financial Recession in challenge 15, multiplying the coin exponent by 1.55.': '挑战15中腐化：经济衰退的效果减少，即金币的指数乘以1.55。',
     'You begin to find the start of the abyss. Coin Exponent +0.10 in Challenge 15, Challenge 15 Score +25%, Ascension Speed +0.2% per Corruption Level (Max: 20%), +1% all Cube types per C9 Completion (multiplicative), +20% Quarks, 1e250x Tesseract Building Multiplier, 2x Ascension Count, +30 Reincarnation Challenge Cap, +20 Ascension Challenge Cap, 6x Offerings and Obtainium (Uncorruptable)! Talk about a deep dive.': '您开始找寻深渊的起始了。在挑战15中金币指数增加0.10。挑战15的分数增加25%。每级腐化使飞升的速度增加0.2%(上限：20%)。每次完成挑战9就使所有类型的方盒及立方获取数量增加1%(相互叠乘)。夸克获取数量增加20%。超立方建筑产量变为1e250倍。飞升次数获取数量翻倍。转世挑战上限次数增加30，飞升挑战上限次数增加20。祭品和难得素的获取数量变为6倍(不受腐化影响)！聊聊继续深入的事吧。',
-    'Increase powder conversion rate by 1% per level, gain +2% ascension count per level and gain up to 2% more ascension count per level based on powder, up to 10,000. This will also multiply Tesseract Building production by (Powder^(10 * level)).': '每级此升级增加1%的超通量粉转化效率，使飞升次数获取数量增加2%，并且根据超通量粉的数量(上限10000)最多还可以使飞升次数获取数量再增加2%。另外，超立方建筑产量变为(超通量粉数量^(10*等级))倍。',
+    'Increase powder conversion rate by 1% per level, gain +2% ascension count per level and gain up to 2% more ascension count per level based on powder, up to 100,000. This will also multiply Tesseract Building production by (Powder^(10 * level)).': '每级此升级增加1%的超通量粉转化效率，使飞升次数获取数量增加2%，并且根据超通量粉的数量(上限100000)最多还可以使飞升次数获取数量再增加2%。另外，超立方建筑产量变为(超通量粉数量+1)^(10*等级)倍，无上限。',
     'If Divisiveness or Maladaptive is set to level 10 or higher, score multiplier is raised by an exponent. That exponent is 1.75 + 0.02 per level of this upgrade.': '如果腐化：分歧和腐化：适应不良的等级不低于10级，则将它们的分数倍率变为原来的(1.75+0.02*此升级等级)次方。',
     'Raise the base percentage of Constant Upgrade 1 by 0.1% and increase the base percentage cap of Constant Upgrade 2 by 0.3% per level!': '每级将数学常数升级1的基础效果百分比增加0.1%，并将数学常数升级2的基础上限百分比增加0.3%！',
     'The diminishing return power on Chronos Hepteract changes from 0.166 to (0.166 + 0.0033 * level).': '惊奇七阶立方·时光超过软上限后的效果从0.166变为(0.166+0.0033*等级)。',
@@ -1602,7 +1602,7 @@ var cnItems = {
     'Can\'t bet that!': '无法下注那个数量！',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
-    'You\'re playing v2.5.4 - Seal of the Merchant [Last Update: 02:30 UTC-8 1-Jul-2021].': '您目前玩的版本为V2.5.4 - 商人的印记 [2021年7月1日 西八区 02:30更新]。',
+    'You\'re playing v2.5.5 - Seal of the Merchant [Last Update: 8:10 UTC-8 2-Jul-2021].': '您目前玩的版本为V2.5.5 - 商人的印记 [2021年7月2日 西八区 8:10更新]。',
     'Current Bonus: N/A (offline)%!': '当前加成：无(因为离线)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
@@ -2204,7 +2204,8 @@ var cnRegReplace = new Map([
     [/^How many Orbs would you like to purchase\? You can buy up to (.*) with your hepteracts.$/, '您要购买多少超通量珠？现有的七阶立方最多可以购买$1。'], //惊奇方盒
     [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。祝您开心！'], //惊奇方盒
     [/^Expired Overflux Orbs become powder at a rate of (.+) Orbs per powder lump!$/, '粉碎的超通量珠可以转化为超通量粉，比率为：每超通量粉块需要$1超通量珠！'], //惊奇方盒
-    [/^Powder effect: ALL Cube Gain \+(.+)% and Quarks \+(.+)% \[Max effect at 10,000 Powder\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%，夸克获取数量增加$2%[在10000超通量粉块时达到上限]'], //惊奇方盒
+    [/^Powder effect: ALL Cube Gain \+(.+)% \[Multiplicative\], \+(.+)% Quarks \[Multiplicative\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%[叠乘]，夸克获取数量增加$2%[叠乘]'], //惊奇方盒
+    [/^Powder effect: ALL Cube Gain \+(.+)% \[Multiplicative\], \+(.+)% Quarks \[Multiplicative\], Ascension Count \+(.+)%, Tesseract Building Production x(.+) \[From Platonic Upgrade 4x1\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%[叠乘]，夸克获取数量增加$2%[叠乘]，飞升次数增加$3%，超立方建筑产量变为$4倍[Platonic升级4x1的效果]'], //惊奇方盒
     [/^You have (.+) lumps of Overflux Powder.$/, '您拥有$1超通量粉块。'], //惊奇方盒
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化

@@ -741,8 +741,8 @@ var cnItems = {
     'Bonus Ant Levels: +': '蚂蚁等级额外增加',
     'Mythic Effect: Gain ant speed based on your total rune level!': '神秘效果：根据符文总等级增加蚂蚁速度！',
     '=-=-=-= Plastic Talisman Effects =-=-=-=': '=-=-=-= 信卡护身符效果 =-=-=-=',
-    'Gain 1x normal production': '无',
-    'Mythic Effect: +20% Quarks per Hour on Export (Additive)!': '神秘效果：导出奖励增加20%夸克(叠加)！',
+    'Gain 1x normal production (Joke)!': '无',
+    'Mythic Effect: Gain 1x your normal quark values (Joke)!': '神秘效果：无！',
     'Get Max Enhance for a Mythical bonus effect!': '升阶到最大后可获得一个神秘效果！',
     '=-=- Resources Required to Level Up -=-=-': '=-=- 加强所需的资源 -=-=-',
     '=-=-= Resources Required to ENHANCE =-=-=': '=-=-= 升阶所需的资源 =-=-=',
@@ -1017,13 +1017,13 @@ var cnItems = {
     '[4x21] Ants slow? Add +0.0002 to ant efficiency increase per ant purchased per level.': '[4x21]蚂蚁太慢了？每级使您每购买1只蚂蚁，就增加0.0002的蚂蚁效率。',
     '[4x22] Add +4 level to the first six upgradable ants per level!': '[4x22]每级使前六个蚂蚁升级的等级增加4级！',
     '[4x23] Add +4 level to the next five upgradable ants per level!': '[4x23]每级使后五个蚂蚁升级的等级增加4级！',
-    '[4x24] Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!': '[4x24]夸克商店的诱惑太强无法自制了？每级使每小时导出奖励增加1夸克(上限为75)！',
-    '[4x25] Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!': '[4x25]好吧，这游戏作者Platonic怕是石乐志了。本来不指望您能购买这个的，总之，它会使每小时导出奖励再增加1夸克(上限为100)！',
+    '[4x24] Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level!': '[4x24]夸克商店的诱惑太强无法自制了？每级使每小时导出奖励增加1夸克！',
+    '[4x25] Alright, Platonic is off his rocker. I don\'t expect you to get this but this will give +1 MORE Quark per hour from Exporting for each level!': '[4x25]好吧，这游戏作者Platonic怕是石乐志了。本来不指望您能购买这个的，总之，每级使每小时导出奖励再增加1夸克！',
     '[5x1] Alright, you\'re past the big wall. How about adding +.001 to Inceptus Ant efficiency per level?': '[5x1]很好，您穿过了高墙。每级增加0.001创始蚁效率，听起来如何？',
     '[5x2] Gain +1 bonus level to ALL ants per level! A rainbow attack!': '[5x2]每级使所有蚂蚁额外增加1级！这就是彩虹攻击！',
     '[5x3] Pray to Ant God for +5% sacrifice rewards per level!': '[5x3]向蚁神祈祷，每级增加5%的献祭奖励！',
     '[5x4] You\'re beginning to feel like an ant god (ant god): +5% sacrifice reward per level!': '[5x4]您越来越有蚁神的感觉了：每级增加5%的献祭奖励！',
-    '[5x5] Buy this and be able to run the first five challenges infinitely! (Note that requirements scale a LOT faster after': '[5x5]购买此研究后，将可以无限地进行前五个挑战！(请注意，挑战目标将急剧增加，如果完成次数超过',
+    '[5x5] Buy this and be able to run the first five challenges 9,001 times! (Note that requirements scale a LOT faster after 75, and again after 1,': '[5x5]购买此研究后，前五个挑战次数上限将变为9001！(请注意，如果挑战完成次数超过75，目标将急剧增加，且将更急剧增加，如果完成次数超过了1,',
     '[5x6] Engrave your talismans with obtainium to get +0.03 Rune Levels per talisman level per level.': '[5x6]使用难得素给护身符刻印，每级使每级护身符多增加0.03级符文。',
     '[5x7] Refine your talismans with the powder of Obtainium to get +0.03 Rune Levels per talisman level per level again.': '[5x7]使用难得素的粉末精炼护身符，每级再次使每级护身符多增加0.03级符文。',
     '[5x8] A simple trick makes your base ant ELO increase by 25 per level!': '[5x8]一个简单的小把戏就可以每级使蚂蚁基础强度分增加25！',
@@ -1043,7 +1043,7 @@ var cnItems = {
     '[5x22] Adds +2% ant sacrifice reward per level.': '[5x22]每级使蚂蚁献祭奖励增加2%。',
     '[5x23] Adds +40 base ant ELO per level.': '[5x23]每级使蚂蚁基础强度分增加40。',
     '[5x24] Unlock the automator for Ant Sacrifice! [Good luck buying this.]': '[5x24]解锁自动献祭蚂蚁！[祝您好运。]',
-    '[5x25] Good luck, buddy. [+1 Export Quark/hour]': '[5x25]祝好运，哥们。[使每小时导出奖励增加1夸克]',
+    '[5x25] Good luck, buddy. [+1 Export Quark/hour per level]': '[5x25]祝好运，哥们。[每级使每小时导出奖励增加1夸克]',
     '[6x1] 6 rows? That can\'t be... You\'ve angered ant god (+1% Accelerators / level': '[6x1]六行了？不可能啊……您已经激怒了蚁神(每级增加1%加速器数量',
     '[6x2] Ant God gets angrier (+1% Accelerator Boosts / level': '[6x2]蚁神更生气了(每级增加1%加速器加成数量',
     '[6x3] Ant God cannot believe your bravery (+1% Multipliers / level': '[6x3]蚁神不敢相信您的勇气(每级增加1%加倍器数量',
@@ -1098,7 +1098,7 @@ var cnItems = {
     '[8x2] +Log10(Crumbs)% to ant production per level. Pretty cool buff ain\'t it?': '[8x2]每级使蚂蚁产量增加log10(银河碎屑数量)%。很棒的效果，对吧？',
     '[8x3] +666 Base ELO per level! Spooky number of the devil.': '[8x3]每级增加666蚂蚁基础强度分！给蚂蚁们刷一波6。',
     '[8x4] +0.04% more offerings per level per midas level!': '[8x4]每级使每级点金护身符增加0.04%的祭品获取数量！',
-    '[8x5] +1 Export Quark per hour, yet again.': '[8x5]每小时导出奖励增加1夸克，是的，又是这个。',
+    '[8x5] +1 Export Quark per hour per level, yet again.': '[8x5]每级使每小时导出奖励增加1夸克，是的，又是这个。',
     '[8x6] +0.6% faster ticks / level because why not? You\'re already the speed of light.': '[8x6]每级使所有速度加快0.6%，因为，为什么不呢？我是说，您已经是光速一样了。',
     '[8x7] +0.7% cubes in ascension bank / level, from dividends in Wow! Stock.': '[8x7]由于惊奇公司的分红，每级增加飞升库中0.7%的惊奇方盒数量。',
     '[8x8] When you open a Hypercube, you also open 100 Tesseracts! (This works with 7x3, if you were curious.': '[8x8]开启一个五阶立方时，获得100个超立方的奖励！(此研究与研究7x3可以一起生效',
@@ -1487,9 +1487,9 @@ var cnItems = {
     'That\'s preposterous. How are you going to gain +0.05% C15 Exponent per Challenge Hepteract? How!?': '这不是扯淡吗？每个惊奇七阶立方·挑战可以使挑战15的指数获取数量增加0.05%？怎么可能？怎么可能！？',
     'It seems like this holds the power to be at the End of Time. Do you remember why you need this?': '似乎它拥有时间尽头的力量。还记得有哪里出现过类似的东西吗？',
     '<[You will submit to the Omega Entity of Time]>': '<[服从于时间的欧米伽形态吧]>',
-    'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerators per \'Way too many accelerators\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器可以使不受腐化影响的加速器数量增加0.03%。',
-    'Haha, stupid Corruptions. +0.03% Uncorruptable Accelerator Boosts per \'Way too many accelerator boosts\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器加成可以使不受腐化影响的加速器加成数量增加0.03%。',
-    'Haha, stupid Corruptions. +0.03% Uncorruptable Multipliers per \'Way too many multipliers\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加倍器可以使不受腐化影响的加倍器数量增加0.03%。',
+    'Haha, stupid Corruptions. +2,000 +0.03% Uncorruptable Accelerators per \'Way too many accelerators\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器可以使不受腐化影响的加速器数量增加2000，然后再增加0.03%。',
+    'Haha, stupid Corruptions. +0.1% Accelerator Boosts per \'Way too many accelerator boosts\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加速器加成可以使加速器加成数量增加0.1%。',
+    'Haha, stupid Corruptions. +1,000 +0.03% Uncorruptable Multipliers per \'Way too many multipliers\' Hepteract!': '哈哈，腐化你个蠢蛋。每个惊奇七阶立方·加倍器可以使不受腐化影响的加倍器数量增加1000，然后再增加0.03%。',
     'You can amalgamate Overflux Orbs here. [NOTE: these expire at the end of your current day]': '您可以在此处融合出超通量珠。[注意：所有超通量珠将在当天后粉碎]',
     '250,000 Hepteracts per Overflux Orb': '每超通量珠需要250000七阶立方',
     'Hey! That\'s not a valid number!': '哈？不，这不是个有效的数字。',
@@ -1599,7 +1599,7 @@ var cnItems = {
     'Can\'t bet that!': '无法下注那个数量！',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
-    'You\'re playing v2.5.3 - Seal of the Merchant [Last Update: 04:00 UTC-8 28-Jun-2021].': '您目前玩的版本为V2.5.3 - 商人的印记 [2021年6月28日 西八区 04:00更新]。',
+    'You\'re playing v2.5.4 - Seal of the Merchant [Last Update: 02:30 UTC-8 1-Jul-2021].': '您目前玩的版本为V2.5.4 - 商人的印记 [2021年7月1日 西八区 02:30更新]。',
     'Current Bonus: N/A (offline)%!': '当前加成：无(因为离线)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
@@ -2185,9 +2185,9 @@ var cnRegReplace = new Map([
     [/^Current Effect: Hypercubes \+(.*)$/, '当前效果：五阶立方获取数量增加$1'], //惊奇方盒
     [/^Current Effect: Quarks \+(.*)$/, '当前效果：夸克获取数量增加$1'], //惊奇方盒
     [/^Current Effect: C15 Exponent \+(.*)$/, '当前效果：挑战15的指数获取数量增加$1'], //惊奇方盒
-    [/^Current Effect: Uncorruptable Accelerators \+(.*)$/, '当前效果：不受腐化影响的加速器数量增加$1'], //惊奇方盒
-    [/^Current Effect: Uncorruptable Accelerator Boosts \+(.*)$/, '当前效果：不受腐化影响的加速器加成数量增加$1'], //惊奇方盒
-    [/^Current Effect: Uncorruptable Multipliers \+(.*)$/, '当前效果：不受腐化影响的加倍器数量增加$1'], //惊奇方盒
+    [/^Current Effect: Uncorruptable Accelerators \+(.*)$/, '当前效果：不受腐化影响的加速器数量+$1'], //惊奇方盒
+    [/^Current Effect: Accelerator Boosts \+(.*)$/, '当前效果：不受腐化影响的加速器加成数量+$1'], //惊奇方盒
+    [/^Current Effect: Uncorruptable Multipliers \+(.*)$/, '当前效果：不受腐化影响的加倍器数量+$1'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e115 Obtainium \[WIP\]$/, '锻造一个将消耗$1七阶立方及1e115难得素[暂定]'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e80 Offerings.$/, '锻造一个将消耗$1七阶立方及1e80祭品。'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts, 1e11 Platonic Cubes and 1e22 Cubes.$/, '锻造一个将消耗$1七阶立方，1e11 PLATONIC方盒及1e22惊奇方盒。'], //惊奇方盒

@@ -1782,7 +1782,6 @@ var cnItems = {
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
-    'CURRENT Effect: All Ants\' Speed': '当前效果：所有蚂蚁速度',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
     'Would you like to use this potion?': '您想要使用此药剂吗？',
     'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
@@ -2256,6 +2255,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Per 10 seconds, pour (.+) Offerings. \+(.+)% Offerings.$/, '当前效果：每秒最多使符文增加$1级。祭品获取数量增加$2%。'], //商店
     [/^CURRENT Effect: You will gain (.+)% more Obtainium!$/, '当前效果：难得素获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Try to upgrade research each reincarnation, and gain (.+)% more Obtainium.$/, '当前效果：每次转世都尝试研究，并且难得素获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: All Ants' Speed(.*)$/, '当前效果：所有蚂蚁速度$1'], //商店
     [/^CURRENT Effect: You will gain (.+)% more Obtainium and Offerings!$/, '当前效果：难得素和祭品的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Wow! Cubes and Tesseracts.$/, '当前效果：飞升的方盒和超立方获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Reincarnation Challenges may be completed an additional (.+) times.$/, '当前效果：转世挑战完成次数上限额外增加$1次。'], //商店

@@ -21,7 +21,7 @@ import { antSacrificePointsToMultiplier, autoBuyAnts, calculateCrumbToCoinExp } 
 import { calculatetax } from './Tax';
 import { ascensionAchievementCheck, challengeachievementcheck, achievementaward, resetachievementcheck, buildingAchievementCheck } from './Achievements';
 import { reset } from './Reset';
-import { buyMax, buyAccelerator, buyMultiplier, boostAccelerator, buyCrystalUpgrades, buyParticleBuilding, getReductionValue, getCost, buyRuneBonusLevels, buyTesseractBuilding, getTesseractCost, tesseractBuildingCosts } from './Buy';
+import { buyMax, buyAccelerator, buyMultiplier, boostAccelerator, buyCrystalUpgrades, buyParticleBuilding, getReductionValue, getCost, buyRuneBonusLevels, buyTesseractBuilding, TesseractBuildings, calculateTessBuildingsInBudget } from './Buy';
 import { autoUpgrades } from './Automation';
 import { redeemShards } from './Runes';
 import { updateCubeUpgradeBG } from './Cubes';
@@ -36,13 +36,15 @@ import { QuarkHandler } from './Quark';
 import { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from './CubeExperimental';
 import './Hotkeys';
 import { startHotkeys } from './Hotkeys';
+import { updatePlatonicUpgradeBG } from './Platonic';
+import { testing, version, lastUpdated } from './Config';
 
 /**
  * Whether or not the current version is a testing version or a main version.
  * This should be detected when importing a file.
  */
-export const isTesting = false;
-export const version = '2.5.5';
+//export const isTesting = false;
+//export const version = '2.5.5';
 
 export const intervalHold = new Set<ReturnType<typeof setInterval>>();
 export const interval = new Proxy(setInterval, {
@@ -600,7 +602,7 @@ export const player: Player = {
     autoTesseracts: [false, false, false, false, false, false],
 
     saveString: "Synergism-$VERSION$-$TIME$.txt",
-    exporttest: !isTesting,
+    exporttest: !testing,
 
     dayCheck: null,
     dayTimer: 0,
@@ -667,12 +669,12 @@ const toAdapt = new Map<keyof Player, (data: Player) => unknown>([
     ['wowPlatonicCubes', data => new WowPlatonicCubes(Number(data.wowPlatonicCubes))]
 ]);
 
-const loadSynergy = (reset = false) => {
+const loadSynergy = () => {
     console.log('loaded attempted')
     const save = localStorage.getItem("Synergysave2");
     const data = save ? JSON.parse(atob(save)) : null;
 
-    if (isTesting) {
+    if (testing) {
         Object.defineProperty(window, 'player', {
             value: player
         });
@@ -683,7 +685,7 @@ const loadSynergy = (reset = false) => {
     if (data) {
         if (
             (data.exporttest === false || data.exporttest === 'NO!') &&
-            !isTesting
+            !testing
         ) {
             return Alert(`You can't load this save anymore!`);
         }
@@ -1119,6 +1121,10 @@ const loadSynergy = (reset = false) => {
         for (let j = 1; j <= 50; j++) {
             updateCubeUpgradeBG(j);
         }
+        const platUpg = document.querySelectorAll('img[id^="platUpg"]');
+        for (let j = 1; j <= platUpg.length; j++) {
+            updatePlatonicUpgradeBG(j);
+        }
 
         const q = ['coin', 'crystal', 'mythos', 'particle', 'offering', 'tesseract'] as const;
         if (player.coinbuyamount !== 1 && player.coinbuyamount !== 10 && player.coinbuyamount !== 100 && player.coinbuyamount !== 1000) {
@@ -1327,11 +1333,6 @@ const loadSynergy = (reset = false) => {
             document.getElementById("rune" + player.autoSacrifice).style.backgroundColor = "orange"
         }
 
-        if (!reset) 
-            calculateOffline();
-        else
-            player.worlds = new QuarkHandler({quarks: 0})
-        
         toggleTalismanBuy(player.buyTalismanShardPercent);
         updateTalismanInventory();
         calculateObtainium();
@@ -1399,7 +1400,7 @@ export const format = (
         return '0 [und.]';
     else if ( // this case handles numbers less than 1e-6 and greater than 0
         typeof input === 'number' && 
-        input < 1e-6 && // arbitrary number, can be changed
+        input < 1e-3 && // arbitrary number, can be changed
         input > 0 // don't handle negative numbers, probably could be removed
     )
         return input.toExponential(accuracy);
@@ -1475,7 +1476,7 @@ export const format = (
     } else if (power >= 1e6) {
         // if the power is greater than 1e6 apply notation scientific notation
         // Makes mantissa be rounded down to 2 decimal places
-        const mantissaLook = isTesting && truncate ? '' : (Math.floor(mantissa * 100) / 100).toLocaleString(undefined, locOpts);
+        const mantissaLook = testing && truncate ? '' : (Math.floor(mantissa * 100) / 100).toLocaleString(undefined, locOpts);
         
         // Drops the power down to 4 digits total but never greater than 1000 in increments that equate to notations, (1234000 -> 1.234) ( 12340000 -> 12.34) (123400000 -> 123.4) (1234000000 -> 1.234)
         const powerDigits = Math.ceil(Math.log10(power));
@@ -2867,20 +2868,24 @@ export const updateAll = (): void => {
         }
     }
 
-//Loops through all buildings which have AutoBuy turned 'on' and purchases the cheapest available building that player can afford
+//Autobuy tesseract buildings
     if ((player.researches[190] > 0) && (player.tesseractAutoBuyerToggle == 1)) {
-        const cheapestTesseractBuilding: {cost: number, index: 0|OneToFive} = { cost:0, index:0 };
-        for (let i = 0; i < tesseractBuildingCosts.length; i++){
-            const iPlusOne = i+1 as OneToFive;
-            if ((Number(player.wowTesseracts) >= tesseractBuildingCosts[i] * Math.pow(player.tesseractbuyamount + player[`ascendBuilding${iPlusOne}` as const]['owned'], 3) + player.tesseractAutoBuyerAmount) && player.autoTesseracts[iPlusOne]) {
-                if ((getTesseractCost(iPlusOne)[1] < cheapestTesseractBuilding.cost) || (cheapestTesseractBuilding.cost == 0)){
-                    cheapestTesseractBuilding.cost = getTesseractCost(iPlusOne)[1];
-                    cheapestTesseractBuilding.index = iPlusOne;
-                }
+        const ownedBuildings: TesseractBuildings = [null, null, null, null, null];
+        for (let i = 1; i <= 5; i++) {
+            if (player.autoTesseracts[i]) {
+                ownedBuildings[i-1] = player[`ascendBuilding${i as OneToFive}` as const]['owned'];
             }
         }
-        if (cheapestTesseractBuilding.index !== 0){
-            buyTesseractBuilding(cheapestTesseractBuilding.index, true);
+        const budget = Number(player.wowTesseracts) - player.tesseractAutoBuyerAmount;
+        const buyToBuildings = calculateTessBuildingsInBudget(ownedBuildings, budget);
+        // Prioritise buying buildings from highest tier to lowest,
+        // in case there are any off-by-ones or floating point errors.
+        for (let i = 5; i >= 1; i--) {
+            const buyFrom = ownedBuildings[i-1];
+            const buyTo = buyToBuildings[i-1];
+            if (buyFrom !== null && buyTo !== null && buyTo !== buyFrom) {
+                buyTesseractBuilding(i as OneToFive, buyTo - buyFrom);
+            }
         }
     }
 
@@ -3355,7 +3360,11 @@ export const reloadShit = async (reset = false) => {
         await Alert('Transferred save to new format successfully!');
     }
 
-    loadSynergy(reset);
+    loadSynergy();
+    if (!reset) 
+            calculateOffline();
+    else
+        player.worlds = new QuarkHandler({quarks: 0})
     saveSynergy();
     toggleauto();
     revealStuff();
@@ -3370,8 +3379,9 @@ export const reloadShit = async (reset = false) => {
 window.addEventListener('load', () => {
     const ver = document.getElementById('versionnumber');
     ver && (ver.textContent = 
-        `You're ${isTesting ? 'testing' : 'playing'} v${version} - Seal of the Merchant [Last Update: 8:10 UTC-8 2-Jul-2021].` + 
-        ` ${isTesting ? 'Savefiles cannot be used in live!' : ''}`
+        `You're ${testing ? 'testing' : 'playing'} v${version} - Seal of the Merchant` +
+        ` [Last Update: ${lastUpdated.getHours()}:${lastUpdated.getMinutes()} UTC ${lastUpdated.getDate()}-${lastUpdated.toLocaleString('en-us', {month: 'short'})}-${lastUpdated.getFullYear()}].` + 
+        ` ${testing ? 'Savefiles cannot be used in live!' : ''}`
     );
     document.title = `协同放置 - Synergism v${version}`;
 

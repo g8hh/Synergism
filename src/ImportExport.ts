@@ -334,10 +334,9 @@ export const promocodes = async () => {
         const dice = window.crypto.getRandomValues(new Uint8Array(1))[0] % 6 + 1; // [1, 6]
         
         if (dice === 1) {
-            if (bet >= 1000) {
-                const won = 250;
-            } else {
-                const won = bet * .25; // lmao
+            let won = bet * .25; // lmao
+            if(won >= 250) {
+                won = 250;                
             }
             player.worlds.add(won);
 

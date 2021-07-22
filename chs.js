@@ -1598,7 +1598,7 @@ var cnItems = {
     'Wait a little bit. We\'ll get back to you when you\'re ready to lose again.': '稍等片刻，等您准备好再输一次的时候再来吧。',
     'Are you sure? The house always wins!': '您确定吗？要知道，庄家总是赢家！',
     'Scared? You should be!': '怂了吗？也不失为明智之举！',
-    'How many quarks are you putting up?': '您要下注多少夸克？',
+    'How many quarks are you putting up?': '您要下注多少夸克？（注意：奖励上限为250夸克，别下注超过1000夸克，不会有更多奖励了）',
     'Can\'t bet that!': '无法下注那个数量！',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',

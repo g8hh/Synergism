@@ -306,7 +306,7 @@ export const promocodes = async () => {
             await Alert(`I gave you ${amount - quarks} quarks so I could take ${amount} away.`);
 
         player.worlds.sub(quarks < amount ? amount - quarks : amount);
-    /*} else if (input === 'gamble') {
+    } else if (input === 'gamble') {
         if (
             typeof player.skillCode === 'number' ||
             typeof localStorage.getItem('saveScumIsCheating') === 'string'
@@ -334,7 +334,11 @@ export const promocodes = async () => {
         const dice = window.crypto.getRandomValues(new Uint8Array(1))[0] % 6 + 1; // [1, 6]
         
         if (dice === 1) {
-            const won = bet * .25; // lmao
+            if (bet >= 1000) {
+                const won = 250;
+            } else {
+                const won = bet * .25; // lmao
+            }
             player.worlds.add(won);
 
             player.skillCode = Date.now();
@@ -342,7 +346,7 @@ export const promocodes = async () => {
         }
         
         player.worlds.sub(bet);
-        el.textContent = `Try again... you can do it! [-${bet} quarks]`;*/
+        el.textContent = `Try again... you can do it! [-${bet} quarks]`;
     } else if (input === 'time') {
         if ((Date.now() - player.promoCodeTiming.time) / 1000 < 3600) {
             return Confirm(`

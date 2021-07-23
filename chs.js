@@ -1943,7 +1943,7 @@ var cnExcludeWhole = [
 ];
 var cnExcludePostfix = [
     /:?\s*x?\d+(\.\d+)?(e[+\-]?\d+)?\s*$/, //12.34e+4
-    /:?\s*x?\d+(\.\d+)?[A-Za-rt-z]{0,2}$/, //: 12.34K, x1.5
+    /:?\s*x?\d+(\.\d+)?[A-Za-rt-z]{0,4}$/, //: 12.34K, x1.5
 ]
 
 //正则替换，带数字的固定格式句子
@@ -2060,7 +2060,7 @@ var cnRegReplace = new Map([
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
     [/^Reward: 10 AP. 10 Quarks! ALL Ant speed multiplied by(.*)$/, '奖励：10成就点数。10夸克！所有蚂蚁的速度都乘以$1'], //成就
-    [/^Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm: x(.*)$/, '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率：乘以$1'], //成就
+    [/^Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm(.*)$/, '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率$1'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain an Ascension cubes multiplier based on your score: x(.*). Also: Offerings \+(.*)% \[Max: 100% at 1M Ascensions\]$/, '奖励：60成就点数。300夸克！根据您的飞升分数，使飞升的方盒及立方倍率乘以$1。另外，祭品获取数量增加$2%[与飞升次数有关，在1000000次飞升时达到上限：100%]'], //成就
     [/^Reward: 60 AP. 300 Quarks! Gain \+100 ascension count for all ascensions longer than 10 seconds. Also: Obtainium \+(.*)% \[Max: 100% at 5M Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。另外，难得素获取数量增加$1%[与飞升次数有关，在5000000次飞升时达到上限：100%]'], //成就
     [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascension count. Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000(5e8)次飞升时达到上限：200%]'], //成就

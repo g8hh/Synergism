@@ -873,6 +873,7 @@ var cnItems = {
     '80 to Rune Caps! Current': '80级符文等级上限！当前效果',
     'Unlock 15 Researches, and unlock the ability to open Tesseracts!': '解锁15个研究，并且解锁开启超立方的能力！',
     'Start <[(Reduced Ants)]>': '开始<[(蚂蚁减少挑战)]>',
+    'Ant Speed': '蚂蚁速度',
     'For some reason, you just can\'t do it.': '总之就是不行，别问原因，没有原因。',
     'Ascend and reach the goal but you do not gain Particles and you cannot Reincarnate at all! Ant production ^0.5.': '立即飞升开始挑战，您无法获得粒子，也无法转世！蚂蚁产量^0.5。',
     '50% Obtainium! Current': '50%难得素获取数量！当前效果',

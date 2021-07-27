@@ -822,8 +822,7 @@ var cnItems = {
     'Building Cost Delay +0.5%. Current': '建筑成本增长减缓0.5%。当前效果',
     'None': '无',
     'Start [Cost+]': '开始[花费增加挑战]',
-    'Accelerator Delay +': '加速器减缓次数',
-    'Multiplier Delay +': '加倍器减缓次数',
+    'Multiplier Delay +': '加倍器减缓次数 +',
     'Building Cost Delay +': '建筑成本增长减缓',
     'You ever wonder how you get so many diamonds?': '您想过钻石是怎么来的吗？',
     'Transcend and reach the goal except you gain far fewer Diamonds from all sources [Gets harder each time!]': '立即超越开始挑战，您获得的钻石数量大幅度减少[挑战难度会随着完成次数越来越高！]',
@@ -1601,6 +1600,10 @@ var cnItems = {
     'How many quarks are you putting up?': '您要下注多少夸克？（注意：奖励上限为250夸克，别下注超过1000夸克，不会有更多奖励了）',
     'Can\'t bet that!': '无法下注那个数量！',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
+    'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
+    'Click the button within the next 15 seconds to test your luck! If you click within 500 ms of a randomly generated time, you will win a prize!': '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的500毫秒范围内点击了按钮，您将获得一份奖励！',
+    'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',
+    'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'You\'re playing v2.5.6 - Seal of the Merchant [Last Update: 11:47 UTC 15-Jul-2021].': '您目前玩的版本为V2.5.6 - 商人的印记 [2021年7月15日 UTC 11:47更新]。',
     'Current Bonus: N/A (offline)%!': '当前加成：无(因为离线)！',
@@ -2112,6 +2115,7 @@ var cnRegReplace = new Map([
     [/^No Shards Challenge \|\| (.+)\/(.+) Completions$/, '无碎片挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^([e%\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
     [/^Cost\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费增加挑战 || 完成$1次，次数上限为$2'], //挑战
+    [/^Accelerator Delay(.*)$/, '加速器减缓次数$1'], //挑战
     [/^Reduced Diamonds Challenge \|\| (.+)\/(.+) Completions$/, '钻石减少挑战 || 完成$1次，次数上限为$2'], //挑战
     [/^Crystal production(.*)$/, '水晶产量倍率变为$1'], //挑战
     [/^Higher Tax Challenge \|\| (.+)\/(.+) Completions$/, '税收增加挑战 || 完成$1次，次数上限为$2'], //挑战

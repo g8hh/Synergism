@@ -256,7 +256,7 @@ const corruptionLoadoutSaveLoad = (save = true, loadout = 1) => {
 async function corruptionLoadoutGetNewName(loadout = 0) {
     const maxChars = 9
     // eslint-disable-next-line
-    const regex = /^[\x00-\xFF]*[\u4E00-\u9FFF]*$/
+    const regex = /^[\x00-\xFF]*$/
     const renamePrompt = await Prompt(
         `What would you like to name Loadout ${loadout + 1}? ` +
         `Names cannot be longer than ${maxChars} characters. Nothing crazy!`

@@ -1574,7 +1574,7 @@ var cnItems = {
     'Ascend when you\'ve completed Sadistic Challenge I a total of': '完成以下次数挑战10以后飞升：',
     ' times.': '次。',
     'The name you provided is too long! Try again.': '名字太长了！换个短一点的再来吧。',
-    'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符(比如中文)！换个其他的再来吧。',
+    'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符！换个其他的再来吧。',
     //腐化结束
 
     //设置

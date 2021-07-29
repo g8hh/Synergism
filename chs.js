@@ -50,8 +50,12 @@ var cnItems = {
     'Auto Enhance: OFF': '自动升阶：关',
     'Automatic: ON': '自动：开',
     'Automatic: OFF': '自动：关',
+    'Automatic mode: Cheapest': '自动模式：花费',
+    'Automatic mode: Manual': '自动模式：顺序',
     'Per second: ON': '每秒产量：开',
     'Per second: OFF': '每秒产量：关',
+    'Buy Max: ON': '最大化购买：开',
+    'Buy Max: OFF': '最大化购买：关',
     'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
     //主脚本结束
 
@@ -675,7 +679,7 @@ var cnItems = {
     'Reward: 100 AP. 500 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！',
     'Reward: 100 AP. 500 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！',
     'Reward: 50 AP. 2,000 Quarks! You will gain +10% Hypercubes! Why? I don\'t know.': '奖励：50成就点数。2000夸克！五阶立方获取数量增加10%！原因？我也不知道。',
-    'Reward: 150 AP. 6,000 Quarks! Ascensions are 25% faster, forever!': '奖励：150成就点数。6000夸克！飞升的速度永久增加25%！',
+    'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract! [WIP]': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！[未实装]',
     'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
     'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
@@ -1459,7 +1463,7 @@ var cnItems = {
     'Increase powder conversion rate by 1% per level, gain +2% ascension count per level and gain up to 2% more ascension count per level based on powder, up to 100,000. This will also multiply Tesseract Building production by (Powder + 1)^(10 * level), uncapped.': '每级此升级增加1%的超通量粉转化效率，使飞升次数获取数量增加2%，并且根据超通量粉的数量(上限100000)最多还可以使飞升次数获取数量再增加2%。另外，超立方建筑产量变为(超通量粉数量+1)^(10*等级)倍，无上限。',
     'If Divisiveness or Maladaptive is set to level 10 or higher, score multiplier is raised by an exponent. That exponent is 1.75 + 0.02 per level of this upgrade.': '如果腐化：分歧和腐化：适应不良的等级不低于10级，则将它们的分数倍率变为原来的(1.75+0.02*此升级等级)次方。',
     'Raise the base percentage of Constant Upgrade 1 by 0.1% and increase the base percentage cap of Constant Upgrade 2 by 0.3% per level!': '每级将数学常数升级1的基础效果百分比增加0.1%，并将数学常数升级2的基础上限百分比增加0.3%！',
-    'The diminishing return power on Chronos Hepteract changes from 0.166 to (0.166 + 0.0033 * level).': '惊奇七阶立方·时光超过软上限后的效果从0.166变为(0.166+0.0033*等级)。',
+    'The diminishing return power on Chronos Hepteract changes from 0.166 to (0.166 + 0.00133 * level) [Max of 0.2333].': '惊奇七阶立方·时光超过软上限后的效果从0.166变为(0.166+0.00133*等级)[上限为0.2333]。',
     'You know, maybe some things should be left unbought.': '有些东西，最好还是不要买的好。',
     'While I strongly recommended you not to buy this, you did it anyway. For that, you have unlocked the rune of Grandiloquence, for you are a richass.': '我都这么说了，您还是买了。好吧，您是土豪，我输了。您解锁了豪言壮语符文。',
     '===Upgrade Costs===': '===升级成本===',
@@ -1467,13 +1471,13 @@ var cnItems = {
     '===You cannot afford this!===': '===资源不足，无法购买===',
     '===Maxed===': '===等级已达最大===',
     'How did I get here?': '我是怎么到这里的？',
-    'Oh well, no time to waste. This is your lab. Make cool shit with your Hepteracts!': '好吧，没时间管那些了。这就是您的实验室。用惊奇七阶立方弄出一些有用的东西来吧！',
+    'Oh well, no time to waste. This is your lab. Make cool stuff with your Hepteracts!': '好吧，没时间管那些了。这就是您的实验室。用惊奇七阶立方弄出一些有用的东西来吧！',
     'Hepteracts do not provide passive bonuses. They must be made useful through crafting.': '惊奇七阶立方没有任何被动加成。必须通过锻造才能变得有用。',
     ' Hepteracts! You know where to get these, right?': '惊奇七阶立方！您应该已经知道这些是哪来的了吧？',
     'Craft': '锻造',
     'How many would you like to craft?': '您想要锻造多少？',
     'Okay, maybe next time.': '好吧，下次再说。',
-    'You can\'t craft a nonpositive amount of these fucks, lol!': '您没法锻造负数数量啊。',
+    'You can\'t craft a nonpositive amount of these, you monster!': '您没法锻造负数数量啊。',
     'This is not an unlocked craft, thus you cannot craft this item!': '这还没有解锁，您要怎么锻造呢？',
     'Expand': '延展',
     'This will empty your balance, but double your capacity. Agree to the terms and conditions and stuff?': '延展将清空此类惊奇七阶立方，但可以使上限翻倍。您确定这么做没问题吧？',
@@ -1544,6 +1548,7 @@ var cnItems = {
     ' / Next': ' / 下次',
     'Next': '下次',
     'Loadout': '档',
+    'Zero': '零',
     'Save': '存',
     'Load': '载',
     'This Ascension\'s climate raises ant production to the power of': '此飞升的气候使蚂蚁产量变为蚂蚁产量^',
@@ -1568,6 +1573,8 @@ var cnItems = {
     'Mode: C10 Completions': '模式：挑战10完成数',
     'Ascend when you\'ve completed Sadistic Challenge I a total of': '完成以下次数挑战10以后飞升：',
     ' times.': '次。',
+    'The name you provided is too long! Try again.': '名字太长了！换个短一点的再来吧。',
+    'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符(比如中文)！换个其他的再来吧。',
     //腐化结束
 
     //设置
@@ -1598,15 +1605,16 @@ var cnItems = {
     'Wait a little bit. We\'ll get back to you when you\'re ready to lose again.': '稍等片刻，等您准备好再输一次的时候再来吧。',
     'Are you sure? The house always wins!': '您确定吗？要知道，庄家总是赢家！',
     'Scared? You should be!': '怂了吗？也不失为明智之举！',
-    'How many quarks are you putting up?': '您要下注多少夸克？（注意：奖励上限为250夸克，别下注超过1000夸克，不会有更多奖励了）',
+    'How many quarks are you putting up?': '您要下注多少夸克？',
     'Can\'t bet that!': '无法下注那个数量！',
+    'Due to cheaters, you can only bet 1k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为1000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
     'Click the button within the next 15 seconds to test your luck! If you click within 500 ms of a randomly generated time, you will win a prize!': '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的500毫秒范围内点击了按钮，您将获得一份奖励！',
     'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',
     'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
-    'You\'re playing v2.5.6 - Seal of the Merchant [Last Update: 11:47 UTC 15-Jul-2021].': '您目前玩的版本为V2.5.6 - 商人的印记 [2021年7月15日 UTC 11:47更新]。',
+    'You\'re playing v2.5.7 - Seal of the Merchant [Last Update: 14:28 UTC 29-Jul-2021].': '您目前玩的版本为V2.5.7 - 商人的印记 [2021年7月29日 UTC 14:28更新]。',
     'Current Bonus: N/A (offline)%!': '当前加成：无(因为离线)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
@@ -1778,7 +1786,7 @@ var cnItems = {
     'Five times the price gouge, twice the fun! +1% Wow! Hypercubes and Platonic Cubes per level.': '价格五倍，欢乐成对！每级使五阶立方和PLATONIC方盒获取数量增加1%！',
     'Okay, now this is just ridiculous. +1% Wow! Hepteracts and Octeracts per level!': '好吧，越来离谱了。每级使七阶立方和八阶立方获取数量增加1%！',
     'You know, those ascensions are kinda slow. Why don\'t I give you a +1% speedup to the timer per level?': '您知道的，飞升慢的很。不如，每级使飞升的速度增加1%？',
-    'Okay, for an exorbitant amount, you can obtain the 6th rune, which gives +20% Quarks and +75% all cube types when maxed!': '嗯，支付高昂的费用以后，您就可以获得第六个符文了，满级时可以增加20%夸克获取数量及75%所有类型的方盒及立方获取数量!',
+    'Okay, for an exorbitant amount, you can obtain the 6th rune, which gives +35% Quarks and +125% all cube types when maxed!': '嗯，支付高昂的费用以后，您就可以获得第六个符文了，满级时可以增加35%夸克获取数量及125%所有类型的方盒及立方获取数量!',
     'The PL-AT can do addition in the blink of an eye. Not much else though. +14% Quarks from using code \'add\' per level, the first level provides the answer and the final level does it automatically!': 'PL-AT在眨眼间就能做完加法。不过它也没其他什么用途了。每级使您使用“add”代码获取的夸克数量增加14%，另外，第一级可以直接显示答案，而最后一级可以自动完成加法！',
     'The PL-AT X has improved memory capacity, allowing you to store 2 additional uses to code \'add\' per level. Final level makes \'add\' give 25% more Quarks!': 'PL-AT X提升了内存容量，每级使您使用“add”代码的次数上限增加2。另外，最后一级可以使您使用“add”代码获取的夸克数量增加25%！',
     'The PL-AT Ω is infused with some Unobtainium, which is epic! But furthermore, it reduces the variance of Quarks by code \'add\' by 10% per level, which makes you more likely to get the maximum multiplier. It also has the ability to give +60 seconds to Ascension Timer per level using that code.': 'PL-AT Ω注入了难得素，这使它的性能进一步提升了！每级使您使用“add”代码获得的夸克数量变化范围减少10%，因此您更有可能获得最高的数值。另外，每级可以使您使用“add”代码时同时增加60秒飞升时间。',
@@ -1916,7 +1924,7 @@ var cnPostfix = {
     " Royals/sec": "国王蚁", //蚂蚁
     " ALMIGHTIES/sec": "全能蚁", //蚂蚁
     "0.2% Quarks, +1% all cube types per level! Start with +10% Quarks.": "0.2%夸克获取数量，+1%所有类型的方盒及立方获取数量于每级！初始+10%夸克获取数量。", //符文等
-    " with. MDN has a list of values for \"special keys\" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values": "绑定的新按键。Mozilla开发者网络上列出了一系列特殊按键的名称：https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values", //快捷键
+    " with. MDN has a list of values for \"special keys\" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values You can also prefix your hotkey with [Ctrl,Shift,Alt]+<key>": "绑定的新按键。Mozilla开发者网络上列出了一系列特殊按键的名称：https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values 您也可以使用类似Ctrl+A这样的方式来定义快捷键(可以使用Ctrl，Shift或Alt)", //快捷键
     " Quarks.": "夸克。", //商店
     ":": "：",
     "：": "：",
@@ -2231,6 +2239,7 @@ var cnRegReplace = new Map([
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
+    [/^What would you like to name Loadout (.+)\? Names cannot be longer than (.+) characters. Nothing crazy!$/, '您想要重新命名档$1吗？名字无法超过$2个字符。就这样！'], //腐化
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
@@ -2275,29 +2284,4 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Code 'add' variance -(.+)%, Each use gives (.+) seconds to Ascension Timer.$/, '当前效果：使用“add”代码获得的夸克数量变化范围减少$1%，使用“add”代码时同时增加$2秒飞升时间。'], //商店
     [/^CURRENT Effect: \+(.+) effect on Constant Upgrade 2.$/, '当前效果：数学常数升级2的效果再增加$1。'], //商店
     [/^CURRENT Effect: \+(.+)% Overflux Powder gained when Overflux Orbs expire.$/, '当前效果：超通量粉转换效率增加$1%。'], //商店
-    [/^Are you sure you'd like to purchase offeringPotion for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买祭品药剂吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase obtainiumPotion for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买难得素药剂吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase offeringEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX额外祭品吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase offeringAuto for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买AUTO自动献祭祭品吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase obtainiumEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX额外难得素吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase obtainiumAuto for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买AUTO难得素自动研究吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase instantChallenge for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买立即挑战吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase antSpeed for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买蚂蚁速度吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase cashGrab for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买昂贵物品吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase shopTalisman for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买商店护身符吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase seasonPass for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买季票 1吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase challengeExtension for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买挑战上限吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase challengeTome for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买挑战后传吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase cubeToQuark for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买方盒转夸克吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase tesseractToQuark for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买超立方转夸克吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase hypercubeToQuark for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买五阶立方转夸克吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase seasonPass2 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买季票 2吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase seasonPass3 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买季票 3吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase chronometer for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买时计吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase infiniteAscent for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买无限晋升吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase calculator for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买计算器 1吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase calculator2 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买计算器 2吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase calculator3 for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买计算器 3吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase constantEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX数学常数吗？点击确定后才会购买。'], //商店
-    [/^Are you sure you'd like to purchase powderEX for (.+) Quarks\? Press 'OK' to finalize purchase.$/, '您确定要花费$1夸克购买EX超通量粉吗？点击确定后才会购买。'], //商店
 ]);

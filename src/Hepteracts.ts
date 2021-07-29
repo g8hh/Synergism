@@ -86,7 +86,7 @@ export class HepteractCraft {
         if (Number.isNaN(craftAmount) || !Number.isFinite(craftAmount)) // nan + Infinity checks
             return Alert('Value must be a finite number!');
         else if (craftAmount <= 0) // 0 or less selected
-            return Alert('You can\'t craft a nonpositive amount of these fucks, lol!');
+            return Alert('You can\'t craft a nonpositive amount of these, you monster!');
 
         // If craft is unlocked, we return object
         if (!this.UNLOCKED) 
@@ -225,7 +225,7 @@ export const hepteractEffective = (data: hepteractTypes) => {
     let effectiveValue = Math.min(player.hepteractCrafts[data].BAL, hepteractEffectiveValues[data].LIMIT)
     let exponentBoost = 0;
     if (data === 'chronos') {
-        exponentBoost += 1/300 * player.platonicUpgrades[19]
+        exponentBoost += 1/750 * player.platonicUpgrades[19]
     }
     if (player.hepteractCrafts[data].BAL > hepteractEffectiveValues[data].LIMIT) {
         effectiveValue *= Math.pow(player.hepteractCrafts[data].BAL / hepteractEffectiveValues[data].LIMIT, hepteractEffectiveValues[data].DR + exponentBoost)

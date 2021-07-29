@@ -20,12 +20,12 @@ import { calculatePlatonicBlessings } from './PlatonicCubes';
 import { antSacrificePointsToMultiplier, autoBuyAnts, calculateCrumbToCoinExp } from './Ants';
 import { calculatetax } from './Tax';
 import { ascensionAchievementCheck, challengeachievementcheck, achievementaward, resetachievementcheck, buildingAchievementCheck } from './Achievements';
-import { reset } from './Reset';
+import { reset, resetrepeat } from './Reset';
 import { buyMax, buyAccelerator, buyMultiplier, boostAccelerator, buyCrystalUpgrades, buyParticleBuilding, getReductionValue, getCost, buyRuneBonusLevels, buyTesseractBuilding, TesseractBuildings, calculateTessBuildingsInBudget } from './Buy';
 import { autoUpgrades } from './Automation';
 import { redeemShards } from './Runes';
 import { updateCubeUpgradeBG } from './Cubes';
-import { corruptionLoadoutTableUpdate, corruptionButtonsAdd, corruptionLoadoutTableCreate, corruptionStatsUpdate } from './Corruptions';
+import { corruptionLoadoutTableUpdate, corruptionButtonsAdd, corruptionLoadoutTableCreate, corruptionStatsUpdate, updateCorruptionLoadoutNames } from './Corruptions';
 import { generateEventHandlers } from './EventListeners';
 import { addTimers, automaticTools } from './Helper';
 //import { LegacyShopUpgrades } from './types/LegacySynergism';
@@ -450,6 +450,7 @@ export const player: Player = {
     autoFortifyToggle: false,
     autoEnhanceToggle: false,
     autoResearchToggle: false,
+    autoResearchMode: 'manual',
     autoResearch: 0,
     autoSacrifice: 0,
     sacrificeTimer: 0,
@@ -572,11 +573,18 @@ export const player: Player = {
 
     prototypeCorruptions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     usedCorruptions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    corruptionLoadouts: {
+    corruptionLoadouts: {  //If you add loadouts don't forget to add loadout names!
         1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
+    corruptionLoadoutNames: [
+        "Loadout 1",
+        "Loadout 2",
+        "Loadout 3",
+        "Loadout 4",
+    ],
     corruptionShowStats: true,
 
     constantUpgrades: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -811,6 +819,7 @@ const loadSynergy = () => {
             player.fifthCostParticles = new Decimal("1e16");
             player.autoSacrificeToggle = false;
             player.autoResearchToggle = false;
+            player.autoResearchMode = 'manual';
             player.autoResearch = 0;
             player.autoSacrifice = 0;
             player.sacrificeTimer = 0;
@@ -1214,6 +1223,7 @@ const loadSynergy = () => {
             corruptionLoadoutTableUpdate(i);
         }
         showCorruptionStatsLoadouts()
+        updateCorruptionLoadoutNames()
 
         for (let j = 1; j <= 5; j++) {
             const ouch = document.getElementById("tesseractAutoToggle" + j);
@@ -1281,6 +1291,11 @@ const loadSynergy = () => {
         if (!player.autoResearchToggle) {
             document.getElementById("toggleautoresearch").textContent = "Automatic: OFF"
         }
+        if (player.autoResearchMode === 'cheapest') {
+            document.getElementById("toggleautoresearchmode").textContent = "Automatic mode: Cheapest"
+        } else if (player.autoResearchMode === 'manual') {
+            document.getElementById("toggleautoresearchmode").textContent = "Automatic mode: Manual"
+        }
         if (player.autoSacrificeToggle == true) {
             document.getElementById("toggleautosacrifice").textContent = "Auto Rune: ON"
             document.getElementById("toggleautosacrifice").style.border = "2px solid green"
@@ -1346,6 +1361,11 @@ const loadSynergy = () => {
     }
     CSSAscend();
     updateAchievementBG();
+    if (player.currentChallenge.reincarnation) {
+        resetrepeat('reincarnationChallenge');
+    } else if (player.currentChallenge.transcension) {
+        resetrepeat('transcensionChallenge');
+    }
 
     const d = new Date()
     const h = d.getHours()
@@ -1447,8 +1467,8 @@ export const format = (
             standard = Math.ceil(standard);
         }
         // If the power is less than 1 or format long and less than 3 apply toFixed(accuracy) to get decimal places
-        if ((power < 1 || (long && power < 3)) && accuracy > 0) {
-            standardString = standard.toFixed(accuracy);
+        if ((power < 2 || (long && power < 3)) && accuracy > 0) {
+            standardString = standard.toFixed(power === 2 && accuracy > 2 ? 2 : accuracy);
         } else {
             // If it doesn't fit those criteria drop the decimal places
             standard = Math.floor(standard);
@@ -3260,7 +3280,7 @@ document.addEventListener('keydown', (event) => {
 
     const type = types[G['buildingSubTab']];
 
-    const key = event.key.toUpperCase();
+    const key = event.code.replace(/^(Digit|Numpad)/, '').toUpperCase();
     switch (key) {
         case "1":
         case "2":
@@ -3365,7 +3385,7 @@ export const reloadShit = async (reset = false) => {
 
     loadSynergy();
     if (!reset) 
-            calculateOffline();
+        calculateOffline();
     else
         player.worlds = new QuarkHandler({quarks: 0})
     saveSynergy();

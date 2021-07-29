@@ -23,7 +23,8 @@ export const hotkeys = new Map<string, [string, () => unknown]>([
     ['ARROWLEFT', ['Back a tab', () => keyboardTabChange(-1)]],
     ['ARROWRIGHT', ['Next tab', () => keyboardTabChange(1)]],
     ['ARROWUP', ['Back a subtab', () => keyboardTabChange(-1, false)]],
-    ['ARROWDOWN', ['Next subtab', () => keyboardTabChange(1, false)]]
+    ['ARROWDOWN', ['Next subtab', () => keyboardTabChange(1, false)]],
+    ['SHIFT+A', ['Reset Ascend', () => resetCheck('ascend')]],
 ]);
 
 document.addEventListener('keydown', event => {
@@ -33,7 +34,17 @@ document.addEventListener('keydown', event => {
         return event.stopPropagation();
     }
 
-    const key = event.key.toUpperCase();
+    let keyPrefix = '';
+    if (event.ctrlKey) {
+        keyPrefix += 'CTRL+';
+    }
+    if (event.shiftKey) {
+        keyPrefix += 'SHIFT+';
+    }
+    if (event.altKey) {
+        keyPrefix += 'ALT+';
+    }
+    const key = keyPrefix + event.key.toUpperCase();
 
     if (hotkeys.has(key)) {
         hotkeys.get(key)[1]();
@@ -50,7 +61,7 @@ const makeSlot = (key: string, descr: string) => {
     span.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement;
         // new value to set key as, unformatted
-        const newKey = await Prompt(`Enter the new key you want to activate ${target.parentNode.querySelector('p').textContent} with. MDN has a list of values for "special keys" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values`);
+        const newKey = await Prompt(`Enter the new key you want to activate ${target.parentNode.querySelector('p').textContent} with. MDN has a list of values for "special keys" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values You can also prefix your hotkey with [Ctrl,Shift,Alt]+<key>`);
 
         if (typeof newKey !== 'string') return;
 

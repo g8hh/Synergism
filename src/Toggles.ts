@@ -4,7 +4,7 @@ import { Globals as G } from './Variables';
 import Decimal from 'break_infinity.js';
 import { visualUpdateCubes } from './UpdateVisuals';
 import { calculateRuneLevels } from './Calculate';
-import { reset } from './Reset';
+import { reset, resetrepeat } from './Reset';
 import { achievementaward } from './Achievements';
 import { getChallengeConditions } from './Challenges';
 import { loadStatisticsCubeMultipliers, loadStatisticsOfferingMultipliers, loadStatisticsAccelerator, loadStatisticsMultiplier, loadPowderMultiplier } from './Statistics';
@@ -80,18 +80,24 @@ export const toggleSettings = (i: number) => {
 }
 
 export const toggleChallenges = (i: number, auto = false) => {
-    if (player.currentChallenge.transcension === 0 && (i <= 5)) {
+    if ((i <= 5)) {
         if(player.currentChallenge.ascension !== 15 || player.ascensionCounter >= 2){
             player.currentChallenge.transcension = i;
             reset("transcensionChallenge", false, "enterChallenge");
             player.transcendCount -= 1;
         }
+        if (!player.currentChallenge.reincarnation && !document.querySelector('.resetbtn.hover')) {
+            resetrepeat('transcensionChallenge');
+        }
     }
-    if ((player.currentChallenge.transcension === 0 && player.currentChallenge.reincarnation === 0) && (i >= 6 && i < 11)){
+    if ((i >= 6 && i < 11)){
         if(player.currentChallenge.ascension !== 15 || player.ascensionCounter >= 2){
             player.currentChallenge.reincarnation = i;
             reset("reincarnationChallenge", false, "enterChallenge");
             player.reincarnationCount -= 1;
+        }
+        if (!document.querySelector('.resetbtn.hover')) {
+            resetrepeat('reincarnationChallenge');
         }
     }
     if (player.challengecompletions[10] > 0) {
@@ -394,10 +400,26 @@ export const toggleAutoResearch = () => {
         el.textContent = "Automatic: ON"
     }
 
-    if (player.autoResearchToggle && player.cubeUpgrades[9] === 1) {
+    if (player.autoResearchToggle && player.cubeUpgrades[9] === 1 && player.autoResearchMode === 'cheapest') {
         player.autoResearch = G['researchOrderByCost'][player.roombaResearchIndex]
     }
 
+}
+
+export const toggleAutoResearchMode = () => {
+    const el = document.getElementById("toggleautoresearchmode")
+    if (player.autoResearchMode === 'cheapest') {
+        player.autoResearchMode = 'manual';
+        el.textContent = "Automatic mode: Manual";
+    } else {
+        player.autoResearchMode = 'cheapest';
+        el.textContent = "Automatic mode: Cheapest";
+    }
+    document.getElementById(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
+
+    if (player.autoResearchToggle && player.cubeUpgrades[9] === 1 && player.autoResearchMode === 'cheapest') {
+        player.autoResearch = G['researchOrderByCost'][player.roombaResearchIndex]
+    }
 }
 
 export const toggleAutoSacrifice = (index: number) => {
@@ -604,6 +626,15 @@ export const toggleShopConfirmation = () => {
         : "Shop Confirmations: ON";
 
     G['shopConfirmation'] = !G['shopConfirmation'];
+}
+
+export const toggleBuyMaxShop = () => {
+    const el = document.getElementById("toggleBuyMaxShop")
+    el.textContent = G['shopBuyMax']
+        ? "Buy Max: OFF"
+        : "Buy Max: ON";
+
+    G['shopBuyMax'] = !G['shopBuyMax'];
 }
 
 export const toggleAntMaxBuy = () => {

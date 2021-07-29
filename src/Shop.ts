@@ -1,6 +1,6 @@
 import { player, format } from './Synergism';
 import { Globals as G } from './Variables';
-import { Confirm, revealStuff } from './UpdateHTML';
+import { Alert, Confirm, revealStuff } from './UpdateHTML';
 import { calculateTimeAcceleration } from './Calculate';
 import { Player } from './types/Synergism';
 
@@ -200,7 +200,7 @@ export const shopData: Record<keyof Player['shopUpgrades'], IShopData> = {
         type: "upgrade",
         refundable: false,
         refundMinimumLevel: 0,
-        description: "Okay, for an exorbitant amount, you can obtain the 6th rune, which gives +20% Quarks and +75% all cube types when maxed!"
+        description: "Okay, for an exorbitant amount, you can obtain the 6th rune, which gives +35% Quarks and +125% all cube types when maxed!"
     },
     calculator: {
         price: 1000,
@@ -358,20 +358,74 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
 
 }
 
+//strentax 07/21 Add function to convert code-name display to end-user friendly display of shop upgrades
+export const friendlyShopName = (input: ShopUpgradeNames) => {
+
+    const names: Record<ShopUpgradeNames, string> = {
+        offeringPotion: '祭品药剂',
+        obtainiumPotion: '难得素药剂',
+        offeringEX: 'EX额外祭品',
+        offeringAuto: 'AUTO自动献祭祭品',
+        obtainiumEX: 'EX额外难得素',
+        obtainiumAuto: 'AUTO难得素自动研究',
+        instantChallenge: '立即完成挑战',
+        antSpeed: "蚂蚁速度",
+        cashGrab: '昂贵物品',
+        shopTalisman: "信卡护身符",
+        seasonPass: '季票 1',
+        challengeExtension: '转世挑战上限',
+        challengeTome: '挑战10减少需求',
+        cubeToQuark: '开启惊奇方盒时50%夸克加成',
+        tesseractToQuark: '开启惊奇超立方时50%夸克加成',
+        hypercubeToQuark: '开启惊奇五阶立方时50%夸克加成',
+        seasonPass2: '季票 2',
+        seasonPass3: '季票 3',
+        chronometer: '飞升的速度1%加成',
+        infiniteAscent: '无限晋升符文',
+        calculator: 'PL-AT计算器',
+        calculator2: 'PL-AT X计算器',
+        calculator3: 'PL-AT Ω计算器',
+        constantEX: 'EX数学常数',
+        powderEX: 'EX超通量粉'
+    }
+
+    return names[input];
+
+}
+
 export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
     let p = true;
+    const maxLevel = player.shopUpgrades[input] === shopData[input].maxLevel;
+    const canAfford = Number(player.worlds) >= getShopCosts(input);
+
     if (G['shopConfirmation']) {
-        p = await Confirm("Are you sure you'd like to purchase " + input + " for " + format(getShopCosts(input)) + " Quarks? Press 'OK' to finalize purchase.");
+        if (maxLevel) {
+            await Alert("您无法购买" + friendlyShopName(input) + "，因为您已经达到最大等级！")
+        }
+        else if (!canAfford) {
+            await Alert("您无法购买" + friendlyShopName(input) + "，因为您的夸克不够！")
+        }
+        else {
+            let noRefunds = "";
+            if (!shopData[input].refundable) {
+                noRefunds = "注意：无法重置此项购买！"
+            }
+            p = await Confirm("您确定要花费" + format(getShopCosts(input)) + "夸克购买" + friendlyShopName(input) + "吗？点击确定后才会购买。" + noRefunds);
+        }
     }
 
     if (p) {
-        if (Number(player.worlds) >= getShopCosts(input) && player.shopUpgrades[input] < shopData[input].maxLevel) {
-            player.worlds.sub(getShopCosts(input));
-            player.shopUpgrades[input] += 1
-            console.log("purchase successful for 1 level of '" + input + "'!")
-        }
-        else{
-            console.log("purchase attempted for 1 level of '" + input + "' but failed!")    
+        if (G['shopBuyMax']) {
+            //Can't use canAfford and maxLevel here because player's quarks change and shop levels change during loop
+            while (Number(player.worlds) >= getShopCosts(input) && player.shopUpgrades[input] < shopData[input].maxLevel) {
+                player.worlds.sub(getShopCosts(input));
+                player.shopUpgrades[input] += 1
+            }
+        } else {
+            if (canAfford && !maxLevel) {
+                player.worlds.sub(getShopCosts(input));
+                player.shopUpgrades[input] += 1
+            }
         }
     }
     revealStuff();

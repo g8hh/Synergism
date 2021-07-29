@@ -326,18 +326,16 @@ export const promocodes = async () => {
         const bet = Number(await Prompt('How many quarks are you putting up?'));
         if (Number.isNaN(bet) || bet <= 0)
             return el.textContent = 'Can\'t bet that!';
-
-        if (Number(player.worlds) < bet)
+        else if (bet > 1e3)
+            return el.textContent = `Due to cheaters, you can only bet 1k max.`;
+        else if (Number(player.worlds) < bet)
             return el.textContent = 'Can\'t bet what you don\'t have.';
 
         localStorage.setItem('saveScumIsCheating', Date.now().toString());
         const dice = window.crypto.getRandomValues(new Uint8Array(1))[0] % 6 + 1; // [1, 6]
         
         if (dice === 1) {
-            let won = bet * .25; // lmao
-            if(won >= 250) {
-                won = 250;                
-            }
+            const won = bet * .25; // lmao
             player.worlds.add(won);
 
             player.skillCode = Date.now();

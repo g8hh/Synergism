@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="Synergism.css">
     <script src="./dist/out.js" defer></script>
 </head>
-<body>
+<body class="loading">
     <script src="chs.js?0619"></script>
     <script src="//g8hh.com/zh/core.js"></script>
     <div id="transparentBG"></div>
@@ -42,7 +42,9 @@
             </div>
         </div>
     </div>
-    <img src="Pictures/Splash/base.png" id="preload" alt="" style="width: 100%;">
+    <div id="preloadContainer">
+        <img src="Pictures/Splash/base.png" id="preload" alt="" style="width: 100%;">
+    </div>
     <div id="offlineContainer">
         <p id="offlineTimer" class="offlineText" style="color: plum"></p>
         <p id="progressbardescription" class="offlineText" style="color: yellow">Loading Offline Progress...</p>

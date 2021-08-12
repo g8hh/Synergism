@@ -943,7 +943,7 @@ var cnItems = {
     '[1x18] Gain +2 free accelerator per accelerator boost.': '[1x18]每个加速器加成额外增加2个免费加速器。',
     '[1x19] Gain +2 free accelerator per accelerator boost.': '[1x19]每个加速器加成额外增加2个免费加速器。',
     '[1x20] Gain +3 free accelerator per accelerator boost!': '[1x20]每个加速器加成额外增加3个免费加速器！',
-    '[1x21] Most rune effects are increased by 1% per level. (Excludes any recycle chance bonus': '[1x11]绝大多数符文的效果每级增加1%。(增加回收概率的除外',
+    '[1x21] Most rune effects are increased by 1% per level. (Excludes any recycle chance bonus': '[1x21]绝大多数符文的效果每级增加1%。(增加回收概率的除外',
     '[1x22] Each Offering used increases Rune EXP by 0.6 per level.': '[1x22]每级使每个祭品增加的经验值提升0.6。',
     '[1x23] Each Offering used increases Rune EXP by another 0.3 per level!': '[1x23]每级使每个祭品增加的经验值再提升0.3。',
     '[1x24] Prestige and Transcensions base Offering is increased by 0.2 per level.': '[1x24]转生和超越相关的基础祭品数量每级增加0.2。',

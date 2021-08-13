@@ -1873,6 +1873,7 @@ var cnPrefix = {
     "+1 in ": "升1级需要", //主界面及建筑
     "Level ": "等级 ", //主界面及建筑
     "Achievement Points: ": "成就点数：", //成就
+    "You unlocked an achievement: ": "你解锁了成就：", //成就
     "Bonus Speed Rune Levels: ": "加速符文额外等级：", //符文等
     "Bonus Duplication Rune Levels: ": "重叠符文额外等级：", //符文等
     "Bonus Prism Rune Levels: ": "棱柱符文额外等级：", //符文等

@@ -534,7 +534,7 @@ var cnItems = {
     '[243] Unsmith: [Hint: unsmith emoji :unsmith: can be a pretty good input]':'[243]面无表情：[提示：奖励代码输入 :unsmith: ]',
     '[244] Smith: [Hint: :antismith: looks promising as well]':'[244]反色面无表情：[提示：奖励代码输入 :antismith: ]',
     '[245] BLESSED: [Hint: Your Speed Blessing best be unreasonably high!]':'[245]彻底祝福：[提示：加速符文的祝福等级需要大到离谱，甚至是1e14的一亿倍]',
-    '[246] Why? [Hint: Sometimes even 1 in over a Trillion counts!]':'[246]意义何在？[提示：在赫尔墨斯的祝福等级已经比一千万的两万倍还多时，再去开一个方盒又有什么意义呢，对不对？]',
+    '[246] Why? [Hint: Sometimes even 1 in over a Trillion counts!]':'[246]意义何在？[提示：在赫尔墨斯的贡品等级已经比一千万的两万倍还多时，再去开一个方盒又有什么意义呢，对不对？]',
     '[247] Challenging! [Hint: Challenge 11 is calling your name, but with even less ants]':'[247]真正的挑战！[提示：使用某个跟蚂蚁产量有关的腐化以后，完成挑战11，且本次完成挑战10的次数不能低于49，也不需要高于51？什么，腐化要多少级？挑战10至少需要次数的第一位就是了]',
     '[248] Seeing Red but not Blue: [Hint: Can you get red stuff without getting blue stuff?]':'[248]无蓝见红：[提示：在某个见不到发亮蓝石的挑战中，获得1后面跟着10个0……哦不好意思还少了个0的某种红色资源。什么资源？前面不是有一个一样的吗，就那个]',
     '[249] Overtaxed: [Hint: It might pay not to read!]':'[249]课税过重：[提示：在某个税收增加极快的挑战，当然不是那种转转世就能完成的挑战中，由于税收，金币产量连1后面跟着1，2，3……等等，多少来着，哦，100……1000？不不，100000个0都达不到]',

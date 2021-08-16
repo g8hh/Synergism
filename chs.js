@@ -1580,8 +1580,8 @@ var cnItems = {
     //设置
     'Credits': '制作组',
     'Stats for Nerds': '高玩特供统计',
-    'Reset History': '重置历史数据',
-    'Ascend History': '飞升历史数据',
+    'Reset History': '历史重置数据',
+    'Ascend History': '历史飞升数据',
     'Hotkeys': '快捷键',
     'Confirmation Toggles': '相应重置时是否弹窗确认',
     '[ON]': '[开]',

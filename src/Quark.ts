@@ -9,6 +9,7 @@ import { DOMCacheGetOrSet } from './Cache/DOM';
 
 const getBonus = async (): Promise<null | number> => {
     if (navigator.onLine === false) return null;
+    if (document.hidden === true) return null;
 
     try {
         const r = await fetch('https://api.github.com/gists/44be6ad2dcf0d44d6a29dffe1d66a84a', {
@@ -32,7 +33,7 @@ const getBonus = async (): Promise<null | number> => {
         return j.bonus;
     } catch (e) {
         console.log(`workers.dev: ${(<Error>e).message}`);
-        return null;
+        return undefined;
     }
 }
 
@@ -160,12 +161,16 @@ export class QuarkHandler {
                 return this.BONUS = bonus;
             }
         } else if (!navigator.onLine) {
-            return el.textContent = `Current Bonus: N/A (offline)%!`;
+            return el.textContent = `Current Bonus: N/A% (offline)!`;
+        } else if (document.hidden) {
+            return el.textContent = `Current Bonus: N/A% (unfocused)!`;
         }
 
         const b = await getBonus();
 
-        if (Number.isNaN(b) || typeof b !== 'number') 
+        if (b === null) {
+            return;
+        } else if (Number.isNaN(b) || typeof b !== 'number') 
             return Alert('No bonus could be applied, an error occurred. [NaN] :(');
         else if (!Number.isFinite(b))
             return Alert('No bonus could be applied, an error occurred. [Infinity] :(');

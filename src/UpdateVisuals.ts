@@ -3,13 +3,14 @@ import { Globals as G } from './Variables';
 import { player, format, formatTimeShort } from './Synergism';
 import { version } from './Config';
 import { CalcECC } from './Challenges';
-import { calculateSigmoidExponential, calculateMaxRunes, calculateRuneExpToLevel, calculateSummationLinear, calculateRecycleMultiplier, calculateCorruptionPoints, CalcCorruptionStuff, calculateAutomaticObtainium, calculateTimeAcceleration } from './Calculate';
+import { calculateSigmoidExponential, calculateMaxRunes, calculateRuneExpToLevel, calculateSummationLinear, calculateRecycleMultiplier, calculateCorruptionPoints, CalcCorruptionStuff, calculateAutomaticObtainium, calculateTimeAcceleration, calcAscensionCount, calculateCubeQuarkMultiplier } from './Calculate';
 import { displayRuneInformation } from './Runes';
 import { showSacrifice } from './Ants';
 import { sumContents } from './Utility';
 import { getShopCosts, shopData } from './Shop';
 import { quarkHandler } from './Quark';
 import type { Player, ZeroToFour } from './types/Synergism';
+import { hepteractTypeList, hepteractTypes } from './Hepteracts';
 import { DOMCacheGetOrSet } from './Cache/DOM';
 
 export const visualUpdateBuildings = () => {
@@ -378,11 +379,47 @@ export const visualUpdateCubes = () => {
             break;
         case 6:
             DOMCacheGetOrSet('hepteractQuantity').textContent = format(player.wowAbyssals, 0, true)
+
+            //Update the grid
+            hepteractTypeList.forEach((type) => {
+                UpdateHeptGridValues(type);
+            });
+
+            //orbs
+            DOMCacheGetOrSet('heptGridOrbBalance').textContent = format(player.overfluxOrbs)
+            DOMCacheGetOrSet('heptGridOrbEffect').textContent = format(100 * (-1 + calculateCubeQuarkMultiplier()), 2, true) + '%'
+
+            //powder
+            DOMCacheGetOrSet('heptGridPowderBalance').textContent = format(player.overfluxPowder)
+            DOMCacheGetOrSet('heptGridPowderWarps').textContent = format(player.dailyPowderResetUses)
             break;
         default:
             // console.log(`player.subtabNumber (${player.subtabNumber}) was outside of the allowed range (${subTabsInMainTab(8).subTabList.length}) for the cube tab`);
             break;
     }
+}
+
+const UpdateHeptGridValues = (type: hepteractTypes) => {
+    const text = type + 'ProgressBarText'
+    const bar = type + 'ProgressBar'
+    const textEl = document.getElementById(text)
+    const barEl = document.getElementById(bar)
+    const balance = player.hepteractCrafts[type].BAL
+    const cap = player.hepteractCrafts[type].CAP
+    const barWidth = Math.round((balance / cap) * 100)
+
+    let barColor = "";
+    if (barWidth < 34) {
+        barColor = "red";
+    } else if (barWidth >= 34 && barWidth < 68) {
+        barColor = "#cca300";
+    } else {
+        barColor = "green";
+    }
+
+    textEl.textContent = format(balance) + " / " + format(cap)
+    barEl.style.width = barWidth + '%'
+    barEl.style.backgroundColor = barColor
 }
 
 export const visualUpdateCorruptions = () => {
@@ -391,18 +428,24 @@ export const visualUpdateCorruptions = () => {
 
     DOMCacheGetOrSet("autoAscendMetric").textContent = format(player.autoAscendThreshold, 0, true)
     const metaData = CalcCorruptionStuff();
+    const ascCount = calcAscensionCount();
 
-    DOMCacheGetOrSet("corruptionBankValue").textContent = format(metaData[0])
-    DOMCacheGetOrSet("corruptionScoreValue").textContent = format(metaData[1], 0, true)
-    DOMCacheGetOrSet("corruptionMultiplierValue").textContent = format(metaData[2], 1, true)
-    DOMCacheGetOrSet("corruptionTotalScore").textContent = format(metaData[3], 0, true)
-    DOMCacheGetOrSet("corruptionCubesValue").textContent = format(metaData[4], 0, true)
-    DOMCacheGetOrSet("corruptionTesseractsValue").textContent = format(metaData[5])
-    DOMCacheGetOrSet("corruptionHypercubesValue").textContent = format(metaData[6])
-    DOMCacheGetOrSet("corruptionPlatonicCubesValue").textContent = format(metaData[7])
-    DOMCacheGetOrSet("corruptionHepteractsValue").textContent = format(metaData[8])
-    DOMCacheGetOrSet("corruptionAntExponentValue").textContent = format((1 - 0.9 / 90 * sumContents(player.usedCorruptions)) * G['extinctionMultiplier'][player.usedCorruptions[7]], 3)
-    DOMCacheGetOrSet("corruptionSpiritBonusValue").textContent = format(calculateCorruptionPoints()/400,2,true)
+    DOMCacheGetOrSet("corruptionBankValue").textContent = format(metaData[0]);
+    DOMCacheGetOrSet("corruptionScoreValue").textContent = format(metaData[1], 0, true);
+    DOMCacheGetOrSet("corruptionMultiplierValue").textContent = format(metaData[2], 1, true);
+    DOMCacheGetOrSet("corruptionTotalScore").textContent = format(metaData[3], 0, true);
+    DOMCacheGetOrSet("corruptionCubesValue").textContent = format(metaData[4], 0, true);
+    DOMCacheGetOrSet("corruptionTesseractsValue").textContent = format(metaData[5]);
+    DOMCacheGetOrSet("corruptionHypercubesValue").textContent = format(metaData[6]);
+    DOMCacheGetOrSet("corruptionPlatonicCubesValue").textContent = format(metaData[7]);
+    DOMCacheGetOrSet("corruptionHepteractsValue").textContent = format(ascCount);
+    DOMCacheGetOrSet("corruptionAntExponentValue").textContent = format((1 - 0.9 / 90 * sumContents(player.usedCorruptions)) * G['extinctionMultiplier'][player.usedCorruptions[7]], 3);
+    DOMCacheGetOrSet("corruptionSpiritBonusValue").textContent = format(calculateCorruptionPoints()/400,2,true);
+    DOMCacheGetOrSet("corruptionAscensionCount").style.display = ascCount > 1 ? 'block' : 'none';
+
+    if (ascCount > 1) {
+        DOMCacheGetOrSet("corruptionAscensionCountValue").textContent = format(calcAscensionCount());
+    }
 }
 
 export const visualUpdateSettings = () => {

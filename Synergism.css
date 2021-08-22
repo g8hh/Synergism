@@ -302,6 +302,7 @@ button:focus {
     display: flex;
     flex-direction: column;
     width: 50%;
+    min-width: 625px;
 }
 
 .resetsContainer {
@@ -325,10 +326,9 @@ button:focus {
 }
 
 #resetinfo {
-    text-align: center;
+    text-align: left; /*Keeps text from bouncing around*/
     font-size: 15px;
     font-variant-numeric: tabular-nums;
-    width: 600px;
 }
 
 #resetrewards > div {
@@ -489,6 +489,8 @@ nav li:hover {
     text-align: center;
     padding: 0;
     color: gold;
+    margin: 0 auto;
+    max-width: 1500px;
 }
 
 #upgradesFlex {
@@ -568,6 +570,7 @@ nav li:hover {
 
 .settingSubTabUpper {
     display: flex;
+    margin-left: 25px;
 }
 
 .confirmationToggles {
@@ -580,7 +583,8 @@ nav li:hover {
 #exportButtons {
     display: flex;
     flex-direction: column;
-    margin: 0.8em 0;
+    margin: 0.8em 0 0.8em 50px;
+    min-width: 300px;
 }
 
 #exportButtons > * { margin: 0.15em 0; }
@@ -654,7 +658,6 @@ nav li:hover {
 }
 
 #promocodeinfo {
-    word-break: break-all;
     width: 75%;
     margin: 0 auto;
 }
@@ -832,8 +835,8 @@ nav li:hover {
     position: absolute;
     font-size: 11px;
     width: 220px;
-    left: 80%;
-    top: 30px;
+    left: 86%;
+    top: 32px;
     margin-left: -173px;
 }
 
@@ -842,6 +845,7 @@ nav li:hover {
     flex-direction: column;
     align-items: flex-start;
     width: 30%;
+    margin-top: 23px;
 }
 
 #buyamounttalisman {
@@ -892,10 +896,10 @@ nav li:hover {
     color: white;
     position: absolute;
     font-size: 11px;
-    width: 220px;
-    left: 80%;
-    top: 30px;
-    margin-left: -120px;
+    width: 250px;
+    left: 85%;
+    top: 25px;
+    margin-left: -183px;
 }
 
 #toggletalismanbuy {
@@ -939,6 +943,8 @@ nav li:hover {
     padding: 0;
     flex-direction: column;
     align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 #prestige {
@@ -947,6 +953,8 @@ nav li:hover {
     color: cyan;
     flex-direction: column;
     align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 #crystalupgradestable { margin: 0 auto; }
@@ -1117,8 +1125,8 @@ nav li:hover {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    width: 30%;
-    margin-top: 25px;
+    width: 33%;
+    margin-top: 23px;
 }
 
 .talismanShardContainer {
@@ -1257,7 +1265,7 @@ nav li:hover {
     left: 50%;
     width: 600px;
     margin-left: -200px;
-    top: 330px;
+    top: 327px;
     text-align: center;
 }
 
@@ -1334,6 +1342,8 @@ nav li:hover {
     padding: 0;
     flex-direction: column;
     align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 #transcension > .buttonRow {
@@ -1534,6 +1544,8 @@ nav li:hover {
     color: limegreen;
     flex-direction: column;
     align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 #reincarnationTexts {
@@ -1806,6 +1818,8 @@ nav li:hover {
     position: relative;
     padding: 0;
     text-align: center;
+    max-width: 1500px;
+    margin: 0 auto;
 }
 
 #antsWrapper {
@@ -2066,6 +2080,7 @@ p[id$="BlessingsTotal"] {
 .openGrid {
     display: flex;
     align-self: flex-start;
+    margin-top: 10px;
 }
 
 .openImage {
@@ -2104,6 +2119,7 @@ p[id$="BlessingsTotal"] {
     flex-direction: column;
     align-items: center;
     width: 700px;
+    margin-left: 20px;
 }
 
 #cubeTab5Wrapper {
@@ -2193,6 +2209,8 @@ p[id$="BlessingsTotal"] {
     color: orange;
     flex-direction: column;
     align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 #tesseractTexts { margin-top: 20px; }
@@ -2260,6 +2278,8 @@ p[id$="BlessingsTotal"] {
 #creditList {
     display: grid;
     grid-template-columns: repeat(4, minmax(250px, 1fr));
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .credit {
@@ -2484,10 +2504,11 @@ p[id$="BlessingsTotal"] {
 
 #historyAscendTable {
     min-width: 1180px;
+    white-space: nowrap;
 }
 
 .historyTableWrap {
-    max-height: 450px;
+    max-height: 650px;
     overflow-y: auto;
 }
 
@@ -2795,12 +2816,15 @@ header .img {
 
 .subHeader {
     display: flex;
+    max-width: 1250px;
 }
 
 .currenciesContainer {
     display: flex;
     flex-direction: column;
     width: 50%;
+    align-items: flex-start;
+    min-width: 625px;
 }
 
 .currencyRow {
@@ -2814,7 +2838,7 @@ header .img {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 140px;
+    min-width: 146px;
 }
 
 header #coinDisplay {
@@ -2900,6 +2924,10 @@ header #obtainiumDisplay {
     color: pink;
 }
 
+#ascTimeTakenStats {
+    min-width: 125px; /*prevent bouncing around*/
+}
+
 #ascTimeAccel {
     color: royalblue;
 }
@@ -2975,33 +3003,106 @@ header #obtainiumDisplay {
     font-size: 1em;
 }
 
-#hepteractGrid {
+.hepteractGrid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(70px, 105px));
+    grid-template-columns: repeat(4, 180px);
     margin-top: 10px;
-    width: calc(105px * 4);
+    padding: 8px 8px;
+    width: calc(180px * 4 + 45px);
     border: 3px solid plum;
     grid-column: shop 2/4;
     grid-row: 1;
+    grid-column-gap: 15px;
+    grid-row-gap: 30px;
 }
 
-#hepteractGrid > div {
-    display: flex;
-    flex-direction: column;
+.hepteractGrid > div {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 28px);
     align-items: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
-.hepteractType > button {
+#hepteractToQuark,
+#overfluxPowder {
+    display: grid;
+    grid-template-columns: 12px 32px 31px 90px 15px;
+    grid-template-rows: 32px 15px 15px 15px;
+}
+
+#hepteractToQuarkImage,
+#overfluxPowderImage {
+    grid-column: 2;
+}
+
+#hepteractToQuarkTrade,
+#powderDayWarp {
+    grid-column: 4;
+}
+
+.heptTypeImage {
+    grid-row: 1 / span 2;
+}
+
+.heptGridInventory {
+    grid-column: 2 / span 3;
+    display: block;
+}
+
+.heptGridInventoryLabel,
+.heptGridInventoryValue {
+    float: left;
+}
+
+.heptGridInventoryValue {
+    float: right;
+}
+
+.hepteractGrid button {
     border: 2px solid pink;
-    width: 56px;
-    height: 30px;
+    width: 100%;
+    height: 25px;
     transition-duration: 0.15s;
 }
 
-.hepteractType > button:hover {
+.hepteractGrid button:hover {
     background-color: #333;
+}
+
+.meter {
+    height: 15px;
+    position: relative;
+    background: #555;
+    border-radius: 5px;
+    padding: 2px;
+    grid-column: 1 / span 3;
+    text-align: center;
+}
+
+.meter > span {
+    display: block;
+    height: 100%;
+}
+
+.progressBar {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.progressText {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -2px;
+    width: 100%;
 }
 
 #hepteractCraftTexts {

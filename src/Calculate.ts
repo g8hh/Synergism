@@ -123,7 +123,7 @@ export function calculateRuneExpGiven(runeIndex: number, all = false, runeLevel 
         allRuneExpAdditiveMultiplier = sumContents([
             //Challenge 3 completions
             1 / 100 * player.highestchallengecompletions[3],
-            //Reincarnation 3x1
+            //Reincarnation 2x1
             1 * player.upgrades[66]
         ]);
     } else {
@@ -230,7 +230,7 @@ export const calculateRuneExpToLevel = (runeIndex: number, runeLevel = player.ru
 export const calculateMaxRunes = (i: number) => {
     let max = 1000;
 
-    const increaseAll = 10 * (2 * player.cubeUpgrades[16] + 2 * player.cubeUpgrades[37])
+    const increaseAll = 20 * (player.cubeUpgrades[16] + player.cubeUpgrades[37])
         + 3 * player.constantUpgrades[7] + 80 * CalcECC('ascension', player.challengecompletions[11])
         + 200 * CalcECC('ascension', player.challengecompletions[14])
         + Math.floor(0.04 * player.researches[200] + 0.04 * player.cubeUpgrades[50])
@@ -661,16 +661,7 @@ export const calculateAntSacrificeELO = () => {
         G['antELO'] += 4 * player.seventhOwnedAnts
         G['antELO'] += 8 * player.eighthOwnedAnts
         G['antELO'] += 666 * player.researches[178]
-
-        if (player.achievements[180] === 1) {
-            G['antELO'] *= 1.01
-        }
-        if (player.achievements[181] === 1) {
-            G['antELO'] *= 1.03 / 1.01
-        }
-        if (player.achievements[182] === 1) {
-            G['antELO'] *= 1.06 / 1.03
-        }
+		G['antELO'] *= (1 + 0.01 * player.achievements[180] + 0.02 * player.achievements[181] + 0.03 * player.achievements[182])
         G['antELO'] *= (1 + player.researches[110] / 100)
         G['antELO'] *= (1 + 2.5 * player.researches[148] / 100)
 
@@ -1170,7 +1161,7 @@ export const calculateHepteractMultiplier = (score = -1) => {
         // Achievement 265 Bonus [Max: 160T Asc]
         1 + Math.min(0.2, player.ascensionCount / 8e14) * player.achievements[265],
         // Achievement 270 Bonus
-        Math.min(2, (1 + 1/100000 * Decimal.log(player.ascendShards.add(1), 10)))
+        Math.min(2, (1 + 1/1_000_000 * Decimal.log(player.ascendShards.add(1), 10) * player.achievements[270]))
         // Total Hepteract Multipliers: 7
     ]
 
@@ -1369,6 +1360,33 @@ export const CalcCorruptionStuff = () => {
     
     return [cubeBank, Math.floor(baseScore), corruptionMultiplier, Math.floor(effectiveScore), Math.floor(cubeGain), Math.floor(tesseractGain), Math.floor(hypercubeGain), Math.floor(platonicGain), Math.floor(hepteractGain)]
 }
+
+export const calcAscensionCount = () => {
+    let ascCount = 1;
+
+    if (player.challengecompletions[10] > 0) {
+        const {effectiveScore} = calculateAscensionScore();
+
+        if (player.ascensionCounter >= 10) {
+            if (player.achievements[188] > 0) {
+                ascCount += 99;
+            }
+
+            ascCount *= 1 + (player.ascensionCounter / 10 - 1) * 0.2
+                * (player.achievements[189] + player.achievements[202] + player.achievements[209] + player.achievements[216] + player.achievements[223]);
+        }
+
+        ascCount *= player.achievements[187] && Math.floor(effectiveScore) > 1e8 ? (Math.log(Math.floor(effectiveScore)) / Math.log(10) - 1) : 1;
+        ascCount *= G['challenge15Rewards'].ascensions;
+        ascCount *= (player.achievements[260] > 0 ? 1.1 : 1);
+        ascCount *= (player.achievements[261] > 0 ? 1.1 : 1);
+        ascCount *= (player.platonicUpgrades[15] > 0 ? 2 : 1);
+        ascCount *= (1 + 0.02 * player.platonicUpgrades[16]);
+        ascCount *= (1 + 0.02 * player.platonicUpgrades[16] * Math.min(1, player.overfluxPowder / 100000));
+    }
+
+    return Math.floor(ascCount);
+};
 
 /**
  * Calculates the product of all Powder bonuses.

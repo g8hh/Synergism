@@ -179,12 +179,12 @@ var cnItems = {
     'Printer production is multiplied by 1e+15000.': '打印机产量变为1e15000倍。',
     'Coin Mint production is multiplied by 1e+25000.': '铸币厂产量变为1e25000倍。',
     'Alchemies production is multiplied by 1e+35000.': '炼金术产量变为1e35000倍。',
-    'Welcome to reincarnation! +5% Offering Recycle, +5 EXP/Offering!': '欢迎进入转世时代！祭品回收概率增加5%，每个祭品提供的经验值增加5！',
+    'Welcome to reincarnation! +5% Offering Recycle, +2 EXP/Offering!': '欢迎进入转世时代！祭品回收概率增加5%，每个祭品提供的经验值增加2！',
     'Completing challenges, automatically or manually, increase offerings gained in Reincarnation. Bonus subject to time multiplier!': '转世过程中完成挑战，无论手动自动，都可以增加转世的祭品获取数量。增加的数量与转世时间有关！',
     'Crystal Production is multiplied based on Particles to the sixth power [Caps at 1e6000x].': '将水晶产量乘以粒子数量的6次方[上限为1e6000]。',
     'Mythos Shard Production is multiplied by your Particles squared.': '将神话碎片产量乘以粒子数量的平方。',
     'Multiply the gain of Particles from Reincarnation by 5x!': '转世的粒子获取数量变为5倍！',
-    'When you use an Offering, every unlocked rune will get 3 free experience.': '每献祭一个祭品，其他所有解锁的符文也获得3点免费经验值。',
+    'When you use an Offering, every unlocked rune will get 1 free experience.': '每献祭一个祭品，其他所有解锁的符文也获得1点免费经验值。',
     'Atom gain is increased by 3% per Particle producer purchased!': '每个粒子生产者使原子产量增加3%！',
     'Gain a free multiplier for every 1e1000x increase in tax.': '税收每增加1e1000倍就获得一个免费加倍器。',
     'Gain more Obtainium based on your particle gain. [Works with automation at a reduced rate!]': '根据您的粒子产量增加难得素的获取数量。[以减少的倍率对自动难得素生效！]',
@@ -258,7 +258,7 @@ var cnItems = {
     'Effect: It\'s quite obvious what the benefit is, but you must be in a challenge for it to be in use!': '效果：好处很明显，但必须在挑战中才能生效！',
     'Effect: It\'s quite obvious, ain\'t it?': '效果：很明显，不是么？',
     'Effect: Look above!': '效果：看上面！',
-    'Effect: +5% Offering Recycle/+5EXP per Offerings. Duh!': '效果：祭品回收概率增加5%，每个祭品提供的经验值增加5。废话！',
+    'Effect: +5% Offering Recycle/+2EXP per Offerings. Duh!': '效果：祭品回收概率增加5%，每个祭品提供的经验值增加2。废话！',
     'Effect: 5x Particle gain from Reincarnations. Duh!': '效果：转世的粒子获取数量变为5倍。又是废话！',
     'Effect: It\'s quite clear in the description!': '效果：看描述，写得很清楚！',
     'Effect: Writing\'s on the wall. Look above!': '效果：在那写着呢。看上面！',
@@ -643,8 +643,8 @@ var cnItems = {
     'Reward: 9 AP. 9 Quarks! Permanently gain +25% more sacrifice reward!': '奖励：9成就点数。9夸克！献祭奖励永久增加25%！',
     'Reward: 10 AP. 10 Quarks! +15% obtainium. Obtain the gift of Midas himself.': '奖励：10成就点数。10夸克！难得素的获取数量增加15%。获得米达斯的一份礼物。',
     'Reward: 1 AP. 1 Quarks! Unlock 10 newer incredibly expensive yet good researches. Unlock <<Talismans>> in the Runes Tab!': '奖励：1成就点数。1夸克！解锁10个极贵也极强的研究。解锁符文选项卡下的<<护身符>>面板！',
-    'Reward: 2 AP. 2 Quarks! Talisman positive bonuses are now +0.05 stronger per level.': '奖励：2成就点数。2夸克！护身符的每级加成效果增加0.05。',
-    'Reward: 4 AP. 4 Quarks! Talisman positive bonuses are now +0.05 even stronger per level.': '奖励：4成就点数。4夸克！护身符的每级加成效果再增加0.05。',
+    'Reward: 2 AP. 2 Quarks! Talisman positive bonuses are now +0.02 stronger per level.': '奖励：2成就点数。2夸克！护身符的每级加成效果增加0.02。',
+    'Reward: 4 AP. 4 Quarks! Talisman positive bonuses are now +0.02 even stronger per level.': '奖励：4成就点数。4夸克！护身符的每级加成效果再增加0.02。',
     'Reward: 6 AP. 6 Quarks! Permanently gain +25% more sacrifice reward!': '奖励：6成就点数。6夸克！献祭奖励永久增加25%！',
     'Reward: 10 AP. 10 Quarks! +17% obtainium. Lazy joke about not leaking talismans here [You get a new one]': '奖励：10成就点数。10夸克！难得素的获取数量增加17%。懒得拿不泄露护身符来开玩笑了[您可以获得一个新的护身符]',
     'Reward: 1 AP. 1 Quarks! Unlock a new reset tier!': '奖励：1成就点数。1夸克！解锁下一阶的重置！',
@@ -1475,8 +1475,10 @@ var cnItems = {
     'Hepteracts do not provide passive bonuses. They must be made useful through crafting.': '惊奇七阶立方没有任何被动加成。必须通过锻造才能变得有用。',
     ' Hepteracts! You know where to get these, right?': '惊奇七阶立方！您应该已经知道这些是哪来的了吧？',
     'Craft': '锻造',
+    'Max': '最大化',
     'How many would you like to craft?': '您想要锻造多少？',
     'Okay, maybe next time.': '好吧，下次再说。',
+    'This will attempt to buy as many as possible. Are you sure?': '这将尽可能进行锻造，您确定要这么做吗？',
     'You can\'t craft a nonpositive amount of these, you monster!': '您没法锻造负数数量啊。',
     'This is not an unlocked craft, thus you cannot craft this item!': '这还没有解锁，您要怎么锻造呢？',
     'Expand': '延展',
@@ -1486,6 +1488,10 @@ var cnItems = {
     'Warp': '时空跃迁',
     'How far in the future would you like to go into the future? Anything awaits when it is testing season.': '您想要跃迁到多久以后？',
     'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
+    'Orbs': '超通量珠',
+    'Effect': '效果',
+    'Powder': '超通量粉',
+    'Warps': '跃迁次数',
     '< UNLOCKED >': '< 已解锁 >',
     '< LOCKED >': '< 未解锁 >',
     'This hepteract bends time, in your favor. +0.06% Ascension Speed per Chronos Hepteract.': '此类惊奇七阶立方可以扭曲时间，为您所用。每个惊奇七阶立方·时光可以使飞升的速度增加0.06%。',
@@ -1558,6 +1564,8 @@ var cnItems = {
     'Your Ascension Score is': '您的飞升分数为',
     ' (base) *': '(基础值)*',
     ' (Corruption mult) =': '(腐化因子)=',
+    'If you ascend now,': '如果现在飞升，您的飞升次数将增加',
+    ' will be added to your ascension count.': '次。',
     'If you ascend now, you will gain': '如果现在飞升，您可以获得',
     ' Wow! Cubes.': '个惊奇方盒。',
     ' Wow! Tesseracts. [': '个惊奇超立方。[',
@@ -1601,7 +1609,7 @@ var cnItems = {
     'Alright, come back soon!': '好吧，下次再说！',
     'It\'s Spaghetti Time! [Awarded an achievement!!!]': '意面时间！[获得一个成就！！！]',
     'Hey, isn\'t this just a reference to Antimatter Dimensions? Shh. [Awarded an achievement!!!]': '这不是玩的反物质维度的梗吗？切。[获得一个成就！！！]',
-    'Code was canceled, took no uses away from you!': '您放弃使用代码，因此没有消耗任何次数！',
+    'No worries, you didn\'t lose any of your uses! Come back later!': '您没有消耗任何代码次数！下次再说吧！',
     'Wait a little bit. We\'ll get back to you when you\'re ready to lose again.': '稍等片刻，等您准备好再输一次的时候再来吧。',
     'Are you sure? The house always wins!': '您确定吗？要知道，庄家总是赢家！',
     'Scared? You should be!': '怂了吗？也不失为明智之举！',
@@ -2245,9 +2253,9 @@ var cnRegReplace = new Map([
     [/^What would you like to name Loadout (.+)\? Names cannot be longer than (.+) characters. Nothing crazy!$/, '您想要重新命名档$1吗？名字无法超过$2个字符。就这样！'], //腐化
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
-    [/^You can use up to (.+) attempts at once. How many would you like to use$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！由于PL-AT Ω的效果，您同时获得了$6秒的飞升时间！您还有$7次“Add”代码的使用机会。$8秒后可以获得1次。'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
+    [/^You can use up to (.+) attempts at once. How many would you like to use\?$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！由于PL-AT Ω的效果，您同时获得了$6秒的飞升时间！您还有$7次“Add”代码的使用机会。$8秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
     [/^For (.+) quarks or nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
     [/^For (.+) quarks or nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
     [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！由于PL-AT Ω的效果，您同时获得了$3秒的飞升时间！您还有$4次“Add”代码的使用机会。$5秒后可以获得1次。'], //每小时奖励代码
@@ -2261,6 +2269,7 @@ var cnRegReplace = new Map([
     [/^(\d+)m(\d+)s$/, '$1分$2秒'], //历史统计
     [/^(\d+)h(\d+)m(\d+)s$/, '$1时$2分$3秒'], //历史统计
     [/^([e\d\,\.]+)d(\d+)h(\d+)m(\d+)s$/, '$1日$2时$3分$4秒'], //历史统计
+    [/^([e\d\,\.]+)d(\d+)h(\d+)m$/, '$1日$2时$3分'], //历史统计
     [/^([e\d\,\.]+)\/s$/, '$1/秒'], //历史统计
     [/^(.+) multi$/, '$1倍率'], //历史统计
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计

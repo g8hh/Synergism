@@ -1296,7 +1296,7 @@ var cnItems = {
     ' ALL Hypercube bonuses': '惊奇五阶立方的加成数值',
     ' Bonus Constant exponent on taxes': '数学常数减缓税收的指数的加成数值',
     ' More Score on corruptions': '腐化时的飞升分数',
-    ' Global Speed (Unaffected by corruption / diminishing returns!': '全局速度(不受腐化影响/效果逐渐衰减！',
+    ' Global Speed (Unaffected by corruption / diminishing returns!': '全局速度(不受腐化/效果衰减影响！',
     ' Platonic Cubes opened!': 'PLATONIC方盒已开启！',
     'Wow! I want more Cubes.': '真惊奇！我想要更多方盒。',
     'Wow! I want passive Offering gain too.': '真惊奇！我也想被动获得祭品。',

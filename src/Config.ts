@@ -1,3 +1,3 @@
-export const version = '2.5.7';
+export const version = '2.7.0';
 export const testing = false;
-export const lastUpdated = new Date(Date.UTC(2021, 6, 29, 6, 28, 6));
+export const lastUpdated = new Date(Date.UTC(2021, 7, 22, 13, 31, 6));

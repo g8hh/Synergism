@@ -508,11 +508,16 @@ export interface Player {
     overfluxOrbs: number
     overfluxPowder: number
     dailyPowderResetUses: number
+
+    singularityCount: number
+    goldenQuarks: number
+    quarksThisSingularity: number
 }
 
 export interface GlobalVariables {
     runediv: number[]
     runeexpbase: number[]
+    runeMaxLvl: number
     upgradeCosts: number[]
 
     // Mega list of Variables to be used elsewhere
@@ -859,6 +864,7 @@ export type resetNames =
     | "transcension" 
     | "reincarnation" 
     | "ascension" 
+    | "singularity"
     | "transcensionChallenge" 
     | "reincarnationChallenge" 
     | "ascensionChallenge" 

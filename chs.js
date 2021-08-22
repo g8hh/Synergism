@@ -679,7 +679,7 @@ var cnItems = {
     'Reward: 100 AP. 500 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！',
     'Reward: 100 AP. 500 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！',
     'Reward: 50 AP. 2,000 Quarks! You will gain +10% Hypercubes! Why? I don\'t know.': '奖励：50成就点数。2000夸克！五阶立方获取数量增加10%！原因？我也不知道。',
-    'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract! [WIP]': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！[未实装]',
+    'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract!': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！',
     'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
     'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
@@ -713,6 +713,7 @@ var cnItems = {
     '~(1 + (Level/2)^2 * 2^(Level/2) / 256)x Crystal Production. +1 free level for each Crystal upgrade per 16 levels!': '水晶产量变为[1+(等级/2)^2*2^(等级/2)/256]倍。每16级使每个水晶升级免费+1级！',
     '0.125% building cost growth delay per level, +0.0625% offering recycle chance per level [MAX: 25%], 2^((1000 - Level)/1100) Tax growth multiplier AFTER level': '0.125%建筑成本增长减缓于每级，每级增加0.0625%祭品回收概率[上限：25%]。另外税收增长倍率变为2^[(1000-等级)/1100]倍，但只生效于超过等级',
     '~(1 + level/200)x Obtainium, (1 + Level^2/2500)x Ant Hatch Speed, +0.005 base offerings for each tier per level': '难得素获取数量变为(1+等级/200)倍，蚂蚁速度变为(1+等级^2/2500)倍，每级使每一阶重置的基础祭品数量+0.005',
+    'You cannot grasp the true form of Ant God\'s treasure.': '您无法掌握蚁神至宝的真面目。',
     'Press [1], [2], [3], [4] or [5] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1]，[2]，[3]，[4]或[5]来为每个符文进行献祭，从加速符文开始从左往右依次对应。需要解锁了相应符文才可以使用快捷键献祭！',
     'Toggle percent resources used': '切换使用的资源比例',
     'BUY': '购买',
@@ -1464,7 +1465,7 @@ var cnItems = {
     'If Divisiveness or Maladaptive is set to level 10 or higher, score multiplier is raised by an exponent. That exponent is 1.75 + 0.02 per level of this upgrade.': '如果腐化：分歧和腐化：适应不良的等级不低于10级，则将它们的分数倍率变为原来的(1.75+0.02*此升级等级)次方。',
     'Raise the base percentage of Constant Upgrade 1 by 0.1% and increase the base percentage cap of Constant Upgrade 2 by 0.3% per level!': '每级将数学常数升级1的基础效果百分比增加0.1%，并将数学常数升级2的基础上限百分比增加0.3%！',
     'The diminishing return power on Chronos Hepteract changes from 0.166 to (0.166 + 0.00133 * level) [Max of 0.2333].': '惊奇七阶立方·时光超过软上限后的效果从0.166变为(0.166+0.00133*等级)[上限为0.2333]。',
-    'You know, maybe some things should be left unbought.': '有些东西，最好还是不要买的好。',
+    'You know, maybe some things should be left unbought.': '有些东西，还是不要买的好。',
     'While I strongly recommended you not to buy this, you did it anyway. For that, you have unlocked the rune of Grandiloquence, for you are a richass.': '我都这么说了，您还是买了。好吧，您是土豪，我输了。您解锁了豪言壮语符文。',
     '===Upgrade Costs===': '===升级成本===',
     '===Affordable! Click to buy!===': '===资源充足！点击购买！===',
@@ -1695,6 +1696,7 @@ var cnItems = {
     'Platonic Omega': 'Platonic Omega升级',
     'Overflux Powder': '超通量粉',
     'Event [Most Recent: June 28 - July 01]': '活动加成[最近时间：6月28日至7月1日]',
+    'Singularity Factor': '奇点因子',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube Multipliers': '方盒倍率',
     'Ascension Score Multiplier': '飞升分数倍率',
@@ -2114,6 +2116,7 @@ var cnRegReplace = new Map([
     [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文等
     [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品数量：增加$3'], //符文等
     [/^IA Rune Bonus:  Quark Gain \+(.+)%, Ascensions give \+(.+)% more of all cube types.$/, '无限晋升符文奖励：夸克获取数量增加$1%，飞升时所有类型的方盒及立方获取数量增加$2%。'], //符文等
+    [/^I wonder what happens if you feed it (.+) Rune EXP.$/, '如果给它$1符文经验值，或许会发生什么事情。'], //符文等
     [/^Cost to buy (.+) Talisman Shards?: (.+) Obtainium and (.+) offerings.$/, '购买$1个护身符碎片的花费：$2难得素及$3祭品。'], //符文等
     [/^Cost to buy (.+) Common Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个普通碎片的花费：$2难得素及$3祭品。'], //符文等
     [/^Cost to buy (.+) Uncommon Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个罕见碎片的花费：$2难得素及$3祭品。'], //符文等

@@ -72,6 +72,7 @@ var cnItems = {
     'Anthill': '蚁丘',
     'WOW! Cubes': '惊奇方盒',
     'Corruption': '腐化',
+    'Singularity': '奇点',
     'Coin Buildings': '金币建筑',
     'Diamond Buildings': '钻石建筑',
     'Mythos Buildings': '神话建筑',
@@ -102,6 +103,7 @@ var cnItems = {
     'You\'re not in a Transcension Challenge right now. Get in one before you can leave it, duh!': '您目前并没有在进行超越挑战。进行挑战后再来考虑离开的事，懂了吧！',
     'You\'re not in a Reincarnation Challenge right now. How could you leave what you are not in?': '您目前并没有在进行转世挑战。如果您都没在进行挑战，你又要怎么离开？',
     'Click this if you\'re in an Ascension Challenge and want to leave. You get it already!': '如果您想要退出飞升挑战，请点击这里。您懂的！',
+    'Are you willing to give up your laurels for a greater challenge? The Ant God bribes you with Golden Quarks.': '您愿意放弃目前的一切荣耀，踏上更大挑战的征途吗？蚁神将赐予您金夸克。',
     'Prestige will reset coin upgrades, coin producers AND crystals. The first prestige unlocks new features. Would you like to prestige? [Toggle this message in settings.]': '转生后金币升级，金币生产者和水晶都将被重置。首次转生可以解锁新的游戏机制。您确定要转生吗？[您可以在设置中调整是否弹出此对话框。]',
     'Transcends will reset coin and prestige upgrades, coin producers, crystal producers AND diamonds. The first transcension unlocks new features. Would you like to prestige? [Toggle this message in settings.]': '超越后金币、钻石升级，金币生产者，水晶生产者和钻石都将被重置。首次超越可以解锁新的游戏机制。您确定要超越吗？[您可以在设置中调整是否弹出此对话框。]',
     'Reincarnating will reset EVERYTHING but in return you will get extraordinarily powerful Particles, and unlock some very strong upgrades and some new features. would you like to Reincarnate? [Disable this message in settings]': '转世后之前的所有低阶资源都将被重置，但您可以获得强大的粒子，以及解锁一些非常强大的升级和新的游戏机制。您确定要转世吗？[您可以在设置中调整是否弹出此对话框。]',
@@ -703,7 +705,8 @@ var cnItems = {
     'Thrift Rune': '节俭符文',
     'Superior Intellect': '卓越智慧',
     'Infinite Ascent': '无限晋升',
-    'Grandiloquence': '豪言壮语',
+    'Antiquities of Ant God': '蚁神之古物',
+    'Max level!': '等级已达最大！',
     '[Bonus: Nope!]': '[额外等级：无！]',
     'SACRIFICE': '献祭',
     'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标停在符文上来查看它有什么作用！',
@@ -1815,6 +1818,17 @@ var cnItems = {
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
     //商店结束
 
+    //奇点
+    'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
+    'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',
+    'You\'re too powerful for this current universe. The multiverse of Synergism is truly endless, but out there are even more challenging universes parallel to your very own.': '这个宇宙已经容纳不了您的力量了。协同放置的多元宇宙可谓是无穷无尽，但对您现在这个宇宙来说，还有更多更具挑战性的平行宇宙。',
+    'However, all your past accomplishments are gone! ALL Challenges, Refundable Shop upgrades, Upgrade Tab, Runes, All Cube upgrades, All Cube Openings, Hepteracts, Achievements will be wiped clean.': '但是，您之前的一切成果都将离您而去！所有的挑战完成次数，可重置的商店购买项，升级，符文，所有类型的方盒及立方升级，所有类型的方盒及立方已获取量，七阶立方库存，成就，一切的一切，都将成为过去。',
+    'So, what do you say? Do you wish to enter the singularity?': '所以，您意下如何？您真的想要进入奇点吗？',
+    'Are you sure you wish to enter the Singularity?': '您……真的想要进入奇点吗？',
+    'Are you REALLY SURE? You cannot go back from this (without an older savefile)! Confirm one last time to finalize your decision.': '您是真的真的确定了吗？一旦这么做将再也无法反悔(除非您有旧的存档文件)！这是最后一次向您确认。',
+    'If you decide to change your mind, let me know. -Ant God': '改变主意的话，可以再来找我。————蚁神',
+    //奇点结束
+
     //原样
     '': '',
     '': '',
@@ -2299,4 +2313,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Code 'add' variance -(.+)%, Each use gives (.+) seconds to Ascension Timer.$/, '当前效果：使用“add”代码获得的夸克数量变化范围减少$1%，使用“add”代码时同时增加$2秒飞升时间。'], //商店
     [/^CURRENT Effect: \+(.+) effect on Constant Upgrade 2.$/, '当前效果：数学常数升级2的效果再增加$1。'], //商店
     [/^CURRENT Effect: \+(.+)% Overflux Powder gained when Overflux Orbs expire.$/, '当前效果：超通量粉转换效率增加$1%。'], //商店
+    [/^You have reached the end of the game, on singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
+    [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain 1 Golden Quark per 100,000 earned in this universe.$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且每在这个宇宙中获得100000夸克，您还可以获得1金夸克。'], //奇点
+    [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
 ]);

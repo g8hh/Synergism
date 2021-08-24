@@ -3410,6 +3410,7 @@ export const reloadShit = async (reset = false) => {
 
     eventCheck();
     interval(() => eventCheck(), 15000);
+    setTimeout(() => DOMCacheGetOrSet('exitOffline').classList.remove('subtabContent'), 2000);
 
     if (localStorage.getItem('pleaseStar') === null) {
         void Alert(`请支持我们，给我们的Github项目加一个星。 ❤️ https://github.com/pseudo-corp/SynergismOfficial`);

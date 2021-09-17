@@ -1626,6 +1626,8 @@ var cnItems = {
     'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',
     'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
+    'Light Mode': '明亮模式',
+    'Dark Mode': '黑暗模式',
     'You\'re playing v2.7.0 - Seal of the Merchant [Last Update: 21:31 UTC 22-Aug-2021].': '您目前玩的版本为V2.7.0 - 商人的印记 [2021年8月22日 UTC 21:31更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',

@@ -1628,7 +1628,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.8.0 - Seal of the Merchant [Last Update: 12:15 UTC 7-Oct-2021].': '您目前玩的版本为V2.8.0 - 商人的印记 [2021年10月7日 UTC 12:15更新]。',
+    'You\'re playing v2.8.1 - Seal of the Merchant [Last Update: 9:58 UTC 8-Oct-2021].': '您目前玩的版本为V2.8.1 - 商人的印记 [2021年10月8日 UTC 9:58更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1702,6 +1702,8 @@ var cnItems = {
     'Overflux Powder': '超通量粉',
     'Event [Most Recent: June 28 - July 01]': '活动加成[最近时间：6月28日至7月1日]',
     'Singularity Factor': '奇点因子',
+    'Wow Pass Y': '季票 Y',
+    'Wow Pass Z': '季票 Z',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube Multipliers': '方盒倍率',
     'Ascension Score Multiplier': '飞升分数倍率',
@@ -1809,6 +1811,11 @@ var cnItems = {
     'The PL-AT Ω is infused with some Unobtainium, which is epic! But furthermore, it reduces the variance of Quarks by code \'add\' by 10% per level, which makes you more likely to get the maximum multiplier. It also has the ability to give +60 seconds to Ascension Timer per level using that code.': 'PL-AT Ω注入了难得素，这使它的性能进一步提升了！每级使您使用“add”代码获得的夸克数量变化范围减少10%，因此您更有可能获得最高的数值。另外，每级可以使您使用“add”代码时同时增加60秒飞升时间。',
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
+    'Okay, fine. Here\'s another +0.5% Ascension Speed per level, stacks multiplicatively with the first upgrade!': '嗯，很好。飞升的速度每级再增加0.5%，效果与第一个升级叠乘！',
+    'OKAY. FINE. Here\'s yet ANOTHER +1% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1%，效果与之前类似，也是叠乘计算。',
+    'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒及立方获取数量增加0.5%。',
+    'This one is arguably very good. Gain +1% ALL Cubes per level, per singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒及立方获取数量增加1%！',
+    'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
@@ -1829,6 +1836,14 @@ var cnItems = {
     'Are you sure you wish to enter the Singularity?': '您……真的想要进入奇点吗？',
     'Are you REALLY SURE? You cannot go back from this (without an older savefile)! Confirm one last time to finalize your decision.': '您是真的真的确定了吗？一旦这么做将再也无法反悔(除非您有旧的存档文件)！这是最后一次向您确认。',
     'If you decide to change your mind, let me know. -Ant God': '改变主意的话，可以再来找我。————蚁神',
+    ' NOTE: WIP. This will be expanded on soon.': '注意：暂时如此。内容随时可能扩展。',
+    'You are in the': '您目前已进入了',
+    ' singularity, and have': '次奇点，并拥有',
+    ' Golden': '金',
+    'Global Speed is divided by': '全局速度除以',
+    'Cube Gain is divided by': '所有类型的方盒及立方获取数量除以',
+    'Research Costs are multiplied by': '研究花费乘以',
+    'Cube Upgrade costs are multiplied by': '方盒升级花费乘以',
     //奇点结束
 
     //原样
@@ -2317,7 +2332,10 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Code 'add' variance -(.+)%, Each use gives (.+) seconds to Ascension Timer.$/, '当前效果：使用“add”代码获得的夸克数量变化范围减少$1%，使用“add”代码时同时增加$2秒飞升时间。'], //商店
     [/^CURRENT Effect: \+(.+) effect on Constant Upgrade 2.$/, '当前效果：数学常数升级2的效果再增加$1。'], //商店
     [/^CURRENT Effect: \+(.+)% Overflux Powder gained when Overflux Orbs expire.$/, '当前效果：超通量粉转换效率增加$1%。'], //商店
+    [/^CURRENT Effect: \+(.+)% faster ascensions!$/, '当前效果：飞升的速度增加$1%！'], //商店
+    [/^CURRENT Effect: \+(.+)% faster ascensions! FOREVER!$/, '当前效果：飞升的速度增加$1%！效果永久生效！'], //商店
+    [/^CURRENT Effect: \+(.+)% more cubes on ascension.$/, '当前效果：所有类型的方盒及立方获取数量增加$1%。'], //商店
     [/^You have reached the end of the game, on singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
-    [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain 1 Golden Quark per 100,000 earned in this universe.$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且每在这个宇宙中获得100000夸克，您还可以获得1金夸克。'], //奇点
+    [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) golden quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
 ]);

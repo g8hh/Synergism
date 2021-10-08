@@ -904,7 +904,7 @@ var cnItems = {
     'Unlock 15 Researches, and a way to coalesce your power into the Singularity.': '解锁15个研究，并且解锁将能量与奇点结合的方法。',
     'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
     'The worst sin a man can do is making others suffer.': '折磨他人，是人类最大的原罪。',
-    'Ascend and reach the goal but you\'re FULLY corrupt and must stay that way.': '立即飞升开始挑战，腐化全部为最大级别，并且无法清除。',
+    'Ascend and reach the goal but you\'re stuck in all corruptions level 11 and must stay that way.': '立即飞升开始挑战，腐化全部为11级，并且无法清除。',
     'You have no idea': '你根本不知道',
     'what you have just done': '你做了些什么',
     'the ant god shakes their mighty head': '蚁神摇着巨大的脑袋如是说',
@@ -1628,7 +1628,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.7.0 - Seal of the Merchant [Last Update: 21:31 UTC 22-Aug-2021].': '您目前玩的版本为V2.7.0 - 商人的印记 [2021年8月22日 UTC 21:31更新]。',
+    'You\'re playing v2.8.0 - Seal of the Merchant [Last Update: 12:15 UTC 7-Oct-2021].': '您目前玩的版本为V2.8.0 - 商人的印记 [2021年10月7日 UTC 12:15更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2224,6 +2224,7 @@ var cnRegReplace = new Map([
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Platonic! Cubes$/, '$1/$2 PLATONIC方盒'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Hepteracts of the Abyss$/, '$1/$2 惊奇七阶立方·深渊'], //惊奇方盒
     [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数到达$1。'], //惊奇方盒
+    [/^You have successfully crafted (.+) hepteracts.$/, '您锻造了$1七阶立方。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
     [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
     [/^Inventory: (.+)\/(.*)$/, '库存：$1 /$2'], //惊奇方盒
@@ -2234,7 +2235,7 @@ var cnRegReplace = new Map([
     [/^Current Effect: Uncorruptable Accelerators \+(.*)$/, '当前效果：不受腐化影响的加速器数量+$1'], //惊奇方盒
     [/^Current Effect: Accelerator Boosts \+(.*)$/, '当前效果：不受腐化影响的加速器加成数量+$1'], //惊奇方盒
     [/^Current Effect: Uncorruptable Multipliers \+(.*)$/, '当前效果：不受腐化影响的加倍器数量+$1'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e115 Obtainium \[WIP\]$/, '锻造一个将消耗$1七阶立方及1e115难得素[暂定]'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e115 Obtainium$/, '锻造一个将消耗$1七阶立方及1e115难得素'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e80 Offerings.$/, '锻造一个将消耗$1七阶立方及1e80祭品。'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts, 1e11 Platonic Cubes and 1e22 Cubes.$/, '锻造一个将消耗$1七阶立方，1e11 PLATONIC方盒及1e22惊奇方盒。'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 69 Wow! Cubes \(lol$/, '锻造一个将消耗$1七阶立方及69惊奇方盒(笑'], //惊奇方盒

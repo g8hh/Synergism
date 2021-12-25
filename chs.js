@@ -1634,6 +1634,7 @@ var cnItems = {
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
     'Current Buffs: +100% Quarks from all sources, +100% All Cube Types, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量翻倍，所有类型的方盒及立方获取数量翻倍，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
+    '💗 Happy Holidays! 💗': '💗节日快乐！💗',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',

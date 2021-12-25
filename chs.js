@@ -1628,7 +1628,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.8.1 - Seal of the Merchant [Last Update: 9:58 UTC 8-Oct-2021].': '您目前玩的版本为V2.8.1 - 商人的印记 [2021年10月8日 UTC 9:58更新]。',
+    'You\'re playing v2.8.1 - Seal of the Merchant [Last Update: 10:12 UTC 25-Dec-2022].': '您目前玩的版本为V2.8.1 - 商人的印记 [2021年12月25日 UTC 10:12更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',

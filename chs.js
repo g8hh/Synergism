@@ -1633,7 +1633,7 @@ var cnItems = {
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +100% Quarks from code \'Add\', +20.21% All Cube Types': '当前加成：输入Add代码获取的夸克数量翻倍，所有类型的方盒及立方获取数量增加20.21%',
+    'Current Buffs: +100% Quarks from all sources, +100% All Cube Types, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量翻倍，所有类型的方盒及立方获取数量翻倍，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1856,7 +1856,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Thu Jul 01 2021 23:59:59 GMT+0800 (": "活动持续到2021年7月1日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Mon Jan 03 2022 23:59:59 GMT+0800 (": "活动持续到2022年1月3日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

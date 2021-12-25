@@ -785,22 +785,6 @@ nav li:hover {
 .autobuyerToggleButton:hover {
     background-color: #333;
 }
-#event{
-	position: absolute;
-	width: 900px;
-	height: 100px;
-	top: 470px;
-	left: 50%;
-	margin-left: -450px;
-}
-#eventBuffs{
-	position: absolute;
-	width: 900px;
-	height: 100px;
-	top: 490px;
-	left: 50%;
-	margin-left: -450px;
-}
 
 .buttonRow > div > .stats {
     width: 400px;

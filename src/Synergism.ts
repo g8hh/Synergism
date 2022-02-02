@@ -3421,10 +3421,13 @@ export const reloadShit = async (reset = false) => {
     }
 
     void loadSynergy();
-    if (!reset) 
+
+    if (!reset) {
         calculateOffline();
-    else
-        player.worlds = new QuarkHandler({ quarks: 0, bonus: 0 });
+    } else {
+        player.worlds = new QuarkHandler({ bonus: 0, quarks: Number(player.worlds) });
+    }
+
     saveSynergy();
     toggleauto();
     revealStuff();
@@ -3446,6 +3449,7 @@ export const reloadShit = async (reset = false) => {
 }
 
 window.addEventListener('load', () => {
+    document.body.classList.add('loading');
     const ver = DOMCacheGetOrSet('versionnumber');
     ver && (ver.textContent = 
         `You're ${testing ? 'testing' : 'playing'} v${version} - Seal of the Merchant` +

@@ -342,11 +342,17 @@ export interface Player {
         calculator3: number,
         constantEX: number,
         powderEX: number,
+        chronometer2: number,
+        chronometer3: number,
+        seasonPassY: number,
+        seasonPassZ: number,
+        challengeTome2: number,
     }
     autoSacrificeToggle: boolean,
     autoFortifyToggle: boolean,
     autoEnhanceToggle: boolean,
     autoResearchToggle: boolean,
+    autoResearchMode: 'cheapest' | 'manual'
     autoResearch: number
     autoSacrifice: number
     sacrificeTimer: number
@@ -448,11 +454,11 @@ export interface Player {
     prototypeCorruptions: number[]
     usedCorruptions: number[]
     corruptionLoadouts: Record<number, number[]>
+    corruptionLoadoutNames: string[]
     corruptionShowStats: boolean,
 
     constantUpgrades: number[]
     history: Record<Category, ResetHistoryEntryUnion[]>
-    historyCountMax: number
     historyShowPerSecond: boolean,
 
     autoChallengeRunning: boolean,
@@ -484,10 +490,15 @@ export interface Player {
     loadedOct4Hotfix: boolean
     loadedNov13Vers: boolean
     loadedDec16Vers: boolean
+    loadedV253: boolean
+    loadedV255: boolean
     version: string
 
     rngCode: number
     skillCode?: number
+    promoCodeTiming: {
+        time: number
+    }
 
     hepteractCrafts: {
         chronos: HepteractCraft,
@@ -503,12 +514,16 @@ export interface Player {
     overfluxPowder: number
     dailyPowderResetUses: number
 
-    [key: string]: any
+    singularityCount: number
+    goldenQuarks: number
+    quarksThisSingularity: number
+    dailyCodeUsed: boolean
 }
 
 export interface GlobalVariables {
     runediv: number[]
     runeexpbase: number[]
+    runeMaxLvl: number
     upgradeCosts: number[]
 
     // Mega list of Variables to be used elsewhere
@@ -608,7 +623,7 @@ export interface GlobalVariables {
     researchfiller1: string
     researchfiller2: string
 
-    ordinals: readonly string[]
+    ordinals: readonly ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", ...string[]]
     cardinals: string[]
 
     challengeBaseRequirements: number[]
@@ -622,7 +637,6 @@ export interface GlobalVariables {
         three: number
         four: number
         five: number
-        [key: string]: number
     },
 
     mythosupgrade13: Decimal
@@ -641,6 +655,7 @@ export interface GlobalVariables {
     runeSum: number
 
     shopConfirmation: boolean,
+    shopBuyMax: boolean,
 
     globalAntMult: Decimal
     antMultiplier: Decimal
@@ -738,7 +753,7 @@ export interface GlobalVariables {
 
     prevReductionValue: number
 
-    buildingSubTab: string
+    buildingSubTab: BuildingSubtab
     //number000 of each before Diminishing Returns
     blessingbase: number[]
     blessingDRPower: number[]
@@ -822,7 +837,8 @@ export interface GlobalVariables {
         cube5: number
         powder: number
         exponent: number
-        [key: string]: number
+        freeOrbs: number
+        ascensionSpeed: number
     },
 
     autoResetTimers: {
@@ -834,6 +850,8 @@ export interface GlobalVariables {
 
     timeMultiplier: number
     upgradeMultiplier: number
+
+    historyCountMax: number
 
     isEvent: boolean
 }
@@ -852,6 +870,7 @@ export type resetNames =
     | "transcension" 
     | "reincarnation" 
     | "ascension" 
+    | "singularity"
     | "transcensionChallenge" 
     | "reincarnationChallenge" 
     | "ascensionChallenge" 
@@ -864,3 +883,20 @@ export type cubeNames =
     | "hypercubes"
     | "platonics"
     | "hepteracts"
+
+export type BuildingSubtab =
+    | "coin"
+    | "diamond"
+    | "mythos"
+    | "particle"
+    | "tesseract"
+
+export type ZeroToFour = 0 | 1 | 2 | 3 | 4;
+
+export type OneToFive = 1 | 2 | 3 | 4 | 5;
+
+export type ZeroToSeven = ZeroToFour | 5 | 6 | 7;
+
+export type FirstToFifth = GlobalVariables["ordinals"][ZeroToFour];
+
+export type FirstToEighth = GlobalVariables["ordinals"][ZeroToSeven];

@@ -7,6 +7,7 @@ import { buyUpgrades } from './Buy';
 import { buyGenerator } from './Generators';
 import { buyAutobuyers } from './Automation';
 import { revealStuff } from './UpdateHTML';
+import { DOMCacheGetOrSet } from './Cache/DOM';
 
 const upgdesc: Record<string, string> = {
     upgdesc1: "Increase production of Workers per producer bought.", //Coin Upgrades 1-20
@@ -69,12 +70,12 @@ const upgdesc: Record<string, string> = {
     upgdesc58: "Printer production is multiplied by 1e+15000.",
     upgdesc59: "Coin Mint production is multiplied by 1e+25000.",
     upgdesc60: "Alchemies production is multiplied by 1e+35000.", //Reincarnation Upgrades 61-100
-    upgdesc61: "Welcome to reincarnation! +5% Offering Recycle, +5 EXP/Offering!",
+    upgdesc61: "Welcome to reincarnation! +5% Offering Recycle, +2 EXP/Offering!",
     upgdesc62: "Completing challenges, automatically or manually, increase offerings gained in Reincarnation. Bonus subject to time multiplier!",
     upgdesc63: "Crystal Production is multiplied based on Particles to the sixth power [Caps at 1e6000x].",
     upgdesc64: "Mythos Shard Production is multiplied by your Particles squared.",
     upgdesc65: "Multiply the gain of Particles from Reincarnation by 5x!",
-    upgdesc66: "When you use an Offering, every unlocked rune will get 3 free experience.",
+    upgdesc66: "When you use an Offering, every unlocked rune will get 1 free experience.",
     upgdesc67: "Atom gain is increased by 3% per Particle producer purchased!",
     upgdesc68: "Gain a free multiplier for every 1e1000x increase in tax.",
     upgdesc69: "Gain more Obtainium based on your particle gain. [Works with automation at a reduced rate!]",
@@ -148,8 +149,8 @@ const crystalupgdesc: Record<number, () => string> = {
 }
 
 const constantUpgDesc: Record<number, () => string> = {
-    1: () => `Make all Tesseract buildings ${5 + player.achievements[270]}% more productive per level.`,
-    2: () => `Each Tesseract building bought increases the production of all of them by 0.1% per level [Max ${format(10 + player.achievements[270] + player.shopUpgrades.constantEX + 100 * (G['challenge15Rewards'].exponent - 1), 2, true)}%].`,
+    1: () => `Make all Tesseract buildings ${format(5 + player.achievements[270] + 0.1 * player.platonicUpgrades[18], 1, true)}% more productive per level.`,
+    2: () => `Each Tesseract building bought increases the production of all of them by 0.1% per level [Max ${format(10 + player.achievements[270] + player.shopUpgrades.constantEX + 100 * (G['challenge15Rewards'].exponent - 1) + 0.3 * player.platonicUpgrades[18], 2, true)}%].`,
     3: () => "Increase offering gain +2% per level.",
     4: () => "Increase obtainium gain +4% per level.",
     5: () => "Multiply ant speed by (1 + log10(Constant + 1)/10)^level",
@@ -221,7 +222,7 @@ const upgradetexts = [
     () => "Look above!",
     () => "Look above!",
     () => "Look above!",
-    () => "+5% Offering Recycle/+5EXP per Offerings. Duh!",
+    () => "+5% Offering Recycle/+2EXP per Offerings. Duh!",
     () => "Base offering amount for Reincarnations +" + Math.floor(1 / 5 * (sumContents(player.challengecompletions))) + ". Challenge yourself!",
     () => "All crystal production x" + format(Decimal.min("1e6000", Decimal.pow(player.reincarnationPoints.add(1), 6))),
     () => "All mythos shard production x" + format(Decimal.pow(player.reincarnationPoints.add(1), 2)),
@@ -297,14 +298,14 @@ const upgradetexts = [
 ]
 
 export const upgradeeffects = (i: number) => {
-    document.getElementById("upgradeeffect").textContent = "Effect: " + upgradetexts[i - 1]();
+    DOMCacheGetOrSet("upgradeeffect").textContent = "Effect: " + upgradetexts[i - 1]();
 }
 
 export const upgradedescriptions = (i: number) => {
     const y = upgdesc[`upgdesc${i}`];
     const z = player.upgrades[i] > 0.5 ? ' BOUGHT!' : '';
 
-    const el = document.getElementById("upgradedescription");
+    const el = DOMCacheGetOrSet("upgradedescription");
     el.textContent = y + z;
     el.style.color = player.upgrades[i] > 0.5 ? 'gold' : 'white';
 
@@ -361,8 +362,8 @@ export const upgradedescriptions = (i: number) => {
         color = "limegreen"
     }
 
-    document.getElementById("upgradecost").textContent = "Cost: " + format(Decimal.pow(10, G['upgradeCosts'][i])) + " " + currency
-    document.getElementById("upgradecost").style.color = color
+    DOMCacheGetOrSet("upgradecost").textContent = "Cost: " + format(Decimal.pow(10, G['upgradeCosts'][i])) + " " + currency
+    DOMCacheGetOrSet("upgradecost").style.color = color
     upgradeeffects(i)
 }
 
@@ -375,14 +376,14 @@ export const crystalupgradedescriptions = (i: number) => {
         (Math.floor(G['rune3level'] * G['effectiveLevelMult'] /16) * 100 / 100);
     
     const q = Decimal.pow(10, (G['crystalUpgradesCost'][i - 1] + G['crystalUpgradeCostIncrement'][i - 1] * Math.floor(Math.pow(player.crystalUpgrades[i - 1] + 0.5 - c, 2) / 2)))
-    document.getElementById("crystalupgradedescription").textContent = returnCrystalUpgDesc(i)
-    document.getElementById("crystalupgradeslevel").textContent = "Level: " + p;
-    document.getElementById("crystalupgradescost").textContent = "Cost: " + format(q) + " crystals"
+    DOMCacheGetOrSet("crystalupgradedescription").textContent = returnCrystalUpgDesc(i)
+    DOMCacheGetOrSet("crystalupgradeslevel").textContent = "Level: " + p;
+    DOMCacheGetOrSet("crystalupgradescost").textContent = "Cost: " + format(q) + " crystals"
 }
 
 
 export const upgradeupdate = (num: number, fast?: boolean) => {
-    const el = document.getElementById(`upg${num}`);
+    const el = DOMCacheGetOrSet(`upg${num}`);
     if (player.upgrades[num] > 0.5 && ((num <= 60 || num > 80) && (num <= 93 || num > 100))) {
         el.style.backgroundColor = "green"
     } else if (player.upgrades[num] > 0.5 && ((num > 60 && num <= 80) || (num > 93 && num <= 100) || (num > 120))) {
@@ -393,8 +394,8 @@ export const upgradeupdate = (num: number, fast?: boolean) => {
     const c = player.upgrades[num] > 0.5 ? ' BOUGHT!' : '';
     if (player.upgrades[num] > 0.5) {
         if (!fast) {
-            document.getElementById("upgradedescription").textContent = b + c
-            document.getElementById("upgradedescription").style.color = "gold"
+            DOMCacheGetOrSet("upgradedescription").textContent = b + c
+            DOMCacheGetOrSet("upgradedescription").style.color = "gold"
         }
     } else {
         el.style.backgroundColor = "Black"
@@ -413,8 +414,8 @@ export const ascendBuildingDR = () => {
 }
 
 const constUpgEffect: Record<number, () => string> = {
-    1: () => `Tesseract building production x${format(Decimal.pow(1.05 + 0.01 * player.achievements[270], player.constantUpgrades[1]), 2, true)}`,
-    2: () => `Tesseract building production x${format(Decimal.pow(1 + 0.001 * Math.min(100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX, player.constantUpgrades[2]), ascendBuildingDR()), 2, true)}`,
+    1: () => `Tesseract building production x${format(Decimal.pow(1.05 + 0.01 * player.achievements[270] + 0.001 * player.platonicUpgrades[18], player.constantUpgrades[1]), 2, true)}`,
+    2: () => `Tesseract building production x${format(Decimal.pow(1 + 0.001 * Math.min(100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX + 3 * player.platonicUpgrades[18] + 1000 * (G['challenge15Rewards'].exponent - 1), player.constantUpgrades[2]), ascendBuildingDR()), 2, true)}`,
     3: () => `Offering gain x${format(1 + 0.02 * player.constantUpgrades[3], 2, true)}`,
     4: () => `Obtainium gain x${format(1 + 0.04 * player.constantUpgrades[4], 2, true)}`,        
     5: () => `Ant Speed x${format(Decimal.pow(1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10), player.constantUpgrades[5]), 2, true)}`,
@@ -442,10 +443,10 @@ export const getConstUpgradeMetadata = (i: number): [number, Decimal] => {
 
 export const constantUpgradeDescriptions = (i: number) => {
     const [level, cost] = getConstUpgradeMetadata(i)
-    document.getElementById("constUpgradeDescription").textContent = returnConstUpgDesc(i)
-    document.getElementById("constUpgradeLevel2").textContent = format(player.constantUpgrades[i])
-    document.getElementById("constUpgradeCost2").textContent = format(cost) + " [+" + format(level) + " LVL]"
-    document.getElementById("constUpgradeEffect2").textContent = returnConstUpgEffect(i)
+    DOMCacheGetOrSet("constUpgradeDescription").textContent = returnConstUpgDesc(i)
+    DOMCacheGetOrSet("constUpgradeLevel2").textContent = format(player.constantUpgrades[i])
+    DOMCacheGetOrSet("constUpgradeCost2").textContent = format(cost) + " [+" + format(level) + " LVL]"
+    DOMCacheGetOrSet("constUpgradeEffect2").textContent = returnConstUpgEffect(i)
 }
 
 export const buyConstantUpgrades = (i: number, fast = false) => {

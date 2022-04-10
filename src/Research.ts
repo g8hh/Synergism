@@ -3,24 +3,24 @@ import { calculateSummationNonLinear, calculateRuneLevels, calculateAnts } from 
 import { revealStuff } from './UpdateHTML';
 import { Globals as G } from './Variables';
 import { updateClassList } from './Utility';
+import { DOMCacheGetOrSet } from './Cache/DOM';
 
 const getResearchCost = (index: number, buyAmount = 1, linGrowth = 0): [number, number] => {
     buyAmount = Math.min(G['researchMaxLevels'][index] - player.researches[index], buyAmount)
-    const metaData = calculateSummationNonLinear(player.researches[index], G['researchBaseCosts'][index], player.researchPoints, linGrowth, buyAmount)
+    const metaData = calculateSummationNonLinear(player.researches[index], G['researchBaseCosts'][index] * (1 + player.singularityCount), player.researchPoints, linGrowth, buyAmount)
     return [metaData[0], metaData[1]]
 }
 
 export const updateAutoResearch = (index: number, auto: boolean) => {
     /* If Cube Upgrade 9 (1x9) is purchased, then automation behaves differently.
-     You cannot manually put in your research index of interest; instead it does it for you.
      If not purchased, then clicking on a research icon while auto toggled will update research for you.*/
-    if (player.cubeUpgrades[9] > 0 && auto) {
+    if (player.cubeUpgrades[9] > 0 && auto && player.autoResearchMode === 'cheapest') {
 
         player.autoResearch = G['researchOrderByCost'][player.roombaResearchIndex];
 
         // Checks if this is maxed. If so we proceed to the next research.
         if (isResearchMaxed(player.autoResearch)) {
-            document.getElementById(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
+            DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
             player.roombaResearchIndex += 1;
         }
 
@@ -32,26 +32,26 @@ export const updateAutoResearch = (index: number, auto: boolean) => {
 
         // Researches that are unlocked work
         if (isResearchUnlocked(player.autoResearch)) {
-            const doc = document.getElementById("res" + G['researchOrderByCost'][player.roombaResearchIndex]);
+            const doc = DOMCacheGetOrSet("res" + G['researchOrderByCost'][player.roombaResearchIndex]);
             if (doc && player.researches[player.autoResearch] < G['researchMaxLevels'][player.autoResearch])
                 doc.classList.add("researchRoomba");
         }
 
         return
     }
-    else if (!auto && player.cubeUpgrades[9] < 1){
+    else if (!auto && (player.cubeUpgrades[9] < 1 || player.autoResearchMode === 'manual')){
         /* We remove the old research HTML from the 'roomba' class and make the new index our 'roomba'
            class. We then update the index and consequently the coloring of the background based
            on what level (if any) the research has. This functionality is useless after
            Cube Upgrade 9 (1x9) has been purchased. */
-        document.getElementById(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
-        document.getElementById(`res${index}`).classList.add("researchRoomba");
+        DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
+        DOMCacheGetOrSet(`res${index}`).classList.add("researchRoomba");
         player.autoResearch = index;
         
-        // Research is maxxed
+        // Research is maxed
         if (player.researches[index] >= G['researchMaxLevels'][index])
             updateClassList(`res${player.autoResearch}`, ["researchMaxed"], ["researchPurchased", "researchUnpurchased"]);
-        // Research purchased above level 0 but not maxxed
+        // Research purchased above level 0 but not maxed
         else if (player.researches[index] >= 1)
             updateClassList(`res${player.autoResearch}`, ["researchPurchased"], ["researchUnpurchased", "researchMaxed"]);
         // Research has not been purchased yet
@@ -83,7 +83,7 @@ export const buyResearch = (index: number, auto = false, linGrowth = 0): boolean
         player.researchPoints -= cost;
         // Quick check after upgrading for max. This is to update any automation regardless of auto state
         if (isResearchMaxed(index)) 
-            document.getElementById(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
+            DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove("researchRoomba");
 
         // Update the progress description
         G['researchfiller2'] = 'Level: ' + player.researches[index] + "/" + (G['researchMaxLevels'][index]);
@@ -241,13 +241,13 @@ const resdesc = [
     "[4x21] Ants slow? Add +0.0002 to ant efficiency increase per ant purchased per level.",
     "[4x22] Add +4 level to the first six upgradable ants per level!",
     "[4x23] Add +4 level to the next five upgradable ants per level!",
-    "[4x24] Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level (Up to +75)!",
-    "[4x25] Alright, Platonic is off his rocker. I don't expect you to get this but this will give +1 MORE Quark per hour from Exporting (Up to +100)!",
+    "[4x24] Is the Quark Shop too hot to resist? Get +1 Quark per hour from Exporting for each level!",
+    "[4x25] Alright, Platonic is off his rocker. I don't expect you to get this but this will give +1 MORE Quark per hour from Exporting for each level!",
     "[5x1] Alright, you're past the big wall. How about adding +.001 to Inceptus Ant efficiency per level?",
     "[5x2] Gain +1 bonus level to ALL ants per level! A rainbow attack!",
     "[5x3] Pray to Ant God for +5% sacrifice rewards per level!",
     "[5x4] You're beginning to feel like an ant god (ant god): +5% sacrifice reward per level!",
-    "[5x5] Buy this and be able to run the first five challenges infinitely! (Note that requirements scale a LOT faster after 75)",
+    "[5x5] Buy this and be able to run the first five challenges 9,001 times! (Note that requirements scale a LOT faster after 75, and again after 1,000)",
     "[5x6] Engrave your talismans with obtainium to get +0.03 Rune Levels per talisman level per level.",
     "[5x7] Refine your talismans with the powder of Obtainium to get +0.03 Rune Levels per talisman level per level again.",
     "[5x8] A simple trick makes your base ant ELO increase by 25 per level!",
@@ -262,12 +262,12 @@ const resdesc = [
     "[5x17] Talismans have another +0.015 Rune levels per talisman level per level!",
     "[5x18] For 'neutral' talisman effects, increase by +0.06 per level!",
     "[5x19] Gain +0.25% Wow! Cubes per level upon Ascension.",
-    "[5x20] Gain another +0.25% Wow! per level upon Ascension.",
+    "[5x20] Gain another +0.25% Wow! Cubes per level upon Ascension.",
     "[5x21] Bend time to your will, making all ticks 2% faster each level.",
     "[5x22] Adds +2% ant sacrifice reward per level.",
     "[5x23] Adds +40 base ant ELO per level.",
     "[5x24] Unlock the automator for Ant Sacrifice! [Good luck buying this.]",
-    "[5x25] Good luck, buddy. [+1 Export Quark/hour]",
+    "[5x25] Good luck, buddy. [+1 Export Quark/hour per level]",
     "[6x1] 6 rows? That can't be... You've angered ant god (+1% Accelerators / level)",
     "[6x2] Ant God gets angrier (+1% Accelerator Boosts / level)",
     "[6x3] Ant God cannot believe your bravery (+1% Multipliers / level)",
@@ -322,7 +322,7 @@ const resdesc = [
     "[8x2] +Log10(Crumbs)% to ant production per level. Pretty cool buff ain't it?",
     "[8x3] +666 Base ELO per level! Spooky number of the devil.",
     "[8x4] +0.04% more offerings per level per midas level!",
-    "[8x5] +1 Export Quark per hour, yet again.",
+    "[8x5] +1 Export Quark per hour per level, yet again.",
     "[8x6] +0.6% faster ticks / level because why not? You're already the speed of light.",
     "[8x7] +0.7% cubes in ascension bank / level, from dividends in Wow! Stock.",
     "[8x8] When you open a Hypercube, you also open 100 Tesseracts! (This works with 7x3, if you were curious.)",
@@ -342,7 +342,7 @@ const resdesc = [
     "[8x22] +0.6% cubes in Ascension Bank / level. No one knows how. Bank error perhaps.",
     "[8x23] +0.06% tributes from cubes / level!. Wow! Cubes really has a lot of manufacturing errors in your favor.",
     "[8x24] +10% faster Tesseract Buildings / level. THE ARISEN. WITH THE PRAISE OF THE SINGULARITY.",
-    "[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, + Floor(level/400) max Talisman Level, +Floor(level/200) free ants."
+    "[8x25] Gain the power of a thousand suns! +0.01% Accelerators, A. Boosts, Multipliers, Offerings, and +0.004% Cubes, +0.04 Max Rune level, +(level/400) max Talisman Level, +(level/200) free ants, 0.000666% Tax reduction per level."
 ];
 
 export const researchDescriptions = (i: number, auto = false, linGrowth = 0) => {
@@ -353,13 +353,13 @@ export const researchDescriptions = (i: number, auto = false, linGrowth = 0) => 
     const metaData = getResearchCost(i, buyAmount, linGrowth);
     z = " Cost: " + (format(metaData[1], 0, false)) + " Obtainium [+" + format(metaData[0] - player.researches[i], 0, true) + " Levels]"
     if (player.researches[i] === (G['researchMaxLevels'][i])) {
-        document.getElementById("researchcost").style.color = "Gold"
-        document.getElementById("researchinfo3").style.color = "plum"
+        DOMCacheGetOrSet("researchcost").style.color = "Gold"
+        DOMCacheGetOrSet("researchinfo3").style.color = "plum"
         updateClassList(p, ["researchMaxed"], ["researchAvailable", "researchPurchased", "researchPurchasedAvailable"])
         z = z + " || MAXED!"
     } else {
-        document.getElementById("researchcost").style.color = "limegreen"
-        document.getElementById("researchinfo3").style.color = "white"
+        DOMCacheGetOrSet("researchcost").style.color = "limegreen"
+        DOMCacheGetOrSet("researchinfo3").style.color = "white"
         if (player.researches[i] > 0) {
             updateClassList(p, ["researchPurchased", "researchPurchasedAvailable"], ["researchAvailable", "researchMaxed", "researchUnpurchased"])
         } else {
@@ -368,13 +368,13 @@ export const researchDescriptions = (i: number, auto = false, linGrowth = 0) => 
     }
 
     if (player.researchPoints < G['researchBaseCosts'][i] && player.researches[i] < (G['researchMaxLevels'][i])) {
-        document.getElementById("researchcost").style.color = "crimson"
+        DOMCacheGetOrSet("researchcost").style.color = "crimson"
         updateClassList(p, [], ["researchMaxed", "researchAvailable", "researchPurchasedAvailable"])
     }
 
-    document.getElementById("researchinfo2").textContent = y
-    document.getElementById("researchcost").textContent = z
-    document.getElementById("researchinfo3").textContent = "Level " + player.researches[i] + "/" + (G['researchMaxLevels'][i])
+    DOMCacheGetOrSet("researchinfo2").textContent = y
+    DOMCacheGetOrSet("researchcost").textContent = z
+    DOMCacheGetOrSet("researchinfo3").textContent = "Level " + player.researches[i] + "/" + (G['researchMaxLevels'][i])
 }
 
 export const updateResearchBG = (j: number) => {

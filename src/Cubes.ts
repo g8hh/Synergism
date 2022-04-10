@@ -3,6 +3,7 @@ import { calculateCubeBlessings, calculateSummationNonLinear } from "./Calculate
 import { upgradeupdate } from "./Upgrades"
 import { revealStuff } from "./UpdateHTML"
 import { Globals as G } from "./Variables"
+import { DOMCacheGetOrSet } from './Cache/DOM';
 
 const cubeUpgradeName = [
     "Wow! I want more Cubes.",
@@ -123,22 +124,22 @@ const cubeUpgradeDescriptions = [
     "[5x7] Gain +10% more obtainium per level!",
     "[5x8] When you ascend, start with 1 worker ant (this is a lot better than it sounds!)",
     "[5x9] When you ascend, gain 1 of each challenge 6-8 completion.",
-    "[5x10] What doesn't this boost? +0.01% Accelerators, Multipliers, Accelerator Boosts, +0.02% Obtainium, +0.02% Offerings, +0.1 Max Rune Levels, +1 Effective ELO, +0.001 Talisman bonuses per level."
+    "[5x10] What doesn't this boost? +0.01% Accelerators, Multipliers, Accelerator Boosts, +0.02% Obtainium, +0.02% Offerings, +0.04 Max Rune Levels, +1 Effective ELO, +0.0004 Talisman bonuses per level, 0.00066% Tax reduction per level."
 ]
 
 const getCubeCost = (i: number, linGrowth = 0) => {
     let amountToBuy = G['buyMaxCubeUpgrades'] ? 1e5: 1;
     amountToBuy = Math.min(cubeMaxLevel[i-1] - player.cubeUpgrades[i], amountToBuy)
-    const metaData = calculateSummationNonLinear(player.cubeUpgrades[i], cubeBaseCost[i-1], Number(player.wowCubes), linGrowth, amountToBuy)
+    const metaData = calculateSummationNonLinear(player.cubeUpgrades[i], cubeBaseCost[i-1] * (1 + player.singularityCount), Number(player.wowCubes), linGrowth, amountToBuy)
     return([metaData[0],metaData[1]]) //metaData[0] is the levelup amount, metaData[1] is the total cube cost
 }
 
 export const cubeUpgradeDesc = (i: number, linGrowth = 0) => {
     const metaData = getCubeCost(i,linGrowth)
-    const a = document.getElementById("cubeUpgradeName")
-    const b = document.getElementById("cubeUpgradeDescription")
-    const c = document.getElementById("cubeUpgradeCost")
-    const d = document.getElementById("cubeUpgradeLevel")
+    const a = DOMCacheGetOrSet("cubeUpgradeName")
+    const b = DOMCacheGetOrSet("cubeUpgradeDescription")
+    const c = DOMCacheGetOrSet("cubeUpgradeCost")
+    const d = DOMCacheGetOrSet("cubeUpgradeLevel")
 
     a.textContent = cubeUpgradeName[i - 1];
     b.textContent = cubeUpgradeDescriptions[i - 1];
@@ -157,7 +158,7 @@ export const cubeUpgradeDesc = (i: number, linGrowth = 0) => {
 }
 
 export const updateCubeUpgradeBG = (i: number) => {
-    const a = document.getElementById("cubeUpg" + i)
+    const a = DOMCacheGetOrSet("cubeUpg" + i)
     if (player.cubeUpgrades[i] > cubeMaxLevel[i-1]) {
         console.log("Refunded " + (player.cubeUpgrades[i] - cubeMaxLevel[i-1]) + " levels of Cube Upgrade " + i + ", adding " + (player.cubeUpgrades[i] - cubeMaxLevel[i-1]) * cubeBaseCost[i-1] + " Wow! Cubes to balance.")
         player.wowCubes.add((player.cubeUpgrades[i] - cubeMaxLevel[i-1]) * cubeBaseCost[i-1]);

@@ -1,4 +1,6 @@
 import Decimal from 'break_infinity.js';
+import { DOMCacheGetOrSet } from './Cache/DOM';
+import { format } from './Synergism';
 
 export const isDecimal = (o: unknown): o is Decimal =>
     o instanceof Decimal ||
@@ -43,17 +45,17 @@ export const sumContents = (array: number[]): number => {
  */
 export const productContents = (array: number[]): number => array.reduce((a, b) => a * b);
 
-export const sortWithIndeces = (toSort: number[]) => {
+export const sortWithIndices = (toSort: number[]) => {
     return Array
         .from([...toSort.keys()])
         .sort((a, b) => toSort[a] < toSort[b] ? -1 : +(toSort[b] < toSort[a]));
 }
 
 /**
- * Identical to @see {Document.getElementById} but casts the type.
+ * Identical to @see {DOMCacheGetOrSet} but casts the type.
  * @param id {string}
  */
-export const getElementById = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+export const getElementById = <T extends HTMLElement>(id: string) => DOMCacheGetOrSet(id) as T;
 
 /**
  * Remove leading indents at the beginning of new lines in a template literal. 
@@ -77,19 +79,47 @@ export const stripIndents = (temp: TemplateStringsArray, ...args: ValidInterpola
  * @param b item to pad to array
  * @param length Length to pad array to
  */
-export const padArray = <T extends unknown>(a: T[], b: T, length: number) => {
+export const padArray = <T>(a: T[], b: T, length: number) => {
     for (let i = 0; i < length; i++)
         if (!(i in a)) a[i] = b;
 
     return a;
 } 
 
-export const updateClassList = (targetElement: string, additions: Array<string>, removals: Array<string>) => {
-    const target = document.getElementById(targetElement);
+export const updateClassList = (targetElement: string, additions: string[], removals: string[]) => {
+    const target = DOMCacheGetOrSet(targetElement);
     for (const addition of additions) {
         target.classList.add(addition);
     }
     for (const removal of removals) {
         target.classList.remove(removal);
     }
+}
+
+export const btoa = (s: string) => {
+    try {
+        return window.btoa(s);
+    } catch { 
+        // e.code = 5
+        return null;
+    }
+}
+
+/**
+ * 
+ * Creates a string of the ordinal representation of an integer.
+ * @param int An integer, which can be negative or positive.
+ * @returns A string which follows the conventions of ordinal numbers
+ *          in standard English
+ */
+export const toOrdinal = (int: number):string => {
+    let suffix = 'th'
+    if (int % 10 === 1) 
+        suffix = (int % 100 === 11)? 'th': 'st'
+    if (int % 10 === 2)
+        suffix = (int % 100 === 12)? 'th': 'nd'
+    if (int % 10 === 3)
+        suffix = (int % 100 === 13)? 'th': 'rd'
+
+    return format(int,0,true)+suffix
 }

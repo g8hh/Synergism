@@ -11,6 +11,8 @@ import { buyResearch } from './Research';
 import { resetAnts } from './Reset';
 import type { ResetHistoryEntryAntSacrifice } from './History';
 import { Synergism } from './Events';
+import type { FirstToEighth, ZeroToSeven } from './types/Synergism';
+import { DOMCacheGetOrSet } from './Cache/DOM';
 
 const antdesc: Record<string, string> = {
     antdesc1: "Gain a worker ant for your everyday life. Gathers Galactic Crumbs. Essential!",
@@ -41,7 +43,7 @@ const antspecies: Record<string, string> = {
 const antupgdesc: Record<string, string> = {
     antupgdesc1: "Promotes romance and unity within the colony. [+12% Ant Speed / level]",
     antupgdesc2: "Sweetens crumbs to increase their value [Each level increases Crumb --> Coin Conversion efficiency, up to ^50,000,000]",
-    antupgdesc3: "Swarms the Taxman into submission [Up to -99% taxes!]",
+    antupgdesc3: "Swarms the Taxman into submission [Up to -99.5% taxes!]",
     antupgdesc4: "Scares you into running faster [up to x20]",
     antupgdesc5: "Imitates your body through magic shape-shifting powers [up to x40]",
     antupgdesc6: "Tries to please Ant God... but fails [Additional Offerings!]",
@@ -84,13 +86,15 @@ export const antRepeat = (i: number) => {
 }
 
 export const updateAntDescription = (i: number) => {
-    const el = document.getElementById("anttierdescription")
-    const la = document.getElementById("antprice")
-    const ti = document.getElementById("antquantity")
-    const me = document.getElementById("generateant")
+    if (G['currentTab'] !== "ants")
+        return
+    const el = DOMCacheGetOrSet("anttierdescription")
+    const la = DOMCacheGetOrSet("antprice")
+    const ti = DOMCacheGetOrSet("antquantity")
+    const me = DOMCacheGetOrSet("generateant")
 
     let priceType = "Galactic Crumbs"
-    let tier = ""
+    let tier: FirstToEighth = "first"
     el.textContent = antdesc["antdesc" + i]
 
     switch (i) {
@@ -128,8 +132,8 @@ export const updateAntDescription = (i: number) => {
             me.textContent = "Generates " + format(G['antEightProduce'], 5) + " ALMIGHTIES/sec";
             break;
     }
-    la.textContent = "Cost: " + format(player[tier + "CostAnts"]) + " " + priceType
-    ti.textContent = "Owned: " + format(player[tier + "OwnedAnts"]) + " [+" + format(player[tier + "GeneratedAnts"], 2) + "]"
+    la.textContent = "Cost: " + format(player[`${tier}CostAnts` as const]) + " " + priceType
+    ti.textContent = "Owned: " + format(player[`${tier}OwnedAnts` as const]) + " [+" + format(player[`${tier}GeneratedAnts` as const], 2) + "]"
 }
 
 const getAntCost = (originalCost: Decimal, buyTo: number, index: number) => {
@@ -150,10 +154,8 @@ const getAntUpgradeCost = (originalCost: Decimal, buyTo: number, index: number) 
     return cost;
 }
 
-type Pos = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'sixth' | 'seventh' | 'eighth'
-
 //Note to self: REWRITE THIS SHIT Kevin :3
-export const buyAntProducers = (pos: Pos, originalCost: DecimalSource, index: number) => {
+export const buyAntProducers = (pos: FirstToEighth, originalCost: DecimalSource, index: number) => {
     const sacrificeMult = antSacrificePointsToMultiplier(player.antSacrificePoints);
     //This is a fucking cool function. This will buymax ants cus why not
 
@@ -204,7 +206,7 @@ export const buyAntProducers = (pos: Pos, originalCost: DecimalSource, index: nu
 
     const achRequirements = [2, 6, 20, 100, 500, 6666, 77777];
     for (let j = 0; j < achRequirements.length; j++) {
-        if (sacrificeMult > achRequirements[j] && player[G['ordinals'][j + 1] + "OwnedAnts"] > 0 && player.achievements[176 + j] === 0) {
+        if (sacrificeMult > achRequirements[j] && player[`${G['ordinals'][j + 1 as ZeroToSeven]}OwnedAnts` as const] > 0 && player.achievements[176 + j] === 0) {
             achievementaward(176 + j)
         }
     }
@@ -259,11 +261,11 @@ export const buyAntUpgrade = (originalCost: DecimalSource, auto: boolean, index:
 }
 
 export const antUpgradeDescription = (i: number) => {
-    const el = document.getElementById("antspecies")
-    const al = document.getElementById("antlevelbonus");
-    const la = document.getElementById("antupgradedescription")
-    const ti = document.getElementById("antupgradecost")
-    const me = document.getElementById("antupgradeeffect")
+    const el = DOMCacheGetOrSet("antspecies")
+    const al = DOMCacheGetOrSet("antlevelbonus");
+    const la = DOMCacheGetOrSet("antupgradedescription")
+    const ti = DOMCacheGetOrSet("antupgradecost")
+    const me = DOMCacheGetOrSet("antupgradeeffect")
 
     const content1 = antspecies["antspecies" + i];
     const content2 = antupgdesc["antupgdesc" + i];
@@ -304,27 +306,27 @@ export const antSacrificePointsToMultiplier = (points: number) => {
 
 export const showSacrifice = () => {
     const sacRewards = calculateAntSacrificeRewards();
-    document.getElementById("antSacrificeSummary").style.display = "block"
+    DOMCacheGetOrSet("antSacrificeSummary").style.display = "block"
 
-    document.getElementById("antELO").childNodes[0].textContent = "Your Ant ELO is "
-    document.getElementById("ELO").textContent = format(G['antELO'], 2,)
-    document.getElementById("effectiveELO").textContent = "[" + format(G['effectiveELO'], 2, false) + " effective]"
+    DOMCacheGetOrSet("antELO").childNodes[0].textContent = "Your Ant ELO is "
+    DOMCacheGetOrSet("ELO").textContent = format(G['antELO'], 2,)
+    DOMCacheGetOrSet("effectiveELO").textContent = "[" + format(G['effectiveELO'], 2, false) + " effective]"
 
-    document.getElementById("antSacrificeMultiplier").childNodes[0].textContent = "Ant Multiplier x" + format(antSacrificePointsToMultiplier(player.antSacrificePoints), 3, false) + " --> "
-    document.getElementById("SacrificeMultiplier").textContent = "x" + format(antSacrificePointsToMultiplier(player.antSacrificePoints + sacRewards.antSacrificePoints), 3, false)
+    DOMCacheGetOrSet("antSacrificeMultiplier").childNodes[0].textContent = "Ant Multiplier x" + format(antSacrificePointsToMultiplier(player.antSacrificePoints), 3, false) + " --> "
+    DOMCacheGetOrSet("SacrificeMultiplier").textContent = "x" + format(antSacrificePointsToMultiplier(player.antSacrificePoints + sacRewards.antSacrificePoints), 3, false)
 
-    document.getElementById("SacrificeUpgradeMultiplier").textContent = format(G['upgradeMultiplier'], 3, true) + "x"
-    document.getElementById("SacrificeTimeMultiplier").textContent = format(G['timeMultiplier'], 3, true) + "x"
-    document.getElementById("antSacrificeOffering").textContent = "+" + format(sacRewards.offerings)
-    document.getElementById("antSacrificeObtainium").textContent = "+" + format(sacRewards.obtainium)
+    DOMCacheGetOrSet("SacrificeUpgradeMultiplier").textContent = format(G['upgradeMultiplier'], 3, true) + "x"
+    DOMCacheGetOrSet("SacrificeTimeMultiplier").textContent = format(G['timeMultiplier'], 3, true) + "x"
+    DOMCacheGetOrSet("antSacrificeOffering").textContent = "+" + format(sacRewards.offerings)
+    DOMCacheGetOrSet("antSacrificeObtainium").textContent = "+" + format(sacRewards.obtainium)
     if (player.challengecompletions[9] > 0) {
-        document.getElementById("antSacrificeTalismanShard").textContent = "+" + format(sacRewards.talismanShards) + " [>500 ELO]"
-        document.getElementById("antSacrificeCommonFragment").textContent = "+" + format(sacRewards.commonFragments) + " [>750 ELO]"
-        document.getElementById("antSacrificeUncommonFragment").textContent = "+" + format(sacRewards.uncommonFragments) + " [>1,000 ELO]"
-        document.getElementById("antSacrificeRareFragment").textContent = "+" + format(sacRewards.rareFragments) + " [>1,500 ELO]"
-        document.getElementById("antSacrificeEpicFragment").textContent = "+" + format(sacRewards.epicFragments) + " [>2,000 ELO]"
-        document.getElementById("antSacrificeLegendaryFragment").textContent = "+" + format(sacRewards.legendaryFragments) + " [>3,000 ELO]"
-        document.getElementById("antSacrificeMythicalFragment").textContent = "+" + format(sacRewards.mythicalFragments) + " [>5,000 ELO]"
+        DOMCacheGetOrSet("antSacrificeTalismanShard").textContent = "+" + format(sacRewards.talismanShards) + " [>500 ELO]"
+        DOMCacheGetOrSet("antSacrificeCommonFragment").textContent = "+" + format(sacRewards.commonFragments) + " [>750 ELO]"
+        DOMCacheGetOrSet("antSacrificeUncommonFragment").textContent = "+" + format(sacRewards.uncommonFragments) + " [>1,000 ELO]"
+        DOMCacheGetOrSet("antSacrificeRareFragment").textContent = "+" + format(sacRewards.rareFragments) + " [>1,500 ELO]"
+        DOMCacheGetOrSet("antSacrificeEpicFragment").textContent = "+" + format(sacRewards.epicFragments) + " [>2,000 ELO]"
+        DOMCacheGetOrSet("antSacrificeLegendaryFragment").textContent = "+" + format(sacRewards.legendaryFragments) + " [>3,000 ELO]"
+        DOMCacheGetOrSet("antSacrificeMythicalFragment").textContent = "+" + format(sacRewards.mythicalFragments) + " [>5,000 ELO]"
     }
 }
 
@@ -421,11 +423,11 @@ export const autoBuyAnts = () => {
     }
 
     const _ach = [173, 176, 177, 178, 179, 180, 181, 182];
-    const _cost = ["1e800", "3", "100", "10000", "1e12", "1e36", "1e100", "1e300"];
+    const _cost = ["1e700", "3", "100", "10000", "1e12", "1e36", "1e100", "1e300"];
     for (let i = 1; i <= _ach.length; i++) {
         const res = i === 1 ? player.reincarnationPoints : player.antPoints;
         const m = i === 1 ? 1 : 2; // no multiplier on the first ant cost because it costs particles
-        if (player.achievements[_ach[i - 1]] && res.gte(player[G['ordinals'][i - 1] + "CostAnts"].times(m))) {
+        if (player.achievements[_ach[i - 1]] && res.gte(player[`${G['ordinals'][i - 1 as ZeroToSeven]}CostAnts` as const].times(m))) {
             buyAntProducers(
                 G['ordinals'][i - 1] as Parameters<typeof buyAntProducers>[0], 
                 _cost[i - 1], i

@@ -1,4 +1,5 @@
-import { player, format, resetCheck, isTesting, blankSave} from './Synergism';
+import { player, format, resetCheck, blankSave} from './Synergism';
+import { testing } from './Config';
 import { Player } from './types/Synergism';
 import Decimal from 'break_infinity.js';
 import { calculateMaxRunes, calculateTimeAcceleration } from './Calculate';
@@ -8,6 +9,8 @@ import { LegacyShopUpgrades } from './types/LegacySynergism';
 import { padArray } from './Utility';
 import { AbyssHepteract, AcceleratorBoostHepteract, AcceleratorHepteract, ChallengeHepteract, ChronosHepteract, createHepteract, HyperrealismHepteract, MultiplierHepteract, QuarkHepteract } from './Hepteracts';
 import { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from './CubeExperimental';
+import { Alert } from './UpdateHTML';
+import { getQuarkInvestment, shopData} from './Shop';
 
 /**
  * Given player data, it checks, on load if variables are undefined
@@ -22,6 +25,18 @@ export const checkVariablesOnLoad = (data: Player) => {
             reincarnation: 0,
             ascension: 0,
         }
+    }
+
+    data.shopUpgrades ??= { ...blankSave.shopUpgrades };
+    data.ascStatToggles ??= { ...blankSave.ascStatToggles };
+
+    if (typeof data.promoCodeTiming === 'object') {
+        for (const key of Object.keys(data.promoCodeTiming)) {
+            const k = key as keyof typeof data.promoCodeTiming;
+            player.promoCodeTiming[k] = data.promoCodeTiming[k];
+        }
+    } else {
+        player.promoCodeTiming.time = Date.now() - (60 * 1000 * 15);
     }
 
     // backwards compatibility for v1.0101 (and possibly older) saves
@@ -119,7 +134,6 @@ export const checkVariablesOnLoad = (data: Player) => {
     }
     if (data.history === undefined) {
         player.history = { ants: [], ascend: [], reset: [] };
-        player.historyCountMax = 10;
     }
     if (data.autoChallengeRunning === undefined) {
         player.autoChallengeRunning = false
@@ -152,13 +166,15 @@ export const checkVariablesOnLoad = (data: Player) => {
         player.usedCorruptions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         player.prototypeCorruptions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
+
     if (player.corruptionLoadouts === undefined) {
-        player.corruptionLoadouts = {
-            1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        };
+        player.corruptionLoadouts = { ...blankSave.corruptionLoadouts };
         player.corruptionShowStats = true
+    } else if (Object.keys(player.corruptionLoadouts).length !== Object.keys(blankSave.corruptionLoadouts).length) {
+        for (const key of Object.keys(blankSave.corruptionLoadouts)) {
+            if (player.corruptionLoadouts[Number(key)]) continue;
+            player.corruptionLoadouts[Number(key)] = blankSave.corruptionLoadouts[Number(key)];
+        }
     }
 
     for (let i = 0; i <= 4; i++) {
@@ -249,10 +265,10 @@ export const checkVariablesOnLoad = (data: Player) => {
     if (data.platonicBlessings === undefined) {
         const ascCount = player.ascensionCount
         if (player.currentChallenge.ascension !== 0 && player.currentChallenge.ascension !== 15) {
-            resetCheck('ascensionChallenge', false, true);
+            void resetCheck('ascensionChallenge', false, true);
         }
         if (player.currentChallenge.ascension === 15) {
-            resetCheck('ascensionChallenge', false, true);
+            void resetCheck('ascensionChallenge', false, true);
             player.challenge15Exponent = 0;
             c15RewardUpdate();
         }
@@ -280,7 +296,7 @@ export const checkVariablesOnLoad = (data: Player) => {
     }
     if (data.loadedDec16Vers === false || data.loadedDec16Vers === undefined){
         if (player.currentChallenge.ascension === 15) {
-            resetCheck('ascensionChallenge', false, true);
+            void resetCheck('ascensionChallenge', false, true);
             player.challenge15Exponent = 0;
             c15RewardUpdate();
         }
@@ -292,7 +308,7 @@ export const checkVariablesOnLoad = (data: Player) => {
     // in old versions of the game (pre 2.5.0), the import function will only work
     // if this variable = "YES!". Don't ask Platonic why.
     if (typeof data.exporttest === 'string') {
-        player.exporttest = !isTesting;
+        player.exporttest = !testing;
     } else {
         player.exporttest = data.exporttest;
     }
@@ -325,6 +341,11 @@ export const checkVariablesOnLoad = (data: Player) => {
             calculator3: 0,
             constantEX: 0,
             powderEX: 0,
+            chronometer2: 0,
+            chronometer3: 0,
+            seasonPassY: 0,
+            seasonPassZ: 0,
+            challengeTome2: 0,
         }
 
         const initialQuarks = Number(player.worlds);
@@ -398,7 +419,7 @@ export const checkVariablesOnLoad = (data: Player) => {
     }
     
     if (data.overfluxOrbs === undefined) {
-        player.overflubOrbs = 0;
+        player.overfluxOrbs = 0;
     } 
     if (data.overfluxPowder === undefined) {
         player.overfluxPowder = 0;
@@ -408,5 +429,61 @@ export const checkVariablesOnLoad = (data: Player) => {
 
     if (data.ascStatToggles[5] === undefined) {
         player.ascStatToggles[5] = false;
+    }
+
+    while (player.platonicUpgrades[20] === undefined) {
+        player.platonicUpgrades.push(0)
+    }
+
+    if (data.loadedV253 === undefined) {
+        player.loadedV253 = true;
+        player.worlds.add(10000 * player.shopUpgrades.calculator + 10000 / 2 * (player.shopUpgrades.calculator - 1) * (player.shopUpgrades.calculator), false);
+        player.worlds.add(10000 * player.shopUpgrades.calculator2 + 5000 / 2 * (player.shopUpgrades.calculator2 - 1) * (player.shopUpgrades.calculator2), false);
+        player.worlds.add(25000 * player.shopUpgrades.calculator3 + 25000 / 2 * (player.shopUpgrades.calculator3 - 1) * (player.shopUpgrades.calculator3), false);
+        player.shopUpgrades.calculator = 0;
+        player.shopUpgrades.calculator2 = 0;
+        player.shopUpgrades.calculator3 = 0;
+        player.wowAbyssals += 1e8 * player.platonicUpgrades[16] // Refund based off of abyss hepteracts spent
+        void Alert('June 28, 2021: V2.5.3. You have been refunded quarks from calculators if you purchased them. They are no longer refundable so be wary!')
+    }
+
+    if (data.loadedV255 === undefined) {
+        player.loadedV255 = true;
+        player.worlds.add(1000 * player.shopUpgrades.powderEX + 1000 / 2 * (player.shopUpgrades.powderEX - 1) * (player.shopUpgrades.powderEX), false);
+        player.shopUpgrades.powderEX = 0;
+        void Alert('July 2, 2021: V2.5.5. You have been refunded quarks from Powder EX upgrade, if you purchased levels. Your T1 ants were also reset and base cost set to 1e700 particles. Powder EX is no longer refundable, though, so be careful!')
+        player.firstCostAnts = new Decimal('1e700')
+        player.firstOwnedAnts = 0;
+    }
+
+    if (data.autoResearchMode === undefined) {
+        player.autoResearchMode = 'manual';
+    }
+
+    if (data.singularityCount === undefined) {
+        player.singularityCount = 0;
+        player.goldenQuarks = 0;
+
+        player.quarksThisSingularity = 0
+        player.quarksThisSingularity += +player.worlds
+        const keys = Object.keys(player.shopUpgrades) as (keyof Player['shopUpgrades'])[]
+        for (const key of keys) {
+            player.quarksThisSingularity += getQuarkInvestment(key)
+        }
+    }
+
+    // Update (read: check) for undefined shop upgrades. Also checks above max level.
+    const shopKeys = Object.keys(blankSave['shopUpgrades']) as (keyof Player['shopUpgrades'])[];
+    for (const shopUpgrade of shopKeys) {
+        if (player.shopUpgrades[shopUpgrade] === undefined) {
+            player.shopUpgrades[shopUpgrade] = 0;
+        }
+        if (player.shopUpgrades[shopUpgrade] > shopData[shopUpgrade].maxLevel) {
+            player.shopUpgrades[shopUpgrade] = shopData[shopUpgrade].maxLevel
+        }
+    }
+
+    if (data.dailyCodeUsed === undefined) {
+        player.dailyCodeUsed = false;
     }
 }

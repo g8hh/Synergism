@@ -121,5 +121,5 @@ export const toOrdinal = (int: number):string => {
     if (int % 10 === 3)
         suffix = (int % 100 === 13)? 'th': 'rd'
 
-    return format(int,0,true)+suffix
+    return format(int,0,true)//+suffix
 }

@@ -879,7 +879,7 @@ var cnItems = {
     'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.': '立即飞升开始挑战，您只能获得免费的蚂蚁升级，完成挑战8和挑战9也可以获得免费的蚂蚁升级。请注意，所有飞升挑战需要先完成挑战10以后才可以进行。',
     '12 free Ant Levels! Current': '12免费蚂蚁等级！当前效果',
     '80 to Rune Caps! Current': '80级符文等级上限！当前效果',
-    'Unlock 15 Researches, and unlock the ability to open Tesseracts!': '解锁15个研究，并且解锁开启超立方的能力！',
+    'Unlock 15 Researches, and unlock the ability to open Tesseracts! You also get to toggle Corruptions ;': '解锁15个研究，并且解锁开启超立方的能力！同时您也可以开启腐化了 ;',
     'Start <[(Reduced Ants)]>': '开始<[(蚂蚁减少挑战)]>',
     'Ant Speed': '蚂蚁速度',
     'For some reason, you just can\'t do it.': '总之就是不行，别问原因，没有原因。',
@@ -887,28 +887,28 @@ var cnItems = {
     '50% Obtainium! Current': '50%难得素获取数量！当前效果',
     '12% Offerings! Current': '12%祭品获取数量！当前效果',
     '1 Cube Tribute per opening! Current': '1打开每个方盒的贡品获取数量！当前效果',
-    'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab.': '解锁15个研究，并且解锁神秘的魂灵能量！在符文选项卡下可以找到它们。',
+    'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab. Increase Corruption Cap by 2 levels. Finally, unlock two new corruptions! ;': '解锁15个研究，并且解锁神秘的魂灵能量！在符文选项卡下可以找到它们。另外还使腐化上限增加2级。最后，还可以解锁两种新腐化！ ;',
     'Start <[(No Reincarnation)]>': '开始<[(无转世挑战)]>',
     'Good luck with the IRS, buddy.': '祝您好运，税务局又归来了。',
     'Ascend and reach the goal, but taxes are much higher and grow with challenge completions. Ant production ^': '立即飞升开始挑战，税收高得多，而且随着所有挑战的完成次数增加。蚂蚁产量^',
     'Taxes -3.33%! Multiplicative! Current': '税收减少3.33%！效果叠乘！当前效果',
     '6 maximum to Talisman Level Cap! Current': '6护身符等级上限！当前效果',
     '3% Spirit Power effectiveness! Current': '3%魂灵能量效果！当前效果',
-    'Unlock 15 Researches, and unlock the power of the Hypercube!': '解锁15个研究，并且解锁五阶立方的力量！',
+    'Unlock 15 Researches, and unlock the power of the Hypercube! Increase Corruption Cap by 2 levels, to 9! Finally, unlock two new corruptions! ;': '解锁15个研究，并且解锁五阶立方的力量！另外还使腐化上限增加2级，到达9级！最后，还可以解锁两种新腐化！ ;',
     'Start <[(Tax+++)]>': '开始<[(税收激增挑战)]>',
     'The dimension that never progressed past the dark ages. Many fear to even step foot.': '这个维度没能跨越黑暗时代。很多人甚至不敢越雷池一步。',
     'Ascend and reach the goal but you do not gain Obtainium nor are any researches purchasable. Ant production ^0.2.': '立即飞升开始挑战，您无法获得难得素，也无法进行研究。蚂蚁产量^0.2。',
     '50% stronger effect on researches 1x1 through 1x5. Current': '50%研究1x1至研究1x5的效果。当前效果',
     '1 research purchased per roomba tick! Current': '1每次自动购买的研究数量！当前效果',
     '200 to Rune Caps! Current': '200级符文等级上限！当前效果',
-    'Unlock 15 Researches, and a way to coalesce your power into the Singularity.': '解锁15个研究，并且解锁将能量与奇点结合的方法。',
+    'Unlock 15 Researches, and a way to coalesce your power into the Singularity. Increase Corruption Cap by 2 levels, to 11! Finally, unlock two new corruptions! ;': '解锁15个研究，并且解锁将能量与奇点结合的方法。另外还使腐化上限增加2级，到达11级！最后，还可以解锁两种新腐化！ ;',
     'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
     'The worst sin a man can do is making others suffer.': '折磨他人，是人类最大的原罪。',
     'Ascend and reach the goal but you\'re stuck in all corruptions level 11 and must stay that way.': '立即飞升开始挑战，腐化全部为11级，并且无法清除。',
     'You have no idea': '你根本不知道',
     'what you have just done': '你做了些什么',
     'the ant god shakes their mighty head': '蚁神摇着巨大的脑袋如是说',
-    'Enter the singularity.': '进入奇点。',
+    'Who knows. Platonic sure doesn\'t.': '谁知道呢？至少Platonic不知道呢。',
     'Start <[(Sadistic Challenge II)]>': '开始<[(虐待狂挑战 II)]>',
     'Gain 1 Wow! HYPERCUBE for completing this challenge (First Time Bonus': '完成挑战后可以获得1个惊奇五阶立方(首次完成奖励',
     'Retry Challenges: ON': '重新尝试挑战：开',
@@ -1322,7 +1322,7 @@ var cnItems = {
     'Wow! I want to accelerate time!': '真惊奇！我想要加速时间！',
     'Wow! I want to unlock a couple more coin upgrades.': '真惊奇！我想解锁更多的金币升级。',
     'Wow! I want to improve automatic rune tools.': '真惊奇！我想要自动符文变得更好。',
-    'Wow! I want more cubes 3.': '真惊奇！我想要更多方盒3。',
+    'Wow! I want to hack in more score 1.': '真惊奇！我想要破解到更多分数1。',
     'Wow! I wish my Artemis was a little better': '真惊奇！我希望阿尔忒弥斯能更好一点',
     'Wow! I want opened cubes to give more tributes 2.': '真惊奇！我想让方盒给予更多贡品2。',
     'Wow! I want Plutus Tribute bonuses to scale better': '真惊奇！我想让普路托斯的贡品加成更高',
@@ -1332,7 +1332,7 @@ var cnItems = {
     'Wow! I want to finally render Reincarnating obsolete.': '真惊奇！我想让转世从此过时。',
     'Wow! I want to increase maximum Reincarnation Challenge completions.': '真惊奇！我想要增加转世挑战的完成次数上限。',
     'Wow! I want to arbitrarily increase my cube and tesseract gain.': '真惊奇！我想要随意增加方盒和超立方的获取数量。',
-    'Wow! I want more cubes 4.': '真惊奇！我想要更多方盒4。',
+    'Wow! I want to hack in more score 2.': '真惊奇！我想要破解到更多分数2。',
     'Wow! I want runes to be easier to level up over time.': '真惊奇！我想要符文随着时间推移更容易升级。',
     'Wow! I want opened cubes to give more tributes 3.': '真惊奇！我想让方盒给予更多贡品3。',
     'Wow! I want Chronos Tribute bonuses to scale better': '真惊奇！我想让柯罗诺斯的贡品加成更高',
@@ -1342,7 +1342,7 @@ var cnItems = {
     'Wow! I want more tesseracts while corrupted!': '真惊奇！我想要在腐化时获得更多超立方！',
     'Wow! I want more score from challenge 10 completions.': '真惊奇！我想要让完成挑战10给予的分数更高。',
     'Wow! I want Athena Tribute bonuses to scale better 1.': '真惊奇！我想让雅典娜的贡品加成更高1。',
-    'Wow! I want more cubes 5.': '真惊奇！我想要更多方盒5。',
+    'Wow! I want to hack in more score 3.': '真惊奇！我想要破解到更多分数3。',
     'Wow! I want some Uncorruptable Obtainium.': '真惊奇！我想要一些无法腐化的难得素。',
     'Wow! I want even more Uncorruptable Obtainium!': '真惊奇！我还想要一些无法腐化的难得素！',
     'Wow! I want Midas Tribute bonus to scale better 1.': '真惊奇！我想让米达斯的贡品加成更高1。',
@@ -1352,7 +1352,27 @@ var cnItems = {
     'Wow! I want to start ascension with an ant.': '真惊奇！我想要在飞升后就有一只蚂蚁。',
     'Wow! I want to start ascension with a challenge 6-8 completion.': '真惊奇！我想要在飞升后就已经各完成了挑战6至挑战8一次。',
     'Wow! I want to be enlightened by the power of a thousand suns.': '真惊奇！我想要获得静月千阴的启迪。',
-    '[1x1] You got it! +14% cubes from Ascending per level.': '[1x1]好！每级增加飞升时方盒14%获取数量。',
+    'Wow! A pile of Chocolate Chip Cookies.': '真惊奇！这是一堆巧克力曲奇饼干。',
+    'Wow! A pile of Sugar Cookies.': '真惊奇！这是一堆糖饼干。',
+    'Wow! A pile of Butter Cookies.': '真惊奇！这是一堆黄油饼干。',
+    'Wow! A pile of Vanilla Wafers.': '真惊奇！这是一堆香草威化饼。',
+    'Wow! A pile of White Chocolate Cookies.': '真惊奇！这是一堆白巧克力饼干。',
+    'Wow! A bag of Snickerdoodles.': '真惊奇！这是一袋肉桂饼干。',
+    'Wow! A bag of Macarons.': '真惊奇！这是一袋马卡龙。',
+    'Wow! A bag of Gingerbread Cookies.': '真惊奇！这是一袋姜饼饼干。',
+    'Wow! A bag of Lemon Cookies.': '真惊奇！这是一袋柠檬饼干。',
+    'Wow! A bag of Ginger Snaps.': '真惊奇！这是一袋姜脆饼。',
+    'Wow! A tin of Whoopie Pies.': '真惊奇！这是一罐无比派。',
+    'Wow! A tin of Toffee Bars.': '真惊奇！这是一罐太妃糖。',
+    'Wow! A tin of Brownie Cookies.': '真惊奇！这是一罐布朗尼曲奇。',
+    'Wow! A tin of Fortune Cookies.': '真惊奇！这是一罐签语饼。',
+    'Wow! A tin of Biscotti.': '真惊奇！这是一罐意大利脆饼。',
+    'Wow! A box of Mother\'s Favorite Cookies.': '真惊奇！这是一盒妈妈的饼干。',
+    'Wow! A box of Metaphysical Brownies.': '真惊奇！这是一盒玄学布朗尼曲奇。',
+    'Wow! A box of Not Cookies.': '真惊奇！这是一盒非曲奇。',
+    'Wow! A box of Cookies Beyond This World.': '真惊奇！这是一盒绝世出尘的饼干。',
+    'Wow! A box of Perfect Cookies.': '真惊奇！这是一盒完美的饼干。',
+    '[1x1] You got it! +16.666% 3D cubes from Ascending per level.': '[1x1]好！每级增加16.666%飞升时惊奇方盒获取数量。',
     '[1x2] Plutus grants you +1 Offering per second, no matter what, per level. Also a +0.5% Recycling chance!': '[1x2]普路托斯使您每级每秒多获得一个祭品。另外祭品回收概率每级增加0.5%！',
     '[1x3] Athena grants you +10% more Obtainium, and +80% Auto Obtainium per level.': '[1x3]雅典娜使您每级多获得10%难得素和80%自动难得素。',
     '[1x4] You keep those 5 useful automation upgrades in the upgrades tab!': '[1x4]您可以保留升级选项卡下5个有用的自动化升级！',
@@ -1362,7 +1382,7 @@ var cnItems = {
     '[1x8] Automatically buy Particle Upgrades.': '[1x8]自动购买粒子升级。',
     '[1x9] The research automator in shop now automatically buys cheapest when enabled. It\'s like a roomba kinda!': '[1x9]商店中出售的自动研究现在会自动购买最便宜的升级了。就像扫地机器人一样！',
     '[1x10] Unlock some tools to automate Ascensions or whatever. Kinda expensive but cool.': '[1x10]解锁自动飞升。很贵，也很酷。',
-    '[2x1] You got it again! +7% cubes from Ascending per level.': '[2x1]好好！每级增加飞升时方盒7%获取数量。',
+    '[2x1] You got it again! +9.09% 3D cubes from Ascending per level.': '[2x1]好好！每级增加9.09%飞升时惊奇方盒获取数量。',
     '[2x2] Raise building power to the power of (1 + level * 0.09).': '[2x2]将建筑能量变为(1+等级*0.09)次方。',
     '[2x3] For each 20 cubes opened at once, you get 1 additional tribute at random.': '[2x3]每开启20个方盒，就额外获得1个随机贡品。',
     '[2x4] Iris shines her light on you. The effect power is now increased by +0.01 (+0.005 if >1000 tributes) per level.': '[2x4]伊丽丝照亮了您。每级使效果的指数增加0.01(如果超过1000贡品则改为增加0.005)。',
@@ -1372,7 +1392,7 @@ var cnItems = {
     '[2x8] Quantum tunnelling ftw. +20% global game speed.': '[2x8]量子隧穿棒棒哒。全局游戏速度增加20%。',
     '[2x9] Unlocks new coin upgrades ranging from start of ascend to post c10 and beyond.': '[2x9]解锁新的金币升级。',
     '[2x10] The rune automator in shop now spends all offerings automatically, \'splitting\' them into each of the 5 runes equally.': '[2x10]商店中出售的自动符文现在会自动献祭所有祭品了，祭品将平均分配给所有5个符文。',
-    '[3x1] You got it once more! +7% cubes from Ascending per level.': '[3x1]好好好！每级增加飞升时方盒7%获取数量。',
+    '[3x1] Perhaps score will benefit you more? Gain +5% more score on ascensions per level.': '[3x1]或许分数能让您获益更多？每级增加5%飞升分数。',
     '[3x2] The exponent of the bonus of Artemis is increased by 0.05 per level.': '[3x2]每级使阿尔忒弥斯的加成指数增加0.05。',
     '[3x3] For each 20 cubes opened at once, you get 1 additional tribute at random.': '[3x3]每开启20个方盒，就额外获得1个随机贡品。',
     '[3x4] Plutus teaches you the Art of the Deal. The effect power is now increased by +0.01 (+0.0033 if >1000 tributes) per level.': '[3x4]普路托斯教导了您生意经。每级使效果的指数增加0.01(如果超过1000贡品则改为增加0.0033)。',
@@ -1382,7 +1402,7 @@ var cnItems = {
     '[3x8] Well, I think you got it? Gain +1% of particles on Reincarnation per second.': '[3x8]嗯，如您所愿？每秒获得粒子，数量为转世的粒子每秒产量的1%。',
     '[3x9] Add +4 to Reincarnation Challenge cap per level. Completions after 25 scale faster in requirement!': '[3x9]每级增加4次转世挑战次数上限。超过25次以后，挑战的目标将大幅上升！',
     '[3x10] You now get +25% Cubes and Tesseracts forever!': '[3x10]从现在起，您永久多获得25%的方盒和超立方！',
-    '[4x1] You again? +7% cubes from Ascending per level.': '[4x1]又是你啊？每级增加飞升时方盒7%获取数量。',
+    '[4x1] You again? +5% more score on ascensions per level.': '[4x1]又是你啊？每级增加5%飞升分数。',
     '[4x2] Gain +0.1% Rune EXP per second you have spent in an Ascension. This has no cap!': '[4x2]本次飞升每经过一秒，符文经验值获取数量就增加0.1%。此效果没有上限！',
     '[4x3] For each 20 cubes opened at once, you get yet another additional tribute at random.': '[4x3]每开启20个方盒，就再次额外获得1个随机贡品。',
     '[4x4] Chronos overclocks the universe for your personal benefit. (Rewards the same as others': '[4x4]柯罗诺斯将宇宙加速以使您受益。(与其他的奖励相同',
@@ -1392,7 +1412,7 @@ var cnItems = {
     '[4x8] Gain +0.5% more tesseracts on ascension for each additional level in a corruption you enable.': '[4x8]每激活一级腐化，飞升的超立方获取数量就多0.5%。',
     '[4x9] Instead of the multiplier being 1.03^(C10 completions), it is now 1.035^(C10 completions)!': '[4x9]分数倍率从1.03^(挑战10完成次数)变为1.035^(挑战10完成次数)！',
     '[4x10] Athena is very smart (Rewards the same as others).': '[4x10]雅典娜非常睿智(与其他的奖励相同)。',
-    '[5x1] Yeah yeah yeah, +7% cubes from Ascending per level. Isn\'t it enough?': '[5x1]好好，每级增加飞升时方盒7%获取数量。够了吗？',
+    '[5x1] Yeah yeah yeah, +5% score on Ascension per level. Isn\'t it enough?': '[5x1]好好，每级增加5%飞升分数。够了吗？',
     '[5x2] You now gain +4% Obtainium per level, which is not dependent on corruptions!': '[5x2]您每级多获取4%难得素，此效果不受腐化影响！',
     '[5x3] Gain another +3% corruption-independent Obtainium per level.': '[5x3]每级再多获取3%难得素，此效果不受腐化影响。',
     '[5x4] Blah blah blah Midas works harder (same rewards as before': '[5x4]米达斯努力工作等等(与其他的奖励相同',
@@ -1402,6 +1422,26 @@ var cnItems = {
     '[5x8] When you ascend, start with 1 worker ant (this is a lot better than it sounds!': '[5x8]飞升后直接获得一只工蚁(比听起来要强多了！',
     '[5x9] When you ascend, gain 1 of each challenge 6-8 completion.': '[5x9]飞升后直接完成挑战6至挑战8各一次。',
     '[5x10] What doesn\'t this boost? +0.01% Accelerators, Multipliers, Accelerator Boosts, +0.02% Obtainium, +0.02% Offerings, +0.04 Max Rune Levels, +1 Effective ELO, +0.0004 Talisman bonuses per level, 0.00066% Tax reduction per level.': '[5x10]它无所不包。每级使加速器、加倍器、加速器加成数量增加0.01%，难得素和祭品获取数量增加0.02%，符文等级上限增加0.04，有效强度分增加1，护身符的每级符文等级加成增加0.0004，税收减少0.00066%。',
+    '[Cx1] Wow! Bakery is open!!! Immediately unlock all automations in the cube tab, and researches as well.': '[Cx1]惊奇烘焙坊开张了！！！立刻解锁方盒选项卡下和研究选项卡下的所有自动化升级。',
+    '[Cx2] These sugar cookies sure boost your blood sugar. Gain +1% global speed per level.': '[Cx2]吃完这些糖饼干血糖一定会飙升的。每级使全局速度增加1%。',
+    '[Cx3] What a hearty snack. Gain +0.1% Quarks per level.': '[Cx3]美味可口的小点心。每级使夸克获取数量增加0.1%。',
+    '[Cx4] Pretty dry, but they suffice. Increase offering gain by 1% per level.': '[Cx4]吃起来有点干，但分量十足。每级使祭品获取数量增加1%。',
+    '[Cx5] An inventive take on the original chip cookie. Increase obtainium gain by 1% per level.': '[Cx5]在曲奇饼上加一些创意就获得了它们。每级使难得素获取数量增加1%。',
+    '[Cx6] These are a little more exotic. Gain +1 more raw score from Challenge 1 completions per level.': '[Cx6]相当有异国情调。每级使挑战1的飞升基础分数增加1。',
+    '[Cx7] Yum yum! Now we\'re talking... or maybe not. Increase the cap of Cube Upgrades 1x1, 2x1, 3x1, 4x1, 5x1 by 1.': '[Cx7]嚼嚼……就是这个味……吧。使方盒升级1x1，2x1，3x1，4x1，5x1的等级上限增加1。',
+    '[Cx8] A bit festive! If there is an event, All Cube gain is multiplied by 1.25.': '[Cx8]再增添一些节日的气息！如果有活动，则使所有类型的方盒及立方产量乘以1.25。',
+    '[Cx9] Quite sour for a cookie. But it increases your ascension speed by 0.25% per level, so who is to complain?': '[Cx9]很酸很酸。但它每级可以使飞升的速度增加0.25%，所以估计没什么人会抱怨了。',
+    '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使购买金夸克的夸克花费减少1。',
+    '[Cx11] Edible but prone to mistakes. Adds five whole milliseconds to the tolerance of code \'time\'.': '[Cx11]吃起来是没啥问题，但容易出错。使输入代码 time 的时间间隔容错增加5毫秒。',
+    '[Cx12] Platonic loves toffee. Triple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为3倍。',
+    '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使普通方盒和立方的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
+    '[Cx14] Some say the ant god itself penned these fortunes. When you gain a statue from Platonic Cubes, you gain two instead.': '[Cx14]有人说这是蚁神的造物。当您开启PLATONIC方盒获得塑像时，使获取量翻倍。',
+    '[Cx15] That\'s amore, but is quite a crumbful! Increase ant efficiency by 0.4%. (Roughly every 200 ants purchased doubles crumb production!': '[Cx15]香脆可口，但又易碎！使蚂蚁效率增加0.4%。(每购买200只蚂蚁差不多就可以使银河碎屑翻倍！',
+    '[Cx16] You just wish you could have one more cookie baked by her. Gain 2x all cubes until you purchase OMEGA.': '[Cx16]您永远吃不腻的饼干。在购买Platonic Omega升级之前，使所有类型的方盒及立方产量翻倍。',
+    '[Cx17] What the hell are in these??? Anyway, Metaphysics Talisman level cap is increased by 1,337.': '[Cx17]这里面都是什么玩意？？？不管了，总之玄学护身符的等级上限增加1337。',
+    '[Cx18] What the heck! These aren\'t even cookies. +0.02% Quarks per level purchased of this upgrade. +30% more at level 1,000!': '[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.02%，达到等级上限1000时可以使夸克获取数量增加30%！',
+    '[Cx19] Cookies that you\'ll never remember again. +12% Golden Quarks this singularity.': '[Cx19]永远无法再回忆起来的饼干。使本次奇点的金夸克获取数量增加12%。',
+    '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +4% more cubes on ascension if you have challenge 10 completions capped.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果您的挑战10完成次数达到了上限，则使飞升时所有类型的方盒及立方产量增加4%。',
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
     'Upgrade: 1 Level wow': '升级：1级(惊奇)',
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
@@ -1454,7 +1494,7 @@ var cnItems = {
     '0.045% hypercubes per corruption level per level!': '0.045%飞升时五阶立方获取数量于每腐化等级每级此升级！',
     'Gain +2% Platonic Cubes per level! It is that simple.': '每级此升级增加2%的PLATONIC方盒获取数量！简单明了。',
     'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster constant production, +10/+5 Challenge caps, 2x Obtainium/Offerings, ^1.10 coin gain in C15!': 'C10的分数倍率的指数从1.035变为变为1.0375，数学常数减缓税收的指数增加0.1，数学常数产量变为2倍，挑战上限次数分别增加10和5，难得素和祭品获取数量翻倍，在挑战15中金币产量变为金币产量^1.10！',
-    'Raises corruption 1 and 2 exponent ^(1 + level/30), capacity of ^1 on Mult/Accel.': '将腐化：分歧和腐化：适应不良的效果指数乘以(1+此升级等级/30)，但效果指数不能超过1。',
+    'Raises corruption 1 and 2 exponent ^(1 + level/30), capacity of ^1 on Mult/Accel.': '将腐化：粘性的效果指数乘以(1+此升级等级/30)，但效果指数不能超过1。',
     'Raises speed below 1x to the power of ^(1 - level/30).': '全局速度低于1倍时，将速度变为速度的(1-(此升级等级/30))次方。',
     'Divides Hyperchallenged by (1 + 0.4 * level), with a minimum 1x challenge req. multiplier!': '将腐化：极致挑战的效果指数除以(1+0.4*此升级等级)，但效果指数不能低于1！',
     'Raise Obtainium to the power of (1+(0.09*log10(Obt owned))) and add another x2.5 multiplier (uncorruptable), up until 1e100 Obtainium!': '难得素获取数量变为原来的(1+(0.09*log10(难得素当前数量)))次方，并且使难得素获取数量变为2.5倍(不受腐化影响)，最高到1e100难得素！',
@@ -1465,7 +1505,7 @@ var cnItems = {
     'Reduce the effect of Financial Recession in challenge 15, multiplying the coin exponent by 1.55.': '挑战15中腐化：经济衰退的效果减少，即金币的指数乘以1.55。',
     'You begin to find the start of the abyss. Coin Exponent +0.10 in Challenge 15, Challenge 15 Score +25%, Ascension Speed +0.2% per Corruption Level (Max: 20%), +1% all Cube types per C9 Completion (multiplicative), +20% Quarks, 1e250x Tesseract Building Multiplier, 2x Ascension Count, +30 Reincarnation Challenge Cap, +20 Ascension Challenge Cap, 6x Offerings and Obtainium (Uncorruptable)! Talk about a deep dive.': '您开始找寻深渊的起始了。在挑战15中金币指数增加0.10。挑战15的分数增加25%。每级腐化使飞升的速度增加0.2%(上限：20%)。每次完成挑战9就使所有类型的方盒及立方获取数量增加1%(相互叠乘)。夸克获取数量增加20%。超立方建筑产量变为1e250倍。飞升次数获取数量翻倍。转世挑战上限次数增加30，飞升挑战上限次数增加20。祭品和难得素的获取数量变为6倍(不受腐化影响)！聊聊继续深入的事吧。',
     'Increase powder conversion rate by 1% per level, gain +2% ascension count per level and gain up to 2% more ascension count per level based on powder, up to 100,000. This will also multiply Tesseract Building production by (Powder + 1)^(10 * level), uncapped.': '每级此升级增加1%的超通量粉转化效率，使飞升次数获取数量增加2%，并且根据超通量粉的数量(上限100000)最多还可以使飞升次数获取数量再增加2%。另外，超立方建筑产量变为(超通量粉数量+1)^(10*等级)倍，无上限。',
-    'If Divisiveness or Maladaptive is set to level 10 or higher, score multiplier is raised by an exponent. That exponent is 1.75 + 0.02 per level of this upgrade.': '如果腐化：分歧和腐化：适应不良的等级不低于10级，则将它们的分数倍率变为原来的(1.75+0.02*此升级等级)次方。',
+    'If Viscous Corruption is set to level 10 or higher, score multiplier is raised by an exponent. That exponent is 3 + 0.04 per level of this upgrade.': '如果腐化：粘性的等级不低于10级，则将它的分数倍率变为原来的(3+0.04*此升级等级)次方。',
     'Raise the base percentage of Constant Upgrade 1 by 0.1% and increase the base percentage cap of Constant Upgrade 2 by 0.3% per level!': '每级将数学常数升级1的基础效果百分比增加0.1%，并将数学常数升级2的基础上限百分比增加0.3%！',
     'The diminishing return power on Chronos Hepteract changes from 0.166 to (0.166 + 0.00133 * level) [Max of 0.2333].': '惊奇七阶立方·时光超过软上限后的效果从0.166变为(0.166+0.00133*等级)[上限为0.2333]。',
     'You know, maybe some things should be left unbought.': '有些东西，还是不要买的好。',
@@ -1527,23 +1567,21 @@ var cnItems = {
     'The most rewarding ventures are those few would dare to embark.': '不入虎穴，焉得虎子。',
     'Select the trait levels you wish to run with. Choose wisely!': '选择您想要使用的腐化等级。请明智地进行选择！',
     'Don\'t bite off more than you can chew...': '切记，贪多嚼不烂……',
-    'Corruption I: Divisiveness': '腐化 I：分歧',
-    'Your multipliers get disintegrated! Is extra devious without also using Maladaption Corruption': '您的加倍器崩坏了！如果与适应不良等级不同，将变得更难',
-    'Corruption II: Maladaption': '腐化 II：适应不良',
-    'Insert Cool Text Here. Is extra devious without also using Divisiveness Corruption. Yin/Yang!': '此处可以插入有趣的文本。如果与分歧等级不同，将变得更难。这就是阴阳相生！',
-    'Corruption III: Spacial Dilation': '腐化 III：空间膨胀',
+    'Corruption I: Viscosity': '腐化 I：粘性',
+    'You feel lethargic across the universe...': '您感到昏昏欲睡……',
+    'Corruption II: Spacial Dilation': '腐化 II：空间膨胀',
     'Way to go, Albert.': '干得好，阿尔伯特。',
-    'Corruption IV: Hyperchallenged': '腐化 IV：极致挑战',
+    'Corruption III: Hyperchallenged': '腐化 III：极致挑战',
     'What\'s in a challenge?': '翻译翻译，什么叫挑战？',
-    'Corruption V: Scientific Illiteracy': '腐化 V：科盲',
+    'Corruption IV: Scientific Illiteracy': '腐化 IV：科盲',
     'Maybe Albert wouldn\'t have theorized Dilation after all.': '至少阿尔伯特不会提出膨胀理论了。',
-    'Corruption VI: Market Deflation': '腐化 VI：市场通缩',
+    'Corruption V: Market Deflation': '腐化 V：市场通缩',
     'Diamond Mine destroyed... no more monopolies!': '钻石矿被摧毁了……没有垄断了！',
-    'Corruption VII: Extinction': '腐化 VII：灭绝',
+    'Corruption VI: Extinction': '腐化 VI：灭绝',
     'It killed the dinosaurs too, ya dingus.': '它连恐龙都干掉了，憨憨。',
-    'Corruption VIII: Drought': '腐化 VIII：干旱',
+    'Corruption VII: Drought': '腐化 VII：干旱',
     'More like California, am I right?': '更像加州了，对吧？',
-    'Corruption IX: Financial Recession': '腐化 IX：经济衰退',
+    'Corruption VIII: Financial Recession': '腐化 VIII：经济衰退',
     '2008.exe has stopped working.': '2008.exe已停止工作。',
     'CLEANSE THE CORRUPTION': '清除腐化',
     'Free this world of sin.': '这个罪恶的世界解脱了。',
@@ -1556,6 +1594,7 @@ var cnItems = {
     'Confirm': '确认清除',
     'Current': '目前',
     ' / Next': ' / 下次',
+    'MAX': '最大',
     'Next': '下次',
     'Loadout': '档',
     'Zero': '零',
@@ -1567,7 +1606,8 @@ var cnItems = {
     ' Wow! Cubes in the Ascension bank. Gain more by finishing challenges! Ascend to redeem them.': '个惊奇方盒还存在飞升库中。完成更多挑战，以获得更多惊奇方盒！飞升后才可以获得它们。',
     'Your Ascension Score is': '您的飞升分数为',
     ' (base) *': '(基础值)*',
-    ' (Corruption mult) =': '(腐化因子)=',
+    ' (Corruption mult) *': '(腐化因子)*',
+    ' (Bonus mult) =': '(加成因子)=',
     'If you ascend now,': '如果现在飞升，您的飞升次数将增加',
     ' will be added to your ascension count.': '次。',
     'If you ascend now, you will gain': '如果现在飞升，您可以获得',
@@ -1577,7 +1617,7 @@ var cnItems = {
     ' Wow! Hypercubes. [': '个惊奇五阶立方。[',
     'Req Score: >1,000,000,': '需要分数大于1,000,000,',
     ' PLATONIC CUBES. [': '个PLATONIC方盒。[',
-    'Req Score: >1,337,000,000,': '需要分数大于1,337,000,000,',
+    'Req Score: >2,666,000,000,': '需要分数大于2,666,000,000,',
     ' HEPTERACTS. [': '个惊奇七阶立方。[',
     'Req Score: >': '需要分数大于',
     'Auto Ascend [ON]': '自动飞升[开]',
@@ -1622,13 +1662,12 @@ var cnItems = {
     'Due to cheaters, you can only bet 1k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为1000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
-    'Click the button within the next 15 seconds to test your luck! If you click within 500 ms of a randomly generated time, you will win a prize!': '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的500毫秒范围内点击了按钮，您将获得一份奖励！',
     'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',
     'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.8.2 - Seal of the Merchant [Last Update: 15:8 UTC 27-Dec-2021].': '您目前玩的版本为V2.8.2 - 商人的印记 [2021年12月27日 UTC 15:08更新]。',
+    'You\'re playing v2.9.0 - The Reality Update pt.1 [Last Update: 7:30 UTC 11-Apr-2022].': '您目前玩的版本为V2.9.0 - 现实升级第一部分 [2022年4月11日 UTC 7:30更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1686,11 +1725,17 @@ var cnItems = {
     'Research 6x24,': '研究 6x24，',
     'Challenge': '挑战',
     'Ascension Count Achievement': '飞升次数成就',
+    'Cookie Upgrade': '饼干升级',
     'Sun & Moon Achievements': '[烈日千阳]及[静月千阴]成就',
     'Cube Upgrade': '方盒升级',
     'Platonic ALPHA': 'PLATONIC ALPHA升级(第一排最后一个)',
     'Platonic BETA': 'PLATONIC BETA升级(第二排最后一个)',
     'Platonic OMEGA': 'PLATONIC OMEGA升级(第三排最后一个)',
+    'Starter Pack': '新手大礼包',
+    'Offering Charge [GQ]': '祭品充能[金夸克]',
+    'Offering Storm [GQ]': '祭品风暴[金夸克]',
+    'Offering Tempest [GQ]': '祭品狂风[金夸克]',
+    'Cube Upgrade C': '方盒升级C',
     'TOTAL OFFERING MULTIPLIER': '祭品总倍率',
     'Global Cube Multipliers': '所有类型的方盒及立方倍率',
     'Ascension Time Multiplier': '飞升时间倍率',
@@ -1704,6 +1749,9 @@ var cnItems = {
     'Event [Most Recent: June 28 - July 01]': '活动加成[最近时间：6月28日至7月1日]',
     'Singularity Factor': '奇点因子',
     'Wow Pass Y': '季票 Y',
+    'Cube Flame [GQ]': '方盒之焰[金夸克]',
+    'Cube Blaze [GQ]': '方盒烈火[金夸克]',
+    'Cube Inferno [GQ]': '方盒炼狱[金夸克]',
     'Wow Pass Z': '季票 Z',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube Multipliers': '方盒倍率',
@@ -1838,13 +1886,11 @@ var cnItems = {
     'Are you REALLY SURE? You cannot go back from this (without an older savefile)! Confirm one last time to finalize your decision.': '您是真的真的确定了吗？一旦这么做将再也无法反悔(除非您有旧的存档文件)！这是最后一次向您确认。',
     'If you decide to change your mind, let me know. -Ant God': '改变主意的话，可以再来找我。————蚁神',
     ' NOTE: WIP. This will be expanded on soon.': '注意：暂时如此。内容随时可能扩展。',
-    'You are in the': '您目前已进入了',
-    ' singularity, and have': '次奇点，并拥有',
-    ' Golden': '金',
-    'Global Speed is divided by': '全局速度除以',
-    'Cube Gain is divided by': '所有类型的方盒及立方获取数量除以',
-    'Research Costs are multiplied by': '研究花费乘以',
-    'Cube Upgrade costs are multiplied by': '方盒升级花费乘以',
+    'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
+    'You cannot afford this upgrade. Sorry!': '金夸克不够，无法升级。很遗憾！',
+    'Sorry, I can\'t give credit. Come back when you\'re a little... mmm... richer!': '抱歉，您的夸克不是太够……请之后再来吧！',
+    'Sorry, I cannnot sell you this many golden quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
+    'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
     //奇点结束
 
     //原样
@@ -2012,6 +2058,8 @@ var cnExcludePostfix = [
 var cnRegReplace = new Map([
     [/^(.+)s until \+(.+) export Quark$/, '距离增加导出奖励$2夸克还有$1秒'], //主脚本
     [/^Quarks on export: (.+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
+    [/^(.+)s until \+(.+) export Golden Quark$/, '距离增加导出奖励$2金夸克还有$1秒'], //主脚本
+    [/^Golden Quarks on export: (.+) \[Max (.+)\]$/, '导出奖励的金夸克总和：$1[最大为$2]'], //主脚本
     [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
     [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
     [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑
@@ -2043,7 +2091,9 @@ var cnRegReplace = new Map([
     [/^Generous patrons give you a bonus of (.+)% more quarks!$/, '由于Patron上的慷慨相助，夸克获取数量增加了$1%！'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑
+    [/^Upgrade \+(.+) for (.+) Quarks$/, '使用$2夸克升级$1级'], //主界面及建筑
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面及建筑
+    [/^Buy! (.+) Quarks Each$/, '进行购买！每个花费$1夸克'], //主界面及建筑
     [/^You have (.+) seconds of Offline Progress!$/, '您的离线时间为$1秒！'], //离线计算
     [/^Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings. Required: (.+)\/1e16 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置金币、金币生产者、金币升级、水晶，获得钻石和一些祭品。需要：$1/1e16金币 || 花费时间：$2秒。'], //重置
     [/^Reset all Coin and Diamond Upgrades\/Features, Crystal Upgrades & Producers, for Mythos\/Offerings. Required: (.+)\/1e100 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：$1/1e100金币 || 花费时间：$2秒。'], //重置
@@ -2267,11 +2317,9 @@ var cnRegReplace = new Map([
     [/^Powder effect: ALL Cube Gain \+(.+)% \[Multiplicative\], \+(.+)% Quarks \[Multiplicative\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%[叠乘]，夸克获取数量增加$2%[叠乘]'], //惊奇方盒
     [/^Powder effect: ALL Cube Gain \+(.+)% \[Multiplicative\], \+(.+)% Quarks \[Multiplicative\], Ascension Count \+(.+)%, Tesseract Building Production x(.+) \[From Platonic Upgrade 4x1\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%[叠乘]，夸克获取数量增加$2%[叠乘]，飞升次数增加$3%，超立方建筑产量变为$4倍[Platonic升级4x1的效果]'], //惊奇方盒
     [/^You have (.+) lumps of Overflux Powder.$/, '您拥有$1超通量粉块。'], //惊奇方盒
-    [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier$/, '当前分数倍率: $1 / 下次飞升分数倍率'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Free Mult Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加倍器指数变为'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Free Multiplier Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加倍器指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Free Accel. Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加速器指数变为'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器指数变为'], //腐化
+    [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier(.*)$/, '当前分数倍率: $1 / 下次飞升分数倍率$2'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Free Accel. and Multipliers Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加速器和加倍器指数变为'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator and Multipliers Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器和加倍器指数变为'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以$2'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by(.*)/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.(.*)$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数$2'], //腐化
@@ -2300,8 +2348,9 @@ var cnRegReplace = new Map([
     [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！由于PL-AT Ω的效果，您同时获得了$3秒的飞升时间！您还有$4次“Add”代码的使用机会。$5秒后可以获得1次。'], //每小时奖励代码
     [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
-    [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //每小时奖励代码
-    [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //每小时奖励代码
+    [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //下注奖励代码
+    [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
+    [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize!$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！'], //时间点击代码
     [/^([e\d\.\,]+)ms$/, '$1毫秒'], //统计数据
     [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
     [/^([\d\.]+)s$/, '$1秒'], //历史统计
@@ -2341,4 +2390,6 @@ var cnRegReplace = new Map([
     [/^You have reached the end of the game, on singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) golden quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
+    [/^You can buy golden quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
+    [/^Transaction of (.+) golden quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
 ]);

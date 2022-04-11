@@ -47,7 +47,7 @@ document.addEventListener('keydown', event => {
     const key = keyPrefix + event.key.toUpperCase();
 
     if (hotkeys.has(key)) {
-        hotkeys.get(key)[1]();
+        hotkeys.get(key)![1]();
     }
 });
 
@@ -58,22 +58,26 @@ const makeSlot = (key: string, descr: string) => {
     const span = document.createElement('span');
     span.id = 'actualHotkey';
     span.textContent = key;
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     span.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement;
+        const oldKey = target.textContent!.toUpperCase();
+        const name = 
+            hotkeys.get(oldKey)?.[0] ?? 
+            target.nextSibling?.textContent;
+
         // new value to set key as, unformatted
         const newKey = await Prompt(`Enter the new key you want to activate ${target.parentNode.querySelector('p').textContent} with. MDN has a list of values for "special keys" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values You can also prefix your hotkey with [Ctrl,Shift,Alt]+<key>`);
 
         if (typeof newKey !== 'string') return;
 
-        // old hotkey
-        const oldKey = target.textContent.toUpperCase();
         const toSet = newKey.toUpperCase();
 
         if (newKey.length === 0)
-            return Alert(`You didn't enter anything, canceled!`);
+            return void Alert(`You didn't enter anything, canceled!`);
 
         if (hotkeys.has(toSet)) {
-            return Alert(`That key is already binded to an action, use another key instead!`);
+            return void Alert(`That key is already binded to an action, use another key instead!`);
         } else if (hotkeys.has(oldKey)) {
             const old = hotkeys.get(oldKey)!;
 
@@ -82,7 +86,7 @@ const makeSlot = (key: string, descr: string) => {
 
             target.textContent = toSet;
         } else {
-            return Alert(`No hotkey is triggered by ${oldKey}!`);
+            return void Alert(`No hotkey is triggered by ${oldKey}!`);
         }
     });
 
@@ -97,7 +101,7 @@ const makeSlot = (key: string, descr: string) => {
 }
 
 export const startHotkeys = () => {
-    const hotkey = document.querySelector('.hotkeys');
+    const hotkey = document.querySelector('.hotkeys')!;
 
     for (const child of Array.from(hotkey.children)) 
         hotkey.removeChild(child);

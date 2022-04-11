@@ -67,9 +67,98 @@ export class SingularityUpgrade {
         const maxLevel = this.maxLevel === -1
             ? ''
             : `/${this.maxLevel}`;
+        let CN_name = this.name;
+        let CN_desc = this.description;
+        if (CN_name == 'Golden Quarks I'){
+            CN_name = '金夸克 I';
+        } else if  (CN_name == 'Golden Quarks II'){
+            CN_name = '金夸克 II';
+        } else if  (CN_name == 'Golden Quarks III'){
+            CN_name = '金夸克 III';
+        } else if  (CN_name == 'Starter Pack'){
+            CN_name = '新手大礼包';
+        } else if  (CN_name == 'Wow Pass Unlock (WIP)'){
+            CN_name = '季票解锁 (暂时如此)';
+        } else if  (CN_name == 'Cookie Recipes I'){
+            CN_name = '饼干配方 I';
+        } else if  (CN_name == 'Cookie Recipes II'){
+            CN_name = '饼干配方 II';
+        } else if  (CN_name == 'Cookie Recipes III'){
+            CN_name = '饼干配方 III';
+        } else if  (CN_name == 'Cookie Recipes IV'){
+            CN_name = '饼干配方 IV';
+        } else if  (CN_name == 'Improved Ascension Gain'){
+            CN_name = '更多飞升次数';
+        } else if  (CN_name == 'Level Fourteen Corruptions'){
+            CN_name = '腐化等级-十四';
+        } else if  (CN_name == 'Level Fifteen Corruptions'){
+            CN_name = '腐化等级-十五';
+        } else if  (CN_name == 'Offering Charge'){
+            CN_name = '祭品充能';
+        } else if  (CN_name == 'Offering Storm'){
+            CN_name = '祭品风暴';
+        } else if  (CN_name == 'Offering Tempest'){
+            CN_name = '祭品狂风';
+        } else if  (CN_name == 'Obtainium Wave'){
+            CN_name = '难得素波浪';
+        } else if  (CN_name == 'Obtainium Flood'){
+            CN_name = '难得素洪峰';
+        } else if  (CN_name == 'Obtainium Tsunami'){
+            CN_name = '难得素海啸';
+        } else if  (CN_name == 'Cube Flame'){
+            CN_name = '方盒之焰';
+        } else if  (CN_name == 'Cube Blaze'){
+            CN_name = '方盒烈火';
+        } else if  (CN_name == 'Cube Inferno'){
+            CN_name = '方盒炼狱';
+        }
 
-        return `${this.name}
-                ${this.description}
+        if (CN_desc == 'In the future, you will gain 5% more Golden Quarks on singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.'){
+            CN_desc = '每级使进入奇点的金夸克获取数量增加5%！同时每级使商店购买金夸克的花费减少500。';
+        } else if  (CN_desc == 'If you buy this, you will gain 2% more Golden Quarks on singularities. This also reduces the cost to buy Golden Quarks in the shop by 200 per level. Stacks with the first upgrade.'){
+            CN_desc = '每级使进入奇点的金夸克获取数量增加2%。同时每级使商店购买金夸克的花费减少200。效果与第一个升级叠加。';
+        } else if  (CN_desc == 'If you buy this, you will gain 1 Golden Quark per hour from Exports. Also reduces the cost to buy Golden Quarks in the shop by 1,000 per level.'){
+            CN_desc = '购买后，每级使每小时导出存档奖励增加1金夸克。同时每级使商店购买金夸克的花费减少1000。';
+        } else if  (CN_desc == 'Buy this! Buy This! Cube gain is permanently multiplied by 5, and gain 6x the Obtainium and Offerings from all sources, post-corruption.'){
+            CN_desc = '买这个就对了！使所有类型的方盒及立方获取数量乘以5，并使最终难得素获取数量和祭品获取数量(计算腐化后)变为6倍。';
+        } else if  (CN_desc == 'This upgrade will convince the seal merchant to sell you more Wow Passes, which even persist on Singularity!.'){
+            CN_desc = '购买后，印记商人将向您出售更多季票，这些季票在进入奇点后等级仍然保留！';
+        } else if  (CN_desc == 'For just a few golden quarks, re-open Wow! Bakery, adding five cookie-related cube upgrades.'){
+            CN_desc = '花费一点金夸克就可以让惊奇烘焙坊重新开张，增加5个跟饼干有关的方盒升级。';
+        } else if  (CN_desc == 'Diversify Wow! Bakery into cooking slightly more exotic cookies, adding five more cookie-related cube upgrades..'){
+            CN_desc = '让惊奇烘焙坊制造更有异国风味的饼干，再增加5个跟饼干有关的方盒升级……';
+        } else if  (CN_desc == 'Your Bakers threaten to quit without a higher pay. If you do pay them, they will bake even more fancy cookies.'){
+            CN_desc = '烘焙师们表示不加薪就辞职了。如果给他们加薪，他们会为您制造更棒的饼干。';
+        } else if  (CN_desc == 'This is a small price to pay for Salvation.'){
+            CN_desc = '天下没有免费的饼干。';
+        } else if  (CN_desc == 'Buying this, you will gain +2% Ascension Count forever, per level! Every 20 levels grants an additional, multiplicative +1% Ascension Count.'){
+            CN_desc = '购买后，每级使飞升次数获取数量增加2%！每20级还可以使飞升次数获取数量额外乘以1.01。';
+        } else if  (CN_desc == 'Buy this to unlock level fourteen corruptions :).'){
+            CN_desc = '购买后解锁腐化等级14。:)';
+        } else if  (CN_desc == 'This doesn\'t *really* raise the corruption limit. Rather, it adds one FREE level to corruption multipliers, no matter what (can exceed cap). :)'){
+            CN_desc = '购买后并*不*会*使腐化等级上限增加，而是使腐化的相关加成倍率直接视为增加1级(可以超过上限)。:)';
+        } else if  (CN_desc == 'Upgrade this to get +2% offerings per level, forever!'){
+            CN_desc = '购买后，每级使祭品获取数量永久增加2%！';
+        } else if  (CN_desc == 'Apparently, you can use this bar to attract more offerings. +8% per level, to be precise.'){
+            CN_desc = '很显然，它可以吸引更多祭品。每级使祭品获取数量永久增加8%。';
+        } else if  (CN_desc == 'This bar is so prestine, it\'ll make anyone submit their offerings. +4% per level, to be precise.'){
+            CN_desc = '它会让所有人乖乖把祭品奉上。每级使祭品获取数量永久增加4%。';
+        } else if  (CN_desc == 'Upgrade this to get +2% obtainium per level, forever!'){
+            CN_desc = '购买后，每级使难得素获取数量永久增加2%！';
+        } else if  (CN_desc == 'Holy crap, water bending! +8% gained obtainium per level.'){
+            CN_desc = '传说中的御水术？！每级使难得素获取数量永久增加8%。';
+        } else if  (CN_desc == 'A rising tide lifts all boats. +4% gained obtainium per level.'){
+            CN_desc = '它卷起了所有船只。每级使难得素获取数量永久增加4%。';
+        } else if  (CN_desc == 'Upgrade this to get +2% Cubes per level, forever!'){
+            CN_desc = '购买后，每级使所有类型的方盒及立方获取数量永久增加2%！';
+        } else if  (CN_desc == 'Burn some more Golden Quarks! +8% gained Cubes per level.'){
+            CN_desc = '再挥霍一些金夸克吧！每级使所有类型的方盒及立方获取数量永久增加8%。';
+        } else if  (CN_desc == 'Even Dante is impressed. +4% gained Cubes per level.'){
+            CN_desc = '连但丁都会为之而惊讶。每级使所有类型的方盒及立方获取数量永久增加4%。';
+        }
+
+        return `${CN_name}
+                ${CN_desc}
                 等级 ${this.level}${maxLevel}
                 下一级的花费：${format(costNextLevel)}金夸克。
                 已花费金夸克数量：${format(this.goldenQuarksInvested, 0, true)}`

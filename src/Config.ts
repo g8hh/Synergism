@@ -1,3 +1,4 @@
-export const version = '2.8.2';
-export const testing = false;
-export const lastUpdated = new Date(Date.UTC(2021, 11, 27, 7, 8, 6));
+export const version = '2.9.0';
+// eslint-disable-next-line
+export const testing: boolean = false;
+export const lastUpdated = new Date(Date.UTC(2022, 3, 10, 23, 30, 6));

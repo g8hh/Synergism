@@ -2362,6 +2362,7 @@ var cnRegReplace = new Map([
     [/^(.+) multi$/, '$1倍率'], //历史统计
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
     [/^Score(.*)$/, '分数$1'], //历史统计
+    [/^Own: (.+)$/, '拥有：$1'], //商店
     [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
     [/^This item is refundable! Will be set to level (.+) when refunded.$/, '您可以重置此项购买！重置后将变为$1级。'], //商店

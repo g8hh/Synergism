@@ -493,7 +493,7 @@ var cnItems = {
     '[200] War, what is it good for?: Clear \'Reduced Ants\' challenge five times.':'[200]战争，是为何而战？：完成五次蚂蚁减少挑战。',
     '[201] Absolutely everything.: Clear \'Reduced Ants\' challenge ten times.':'[201]当然是为了一切。：完成十次蚂蚁减少挑战。',
     '[202] Perfect Storm: Clear \'Reduced Ants\' challenge twenty times.':'[202]祸不单行：完成二十次蚂蚁减少挑战。',
-    '[203] Immaculate Storm: Clear \'Reduced Ants\' challenge thirty times.':'[203]屋漏偏逢连夜雨：完成二十五次蚂蚁减少挑战。',
+    '[203] Immaculate Storm: Clear \'Reduced Ants\' challenge thirty times.':'[203]屋漏偏逢连夜雨：完成三十次蚂蚁减少挑战。',
     '[204] I didn\'t need those stupid reincarnations anyway!: Clear \'No Reincarnation\' challenge once.':'[204]没用的转世说丢就丢！：完成一次无转世挑战。',
     '[205] [x1,x2,0,x3]: Clear \'No Reincarnation\' challenge twice.':'[205][x1,x2,0,x3]：完成两次无转世挑战。',
     '[206] Nonmetaphysical: Clear \'No Reincarnation\' challenge three times.':'[206]非玄学：完成三次无转世挑战。',

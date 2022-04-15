@@ -493,7 +493,7 @@ var cnItems = {
     '[200] War, what is it good for?: Clear \'Reduced Ants\' challenge five times.':'[200]战争，是为何而战？：完成五次蚂蚁减少挑战。',
     '[201] Absolutely everything.: Clear \'Reduced Ants\' challenge ten times.':'[201]当然是为了一切。：完成十次蚂蚁减少挑战。',
     '[202] Perfect Storm: Clear \'Reduced Ants\' challenge twenty times.':'[202]祸不单行：完成二十次蚂蚁减少挑战。',
-    '[203] Immaculate Storm: Clear \'Reduced Ants\' challenge thirty times.':'[203]屋漏偏逢连夜雨：完成二十五次蚂蚁减少挑战。',
+    '[203] Immaculate Storm: Clear \'Reduced Ants\' challenge thirty times.':'[203]屋漏偏逢连夜雨：完成三十次蚂蚁减少挑战。',
     '[204] I didn\'t need those stupid reincarnations anyway!: Clear \'No Reincarnation\' challenge once.':'[204]没用的转世说丢就丢！：完成一次无转世挑战。',
     '[205] [x1,x2,0,x3]: Clear \'No Reincarnation\' challenge twice.':'[205][x1,x2,0,x3]：完成两次无转世挑战。',
     '[206] Nonmetaphysical: Clear \'No Reincarnation\' challenge three times.':'[206]非玄学：完成三次无转世挑战。',
@@ -1440,7 +1440,7 @@ var cnItems = {
     '[Cx16] You just wish you could have one more cookie baked by her. Gain 2x all cubes until you purchase OMEGA.': '[Cx16]您永远吃不腻的饼干。在购买Platonic Omega升级之前，使所有类型的方盒及立方产量翻倍。',
     '[Cx17] What the hell are in these??? Anyway, Metaphysics Talisman level cap is increased by 1,337.': '[Cx17]这里面都是什么玩意？？？不管了，总之玄学护身符的等级上限增加1337。',
     '[Cx18] What the heck! These aren\'t even cookies. +0.02% Quarks per level purchased of this upgrade. +30% more at level 1,000!': '[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.02%，达到等级上限1000时可以使夸克获取数量增加30%！',
-    '[Cx19] Cookies that you\'ll never remember again. +12% Golden Quarks this singularity.': '[Cx19]永远无法再回忆起来的饼干。使本次奇点的金夸克获取数量增加12%。',
+    '[Cx19] Cookies that you\'ll never remember again. +12% Golden Quarks this singularity.': '[Cx19]永远无法再回忆起来的饼干。使本次进入奇点的金夸克获取数量增加12%。',
     '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +4% more cubes on ascension if you have challenge 10 completions capped.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果您的挑战10完成次数达到了上限，则使飞升时所有类型的方盒及立方产量增加4%。',
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
     'Upgrade: 1 Level wow': '升级：1级(惊奇)',
@@ -1659,7 +1659,7 @@ var cnItems = {
     'Scared? You should be!': '怂了吗？也不失为明智之举！',
     'How many quarks are you putting up?': '您要下注多少夸克？',
     'Can\'t bet that!': '无法下注那个数量！',
-    'Due to cheaters, you can only bet 1k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为1000。',
+    'Due to cheaters, you can only bet 10k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为10000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
     'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',
@@ -1667,7 +1667,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.0 - The Reality Update pt.1 [Last Update: 7:30 UTC 11-Apr-2022].': '您目前玩的版本为V2.9.0 - 现实升级第一部分 [2022年4月11日 UTC 7:30更新]。',
+    'You\'re playing v2.9.1 - The Reality Update pt.1 [Last Update: 7:30 UTC 11-Apr-2022].': '您目前玩的版本为V2.9.1 - 现实升级第一部分 [2022年4月11日 UTC 7:30更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1861,7 +1861,7 @@ var cnItems = {
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
     'Okay, fine. Here\'s another +0.5% Ascension Speed per level, stacks multiplicatively with the first upgrade!': '嗯，很好。飞升的速度每级再增加0.5%，效果与第一个升级叠乘！',
-    'OKAY. FINE. Here\'s yet ANOTHER +1% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1%，效果与之前类似，也是叠乘计算。',
+    'OKAY. FINE. Here\'s yet ANOTHER +1% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1.5%，效果与之前类似，也是叠乘计算。',
     'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒及立方获取数量增加0.5%。',
     'This one is arguably very good. Gain +1% ALL Cubes per level, per singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒及立方获取数量增加1%！',
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
@@ -2362,6 +2362,7 @@ var cnRegReplace = new Map([
     [/^(.+) multi$/, '$1倍率'], //历史统计
     [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
     [/^Score(.*)$/, '分数$1'], //历史统计
+    [/^Own: (.+)$/, '拥有：$1'], //商店
     [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
     [/^This item is refundable! Will be set to level (.+) when refunded.$/, '您可以重置此项购买！重置后将变为$1级。'], //商店

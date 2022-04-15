@@ -305,8 +305,8 @@ export const promocodes = async () => {
         const bet = Number(await Prompt('How many quarks are you putting up?'));
         if (Number.isNaN(bet) || bet <= 0)
             return el.textContent = 'Can\'t bet that!';
-        else if (bet > 1e3)
-            return el.textContent = `Due to cheaters, you can only bet 1k max.`;
+        else if (bet > 1e4)
+            return el.textContent = `Due to cheaters, you can only bet 10k max.`;
         else if (Number(player.worlds) < bet)
             return el.textContent = 'Can\'t bet what you don\'t have.';
 

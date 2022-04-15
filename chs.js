@@ -1659,7 +1659,7 @@ var cnItems = {
     'Scared? You should be!': '怂了吗？也不失为明智之举！',
     'How many quarks are you putting up?': '您要下注多少夸克？',
     'Can\'t bet that!': '无法下注那个数量！',
-    'Due to cheaters, you can only bet 1k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为1000。',
+    'Due to cheaters, you can only bet 10k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为10000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
     'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',

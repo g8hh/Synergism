@@ -1732,7 +1732,7 @@ var cnItems = {
     'Platonic BETA': 'PLATONIC BETA升级(第二排最后一个)',
     'Platonic OMEGA': 'PLATONIC OMEGA升级(第三排最后一个)',
     'Starter Pack': '新手大礼包',
-    'Offering Charge [GQ]': '祭品充能[金夸克]',
+    'Offering Charge [GQ]': '祭品增压[金夸克]',
     'Offering Storm [GQ]': '祭品风暴[金夸克]',
     'Offering Tempest [GQ]': '祭品狂风[金夸克]',
     'Cube Upgrade C': '方盒升级C',

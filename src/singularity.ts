@@ -94,7 +94,7 @@ export class SingularityUpgrade {
         } else if  (CN_name == 'Level Fifteen Corruptions'){
             CN_name = '腐化等级-十五';
         } else if  (CN_name == 'Offering Charge'){
-            CN_name = '祭品充能';
+            CN_name = '祭品增压';
         } else if  (CN_name == 'Offering Storm'){
             CN_name = '祭品风暴';
         } else if  (CN_name == 'Offering Tempest'){

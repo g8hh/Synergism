@@ -691,7 +691,7 @@ var cnItems = {
     'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract!': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！',
     'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
     'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
-    'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44!': '奖励：10成就点数。400夸克！蚂蚁速度永远变为4.44倍！',
+    'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44!': '奖励：10成就点数。400夸克！蚂蚁速度永久变为4.44倍！',
     'Reward: 10 AP. 400 Quarks! You immediately start Singularities with 1 transcension and 1001 mythos!': '奖励：10成就点数。400夸克！进入奇点后直接获得1次超越和1001神话！',
     'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 1 reincarnation, and 10 particles!': '奖励：20成就点数。800夸克！进入奇点后直接获得1次转世和10粒子！',
     'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 500 obtainium!': '奖励：20成就点数。800夸克！进入奇点后直接获得500难得素！',

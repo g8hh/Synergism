@@ -564,6 +564,13 @@ var cnItems = {
     '[271] LARGE BOY: Achieve a constant of 1e100,000.':'[271]小伙子：达到1e100000的数学常数。',
     '[272] LARGER BOY: Achieve a constant of 1e300,000.':'[272]中伙子：达到1e300000的数学常数。',
     '[273] LARGEST BOY: Achieve a constant of 1e1,000,000.':'[273]大伙子：达到1e1000000的数学常数。',
+    '[274] Power Creep: Singularity 1 time.':'[274]能力膨胀：进入奇点1次。',
+    '[275] Have you enough cubes?: Singularity 2 times.':'[275]方盒还够么？：进入奇点2次。',
+    '[276] Singularity: Singularity 3 times.':'[276]进入奇点：进入奇点3次。',
+    '[277] SingularRity: Singularity 4 times.':'[277]进入奇奇点：进入奇点4次。',
+    '[278] SiINguLaRrRity: Singularity 5 times.':'[278]进入入奇奇点：进入奇点5次。',
+    '[279] SiIINGuLArRrIiTyY: Singularity 7 times.':'[279]进进入入奇奇点点：进入奇点7次。',
+    '[280] Inception: Singularity 10 times.':'[280]创始：进入奇点10次。',
     'Reward: 4 AP. 4 Quarks! Gain +.05% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.05%的加速器效果。',
     'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Worker Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁工人自动购买。',
     'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Workers owned.': '奖励：8成就点数。8夸克！每拥有500个工人，就获得1个加速器。',
@@ -684,6 +691,13 @@ var cnItems = {
     'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract!': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！',
     'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
     'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
+    'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44!': '奖励：10成就点数。400夸克！蚂蚁速度永远变为4.44倍！',
+    'Reward: 10 AP. 400 Quarks! You immediately start Singularities with 1 transcension and 1001 mythos!': '奖励：10成就点数。400夸克！进入奇点后直接获得1次超越和1001神话！',
+    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 1 reincarnation, and 10 particles!': '奖励：20成就点数。800夸克！进入奇点后直接获得1次转世和10粒子！',
+    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 500 obtainium!': '奖励：20成就点数。800夸克！进入奇点后直接获得500难得素！',
+    'Reward: 30 AP. 1,200 Quarks! Gain 5% more Quarks, permanently!': '奖励：30成就点数。1200夸克！夸克获取数量永久增加5%！',
+    'Reward: 40 AP. 1,600 Quarks! You immediately start Singularities with a Challenge 7 completion and 1e100 particles.': '奖励：40成就点数。1600夸克！进入奇点后直接完成一次挑战7，并获得1e100粒子。',
+    'Reward: 50 AP. 2,000 Quarks! You immediately start Singularities with 1 Challenge 8 completion and 1 tier 1 ant.': '奖励：50成就点数。2000夸克！进入奇点后直接完成一次挑战8，并获得一只工蚁。',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
     'Green background: Achieved.': '绿色背景：成就已完成。',
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
@@ -1494,7 +1508,7 @@ var cnItems = {
     '0.045% hypercubes per corruption level per level!': '0.045%飞升时五阶立方获取数量于每腐化等级每级此升级！',
     'Gain +2% Platonic Cubes per level! It is that simple.': '每级此升级增加2%的PLATONIC方盒获取数量！简单明了。',
     'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster constant production, +10/+5 Challenge caps, 2x Obtainium/Offerings, ^1.10 coin gain in C15!': 'C10的分数倍率的指数从1.035变为变为1.0375，数学常数减缓税收的指数增加0.1，数学常数产量变为2倍，挑战上限次数分别增加10和5，难得素和祭品获取数量翻倍，在挑战15中金币产量变为金币产量^1.10！',
-    'Raises corruption 1 exponent ^(1 + level/30), capacity of ^1 on Viscosity.': '将腐化：粘性的效果指数乘以(1+此升级等级/30)，但效果指数不能超过1。',
+    'Multiplies Viscocity exponent by (1 + level/30), capacity of ^1 on Mult/Accel.': '将腐化：粘性的效果指数乘以(1+此升级等级/30)，但效果指数不能超过1。',
     'Raises speed below 1x to the power of ^(1 - level/30).': '全局速度低于1倍时，将速度变为速度的(1-(此升级等级/30))次方。',
     'Divides Hyperchallenged by (1 + 0.4 * level), with a minimum 1x challenge req. multiplier!': '将腐化：极致挑战的效果指数除以(1+0.4*此升级等级)，但效果指数不能低于1！',
     'Raise Obtainium to the power of (1+(0.09*log10(Obt owned))) and add another x2.5 multiplier (uncorruptable), up until 1e100 Obtainium!': '难得素获取数量变为原来的(1+(0.09*log10(难得素当前数量)))次方，并且使难得素获取数量变为2.5倍(不受腐化影响)，最高到1e100难得素！',
@@ -1667,13 +1681,13 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.1 - The Reality Update pt.1 [Last Update: 7:30 UTC 11-Apr-2022].': '您目前玩的版本为V2.9.1 - 现实升级第一部分 [2022年4月11日 UTC 7:30更新]。',
+    'You\'re playing v2.9.2 - The Reality Update pt.1 [Last Update: 7:30 UTC 3-May-2022].': '您目前玩的版本为V2.9.2 - 现实升级第一部分 [2022年5月3日 UTC 7:30更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +100% Quarks from all sources, +100% All Cube Types, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量翻倍，所有类型的方盒及立方获取数量翻倍，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
-    '💗 Happy Holidays! 💗': '💗节日快乐！💗',
+    'Current Buffs: +200% Quarks from all sources, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量增加200%，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
+    '💗 Happy Two Year Anniversary! 💗': '💗两周年快乐！💗',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1903,7 +1917,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Mon Jan 03 2022 23:59:59 GMT+0800 (": "活动持续到2022年1月3日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sat May 07 2022 23:59:59 GMT+0800 (": "活动持续到2022年5月7日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

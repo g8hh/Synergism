@@ -225,7 +225,7 @@ const resetHistoryCorruptionImages = [
 const resetHistoryCorruptionTitles = [
     "腐化：分歧[加倍器]",
     "腐化：适应不良[加速器]",
-    "腐化：空间膨胀[时间速度]",
+    "腐化：空间膨胀[全局速度]",
     "腐化：极致挑战[挑战需求]",
     "腐化：科盲[难得素]",
     "腐化：市场通缩[钻石]",

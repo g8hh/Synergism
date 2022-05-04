@@ -31,6 +31,7 @@ export interface ISingularityData {
     costPerLevel: number
     toggleBuy?: number
     goldenQuarksInvested?: number
+    minimumSingularity?: number
 }
 
 /**
@@ -47,8 +48,10 @@ export class SingularityUpgrade {
     private readonly costPerLevel: number; 
     public toggleBuy = 1; //-1 = buy MAX (or 1000 in case of infinity levels!)
     public goldenQuarksInvested = 0;
+    private readonly minimumSingularity: number;
 
     public constructor(data: ISingularityData) {
+        console.log(data.name)
         this.name = data.name;
         this.description = data.description;
         this.level = data.level ?? this.level;
@@ -56,6 +59,8 @@ export class SingularityUpgrade {
         this.costPerLevel = data.costPerLevel;
         this.toggleBuy = data.toggleBuy ?? 1;
         this.goldenQuarksInvested = data.goldenQuarksInvested ?? 0;
+        console.log(data.minimumSingularity)
+        this.minimumSingularity = data.minimumSingularity ?? 0;
     }
 
     /**
@@ -111,6 +116,10 @@ export class SingularityUpgrade {
             CN_name = '方盒烈火';
         } else if  (CN_name == 'Cube Inferno'){
             CN_name = '方盒炼狱';
+        } else if  (CN_name == 'Octeracts ;) (WIP)'){
+            CN_name = '惊奇八阶立方;)(未实装)';
+        } else if  (CN_name == 'Offering Lootzifer (WIP)'){
+            CN_name = '祭品自动获取(未实装)';
         }
 
         if (CN_desc == 'In the future, you will gain 5% more Golden Quarks on singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.'){
@@ -155,10 +164,19 @@ export class SingularityUpgrade {
             CN_desc = '再挥霍一些金夸克吧！每级使所有类型的方盒及立方获取数量永久增加8%。';
         } else if  (CN_desc == 'Even Dante is impressed. +4% gained Cubes per level.'){
             CN_desc = '连但丁都会为之而惊讶。每级使所有类型的方盒及立方获取数量永久增加4%。';
+        } else if  (CN_desc == 'Hey!!! What are you trying to do?!?'){
+            CN_desc = '喂！！！您到底要做什么？！？';
+        } else if  (CN_desc == 'Black Magic. Don\'t make deals with the devil. Each second, you get +2% of offering gain automatically per level. Also +10% Offerings!'){
+            CN_desc = '利用黑暗魔法强化自身。别和魔鬼做交易。每级使您自动获得祭品获取数量2%的祭品。另外还使祭品获取数量增加10%！';
         }
+
+        const minimumSingularity = this.minimumSingularity > 0
+            ? `最少需要进入奇点次数：${this.minimumSingularity}`
+            : `无进入奇点次数要求`
 
         return `${CN_name}
                 ${CN_desc}
+                ${minimumSingularity}
                 等级 ${this.level}${maxLevel}
                 下一级的花费：${format(costNextLevel)}金夸克。
                 已花费金夸克数量：${format(this.goldenQuarksInvested, 0, true)}`
@@ -192,6 +210,8 @@ export class SingularityUpgrade {
         if (maxPurchasable === 0)
             return Alert("hey! You have already maxxed this upgrade. :D")
 
+        if (player.singularityCount < this.minimumSingularity)
+            return Alert("you're not powerful enough to purchase this yet.")
         while (maxPurchasable > 0) {
             const cost = this.getCostTNL();
             if (player.goldenQuarks < cost) {
@@ -374,6 +394,20 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         maxLevel: 40,
         costPerLevel: 500
     },
+    octeractUnlock: {
+        name: "Octeracts ;) (WIP)",
+        description: "Hey!!! What are you trying to do?!?",
+        maxLevel: 1,
+        costPerLevel: 8888,
+        minimumSingularity: 10,
+    },
+    offeringAutomatic: {
+        name: "Offering Lootzifer (WIP)",
+        description: "Black Magic. Don't make deals with the devil. Each second, you get +2% of offering gain automatically per level. Also +10% Offerings!",
+        maxLevel: 50,
+        costPerLevel: 2000,
+        minimumSingularity: 6,
+    }
 }
 
 export const getGoldenQuarkCost = () => {

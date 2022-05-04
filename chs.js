@@ -1446,8 +1446,8 @@ var cnItems = {
     '[Cx8] A bit festive! If there is an event, All Cube gain is multiplied by 1.25.': '[Cx8]再增添一些节日的气息！如果有活动，则使所有类型的方盒及立方产量乘以1.25。',
     '[Cx9] Quite sour for a cookie. But it increases your ascension speed by 0.25% per level, so who is to complain?': '[Cx9]很酸很酸。但它每级可以使飞升的速度增加0.25%，所以估计没什么人会抱怨了。',
     '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使购买金夸克的夸克花费减少1。',
-    '[Cx11] Edible but prone to mistakes. Adds five whole milliseconds to the tolerance of code \'time\'.': '[Cx11]吃起来是没啥问题，但容易出错。使输入代码 time 的时间间隔容错增加5毫秒。',
-    '[Cx12] Platonic loves toffee. Triple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为3倍。',
+    '[Cx11] Edible but prone to mistakes. Adds five whole milliseconds to the tolerance of code \'time\', and increases reward by +11% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加5毫秒，且奖励增加11%。',
+    '[Cx12] Platonic loves toffee. Octuple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为8倍。',
     '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使普通方盒和立方的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
     '[Cx14] Some say the ant god itself penned these fortunes. When you gain a statue from Platonic Cubes, you gain two instead.': '[Cx14]有人说这是蚁神的造物。当您开启PLATONIC方盒获得塑像时，使获取量翻倍。',
     '[Cx15] That\'s amore, but is quite a crumbful! Increase ant efficiency by 0.4%. (Roughly every 200 ants purchased doubles crumb production!': '[Cx15]香脆可口，但又易碎！使蚂蚁效率增加0.4%。(每购买200只蚂蚁差不多就可以使银河碎屑翻倍！',
@@ -1455,7 +1455,7 @@ var cnItems = {
     '[Cx17] What the hell are in these??? Anyway, Metaphysics Talisman level cap is increased by 1,337.': '[Cx17]这里面都是什么玩意？？？不管了，总之玄学护身符的等级上限增加1337。',
     '[Cx18] What the heck! These aren\'t even cookies. +0.02% Quarks per level purchased of this upgrade. +30% more at level 1,000!': '[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.02%，达到等级上限1000时可以使夸克获取数量增加30%！',
     '[Cx19] Cookies that you\'ll never remember again. +12% Golden Quarks this singularity.': '[Cx19]永远无法再回忆起来的饼干。使本次进入奇点的金夸克获取数量增加12%。',
-    '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +4% more cubes on ascension if you have challenge 10 completions capped.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果您的挑战10完成次数达到了上限，则使飞升时所有类型的方盒及立方产量增加4%。',
+    '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +0.01% more Octeracts on ascension if you have challenge 10 completions capped.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果您的挑战10完成次数达到了上限，则使飞升时惊奇八阶立方产量增加0.01%。',
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
     'Upgrade: 1 Level wow': '升级：1级(惊奇)',
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
@@ -1676,7 +1676,6 @@ var cnItems = {
     'Due to cheaters, you can only bet 10k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为10000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
     'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
-    'You clicked at the right time! [+500 Quarkies]': '您点击的时机很好！[增加500夸克]',
     'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
@@ -1901,6 +1900,7 @@ var cnItems = {
     'If you decide to change your mind, let me know. -Ant God': '改变主意的话，可以再来找我。————蚁神',
     ' NOTE: WIP. This will be expanded on soon.': '注意：暂时如此。内容随时可能扩展。',
     'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
+    'you\'re not powerful enough to purchase this yet.': '您还不够强大，无法升级。',
     'You cannot afford this upgrade. Sorry!': '金夸克不够，无法升级。很遗憾！',
     'Sorry, I can\'t give credit. Come back when you\'re a little... mmm... richer!': '抱歉，您的夸克不是太够……请之后再来吧！',
     'Sorry, I cannnot sell you this many golden quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
@@ -2334,8 +2334,8 @@ var cnRegReplace = new Map([
     [/^Current Score Multiplier: (.+)\/ Next Ascension Score Multiplier(.*)$/, '当前分数倍率: $1 / 下次飞升分数倍率$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Free Accel. and Multipliers Exponent \^$/, '本次飞升，此腐化等级为$1。效果为：免费加速器和加倍器指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Free Accelerator and Multipliers Exponent \^$/, '下次飞升，此腐化等级将变为$1。效果为：免费加速器和加倍器指数变为'], //腐化
-    [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：时间速度除以$2'], //腐化
-    [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by(.*)/, '下次飞升，此腐化等级将变为$1。效果为：时间速度除以$2'], //腐化
+    [/^On this Ascension, this corruption is level (.+). Effect: Time Speed is divided by(.*)$/, '本次飞升，此腐化等级为$1。效果为：全局速度除以$2'], //腐化
+    [/^On next Ascension, this corruption will be level (.+). Effect: Time is divided by(.*)/, '下次飞升，此腐化等级将变为$1。效果为：全局速度除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Challenge Exponent Reqs.(.*)$/, '本次飞升，此腐化等级为$1。效果为：挑战需求指数$2'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Challenge Exponent Reqs.(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：挑战需求指数$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Obtainium gain \^$/, '本次飞升，此腐化等级为$1。效果为：难得素获取数量指数变为'], //腐化
@@ -2365,6 +2365,7 @@ var cnRegReplace = new Map([
     [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //下注奖励代码
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
     [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize!$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！'], //时间点击代码
+    [/^You clicked at the right time! \[\+(.+) Quarkies\]$/, '您点击的时机很好！[增加$1夸克]'], //时间点击代码
     [/^([e\d\.\,]+)ms$/, '$1毫秒'], //统计数据
     [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
     [/^([\d\.]+)s$/, '$1秒'], //历史统计

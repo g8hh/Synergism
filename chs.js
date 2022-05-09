@@ -1905,6 +1905,7 @@ var cnItems = {
     'Sorry, I can\'t give credit. Come back when you\'re a little... mmm... richer!': '抱歉，您的夸克不是太够……请之后再来吧！',
     'Sorry, I cannnot sell you this many golden quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
+    'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
     //奇点结束
 
     //原样

@@ -691,12 +691,12 @@ var cnItems = {
     'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract!': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！',
     'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
     'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
-    'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44!': '奖励：10成就点数。400夸克！蚂蚁速度永久变为4.44倍！',
+    'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44! Platonic Upgrades now BuyMax whenever affordable!': '奖励：10成就点数。400夸克！蚂蚁速度永久变为4.44倍！只要资源充足，将最大化购买PLATONIC方盒升级！',
     'Reward: 10 AP. 400 Quarks! You immediately start Singularities with 1 transcension and 1001 mythos!': '奖励：10成就点数。400夸克！进入奇点后直接获得1次超越和1001神话！',
     'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 1 reincarnation, and 10 particles!': '奖励：20成就点数。800夸克！进入奇点后直接获得1次转世和10粒子！',
     'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 500 obtainium!': '奖励：20成就点数。800夸克！进入奇点后直接获得500难得素！',
     'Reward: 30 AP. 1,200 Quarks! Gain 5% more Quarks, permanently!': '奖励：30成就点数。1200夸克！夸克获取数量永久增加5%！',
-    'Reward: 40 AP. 1,600 Quarks! You immediately start Singularities with a Challenge 7 completion and 1e100 particles.': '奖励：40成就点数。1600夸克！进入奇点后直接完成一次挑战7，并获得1e100粒子。',
+    'Reward: 40 AP. 1,600 Quarks! You immediately start Singularities with a Challenge 7 completion and 1e100 particles. Talismans now buff all runes at all times!': '奖励：40成就点数。1600夸克！进入奇点后直接完成一次挑战7，并获得1e100粒子。护身符的额外等级对所有符文均生效！',
     'Reward: 50 AP. 2,000 Quarks! You immediately start Singularities with 1 Challenge 8 completion and 1 tier 1 ant.': '奖励：50成就点数。2000夸克！进入奇点后直接完成一次挑战8，并获得一只工蚁。',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
     'Green background: Achieved.': '绿色背景：成就已完成。',
@@ -1680,7 +1680,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.3 - The Reality Update pt.1 [Last Update: 2:7 UTC 5-May-2022].': '您目前玩的版本为V2.9.3 - 现实升级第一部分 [2022年5月5日 UTC 2:7更新]。',
+    'You\'re playing v2.9.4 - The Reality Update pt.1 [Last Update: 5:42 UTC 16-May-2022].': '您目前玩的版本为V2.9.4 - 现实升级第一部分 [2022年5月16日 UTC 5:42更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2356,12 +2356,12 @@ var cnRegReplace = new Map([
     [/^Thank you for playing today! You have gained (.+) Quarks and (.+) Golden Quarks based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克及$2金夸克！'], //每日奖励代码
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use\?$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！由于PL-AT Ω的效果，您同时获得了$6秒的飞升时间！您还有$7次“Add”代码的使用机会。$8秒后可以获得1次。'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克[Patreon加成了$5]！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks  You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。您还有$5次“Add”代码的使用机会。$6秒后可以获得1次。'], //每小时奖励代码
     [/^For (.+) quarks or nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
     [/^For (.+) quarks or nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
-    [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！由于PL-AT Ω的效果，您同时获得了$3秒的飞升时间！您还有$4次“Add”代码的使用机会。$5秒后可以获得1次。'], //每小时奖励代码
-    [/^You were awarded (.+) quarks \[(.+) from Patreon Boost\]!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克[Patreon加成了$2]！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
+    [/^You were awarded (.+) quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！由于PL-AT Ω的效果，您同时获得了$2秒的飞升时间！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
+    [/^You were awarded (.+) quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！您还有$2次“Add”代码的使用机会。$3秒后可以获得1次。'], //每小时奖励代码
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //下注奖励代码
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码

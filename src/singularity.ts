@@ -118,6 +118,16 @@ export class SingularityUpgrade {
             CN_name = '惊奇八阶立方;)(未实装)';
         } else if  (CN_name == 'Offering Lootzifer (WIP)'){
             CN_name = '祭品自动获取(未实装)';
+        } else if  (CN_name == 'Intermediate Pack'){
+            CN_name = '中级礼包';
+        } else if  (CN_name == 'Advanced Pack'){
+            CN_name = '高级礼包';
+        } else if  (CN_name == 'Expert Pack'){
+            CN_name = '专家礼包';
+        } else if  (CN_name == 'Master Pack'){
+            CN_name = '大师礼包';
+        } else if  (CN_name == 'Divine Pack'){
+            CN_name = '神圣礼包';
         }
 
         if (CN_desc == 'In the future, you will gain 5% more Golden Quarks on singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.'){
@@ -166,6 +176,16 @@ export class SingularityUpgrade {
             CN_desc = '喂！！！您到底要做什么？！？';
         } else if  (CN_desc == 'Black Magic. Don\'t make deals with the devil. Each second, you get +2% of offering gain automatically per level. Also +10% Offerings!'){
             CN_desc = '利用黑暗魔法强化自身。别和魔鬼做交易。每级使您自动获得祭品获取数量2%的祭品。另外还使祭品获取数量增加10%！';
+        } else if  (CN_desc == 'Double Global Speed, Multiply Ascension speed by 1.5, and gain +2% Quarks forever. Yum... 2% Quark Milk.'){
+            CN_desc = '使全局速度翻倍，飞升的速度变为1.5倍，夸克获取数量增加2%。';
+        } else if  (CN_desc == 'Now we\'re cooking with kerosene! Gain +4% Quarks stack with intermediate, +0.33 to all corruption score multipliers, regardless of level!'){
+            CN_desc = '好上加好！使夸克获取数量增加4%(可以与中级礼包叠加)，并使所有腐化(等级不限)的分数倍率增加0.33！';
+        } else if  (CN_desc == 'That\'s a handful! Gain +6% Quarks stack with advanced, 1.5x Ascension Score, Code \'add\' gives 1.2x Ascension Timer.'){
+            CN_desc = '越来越难控制了！使夸克获取数量增加6%(可以与高级礼包叠加)，飞升分数变为1.5倍，输入代码 add 的飞升时间奖励变为1.2倍。';
+        } else if  (CN_desc == 'A tad insane. Gain +8% Quarks stack with expert, for every level 14 corruption, ascension score is multiplied by 1.1.'){
+            CN_desc = '有点疯狂了。使夸克获取数量增加8%(可以与专家礼包叠加)，每有一个腐化等级达到14，就使飞升分数变为1.1倍。';
+        } else if  (CN_desc == 'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14. Also unlock Platonic Upgrade autobuyers!'){
+            CN_desc = '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级全部为14，则使八阶立方获取数量变为7.77倍。解锁PLATONIC方盒升级自动购买！';
         }
 
         const minimumSingularity = this.minimumSingularity > 0
@@ -412,6 +432,41 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         maxLevel: 50,
         costPerLevel: 2000,
         minimumSingularity: 6
+    },
+    intermediatePack: {
+        name: 'Intermediate Pack',
+        description: 'Double Global Speed, Multiply Ascension speed by 1.5, and gain +2% Quarks forever. Yum... 2% Quark Milk.',
+        maxLevel: 1,
+        costPerLevel: 1,
+        minimumSingularity: 4
+    },
+    advancedPack: {
+        name: 'Advanced Pack',
+        description: 'Now we\'re cooking with kerosene! Gain +4% Quarks stack with intermediate, +0.33 to all corruption score multipliers, regardless of level!',
+        maxLevel: 1,
+        costPerLevel: 200,
+        minimumSingularity: 9
+    },
+    expertPack: {
+        name: 'Expert Pack',
+        description: 'That\'s a handful! Gain +6% Quarks stack with advanced, 1.5x Ascension Score, Code \'add\' gives 1.2x Ascension Timer.',
+        maxLevel: 1,
+        costPerLevel: 800,
+        minimumSingularity: 16
+    },
+    masterPack: {
+        name: 'Master Pack',
+        description: 'A tad insane. Gain +8% Quarks stack with expert, for every level 14 corruption, ascension score is multiplied by 1.1.',
+        maxLevel: 1,
+        costPerLevel: 3200,
+        minimumSingularity: 25
+    },
+    divinePack: {
+        name: 'Divine Pack',
+        description: 'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14. Also unlock Platonic Upgrade autobuyers!',
+        maxLevel: 1,
+        costPerLevel: 12800,
+        minimumSingularity: 36
     }
 }
 

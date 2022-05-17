@@ -128,6 +128,8 @@ export class SingularityUpgrade {
             CN_name = '大师礼包';
         } else if  (CN_name == 'Divine Pack'){
             CN_name = '神圣礼包';
+        } else if  (CN_name == 'Shop Liquidation Sale'){
+            CN_name = '商店清仓大甩卖';
         }
 
         if (CN_desc == 'In the future, you will gain 5% more Golden Quarks on singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.'){
@@ -186,6 +188,8 @@ export class SingularityUpgrade {
             CN_desc = '有点疯狂了。使夸克获取数量增加8%(可以与专家礼包叠加)，每有一个腐化等级达到14，就使飞升分数变为1.1倍。';
         } else if  (CN_desc == 'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14. Also unlock Platonic Upgrade autobuyers!'){
             CN_desc = '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级全部为14，则使八阶立方获取数量变为7.77倍。解锁PLATONIC方盒升级自动购买！';
+        } else if  (CN_desc == 'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.'){
+            CN_desc = '印记商人想要抛售掉一些奇异商品。价格的确是有点高昂了。大甩卖大概不是这个样子的。';
         }
 
         const minimumSingularity = this.minimumSingularity > 0
@@ -467,6 +471,13 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         maxLevel: 1,
         costPerLevel: 12800,
         minimumSingularity: 36
+    },
+    wowPass2: {
+        name: 'Shop Liquidation Sale',
+        description: 'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.',
+        maxLevel: 1,
+        costPerLevel: 49999,
+        minimumSingularity: 11
     }
 }
 
@@ -551,12 +562,12 @@ export const calculateSingularityDebuff = (debuff: SingularityDebuffs) => {
         effectiveSingularities *= Math.min(4, 1.25 * player.singularityCount / 10 - 0.25)
     }
     if (player.singularityCount > 25) {
-        effectiveSingularities *= 2
-        effectiveSingularities *= Math.min(4, 1.5 * player.singularityCount / 25 - 0.5)
+        effectiveSingularities *= 2.5
+        effectiveSingularities *= Math.min(6, 1.5 * player.singularityCount / 25 - 0.5)
     }
     if (player.singularityCount > 50) {
-        effectiveSingularities *= 4
-        effectiveSingularities *= Math.min(4, 2 * player.singularityCount / 50 - 1)
+        effectiveSingularities *= 6
+        effectiveSingularities *= Math.min(8, 2 * player.singularityCount / 50 - 1)
     }
     if (player.singularityCount > 100) {
         effectiveSingularities *= player.singularityCount / 25

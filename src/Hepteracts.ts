@@ -295,7 +295,7 @@ export const hepteractDescriptions = (type: hepteractTypes) => {
             effectText.textContent = 'One pound, two pound fish, fishy grant +0.05% Quarks per Quark Hepteract fish fish.'
             currentEffectText.textContent = 'Current Effect: Quarks +' + format(hepteractEffective('quark') * 5 / 100, 2, true) + '%'
             balanceText.textContent = 'Inventory: ' + format(player.hepteractCrafts.quark.BAL, 0, true) + ' / ' + format(player.hepteractCrafts.quark.CAP)
-            costText.textContent = 'One of these will cost you ' + format(player.hepteractCrafts.quark.HEPTERACT_CONVERSION, 0, true) + ' Hepteracts and 100 Quarks.'
+            costText.textContent = '锻造一个将消耗' + format(player.hepteractCrafts.quark.HEPTERACT_CONVERSION, 0, true) + '七阶立方及100夸克'
             break;
         case 'challenge':
             unlockedText.textContent = (player.hepteractCrafts.challenge.UNLOCKED) ? '< UNLOCKED >': '< LOCKED >'
@@ -371,7 +371,11 @@ export const tradeHepteractToOverfluxOrb = async () => {
     player.wowAbyssals -= 250000 * buyAmount
     const afterEffect = calculateCubeQuarkMultiplier();
 
-    return Alert('You have purchased ' + format(buyAmount, 0, true) + ` Overflux Orbs [+${format(100 * (afterEffect - beforeEffect), 2, true)}% to effect]. Enjoy!`)
+    const powderGain = player.shopUpgrades.powderAuto * calculatePowderConversion().mult * buyAmount / 100
+    player.overfluxPowder += powderGain
+
+    const powderText = (powderGain > 0) ? `You have also gained ${format(powderGain, 2, true)} powder immediately, thanks to your shop upgrades.` : ''
+    return Alert('You have purchased ' + format(buyAmount, 0, true) + ` Overflux Orbs [+${format(100 * (afterEffect - beforeEffect), 2, true)}% to effect]. ${powderText} Enjoy!`)
 
 }
 

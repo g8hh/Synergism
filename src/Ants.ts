@@ -65,18 +65,18 @@ export const calculateCrumbToCoinExp = () => {
 }
 
 const antUpgradeTexts = [
-    () => 'ALL Ants work at ' + format(Decimal.pow(1.12 + 1 / 1000 * player.researches[101], player.antUpgrades[1-1]! + G['bonusant1']), 2) + 'x speed.',
-    () => 'Crumb --> Coin exponent is ^' + format(calculateCrumbToCoinExp()),
-    () => 'Tax growth is multiplied by ' + format(0.005 + 0.995 * Math.pow(0.99, player.antUpgrades[3-1]! + G['bonusant3']), 4),
-    () => 'Accelerator Boosts +' + format(100 * (calculateSigmoidExponential(20, (player.antUpgrades[4-1]! + G['bonusant4']) / 1000 * 20 / 19) - 1), 3) + '%',
-    () => 'Multipliers +' + format(100 * (calculateSigmoidExponential(40, (player.antUpgrades[5-1]! + G['bonusant5']) / 1000 * 40 / 39) - 1), 3) + '%',
-    () => 'Offerings x' + format(1 + Math.pow((player.antUpgrades[6-1]! + G['bonusant6']), 0.66), 4),
-    () => 'Building Costs scale ' + format(Math.min(9999999,3 * player.antUpgrades[7-1]! + 3 * G['bonusant7']),0,true) + '% slower!',
-    () => 'Rune EXP is multiplied by ' + format(calculateSigmoidExponential(999, 1 / 10000 * Math.pow(player.antUpgrades[8-1]! + G['bonusant8'], 1.1)), 3) + '!',
-    () => 'Each rune has +' + format(1 * Math.min(1e7, (player.antUpgrades[9-1]! + G['bonusant9'])),0,true) + ' effective levels.',
-    () => 'Obtainium x' + format(1 + 2 * Math.pow((player.antUpgrades[10-1]! + G['bonusant10']) / 50, 0.75), 4),
-    () => 'Sacrificing is ' + format(1 + 2 * (1 - Math.pow(2, -(player.antUpgrades[11-1]! + G['bonusant11']) / 125)), 4) + 'x as effective',
-    () => 'Global timer is sped up by a factor of ' + format(calculateSigmoid(2, player.antUpgrades[12-1]! + G['bonusant12'], 69), 4)
+    () => '所有蚂蚁工作速度变为' + format(Decimal.pow(1.12 + 1 / 1000 * player.researches[101], player.antUpgrades[1-1]! + G['bonusant1']), 2) + '倍',
+    () => '碎屑对金币产量的加成效率变为^' + format(calculateCrumbToCoinExp()),
+    () => '税收增长变为' + format(0.005 + 0.995 * Math.pow(0.99, player.antUpgrades[3-1]! + G['bonusant3']), 4) + '倍',
+    () => '加速器加成增加' + format(100 * (calculateSigmoidExponential(20, (player.antUpgrades[4-1]! + G['bonusant4']) / 1000 * 20 / 19) - 1), 3) + '%',
+    () => '加倍器增加' + format(100 * (calculateSigmoidExponential(40, (player.antUpgrades[5-1]! + G['bonusant5']) / 1000 * 40 / 39) - 1), 3) + '%',
+    () => '祭品获取数量变为' + format(1 + Math.pow((player.antUpgrades[6-1]! + G['bonusant6']), 0.66), 4) + '倍',
+    () => '建筑成本增长速度减缓' + format(Math.min(9999999,3 * player.antUpgrades[7-1]! + 3 * G['bonusant7']),0,true) + '%！',
+    () => '符文经验值变为' + format(calculateSigmoidExponential(999, 1 / 10000 * Math.pow(player.antUpgrades[8-1]! + G['bonusant8'], 1.1)), 3) + '倍！',
+    () => '每个符文有效等级增加' + format(1 * Math.min(1e7, (player.antUpgrades[9-1]! + G['bonusant9'])),0,true) + '',
+    () => '难得素获取数量变为' + format(1 + 2 * Math.pow((player.antUpgrades[10-1]! + G['bonusant10']) / 50, 0.75), 4) + '倍',
+    () => '献祭效果变为' + format(1 + 2 * (1 - Math.pow(2, -(player.antUpgrades[11-1]! + G['bonusant11']) / 125)), 4) + '倍',
+    () => '全局速率变为' + format(calculateSigmoid(2, player.antUpgrades[12-1]! + G['bonusant12'], 69), 4) + '倍'
 ]
 
 let repeatAnt: ReturnType<typeof setTimeout> | null = null;
@@ -279,7 +279,7 @@ export const antUpgradeDescription = (i: number) => {
     al.textContent = ' [+' + format(Math.min(player.antUpgrades[i-1]! + c11, bonuslevel)) + ']'
     la.textContent = content2
     ti.textContent = 'Cost: ' + format(Decimal.pow(G['antUpgradeCostIncreases'][i-1], player.antUpgrades[i-1]! * G['extinctionMultiplier'][player.usedCorruptions[10]]).times(G['antUpgradeBaseCost'][i-1])) + ' Galactic Crumbs'
-    me.textContent = 'CURRENT EFFECT: ' + antUpgradeTexts[i - 1]()
+    me.textContent = '当前效果：' + antUpgradeTexts[i - 1]()
 }
 
 //function buyAntUpgrade(i,auto) {
@@ -312,7 +312,7 @@ export const showSacrifice = () => {
 
     DOMCacheGetOrSet('antELO').childNodes[0].textContent = 'Your Ant ELO is '
     DOMCacheGetOrSet('ELO').textContent = format(G['antELO'], 2)
-    DOMCacheGetOrSet('effectiveELO').textContent = '[' + format(G['effectiveELO'], 2, false) + ' effective]'
+    DOMCacheGetOrSet('effectiveELO').textContent = '[有效分' + format(G['effectiveELO'], 2, false) + ']'
 
     DOMCacheGetOrSet('antSacrificeMultiplier').childNodes[0].textContent = 'Ant Multiplier x' + format(antSacrificePointsToMultiplier(player.antSacrificePoints), 3, false) + ' --> '
     DOMCacheGetOrSet('SacrificeMultiplier').textContent = 'x' + format(antSacrificePointsToMultiplier(player.antSacrificePoints + sacRewards.antSacrificePoints), 3, false)
@@ -322,13 +322,13 @@ export const showSacrifice = () => {
     DOMCacheGetOrSet('antSacrificeOffering').textContent = '+' + format(sacRewards.offerings)
     DOMCacheGetOrSet('antSacrificeObtainium').textContent = '+' + format(sacRewards.obtainium)
     if (player.challengecompletions[9] > 0) {
-        DOMCacheGetOrSet('antSacrificeTalismanShard').textContent = '+' + format(sacRewards.talismanShards) + ' [>500 ELO]'
-        DOMCacheGetOrSet('antSacrificeCommonFragment').textContent = '+' + format(sacRewards.commonFragments) + ' [>750 ELO]'
-        DOMCacheGetOrSet('antSacrificeUncommonFragment').textContent = '+' + format(sacRewards.uncommonFragments) + ' [>1,000 ELO]'
-        DOMCacheGetOrSet('antSacrificeRareFragment').textContent = '+' + format(sacRewards.rareFragments) + ' [>1,500 ELO]'
-        DOMCacheGetOrSet('antSacrificeEpicFragment').textContent = '+' + format(sacRewards.epicFragments) + ' [>2,000 ELO]'
-        DOMCacheGetOrSet('antSacrificeLegendaryFragment').textContent = '+' + format(sacRewards.legendaryFragments) + ' [>3,000 ELO]'
-        DOMCacheGetOrSet('antSacrificeMythicalFragment').textContent = '+' + format(sacRewards.mythicalFragments) + ' [>5,000 ELO]'
+        DOMCacheGetOrSet('antSacrificeTalismanShard').textContent = '+' + format(sacRewards.talismanShards) + ' [分>500]'
+        DOMCacheGetOrSet('antSacrificeCommonFragment').textContent = '+' + format(sacRewards.commonFragments) + ' [分>750]'
+        DOMCacheGetOrSet('antSacrificeUncommonFragment').textContent = '+' + format(sacRewards.uncommonFragments) + ' [分>1,000]'
+        DOMCacheGetOrSet('antSacrificeRareFragment').textContent = '+' + format(sacRewards.rareFragments) + ' [分>1,500]'
+        DOMCacheGetOrSet('antSacrificeEpicFragment').textContent = '+' + format(sacRewards.epicFragments) + ' [分>2,000]'
+        DOMCacheGetOrSet('antSacrificeLegendaryFragment').textContent = '+' + format(sacRewards.legendaryFragments) + ' [分>3,000]'
+        DOMCacheGetOrSet('antSacrificeMythicalFragment').textContent = '+' + format(sacRewards.mythicalFragments) + ' [分>5,000]'
     }
 }
 

@@ -456,7 +456,14 @@ export const player: Player = {
         chronometer3: 0,
         seasonPassY: 0,
         seasonPassZ: 0,
-        challengeTome2: 0
+        challengeTome2: 0,
+        cashGrab2: 0,
+        chronometerZ: 0,
+        cubeToQuarkAll: 0,
+        offeringEX2: 0,
+        obtainiumEX2: 0,
+        seasonPassLost: 0,
+        powderAuto: 0
     },
     autoSacrificeToggle: false,
     autoFortifyToggle: false,
@@ -681,7 +688,8 @@ export const player: Player = {
         advancedPack: new SingularityUpgrade(singularityData['advancedPack']),
         expertPack: new SingularityUpgrade(singularityData['expertPack']),
         masterPack: new SingularityUpgrade(singularityData['masterPack']),
-        divinePack: new SingularityUpgrade(singularityData['divinePack'])
+        divinePack: new SingularityUpgrade(singularityData['divinePack']),
+        wowPass2: new SingularityUpgrade(singularityData['wowPass2'])
     },
     dailyCodeUsed: false
 }
@@ -1674,11 +1682,11 @@ export const format = (
 }
 
 export const formatTimeShort = (seconds: number, msMaxSeconds?: number): string => {
-    return ((seconds >= 86400) ? format(Math.floor(seconds / 86400)) + 'd' : '') +
-        ((seconds >= 3600) ? format(Math.floor(seconds / 3600) % 24) + 'h' : '') +
-        ((seconds >= 60)   ? format(Math.floor(seconds / 60) % 60) + 'm'   : '') +
+    return ((seconds >= 86400) ? format(Math.floor(seconds / 86400)) + '日' : '') +
+        ((seconds >= 3600) ? format(Math.floor(seconds / 3600) % 24) + '时' : '') +
+        ((seconds >= 60)   ? format(Math.floor(seconds / 60) % 60) + '分'   : '') +
         ((seconds >= 8640000) ? '' : format(Math.floor(seconds) % 60) + ((msMaxSeconds && seconds < msMaxSeconds)  //Don't show seconds when you're over 100 days, like honestly
-            ? '.' + (Math.floor((seconds % 1) * 1000).toString().padStart(3, '0')) : '') + 's');
+            ? '.' + (Math.floor((seconds % 1) * 1000).toString().padStart(3, '0')) : '') + '秒');
 }
 
 export const updateAllTick = (): void => {

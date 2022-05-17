@@ -47,9 +47,9 @@ export const visualUpdateBuildings = () => {
         }
 
         DOMCacheGetOrSet('buildtext11').textContent = 'Accelerators: ' + format(player.acceleratorBought, 0, true) + ' [+' + format(G['freeAccelerator'], 0, true) + ']'
-        DOMCacheGetOrSet('buildtext12').textContent = 'Acceleration Power: ' + ((G['acceleratorPower'] - 1) * (100)).toPrecision(4) + '% || Acceleration Multiplier: ' + format(G['acceleratorEffect'], 2) + 'x'
+        DOMCacheGetOrSet('buildtext12').textContent = '加速器效果：' + ((G['acceleratorPower'] - 1) * (100)).toPrecision(4) + '% || 加速器倍率：' + format(G['acceleratorEffect'], 2) + 'x'
         DOMCacheGetOrSet('buildtext13').textContent = 'Multipliers: ' + format(player.multiplierBought, 0, true) + ' [+' + format(G['freeMultiplier'], 0, true) + ']'
-        DOMCacheGetOrSet('buildtext14').textContent = 'Multiplier Power: ' + G['multiplierPower'].toPrecision(4) + 'x || Multiplier: ' + format(G['multiplierEffect'], 2) + 'x'
+        DOMCacheGetOrSet('buildtext14').textContent = '加倍器效果：' + G['multiplierPower'].toPrecision(4) + 'x || 加倍器倍率：' + format(G['multiplierEffect'], 2) + 'x'
         DOMCacheGetOrSet('buildtext15').textContent = 'Accelerator Boost: ' + format(player.acceleratorBoostBought, 0, true) + ' [+' + format(G['freeAcceleratorBoost'], 0, false) + ']'
         DOMCacheGetOrSet('buildtext16').textContent = 'Reset Diamonds and Prestige Upgrades, but add ' + (G['tuSevenMulti'] * (1 + player.researches[16] / 50) * (1 + CalcECC('transcend', player.challengecompletions[2]) / 100)).toPrecision(4) + '% Acceleration Power and 5 free Accelerators.'
         DOMCacheGetOrSet('buyaccelerator').textContent = 'Cost: ' + format(player.acceleratorCost) + ' coins.'
@@ -59,10 +59,10 @@ export const visualUpdateBuildings = () => {
         // update the tax text
         let warning = '';
         if (player.reincarnationCount > 0.5) {
-            warning = `Your tax also caps your Coin gain at ${format(Decimal.pow(10, G['maxexponent'] - Decimal.log(G['taxdivisorcheck'], 10)))}/s.`
+            warning = `税收还将您的金币每秒产量上限限制在${format(Decimal.pow(10, G['maxexponent'] - Decimal.log(G['taxdivisorcheck'], 10)))}。`
         }
         DOMCacheGetOrSet('taxinfo').textContent =
-            `Due to your excessive wealth, coin production is divided by ${format(G['taxdivisor'], 2)} to pay taxes! ${warning}`
+            `由于您的财富过多，需要减少${format(G['taxdivisor'], 2)}的金币产量用于缴税！${warning}`
     }
 
     if (G['buildingSubTab'] === 'diamond') {
@@ -71,7 +71,7 @@ export const visualUpdateBuildings = () => {
         const names = [null, 'Refineries', 'Coal Plants', 'Coal Rigs', 'Pickaxes', 'Pandoras Boxes']
         const perSecNames = [null, 'Crystal/sec', 'Ref./sec', 'Plants/sec', 'Rigs/sec', 'Pickaxes/sec']
 
-        DOMCacheGetOrSet('prestigeshardinfo').textContent = 'You have ' + format(player.prestigeShards, 2) + ' Crystals, multiplying Coin production by ' + format(G['prestigeMultiplier'], 2) + 'x.'
+        DOMCacheGetOrSet('prestigeshardinfo').textContent = '您有' + format(player.prestigeShards, 2) + '水晶，金币产量因此乘以' + format(G['prestigeMultiplier'], 2) + '。'
 
         for (let i = 1; i <= 5; i++) {
             const place = G[upper[i-1]];
@@ -84,10 +84,10 @@ export const visualUpdateBuildings = () => {
 
         if (player.resettoggle1 === 1 || player.resettoggle1 === 0) {
             const p = Decimal.pow(10, Decimal.log(G['prestigePointGain'].add(1), 10) - Decimal.log(player.prestigePoints.sub(1), 10))
-            DOMCacheGetOrSet('autoprestige').textContent = 'Prestige when your Diamonds can increase by a factor ' + format(Decimal.pow(10, player.prestigeamount)) + ' [Toggle number above]. Current Multiplier: ' + format(p) + '.'
+            DOMCacheGetOrSet('autoprestige').textContent = '当钻石为之前的' + format(Decimal.pow(10, player.prestigeamount)) + '倍时转生[在上方输入设置数值]。当前倍率：' + format(p) + '。'
         }
         if (player.resettoggle1 === 2) {
-            DOMCacheGetOrSet('autoprestige').textContent = 'Prestige when the autotimer is at least ' + (player.prestigeamount) + ' real-life seconds. [Toggle number above]. Current timer: ' + format(G['autoResetTimers'].prestige, 1) + 's.'
+            DOMCacheGetOrSet('autoprestige').textContent = '当现实时间经过' + (player.prestigeamount) + '秒后转生[在上方输入设置数值]。当前时间：' + format(G['autoResetTimers'].prestige, 1) + '秒。'
         }
     }
 
@@ -97,7 +97,7 @@ export const visualUpdateBuildings = () => {
         const names = [null, 'Augments', 'Enchantments', 'Wizards', 'Oracles', 'Grandmasters']
         const perSecNames = [null, 'Shards/sec', 'Augments/sec', 'Enchantments/sec', 'Wizards/sec', 'Oracles/sec']
 
-        DOMCacheGetOrSet('transcendshardinfo').textContent = 'You have ' + format(player.transcendShards, 2) + ' Mythos Shards, providing ' + format(G['totalMultiplierBoost'], 0, true) + ' Multiplier Power boosts.'
+        DOMCacheGetOrSet('transcendshardinfo').textContent = '您有' + format(player.transcendShards, 2) + '神话碎片，加倍器加成因此增加' + format(G['totalMultiplierBoost'], 0, true) + '个。'
 
         for (let i = 1; i <= 5; i++) {
             const place = G[upper[i-1]];
@@ -109,10 +109,10 @@ export const visualUpdateBuildings = () => {
         }
 
         if (player.resettoggle2 === 1 || player.resettoggle2 === 0) {
-            DOMCacheGetOrSet('autotranscend').textContent = 'Prestige when your Mythos can increase by a factor ' + format(Decimal.pow(10, player.transcendamount)) + ' [Toggle number above]. Current Multiplier: ' + format(Decimal.pow(10, Decimal.log(G['transcendPointGain'].add(1), 10) - Decimal.log(player.transcendPoints.add(1), 10)), 2) + '.'
+            DOMCacheGetOrSet('autotranscend').textContent = '当神话碎片为之前的' + format(Decimal.pow(10, player.transcendamount)) + '倍时超越[在上方输入设置数值]。当前倍率：' + format(Decimal.pow(10, Decimal.log(G['transcendPointGain'].add(1), 10) - Decimal.log(player.transcendPoints.add(1), 10)), 2) + '。'
         }
         if (player.resettoggle2 === 2) {
-            DOMCacheGetOrSet('autotranscend').textContent = 'Transcend when the autotimer is at least ' + (player.transcendamount) + ' real-life seconds. [Toggle number above]. Current timer: ' + format(G['autoResetTimers'].transcension, 1) + 's.'
+            DOMCacheGetOrSet('autotranscend').textContent = '当现实时间经过' + (player.transcendamount) + '秒后超越[在上方输入设置数值]。当前时间：' + format(G['autoResetTimers'].transcension, 1) + '秒。'
         }
     }
 
@@ -135,15 +135,15 @@ export const visualUpdateBuildings = () => {
                 `Cost: ${format(player[`${ith}CostParticles` as const], 2)} Particles`;
         }
 
-        DOMCacheGetOrSet('reincarnationshardinfo').textContent = 'You have ' + format(player.reincarnationShards, 2) + ' Atoms, providing ' + G['buildingPower'].toPrecision(4) + ' Building Power. Multiplier to Coin Production: ' + format(G['reincarnationMultiplier'])
+        DOMCacheGetOrSet('reincarnationshardinfo').textContent = '您有' + format(player.reincarnationShards, 2) + '原子，建筑能量因此增加' + G['buildingPower'].toPrecision(4) + '。金币产量倍率变为' + format(G['reincarnationMultiplier']) + '倍'
         DOMCacheGetOrSet('reincarnationCrystalInfo').textContent = 'Thanks to Research 2x14, you also multiply Crystal production by ' + format(Decimal.pow(G['reincarnationMultiplier'], 1 / 50), 3, false)
         DOMCacheGetOrSet('reincarnationMythosInfo').textContent = 'Thanks to Research 2x15, you also multiply Mythos Shard production by ' + format(Decimal.pow(G['reincarnationMultiplier'], 1 / 250), 3, false)
 
         if (player.resettoggle3 === 1 || player.resettoggle3 === 0) {
-            DOMCacheGetOrSet('autoreincarnate').textContent = 'Reincarnate when your Particles can increase by a factor ' + format(Decimal.pow(10, player.reincarnationamount)) + ' [Toggle number above]. Current Multiplier: ' + format(Decimal.pow(10, Decimal.log(G['reincarnationPointGain'].add(1), 10) - Decimal.log(player.reincarnationPoints.add(1), 10)), 2) + '.'
+            DOMCacheGetOrSet('autoreincarnate').textContent = '当粒子为之前的' + format(Decimal.pow(10, player.reincarnationamount)) + '倍时转世[在上方输入设置数值]。当前倍率：' + format(Decimal.pow(10, Decimal.log(G['reincarnationPointGain'].add(1), 10) - Decimal.log(player.reincarnationPoints.add(1), 10)), 2) + '。'
         }
         if (player.resettoggle3 === 2) {
-            DOMCacheGetOrSet('autoreincarnate').textContent = 'Reincarnate when the autotimer is at least ' + (player.reincarnationamount) + ' real-life seconds. [Toggle number above]. Current timer: ' + format(G['autoResetTimers'].reincarnation, 1) + 's.'
+            DOMCacheGetOrSet('autoreincarnate').textContent = '当现实时间经过' + (player.reincarnationamount) + '秒后转世[在上方输入设置数值]。当前时间：' + format(G['autoResetTimers'].reincarnation, 1) + '秒。'
         }
     }
 
@@ -159,7 +159,7 @@ export const visualUpdateBuildings = () => {
         }
 
         DOMCacheGetOrSet('tesseractInfo').textContent = 'You have ' + format(player.wowTesseracts) + ' Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.'
-        DOMCacheGetOrSet('ascendShardInfo').textContent = 'You have a mathematical constant of ' + format(player.ascendShards, 2) + '. Taxes are divided by ' + format(Math.pow(Decimal.log(player.ascendShards.add(1), 10) + 1, 1 + .2 / 60 * player.challengecompletions[10] * player.upgrades[125] + 0.1 * player.platonicUpgrades[5] + 0.2 * player.platonicUpgrades[10] + (G['platonicBonusMultiplier'][5] - 1)), 4, true) + '.'
+        DOMCacheGetOrSet('ascendShardInfo').textContent = '您有' + format(player.ascendShards, 2) + '数学常数。税收因此除以' + format(Math.pow(Decimal.log(player.ascendShards.add(1), 10) + 1, 1 + .2 / 60 * player.challengecompletions[10] * player.upgrades[125] + 0.1 * player.platonicUpgrades[5] + 0.2 * player.platonicUpgrades[10] + (G['platonicBonusMultiplier'][5] - 1)), 4, true) + '。'
         DOMCacheGetOrSet('autotessbuyeramount').textContent = 'Auto buyer will save at least ' + format(player.tesseractAutoBuyerAmount) + ' tesseracts. [Enter number above].'
     }
 }
@@ -184,7 +184,7 @@ export const visualUpdateRunes = () => {
             'rune5Talisman'
         ] as const;
 
-        DOMCacheGetOrSet('offeringCount').textContent = 'You have ' + format(player.runeshards, 0, true) + ' Offerings.'
+        DOMCacheGetOrSet('offeringCount').textContent = '您有' + format(player.runeshards, 0, true) + '祭品。'
 
         for (let i = 1; i <= 7; i++) { //First one updates level, second one updates TNL, third updates orange bonus levels
             let place = G[talismans[i-1]];
@@ -196,14 +196,14 @@ export const visualUpdateRunes = () => {
             DOMCacheGetOrSet('rune' + i + 'level').childNodes[0].textContent = 'Level: ' + format(runeLevel) + '/' + format(maxLevel)
             DOMCacheGetOrSet('rune' + i + 'exp').textContent = (runeLevel < maxLevel ? '+1 in ' + format(calculateRuneExpToLevel(i - 1) - player.runeexp[i - 1], 2) + ' EXP' : 'Max level!')
             if (i <= 5) {
-                DOMCacheGetOrSet('bonusrune' + i).textContent = ' [Bonus: ' + format(7 * player.constantUpgrades[7] + Math.min(1e7, player.antUpgrades[8]! + G['bonusant9']) + place) + ']'
+                DOMCacheGetOrSet('bonusrune' + i).textContent = '[额外等级：' + format(7 * player.constantUpgrades[7] + Math.min(1e7, player.antUpgrades[8]! + G['bonusant9']) + place) + ']'
             } else {
                 DOMCacheGetOrSet('bonusrune' + i).textContent = '[Bonus: Nope!]'
             }
             DOMCacheGetOrSet('rune' + i + 'level').childNodes[0].textContent = 'Level: ' + format(player.runelevels[i - 1]) + '/' + format(calculateMaxRunes(i))
             DOMCacheGetOrSet('rune' + i + 'exp').textContent = '+1 in ' + format(calculateRuneExpToLevel(i - 1) - player.runeexp[i - 1], 2) + ' EXP'
             if (i <= 5) {
-                DOMCacheGetOrSet('bonusrune' + i).textContent = ' [Bonus: ' + format(7 * player.constantUpgrades[7] + Math.min(1e7, player.antUpgrades[8]! + G['bonusant9']) + place) + ']'
+                DOMCacheGetOrSet('bonusrune' + i).textContent = '[额外等级：' + format(7 * player.constantUpgrades[7] + Math.min(1e7, player.antUpgrades[8]! + G['bonusant9']) + place) + ']'
             } else {
                 DOMCacheGetOrSet('bonusrune' + i).textContent = '[Bonus: Nope!]'
             }
@@ -282,9 +282,9 @@ export const visualUpdateAnts = () => {
         return
     }
     DOMCacheGetOrSet('crumbcount').textContent = 'You have ' + format(player.antPoints, 2) + ' Galactic Crumbs [' + format(G['antOneProduce'], 2) + '/s], providing a ' + format(Decimal.pow(Decimal.max(1, player.antPoints), 100000 + calculateSigmoidExponential(49900000, (player.antUpgrades[1]! + G['bonusant2']) / 5000 * 500 / 499))) + 'x Coin Multiplier.'
-    const mode = player.autoAntSacrificeMode === 2 ? 'Real-time' : 'In-game time';
+    const mode = player.autoAntSacrificeMode === 2 ? '现实时间' : '游戏时间';
     const timer = player.autoAntSacrificeMode === 2 ? player.antSacrificeTimerReal : player.antSacrificeTimer;
-    DOMCacheGetOrSet('autoAntSacrifice').textContent = `Sacrifice when the timer is at least ${player.autoAntSacTimer} seconds (${mode}), Currently: ${format(timer)}`
+    DOMCacheGetOrSet('autoAntSacrifice').textContent = `当时间至少经过${player.autoAntSacTimer}秒(${mode})后献祭蚂蚁，目前时间为：${format(timer)}`
     if (player.achievements[173] === 1) {
         DOMCacheGetOrSet('antSacrificeTimer').textContent = formatTimeShort(player.antSacrificeTimer);
         showSacrifice();
@@ -302,7 +302,7 @@ export const visualUpdateCubes = () => {
     if (G['currentTab'] !== 'cubes') {
         return
     }
-    DOMCacheGetOrSet('cubeToQuarkTimerValue').textContent = format(Math.floor(player.dayTimer / 3600), 0) + ' Hours ' + format(Math.floor(player.dayTimer / 60 % 60), 0) + ' Mins ' + format(Math.floor(player.dayTimer % 60), 0) + ' Secs '
+    DOMCacheGetOrSet('cubeToQuarkTimerValue').textContent = format(Math.floor(player.dayTimer / 3600), 0) + '小时' + format(Math.floor(player.dayTimer / 60 % 60), 0) + '分' + format(Math.floor(player.dayTimer % 60), 0) + '秒'
 
     const cubeMult = (player.shopUpgrades.cubeToQuark) ? 1.5 : 1;
     const tesseractMult = (player.shopUpgrades.tesseractToQuark) ? 1.5 : 1;
@@ -482,9 +482,9 @@ export const visualUpdateSettings = () => {
     DOMCacheGetOrSet('prestigeCountStatistic').childNodes[1].textContent = format(player.prestigeCount, 0, true)
     DOMCacheGetOrSet('transcensionCountStatistic').childNodes[1].textContent = format(player.transcendCount, 0, true)
     DOMCacheGetOrSet('reincarnationCountStatistic').childNodes[1].textContent = format(player.reincarnationCount, 0, true)
-    DOMCacheGetOrSet('fastestPrestigeStatistic').childNodes[1].textContent = format(1000 * player.fastestprestige) + 'ms'
-    DOMCacheGetOrSet('fastestTranscensionStatistic').childNodes[1].textContent = format(1000 * player.fastesttranscend) + 'ms'
-    DOMCacheGetOrSet('fastestReincarnationStatistic').childNodes[1].textContent = format(1000 * player.fastestreincarnate) + 'ms'
+    DOMCacheGetOrSet('fastestPrestigeStatistic').childNodes[1].textContent = format(1000 * player.fastestprestige) + '毫秒'
+    DOMCacheGetOrSet('fastestTranscensionStatistic').childNodes[1].textContent = format(1000 * player.fastesttranscend) + '毫秒'
+    DOMCacheGetOrSet('fastestReincarnationStatistic').childNodes[1].textContent = format(1000 * player.fastestreincarnate) + '毫秒'
     DOMCacheGetOrSet('mostOfferingStatistic').childNodes[1].textContent = format(player.maxofferings)
     DOMCacheGetOrSet('mostObtainiumStatistic').childNodes[1].textContent = format(player.maxobtainium)
     DOMCacheGetOrSet('mostObtainiumPerSecondStatistic').childNodes[1].textContent = format(player.maxobtainiumpersecond, 2, true)
@@ -499,13 +499,13 @@ export const visualUpdateSettings = () => {
     const onExportQuarks = quarkData.gain
     const maxExportQuarks = quarkData.capacity
     const patreonLOL = 1 + player.worlds.BONUS / 100
-    DOMCacheGetOrSet('quarktimerdisplay').textContent = format((3600 / (quarkData.perHour) - (player.quarkstimer % (3600.00001 / (quarkData.perHour)))), 2) + 's until +' + player.worlds.toString(1) + ' export Quark'
+    DOMCacheGetOrSet('quarktimerdisplay').textContent = '距离增加导出奖励' + player.worlds.toString(1) + '夸克还有' + format((3600 / (quarkData.perHour) - (player.quarkstimer % (3600.00001 / (quarkData.perHour)))), 2) + '秒'
     DOMCacheGetOrSet('quarktimeramount').textContent =
-        `Quarks on export: ${player.worlds.toString(onExportQuarks)} [Max ${player.worlds.toString(maxExportQuarks)}]`;
+        `导出奖励的夸克总和：${player.worlds.toString(onExportQuarks)}[最大为${player.worlds.toString(maxExportQuarks)}]`;
 
-    DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = format(3600 / Math.max(1, player.singularityUpgrades.goldenQuarks3.level) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,player.singularityUpgrades.goldenQuarks3.level)))) + 's until +' + format(patreonLOL, 2, true) + ' export Golden Quark'
+    DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = '距离增加导出奖励' + format(patreonLOL, 2, true) + '金夸克还有' + format(3600 / Math.max(1, player.singularityUpgrades.goldenQuarks3.level) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,player.singularityUpgrades.goldenQuarks3.level)))) + '秒'
     DOMCacheGetOrSet('goldenQuarkTimerAmount').textContent =
-        `Golden Quarks on export: ${format(Math.floor(player.goldenQuarksTimer * player.singularityUpgrades.goldenQuarks3.level/ 3600) * patreonLOL, 2)} [Max ${format(Math.floor(25 * player.singularityUpgrades.goldenQuarks3.level * patreonLOL))}]`
+        `导出奖励的金夸克总和：${format(Math.floor(player.goldenQuarksTimer * player.singularityUpgrades.goldenQuarks3.level/ 3600) * patreonLOL, 2)}[最大为${format(Math.floor(25 * player.singularityUpgrades.goldenQuarks3.level * patreonLOL))}]`
 
 }
 

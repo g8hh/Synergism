@@ -566,133 +566,6 @@ var cnItems = {
     '[278] SiINguLaRrRity: Singularity 5 times.':'[278]进入入奇奇点：进入奇点5次。',
     '[279] SiIINGuLArRrIiTyY: Singularity 7 times.':'[279]进进入入奇奇点点：进入奇点7次。',
     '[280] Inception: Singularity 10 times.':'[280]创始：进入奇点10次。',
-    'Reward: 4 AP. 4 Quarks! Gain +.05% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.05%的加速器效果。',
-    'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Worker Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁工人自动购买。',
-    'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Workers owned.': '奖励：8成就点数。8夸克！每拥有500个工人，就获得1个加速器。',
-    'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Workers owned.': '奖励：9成就点数。9夸克！每拥有1000个工人，就获得1个加倍器。',
-    'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 workers owned.': '奖励：10成就点数。10夸克！每拥有2000个工人，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.10% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.10%的加速器效果。',
-    'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Investment Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁投资自动购买。',
-    'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Investments owned.': '奖励：8成就点数。8夸克！每拥有500个投资，就获得1个加速器。',
-    'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Investments owned.': '奖励：9成就点数。9夸克！每拥有1000个投资，就获得1个加倍器。',
-    'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 Investments owned.': '奖励：10成就点数。10夸克！每拥有2000个投资，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.15% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.15%的加速器效果。',
-    'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Printer Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁打印机自动购买。',
-    'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Printers owned.': '奖励：8成就点数。8夸克！每拥有500台打印机，就获得1个加速器。',
-    'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Printers owned.': '奖励：9成就点数。9夸克！每拥有1000台打印机，就获得1个加倍器。',
-    'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 Printers owned.': '奖励：10成就点数。10夸克！每拥有2000台打印机，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.20% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.20%的加速器效果。',
-    'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Coin Mint Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁铸币厂自动购买。',
-    'Reward: 8 AP. 8 Quarks! Gain +1 Accelerator per 500 Mints owned.': '奖励：8成就点数。8夸克！每拥有500个铸币厂，就获得1个加速器。',
-    'Reward: 9 AP. 9 Quarks! Gain +1 Multiplier per 1,000 Mints owned.': '奖励：9成就点数。9夸克！每拥有1000个铸币厂，就获得1个加倍器。',
-    'Reward: 10 AP. 10 Quarks! Gain +1 Accelerator Boost per 2,000 Mints owned.': '奖励：10成就点数。10夸克！每拥有2000个铸币厂，就获得1个加速器加成。',
-    'Reward: 4 AP. 4 Quarks! Gain +.25% to Accelerator Power.': '奖励：4成就点数。4夸克！增加0.25%的加速器效果。',
-    'Reward: 6 AP. 6 Quarks! Start transcensions/challenges with Alchemy Autobuyer unlocked.': '奖励：6成就点数。6夸克！超越或进入挑战后直接解锁炼金术自动购买。',
-    'Reward: 8 AP. 8 Quarks! Gain 10% more offerings from resets || +1 Accelerator per 500 Alchemies!': '奖励：8成就点数。8夸克！重置时多获得10%祭品 || 每拥有500个炼金术，就获得1个加速器！',
-    'Reward: 9 AP. 9 Quarks! Gain 15% more offerings from resets (stacks multiplicatively!) || +1 Multiplier per 1,000 Alchemies!': '奖励：9成就点数。9夸克！重置时多获得15%祭品(效果叠乘！) || 每拥有1000个炼金术，就获得1个加倍器！',
-    'Reward: 10 AP. 10 Quarks! Gain 25% more offerings from resets (stacks multiplicatively!) || +1 Accelerator Boost per 2,000 Alchemies!': '奖励：10成就点数。10夸克！重置时多获得25%祭品(效果叠乘！) || 每拥有2000个炼金术，就获得1个加速器加成！',
-    'Reward: 1 AP. 1 Quarks! Multiply Crystal Production by 2x.': '奖励：1成就点数。1夸克！水晶产量变为2倍。',
-    'Reward: 2 AP. 2 Quarks! Multiply Crystal Production by the common logarithm of owned Diamonds. Prestiges give more offerings based on time spent (Up to +15 at 1800 seconds': '奖励：2成就点数。2夸克！水晶产量乘以(当前钻石数量的常用对数)。根据花费的时间，转生可获得更多祭品(在1800秒时达到最大，此时多获得15祭品',
-    'Reward: 4 AP. 4 Quarks! Unlock the Duplication rune!': '奖励：4成就点数。4夸克！解锁重叠符文！',
-    'Reward: 1 AP. 1 Quarks! Accelerator Boosts can be purchased from any screen. Unlock the Auto-Prestige feature.': '奖励：1成就点数。1夸克！在任何屏幕上都可以购买加速器加成了。解锁自动转生特性。',
-    'Reward: 2 AP. 2 Quarks! Unlock the Prism Rune! Transcensions give more offerings based on time spent (Up to +15 at 1800 seconds': '奖励：2成就点数。2夸克！解锁棱柱符文！根据花费的时间，超越可获得更多祭品(在1800秒时达到最大，此时多获得15祭品',
-    'Reward: 4 AP. 4 Quarks! Reduce tax scaling by up to 5%, depending on the length of prestige.': '奖励：4成就点数。4夸克！至多减少税收增长5%，此数值与转生的时长有关。',
-    'Reward: 6 AP. 6 Quarks! Reduce tax scaling by up to another 5%, depending on length of prestige.': '奖励：6成就点数。6夸克！再次至多减少税收增长5%，此数值与转生的时长有关。',
-    'Reward: 8 AP. 8 Quarks! Reduce tax scaling by up to ANOTHER 10%, depending on length of prestige!': '奖励：8成就点数。8夸克！再次至多减少税收增长10%，此数值与转生的时长有关！',
-    'Reward: 1 AP. 1 Quarks! Unlock new Atomic production and unlock 3 new incredibly difficult challenges! Gain 2x particles on all future Reincarnations!': '奖励：1成就点数。1夸克！解锁原子的生产建筑，另外还解锁了3个非常难的挑战！转世可以获得2倍粒子！',
-    'Reward: 2 AP. 2 Quarks! Manual Reincarnations give +4 Obtainium (unaffected by multipliers except time multiplier)!': '奖励：2成就点数。2夸克！手动转世可以多获得4难得素(除了时间倍率以外，不受其他倍率影响)！',
-    'Reward: 4 AP. 4 Quarks! Reincarnations give more offerings based on time spent (Up to +25 at 1800 seconds': '奖励：4成就点数。4夸克！根据花费的时间，转世可获得更多祭品(在1800秒时达到最大，此时多获得25祭品',
-    'Reward: 6 AP. 6 Quarks! Increase the amount of obtainium gained through all features by 0.125% additive for each rune level.': '奖励：6成就点数。6夸克！每级符文使难得素的获取数量增加0.125%，数值相互叠加。',
-    'Reward: 2 AP. 2 Quarks! Gain +1, +1% free Multipliers!': '奖励：2成就点数。2夸克！获得1个加倍器，并且多获得1%加倍器！',
-    'Reward: 8 AP. 8 Quarks! Gain +1, +1% more free Multipliers!': '奖励：8成就点数。8夸克！再获得1个加倍器，并且再多获得1%加倍器！',
-    'Reward: 10 AP. 10 Quarks! Gain +1, +1% more, MORE free Multipliers!': '奖励：10成就点数。10夸克！再获得1个加倍器，并且再多获得1%加倍器！',
-    'Reward: 2 AP. 2 Quarks! Gain +2, +1% free Accelerators!': '奖励：2成就点数。2夸克！获得2个加速器，并且多获得1%加速器！',
-    'Reward: 8 AP. 8 Quarks! Gain +2, +1% more free Accelerators!': '奖励：8成就点数。8夸克！再获得2个加速器，并且再多获得1%加速器！',
-    'Reward: 10 AP. 10 Quarks! Gain +2, +1% more, MORE free Accelerators!': '奖励：10成就点数。10夸克！再获得2个加速器，并且再多获得1%加速器！',
-    'Reward: 2 AP. 2 Quarks! +1% Conversion Exponent on all generator upgrades!': '奖励：2成就点数。2夸克！所有发生器升级的转换指数增加1%！',
-    'Reward: 4 AP. 4 Quarks! +1% Conversion Exponent on all generator upgrades!': '奖励：4成就点数。4夸克！所有发生器升级的转换指数增加1%！',
-    'Reward: 6 AP. 6 Quarks! +1% Conversion Exponent on all generator upgrades!': '奖励：6成就点数。6夸克！所有发生器升级的转换指数增加1%！',
-    'Reward: 8 AP. 8 Quarks! +1% Conversion Exponent on all generator upgrades!': '奖励：8成就点数。8夸克！所有发生器升级的转换指数增加1%！',
-    'Reward: 10 AP. 10 Quarks! +1% Conversion Exponent on all generator upgrades!': '奖励：10成就点数。10夸克！所有发生器升级的转换指数增加1%！',
-    'Reward: 10 AP. 10 Quarks! +1% Conversion Exponent on all generator upgrades! They\'re in overdrive now!': '奖励：10成就点数。10夸克！所有发生器升级的转换指数增加1%！它们现在是超速运转了！',
-    'Reward: 1 AP. 1 Quarks! Start transcensions/challenges with 1 Refinery and automatically buy Refineries.': '奖励：1成就点数。1夸克！超越或进入挑战后直接获得1个炼油厂并解锁炼油厂自动购买。',
-    'Reward: 2 AP. 2 Quarks! Automatically buy the first crystal upgrade if you can afford it!': '奖励：2成就点数。2夸克！自动购买第一个水晶升级！',
-    'Reward: 4 AP. 4 Quarks! Start transcensions/challenges with Multiplier Autobuyer unlocked. +5% offering recycle.': '奖励：4成就点数。4夸克！超越或进入挑战后直接解锁加倍器自动购买。祭品回收概率增加5%。',
-    'Reward: 8 AP. 8 Quarks! Delay tax growth by 4%.': '奖励：8成就点数。8夸克！税收增长减缓4%。',
-    'Reward: 10 AP. 10 Quarks! +1% obtainium (stacks additively with other achievement rewards': '奖励：10成就点数。10夸克！难得素的获取数量增加1%(与其他成就的同类效果叠加',
-    'Reward: 1 AP. 1 Quarks! Start transcensions/challenges with 1 Coal Plant and automatically buy Coal Plants.': '奖励：1成就点数。1夸克！超越或进入挑战后直接获得1个煤电厂并解锁煤电厂自动购买。',
-    'Reward: 2 AP. 2 Quarks! Automatically buy the second crystal upgrade if you can afford it!': '奖励：2成就点数。2夸克！自动购买第二个水晶升级！',
-    'Reward: 4 AP. 4 Quarks! Start transcensions/challenges with Accelerator Autobuyer unlocked. +5% offering recycle.': '奖励：4成就点数。4夸克！超越或进入挑战后直接解锁加速器自动购买。祭品回收概率增加5%。',
-    'Reward: 10 AP. 10 Quarks! +3% obtainium (stacks additively with other achievement rewards': '奖励：10成就点数。10夸克！难得素的获取数量增加3%(与其他成就的同类效果叠加',
-    'Reward: 1 AP. 1 Quarks! Start transcensions/challenges with 1 Coal Rig and automatically buy Coal Rigs.': '奖励：1成就点数。1夸克！超越或进入挑战后直接获得1个煤钻机并解锁煤钻机自动购买。',
-    'Reward: 2 AP. 2 Quarks! Automatically buy the third crystal upgrade if you can afford it!': '奖励：2成就点数。2夸克！自动购买第三个水晶升级！',
-    'Reward: 4 AP. 4 Quarks! +5% offering recycle.': '奖励：4成就点数。4夸克！祭品回收概率增加5%。',
-    'Reward: 10 AP. 10 Quarks! +5% obtainium (stacks additively with other achievement rewards': '奖励：10成就点数。10夸克！难得素的获取数量增加5%(与其他成就的同类效果叠加',
-    'Reward: 1 AP. 1 Quarks! Start transcensions/challenges with 1 Diamond Pickaxe and automatically buy Diamond Pickaxes.': '奖励：1成就点数。1夸克！超越或进入挑战后直接获得1个十字镐并解锁十字镐自动购买。',
-    'Reward: 2 AP. 2 Quarks! Automatically buy the fourth crystal upgrade if you can afford it!': '奖励：2成就点数。2夸克！自动购买第四个水晶升级！',
-    'Reward: 6 AP. 6 Quarks! Unlock the Thrift rune!': '奖励：6成就点数。6夸克！解锁节俭符文！',
-    'Reward: 10 AP. 10 Quarks! +7% obtainium (stacks additively with other achievement rewards': '奖励：10成就点数。10夸克！难得素的获取数量增加7%(与其他成就的同类效果叠加',
-    'Reward: 1 AP. 1 Quarks! Start transcensions/challenges with 1 Pandora\'s Box and automatically buy Pandora\'s Boxes.': '奖励：1成就点数。1夸克！超越或进入挑战后直接获得1个潘多拉魔盒并解锁潘多拉魔盒自动购买。',
-    'Reward: 2 AP. 2 Quarks! Automatically buy the fifth crystal upgrade if you can afford it!': '奖励：2成就点数。2夸克！自动购买第五个水晶升级！',
-    'Reward: 10 AP. 10 Quarks! +9% obtainium (stacks additively with other achievement rewards': '奖励：10成就点数。10夸克！难得素的获取数量增加9%(与其他成就的同类效果叠加',
-    'Reward: 8 AP. 8 Quarks! Delay tax growth by 5.66%.': '奖励：8成就点数。8夸克！税收增长减缓5.66%。',
-    'Reward: 9 AP. 9 Quarks! Each Reincarnation challenge completion delays tax growth by 0.75% per level, multiplicative. Effect': '奖励：9成就点数。9夸克！每完成一次任意转世挑战，税收增长就减缓0.75%，效果叠乘。效果',
-    'Reward: 10 AP. 10 Quarks! +11% obtainium. Unlock a nice trinket somewhere...': '奖励：10成就点数。10夸克！难得素的获取数量增加11%。某个地方解锁了一个很不错的饰品……',
-    'Reward: 4 AP. 4 Quarks! +7.5% offering recycle.': '奖励：4成就点数。4夸克！祭品回收概率增加7.5%。',
-    'Reward: 8 AP. 8 Quarks! Delay tax growth by 5.66%. Unlock 5 new incredibly powerful researches!': '奖励：8成就点数。8夸克！税收增长减缓5.66%。解锁5个非常强大的研究！',
-    'Reward: 10 AP. 10 Quarks! +13% obtainium. You get an accessory to commemorate this moment!': '奖励：10成就点数。10夸克！难得素的获取数量增加13%。您得到了一个纪念这一刻的饰品！',
-    'Reward: 1 AP. 1 Quarks! Unlock 20 new incredibly expensive yet good researches. Unlock the [Anthill] feature!': '奖励：1成就点数。1夸克！解锁20个极贵也极强的研究。解锁[蚁丘]特性！',
-    'Reward: 2 AP. 2 Quarks! Make researches go Cost-- with 1.5x Obtainium!': '奖励：2成就点数。2夸克！难得素获取数量变为1.5倍！',
-    'Reward: 4 AP. 4 Quarks! +7.5% offering recycle. Gain another 1.25x Obtainium multiplier!': '奖励：4成就点数。4夸克！祭品回收概率增加7.5%。难得素获取数量变为1.25倍！',
-    'Reward: 9 AP. 9 Quarks! Permanently gain +25% more sacrifice reward!': '奖励：9成就点数。9夸克！献祭奖励永久增加25%！',
-    'Reward: 10 AP. 10 Quarks! +15% obtainium. Obtain the gift of Midas himself.': '奖励：10成就点数。10夸克！难得素的获取数量增加15%。获得米达斯的一份礼物。',
-    'Reward: 1 AP. 1 Quarks! Unlock 10 newer incredibly expensive yet good researches. Unlock <<Talismans>> in the Runes Tab!': '奖励：1成就点数。1夸克！解锁10个极贵也极强的研究。解锁符文选项卡下的<<护身符>>面板！',
-    'Reward: 2 AP. 2 Quarks! Talisman positive bonuses are now +0.02 stronger per level.': '奖励：2成就点数。2夸克！护身符的每级加成效果增加0.02。',
-    'Reward: 4 AP. 4 Quarks! Talisman positive bonuses are now +0.02 even stronger per level.': '奖励：4成就点数。4夸克！护身符的每级加成效果再增加0.02。',
-    'Reward: 6 AP. 6 Quarks! Permanently gain +25% more sacrifice reward!': '奖励：6成就点数。6夸克！献祭奖励永久增加25%！',
-    'Reward: 10 AP. 10 Quarks! +17% obtainium. Lazy joke about not leaking talismans here [You get a new one]': '奖励：10成就点数。10夸克！难得素的获取数量增加17%。懒得拿不泄露护身符来开玩笑了[您可以获得一个新的护身符]',
-    'Reward: 1 AP. 1 Quarks! Unlock a new reset tier!': '奖励：1成就点数。1夸克！解锁下一阶的重置！',
-    'Reward: 10 AP. 10 Quarks! +19% obtainium (Achievement total is up to 100%!). Gain the Polymath Talisman!': '奖励：10成就点数。10夸克！难得素的获取数量增加19%(成就同类型加成总和为100%！)。获得博识护身符！',
-    'Reward: 10 AP. 10 Quarks! +16.666% ALL Ant speed!': '奖励：10成就点数。10夸克！所有蚂蚁的速度增加16.666%！',
-    'Reward: 10 AP. 10 Quarks! Gain more ants the longer your reincarnation lasts (max speed achieved in 2 hours': '奖励：10成就点数。10夸克！转世持续越久就可以获得越多蚂蚁(2小时的时候速度达到最大',
-    'Reward: 10 AP. 10 Quarks! Unlock Ant Sacrifice, allowing you to reset your ants and ant upgrades in exchange for amazing rewards! Automatically buy Worker Ants.': '奖励：10成就点数。10夸克！解锁蚂蚁献祭，重置蚂蚁数量和蚂蚁升级以获取强大的奖励！自动购买工蚁。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 2 Ant autobuy, and autobuy Inceptus and Fortunae ants! Add +25 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T2蚂蚁自动购买，并且可以自动购买创始蚁和财富蚁！基础蚂蚁强度分增加25。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 3 Ant autobuy, and autobuy Tributum ants! Add +50 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T3蚂蚁自动购买，并且可以自动购买示威蚁！基础蚂蚁强度分增加50。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 4 Ant autobuy, and autobuy Celeritas and Multa ants! Add +75 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T4蚂蚁自动购买，并且可以自动购买迅捷蚁和加倍蚁！基础蚂蚁强度分增加75。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 5 Ant autobuy, and autobuy Sacrificium ants! Add +100 Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T5蚂蚁自动购买，并且可以自动购买献祭蚁！基础蚂蚁强度分增加100。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 6 Ant autobuy, and autobuy Hic and Experientia ants! Add +1% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T6蚂蚁自动购买，并且可以自动购买建筑蚁和博学蚁！基础蚂蚁强度分增加1%。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 7 Ant autobuy, and autobuy Praemoenio ants! Add +2% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T7蚂蚁自动购买，并且可以自动购买预言蚁！基础蚂蚁强度分增加2%。',
-    'Reward: 10 AP. 10 Quarks! Unlock Tier 8 Ant autobuy, and autobuy Scientia and Phylacterium ants! Add +3% Base Ant ELO.': '奖励：10成就点数。10夸克！解锁T8蚂蚁自动购买，并且可以自动购买科学蚁和命匣蚁！基础蚂蚁强度分增加3%。',
-    'Reward: 20 AP. 100 Quarks! You will unlock a stat tracker for ascensions.': '奖励：20成就点数。100夸克！解锁飞升的数据追踪器。',
-    'Reward: 20 AP. 100 Quarks! Gain +4% Cubes on ascension!': '奖励：20成就点数。100夸克！飞升时方盒获取数量增加4%！',
-    'Reward: 40 AP. 200 Quarks! Gain +4% Cubes on ascension!': '奖励：40成就点数。200夸克！飞升时方盒获取数量增加4%！',
-    'Reward: 40 AP. 200 Quarks! Gain +4% Cubs on ascension! Did I spell that wrong? You bet I did.': '奖励：40成就点数。200夸克！飞升时方合获取数量增加4%！什么？我打错字了？您猜猜我是有意的呢，还是有意的呢，还是有意的呢？',
-    'Reward: 60 AP. 300 Quarks! Gain +3% Cubes on ascension!': '奖励：60成就点数。300夸克！飞升时方盒获取数量增加3%！',
-    'Reward: 20 AP. 100 Quarks! You will gain 25% of excess time after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：20成就点数。100夸克！飞升时间超过10秒以后，超出部分的时间的25%将变为飞升奖励的倍率。',
-    'Reward: 40 AP. 200 Quarks! Gain +4% Tesseracts on ascension!': '奖励：40成就点数。200夸克！飞升时超立方获取数量增加4%！',
-    'Reward: 60 AP. 300 Quarks! Gain +3% Tesseracts on ascension!': '奖励：60成就点数。300夸克！飞升时超立方获取数量增加3%！',
-    'Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count.': '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。',
-    'Reward: 40 AP. 200 Quarks! You will gain 25% MORE excess time (Total: 50%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。200夸克！飞升时间超过10秒以后，超出部分的时间的25%将再次变为飞升奖励的倍率(总和：50%)。',
-    'Reward: 40 AP. 200 Quarks! Gain +4% Hypercubes on ascension!': '奖励：40成就点数。200夸克！飞升时五阶立方获取数量增加4%！',
-    'Reward: 60 AP. 300 Quarks! Gain +4% Hypercubes on ascension!': '奖励：60成就点数。300夸克！飞升时五阶立方获取数量增加4%！',
-    'Reward: 60 AP. 300 Quarks! Gain +3% Hypercubes on ascension!': '奖励：60成就点数。300夸克！飞升时五阶立方获取数量增加3%！',
-    'Reward: 40 AP. 200 Quarks! You gain gain 50% MORE MORE excess time (Total: 100%) after 10 seconds each Ascension as a linear multiplier to rewards.': '奖励：40成就点数。200夸克！飞升时间超过10秒以后，超出部分的时间的50%将再次变为飞升奖励的倍率(总和：100%)。',
-    'Reward: 40 AP. 200 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：40成就点数。200夸克！飞升时PLATONIC方盒获取数量增加4%！',
-    'Reward: 60 AP. 300 Quarks! Gain +4% Platonic Cubes on ascension!': '奖励：60成就点数。300夸克！飞升时PLATONIC方盒获取数量增加4%！',
-    'Reward: 100 AP. 500 Quarks! Gain +3% Platonic Cubes on ascension!': '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加3%！',
-    'Reward: 100 AP. 500 Quarks! You gain a permanent +60% Obtainium and Offering bonus, with +6% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加60%，所有类型的方盒及立方获取数量永久增加6%！',
-    'Reward: 100 AP. 500 Quarks! You gain a permanent +100% Obtainium and Offering bonus, with +10% all cube types!': '奖励：100成就点数。500夸克！难得素和祭品获取数量永久增加100%，所有类型的方盒及立方获取数量永久增加10%！',
-    'Reward: 50 AP. 2,000 Quarks! You will gain +10% Hypercubes! Why? I don\'t know.': '奖励：50成就点数。2000夸克！五阶立方获取数量增加10%！原因？我也不知道。',
-    'Reward: 150 AP. 6,000 Quarks! Corruption score is increased by 1% for every expansion of Abyss Hepteract!': '奖励：150成就点数。6000夸克！每次延展惊奇七阶立方·深渊以后，腐化分数就增加1%！',
-    'Reward: 50 AP. 2,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：50成就点数。2000夸克！飞升次数获取数量永久增加10%！',
-    'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
-    'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44! Platonic Upgrades now BuyMax whenever affordable!': '奖励：10成就点数。400夸克！蚂蚁速度永久变为4.44倍！只要资源充足，将最大化购买PLATONIC方盒升级！',
-    'Reward: 10 AP. 400 Quarks! You immediately start Singularities with 1 transcension and 1001 mythos!': '奖励：10成就点数。400夸克！进入奇点后直接获得1次超越和1001神话！',
-    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 1 reincarnation, and 10 particles!': '奖励：20成就点数。800夸克！进入奇点后直接获得1次转世和10粒子！(隐藏效果：进入奇点后直接完成挑战1至挑战5各三次，完成成就37、成就38、成就44、成就50、成就57至成就77、成就80、成就87)',
-    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 500 obtainium!': '奖励：20成就点数。800夸克！进入奇点后直接获得500难得素！(隐藏效果：进入奇点后直接获得1e16粒子，完成一次挑战6)',
-    'Reward: 30 AP. 1,200 Quarks! Gain 5% more Quarks, permanently!': '奖励：30成就点数。1200夸克！夸克获取数量永久增加5%！(隐藏效果：进入奇点后直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克)',
-    'Reward: 40 AP. 1,600 Quarks! You immediately start Singularities with a Challenge 7 completion and 1e100 particles. Talismans now buff all runes at all times!': '奖励：40成就点数。1600夸克！进入奇点后直接完成一次挑战7，并获得1e100粒子。护身符的额外等级对所有符文均生效！',
-    'Reward: 50 AP. 2,000 Quarks! You immediately start Singularities with 1 Challenge 8 completion and 1 tier 1 ant.': '奖励：50成就点数。2000夸克！进入奇点后直接完成一次挑战8，并获得一只工蚁。(15次奇点的隐藏效果：进入奇点后直接完成五次挑战8，获得一只蚁后，并获得2.22e2222粒子)(20次奇点的隐藏效果：进入奇点后直接完成一次挑战9，获得一只神使蚁，夸克获取数量永久增加5%，获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置))(25次奇点的隐藏效果：进入奇点后直接获得1e100银河碎屑，并获得虔蚁护身符)',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
     'Green background: Achieved.': '绿色背景：成就已完成。',
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
@@ -810,22 +683,13 @@ var cnItems = {
     '|| Softcapped past 10! Effective completion count': '|| 超过10次以后效果下降！有效的完成次数为',
     'Multipliers make the game a little too fast. Let\'s take them out!': '加倍器让游戏的进度有点太快了。它们可以走了！',
     'Transcend and reach the goal except Multipliers do nothing but act like Accelerators, which are nerfed by 50%!': '立即超越开始挑战，加倍器失去加倍器效果，变为与加速器作用相同，且效果削弱50%！',
-    '10 base Multiplier Boosts! \[\+0.05 to power!\] Current': '10个基础加倍器加成！[增加0.05加倍器效果！]当前效果',
-    '10% total Multiplier Boosts! Current': '10%总加倍器加成！当前效果',
-    '0.04 base Rune exp per Offering! Current': '0.04每个祭品的基础符文经验值！当前效果',
-    '1 free Multiplier! +1 Base EXP per offering used!': '1个免费加倍器！每个祭品的基础符文经验值增加1！',
     'Start [No Multipliers]': '开始[无加倍器挑战]',
     'Who needs accelerators? They do basically nothing now.': '加速器？谁要就拿去，不过是无用之物而已。',
     'Transcend and reach the goal except Accelerators do nothing! Multipliers are nerfed a bit as well.': '立即超越开始挑战，加速器完全无效，加倍器也被削弱了。',
-    '5 Free Accelerators! Current': '5个免费加速器！当前效果',
-    '5% Accelerator Boost Power! Current': '5%加速器加成效果！当前效果',
-    '0.25% Accelerator Power! Current': '0.25%加速器效果！当前效果',
-    '1 base offering for Prestige and Transcensions.': '1转生和超越的基础祭品获取数量。',
     'Start [No Accelerators]': '开始[无加速器挑战]',
     'Alright, now you\'re thinking, how else can I make the game harder?': '很好，您是不是在想，我还能玩出什么花样来？',
     'Transcend and reach the goal except you do not produce Crystals or Mythos Shards.': '立即超越开始挑战，无法产生水晶或神话碎片。',
     'Crystal --> Coin conversion exponent +0.04! Current': '水晶对金币转换指数增加0.04！当前效果',
-    '0.5% to Grandmaster production per Mythos producer bought. Current': '0.5%宗师产量于每购买1个神话生产者。当前效果',
     'When you use a rune, all other runes gain +0.01 EXP. Current': '当您献祭符文的时候，其他所有符文也获得0.01经验值。当前效果',
     'Gain an offering automatically every 2 seconds!': '每2秒自动获得1个祭品！',
     'Start [No Shards]': '开始[无碎片挑战]',
@@ -837,23 +701,16 @@ var cnItems = {
     'Building Cost Delay +0.5%. Current': '建筑成本增长减缓0.5%。当前效果',
     'None': '无',
     'Start [Cost+]': '开始[花费增加挑战]',
-    'Multiplier Delay +': '加倍器减缓次数 +',
-    'Building Cost Delay +': '建筑成本增长减缓',
     'You ever wonder how you get so many diamonds?': '您想过钻石是怎么来的吗？',
     'Transcend and reach the goal except you gain far fewer Diamonds from all sources [Gets harder each time!]': '立即超越开始挑战，您获得的钻石数量大幅度减少[挑战难度会随着完成次数越来越高！]',
-    '0.01 Coin --> Diamond conversion exponent on Prestige! Current': '0.01转生时金币对钻石的转换指数！当前效果',
     'Multiply Crystal production by 10! Current': '水晶产量变为10倍！当前效果',
     'Start [Reduced Diamonds]': '开始[钻石减少挑战]',
     'Exponent = ^': '指数变为',
     'The tax man caught wind that you reincarnated recently...': '据说，您最近在转世……税务官如是说',
     'Reincarnate and reach the goal except tax has a lower cap, and Coin production is divided by 1e250.': '立即转世开始挑战，税收将金币上限限制得更低，并且金币产量将除以1e250。',
-    '3.5% Taxes [Multiplicative]! Current': '3.5%税收[效果叠乘]！当前效果',
     'Thrift Rune Exp +10%! Current': '节俭符文经验值增加10%！当前效果',
     'Prestige Offerings +2%! Current': '转生的祭品获取数量增加2%！当前效果',
-    '7.5% Taxes!': '7.5%税收！',
     'Start <Higher Tax>': '开始<税收增加挑战>',
-    'Tax multiplier': '税收倍率变为',
-    'EXP +': '经验值增加',
     'You\'re really going to hate this one.': '憎恨我，怨恨我，然后，再来到我眼前吧。',
     'Reincarnate and reach the goal except Accelerators and Multipliers do nothing. Coin Production is divided by 1e1,250.': '立即转世开始挑战，加速器和加倍器完全无效。金币产量将除以1e1250。',
     'Accelerator/Multiplier boost power exponent +0.04! Current': '加速器加成及加倍器加成效果指数增加0.04！当前效果',
@@ -870,44 +727,29 @@ var cnItems = {
     'Start <Cost++>': '开始<花费暴增挑战>',
     'You\'ll never complain about Prism being bad again.': '您大概不会再抱怨棱柱符文没用了。',
     'Reincarnate and reach the goal except runes always have level 1 effects. All coin production is divided by e2,000,000.': '立即转世开始挑战，所有符文永远只有1级的效果。金币产量将除以1e2000000。',
-    '1 free Ant level! Current': '1免费蚂蚁等级！当前效果',
-    '10% Ant speed [Multiplicative!] Current': '10%蚂蚁速度[效果叠乘！]当前效果',
     'SI Rune Exp +20%! Current': '卓越智慧经验值增加20%！当前效果',
     'Unlock the Talismans feature! [In Runes tab]. A Global Diamond Upgrade.': '解锁护身符特性！[在符文选项卡下]。另外还解锁了一个全局钻石升级。',
     'Start <No Runes>': '开始<无符文挑战>',
     'I\'m sorry for what I\'ve unleashed onto the world.': '生而为人，我很抱歉。',
     'Reincarnate and reach the goal except run the first five challenges AT THE SAME TIME! Coin Production /e12,500,000.': '立即转世开始挑战，前五个挑战的限制同时生效！金币产量将除以1e12500000。',
-    '100 base ELO for sacrificing ants! Current': '100蚂蚁基础强度分！当前效果',
-    '2% Ant Sacrifice Reward! Current': '2%蚂蚁献祭奖励！当前效果',
     'Reincarnation Offerings +10%! Current': '转世的祭品获取数量增加10%！当前效果',
     'Unlock the Ascension Reset Tier!': '解锁飞升，下一阶的重置！',
     'Start <Sadistic I>': '开始<虐待狂挑战 I>',
     'The great Ant War of \'21 wiped off all of the skilled ants.': '二十一世纪的蚂蚁大战将所有技艺娴熟的蚂蚁都抹杀了。',
     'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.': '立即飞升开始挑战，您只能获得免费的蚂蚁升级，完成挑战8和挑战9也可以获得免费的蚂蚁升级。请注意，所有飞升挑战需要先完成挑战10以后才可以进行。',
-    '12 free Ant Levels! Current': '12免费蚂蚁等级！当前效果',
-    '80 to Rune Caps! Current': '80级符文等级上限！当前效果',
     'Unlock 15 Researches, and unlock the ability to open Tesseracts! You also get to toggle Corruptions ;': '解锁15个研究，并且解锁开启超立方的能力！同时您也可以开启腐化了 ;',
     'Start <[(Reduced Ants)]>': '开始<[(蚂蚁减少挑战)]>',
-    'Ant Speed': '蚂蚁速度',
     'For some reason, you just can\'t do it.': '总之就是不行，别问原因，没有原因。',
     'Ascend and reach the goal but you do not gain Particles and you cannot Reincarnate at all! Ant production ^0.5.': '立即飞升开始挑战，您无法获得粒子，也无法转世！蚂蚁产量^0.5。',
-    '50% Obtainium! Current': '50%难得素获取数量！当前效果',
-    '12% Offerings! Current': '12%祭品获取数量！当前效果',
-    '1 Cube Tribute per opening! Current': '1打开每个方盒的贡品获取数量！当前效果',
     'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab. Increase Corruption Cap by 2 levels. Finally, unlock two new corruptions! ;': '解锁15个研究，并且解锁神秘的魂灵能量！在符文选项卡下可以找到它们。另外还使腐化上限增加2级。最后，还可以解锁两种新腐化！ ;',
     'Start <[(No Reincarnation)]>': '开始<[(无转世挑战)]>',
     'Good luck with the IRS, buddy.': '祝您好运，税务局又归来了。',
     'Ascend and reach the goal, but taxes are much higher and grow with challenge completions. Ant production ^': '立即飞升开始挑战，税收高得多，而且随着所有挑战的完成次数增加。蚂蚁产量^',
     'Taxes -3.33%! Multiplicative! Current': '税收减少3.33%！效果叠乘！当前效果',
-    '6 maximum to Talisman Level Cap! Current': '6护身符等级上限！当前效果',
-    '3% Spirit Power effectiveness! Current': '3%魂灵能量效果！当前效果',
     'Unlock 15 Researches, and unlock the power of the Hypercube! Increase Corruption Cap by 2 levels, to 9! Finally, unlock two new corruptions! ;': '解锁15个研究，并且解锁五阶立方的力量！另外还使腐化上限增加2级，到达9级！最后，还可以解锁两种新腐化！ ;',
     'Start <[(Tax+++)]>': '开始<[(税收激增挑战)]>',
     'The dimension that never progressed past the dark ages. Many fear to even step foot.': '这个维度没能跨越黑暗时代。很多人甚至不敢越雷池一步。',
     'Ascend and reach the goal but you do not gain Obtainium nor are any researches purchasable. Ant production ^0.2.': '立即飞升开始挑战，您无法获得难得素，也无法进行研究。蚂蚁产量^0.2。',
-    '50% stronger effect on researches 1x1 through 1x5. Current': '50%研究1x1至研究1x5的效果。当前效果',
-    '1 research purchased per roomba tick! Current': '1每次自动购买的研究数量！当前效果',
-    '200 to Rune Caps! Current': '200级符文等级上限！当前效果',
     'Unlock 15 Researches, and a way to coalesce your power into the Singularity. Increase Corruption Cap by 2 levels, to 11! Finally, unlock two new corruptions! ;': '解锁15个研究，并且解锁将能量与奇点结合的方法。另外还使腐化上限增加2级，到达11级！最后，还可以解锁两种新腐化！ ;',
     'Start <[(No Research)]>': '开始<[(无研究挑战)]>',
     'The worst sin a man can do is making others suffer.': '折磨他人，是人类最大的原罪。',
@@ -1163,7 +1005,7 @@ var cnItems = {
     'Imitates your body through magic shape-shifting powers [up to x40]': '通过神奇的变形效果模仿您的行动[最高为40倍]',
     'Tries to please Ant God... but fails [Additional Offerings!]': '尝试取悦蚁神……但很遗憾地失败了[获得额外祭品！]',
     'Helps you build a few things here and there [+3% Building Cost Delay / level, Cap 9,999,999%]': '帮助您到处建造一些东西[每级使建筑成本减缓3%，最高为9999999%]',
-    'Knows how to salt and pepper food [Up to 1,000x Rune EXP!]': '懂得如何给食物加盐和胡椒[最高为1000倍符文经验！]',
+    'Knows how to salt and pepper food [Up to 1,000x Rune EXP!]': '懂得如何给食物加盐和胡椒[最高为1000倍符文经验值！]',
     'Can make your message to Ant God a little more clear [+1 all Rune Levels / level, Cap 10 Million]': '使您的信息更容易传达给蚁神[每级使所有符文增加1级，最高为10000000级]',
     'Has big brain energy [Additional Obtainium!]': '有一个超级强大的大脑[获得额外难得素！]',
     'A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!]': '献给蚁神的贵重祭品[最高可以获得3倍献祭奖励！]',
@@ -1668,7 +1510,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.4 - The Reality Update pt.1 [Last Update: 5:42 UTC 16-May-2022].': '您目前玩的版本为V2.9.4 - 现实升级第一部分 [2022年5月16日 UTC 5:42更新]。',
+    'You\'re playing v2.9.4 Part 2 - The Reality Update pt.1 [Last Update: 10:42 UTC 17-May-2022].': '您目前玩的版本为V2.9.4 第二部分 - 现实升级第一部分 [2022年5月17日 UTC 10:42更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1843,7 +1685,7 @@ var cnItems = {
     'Automatically pour Obtainium into a research. 1st level unlocks feature, and each level increases Obtainium gain by 2%. Every reincarnation, dump all Obtainium into research until maxed.': '自动使用难得素进行研究。第一级解锁特性，之后的每一级使难得素获取数量增加2%。每次转世，尽可能地使用难得素升级目标研究，激活方式与自动献祭类似。',
     'T and R challenges don\'t cause resets if retry is enabled and gain up to 10 completions per tick. Additionally, instantly gain T challenge completions up to highest completed when exiting R challenges.': '只要开启重新尝试挑战，超越和转世挑战将不再重置资源，且每个时刻可以完成10次。另外，在退出转世挑战时，立刻使超越挑战的完成次数达到之前的完成次数上限。',
     'Each level gives a 1.125x speed multiplier to all Ant tiers\' production! (Uncorruptable!) Short and simple.': '每级使蚂蚁速度变为1.125倍！(不受腐化影响！)简单有效。',
-    'This is a cash grab but it gives a couple cool stats. +1% production per level to Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使祭品和难得素的产量增加1%。',
+    'This is a cash grab but it gives a couple cool stats. +1% production per level to Offerings and Obtainium.': '这玩意非常贵，但是效果拔群。每级使祭品和难得素的获取数量增加1%。',
     'Permanently unlock a Shop talisman!': '永久解锁一个商店护身符！',
     'Wow! Cubes is giving you a deal: Buy this totally fair Season Pass and gain +1.5% cubes and tesseracts per level when you ascend!': '惊奇方盒提出交易：购买这个完全公平的季票以后，每级使您飞升的方盒和超立方获取数量增加1.5%！',
     'Using some amazing trick, you manage to increase your Reincarnation Challenge cap by 2 for each level!': '耍点漂亮的小把戏，每级增加2次转世挑战次数上限！',
@@ -1865,6 +1707,13 @@ var cnItems = {
     'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒及立方获取数量增加0.5%。',
     'This one is arguably very good. Gain +1% ALL Cubes per level, per singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒及立方获取数量增加1%！',
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
+    'First up on the menu, why not gain +0.2% Quarks from cube opening per level?': '兵马未动，粮草先行，每级使开启方盒及立方的夸克获取数量增加0.2%。',
+    'This isn\'t even as good as the original. +0.5% Offerings and Obtainium per level.': '效果甚至还不如之前的。每级使祭品和难得素的获取数量增加0.5%。',
+    'Gain +0.01% Ascension Speed per level per singularity. It needs a lot of fuel to power up.': '对于每次奇点，每级使飞升的速度增加0.01%。加速需要消耗大量燃料。',
+    'Gain +0.01% Offerings per level per singularity. Putting the Singularity Debuff industry out of business.': '对于每次奇点，每级使祭品获取数量增加0.01%。让奇点削弱行业倒闭去吧。',
+    'Gain +0.01% Obtainium per level per singularity!!!': '对于每次奇点，每级使难得素获取数量增加0.01%！！！',
+    'Your grandparents had to wait a full day for powder, but not you! Per level gain +1% of orbs to powder based on the conversion rate.': '您的爷爷奶奶可能还在等着一天结束获得超通量粉，但您已经可以直接获得了！每级可以将1%的超通量珠直接转化为超通量粉，且不减少超通量珠数量。',
+    'One would be advised not to touch this. +0.05% Octeracts per level, whatever those are...': '触碰它可不是什么明智之举。每级使八阶立方获取数量增加0.05%，但这些是……',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
@@ -1916,7 +1765,6 @@ var cnPrefix = {
     "Multipliers: ": "加倍器：", //主界面及建筑
     "Accelerator Boost: ": "加速器加成：", //主界面及建筑
     "Reset Diamonds and Prestige Upgrades, but add ": "重置钻石及转生升级，但将增加", //主界面及建筑
-    "Due to your excessive wealth, coin production is divided by ": "由于您的财富过多，需要减少", //主界面及建筑
     "Refineries: ": "炼油厂：", //主界面及建筑
     "Coal Plants: ": "煤电厂：", //主界面及建筑
     "Coal Rigs: ": "煤钻机：", //主界面及建筑
@@ -2057,53 +1905,20 @@ var cnExcludePostfix = [
 //小数点：([\d\.]+)
 //原样输出的字段：(.+)
 var cnRegReplace = new Map([
-    [/^(.+)s until \+(.+) export Quark$/, '距离增加导出奖励$2夸克还有$1秒'], //主脚本
-    [/^Quarks on export: (.+) \[Max (.+)\]$/, '导出奖励的夸克总和：$1[最大为$2]'], //主脚本
-    [/^(.+)s until \+(.+) export Golden Quark$/, '距离增加导出奖励$2金夸克还有$1秒'], //主脚本
-    [/^Golden Quarks on export: (.+) \[Max (.+)\]$/, '导出奖励的金夸克总和：$1[最大为$2]'], //主脚本
-    [/^Acceleration Power: (.+) \|\| Acceleration Multiplier(.*)$/, '加速器效果: $1 || 加速器倍率$2'], //主界面及建筑
-    [/^Multiplier Power: (.+) \|\| Multiplier(.*)$/, '加倍器效果: $1 || 加倍器倍率$2'], //主界面及建筑
-    [/^(.+) to pay taxes!$/, '$1的金币产量用于缴税！'], //主界面及建筑
-    [/^(.+) to pay taxes! Your tax also caps your Coin gain at (.+)\/s.$/, '$1的金币产量用于缴税！税收还将您的金币每秒产量上限限制在$2。'], //主界面及建筑
-    [/^You have (.+) Crystals, multiplying Coin production by (.+)x.$/, '您有$1水晶，金币产量因此乘以$2倍。'], //主界面及建筑
-    [/^Prestige when your Diamonds can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当钻石为之前的$1倍时转生[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
-    [/^Prestige when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后转生[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
-    [/^You have (.+) Mythos Shards, providing (.+) Multiplier Power boosts.$/, '您有$1神话碎片，加倍器加成因此增加$2个。'], //主界面及建筑
-    [/^Prestige when your Mythos can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当神话碎片为之前的$1倍时超越[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
-    [/^Transcend when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后超越[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
-    [/^You have (.+) Atoms, providing (.+) Building Power. Multiplier to Coin Production(.*)$/, '您有$1原子，建筑能量因此增加$2。金币产量倍率变为$3'], //主界面及建筑
-    [/^Reincarnate when your Particles can increase by a factor (.*) \[Toggle number above\]. Current Multiplier: (.+).$/, '当粒子为之前的$1倍时转世[在上方输入设置数值]。当前倍率：$2。'], //主界面及建筑
-    [/^Reincarnate when the autotimer is at least (.*) real-life seconds. \[Toggle number above\]. Current timer: (.+)s.$/, '当现实时间经过$1秒后转世[在上方输入设置数值]。当前时间：$2秒。'], //主界面及建筑
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面及建筑
-    [/^You have a mathematical constant of (.+). Taxes are divided by (.+).$/, '您有$1数学常数。税收因此除以$2。'], //主界面及建筑
     [/^Auto buyer will save at least (.+) tesseracts. \[Enter number above\].$/, '自动购买至少保留$1超立方[在上方输入设置数值]。'], //主界面及建筑
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面及建筑
-    [/^You have (.+) Offerings.$/, '您有$1祭品。'], //主界面及建筑
     [/^Gain (.+)\* EXP per offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面及建筑
     [/^You have (.+)% chance of recycling your offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面及建筑
-    [/^ \[Bonus: (.+)\]$/, '[额外等级：$1]'], //主界面及建筑
     [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面及建筑
-    [/^Sacrifice when the timer is at least (.+) seconds \(In-game time\), Currently(.*)$/, '当时间至少经过$1秒(游戏时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑
-    [/^Sacrifice when the timer is at least (.+) seconds \(Real-time\), Currently(.*)$/, '当时间至少经过$1秒(现实时间)后献祭蚂蚁，目前时间为$2'], //主界面及建筑
-    [/^(.+) Hours (.+) Mins (.+) Secs$/, '$1小时$2分$3秒'], //主界面及建筑
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面及建筑
-    [/^(\s+)Click the image below to join the Discord!(\s+)$/, '$1点击下方的图片加入Discord频道！$2'], //主界面及建筑
-    [/^(\s+)Support Development on Patreon!(\s+)$/, '$1在Patreon上支持本游戏开发！$2'], //主界面及建筑
     [/^Generous patrons give you a bonus of (.+)% more quarks!$/, '由于Patron上的慷慨相助，夸克获取数量增加了$1%！'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑
     [/^Upgrade \+(.+) for (.+) Quarks$/, '使用$2夸克升级$1级'], //主界面及建筑
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面及建筑
     [/^Buy! (.+) Quarks Each$/, '进行购买！每个花费$1夸克'], //主界面及建筑
-    [/^You have (.+) seconds of Offline Progress!$/, '您的离线时间为$1秒！'], //离线计算
-    [/^Coins, Coin Producers, Coin Upgrades, and Crystals are reset, but in return you gain diamonds and a few offerings. Required: (.+)\/1e16 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置金币、金币生产者、金币升级、水晶，获得钻石和一些祭品。需要：$1/1e16金币 || 花费时间：$2秒。'], //重置
-    [/^Reset all Coin and Diamond Upgrades\/Features, Crystal Upgrades & Producers, for Mythos\/Offerings. Required: (.+)\/1e100 Coins \|\| TIME SPENT: (.+) seconds.$/, '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：$1/1e100金币 || 花费时间：$2秒。'], //重置
-    [/^Are you tired of being in your challenge or stuck\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) seconds.$/, '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
-    [/^Reset ALL previous reset tiers, but gain Particles, Obtainium and Offerings! Required: (.+)\/1e300 Mythos Shards \|\| TIME SPENT: (.+) seconds.$/, '重置之前的所有低阶资源，获得粒子，难得素和一些祭品！需要：$1/1e300神话碎片 || 花费时间：$2秒。'], //重置
-    [/^Reset Coin Producers\/Upgrades, Crystals and Diamonds in order to increase the power of your Accelerators. Required: (.+)\/(.*)$/, '重置所有金币的生产者和升级，以及水晶和钻石，增加加速器效果。需要：$1/$2'], //重置
-    [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Mythos Shards. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3神话碎片。花费时间：$4秒。'], //重置
-    [/^Are you done or tired of being in your challenge\? Click to leave challenge (.+). Progress: (.+)\/(.+) Coins. TIME SPENT: (.+) Seconds.$/, '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战$1。进度：$2/$3金币。花费时间：$4秒。'], //重置
-    [/^Ascend. 10x1 is required! \+(.+) Wow! Cubes for doing it! Time: (.+) Seconds.$/, '进行飞升。需要完成一次挑战10才可飞升！可获得$1惊奇方盒！花费时间：$2秒。'], //重置
+    [/^You have (.+) seconds of Offline Progress!$/, '您离线了$1秒！'], //离线计算
     [/^Effect: Worker Production(.*)$/, '效果：工人产量$1'], //升级
     [/^Effect: Investment Production(.*)$/, '效果：投资产量$1'], //升级
     [/^Effect: Printer Production(.*)$/, '效果：打印机产量$1'], //升级
@@ -2167,119 +1982,21 @@ var cnRegReplace = new Map([
     [/^Rune EXP(.*)$/, '符文经验$1'], //升级
     [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
     [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
-    [/^Reward: (.+) AP. (.+) Quarks!$/, '奖励：$1成就点数。$2夸克！'], //成就
-    [/^Reward: 10 AP. 10 Quarks! ALL Ant speed multiplied by(.*)$/, '奖励：10成就点数。10夸克！所有蚂蚁的速度都乘以$1'], //成就
-    [/^Reward: 10 AP. 10 Quarks! Ant Multiplier from sacrifice is multiplied by another logarithm(.*)$/, '奖励：10成就点数。10夸克！献祭获得的蚂蚁倍率乘以另一个对数倍率$1'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain an Ascension cubes multiplier based on your score: x(.*). Also: Offerings \+(.*)% \[Max: 100% at 1M Ascensions\]$/, '奖励：60成就点数。300夸克！根据您的飞升分数，使飞升的方盒及立方倍率乘以$1。另外，祭品获取数量增加$2%[与飞升次数有关，在1000000次飞升时达到上限：100%]'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain \+100 ascension count for all ascensions longer than 10 seconds. Also: Obtainium \+(.*)% \[Max: 100% at 5M Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时长超过10秒时，本次飞升使飞升次数增加100次。另外，难得素获取数量增加$1%[与飞升次数有关，在5000000次飞升时达到上限：100%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascension as a linear multiplier to ascension count. Also: Cubes \+(.*)% \[Max: 200% at 500M Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，方盒获取数量增加$1%[与飞升次数有关，在500000000(5e8)次飞升时达到上限：200%]'], //成就
-    [/^Reward: 40 AP. 200 Quarks! Gain (.*)% more Cubes on ascension!$/, '奖励：40成就点数。200夸克！飞升时方盒获取数量增加$1%！'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain (.*)% more Cubes and Tesseracts on ascension! Multiplicative with the other Ach. bonus \[MAX: 25,000% at e100,000 Const\]$/, '奖励：60成就点数。300夸克！飞升时方盒和超立方获取数量增加$1%！与其他成就的加成相互叠乘[在e100000常数时达到上限：25000%]。'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain (.*)% more Platonic Cubes on ascension! \[MAX: 2,000% at e100,000 Const\]$/, '奖励：100成就点数。500夸克！飞升时PLATONIC方盒获取数量增加$1%！[在e100000常数时达到上限：2000%]。'], //成就
-    [/^Reward: 60 AP. 300 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count. Also: Tesseracts \+(.*)% \[Max: 200% at 1B Ascensions\]$/, '奖励：60成就点数。300夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，超立方获取数量增加$1%[与飞升次数有关，在1000000000(1e9)次飞升时达到上限：200%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count. Also: Hypercubes \+(.*)% \[Max: 200% at 2B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，五阶立方获取数量增加$1%[与飞升次数有关，在2000000000(2e9)次飞升时达到上限：200%]'], //成就
-    [/^Reward: 100 AP. 500 Quarks! Gain 20% of excess time after 10 seconds each Ascensions as a linear multiplier to ascension count. Also: Platonic Cubes \+(.*)% \[Max: 200% at 2.674B Ascensions\]$/, '奖励：100成就点数。500夸克！飞升时间超过10秒以后，超出部分的时间的2%将变为飞升次数的倍率。另外，PLATONIC方盒获取数量增加$1%[与飞升次数有关，在2674000000(2.674e9)次飞升时达到上限：200%]'], //成就
-    [/^Reward: 40 AP. 200 Quarks! Ascension Cube Gain Multipliers is VERY slightly affected by global speed multipliers: (.*)x \(Min: 1.10x, Max$/, '奖励：40成就点数。200夸克！飞升时所有类型的方盒及立方获取数量受到全局速度轻微的影响：乘以$1(最小值: 1.10x，最大值'], //成就
-    [/^Reward: 75 AP. 3,000 Quarks! Cube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：75成就点数。3000夸克！方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
-    [/^Reward: 75 AP. 3,000 Quarks! Tesseract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\], and allow gain of Hepteracts.$/, '奖励：75成就点数。3000夸克！超立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]，并且解锁惊奇七阶立方。'], //成就
-    [/^Reward: 75 AP. 3,000 Quarks! Hypercube Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]. Also, Overflux Powder conversion rate is 5% better!$/, '奖励：75成就点数。3000夸克！五阶立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]。另外，超通量粉的转化效率增加5%。'], //成就
-    [/^Reward: 100 AP. 4,000 Quarks! Platonic Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]. Also, Overflux Powder conversion rate is 5% better!$/, '奖励：100成就点数。4000夸克！PLATONIC方盒获取数量增加$1%[在1e25飞升分数时达到上限：15%]。另外，超通量粉的转化效率增加5%。'], //成就
-    [/^Reward: 100 AP. 4,000 Quarks! Hepteract Gain \+(.*)% \[Max: \+15% at 1e25 Ascension Score\]$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在1e25飞升分数时达到上限：15%]'], //成就
-    [/^Reward: 75 AP. 3,000 Quarks! Ascensions are (.*) faster! Max: \+$/, '奖励：75成就点数。3000夸克！飞升的速度增加$1！上限：增加'], //成就
-    [/^Reward: 100 AP. 4,000 Quarks! Hepteracts \+(.*)% \[Max: 40% at 8T Ascensions\]!$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在8000000000000(8e12)次飞升时达到上限：40%]！'], //成就
-    [/^Reward: 100 AP. 4,000 Quarks! Hepteracts \+(.*)% \[Max: 20% at 160T Ascensions\]!$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在160000000000000(1.6e14)次飞升时达到上限：20%]！'], //成就
-    [/^Reward: 150 AP. 6,000 Quarks! Quarks \+(.*)% \[Max: 10% at 1Qa Ascensions\]!$/, '奖励：100成就点数。4000夸克！七阶立方获取数量增加$1%[在1000000000000000(1e15)次飞升时达到上限：10%]！'], //成就
-    [/^Reward: 50 AP. 2,000 Quarks! Ascension Score is boosted by (.*)% \[Max: 100% at 1e100,000 Const\]$/, '奖励：50成就点数。2000夸克！飞升分数增加$1%[在e100000常数时达到上限：100%]'], //成就
-    [/^Reward: 75 AP. 3,000 Quarks! Hepteract Gain is boosted by (.*)% \[Max: 100% at 1e1,000,000 const\], Constant Upgrade 1 boosted to 1.06 \(from 1.05\), Constant Upgrade 2 boosted to 1.11 \(from 1.10\).$/, '奖励：75成就点数。3000夸克！七阶立方获取数量增加$1%[在e1000000常数时达到上限：100%]，数学常数升级1的效果从1.05变为1.06，数学常数升级2的效果从1.1变为1.11。'], //成就
-    [/^Reward: 100 AP. 4,000 Quarks! When you open a Platonic Cube, gain (.*) Hypercubes, rounded down \[Max: 1 at 1e1,000,000 Const\]$/, '奖励：100成就点数。4000夸克！开启一个PLATONIC方盒时，获得$1个五阶立方，向下取整[在e1000000常数时达到上限：1]'], //成就
-    [/^(.+) EXP per offering. (.+) Offerings to level up once.$/, '$1经验值于每个祭品。需要$2祭品以提升1级。'], //符文等
-    [/^(.+) EXP per offering. (.+) Offerings to level up (.+) times.$/, '$1经验值于每个祭品。需要$2祭品以提升$3级。'], //符文等
-    [/^Speed Rune Bonus: \+(.+) Accelerators, \+(.+)% Accelerators, \+(.+) Accelerator Boosts.$/, '加速符文奖励：加速器数量增加$1，加速器数量再增加$2%，加速器加成数量增加$3。'], //符文等
-    [/^Duplication Rune Bonus: \+(.+) Multipliers, \+(.+)% Multipliers, \-(.+)% Tax Growth.$/, '重叠符文奖励：加倍器数量增加$1，加倍器数量再增加$2%，税收增长减缓$3%。'], //符文等
-    [/^Prism Rune Bonus: All Crystal Producer production multiplied by (.+), gain \+(.+) free crystal levels.$/, '棱柱符文奖励：水晶产量变为$1倍，水晶升级免费增加$2级。'], //符文等
-    [/^Thrift Rune Bonus: Delay all producer cost increases by (.+)%. Offering recycle chance: \+(.+)%. \-(.+)% Tax Growth$/, '节俭符文奖励：所有建筑成本增长减缓$1%。祭品回收概率：$2%。税收增长减缓$3%。'], //符文等
-    [/^S. Intellect Rune Bonus: Obtainium gain x(.+). Ant Speed: x(.+). Base Offerings: \+(.*)$/, '卓越智慧符文奖励：难得素获取数量变为$1倍。蚂蚁速度变为$2倍。基础祭品数量：增加$3'], //符文等
-    [/^IA Rune Bonus:  Quark Gain \+(.+)%, Ascensions give \+(.+)% more of all cube types.$/, '无限晋升符文奖励：夸克获取数量增加$1%，飞升时所有类型的方盒及立方获取数量增加$2%。'], //符文等
     [/^I wonder what happens if you feed it (.+) Rune EXP.$/, '如果给它$1符文经验值，或许会发生什么事情。'], //符文等
-    [/^Cost to buy (.+) Talisman Shards?: (.+) Obtainium and (.+) offerings.$/, '购买$1个护身符碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Common Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个普通碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Uncommon Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个罕见碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Rare Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个稀有碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Epic Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个史诗碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Legendary Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个传奇碎片的花费：$2难得素及$3祭品。'], //符文等
-    [/^Cost to buy (.+) Mythical Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个神秘碎片的花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Talisman Shards?: (.+) Obtainium and (.+) offerings.$/, '购买$1个护身符碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Common Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个普通碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Uncommon Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个罕见碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Rare Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个稀有碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Epic Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个史诗碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Legendary Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个传奇碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Mythical Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个神秘碎片花费：$2难得素及$3祭品。'], //符文等
     [/^Gain \+(.+)% Global Speed Acceleration.$/, '全局速度增加$1%。'], //符文等
     [/^Talismans' Bonus Rune Levels \+(.+) per level$/, '护身符的符文额外等级每级多增加$1'], //符文等
-    [/^No Multipliers Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Goal: Gain (.+) Coins in challenge.$/, '目标：在挑战中达到$1金币。'], //挑战
-    [/^(.+)% more Boosts$/, '$1%加倍器加成'], //挑战
-    [/^([e\d\,\.\s]+) Boosts$/, '$1加倍器加成'], //挑战
-    [/^(.+) Rune EXP \[Highest Completion\]$/, '$1符文经验值[取最高完成次数]'], //挑战
-    [/^No Accelerators Challenge \|\| (.+)\/(.+) Completions$/, '无加速器挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^([e\d\,\.\s]+) Accelerators$/, '$1加速器'], //挑战
-    [/^(.+)% A.Boost Power$/, '$1%加速器加成效果'], //挑战
-    [/^(.+)% Accelerator Power$/, '$1%加速器效果'], //挑战
-    [/^No Shards Challenge \|\| (.+)\/(.+) Completions$/, '无碎片挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^([e%\d\,\.\s]+) EXP$/, '$1经验值'], //挑战
-    [/^Cost\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费增加挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Accelerator Delay(.*)$/, '加速器减缓次数$1'], //挑战
-    [/^Reduced Diamonds Challenge \|\| (.+)\/(.+) Completions$/, '钻石减少挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Crystal production(.*)$/, '水晶产量倍率变为$1'], //挑战
-    [/^Higher Tax Challenge \|\| (.+)\/(.+) Completions$/, '税收增加挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Goal: Gain (.+) Mythos Shards in challenge.$/, '目标：在挑战中达到$1神话碎片。'], //挑战
-    [/^(.+)% Prestige-based Offerings$/, '$1%转生相关的祭品数量'], //挑战
-    [/^No Multipliers\/Accelerators Challenge \|\| (.+)\/(.+) Completions$/, '无加倍器/加速器挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Cost\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '花费暴增挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+)% Transcend-based offerings$/, '$1%超越相关的祭品数量'], //挑战
-    [/^No Runes Challenge \|\| (.+)\/(.+) Completions$/, '无符文挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+) free levels$/, '$1免费等级'], //挑战
-    [/^(.+) Ant Speed$/, '$1蚂蚁速度'], //挑战
-    [/^Sadistic Challenge I \|\| (.+)\/(.+) Completions$/, '虐待狂挑战 I || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+) Ant ELO$/, '$1蚂蚁强度分'], //挑战
-    [/^(.+)% Ant Sacrifice reward$/, '$1%蚂蚁献祭奖励'], //挑战
-    [/^(.+)% Reincarnate-based offerings$/, '$1%转世相关的祭品数量'], //挑战
-    [/^Reduced Ants Challenge \|\| (.+)\/(.+) Completions$/, '蚂蚁减少挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^Goal: Complete Challenge 10 \[Sadistic Challenge I\] (.+) times.$/, '目标：在挑战中完成$1次挑战10<虐待狂挑战 I>。'], //挑战
-    [/^(.+) free ant levels$/, '$1免费蚂蚁等级'], //挑战
-    [/^(.+) to Rune Caps$/, '$1级符文等级上限'], //挑战
-    [/^No Reincarnation Challenge \|\| (.+)\/(.+) Completions$/, '无转世挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+)% Obtainium$/, '$1%难得素'], //挑战
-    [/^(.+)% Offerings$/, '$1%祭品'], //挑战
-    [/^(.+) additional Cube Tributes$/, '$1额外的方盒贡品'], //挑战
-    [/^Tax\+\+\+ Challenge \|\| (.+)\/(.+) Completions$/, '税收激增挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+)% Corruption Tax$/, '$1%腐化税收'], //挑战
-    [/^(.+) Talisman Level Cap$/, '$1护身符等级上限'], //挑战
-    [/^(.+)% Effectiveness$/, '$1%效果'], //挑战
-    [/^No Research Challenge \|\| (.+)\/(.+) Completions$/, '无研究挑战 || 完成$1次，次数上限为$2'], //挑战
-    [/^(.+)% Power$/, '$1%效果'], //挑战
-    [/^(.+) per Tick$/, '$1个研究于每次自动购买'], //挑战
-    [/^SADISTIC CHALLENGE II \|\| (.+)\/(.+) Completions$/, '虐待狂挑战 II || 完成$1次，次数上限为$2'], //挑战
-    [/^Goal: (.+) Coins, but get bonuses based on your best attempt.$/, '目标：$1金币，根据您在此挑战中的最高金币数量获得奖励。'], //挑战
     [/^Gain (.+) Quarks for completing this challenge \[First Time Bonus\]!$/, '完成挑战后可以获得$1夸克[首次完成奖励]！'], //挑战
     [/^Completing the challenge adds (.+) to Ascension Bank and increase base Score by (.+).$/, '完成挑战后飞升库增加$1个惊奇方盒，飞升基础分数增加$2。'], //挑战
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
     [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
     [/^ Cost: (.*) Obtainium \[\+(.+) Levels\]$/, '花费：$1难得素[可提升$2级]'], //研究
-    [/^CURRENT EFFECT: ALL Ants work at (.+)x speed.$/, '当前效果：所有蚂蚁工作速度变为$1倍。'], //蚂蚁
-    [/^CURRENT EFFECT: Crumb --> Coin exponent is \^(.*)$/, '当前效果：碎屑对金币产量的加成效率变为^$1'], //蚂蚁
-    [/^CURRENT EFFECT: Tax growth is multiplied by(.*)$/, '当前效果：税收增长乘以$1'], //蚂蚁
-    [/^CURRENT EFFECT: Accelerator Boosts \+(.*)$/, '当前效果：加速器加成增加$1'], //蚂蚁
-    [/^CURRENT EFFECT: Multipliers \+(.*)$/, '当前效果：加倍器增加$1'], //蚂蚁
-    [/^CURRENT EFFECT: Offerings(.*)$/, '当前效果：祭品$1'], //蚂蚁
-    [/^CURRENT EFFECT: Building Costs scale (.+)% slower!$/, '当前效果：建筑成本增长速度减缓$1%！'], //蚂蚁
-    [/^CURRENT EFFECT: Rune EXP is multiplied by (.+)!$/, '当前效果：符文经验乘以$1倍！'], //蚂蚁
-    [/^CURRENT EFFECT: Each rune has +(.+) effective levels.$/, '当前效果：每个符文有效等级增加$1。'], //蚂蚁
-    [/^CURRENT EFFECT: Obtainium(.*)$/, '当前效果：难得素$1'], //蚂蚁
-    [/^CURRENT EFFECT: Sacrificing is (.+)x as effective$/, '当前效果：献祭效果变为$1倍'], //蚂蚁
-    [/^CURRENT EFFECT: Global timer is sped up by a factor of(.*)$/, '当前效果：全局速率变为'], //蚂蚁
-    [/^\[(.+) effective\]$/, '[有效分$1]'], //蚂蚁
-    [/^(.+) \[>500 ELO\]$/, '$1[分>500]'], //蚂蚁
-    [/^(.+) \[>750 ELO\]$/, '$1[分>750]'], //蚂蚁
-    [/^(.+) \[>1,000 ELO\]$/, '$1[分>1000]'], //蚂蚁
-    [/^(.+) \[>1,500 ELO\]$/, '$1[分>1500]'], //蚂蚁
-    [/^(.+) \[>2,000 ELO\]$/, '$1[分>2000]'], //蚂蚁
-    [/^(.+) \[>3,000 ELO\]$/, '$1[分>3000]'], //蚂蚁
-    [/^(.+) \[>5,000 ELO\]$/, '$1[分>5000]'], //蚂蚁
     [/^How many cubes would you like to open\? You have (.+)!$/, '您想要开启多少？您目前拥有$1！'], //惊奇方盒
     [/^(.+) Wow! Cubes \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
     [/^(\d+)\/(\d+) \[MAX\]$/, '$1/$2 [最大]'], //惊奇方盒
@@ -2303,17 +2020,17 @@ var cnRegReplace = new Map([
     [/^Current Effect: Accelerator Boosts \+(.*)$/, '当前效果：不受腐化影响的加速器加成数量+$1'], //惊奇方盒
     [/^Current Effect: Uncorruptable Multipliers \+(.*)$/, '当前效果：不受腐化影响的加倍器数量+$1'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e115 Obtainium$/, '锻造一个将消耗$1七阶立方及1e115难得素'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e80 Offerings.$/, '锻造一个将消耗$1七阶立方及1e80祭品。'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts, 1e11 Platonic Cubes and 1e22 Cubes.$/, '锻造一个将消耗$1七阶立方，1e11 PLATONIC方盒及1e22惊奇方盒。'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and 1e80 Offerings.$/, '锻造一个将消耗$1七阶立方及1e80祭品'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts, 1e11 Platonic Cubes and 1e22 Cubes.$/, '锻造一个将消耗$1七阶立方，1e11 PLATONIC方盒及1e22惊奇方盒'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 69 Wow! Cubes \(lol$/, '锻造一个将消耗$1七阶立方及69惊奇方盒(笑'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e14 Wow!$/, '锻造一个将消耗$1七阶立方及1e14惊奇'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e10 Hypercubes$/, '锻造一个将消耗$1七阶立方及1e10惊奇五阶立方'], //惊奇方盒
     [/^One of these will cost you (.*) Hepteracts and 1e130 Obtainium$/, '锻造一个将消耗$1七阶立方及1e130难得素'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and$/, '锻造一个将消耗$1七阶立方及'], //惊奇方盒
     [/^Orb Effect: Opening Cubes gives (.*)% more$/, '超通量珠效果：开启方盒及立方时额外获得$1%'], //惊奇方盒
     [/^Orbs Purchased Today: (.*).$/, '今日购买的超通量珠数量：$1。'], //惊奇方盒
     [/^How many Orbs would you like to purchase\? You can buy up to (.*) with your hepteracts.$/, '您要购买多少超通量珠？现有的七阶立方最多可以购买$1。'], //惊奇方盒
-    [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。祝您开心！'], //惊奇方盒
+    [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. You have also gained (.+) powder immediately, thanks to your shop upgrades. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。由于商店升级的效果，您还立即获得了$3超通量粉。祝您开心！'], //惊奇方盒
+    [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\].  Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。祝您开心！'], //惊奇方盒
     [/^Expired Overflux Orbs become powder at a rate of (.+) Orbs per powder lump!$/, '粉碎的超通量珠可以转化为超通量粉，比率为：每超通量粉块需要$1超通量珠！'], //惊奇方盒
     [/^Powder effect: ALL Cube Gain \+(.+)% \[Multiplicative\], \+(.+)% Quarks \[Multiplicative\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%[叠乘]，夸克获取数量增加$2%[叠乘]'], //惊奇方盒
     [/^Powder effect: ALL Cube Gain \+(.+)% \[Multiplicative\], \+(.+)% Quarks \[Multiplicative\], Ascension Count \+(.+)%, Tesseract Building Production x(.+) \[From Platonic Upgrade 4x1\]$/, '超通量粉块效果：所有类型的方盒及立方获取数量增加$1%[叠乘]，夸克获取数量增加$2%[叠乘]，飞升次数增加$3%，超立方建筑产量变为$4倍[Platonic升级4x1的效果]'], //惊奇方盒
@@ -2353,17 +2070,7 @@ var cnRegReplace = new Map([
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
     [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize!$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！'], //时间点击代码
     [/^You clicked at the right time! \[\+(.+) Quarkies\]$/, '您点击的时机很好！[增加$1夸克]'], //时间点击代码
-    [/^([e\d\.\,]+)ms$/, '$1毫秒'], //统计数据
     [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
-    [/^([\d\.]+)s$/, '$1秒'], //历史统计
-    [/^(\d+)m(\d+)s$/, '$1分$2秒'], //历史统计
-    [/^(\d+)h(\d+)m(\d+)s$/, '$1时$2分$3秒'], //历史统计
-    [/^([e\d\,\.]+)d(\d+)h(\d+)m(\d+)s$/, '$1日$2时$3分$4秒'], //历史统计
-    [/^([e\d\,\.]+)d(\d+)h(\d+)m$/, '$1日$2时$3分'], //历史统计
-    [/^([e\d\,\.]+)\/s$/, '$1/秒'], //历史统计
-    [/^(.+) multi$/, '$1倍率'], //历史统计
-    [/^([e\d\,\.]+) ELO$/, '$1分'], //历史统计
-    [/^Score(.*)$/, '分数$1'], //历史统计
     [/^Own: (.+)$/, '拥有：$1'], //商店
     [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店
@@ -2390,6 +2097,13 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: \+(.+)% faster ascensions!$/, '当前效果：飞升的速度增加$1%！'], //商店
     [/^CURRENT Effect: \+(.+)% faster ascensions! FOREVER!$/, '当前效果：飞升的速度增加$1%！效果永久生效！'], //商店
     [/^CURRENT Effect: \+(.+)% more cubes on ascension.$/, '当前效果：所有类型的方盒及立方获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Offering, Obtainium \+(.+)%!$/, '当前效果：难得素和祭品的获取数量增加$1%！'], //商店
+    [/^CURRENT Effect: Opening any cube gives \+(.+)% quarks!$/, '当前效果：开启方盒及立方的夸克获取数量增加$1%！'], //商店
+    [/^CURRENT Effect: Ascension Speed \+(.+)%!$/, '当前效果：飞升的速度增加$1%！'], //商店
+    [/^CURRENT Effect: Offerings \+(.+)%!$/, '当前效果：祭品的获取数量增加$1%！'], //商店
+    [/^CURRENT Effect: Obtainium \+(.+)%!$/, '当前效果：难得素的获取数量增加$1%！'], //商店
+    [/^CURRENT Effect: Every (.+) purchased orbs grants 1 powder.$/, '当前效果：每锻造$1超通量珠就可以获得1超通量粉块。'], //商店
+    [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶立方获取数量增加$1%。'], //商店
     [/^You have reached the end of the game, on singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) golden quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点

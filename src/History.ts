@@ -113,11 +113,11 @@ const conditionalFormatPerSecond = (numOrStr: DecimalSource, data: ResetHistoryE
 
     if (typeof (numOrStr) === 'number' && player.historyShowPerSecond && data.seconds !== 0) {
         if (numOrStr === 0) { // work around format(0, 3) return 0 instead of 0.000, for consistency
-            return '0.000/s';
+            return '0.000/秒';
         }
         // Use "long" display for smaller numbers, but once it exceeds 1000, use the "short" display.
         // This'll keep decimals intact until 1000 instead of 10 without creating unwieldy numbers between e6-e13.
-        return format(numOrStr / data.seconds, 3, numOrStr < 1000) + '/s';
+        return format(numOrStr / data.seconds, 3, numOrStr < 1000) + '/秒';
     }
     return format(numOrStr);
 }
@@ -371,7 +371,7 @@ export const resetHistoryTogglePerSecond = () => {
 
 // Helper function to format the corruption display in the ascension table.
 const resetHistoryFormatCorruptions = (data: ResetHistoryEntryAscend): [string, string] => {
-    let score = 'Score: ' + format(data.corruptionScore, 0, false);
+    let score = '分数：' + format(data.corruptionScore, 0, false);
     let corruptions = '';
     for (let i = 0; i < resetHistoryCorruptionImages.length; ++i) {
         const corruptionIdx = i + 1;

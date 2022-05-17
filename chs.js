@@ -11,11 +11,10 @@
 var cnItems = {
     _OTHER_: [],
 
-    //标点处理
+    //#region 标点处理
     '.': '。',
-    //标点处理结束
-
-    //主脚本
+    //#endregion
+    //#region 主脚本
     'OK': '确定',
     'Cancel': '取消',
     'Loading Offline Progress...': '加载离线进度...',
@@ -57,9 +56,8 @@ var cnItems = {
     'Buy Max: ON': '最大化购买：开',
     'Buy Max: OFF': '最大化购买：关',
     'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
-    //主脚本结束
-
-    //主界面及建筑
+    //#endregion
+    //#region 主界面及建筑
     '/s': '/秒',
     'Buildings': '建筑',
     'Upgrades': '升级',
@@ -97,9 +95,8 @@ var cnItems = {
     'Current Level': '当前等级',
     'Current Effect': '当前效果',
     ' from your Constant': '数学常数',
-    //主界面及建筑结束
-
-    //重置
+    //#endregion
+    //#region 重置
     'You\'re not in a Transcension Challenge right now. Get in one before you can leave it, duh!': '您目前并没有在进行超越挑战。进行挑战后再来考虑离开的事，懂了吧！',
     'You\'re not in a Reincarnation Challenge right now. How could you leave what you are not in?': '您目前并没有在进行转世挑战。如果您都没在进行挑战，你又要怎么离开？',
     'Click this if you\'re in an Ascension Challenge and want to leave. You get it already!': '如果您想要退出飞升挑战，请点击这里。您懂的！',
@@ -109,9 +106,8 @@ var cnItems = {
     'Reincarnating will reset EVERYTHING but in return you will get extraordinarily powerful Particles, and unlock some very strong upgrades and some new features. would you like to Reincarnate? [Disable this message in settings]': '转世后之前的所有低阶资源都将被重置，但您可以获得强大的粒子，以及解锁一些非常强大的升级和新的游戏机制。您确定要转世吗？[您可以在设置中调整是否弹出此对话框。]',
     'Ascending will reset all buildings, rune levels [NOT CAP!], talismans, most researches, and the anthill feature for Cubes of Power. Continue? [It is strongly advised you get R5x24 first.]': '飞升后，之前的所有低阶资源，符文等级[非上限！]，护身符，大部分研究，以及蚁丘都将被重置，但您可以获得方盒的力量。您确定要继续吗？[强烈建议您先获得研究5x24。]',
     'Are you absolutely sure that you want to exit the Ascension Challenge? You will need to clear challenge 10 again before you can attempt the challenge again!': '您真的确定要退出飞升挑战吗？退出后，您必须完成挑战10以后才能再次进行飞升挑战！',
-    //重置结束
-
-    //升级
+    //#endregion
+    //#region 升级
     'Coin Upgrades': '金币升级',
     'Diamond Upgrades': '钻石升级',
     'Mythos Upgrades': '神话升级',
@@ -278,9 +274,8 @@ var cnItems = {
     'Hover over an upgrade to view details!': '鼠标停在升级上可以查看详细信息！',
     'Hover-to-Buy [ON]': '鼠标停留购买[开]',
     'Hover-to-Buy [OFF]': '鼠标停留购买[关]',
-    //升级结束
-
-    //成就
+    //#endregion
+    //#region 成就
     '[1] A Loyal Employee: Hire your first worker.':'[1]一个忠实的雇员：雇佣第1个工人。',
     '[2] Small Business: Hire 10 workers.':'[2]小生意：雇佣10个工人。',
     '[3] Now we\'re synergizing!: Hire 100 workers.':'[3]我们就是协同！：雇佣100个工人。',
@@ -693,11 +688,11 @@ var cnItems = {
     'Reward: 75 AP. 3,000 Quarks! You will gain 10% more ascension count, forever!': '奖励：75成就点数。3000夸克！飞升次数获取数量永久增加10%！',
     'Reward: 10 AP. 400 Quarks! Ant Speed is permanently multiplied by 4.44! Platonic Upgrades now BuyMax whenever affordable!': '奖励：10成就点数。400夸克！蚂蚁速度永久变为4.44倍！只要资源充足，将最大化购买PLATONIC方盒升级！',
     'Reward: 10 AP. 400 Quarks! You immediately start Singularities with 1 transcension and 1001 mythos!': '奖励：10成就点数。400夸克！进入奇点后直接获得1次超越和1001神话！',
-    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 1 reincarnation, and 10 particles!': '奖励：20成就点数。800夸克！进入奇点后直接获得1次转世和10粒子！',
-    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 500 obtainium!': '奖励：20成就点数。800夸克！进入奇点后直接获得500难得素！',
-    'Reward: 30 AP. 1,200 Quarks! Gain 5% more Quarks, permanently!': '奖励：30成就点数。1200夸克！夸克获取数量永久增加5%！',
+    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 1 reincarnation, and 10 particles!': '奖励：20成就点数。800夸克！进入奇点后直接获得1次转世和10粒子！(隐藏效果：进入奇点后直接完成挑战1至挑战5各三次，完成成就37、成就38、成就44、成就50、成就57至成就77、成就80、成就87)',
+    'Reward: 20 AP. 800 Quarks! You immediately start Singularities with 500 obtainium!': '奖励：20成就点数。800夸克！进入奇点后直接获得500难得素！(隐藏效果：进入奇点后直接获得1e16粒子，完成一次挑战6)',
+    'Reward: 30 AP. 1,200 Quarks! Gain 5% more Quarks, permanently!': '奖励：30成就点数。1200夸克！夸克获取数量永久增加5%！(隐藏效果：进入奇点后直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克)',
     'Reward: 40 AP. 1,600 Quarks! You immediately start Singularities with a Challenge 7 completion and 1e100 particles. Talismans now buff all runes at all times!': '奖励：40成就点数。1600夸克！进入奇点后直接完成一次挑战7，并获得1e100粒子。护身符的额外等级对所有符文均生效！',
-    'Reward: 50 AP. 2,000 Quarks! You immediately start Singularities with 1 Challenge 8 completion and 1 tier 1 ant.': '奖励：50成就点数。2000夸克！进入奇点后直接完成一次挑战8，并获得一只工蚁。',
+    'Reward: 50 AP. 2,000 Quarks! You immediately start Singularities with 1 Challenge 8 completion and 1 tier 1 ant.': '奖励：50成就点数。2000夸克！进入奇点后直接完成一次挑战8，并获得一只工蚁。(15次奇点的隐藏效果：进入奇点后直接完成五次挑战8，获得一只蚁后，并获得2.22e2222粒子)(20次奇点的隐藏效果：进入奇点后直接完成一次挑战9，获得一只神使蚁，夸克获取数量永久增加5%，获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置))(25次奇点的隐藏效果：进入奇点后直接获得1e100银河碎屑，并获得虔蚁护身符)',
     'Hover over an achievement to view information.': '鼠标停在成就上可以查看详细信息。',
     'Green background: Achieved.': '绿色背景：成就已完成。',
     'Purple background: Unachieved, provides bonus multiplier.': '紫色背景：成就可提供加成，未完成。',
@@ -706,9 +701,8 @@ var cnItems = {
     'Congratulations on your first prestige. The first of many. You obtain offerings. You can use them in the new Runes tab! [Unlocked Runes, Achievements, Diamond Buildings and some Upgrades!]': '恭喜您完成了第一次转生。当然，有一次，就会有无数次。您获得了祭品，您可以在新解锁的符文选项卡中使用它们！[解锁了符文，成就，钻石建筑和一些其他升级！]',
     'Hmm, it seems you are getting richer, being able to get 1 Googol diamonds in a single prestige. How about we give you another rune? [Unlocked Duplication rune in Runes tab!]': '嗯，您越来越有钱了，一次转生中就能获得1e100的钻石了。不如，我们再给您一个符文吧？[解锁重叠符文！]',
     'Wow! You gained 1e17 (100 Quadrillion) score in a single Ascension. For that, you can now generate Hepteracts if you get above 6.66e16 (66.6 Quadrillion) score in an Ascension. Good luck!': '哇哦！您在这一次飞升中获得了1e17的飞升分数。因此从现在起，只要您的飞升分数大于6.66e16，您就可以获得惊奇七阶立方了。祝您好运！',
-    //成就结束
-
-    //符文等
+    //#endregion
+    //#region 符文等
     'Talismans': '护身符',
     'Blessings': '祝福',
     '[=-Spirits-=]': '[=-魂灵-=]',
@@ -801,9 +795,8 @@ var cnItems = {
     ' Additional levels to Crystal caps': '额外的水晶升级等级上限',
     'x Obtainium': '倍难得素',
     '% stronger Research 4x9 effect': '%额外的研究4x9效果',
-    //符文等结束
-
-    //挑战
+    //#endregion
+    //#region 挑战
     'Is the base game too easy? Try these situations! [Click the icons to view challenge details!]': '正常游戏是不是已经让您觉得太简单了？试试这些吧！[点击图标以查看挑战详情！]',
     'Mode: OFF': '模式：关闭',
     'MODE: OFF': '模式：关闭',
@@ -936,9 +929,8 @@ var cnItems = {
     'Press [1], [2], [3], [4], or [5] to enter challenges, starting from the top. Press [E] or [e] to exit your transcension challenge if stuck!': '按[1]，[2]，[3]，[4]或[5]来进入挑战，从左往右对应。如果在挑战中卡住了，按[E]或[e]可以退出挑战！',
     'If you are unable to finish the challenge, press the hotkey listed above OR click on the red Challenge "C" button on the reset buttons on top.': '如果您无法完成挑战，可以按下上面列出的快捷键退出，或者点击顶部重置按钮上的红色 C 按钮来退出。',
     'To leave a reincarnation challenge, press the grey Challenge "C" instead!': '如果想要退出转世挑战，请按灰色的 C 按钮！',
-    //挑战结束
-
-    //研究
+    //#endregion
+    //#region 研究
     'Upgrade: 1 Level': '升级：1级',
     'Upgrade: MAX [if possible]': '升级：最大[尽可能]',
     '[1x1] Increase the number of free Accelerators gained by 20% from all sources.': '[1x1]免费加速器数量增加20%。',
@@ -1152,9 +1144,8 @@ var cnItems = {
     ' researches are never reset whereas the': '的升级不会被重置，',
     'white-bordered': '白色边框',
     ' researches will reset upon the next reset tier!': '的升级在下一阶重置时将被重置！',
-    //研究结束
-
-    //蚂蚁
+    //#endregion
+    //#region 蚂蚁
     'The ants welcome you to their home.': '蚂蚁们欢迎您来到它们的家',
     'Hover over the icons for description. Click icons to buy!': '鼠标停在图标上可获取信息。点击图标来购买！',
     'Gain a worker ant for your everyday life. Gathers Galactic Crumbs. Essential!': '获得一只工蚁为您每日工作。它会采集银河碎屑。它很有用！',
@@ -1188,9 +1179,8 @@ var cnItems = {
     'Time Multiplier': '时间倍率',
     'Reset Anthill features for': '重置蚁丘可获得(下方 分 指强度分)',
     'This resets your Crumbs, Ants and Ant Upgrades in exchange for some multiplier and resources. Continue?': '这么做将重置银河碎屑，蚂蚁以及蚂蚁升级，但可以获得更高的倍率和一些其他资源。您确定要继续吗？',
-    //蚂蚁结束
-
-    //惊奇方盒
+    //#endregion
+    //#region 惊奇方盒
     'Cube Tributes': '方盒的贡品',
     'Tesseract Gifts': '超立方的赠礼',
     'Hypercube Benedictions': '五阶立方的恩赐',
@@ -1575,9 +1565,8 @@ var cnItems = {
     'Congratulations. You have unlocked the ability to craft the Hepteract of Way Too Many Accelerators in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器了！',
     'Congratulations. You have unlocked the ability to craft the Hepteract of Way Too Many Accelerator Boosts in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加速器加成了！',
     'Congratulations. You have unlocked the ability to craft the Hepteract of Way Too Many Multipliers in the hepteract forge!': '恭喜，您现在可以在七阶立方锻炉内锻造惊奇七阶立方·加倍器了！',
-    //惊奇方盒结束
-
-    //腐化
+    //#endregion
+    //#region 腐化
     'The most rewarding ventures are those few would dare to embark.': '不入虎穴，焉得虎子。',
     'Select the trait levels you wish to run with. Choose wisely!': '选择您想要使用的腐化等级。请明智地进行选择！',
     'Don\'t bite off more than you can chew...': '切记，贪多嚼不烂……',
@@ -1641,9 +1630,8 @@ var cnItems = {
     ' times.': '次。',
     'The name you provided is too long! Try again.': '名字太长了！换个短一点的再来吧。',
     'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符(比如中文)！换个其他的再来吧。',
-    //腐化结束
-
-    //设置
+    //#endregion
+    //#region 设置
     'Credits': '制作组',
     'Stats for Nerds': '高玩特供统计',
     'Reset History': '历史重置数据',
@@ -1835,9 +1823,8 @@ var cnItems = {
     'Why don\'t you try clicking on one of the item\'s': '为何不尝试点击上方的',
     'gold': '金色',
     ' text above to get started? You can always cancel!': '文本来进行设置？反正您还可以取消的。',
-    //设置结束
-
-    //商店
+    //#endregion
+    //#region 商店
     'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
     'Own': '拥有',
     'Buy Yer\' Potions!': '买点药剂！',
@@ -1887,9 +1874,8 @@ var cnItems = {
     'Shop Confirmations: ON': '商店确认框：开',
     'Shop Confirmations: OFF': '商店确认框：关',
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
-    //商店结束
-
-    //奇点
+    //#endregion
+    //#region 奇点
     'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
     'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',
     'You\'re too powerful for this current universe. The multiverse of Synergism is truly endless, but out there are even more challenging universes parallel to your very own.': '这个宇宙已经容纳不了您的力量了。协同放置的多元宇宙可谓是无穷无尽，但对您现在这个宇宙来说，还有更多更具挑战性的平行宇宙。',
@@ -1906,7 +1892,7 @@ var cnItems = {
     'Sorry, I cannnot sell you this many golden quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
-    //奇点结束
+    //#endregion
 
     //原样
     '': '',

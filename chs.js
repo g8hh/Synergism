@@ -7,7 +7,7 @@
 
 */
 
-//1.汉化杂项
+//汉化杂项
 var cnItems = {
     _OTHER_: [],
 
@@ -945,7 +945,7 @@ var cnItems = {
     '[7x18] Gain +0.08% tributes from cubes per level. You know, you should expect it at this point.': '[7x18]每级使惊奇方盒的贡品获取数量增加0.08%。您到这个时候应该预料的到。',
     '[7x19] +4% faster Tesseract Buildings / level. It\'s GROWING.': '[7x19]每级使超立方建筑的产量增加4%。它还在增加。',
     '[7x20] Tome 3 of 4: How to totally ROCK challenge 10. e100m divisor!': '[7x20]四部曲的第三部：如何完全搞定挑战10。挑战10的基础目标再次减少1e100M！',
-    '[7x21] You should know how this goes. +0.4% Accelerator Boosts / level': '[7x21]您应该知道这个趋势了。每级增加0.4%加速器数量',
+    '[7x21] You should know how this goes. +0.4% Accelerator / level': '[7x21]您应该知道这个趋势了。每级增加0.4%加速器数量',
     '[7x22] Accelerator Boosts += 0.004 * Accelerator Boosts': '[7x22]每级增加0.4%加速器加成，就这样',
     '[7x23] A lot of a small +0.4% Multipliers per level': '[7x23]聚沙成塔，每级增加0.4%加倍器数量',
     '[7x24] Epic Fragments boost Blessing power by 10% * Log10(Epic Shards +': '[7x24]史诗碎片将祝福能量增加 10% * log10(史诗碎片数量 +',
@@ -1472,6 +1472,7 @@ var cnItems = {
     ' times.': '次。',
     'The name you provided is too long! Try again.': '名字太长了！换个短一点的再来吧。',
     'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符(比如中文)！换个其他的再来吧。',
+    'All next Corruption Stats are now Zero. This will take effect on the next ascension.': '所有腐化的等级都归零了。飞升后即可生效。',
     //#endregion
     //#region 设置
     'Credits': '制作组',
@@ -1649,6 +1650,7 @@ var cnItems = {
     'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
     'Buy Accelerators': '购买加速器',
     'Boost Accelerator': '加速器加成',
+    'Auto Challenge': '自动扫荡挑战',
     'Exit Challenge': '退出挑战',
     'Multipliers': '加倍器',
     'Reset Prestige': '转生重置',

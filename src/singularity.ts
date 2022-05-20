@@ -32,6 +32,7 @@ export interface ISingularityData {
     toggleBuy?: number
     goldenQuarksInvested?: number
     minimumSingularity?: number
+    effect? (n: number): {bonus: number | boolean, desc: string}
 }
 
 /**
@@ -49,6 +50,7 @@ export class SingularityUpgrade {
     public toggleBuy = 1; //-1 = buy MAX (or 1000 in case of infinity levels!)
     public goldenQuarksInvested = 0;
     private readonly minimumSingularity: number;
+    private readonly effect: (n: number) => {bonus: number | boolean, desc: string}
 
     public constructor(data: ISingularityData) {
         this.name = data.name;
@@ -59,6 +61,9 @@ export class SingularityUpgrade {
         this.toggleBuy = data.toggleBuy ?? 1;
         this.goldenQuarksInvested = data.goldenQuarksInvested ?? 0;
         this.minimumSingularity = data.minimumSingularity ?? 0;
+        this.effect = data.effect ?? function (n:number) {
+            return {bonus: n, desc: 'WIP not implemented'}
+        }
     }
 
     /**
@@ -80,8 +85,8 @@ export class SingularityUpgrade {
             CN_name = '金夸克 III';
         } else if  (CN_name == 'Starter Pack'){
             CN_name = '新手大礼包';
-        } else if  (CN_name == 'Wow Pass Unlock'){
-            CN_name = '季票解锁';
+        } else if  (CN_name == 'Shop Bonanza'){
+            CN_name = '商店促销';
         } else if  (CN_name == 'Cookie Recipes I'){
             CN_name = '饼干配方 I';
         } else if  (CN_name == 'Cookie Recipes II'){
@@ -140,8 +145,8 @@ export class SingularityUpgrade {
             CN_desc = '购买后，每级使每小时导出存档奖励增加1金夸克。同时每级使商店购买金夸克的花费减少1000。';
         } else if  (CN_desc == 'Buy this! Buy This! Cube gain is permanently multiplied by 5, and gain 6x the Obtainium and Offerings from all sources, post-corruption.'){
             CN_desc = '买这个就对了！使所有类型的方盒及立方获取数量乘以5，并使最终难得素获取数量和祭品获取数量(计算腐化后)变为6倍。';
-        } else if  (CN_desc == 'This upgrade will convince the seal merchant to sell you more Wow Passes, which even persist on Singularity!.'){
-            CN_desc = '购买后，印记商人将向您出售更多季票，这些季票在进入奇点后等级仍然保留！';
+        } else if  (CN_desc == 'This upgrade will convince the seal merchant to sell you more cool stuff, which even persist on Singularity!.'){
+            CN_desc = '购买后，印记商人将向您出售更多好东西，它们在进入奇点后等级仍然保留！';
         } else if  (CN_desc == 'For just a few golden quarks, re-open Wow! Bakery, adding five cookie-related cube upgrades.'){
             CN_desc = '花费一点金夸克就可以让惊奇烘焙坊重新开张，增加5个跟饼干有关的方盒升级。';
         } else if  (CN_desc == 'Diversify Wow! Bakery into cooking slightly more exotic cookies, adding five more cookie-related cube upgrades..'){
@@ -200,6 +205,7 @@ export class SingularityUpgrade {
                 ${CN_desc}
                 ${minimumSingularity}
                 等级 ${this.level}${maxLevel}
+                加成：${this.getEffect().desc}
                 下一级的花费：${format(costNextLevel)}金夸克。
                 已花费金夸克数量：${format(this.goldenQuarksInvested, 0, true)}`
     }
@@ -294,6 +300,10 @@ export class SingularityUpgrade {
         this.level = 0;
         this.goldenQuarksInvested = 0;
     }
+
+    public getEffect(): {bonus: number | boolean, desc: string} {
+        return this.effect(this.level)
+    }
 }
 
 export const singularityData: Record<keyof Player['singularityUpgrades'], ISingularityData> = {
@@ -301,183 +311,358 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         name: 'Golden Quarks I',
         description: 'In the future, you will gain 5% more Golden Quarks on singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.',
         maxLevel: 10,
-        costPerLevel: 12
+        costPerLevel: 12,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.05 * n,
+                desc: `使进入奇点的金夸克获取数量增加${format(5 * n, 0, true)}%。`
+            }
+        }
     },
     goldenQuarks2: {
         name: 'Golden Quarks II',
         description: 'If you buy this, you will gain 2% more Golden Quarks on singularities. This also reduces the cost to buy Golden Quarks in the shop by 200 per level. Stacks with the first upgrade.',
         maxLevel: 25,
-        costPerLevel: 60
+        costPerLevel: 60,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.02 * n,
+                desc: `使进入奇点的金夸克获取数量增加${format(2 * n, 0, true)}%。`
+            }
+        }
     },
     goldenQuarks3: {
         name: 'Golden Quarks III',
         description: 'If you buy this, you will gain 1 Golden Quark per hour from Exports. Also reduces the cost to buy Golden Quarks in the shop by 1,000 per level.',
         maxLevel: 5,
-        costPerLevel: 1000
+        costPerLevel: 1000,
+        effect: (n: number) => {
+            return {
+                bonus: n,
+                desc: `每小时导出存档可以获得${format(n)}金夸克。`
+            }
+        }
     },
     starterPack: {
         name: 'Starter Pack',
         description: 'Buy this! Buy This! Cube gain is permanently multiplied by 5, and gain 6x the Obtainium and Offerings from all sources, post-corruption.',
         maxLevel: 1,
-        costPerLevel: 10
+        costPerLevel: 10,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}使所有类型的方盒及立方获取数量乘以5，最终难得素获取数量和祭品获取数量变为6倍。`
+            }
+        }
     },
     wowPass: {
-        name: 'Wow Pass Unlock',
-        description: 'This upgrade will convince the seal merchant to sell you more Wow Passes, which even persist on Singularity!.',
+        name: 'Shop Bonanza',
+        description: 'This upgrade will convince the seal merchant to sell you more cool stuff, which even persist on Singularity!.',
         maxLevel: 1,
-        costPerLevel: 500
+        costPerLevel: 500,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}解锁商店促销。`
+            }
+        }
     },
     cookies: {
         name: 'Cookie Recipes I',
         description: 'For just a few golden quarks, re-open Wow! Bakery, adding five cookie-related cube upgrades.',
         maxLevel: 1,
-        costPerLevel: 100
+        costPerLevel: 100,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}解锁饼干配方 I。`
+            }
+        }
     },
     cookies2: {
         name: 'Cookie Recipes II',
         description: 'Diversify Wow! Bakery into cooking slightly more exotic cookies, adding five more cookie-related cube upgrades..',
         maxLevel: 1,
-        costPerLevel: 500
+        costPerLevel: 500,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}解锁饼干配方 II。`
+            }
+        }
     },
     cookies3: {
         name: 'Cookie Recipes III',
         description: 'Your Bakers threaten to quit without a higher pay. If you do pay them, they will bake even more fancy cookies.',
         maxLevel: 1,
-        costPerLevel: 24999
+        costPerLevel: 24999,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}安抚烘焙师工会。`
+            }
+        }
     },
     cookies4: {
         name: 'Cookie Recipes IV',
         description: 'This is a small price to pay for Salvation.',
         maxLevel: 1,
-        costPerLevel: 199999
+        costPerLevel: 199999,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}替饼干付费。`
+            }
+        }
     },
     ascensions: {
         name: 'Improved Ascension Gain',
         description: 'Buying this, you will gain +2% Ascension Count forever, per level! Every 20 levels grants an additional, multiplicative +1% Ascension Count.',
         maxLevel: -1,
-        costPerLevel: 5
+        costPerLevel: 5,
+        effect: (n: number) => {
+            return {
+                bonus: (1 + 2 * n / 100) * (1 + Math.floor(n / 10) / 100),
+                desc: `飞升次数获取数量增加${format((100 + 2 * n) * (1 + Math.floor(n/10) / 100) - 100, 1, true)}%。`
+            }
+        }
     },
     corruptionFourteen: {
         name: 'Level Fourteen Corruptions',
         description: 'Buy this to unlock level fourteen corruptions :).',
         maxLevel: 1,
-        costPerLevel: 1000
+        costPerLevel: 1000,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}解锁腐化等级14${(n > 0)? ':)': ':('}。`
+            }
+        }
     },
     corruptionFifteen: {
         name: 'Level Fifteen Corruptions',
         description: 'This doesn\'t *really* raise the corruption limit. Rather, it adds one FREE level to corruption multipliers, no matter what (can exceed cap). :)',
         maxLevel: 1,
-        costPerLevel: 40000
+        costPerLevel: 40000,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}使腐化加成倍率视为增加1级${(n > 0)? ':)': ':('}。`
+            }
+        }
     },
     singOfferings1: {
         name: 'Offering Charge',
         description: 'Upgrade this to get +2% offerings per level, forever!',
         maxLevel: -1,
-        costPerLevel: 1
+        costPerLevel: 1,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.02 * n,
+                desc: `使祭品获取数量增加${format(2 * n, 0, true)}%。`
+            }
+        }
+
     },
     singOfferings2: {
         name: 'Offering Storm',
         description: 'Apparently, you can use this bar to attract more offerings. +8% per level, to be precise.',
         maxLevel: 25,
-        costPerLevel: 25
+        costPerLevel: 25,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.08 * n,
+                desc: `使祭品获取数量增加${format(8 * n, 0, true)}%。`
+            }
+        }
     },
     singOfferings3: {
         name: 'Offering Tempest',
         description: 'This bar is so prestine, it\'ll make anyone submit their offerings. +4% per level, to be precise.',
         maxLevel: 40,
-        costPerLevel: 500
+        costPerLevel: 500,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.04 * n,
+                desc: `使祭品获取数量增加${format(4 * n, 0, true)}%。`
+            }
+        }
     },
     singObtainium1: {
         name: 'Obtainium Wave',
         description: 'Upgrade this to get +2% obtainium per level, forever!',
         maxLevel: -1,
-        costPerLevel: 1
+        costPerLevel: 1,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.02 * n,
+                desc: `使难得素获取数量增加${format(2 * n, 0, true)}%。`
+            }
+        }
     },
     singObtainium2: {
         name: 'Obtainium Flood',
         description: 'Holy crap, water bending! +8% gained obtainium per level.',
         maxLevel: 25,
-        costPerLevel: 25
+        costPerLevel: 25,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.08 * n,
+                desc: `使难得素获取数量增加${format(8 * n, 0, true)}%。`
+            }
+        }
     },
     singObtainium3: {
         name: 'Obtainium Tsunami',
         description: 'A rising tide lifts all boats. +4% gained obtainium per level.',
         maxLevel: 40,
-        costPerLevel: 500
+        costPerLevel: 500,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.04 * n,
+                desc: `使难得素获取数量增加${format(4 * n, 0, true)}%。`
+            }
+        }
     },
     singCubes1: {
         name: 'Cube Flame',
         description: 'Upgrade this to get +2% Cubes per level, forever!',
         maxLevel: -1,
-        costPerLevel: 1
+        costPerLevel: 1,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.02 * n,
+                desc: `使所有类型的方盒及立方获取数量增加${format(2 * n, 0, true)}%。`
+            }
+        }
     },
     singCubes2: {
         name: 'Cube Blaze',
         description: 'Burn some more Golden Quarks! +8% gained Cubes per level.',
         maxLevel: 25,
-        costPerLevel: 25
+        costPerLevel: 25,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.08 * n,
+                desc: `使所有类型的方盒及立方获取数量增加${format(8 * n, 0, true)}%。`
+            }
+        }
     },
     singCubes3: {
         name: 'Cube Inferno',
         description: 'Even Dante is impressed. +4% gained Cubes per level.',
         maxLevel: 40,
-        costPerLevel: 500
+        costPerLevel: 500,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.04 * n,
+                desc: `使所有类型的方盒及立方获取数量增加${format(4 * n, 0, true)}%。`
+            }
+        }
     },
     octeractUnlock: {
         name: 'Octeracts ;) (WIP)',
         description: 'Hey!!! What are you trying to do?!?',
         maxLevel: 1,
         costPerLevel: 8888,
-        minimumSingularity: 10
+        minimumSingularity: 10,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}解锁八阶立方。`
+            }
+        }
     },
     offeringAutomatic: {
         name: 'Offering Lootzifer (WIP)',
         description: 'Black Magic. Don\'t make deals with the devil. Each second, you get +2% of offering gain automatically per level. Also +10% Offerings!',
         maxLevel: 50,
         costPerLevel: 2000,
-        minimumSingularity: 6
+        minimumSingularity: 6,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}与魔鬼做交易获得祭品自动获取的能力。`
+            }
+        }
     },
     intermediatePack: {
         name: 'Intermediate Pack',
         description: 'Double Global Speed, Multiply Ascension speed by 1.5, and gain +2% Quarks forever. Yum... 2% Quark Milk.',
         maxLevel: 1,
         costPerLevel: 1,
-        minimumSingularity: 4
+        minimumSingularity: 4,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}将礼包升级为中级。`
+            }
+        }
     },
     advancedPack: {
         name: 'Advanced Pack',
         description: 'Now we\'re cooking with kerosene! Gain +4% Quarks stack with intermediate, +0.33 to all corruption score multipliers, regardless of level!',
         maxLevel: 1,
         costPerLevel: 200,
-        minimumSingularity: 9
+        minimumSingularity: 9,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}购买高级礼包。`
+            }
+        }
     },
     expertPack: {
         name: 'Expert Pack',
         description: 'That\'s a handful! Gain +6% Quarks stack with advanced, 1.5x Ascension Score, Code \'add\' gives 1.2x Ascension Timer.',
         maxLevel: 1,
         costPerLevel: 800,
-        minimumSingularity: 16
+        minimumSingularity: 16,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}切换至专家礼包。`
+            }
+        }
     },
     masterPack: {
         name: 'Master Pack',
         description: 'A tad insane. Gain +8% Quarks stack with expert, for every level 14 corruption, ascension score is multiplied by 1.1.',
         maxLevel: 1,
         costPerLevel: 3200,
-        minimumSingularity: 25
+        minimumSingularity: 25,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}能开宗立派。`
+            }
+        }
     },
     divinePack: {
         name: 'Divine Pack',
         description: 'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14. Also unlock Platonic Upgrade autobuyers!',
         maxLevel: 1,
         costPerLevel: 12800,
-        minimumSingularity: 36
+        minimumSingularity: 36,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '暂未'}发觉生存的理由${(n > 0) ? '' : ''}。`
+            }
+        }
     },
     wowPass2: {
         name: 'Shop Liquidation Sale',
         description: 'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.',
         maxLevel: 1,
         costPerLevel: 49999,
-        minimumSingularity: 11
+        minimumSingularity: 11,
+        effect: (n: number) => {
+            return {
+                bonus: (n > 0),
+                desc: `您${(n > 0) ? '已': '未'}开启清仓大甩卖！`
+            }
+        }
     }
 }
 

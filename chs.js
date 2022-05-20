@@ -1511,7 +1511,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.4 Part 2 - The Reality Update pt.1 [Last Update: 10:42 UTC 17-May-2022].': '您目前玩的版本为V2.9.4 第二部分 - 现实升级第一部分 [2022年5月17日 UTC 10:42更新]。',
+    'You\'re playing v2.9.4 Part 3 - The Reality Update pt.1 [Last Update: 9:56 UTC 20-May-2022].': '您目前玩的版本为V2.9.4 第三部分 - 现实升级第一部分 [2022年5月20日 UTC 09:56更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',

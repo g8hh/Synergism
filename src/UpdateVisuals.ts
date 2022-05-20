@@ -503,9 +503,9 @@ export const visualUpdateSettings = () => {
     DOMCacheGetOrSet('quarktimeramount').textContent =
         `导出奖励的夸克总和：${player.worlds.toString(onExportQuarks)}[最大为${player.worlds.toString(maxExportQuarks)}]`;
 
-    DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = '距离增加导出奖励' + format(patreonLOL, 2, true) + '金夸克还有' + format(3600 / Math.max(1, player.singularityUpgrades.goldenQuarks3.level) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,player.singularityUpgrades.goldenQuarks3.level)))) + '秒'
+    DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = '距离增加导出奖励' + format(patreonLOL, 2, true) + '金夸克还有' + format(3600 / Math.max(1, +player.singularityUpgrades.goldenQuarks3.getEffect().bonus) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,+player.singularityUpgrades.goldenQuarks3.getEffect().bonus)))) + '秒'
     DOMCacheGetOrSet('goldenQuarkTimerAmount').textContent =
-        `导出奖励的金夸克总和：${format(Math.floor(player.goldenQuarksTimer * player.singularityUpgrades.goldenQuarks3.level/ 3600) * patreonLOL, 2)}[最大为${format(Math.floor(25 * player.singularityUpgrades.goldenQuarks3.level * patreonLOL))}]`
+        `导出奖励的金夸克总和：${format(Math.floor(player.goldenQuarksTimer * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus/ 3600) * patreonLOL, 2)}[最大为${format(Math.floor(168 * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus * patreonLOL))}]`
 
 }
 

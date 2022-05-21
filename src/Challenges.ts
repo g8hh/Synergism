@@ -268,12 +268,12 @@ export const challengeDisplay = (i: number, changefocus = true) => {
         d.textContent = '目标：在挑战中完成' + format(challengeRequirement(i, player.challengecompletions[i])) + '次挑战10<虐待狂挑战 I>。'
         e.textContent = '免费蚂蚁等级增加12！当前效果：'
         f.textContent = 'Ant Speed x(1e5)^completions! Current: '
-        g.textContent = '符文等级上限增加80级！当前效果：'
+        g.textContent = '符文等级上限增加80！当前效果：'
         h.textContent = 'Unlock 15 Researches, and unlock the ability to open Tesseracts! You also get to toggle Corruptions ;)'
         k.textContent = 'Start <[(Reduced Ants)]>'
         l.textContent = '免费蚂蚁等级增加' + format(12 * CalcECC('ascension', player.challengecompletions[11])) + ''
         m.textContent = '蚂蚁速度变为' + format(Decimal.pow(1e5, CalcECC('ascension', player.challengecompletions[11]))) + '倍'
-        n.textContent = '符文等级上限增加' + format(80 * CalcECC('ascension', player.challengecompletions[11])) + '级'
+        n.textContent = '符文等级上限增加' + format(80 * CalcECC('ascension', player.challengecompletions[11])) + ''
     }
     if (i === 12 && G['challengefocus'] === 12) {
         a.textContent = '无转世挑战 || 完成' + player.challengecompletions[12] + '次，次数上限为' + format(maxChallenges)
@@ -310,12 +310,12 @@ export const challengeDisplay = (i: number, changefocus = true) => {
         d.textContent = '目标：在挑战中完成' + format(challengeRequirement(i, player.challengecompletions[i])) + '次挑战10<虐待狂挑战 I>。'
         e.textContent = '研究1x1至研究1x5的效果增加50%。当前效果：'
         f.textContent = '每个时刻自动购买的研究数量增加1！当前效果：'
-        g.textContent = '符文等级上限增加200级！当前效果：'
+        g.textContent = '符文等级上限增加200！当前效果：'
         h.textContent = 'Unlock 15 Researches, and a way to coalesce your power into the Singularity. Increase Corruption Cap by 2 levels, to 11! Finally, unlock two new corruptions! ;)'
         k.textContent = 'Start <[(No Research)]>'
         l.textContent = '效果增加' + format(50 * CalcECC('ascension', player.challengecompletions[14])) + '%'
         m.textContent = '每个时刻自动购买' + format(1 * player.challengecompletions[14]) + '个研究'
-        n.textContent = '符文等级上限增加' + format(200 * CalcECC('ascension', player.challengecompletions[14])) + '级'
+        n.textContent = '符文等级上限增加' + format(200 * CalcECC('ascension', player.challengecompletions[14])) + ''
     }
     if (i === 15 && G['challengefocus'] === 15) {
         a.textContent = '虐待狂挑战 II || 完成' + player.challengecompletions[15] + '次，次数上限为' + format(maxChallenges)

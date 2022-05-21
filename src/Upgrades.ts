@@ -417,16 +417,16 @@ export const ascendBuildingDR = () => {
 }
 
 const constUpgEffect: Record<number, () => string> = {
-    1: () => `Tesseract building production x${format(Decimal.pow(1.05 + 0.01 * player.achievements[270] + 0.001 * player.platonicUpgrades[18], player.constantUpgrades[1]), 2, true)}`,
-    2: () => `Tesseract building production x${format(Decimal.pow(1 + 0.001 * Math.min(100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX + 3 * player.platonicUpgrades[18] + 1000 * (G['challenge15Rewards'].exponent - 1), player.constantUpgrades[2]), ascendBuildingDR()), 2, true)}`,
-    3: () => `Offering gain x${format(1 + 0.02 * player.constantUpgrades[3], 2, true)}`,
-    4: () => `Obtainium gain x${format(1 + 0.04 * player.constantUpgrades[4], 2, true)}`,
-    5: () => `Ant Speed x${format(Decimal.pow(1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10), player.constantUpgrades[5]), 2, true)}`,
-    6: () => `+ ${format(2 * player.constantUpgrades[6])} free Ant Levels`,
-    7: () => `+${format(7 * player.constantUpgrades[7])} free Rune Levels, +${format(3 * player.constantUpgrades[7])} to Rune Cap`,
-    8: () => `Rune EXP x${format(1 + 1 / 10 * player.constantUpgrades[8], 2, true)}`,
-    9: () => `Runes effectiveness x${format(1 + 0.01 * Math.log(player.talismanShards + 1) / Math.log(4) * Math.min(1, player.constantUpgrades[9]), 4, true)}`,
-    10: () => `Cubes/Tesseracts on Ascension x${format(1 + 0.01 * Decimal.log(player.ascendShards.add(1), 4) * Math.min(1, player.constantUpgrades[10]), 4, true)}`
+    1: () => `超立方建筑产量×${format(Decimal.pow(1.05 + 0.01 * player.achievements[270] + 0.001 * player.platonicUpgrades[18], player.constantUpgrades[1]), 2, true)}`,
+    2: () => `超立方建筑产量×${format(Decimal.pow(1 + 0.001 * Math.min(100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX + 3 * player.platonicUpgrades[18] + 1000 * (G['challenge15Rewards'].exponent - 1), player.constantUpgrades[2]), ascendBuildingDR()), 2, true)}`,
+    3: () => `祭品获取数量×${format(1 + 0.02 * player.constantUpgrades[3], 2, true)}`,
+    4: () => `难得素获取数量×${format(1 + 0.04 * player.constantUpgrades[4], 2, true)}`,
+    5: () => `蚂蚁速度×${format(Decimal.pow(1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10), player.constantUpgrades[5]), 2, true)}`,
+    6: () => `免费蚂蚁等级增加${format(2 * player.constantUpgrades[6])}`,
+    7: () => `免费符文等级增加${format(7 * player.constantUpgrades[7])}，符文等级上限增加${format(3 * player.constantUpgrades[7])}`,
+    8: () => `符文经验×${format(1 + 1 / 10 * player.constantUpgrades[8], 2, true)}`,
+    9: () => `符文效果×${format(1 + 0.01 * Math.log(player.talismanShards + 1) / Math.log(4) * Math.min(1, player.constantUpgrades[9]), 4, true)}`,
+    10: () => `飞升的惊奇方盒和惊奇超立方获取数量×${format(1 + 0.01 * Decimal.log(player.ascendShards.add(1), 4) * Math.min(1, player.constantUpgrades[10]), 4, true)}`
 }
 
 const returnConstUpgDesc = (i: number) => constantUpgDesc[i]();

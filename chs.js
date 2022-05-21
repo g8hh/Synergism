@@ -188,7 +188,10 @@ var cnItems = {
     'Gain more Obtainium based on your particle gain. [Works with automation at a reduced rate!]': '根据您的粒子产量增加难得素的获取数量。[以减少的倍率对自动难得素生效！]',
     'Time seems to go +0.333*log10(MAX obtainium +1)% faster when you buy this.': '购买这个以后，时间似乎加快了 0.333*log10(最大持有的难得素数量+1)% 。',
     'Runes will gain (Rune Level/25) additional EXP per offering used.': '每献祭一个祭品，符文就额外获得(符文等级/25)的经验值。',
+    'Obtainium gain from Reincarnations is multiplied (1 + 2C) where C is #Reincarnation Challenges completed, up to 50x!': '转世的难得素获取数量变为 (1+2C) 倍，上限为50倍，C为转世挑战完成次数！',
     'Gain +100% free accelerator boosts and +10 free Crystal Upgrade levels, but only in Reincarnation Challenges.': '仅在转世挑战时免费加速器加成数量增加100%，免费水晶升级等级增加10。',
+    'Obtainium gain is increased based on highest ever unspent offerings. [Max: 100,000 unspent]': '根据最大持有的祭品数量增加难得素获取数量。[祭品数量效果上限：100000]',
+    'Offering gain is increased based on highest ever unspent obtainium [Max: 30,000,000 obtainium]': '根据最大持有的难得素数量增加祭品获取数量。[难得素数量效果上限：30000000]',
     'Ant generation kinda slow? I agree! Make all ant tiers 5x faster!': '蚂蚁增长得太慢了？我也这么觉得！使蚂蚁速度变为5倍！',
     'This is Synergism, right? Let\'s make each purchased ant make all ants 0.4% faster.': '这游戏叫协同放置，对吧？所以每购买一只蚂蚁，蚂蚁速度就增加0.4%。',
     'Gain an ant speed multiplier equivalent to (1 + 0.005 * (log10(MAX offerings + 1))^2).': '蚂蚁速度变为 (1 + 0.005 * (log10(最大持有的祭品数量 + 1))^2) 倍。',
@@ -738,6 +741,7 @@ var cnItems = {
     'The great Ant War of \'21 wiped off all of the skilled ants.': '二十一世纪的蚂蚁大战将所有技艺娴熟的蚂蚁都抹杀了。',
     'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.': '立即飞升开始挑战，您只能获得免费的蚂蚁升级，完成挑战8和挑战9也可以获得免费的蚂蚁升级。请注意，所有飞升挑战需要先完成挑战10以后才可以进行。',
     'Unlock 15 Researches, and unlock the ability to open Tesseracts! You also get to toggle Corruptions ;': '解锁15个研究，并且解锁开启超立方的能力！同时您也可以开启腐化了 ;',
+    'Ant Speed x(1e5)^completions! Current': '蚂蚁速度每完成1次变为1e5倍！当前效果',
     'Start <[(Reduced Ants)]>': '开始<[(蚂蚁减少挑战)]>',
     'For some reason, you just can\'t do it.': '总之就是不行，别问原因，没有原因。',
     'Ascend and reach the goal but you do not gain Particles and you cannot Reincarnate at all! Ant production ^0.5.': '立即飞升开始挑战，您无法获得粒子，也无法转世！蚂蚁产量^0.5。',
@@ -1948,8 +1952,8 @@ var cnRegReplace = new Map([
     [/^Effect: All mythos shard producers are going into overdrive: x(.+) the production!$/, '效果：所有神话碎片生产者都在超速运转：产量变为$1倍！'], //升级
     [/^Effect: Multiply all coin production by (.+)!$/, '效果：金币产量变为$1倍！'], //升级
     [/^Effect: Multiply Mythos gained in Transcension by (.+)!$/, '效果：超越的神话产量变为$1倍！'], //升级
-    [/^Effect: Mythos-tier producers production x(.+)! It's like inception, or something.$/, '效果：神话生产者产量变为$1倍！这就像开始了什么一样。'], //升级，位置前置
-    [/^Effect: Mythos-tier producers production x(.+)!$/, '效果：神话生产者产量变为$1倍！'], //升级，位置前置
+    [/^Effect: Mythos-tier producers production x(.+)! It's like inception, or something.$/, '效果：神话生产者产量变为$1倍！这就像开始了什么一样。'], //升级，前置
+    [/^Effect: Mythos-tier producers production x(.+)!$/, '效果：神话生产者产量变为$1倍！'], //升级，前置
     [/^Effect: Mythos-tier producers production(.*)$/, '效果：神话生产者产量$1'], //升级
     [/^Effect: Multiply coin production by a factor of (.+)!$/, '效果：金币产量变为$1倍！'], //升级
     [/^Effect: \+(.+) Multipliers through magic!$/, '效果：通过魔法获得了$1加倍器！'], //升级
@@ -1971,19 +1975,6 @@ var cnRegReplace = new Map([
     [/^Improve the multiplier to coin production by .05 exponent per level. \[MAX: \+(.*)\]$/, '每级使水晶对金币产量提升的指数增加0.05。[上限：增加$1]'], //升级
     [/^Make all Tesseract buildings (.+)% more productive per level.$/, '每级使所有超立方建筑产量增加$1%。'], //升级
     [/^Each Tesseract building bought increases the production of all of them by 0.1% per level \[Max (.+)%\].$/, '每级使每购买一个超立方建筑增加0.1%的超立方建筑产量[上限$1%]。'], //升级
-    [/^Tesseract building production(.*)$/, '超立方建筑产量$1'], //升级
-    [/^Offering gain is increased based on highest ever unspent obtainium \[Max: 30,000,000 obtainium\]$/, '根据最大持有的难得素数量增加祭品获取数量。[难得素数量效果上限：30000000]'], //升级，前置
-    [/^Offering gain(.*)$/, '祭品获取数量$1'], //升级
-    [/^Obtainium gain from Reincarnations is multiplied \(1 \+ 2C\) where C is #Reincarnation Challenges completed, up to 50x!$/, '转世的难得素获取数量变为 (1+2C) 倍，上限为50倍，C为转世挑战完成次数！'], //升级，前置
-    [/^Obtainium gain is increased based on highest ever unspent offerings. \[Max: 100,000 unspent\]$/, '根据最大持有的祭品数量增加难得素获取数量。[祭品数量效果上限：100000]'], //升级，前置
-    [/^Obtainium gain(.*)$/, '难得素获取数量$1'], //升级
-    [/^(.+) free Ant Levels$/, '$1免费蚂蚁等级'], //升级
-    [/^Ant Speed x\(1e5\)\^completions! Current$/, '蚂蚁速度每完成1次变为1e5倍！当前效果'], //挑战，前置
-    [/^Ant Speed (.+)$/, '蚂蚁速度$1'], //升级
-    [/^(.+) free Rune Levels, \+(.+) to Rune Cap$/, '$1免费符文等级，+$2符文等级上限'], //升级
-    [/^Rune EXP(.*)$/, '符文经验$1'], //升级
-    [/^Runes effectiveness(.*)$/, '符文效果$1'], //升级
-    [/^Cubes\/Tesseracts on Ascension(.*)$/, '飞升的惊奇方盒和惊奇超立方获取数量$1'], //升级
     [/^I wonder what happens if you feed it (.+) Rune EXP.$/, '如果给它$1符文经验值，或许会发生什么事情。'], //符文等
     [/^Cost to buy (.+) Talisman Shards?: (.+) Obtainium and (.+) offerings.$/, '购买$1个护身符碎片花费：$2难得素及$3祭品。'], //符文等
     [/^Cost to buy (.+) Common Fragments?: (.+) Obtainium and (.+) offerings.$/, '购买$1个普通碎片花费：$2难得素及$3祭品。'], //符文等

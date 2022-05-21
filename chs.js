@@ -949,7 +949,7 @@ var cnItems = {
     '[7x18] Gain +0.08% tributes from cubes per level. You know, you should expect it at this point.': '[7x18]每级使惊奇方盒的贡品获取数量增加0.08%。您到这个时候应该预料的到。',
     '[7x19] +4% faster Tesseract Buildings / level. It\'s GROWING.': '[7x19]每级使超立方建筑的产量增加4%。它还在增加。',
     '[7x20] Tome 3 of 4: How to totally ROCK challenge 10. e100m divisor!': '[7x20]四部曲的第三部：如何完全搞定挑战10。挑战10的基础目标再次减少1e100M！',
-    '[7x21] You should know how this goes. +0.4% Accelerator / level': '[7x21]您应该知道这个趋势了。每级增加0.4%加速器数量',
+    '[7x21] You should know how this goes. +0.4% Accelerators / level': '[7x21]您应该知道这个趋势了。每级增加0.4%加速器数量',
     '[7x22] Accelerator Boosts += 0.004 * Accelerator Boosts': '[7x22]每级增加0.4%加速器加成，就这样',
     '[7x23] A lot of a small +0.4% Multipliers per level': '[7x23]聚沙成塔，每级增加0.4%加倍器数量',
     '[7x24] Epic Fragments boost Blessing power by 10% * Log10(Epic Shards +': '[7x24]史诗碎片将祝福能量增加 10% * log10(史诗碎片数量 +',

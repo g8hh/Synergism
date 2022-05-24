@@ -493,7 +493,7 @@ export const visualUpdateSettings = () => {
     DOMCacheGetOrSet('ascensionCountStatistic').childNodes[1].textContent = format(player.ascensionCount, 0, true)
 
     DOMCacheGetOrSet('saveString').textContent =
-        `Currently: ${player.saveString.replace('$VERSION$', 'v' + version)}`;
+        `上方输入存档名称，当前为：${player.saveString.replace('$VERSION$', 'v' + version)}`;
 
     const quarkData = quarkHandler();
     const onExportQuarks = quarkData.gain

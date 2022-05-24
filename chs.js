@@ -2156,7 +2156,6 @@ var cnRegReplace = new Map([
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
     [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize!$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！'], //时间点击代码
     [/^You clicked at the right time! \[\+(.+) Quarkies\]$/, '您点击的时机很好！[增加$1夸克]'], //时间点击代码
-    [/^Currently(.*)$/, '上方输入存档名称，当前为$1'], //统计数据
     [/^Own: (.+)$/, '拥有：$1'], //商店
     [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店
     [/^Gain (.+) Obtainium.$/, '获得$1难得素。'], //商店

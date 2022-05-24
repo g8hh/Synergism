@@ -1739,7 +1739,98 @@ var cnItems = {
     'Are you sure you wish to enter the Singularity?': '您……真的想要进入奇点吗？',
     'Are you REALLY SURE? You cannot go back from this (without an older savefile)! Confirm one last time to finalize your decision.': '您是真的真的确定了吗？一旦这么做将再也无法反悔(除非您有旧的存档文件)！这是最后一次向您确认。',
     'If you decide to change your mind, let me know. -Ant God': '改变主意的话，可以再来找我。————蚁神',
-    ' NOTE: WIP. This will be expanded on soon.': '注意：暂时如此。内容随时可能扩展。',
+    'You are in the': '您目前已进入了',
+    ', and have': '，并拥有',
+    'Antiquities of Ant God is  purchased. Penalties are  dispelled!': '蚁神之古物已购买。奇点相关惩罚已驱散！',
+    'Antiquities of Ant God is NOT purchased. Penalties are NOT dispelled!': '蚁神之古物未购买。奇点相关惩罚未驱散！',
+    'Golden Quarks I': '金夸克 I',
+    'In the future, you will gain 5% more Golden Quarks on singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.': '每级使进入奇点的金夸克获取数量增加5%！同时每级使商店购买金夸克的花费减少500。',
+    'Golden Quarks II': '金夸克 II',
+    'If you buy this, you will gain 2% more Golden Quarks on singularities. This also reduces the cost to buy Golden Quarks in the shop by 200 per level. Stacks with the first upgrade.': '每级使进入奇点的金夸克获取数量增加2%。同时每级使商店购买金夸克的花费减少200。效果与第一个升级叠加。',
+    'Golden Quarks III': '金夸克 III',
+    'If you buy this, you will gain 1 Golden Quark per hour from Exports. Also reduces the cost to buy Golden Quarks in the shop by 1,000 per level.': '购买后，每级使每小时导出存档奖励增加1金夸克。同时每级使商店购买金夸克的花费减少1000。',
+    'Starter Pack': '新手大礼包',
+    'Buy this! Buy This! Cube gain is permanently multiplied by 5, and gain 6x the Obtainium and Offerings from all sources, post-corruption.': '买这个就对了！使所有类型的方盒及立方获取数量乘以5，并使最终难得素获取数量和祭品获取数量(计算腐化后)变为6倍。',
+    'You have unlocked a 5x multiplier to cubes and 6x multiplier to obtainium and offerings.': '您已使所有类型的方盒及立方获取数量乘以5，最终难得素获取数量和祭品获取数量变为6倍。',
+    'You have not unlocked a 5x multiplier to cubes and 6x multiplier to obtainium and offerings.': '您未使所有类型的方盒及立方获取数量乘以5，最终难得素获取数量和祭品获取数量变为6倍。',
+    'Shop Bonanza': '商店促销',
+    'This upgrade will convince the seal merchant to sell you more cool stuff, which even persist on Singularity!.': '购买后，印记商人将向您出售更多好东西，它们在进入奇点后等级仍然保留！',
+    'You have unlocked the shop bonanza.': '您已解锁商店促销。',
+    'You have not unlocked the shop bonanza.': '您未解锁商店促销。',
+    'Cookie Recipes I': '饼干配方 I',
+    'For just a few golden quarks, re-open Wow! Bakery, adding five cookie-related cube upgrades.': '花费一点金夸克就可以让惊奇烘焙坊重新开张，增加5个跟饼干有关的方盒升级。',
+    'You have unlocked volume 1 of the recipe book.': '您已解锁饼干配方 I。',
+    'You have not unlocked volume 1 of the recipe book.': '您未解锁饼干配方 I。',
+    'Cookie Recipes II': '饼干配方 II',
+    'Diversify Wow! Bakery into cooking slightly more exotic cookies, adding five more cookie-related cube upgrades..': '让惊奇烘焙坊制造更有异国风味的饼干，再增加5个跟饼干有关的方盒升级……',
+    'You have unlocked volume 2 of the recipe book.': '您已解锁饼干配方 II。',
+    'You have not unlocked volume 2 of the recipe book.': '您未解锁饼干配方 II。',
+    'Cookie Recipes III': '饼干配方 III',
+    'Your Bakers threaten to quit without a higher pay. If you do pay them, they will bake even more fancy cookies.': '烘焙师们表示不加薪就辞职了。如果给他们加薪，他们会为您制造更棒的饼干。',
+    'You have appeased the union of Bakers.': '您已安抚烘焙师工会。',
+    'You have not appeased the union of Bakers.': '您未安抚烘焙师工会。',
+    'Cookie Recipes IV': '饼干配方 IV',
+    'This is a small price to pay for Salvation.': '天下没有免费的饼干。',
+    'You have paid your price for salvation.': '您已替饼干付费。',
+    'You have not paid your price for salvation.': '您未替饼干付费。',
+    'Improved Ascension Gain': '更多飞升次数',
+    'Buying this, you will gain +2% Ascension Count forever, per level! Every 20 levels grants an additional, multiplicative +1% Ascension Count.': '购买后，每级使飞升次数获取数量增加2%！每20级还可以使飞升次数获取数量额外乘以1.01。',
+    'Buy this to unlock level fourteen corruptions :).': '购买后解锁腐化等级14。:)',
+    'You have gained the ability to use level 14 corruptions :).': '您已解锁腐化等级14。:)',
+    'You have not gained the ability to use level 14 corruptions :(.': '您未解锁腐化等级14。:(',
+    'This doesn\'t *really* raise the corruption limit. Rather, it adds one FREE level to corruption multipliers, no matter what (can exceed cap). :': '购买后并*不*会*使腐化等级上限增加，而是使腐化的相关加成倍率直接视为增加1级(可以超过上限)。:',
+    'You have gained a free corruption level :).': '您已使腐化加成倍率视为增加1级。:)',
+    'You have not gained a free corruption level :(.': '您未使腐化加成倍率视为增加1级。:(',
+    'Offering Charge': '祭品增压',
+    'Upgrade this to get +2% offerings per level, forever!': '购买后，每级使祭品获取数量永久增加2%！',
+    'Offering Storm': '祭品风暴',
+    'Apparently, you can use this bar to attract more offerings. +8% per level, to be precise.': '很显然，它可以吸引更多祭品。每级使祭品获取数量永久增加8%。',
+    'Offering Tempest': '祭品狂风',
+    'This bar is so prestine, it\'ll make anyone submit their offerings. +4% per level, to be precise.': '它会让所有人乖乖把祭品奉上。每级使祭品获取数量永久增加4%。',
+    'Obtainium Wave': '难得素波浪',
+    'Upgrade this to get +2% obtainium per level, forever!': '购买后，每级使难得素获取数量永久增加2%！',
+    'Obtainium Flood': '难得素洪峰',
+    'Holy crap, water bending! +8% gained obtainium per level.': '传说中的御水术？！每级使难得素获取数量永久增加8%。',
+    'Obtainium Tsunami': '难得素海啸',
+    'A rising tide lifts all boats. +4% gained obtainium per level.': '它卷起了所有船只。每级使难得素获取数量永久增加4%。',
+    'Cube Flame': '方盒之焰',
+    'Upgrade this to get +2% Cubes per level, forever!': '购买后，每级使所有类型的方盒及立方获取数量永久增加2%！',
+    'Cube Blaze': '方盒烈火',
+    'Burn some more Golden Quarks! +8% gained Cubes per level.': '再挥霍一些金夸克吧！每级使所有类型的方盒及立方获取数量永久增加8%。',
+    'Cube Inferno': '方盒炼狱',
+    'Even Dante is impressed. +4% gained Cubes per level.': '连但丁都会为之而惊讶。每级使所有类型的方盒及立方获取数量永久增加4%。',
+    'Octeracts ;) (WIP': '惊奇八阶立方;)(未实装',
+    'Hey!!! What are you trying to do?!?': '喂！！！您到底要做什么？！？',
+    'You have bought into the octeract hype.': '您已解锁八阶立方。',
+    'You have not bought into the octeract hype.': '您未解锁八阶立方。',
+    'Offering Lootzifer (WIP': '祭品自动获取(未实装',
+    'Black Magic. Don\'t make deals with the devil. Each second, you get +2% of offering gain automatically per level. Also +10% Offerings!': '利用黑暗魔法强化自身。别和魔鬼做交易。每级使您自动获得祭品获取数量2%的祭品。另外还使祭品获取数量增加10%！',
+    'You have made a deal with the devil Lootzifer.': '您已与魔鬼做交易获得祭品自动获取的能力。',
+    'You have not made a deal with the devil Lootzifer.': '您未与魔鬼做交易获得祭品自动获取的能力。',
+    'Intermediate Pack': '中级礼包',
+    'Double Global Speed, Multiply Ascension speed by 1.5, and gain +2% Quarks forever. Yum... 2% Quark Milk.': '使全局速度翻倍，飞升的速度变为1.5倍，夸克获取数量增加2%。',
+    'You have upgraded your package to intermediate.': '您已将礼包升级为中级。',
+    'You have not upgraded your package to intermediate.': '您未将礼包升级为中级。',
+    'Advanced Pack': '高级礼包',
+    'Now we\'re cooking with kerosene! Gain +4% Quarks stack with intermediate, +0.33 to all corruption score multipliers, regardless of level!': '好上加好！使夸克获取数量增加4%(可以与中级礼包叠加)，并使所有腐化(等级不限)的分数倍率增加0.33！',
+    'You have bought our advanced package.': '您已购买高级礼包。',
+    'You have not bought our advanced package.': '您未购买高级礼包。',
+    'Expert Pack': '专家礼包',
+    'That\'s a handful! Gain +6% Quarks stack with advanced, 1.5x Ascension Score, Code \'add\' gives 1.2x Ascension Timer.': '越来越难控制了！使夸克获取数量增加6%(可以与高级礼包叠加)，飞升分数变为1.5倍，输入代码 add 的飞升时间奖励变为1.2倍。',
+    'You have switched to the expert provider.': '您已切换至专家礼包。',
+    'You have not switched to the expert provider.': '您未切换至专家礼包。',
+    'Master Pack': '大师礼包',
+    'A tad insane. Gain +8% Quarks stack with expert, for every level 14 corruption, ascension score is multiplied by 1.1.': '有点疯狂了。使夸克获取数量增加8%(可以与专家礼包叠加)，每有一个腐化等级达到14，就使飞升分数变为1.1倍。',
+    'You have mastered your inner chakras.': '您已能开宗立派。',
+    'You have not mastered your inner chakras.': '您未能开宗立派。',
+    'Divine Pack': '神圣礼包',
+    'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14. Also unlock Platonic Upgrade autobuyers!': '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级全部为14，则使八阶立方获取数量变为7.77倍。解锁PLATONIC方盒升级自动购买！',
+    'You have found the reason for existence .': '您已发觉生存的理由',
+    'You have not found the reason for existence  just yet.': '您暂未发觉生存的理由。',
+    'Shop Liquidation Sale': '商店清仓大甩卖',
+    'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.': '印记商人想要抛售掉一些奇异商品。价格的确是有点高昂了。大甩卖大概不是这个样子的。',
+    'You have triggered the liquidation event!': '您已开启清仓大甩卖！',
+    'You have not triggered the liquidation event!': '您未开启清仓大甩卖！',
     'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
     'you\'re not powerful enough to purchase this yet.': '您还不够强大，无法升级。',
     'You cannot afford this upgrade. Sorry!': '金夸克不够，无法升级。很遗憾！',
@@ -1815,6 +1906,8 @@ var cnPrefix = {
     "Bent Time/sec: ": "时间扭曲每秒产量：", //主界面及建筑
     "Level: ": "等级：", //主界面及建筑
     "+1 in ": "升1级需要", //主界面及建筑
+    "Level Fourteen Corruptions": "腐化等级-十四", //奇点，前置
+    "Level Fifteen Corruptions": "腐化等级-十五", //奇点，前置
     "Level ": "等级 ", //主界面及建筑
     "Achievement Points: ": "成就点数：", //成就
     "You unlocked an achievement: ": "你解锁了成就：", //成就
@@ -2100,6 +2193,14 @@ var cnRegReplace = new Map([
     [/^You have reached the end of the game, on singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) golden quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
+    [/^(.+) singularity$/, '$1次奇点'], //奇点
+    [/^(.+) golden quarks.$/, '$1金夸克。'], //奇点
+    [/^Permanently gain (.+)% more Golden Quarks on singularities.$/, '使进入奇点的金夸克获取数量增加$1%。'], //奇点
+    [/^Every hour, you gain (.+) Golden Quarks from exporting.$/, '每小时导出存档可以获得$1金夸克。'], //奇点
+    [/^Ascension Count increases (.+)% faster.$/, '飞升次数获取数量增加$1%。'], //奇点
+    [/^Permanently gain (.+)% more Offerings.$/, '使祭品获取数量增加$1%。'], //奇点
+    [/^Permanently gain (.+)% more Obtainium.$/, '使难得素获取数量增加$1%。'], //奇点
+    [/^Permanently gain (.+)% more Cubes.$/, '使所有类型的方盒及立方获取数量增加$1%。'], //奇点
     [/^You can buy golden quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) golden quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
 ]);

@@ -348,7 +348,7 @@ export const promocodes = async () => {
         el.textContent = `Try again... you can do it! [-${bet} quarks]`;
     } else if (input === 'time') {
         if ((Date.now() - player.promoCodeTiming.time) / 1000 < 3600) {
-            return Confirm(`If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.`);
+            return Confirm('If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.');
         }
 
         const random = Math.random() * 15000; // random time within 15 seconds

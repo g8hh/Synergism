@@ -80,7 +80,7 @@ const makeSlot = (key: string, descr: string) => {
             target.nextSibling?.textContent;
 
         // new value to set key as, unformatted
-        const newKey = await Prompt(`Enter the new key you want to activate ${target.parentNode.querySelector('p').textContent} with. MDN has a list of values for "special keys" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values You can also prefix your hotkey with [Ctrl,Shift,Alt]+<key>`);
+        const newKey = await Prompt(`Enter the new key you want to activate ${name} with. MDN has a list of values for "special keys" if you would like to use one: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values You can also prefix your hotkey with [Ctrl,Shift,Alt]+<key>`);
 
         if (typeof newKey !== 'string') {
             return;

@@ -116,7 +116,7 @@ export const btoa = (s: string) => {
  *          in standard English
  */
 export const toOrdinal = (int: number):string => {
-    let suffix = 'th'
+    /*let suffix = 'th'
     if (int % 10 === 1) {
         suffix = (int % 100 === 11)? 'th': 'st'
     }
@@ -125,7 +125,7 @@ export const toOrdinal = (int: number):string => {
     }
     if (int % 10 === 3) {
         suffix = (int % 100 === 13)? 'th': 'rd'
-    }
+    }*/
 
     return format(int,0,true)//+suffix
 }

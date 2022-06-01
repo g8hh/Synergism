@@ -1282,7 +1282,7 @@ var cnItems = {
     '[Cx8] A bit festive! If there is an event, All Cube gain is multiplied by 1.25.': '[Cx8]再增添一些节日的气息！如果有活动，则使所有类型的方盒及立方产量乘以1.25。',
     '[Cx9] Quite sour for a cookie. But it increases your ascension speed by 0.25% per level, so who is to complain?': '[Cx9]很酸很酸。但它每级可以使飞升的速度增加0.25%，所以估计没什么人会抱怨了。',
     '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使购买金夸克的夸克花费减少1。',
-    '[Cx11] Edible but prone to mistakes. Adds five whole milliseconds to the tolerance of code \'time\', and increases reward by +11% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加5毫秒，且奖励增加11%。',
+    '[Cx11] Edible but prone to mistakes. Adds fifty whole milliseconds to the tolerance of code \'time\', and increases reward by +5% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加50毫秒，且奖励增加5%。',
     '[Cx12] Platonic loves toffee. Octuple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为8倍。',
     '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使普通方盒和立方的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
     '[Cx14] Some say the ant god itself penned these fortunes. When you gain a statue from Platonic Cubes, you gain two instead.': '[Cx14]有人说这是蚁神的造物。当您开启PLATONIC方盒获得塑像时，使获取量翻倍。',
@@ -1510,12 +1510,12 @@ var cnItems = {
     'Can\'t bet that!': '无法下注那个数量！',
     'Due to cheaters, you can only bet 10k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为10000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
-    'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Otherwise, you must wait an hour between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待1个小时以后才能再度使用。',
+    'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, Regardless, you must wait at least 15 minutes between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待15分钟后才能再度使用。',
     'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.5 - The Reality Update pt.1 [Last Update: 17:22 UTC 24-May-2022].': '您目前玩的版本为V2.9.5 - 现实升级第一部分 [2022年5月24日 UTC 17:22更新]。',
+    'You\'re playing v2.9.6 - The Reality Update pt.1 [Last Update: 16:46 UTC 1-Jun-2022].': '您目前玩的版本为V2.9.6 - 现实升级第一部分 [2022年6月1日 UTC 16:46更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1715,9 +1715,9 @@ var cnItems = {
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
     'First up on the menu, why not gain +0.2% Quarks from cube opening per level?': '兵马未动，粮草先行，每级使开启方盒及立方的夸克获取数量增加0.2%。',
     'This isn\'t even as good as the original. +0.5% Offerings and Obtainium per level.': '效果甚至还不如之前的。每级使祭品和难得素的获取数量增加0.5%。',
-    'Gain +0.01% Ascension Speed per level per singularity. It needs a lot of fuel to power up.': '对于每次奇点，每级使飞升的速度增加0.01%。加速需要消耗大量燃料。',
-    'Gain +0.01% Offerings per level per singularity. Putting the Singularity Debuff industry out of business.': '对于每次奇点，每级使祭品获取数量增加0.01%。让奇点削弱行业倒闭去吧。',
-    'Gain +0.01% Obtainium per level per singularity!!!': '对于每次奇点，每级使难得素获取数量增加0.01%！！！',
+    'Gain +0.1% Ascension Speed per level per singularity. It needs a lot of fuel to power up.': '对于每次奇点，每级使飞升的速度增加0.1%。加速需要消耗大量燃料。',
+    'Gain +1% Offerings per level per singularity. Putting the Singularity Debuff industry out of business.': '对于每次奇点，每级使祭品获取数量增加1%。让奇点削弱行业倒闭去吧。',
+    'Gain +1% Obtainium per level per singularity!!!': '对于每次奇点，每级使难得素获取数量增加1%！！！',
     'Your grandparents had to wait a full day for powder, but not you! Per level gain +1% of orbs to powder based on the conversion rate.': '您的爷爷奶奶可能还在等着一天结束获得超通量粉，但您已经可以直接获得了！每级可以将1%的超通量珠直接转化为超通量粉，且不减少超通量珠数量。',
     'One would be advised not to touch this. +0.05% Octeracts per level, whatever those are...': '触碰它可不是什么明智之举。每级使八阶立方获取数量增加0.05%，但这些是……',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
@@ -2154,7 +2154,7 @@ var cnRegReplace = new Map([
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //下注奖励代码
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
-    [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize!$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！'], //时间点击代码
+    [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize! This particular instance has a (.+)x multiplier due to elapsed time between uses.$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！由于两次使用该代码之间的时间间隔，本次代码的奖励变为$2倍。'], //时间点击代码
     [/^You clicked at the right time! \[\+(.+) Quarkies\]$/, '您点击的时机很好！[增加$1夸克]'], //时间点击代码
     [/^Own: (.+)$/, '拥有：$1'], //商店
     [/^Gain (.+) Offerings.$/, '获得$1祭品。'], //商店

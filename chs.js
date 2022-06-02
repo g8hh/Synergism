@@ -1510,7 +1510,7 @@ var cnItems = {
     'Can\'t bet that!': '无法下注那个数量！',
     'Due to cheaters, you can only bet 10k max.': '由于过多玩家滥用此代码，因此下注上限现在限制为10000。',
     'Can\'t bet what you don\'t have.': '下注数量无法超过您拥有的夸克数量。',
-    'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, Regardless, you must wait at least 15 minutes between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待15分钟后才能再度使用。',
+    'If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, you must wait at least 15 minutes between each use.': '导入存档后，您在15分钟内是无法使用此代码的，这是为了防止作弊。其他情况下，您需要等待15分钟后才能再度使用。',
     'You didn\'t guess within the correct times, try again soon!': '点击的时机不对，下次再来吧！',
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Light Mode': '明亮模式',

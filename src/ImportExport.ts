@@ -197,7 +197,7 @@ export const promocodes = async () => {
         player.codes.set(1, true);
         player.runeshards += 25;
         player.worlds.add(50);
-        el.textContent = 'Promo Code \'synergism2021\' Applied! +25 Offerings, +50 Quarks'
+        el.textContent = 'Promo Code \'synergism2021\' Applied! +25 Offerings, +' + Math.floor(player.worlds.applyBonus(50)) + ' Quarks'
     } else if (input === ':unsmith:' && player.achievements[243] < 1) {
         achievementaward(243);
         el.textContent = 'It\'s Spaghetti Time! [Awarded an achievement!!!]';
@@ -208,7 +208,7 @@ export const promocodes = async () => {
         player.codes.set(26, true);
         const quarks = Math.floor(Math.random() * (400 - 100 + 1) + 100);
         player.worlds.add(quarks);
-        el.textContent = 'Khafra has blessed you with ' + player.worlds.applyBonus(quarks) + ' quarks!';
+        el.textContent = 'Khafra has blessed you with ' + Math.floor(player.worlds.applyBonus(quarks)) + ' quarks!';
     } else if (input.toLowerCase() === 'daily' && !player.dailyCodeUsed) {
         player.dailyCodeUsed = true;
         const rewards = dailyCodeReward();

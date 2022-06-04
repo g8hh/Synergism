@@ -2140,6 +2140,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
     [/^What would you like to name Loadout (.+)\? Names cannot be longer than (.+) characters. Nothing crazy!$/, '您想要重新命名档$1吗？名字无法超过$2个字符。就这样！'], //腐化
+    [/^Promo Code 'synergism2021' Applied! \+25 Offerings, \+(.+) Quarks$/, '奖励代码“synergism2021”已生效！获得25祭品，$1夸克'], //设置
+    [/^Khafra has blessed you with (.+) quarks!$/, 'Khafra祝福了您，您获得了$1夸克！'], //设置
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^Thank you for playing today! You have gained (.+) Quarks  based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克！'], //每日奖励代码
     [/^Thank you for playing today! You have gained (.+) Quarks and (.+) Golden Quarks based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克及$2金夸克！'], //每日奖励代码

@@ -1056,9 +1056,10 @@ var cnItems = {
     'Open x1,': '开启 x1',
     'Custom Amount': '自定数量',
     'OK. No cubes opened.': '好吧。不开了。',
-    'Value must be a finite number!': '这不是有效的数字啊。',
+    'Value must be a finite, non-decimal number!': '这不是有效的数字啊。',
     'You don\'t have enough cubes to open!': '您目前拥有的数量小于想要开启的数量！',
     'You can\'t open a negative number of cubes.': '您无法开启负数数量。',
+    'You can\'t open a negative percent of cubes.': '您无法开启负数百分比。',
     'Open All': '开启全部',
     'Hermes\' Tribute': '赫尔墨斯的贡品',
     'Aphrodite\'s Tribute': '阿佛洛狄忒的贡品',
@@ -1370,15 +1371,14 @@ var cnItems = {
     ' Hepteracts! You know where to get these, right?': '惊奇七阶立方！您应该已经知道这些是哪来的了吧？',
     'Craft': '锻造',
     'Max': '最大化',
-    'How many would you like to craft?': '您想要锻造多少？',
-    'Okay, maybe next time.': '好吧，下次再说。',
-    'This will attempt to buy as many as possible. Are you sure?': '这将尽可能进行锻造，您确定要这么做吗？',
-    'You can\'t craft a nonpositive amount of these, you monster!': '您没法锻造负数数量啊。',
     'This is not an unlocked craft, thus you cannot craft this item!': '这还没有解锁，您要怎么锻造呢？',
+    'Execustion failed: material could not be calculated.': '执行失败：无法计算原材料。',
+    'Okay, maybe next time.': '好吧，下次再说。',
+    'Value must be a finite number!': '这不是有效的数字啊。',
+    'You can\'t craft a nonpositive amount of these, you monster!': '您没法锻造负数数量啊。',
     'Expand': '延展',
-    'This will empty your balance, but double your capacity. Agree to the terms and conditions and stuff?': '延展将清空此类惊奇七阶立方，但可以使上限翻倍。您确定这么做没问题吧？',
     'This is not an unlocked craft. Sorry!': '您还没有解锁它，所以，抱歉了。',
-    'Insufficient inventory to expand. 404 909 error.': '未达上限，无法延展。404 909错误。',
+    'Insufficient inventory to expand.': '未达上限，无法延展。',
     'Warp': '时空跃迁',
     'How far in the future would you like to go into the future? Anything awaits when it is testing season.': '您想要跃迁到多久以后？',
     'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
@@ -2083,7 +2083,8 @@ var cnRegReplace = new Map([
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
     [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
     [/^ Cost: (.*) Obtainium \[\+(.+) Levels\]$/, '花费：$1难得素[可提升$2级]'], //研究
-    [/^How many cubes would you like to open\? You have (.+)!$/, '您想要开启多少？您目前拥有$1！'], //惊奇方盒
+    [/^How many cubes would you like to open\? You have (.+)! You can input a percentage of cubes to open, for example: "50%" or "100%".$/, '您想要开启多少？您目前拥有$1！您可以输入想要开启的百分比，例如输入“50%”或“100%”。'], //惊奇方盒
+    [/^You can't open (.+)% of your cubes...$/, '无法开启$1%……'], //惊奇方盒
     [/^(.+) Wow! Cubes \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
     [/^(\d+)\/(\d+) \[MAX\]$/, '$1/$2 [最大]'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Offerings$/, '$1/$2 祭品'], //惊奇方盒
@@ -2094,8 +2095,10 @@ var cnRegReplace = new Map([
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Platonic! Cubes$/, '$1/$2 PLATONIC方盒'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Hepteracts of the Abyss$/, '$1/$2 惊奇七阶立方·深渊'], //惊奇方盒
     [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数到达$1。'], //惊奇方盒
+    [/^You have reached the current capacity of (.+). Please expand to craft more.$/, '这种七阶立方达到了上限$1。请进行延展。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts.$/, '您锻造了$1七阶立方。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
+    [/^This will empty your balance, but capacity will increase from (.+) to (.+) \[Expansion Multiplier: (.+)\]. Agree to the terms and conditions and stuff\?$/, '延展将清空此类惊奇七阶立方，但可以使上限从$1变为$2[延展倍率：$3倍]。您确定这么做没问题吧？'], //惊奇方盒
     [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
     [/^Inventory: (.+)\/(.*)$/, '库存：$1 /$2'], //惊奇方盒
     [/^Current Effect: Ascension Speed \+(.*)$/, '当前效果：飞升的速度增加$1'], //惊奇方盒
@@ -2114,7 +2117,6 @@ var cnRegReplace = new Map([
     [/^One of these will cost you (.*) Hepteracts and 1e130 Obtainium$/, '锻造一个将消耗$1七阶立方及1e130难得素'], //惊奇方盒
     [/^Orb Effect: Opening Cubes gives (.*)% more$/, '超通量珠效果：开启方盒及立方时额外获得$1%'], //惊奇方盒
     [/^Orbs Purchased Today: (.*).$/, '今日购买的超通量珠数量：$1。'], //惊奇方盒
-    [/^How many Orbs would you like to purchase\? You can buy up to (.*) with your hepteracts.$/, '您要购买多少超通量珠？现有的七阶立方最多可以购买$1。'], //惊奇方盒
     [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. You have also gained (.+) powder immediately, thanks to your shop upgrades. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。由于商店升级的效果，您还立即获得了$3超通量粉。祝您开心！'], //惊奇方盒
     [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\].  Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。祝您开心！'], //惊奇方盒
     [/^Expired Overflux Orbs become powder at a rate of (.+) Orbs per powder lump!$/, '粉碎的超通量珠可以转化为超通量粉，比率为：每超通量粉块需要$1超通量珠！'], //惊奇方盒

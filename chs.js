@@ -55,6 +55,10 @@ var cnItems = {
     'Per second: OFF': '每秒产量：关',
     'Buy Max: ON': '最大化购买：开',
     'Buy Max: OFF': '最大化购买：关',
+    'Auto ON': '自动：开',
+    'Auto OFF': '自动：关',
+    'Auto Setting --- Percentage': '自动比例',
+    'Autocraft Percentage': '自动锻造比例',
     'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
     //#endregion
     //#region 主界面及建筑
@@ -1283,7 +1287,7 @@ var cnItems = {
     '[Cx8] A bit festive! If there is an event, All Cube gain is multiplied by 1.25.': '[Cx8]再增添一些节日的气息！如果有活动，则使所有类型的方盒及立方产量乘以1.25。',
     '[Cx9] Quite sour for a cookie. But it increases your ascension speed by 0.25% per level, so who is to complain?': '[Cx9]很酸很酸。但它每级可以使飞升的速度增加0.25%，所以估计没什么人会抱怨了。',
     '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使购买金夸克的夸克花费减少1。',
-    '[Cx11] Edible but prone to mistakes. Adds fifty whole milliseconds to the tolerance of code \'time\', and increases reward by +5% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加50毫秒，且奖励增加5%。',
+    '[Cx11] Edible but prone to mistakes. Adds 125 whole milliseconds to the tolerance of code \'time\', and increases reward by +2% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加125毫秒，且奖励增加2%。',
     '[Cx12] Platonic loves toffee. Octuple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为8倍。',
     '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使普通方盒和立方的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
     '[Cx14] Some say the ant god itself penned these fortunes. When you gain a statue from Platonic Cubes, you gain two instead.': '[Cx14]有人说这是蚁神的造物。当您开启PLATONIC方盒获得塑像时，使获取量翻倍。',
@@ -1298,7 +1302,7 @@ var cnItems = {
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
     'Best Challenge 15 Exponent': '挑战15最高达到的指数',
     'Gain': '达到',
-    ' Coin Exponent in Challenge 15 to gain more score!': '金币指数于挑战15中以获得更多奖励！',
+    ' Coins in Challenge 15 to gain more score!': '金币于挑战15中以获得更多奖励！',
     '% [Uncorruptable!]': '%[不受腐化影响！]',
     '% [Additive]': '%[相互叠加]',
     'Unlocked!': '已解锁！',
@@ -1379,6 +1383,9 @@ var cnItems = {
     'Expand': '延展',
     'This is not an unlocked craft. Sorry!': '您还没有解锁它，所以，抱歉了。',
     'Insufficient inventory to expand.': '未达上限，无法延展。',
+    'You do not have this as an unlocked craft. Automation is therefore not possible.': '您还没有解锁它。因此无法自动。',
+    'Enter a number from 0 to 100 (integer only!) to set autocraft percentage. Every ascension, that percentage of your hepteracts are used to craft equally split between every hepteract with AUTO ON. Auto crafting also does not consume other resources! [Except Quarks, of course...]': '请输入0至100之间的数字来设定自动锻造的比例。每次飞升后，都将使用该比例的七阶立方来进行自动锻造，将对所有开启自动锻造的七阶立方平均进行分配。自动锻造除了夸克以外，不花费七阶立方以外的资源！',
+    'Value must be a number between 0 and 100, inclusive!': '请输入0至100之间的数字！',
     'Warp': '时空跃迁',
     'How far in the future would you like to go into the future? Anything awaits when it is testing season.': '您想要跃迁到多久以后？',
     'Hey! That\'s not a valid time!': '您输入的时间……确定是有效的时间吗？',
@@ -1520,8 +1527,8 @@ var cnItems = {
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +200% Quarks from all sources, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量增加200%，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
-    '💗 Happy Two Year Anniversary! 💗': '💗两周年快乐！💗',
+    'Current Buffs: +125% Quarks from all sources, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量增加125%，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
+    '💗 2.9.7 Event! 💗': '💗2.9.7版的活动！💗',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1594,7 +1601,7 @@ var cnItems = {
     'Platonic Beta': 'Platonic Beta升级',
     'Platonic Omega': 'Platonic Omega升级',
     'Overflux Powder': '超通量粉',
-    'Event [Most Recent: June 28 - July 01]': '活动加成[最近时间：6月28日至7月1日]',
+    'Event [Most Recent: June 6 - June 13 2022]': '活动加成[最近时间：2022年6月6日至6月13日]',
     'Singularity Factor': '奇点因子',
     'Wow Pass Y': '季票 Y',
     'Cube Flame [GQ]': '方盒之焰[金夸克]',
@@ -1824,7 +1831,7 @@ var cnItems = {
     'You have mastered your inner chakras.': '您已能开宗立派。',
     'You have not mastered your inner chakras.': '您未能开宗立派。',
     'Divine Pack': '神圣礼包',
-    'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14. Also unlock Platonic Upgrade autobuyers!': '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级全部为14，则使八阶立方获取数量变为7.77倍。解锁PLATONIC方盒升级自动购买！',
+    'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14.': '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级全部为14，则使八阶立方获取数量变为7.77倍。',
     'You have found the reason for existence .': '您已发觉生存的理由',
     'You have not found the reason for existence  just yet.': '您暂未发觉生存的理由。',
     'Shop Liquidation Sale': '商店清仓大甩卖',
@@ -1850,7 +1857,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sat May 07 2022 23:59:59 GMT+0800 (": "活动持续到2022年5月7日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sun Jun 12 2022 23:59:59 GMT+0800 (": "活动持续到2022年6月12日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑
@@ -1968,7 +1975,7 @@ var cnPostfix = {
     ":": "：",
     "：": "：",
     ": ": "： ",
-    "： ": "： ",
+    "： ": "：",
     " ": "",
     "/s)": "/s)",
     ")": ")",
@@ -2100,6 +2107,8 @@ var cnRegReplace = new Map([
     [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
     [/^This will empty your balance, but capacity will increase from (.+) to (.+) \[Expansion Multiplier: (.+)\]. Agree to the terms and conditions and stuff\?$/, '延展将清空此类惊奇七阶立方，但可以使上限从$1变为$2[延展倍率：$3倍]。您确定这么做没问题吧？'], //惊奇方盒
     [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
+    [/^Your percentage is kept at (.+)%.$/, '您的自动锻造比例仍然为$1%。'], //惊奇方盒
+    [/^Okay. On Ascension, (.+)% of your Hepteracts will be used in crafting.$/, '好的。飞升时，将有$1%的七阶立方用于锻造。'], //惊奇方盒
     [/^Inventory: (.+)\/(.*)$/, '库存：$1 /$2'], //惊奇方盒
     [/^Current Effect: Ascension Speed \+(.*)$/, '当前效果：飞升的速度增加$1'], //惊奇方盒
     [/^Current Effect: Hypercubes \+(.*)$/, '当前效果：五阶立方获取数量增加$1'], //惊奇方盒

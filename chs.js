@@ -1294,7 +1294,7 @@ var cnItems = {
     '[Cx15] That\'s amore, but is quite a crumbful! Increase ant efficiency by 0.4%. (Roughly every 200 ants purchased doubles crumb production!': '[Cx15]香脆可口，但又易碎！使蚂蚁效率增加0.4%。(每购买200只蚂蚁差不多就可以使银河碎屑翻倍！',
     '[Cx16] You just wish you could have one more cookie baked by her. Gain 2x all cubes until you purchase OMEGA.': '[Cx16]您永远吃不腻的饼干。在购买Platonic Omega升级之前，使所有类型的方盒及立方产量翻倍。',
     '[Cx17] What the hell are in these??? Anyway, Metaphysics Talisman level cap is increased by 1,337.': '[Cx17]这里面都是什么玩意？？？不管了，总之玄学护身符的等级上限增加1337。',
-    '[Cx18] What the heck! These aren\'t even cookies. +0.02% Quarks per level purchased of this upgrade. +30% more at level 1,000!': '[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.02%，达到等级上限1000时可以使夸克获取数量增加30%！',
+    '[Cx18] What the heck! These aren\'t even cookies. +0.01% Quarks per level purchased of this upgrade. +5% more at level 1,000!': '[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.01%，达到等级上限1000时可以使夸克获取数量再增加5%！',
     '[Cx19] Cookies that you\'ll never remember again. +12% Golden Quarks this singularity.': '[Cx19]永远无法再回忆起来的饼干。使本次进入奇点的金夸克获取数量增加12%。',
     '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +0.01% more Octeracts on ascension if every corruption is set to level 14.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果腐化等级全部为14，则使飞升时惊奇八阶立方产量增加0.01%。',
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
@@ -1482,6 +1482,7 @@ var cnItems = {
     'Ascend when you\'ve completed Sadistic Challenge I a total of': '完成以下次数挑战10以后飞升：',
     ' times.': '次。',
     'The name you provided is too long! Try again.': '名字太长了！换个短一点的再来吧。',
+    'Ant God approves of your joke!': '蚁神批准了你的玩笑！',
     'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符(比如中文)！换个其他的再来吧。',
     'All next Corruption Stats are now Zero. This will take effect on the next ascension.': '所有腐化的等级都归零了。飞升后即可生效。',
     //#endregion
@@ -1684,7 +1685,7 @@ var cnItems = {
     'Own': '拥有',
     'Buy Yer\' Potions!': '买点药剂！',
     'Buy 1 for 100 Quarks': '花费100夸克购买1瓶',
-    'USE 1 [+2hr]': '使用1瓶[2小时效果]',
+    'CONSUME': '使用',
     'Bought': '已购买',
     'Not Bought': '未购买',
     'Maxed!': '达到最大等级！',
@@ -1730,7 +1731,7 @@ var cnItems = {
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
-    'Would you like to use this potion?': '您想要使用此药剂吗？',
+    'Would you like to use some of this potion?': '您想要使用一些此药剂吗？',
     'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
     'This will fully refund most of your permanent upgrades for an upfront cost of 15 Quarks. Would you like to do this?': '这么做将重置大部分永久升级，但需要花费15夸克。您确定要这么做吗？',
     'Shop Confirmations: ON': '商店确认框：开',
@@ -1838,6 +1839,22 @@ var cnItems = {
     'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.': '印记商人想要抛售掉一些奇异商品。价格的确是有点高昂了。大甩卖大概不是这个样子的。',
     'You have triggered the liquidation event!': '您已开启清仓大甩卖！',
     'You have not triggered the liquidation event!': '您未开启清仓大甩卖！',
+    'Potion Decanter of Enlightenment': '启迪药水瓶',
+    'Purported to actually be the fountain of youth, use up to 100 potions at once and multiply gain by the square of the amount used.': '据称它其实是不老泉水，一次性使用100瓶药剂，并且使药剂效果乘以使用数量的平方根。',
+    'You have purchased this decanter!': '您已购买启迪药水瓶！',
+    'You have not purchased this decanter!': '您未购买启迪药水瓶！',
+    'Bigger Challenge Caps': '挑战上限增加',
+    'Need more challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level.': '需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。',
+    'Biggerer Challenge Caps': '挑战上限再度增加',
+    'Need even more challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level.': '还需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。',
+    'biggererEST Challenge Caps': '挑战上限超级增加',
+    'Need even MORE challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level. Does it not seem excessive?': '还……还需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。是不是有点太勉强了？',
+    'I wish my Quark Hepteract was marginally better.': '我希望惊奇七阶立方·夸克的效果略微增加。',
+    'Wrong game, oops. Anyway, would you like a very slightly better DR exponent on Quark Hepteract?': '这个升级似乎走错游戏了，啊哦。总之，您想要让惊奇七阶立方·夸克超过软上限后的效果变得更好吗？',
+    'I wish my Quark Hepteract was marginally better II.': '我希望惊奇七阶立方·夸克的效果略微增加 II。',
+    'Still not the right game. Same as the previous upgrade.': '还是走错游戏了。效果与之前类似。',
+    'I wish my Quark Hepteract was marginally better III.': '我希望惊奇七阶立方·夸克的效果略微增加 III。',
+    'I AM NOT THE GODMOTHER YOU ARE LOOKING FOR, DYLAN!': '我！才！不！是！那！个！游！戏！里！的！教！母！(译者注：指NGU的Titan: Godmother)',
     'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
     'you\'re not powerful enough to purchase this yet.': '您还不够强大，无法升级。',
     'You cannot afford this upgrade. Sorry!': '金夸克不够，无法升级。很遗憾！',
@@ -2213,6 +2230,8 @@ var cnRegReplace = new Map([
     [/^Permanently gain (.+)% more Offerings.$/, '使祭品获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Obtainium.$/, '使难得素获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Cubes.$/, '使所有类型的方盒及立方获取数量增加$1%。'], //奇点
+    [/^You feel motivated enough to complete (.+) more reincarnation challenges, and (.+) more ascension challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
+    [/^The DR exponent is now (.+) larger!$/, '超过软上限后的指数增加了$1！'], //奇点
     [/^You can buy golden quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) golden quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
 ]);

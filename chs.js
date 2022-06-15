@@ -1840,7 +1840,7 @@ var cnItems = {
     'You have triggered the liquidation event!': '您已开启清仓大甩卖！',
     'You have not triggered the liquidation event!': '您未开启清仓大甩卖！',
     'Potion Decanter of Enlightenment': '启迪药水瓶',
-    'Purported to actually be the fountain of youth, use up to 100 potions at once and multiply gain by the square of the amount used.': '据称它其实是不老泉水，一次性使用100瓶药剂，并且使药剂效果乘以使用数量的平方根。',
+    'Purported to actually be the fountain of youth, use up to 100 potions at once and multiply gain by the square of the amount used.': '据称它其实是不老泉水，一次性使用100瓶药剂，并且使药剂效果变为使用数量的平方。',
     'You have purchased this decanter!': '您已购买启迪药水瓶！',
     'You have not purchased this decanter!': '您未购买启迪药水瓶！',
     'Bigger Challenge Caps': '挑战上限增加',

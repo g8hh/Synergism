@@ -176,8 +176,12 @@ export const importSynergism = async (input: string, reset = false) => {
     }
 }
 
-export const promocodes = async () => {
-    const input = await Prompt('Got a code? Great! Enter it in (CaSe SeNsItIvE). [Note to viewer: this is for events and certain always-active codes. May I suggest you type in "synergism2021" or "add" or "daily" or "time" perchance?]');
+export const promocodesPrompt = async () => {
+    const input = await Prompt('Got a code? Great! Enter it in (CaSe SeNsItIvE). [Note to viewer: this is for events and certain always-active codes. May I suggest you type in "synergism2021" or "Khafra" perchance?]');
+    void promocodes(input);
+}
+
+export const promocodes = async (input: string | null) => {
     const el = DOMCacheGetOrSet('promocodeinfo');
 
     if (input === null) {

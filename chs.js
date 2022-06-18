@@ -1288,7 +1288,7 @@ var cnItems = {
     '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使购买金夸克的夸克花费减少1。',
     '[Cx11] Edible but prone to mistakes. Adds 125 whole milliseconds to the tolerance of code \'time\', and increases reward by +2% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加125毫秒，且奖励增加2%。',
     '[Cx12] Platonic loves toffee. Octuple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为8倍。',
-    '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使普通方盒和立方的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
+    '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使惊奇方盒的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
     '[Cx14] Some say the ant god itself penned these fortunes. When you gain a statue from Platonic Cubes, you gain two instead.': '[Cx14]有人说这是蚁神的造物。当您开启PLATONIC方盒获得塑像时，使获取量翻倍。',
     '[Cx15] That\'s amore, but is quite a crumbful! Increase ant efficiency by 0.4%. (Roughly every 200 ants purchased doubles crumb production!': '[Cx15]香脆可口，但又易碎！使蚂蚁效率增加0.4%。(每购买200只蚂蚁差不多就可以使银河碎屑翻倍！',
     '[Cx16] You just wish you could have one more cookie baked by her. Gain 2x all cubes until you purchase OMEGA.': '[Cx16]您永远吃不腻的饼干。在购买Platonic Omega升级之前，使所有类型的方盒及立方产量翻倍。',

@@ -1,20 +1,20 @@
 import { toggleAscStatPerSecond, toggleTabs, toggleSubTab, toggleBuyAmount, toggleAutoTesseracts, toggleSettings, toggleautoreset, toggleautobuytesseract, toggleShops, toggleAutoSacrifice, toggleautoenhance, toggleautofortify, updateRuneBlessingBuyAmount, toggleChallenges, toggleAutoChallengesIgnore, toggleAutoChallengeRun, updateAutoChallenge, toggleResearchBuy, toggleAutoResearch, toggleAntMaxBuy, toggleAntAutoSacrifice, toggleMaxBuyCube, toggleCorruptionLevel, toggleAutoAscend, toggleShopConfirmation, toggleAutoResearchMode, toggleBuyMaxShop, toggleHepteractAutoPercentage } from './Toggles'
 import { resetrepeat, updateAutoReset, updateTesseractAutoBuyAmount } from './Reset'
 import { player, resetCheck, saveSynergy } from './Synergism'
-import { boostAccelerator, buyAccelerator, buyMultiplier, buyProducer, buyCrystalUpgrades, buyParticleBuilding, buyTesseractBuilding, buyUpgrades, buyRuneBonusLevels } from './Buy'
+import { boostAccelerator, buyAccelerator, buyMultiplier, buyProducer, buyCrystalUpgrades, buyParticleBuilding, buyTesseractBuilding, buyUpgrades, buyRuneBonusLevels, buyAllBlessings } from './Buy'
 import { crystalupgradedescriptions, constantUpgradeDescriptions, buyConstantUpgrades, upgradedescriptions } from './Upgrades'
 import { buyAutobuyers } from './Automation'
 import { buyGenerator } from './Generators'
 import { achievementdescriptions, achievementpointvalues } from './Achievements'
 import { displayRuneInformation, redeemShards } from './Runes'
-import { toggleTalismanBuy, buyTalismanResources, showTalismanPrices, buyTalismanLevels, buyTalismanEnhance, showRespecInformation, respecTalismanConfirm, respecTalismanCancel, changeTalismanModifier, updateTalismanCostDisplay, showTalismanEffect, showEnhanceTalismanPrices } from './Talismans'
+import { toggleTalismanBuy, buyTalismanResources, buyAllTalismanResources, showTalismanPrices, buyTalismanLevels, buyTalismanEnhance, showRespecInformation, respecTalismanConfirm, respecTalismanCancel, changeTalismanModifier, updateTalismanCostDisplay, showTalismanEffect, showEnhanceTalismanPrices } from './Talismans'
 import { challengeDisplay, toggleRetryChallenges } from './Challenges'
 import { buyResearch, researchDescriptions } from './Research'
 import { antRepeat, sacrificeAnts, buyAntProducers, updateAntDescription, antUpgradeDescription, buyAntUpgrade } from './Ants'
 import { buyCubeUpgrades, cubeUpgradeDesc } from './Cubes'
 import { buyPlatonicUpgrades, createPlatonicDescription } from './Platonic'
 import { corruptionCleanseConfirm, corruptionDisplay } from './Corruptions'
-import { exportSynergism, updateSaveString, promocodes, promocodesPrompt, importSynergism, resetGame } from './ImportExport'
+import { exportSynergism, updateSaveString, promocodes, promocodesPrompt, promocodesInfo, importSynergism, resetGame } from './ImportExport'
 import { resetHistoryTogglePerSecond } from './History'
 import { resetShopUpgrades, shopDescriptions, buyShopUpgrades, useConsumable, shopData, shopUpgradeTypes } from './Shop'
 import { Globals as G, Upgrade } from './Variables';
@@ -311,6 +311,10 @@ export const generateEventHandlers = () => {
 
     }
 
+    DOMCacheGetOrSet('buyTalismanAll').addEventListener('mouseover', () => updateTalismanCostDisplay(null))
+    DOMCacheGetOrSet('buyTalismanAll').addEventListener('click', () => buyAllTalismanResources())
+
+
     for (let index = 0; index < 7; index++) {
 
         DOMCacheGetOrSet(`talisman${index+1}`).addEventListener('click', () => showTalismanEffect(index))
@@ -341,6 +345,9 @@ export const generateEventHandlers = () => {
     }
     DOMCacheGetOrSet('buyRuneBlessingInput').addEventListener('blur', () => updateRuneBlessingBuyAmount(1))
     DOMCacheGetOrSet('buyRuneSpiritInput').addEventListener('blur', () => updateRuneBlessingBuyAmount(2))
+
+    DOMCacheGetOrSet('buyAllBlessings').addEventListener('click', () => buyAllBlessings('Blessings'))
+    DOMCacheGetOrSet('buyAllSpirits').addEventListener('click', () => buyAllBlessings('Spirits'))
 
     // CHALLENGES TAB
     //Part 1: Challenges
@@ -568,9 +575,13 @@ export const generateEventHandlers = () => {
     /*Delete Save Button*/ DOMCacheGetOrSet('deleteGame').addEventListener('click', () => resetGame())
     /*Submit Stats [Note: will eventually become obsolete if kong closes]*/ // DOMCacheGetOrSet('submitstats').addEventListener('click', () => submitStats())
     /*Promotion Codes*/ DOMCacheGetOrSet('promocodes').addEventListener('click', () => promocodesPrompt())
+    DOMCacheGetOrSet('promocodes').addEventListener('mouseover', () => promocodesInfo(''))
     /*Special action add*/ DOMCacheGetOrSet('addCode').addEventListener('click', () => promocodes('add'))
+    DOMCacheGetOrSet('addCode').addEventListener('mouseover', () => promocodesInfo('add'))
     /*Special action daily*/ DOMCacheGetOrSet('dailyCode').addEventListener('click', () => promocodes('daily'))
+    DOMCacheGetOrSet('dailyCode').addEventListener('mouseover', () => promocodesInfo('daily'))
     /*Special action time*/ DOMCacheGetOrSet('timeCode').addEventListener('click', () => promocodes('time'))
+    DOMCacheGetOrSet('timeCode').addEventListener('mouseover', () => promocodesInfo('time'))
     /*Toggle Ascension Per-Second Setting*/ DOMCacheGetOrSet('historyTogglePerSecondButton').addEventListener('click', () => resetHistoryTogglePerSecond())
 
     // SHOP TAB

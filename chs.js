@@ -606,6 +606,8 @@ var cnItems = {
     'You cannot grasp the true form of Ant God\'s treasure.': '您无法掌握蚁神至宝的真面目。',
     'Press [1], [2], [3], [4] or [5] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1]，[2]，[3]，[4]或[5]来为每个符文进行献祭，从加速符文开始从左往右依次对应。需要解锁了相应符文才可以使用快捷键献祭！',
     'Toggle percent resources used': '切换使用的资源比例',
+    'BUY ALL': '全部购买',
+    'Click to buy every type of Talisman Shards and Fragments, if affordable': '点击后将尽可能购买所有碎片',
     'BUY': '购买',
     'Cost for 1: 1e6 Obtainium': '',
     'Exemption': '免税',
@@ -655,6 +657,7 @@ var cnItems = {
     'SI Rune: Positive': '卓越智慧：获得加成',
     'SI Rune: Negative': '卓越智慧：无加成',
     'Cancel respec changes': '取消洗点',
+    'ALL Increase Level': '提升所有等级',
     'Blessing level': '祝福等级',
     'Increase Level By': '提升等级：',
     ' [Cost': '[花费',
@@ -1506,6 +1509,8 @@ var cnItems = {
     'Answer was wrong, not resetting!': '回答错误，不会删除存档！',
     'Special Actions': '特殊操作',
     'Daily': 'Daily代码',
+    '\'daily\': 0 uses left. Next: end of the day.': 'daily代码：剩余0次使用次数。明日可以获得新的使用次数。',
+    '\'daily\': 1 use left. Next: end of the day.': 'daily代码：剩余1次使用次数。明日可以获得新的使用次数。',
     'Add': 'Add代码',
     'Time': 'Time代码',
     'Enter a promotion code here!': '点击此处输入奖励代码！',
@@ -2017,7 +2022,7 @@ var cnExcludeWhole = [
     /^x([e\d\,\.]+)\,$/, //数字处理
     /^([e\d\,\.]+)-?$/, //数字处理
     /^([e\d\,\.]+)[A-Za-rt-z]{0,4} \[([e%\d\,\.\+]+)[A-Za-rt-z]{0,4}\]$/, //数字处理
-    /^(\d+)\s\/$/, //数字处理
+    /^([e\d\,\.]+)\s\/$/, //数字处理
     /^\d\.\d+e\d\.\d+e\+\d+ \[(.+)\]$/, //数字处理
     /^(.*)[\u4E00-\u9FFF]+(.*)$/, //不抓取内容
 ];
@@ -2177,6 +2182,8 @@ var cnRegReplace = new Map([
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^Thank you for playing today! You have gained (.+) Quarks  based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克！'], //每日奖励代码
     [/^Thank you for playing today! You have gained (.+) Quarks and (.+) Golden Quarks based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克及$2金夸克！'], //每日奖励代码
+    [/^'add': (.+) uses? left.$/, 'add代码：剩余$1次使用次数。'], //每小时奖励代码
+    [/^'add': 0 uses left. Next: in (.+) seconds.$/, 'add代码：剩余0次使用次数。$1秒后可以获得1次使用次数。'], //每小时奖励代码
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use\?$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
     [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
@@ -2188,6 +2195,8 @@ var cnRegReplace = new Map([
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //下注奖励代码
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
+    [/^'time': (.+) uses? left.$/, 'time代码：剩余$1次使用次数。'], //时间点击代码
+    [/^'time': 0 uses left. Next: in (.+) seconds.$/, 'time代码：剩余0次使用次数。$1秒后可以获得1次使用次数。'], //时间点击代码
     [/^Click the button within the next 15 seconds to test your luck! If you click within (.+) ms of a randomly generated time, you will win a prize! This particular instance has a (.+)x multiplier due to elapsed time between uses.$/, '在接下来的15秒内点击确定按钮，以此来测试运气！如果您在随机生成时间点的$1毫秒范围内点击了按钮，您将获得一份奖励！由于两次使用该代码之间的时间间隔，本次代码的奖励变为$2倍。'], //时间点击代码
     [/^You clicked at the right time! \[\+(.+) Quarkies\]$/, '您点击的时机很好！[增加$1夸克]'], //时间点击代码
     [/^Own: (.+)$/, '拥有：$1'], //商店

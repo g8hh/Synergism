@@ -1854,7 +1854,7 @@ var cnItems = {
     'Need more challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level.': '需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。',
     'Biggerer Challenge Caps': '挑战上限再度增加',
     'Need even more challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level.': '还需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。',
-    'biggererEST Challenge Caps': '挑战上限超级增加',
+    'BiggererEST Challenge Caps': '挑战上限超级增加',
     'Need even MORE challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level. Does it not seem excessive?': '还……还需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。是不是有点太勉强了？',
     'I wish my Quark Hepteract was marginally better.': '我希望惊奇七阶立方·夸克的效果略微增加。',
     'Wrong game, oops. Anyway, would you like a very slightly better DR exponent on Quark Hepteract?': '这个升级似乎走错游戏了，啊哦。总之，您想要让惊奇七阶立方·夸克超过软上限后的效果变得更好吗？',

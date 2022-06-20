@@ -579,7 +579,7 @@ var cnItems = {
     'No background: Unachieved, nothing special.': '无背景色：成就没有什么特别的，未完成。',
     'Congratulations on your first prestige. The first of many. You obtain offerings. You can use them in the new Runes tab! [Unlocked Runes, Achievements, Diamond Buildings and some Upgrades!]': '恭喜您完成了第一次转生。当然，有一次，就会有无数次。您获得了祭品，您可以在新解锁的符文选项卡中使用它们！[解锁了符文，成就，钻石建筑和一些其他升级！]',
     'Hmm, it seems you are getting richer, being able to get 1 Googol diamonds in a single prestige. How about we give you another rune? [Unlocked Duplication rune in Runes tab!]': '嗯，您越来越有钱了，一次转生中就能获得1e100的钻石了。不如，我们再给您一个符文吧？[解锁重叠符文！]',
-    'Wow! You gained 1e17 (100 Quadrillion) score in a single Ascension. For that, you can now generate Hepteracts if you get above 6.66e16 (66.6 Quadrillion) score in an Ascension. Good luck!': '哇哦！您在这一次飞升中获得了1e17的飞升分数。因此从现在起，只要您的飞升分数大于6.66e16，您就可以获得惊奇七阶立方了。祝您好运！',
+    'Wow! You gained 1e17 (100 Quadrillion) score in a single Ascension. For that, you can now generate Hepteracts if you get above 1.66e17 (166.6 Quadrillion) score in an Ascension. Good luck!': '哇哦！您在这一次飞升中获得了1e17的飞升分数。因此从现在起，只要您的飞升分数大于1.66e17，您就可以获得惊奇七阶立方了。祝您好运！',
     //#endregion
     //#region 符文等
     'Talismans': '护身符',
@@ -1532,7 +1532,7 @@ var cnItems = {
     'Themes': '主题',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.8 - The Reality Update pt.1 [Last Update: 10:29 UTC 14-Jun-2022].': '您目前玩的版本为V2.9.8 - 现实升级第一部分 [2022年6月14日 UTC 10:29更新]。',
+    'You\'re playing v2.9.8 Decanter - The Reality Update pt.1 [Last Update: 10:29 UTC 14-Jun-2022].': '您目前玩的版本为V2.9.8 药水瓶 - 现实升级第一部分 [2022年6月14日 UTC 10:29更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1726,7 +1726,7 @@ var cnItems = {
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
     'Okay, fine. Here\'s another +0.5% Ascension Speed per level, stacks multiplicatively with the first upgrade!': '嗯，很好。飞升的速度每级再增加0.5%，效果与第一个升级叠乘！',
-    'OKAY. FINE. Here\'s yet ANOTHER +1% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1.5%，效果与之前类似，也是叠乘计算。',
+    'OKAY. FINE. Here\'s yet ANOTHER +1.5% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1.5%，效果与之前类似，也是叠乘计算。',
     'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒及立方获取数量增加0.5%。',
     'This one is arguably very good. Gain +1% ALL Cubes per level, per singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒及立方获取数量增加1%！',
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
@@ -1771,7 +1771,7 @@ var cnItems = {
     'You have unlocked a 5x multiplier to cubes and 6x multiplier to obtainium and offerings.': '您已使所有类型的方盒及立方获取数量乘以5，最终难得素获取数量和祭品获取数量变为6倍。',
     'You have not unlocked a 5x multiplier to cubes and 6x multiplier to obtainium and offerings.': '您未使所有类型的方盒及立方获取数量乘以5，最终难得素获取数量和祭品获取数量变为6倍。',
     'Shop Bonanza': '商店促销',
-    'This upgrade will convince the seal merchant to sell you more cool stuff, which even persist on Singularity!.': '购买后，印记商人将向您出售更多好东西，它们在进入奇点后等级仍然保留！',
+    'This upgrade will convince the seal merchant to sell you more cool stuff, which even persist on Singularity!': '购买后，印记商人将向您出售更多好东西，它们在进入奇点后等级仍然保留！',
     'You have unlocked the shop bonanza.': '您已解锁商店促销。',
     'You have not unlocked the shop bonanza.': '您未解锁商店促销。',
     'Cookie Recipes I': '饼干配方 I',
@@ -1779,7 +1779,7 @@ var cnItems = {
     'You have unlocked volume 1 of the recipe book.': '您已解锁饼干配方 I。',
     'You have not unlocked volume 1 of the recipe book.': '您未解锁饼干配方 I。',
     'Cookie Recipes II': '饼干配方 II',
-    'Diversify Wow! Bakery into cooking slightly more exotic cookies, adding five more cookie-related cube upgrades..': '让惊奇烘焙坊制造更有异国风味的饼干，再增加5个跟饼干有关的方盒升级……',
+    'Diversify Wow! Bakery into cooking slightly more exotic cookies, adding five more cookie-related cube upgrades.': '让惊奇烘焙坊制造更有异国风味的饼干，再增加5个跟饼干有关的方盒升级。',
     'You have unlocked volume 2 of the recipe book.': '您已解锁饼干配方 II。',
     'You have not unlocked volume 2 of the recipe book.': '您未解锁饼干配方 II。',
     'Cookie Recipes III': '饼干配方 III',
@@ -1791,13 +1791,13 @@ var cnItems = {
     'You have paid your price for salvation.': '您已替饼干付费。',
     'You have not paid your price for salvation.': '您未替饼干付费。',
     'Improved Ascension Gain': '更多飞升次数',
-    'Buying this, you will gain +2% Ascension Count forever, per level! Every 20 levels grants an additional, multiplicative +1% Ascension Count.': '购买后，每级使飞升次数获取数量增加2%！每20级还可以使飞升次数获取数量额外乘以1.01。',
-    'Buy this to unlock level fourteen corruptions :).': '购买后解锁腐化等级14。:)',
-    'You have gained the ability to use level 14 corruptions :).': '您已解锁腐化等级14。:)',
-    'You have not gained the ability to use level 14 corruptions :(.': '您未解锁腐化等级14。:(',
+    'Buying this, you will gain +2% Ascension Count forever, per level! Every 10 levels grants an additional, multiplicative +1% Ascension Count.': '购买后，每级使飞升次数获取数量增加2%！每10级还可以使飞升次数获取数量额外乘以1.01。',
+    'Buy this to unlock level fourteen corruptions. :': '购买后解锁腐化等级14。:',
+    'You have gained the ability to use level 14 corruptions. :': '您已解锁腐化等级14。:',
+    'You have not gained the ability to use level 14 corruptions. :(': '您未解锁腐化等级14。:(',
     'This doesn\'t *really* raise the corruption limit. Rather, it adds one FREE level to corruption multipliers, no matter what (can exceed cap). :': '购买后并*不*会*使腐化等级上限增加，而是使腐化的相关加成倍率直接视为增加1级(可以超过上限)。:',
-    'You have gained a free corruption level :).': '您已使腐化加成倍率视为增加1级。:)',
-    'You have not gained a free corruption level :(.': '您未使腐化加成倍率视为增加1级。:(',
+    'You have gained a free corruption level. :': '您已使腐化加成倍率视为增加1级。:',
+    'You have not gained a free corruption level. :(': '您未使腐化加成倍率视为增加1级。:(',
     'Offering Charge': '祭品增压',
     'Upgrade this to get +2% offerings per level, forever!': '购买后，每级使祭品获取数量永久增加2%！',
     'Offering Storm': '祭品风暴',
@@ -1849,9 +1849,7 @@ var cnItems = {
     'You have triggered the liquidation event!': '您已开启清仓大甩卖！',
     'You have not triggered the liquidation event!': '您未开启清仓大甩卖！',
     'Potion Decanter of Enlightenment': '启迪药水瓶',
-    'Purported to actually be the fountain of youth, use up to 100 potions at once and multiply gain by the square of the amount used.': '据称它其实是不老泉水，一次性使用100瓶药剂，并且使药剂效果变为使用数量的平方。',
-    'You have purchased this decanter!': '您已购买启迪药水瓶！',
-    'You have not purchased this decanter!': '您未购买启迪药水瓶！',
+    'Purported to actually be the fountain of youth, this item powers up potions considerably!': '据称它其实是不老泉水，它可以极大地强化药剂！',
     'Bigger Challenge Caps': '挑战上限增加',
     'Need more challenges? Well, add 2 more reincarnation challenges and 1 ascension challenge to the cap, per level.': '需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。',
     'Biggerer Challenge Caps': '挑战上限再度增加',
@@ -2232,6 +2230,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Obtainium \+(.+)%!$/, '当前效果：难得素的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Every (.+) purchased orbs grants 1 powder.$/, '当前效果：每锻造$1超通量珠就可以获得1超通量粉块。'], //商店
     [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶立方获取数量增加$1%。'], //商店
+    [/^Do you wish to start singularity #(.+)\? Your next universe is harder but gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点
     [/^You have reached the end of the game, on singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) golden quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
@@ -2243,6 +2242,7 @@ var cnRegReplace = new Map([
     [/^Permanently gain (.+)% more Offerings.$/, '使祭品获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Obtainium.$/, '使难得素获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Cubes.$/, '使所有类型的方盒及立方获取数量增加$1%。'], //奇点
+    [/^Potions currently give (.+)x items!$/, '药剂的效果变为了$1倍！'], //奇点
     [/^You feel motivated enough to complete (.+) more reincarnation challenges, and (.+) more ascension challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
     [/^The DR exponent is now (.+) larger!$/, '超过软上限后的指数增加了$1！'], //奇点
     [/^You can buy golden quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点

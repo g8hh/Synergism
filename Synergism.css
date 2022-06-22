@@ -1025,6 +1025,7 @@ nav li:hover {
 }
 
 #prestigehotkeys {
+    text-align: center;
     width: 1200px;
     color: gray;
 }

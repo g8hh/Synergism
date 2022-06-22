@@ -181,26 +181,26 @@ export const importSynergism = async (input: string, reset = false) => {
 
 export const promocodesInfo = async (input: string) => {
     const textElement = DOMCacheGetOrSet('promocodeinfo');
-    let textMessage = `'${input}': `;
+    let textMessage = `${input}代码：`;
     let availableUses = 0;
     switch (input) {
         case 'daily':
-            textMessage += (player.dailyCodeUsed ? '0 uses' : '1 use') + ' left. Next: end of the day.';
+            textMessage += '剩余' + (player.dailyCodeUsed ? '0' : '1') + '次使用次数。明日可以获得新的使用次数。';
             break;
         case 'add':
             availableUses = addCodeAvailableUses();
-            textMessage += availableUses + ' use' + (availableUses !== 1 ? 's' : '') + ' left.';
+            textMessage += '剩余' + availableUses + '次使用次数。';
             if (availableUses === 0) {
-                textMessage += ' Next: in ' + addCodeTimeToNextUse() + ' seconds.';
+                textMessage += '' + format(addCodeTimeToNextUse(), 1, true) + '秒后可以获得1次使用次数。';
             }
             break;
         case 'time':
             availableUses = timeCodeAvailableUses();
-            textMessage += availableUses + ' use' + (availableUses !== 1 ? 's' : '') + ' left.';
+            textMessage += '剩余' + availableUses + '次使用次数。';
             if (availableUses === 0) {
-                textMessage += ' Next: in ' + timeCodeTimeToNextUse() + ' seconds.';
+                textMessage += '' + format(timeCodeTimeToNextUse(), 1, true) + '秒后可以获得1次使用次数。';
             } else {
-                textMessage += ' Multiplier: ' + format(timeCodeRewardMultiplier(), 2, true) + 'x';
+                textMessage += '奖励倍率为：' + format(timeCodeRewardMultiplier(), 2, true) + '倍';
             }
             break;
         default:

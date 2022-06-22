@@ -80,14 +80,14 @@ export class SingularityUpgrade {
             ? ''
             : `/${this.maxLevel}`;
         const color = this.maxLevel === this.level ? 'plum' : 'white';
-
+        const minReqColor = player.singularityCount < this.minimumSingularity ? 'crimson' : 'green';
         const minimumSingularity = this.minimumSingularity > 0
             ? `最少需要进入奇点次数：${this.minimumSingularity}`
             : '无进入奇点次数要求'
 
         return `<span style="color: gold">${this.name}</span>
                 <span style="color: lightblue">${this.description}</span>
-                <span style="color:crimson;">${minimumSingularity}</span>
+                <span style="color: ${minReqColor}">${minimumSingularity}</span>
                 <span style="color: ${color}">等级 ${this.level}${maxLevel} <span style="color: orange"> [+${format(this.freeLevels, 1, true)}] </span> </span>
                 <span style="color: gold">${this.getEffect().desc}</span>
                 下一级的花费：${format(costNextLevel,0,true)}金夸克。

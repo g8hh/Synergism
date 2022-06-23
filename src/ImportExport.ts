@@ -15,6 +15,7 @@ import { DOMCacheGetOrSet } from './Cache/DOM';
 import localforage from 'localforage';
 import { Globals as G } from './Variables';
 import { calculateAscensionAcceleration, calculateAscensionScore } from './Calculate';
+import { singularityData } from './singularity';
 
 const format24 = new Intl.DateTimeFormat('EN-GB', {
     year: 'numeric',
@@ -37,7 +38,7 @@ const format12 = new Intl.DateTimeFormat('EN-GB', {
 
 const hour = 3600000;
 
-const getRealTime = (use12 = false) => {
+const getRealTime = (type = 'default', use12 = false) => {
     const format = use12 ? format12 : format24;
     const datePartsArr = format
         .formatToParts(new Date())
@@ -47,7 +48,20 @@ const getRealTime = (use12 = false) => {
     const dateParts = Object.assign({}, ...datePartsArr) as Record<string, string>;
 
     const period = use12 ? ` ${dateParts.dayPeriod.toUpperCase()}` : '';
-    return `${dateParts.year}-${dateParts.month}-${dateParts.day} ${dateParts.hour}_${dateParts.minute}_${dateParts.second}${period}`;
+    const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    switch (type) {
+        case 'default': return `${dateParts.year}-${dateParts.month}-${dateParts.day} ${dateParts.hour}_${dateParts.minute}_${dateParts.second}${period}`;
+        case 'short': return `${dateParts.year}${dateParts.month}${dateParts.day}${dateParts.hour}${dateParts.minute}${dateParts.second}`;
+        case 'year': return `${dateParts.year}`;
+        case 'month': return `${dateParts.month}`;
+        case 'day': return `${dateParts.day}`;
+        case 'hour': return `${dateParts.hour}`;
+        case 'minute': return `${dateParts.minute}`;
+        case 'second': return `${dateParts.second}`;
+        case 'period': return `${dateParts.dayPeriod.toUpperCase()}`;
+        case 'weekday': return `${weekday[new Date().getUTCDay()]}`;
+        default: return type;
+    }
 }
 
 export const updateSaveString = (input: HTMLInputElement) => {
@@ -55,15 +69,43 @@ export const updateSaveString = (input: HTMLInputElement) => {
     player.saveString = value;
 }
 
+export const getVer = () => /[\d?=.]+/.exec(version)?.[0] ?? version
+
 const saveFilename = () => {
     const s = player.saveString
     const t = s.replace(/\$(.*?)\$/g, (_, b) => {
         switch (b) {
             case 'VERSION': return `v${version}`;
             case 'TIME': return getRealTime();
-            case 'TIME12': return getRealTime(true);
-            case 'SING': return ('Singularity ' + player.singularityCount);
-            default: return 'IDFK Lol';
+            case 'TIME12': return getRealTime(undefined, true);
+            case 'SING': return ('奇点次数' + player.singularityCount);
+            case 'SINGS': return ('' + player.singularityCount);
+            case 'VER': return getVer();
+            case 'TIMES': return getRealTime('short');
+            case 'YEAR': return getRealTime('year');
+            case 'Y': return getRealTime('year');
+            case 'MONTH': return getRealTime('month');
+            case 'M': return getRealTime('month');
+            case 'DAY': return getRealTime('day');
+            case 'D': return getRealTime('day');
+            case 'HOUR': return getRealTime('hour');
+            case 'H': return getRealTime('hour');
+            case 'H12': return getRealTime('hour', true);
+            case 'MINUTE': return getRealTime('minute');
+            case 'MI': return getRealTime('minute');
+            case 'SECOND': return getRealTime('second');
+            case 'S': return getRealTime('second');
+            case 'PERIOD': return getRealTime('period', true);
+            case 'P': return getRealTime('period', true);
+            case 'WEEKDAY': return getRealTime('weekday');
+            case 'W': return getRealTime('weekday');
+            case 'DATE': return '' + Date.now();
+            case 'DATES': return '' + Math.floor(Date.now() / 1000);
+            case 'QUARK': return '' + Math.floor(Number(player.worlds));
+            case 'QUARKS': return format(Number(player.worlds));
+            case 'GQ': return '' + Math.floor(player.goldenQuarks);
+            case 'GQS': return format(player.goldenQuarks);
+            default: return `${b}`;
         }
     });
 
@@ -254,6 +296,8 @@ export const promocodes = async (input: string | null) => {
         el.textContent = 'Khafra has blessed you with ' + Math.floor(player.worlds.applyBonus(quarks)) + ' quarks!';
     } else if (input.toLowerCase() === 'daily' && !player.dailyCodeUsed) {
         player.dailyCodeUsed = true;
+        let rewardMessage = '感谢您今日也继续游玩本游戏！\n蚁神奖励了您这些东西：';
+
         const rewards = dailyCodeReward();
         const quarkMultiplier = 1 + Math.min(49, player.singularityCount)
 
@@ -264,7 +308,11 @@ export const promocodes = async (input: string | null) => {
         player.worlds.add(actualQuarkAward, false)
         player.goldenQuarks += rewards.goldenQuarks
 
-        const goldenQuarksText = (rewards.goldenQuarks > 0) ? `and ${format(rewards.goldenQuarks, 0, true)} Golden Quarks` : '';
+        rewardMessage += `\n${format(actualQuarkAward, 0, true)}夸克`
+        if (rewards.goldenQuarks > 0) {
+            rewardMessage += `\n${format(rewards.goldenQuarks, 0, true)}金夸克`
+        }
+        await Alert(rewardMessage);
 
         if (player.singularityCount > 0) {
             const upgradeDistribution: Record<
@@ -289,16 +337,25 @@ export const promocodes = async (input: string | null) => {
                 .keys(player.singularityUpgrades)
                 .filter(key => key in upgradeDistribution) as (keyof typeof upgradeDistribution)[];
 
+            rewardMessage = '大方的蚁神还给予了您以下奇点升级的免费等级：'
+            // The same upgrade can be drawn several times, so we save the sum of the levels gained, to display them only once at the end
+            const freeLevels: Record<string, number> = {}
             for (let i = 0; i < rolls; i++) {
                 const num = 1000 * Math.random();
                 for (const key of keys) {
                     if (upgradeDistribution[key].pdf(num)) {
                         player.singularityUpgrades[key].freeLevels += upgradeDistribution[key].value
+                        freeLevels[key] ? freeLevels[key] += upgradeDistribution[key].value : freeLevels[key] = upgradeDistribution[key].value
                     }
                 }
             }
+
+            for (const key of Object.keys(freeLevels)) {
+                rewardMessage += dailyCodeFormatFreeLevelMessage(key, freeLevels[key])
+            }
+            await Alert(rewardMessage);
         }
-        return Alert(`Thank you for playing today! You have gained ${format(actualQuarkAward, 0, true)} Quarks ${goldenQuarksText} based on your progress!`)
+        return;
     } else if (input.toLowerCase() === 'add') {
         const availableUses = addCodeAvailableUses();
         const timeToNextUse = addCodeTimeToNextUse();
@@ -475,7 +532,7 @@ export const promocodes = async (input: string | null) => {
         ]
 
         const ascensionSpeed = calculateAscensionAcceleration()
-        const perSecond = 1/(24 * 3600 * 365) * baseMultiplier * productContents(valueMultipliers) * ascensionSpeed
+        const perSecond = 1/(24 * 3600 * 365 * 1e9) * baseMultiplier * productContents(valueMultipliers) * ascensionSpeed
         if (perSecond > 1) {
             return Alert(`You will gain ${format(perSecond, 2, true)} octeracts (when they come out) every second, assuming you have them unlocked!`)
         } else {
@@ -512,6 +569,45 @@ function timeCodeTimeToNextUse(): number {
 
 function timeCodeRewardMultiplier(): number {
     return Math.min(24, (Date.now() - player.promoCodeTiming.time) / (1000 * 3600));
+}
+
+function dailyCodeFormatFreeLevelMessage(upgradeKey: string, freeLevelAmount: number): string {
+    const upgradeNiceName = singularityData[upgradeKey].name;
+    var CNNiceName = upgradeNiceName
+    if (CNNiceName == 'Golden Quarks I'){
+        CNNiceName = '金夸克 I'
+    }
+    else if (CNNiceName == 'Cube Flame'){
+        CNNiceName = '方盒之焰'
+    }
+    else if (CNNiceName == 'Cube Blaze'){
+        CNNiceName = '方盒烈火'
+    }
+    else if (CNNiceName == 'Cube Inferno'){
+        CNNiceName = '方盒炼狱'
+    }
+    else if (CNNiceName == 'Offering Charge'){
+        CNNiceName = '难得素波浪'
+    }
+    else if (CNNiceName == 'Offering Storm'){
+        CNNiceName = '难得素洪峰'
+    }
+    else if (CNNiceName == 'Offering Tempest'){
+        CNNiceName = '难得素海啸'
+    }
+    else if (CNNiceName == 'Obtainium Wave'){
+        CNNiceName = '祭品增压'
+    }
+    else if (CNNiceName == 'Obtainium Flood'){
+        CNNiceName = '祭品风暴'
+    }
+    else if (CNNiceName == 'Obtainium Tsunami'){
+        CNNiceName = '祭品狂风'
+    }
+    else if (CNNiceName == 'Improved Ascension Gain'){
+        CNNiceName = '更多飞升次数'
+    }
+    return `\n“${CNNiceName}”的免费等级+${freeLevelAmount}级`;
 }
 
 function dailyCodeReward() {

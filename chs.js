@@ -1711,6 +1711,7 @@ var cnItems = {
     'Why don\'t you try clicking on one of the item\'s': '为何不尝试点击上方的',
     'gold': '金色',
     ' text above to get started? You can always cancel!': '文本来进行设置？反正您还可以取消的。',
+    'Loadouts correspond from SHIFT + 0 to SHIFT + 8 and SHIFT + BACKQUOTE. But you can\'t change it!': '您可以使用SHIFT+1到SHIFT+8来载入对应预设，SHIFT+9，SHIFT+0，SHIFT+`来清除腐化，但您无法更改对应快捷键！',
     //#endregion
     //#region 商店
     'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
@@ -2201,8 +2202,6 @@ var cnRegReplace = new Map([
     [/^Promo Code 'synergism2021' Applied! \+25 Offerings, \+(.+) Quarks$/, '奖励代码“synergism2021”已生效！获得25祭品，$1夸克'], //设置
     [/^Khafra has blessed you with (.+) quarks!$/, 'Khafra祝福了您，您获得了$1夸克！'], //设置
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
-    [/^Thank you for playing today! You have gained (.+) Quarks  based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克！'], //每日奖励代码
-    [/^Thank you for playing today! You have gained (.+) Quarks and (.+) Golden Quarks based on your progress!$/, '感谢您今日也继续游玩本游戏！基于您当前的进度，您获得了$1夸克及$2金夸克！'], //每日奖励代码
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use\?$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
     [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add.You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码

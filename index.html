@@ -866,7 +866,11 @@
 
         <div id="statistics" alt="statistics" label="statistics">
             <div id="achievements" alt="achievements" label="achievements">
-                <p id="achievementprogress" alt="achievementprogress" label="achievementprogress" style="color:white"></p>
+                <div class="NotificationToggle">
+                    <p id="achievementprogress" alt="achievementprogress" label="achievementprogress" style="color:white"></p>
+                    <img class="achNotification" id="notificationpic" alt="notificationpic" label="notificationpic" src = "Pictures/Achievement Notifications.png" title='跳出提示框' loading="lazy">
+                    <button class="auto nonSquare" id="toggle34" alt="toggle34" label="toggle34" toggleid="34" alt="34" label="34" format="[$]" style="border: 2px solid green">[ON]</button>
+                </div>
                 <table id="achievementstable" alt="achievementstable" label="achievementstable" style="padding: 0; font-size:0;">
                     <tr>
                         <td><img src="Pictures/Transparent Pics/ach1.png" id="ach1" alt="ach1" label="ach1" loading="lazy"></td>
@@ -2822,10 +2826,30 @@
                 </div>
                 <button id="exportgame" alt="exportgame" label="exportgame" style="border:2px solid green">Export the game here</button>
                 <p id="exportinfo" alt="exportinfo" label="exportinfo" class="tightText" style="color: white"></p>
-                <label title="文件名中：输入$VERSION$可指代版本号，$TIME$指代24小时制的当前时间，$TIME12$指代12小时制的当前时间">
+                <label title="文件名中：输入$VERSION$可指代完整版本号，$VER$可指代版本号，
+$TIME$指代24小时制的当前时间，$TIME12$指代12小时制的当前时间，
+$YEAR$或$Y$指代当前年份，$MONTH$或$M$指代当前月份，
+$DAY$或$D$指代当前天数，$HOUR$或$H$指代当前小时，
+$MINUTE$或$MI$指代当前分钟，$SECOND$或$S$指代当前秒数，
+$PERIOD$或$P$指代时段，$WEEKDAY$或$W$指代星期几，
+$DATE$指代时间戳，$DATES$指代有秒数的时间戳，
+$TIMES$指代短版本的24小时制当前时间，
+$SING$指代奇点次数，$SINGS$指代奇点次数的数字，
+$QUARK$指代夸克数量，$QUARKS$指代用记数法表示的夸克数量，
+$GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量">
                     <input id="saveStringInput" alt="saveStringInput" label="saveStringInput">
                 </label>
-                <p id="saveString" alt="saveString" label="saveString" class="tightText" title="文件名中：输入$VERSION$可指代版本号，$TIME$指代24小时制的当前时间，$TIME12$指代12小时制的当前时间"></p>
+                <p id="saveString" alt="saveString" label="saveString" class="tightText" title="文件名中：输入$VERSION$可指代完整版本号，$VER$可指代版本号，
+$TIME$指代24小时制的当前时间，$TIME12$指代12小时制的当前时间，
+$YEAR$或$Y$指代当前年份，$MONTH$或$M$指代当前月份，
+$DAY$或$D$指代当前天数，$HOUR$或$H$指代当前小时，
+$MINUTE$或$MI$指代当前分钟，$SECOND$或$S$指代当前秒数，
+$PERIOD$或$P$指代时段，$WEEKDAY$或$W$指代星期几，
+$DATE$指代时间戳，$DATES$指代有秒数的时间戳，
+$TIMES$指代短版本的24小时制当前时间，
+$SING$指代奇点次数，$SINGS$指代奇点次数的数字，
+$QUARK$指代夸克数量，$QUARKS$指代用记数法表示的夸克数量，
+$GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量"></p>
                 <p id="importgame" alt="importgame" label="importgame" class="tightText" style="color: limegreen">Load game below!</p>
                 <label id="importFileButton" alt="importFileButton" label="importFileButton" for="importfile">Load from file</label>
                 <input type="file" id="importfile" alt="importfile" label="importfile" accept=".txt" style="display: none">
@@ -3137,6 +3161,7 @@
 
         </div>
         <span id="hotkeyTooltip" alt="hotkeyTooltip" label="hotkeyTooltip">Why don't you try clicking on one of the item's <span style="color:gold;">gold</span> text above to get started? You can always cancel!</span>
+        <span style="color: lightblue;">Loadouts correspond from SHIFT + 0 to SHIFT + 8 and SHIFT + BACKQUOTE. But you can't change it!</span>
     </div>
 </div>
 

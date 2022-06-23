@@ -573,38 +573,28 @@ function timeCodeRewardMultiplier(): number {
 
 function dailyCodeFormatFreeLevelMessage(upgradeKey: string, freeLevelAmount: number): string {
     const upgradeNiceName = singularityData[upgradeKey].name;
-    var CNNiceName = upgradeNiceName
+    let CNNiceName = upgradeNiceName
     if (CNNiceName == 'Golden Quarks I'){
         CNNiceName = '金夸克 I'
-    }
-    else if (CNNiceName == 'Cube Flame'){
+    } else if (CNNiceName == 'Cube Flame'){
         CNNiceName = '方盒之焰'
-    }
-    else if (CNNiceName == 'Cube Blaze'){
+    } else if (CNNiceName == 'Cube Blaze'){
         CNNiceName = '方盒烈火'
-    }
-    else if (CNNiceName == 'Cube Inferno'){
+    } else if (CNNiceName == 'Cube Inferno'){
         CNNiceName = '方盒炼狱'
-    }
-    else if (CNNiceName == 'Offering Charge'){
+    } else if (CNNiceName == 'Offering Charge'){
         CNNiceName = '难得素波浪'
-    }
-    else if (CNNiceName == 'Offering Storm'){
+    } else if (CNNiceName == 'Offering Storm'){
         CNNiceName = '难得素洪峰'
-    }
-    else if (CNNiceName == 'Offering Tempest'){
+    } else if (CNNiceName == 'Offering Tempest'){
         CNNiceName = '难得素海啸'
-    }
-    else if (CNNiceName == 'Obtainium Wave'){
+    } else if (CNNiceName == 'Obtainium Wave'){
         CNNiceName = '祭品增压'
-    }
-    else if (CNNiceName == 'Obtainium Flood'){
+    } else if (CNNiceName == 'Obtainium Flood'){
         CNNiceName = '祭品风暴'
-    }
-    else if (CNNiceName == 'Obtainium Tsunami'){
+    } else if (CNNiceName == 'Obtainium Tsunami'){
         CNNiceName = '祭品狂风'
-    }
-    else if (CNNiceName == 'Improved Ascension Gain'){
+    } else if (CNNiceName == 'Improved Ascension Gain'){
         CNNiceName = '更多飞升次数'
     }
     return `\n“${CNNiceName}”的免费等级+${freeLevelAmount}级`;

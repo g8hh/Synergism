@@ -1711,7 +1711,7 @@ nav li:hover {
 }
 
 #researchinfo2 {
-    height: 40px;
+    height: 60px;
 }
 
 .researchAvailable {
@@ -2206,6 +2206,10 @@ p[id$="BlessingsTotal"] {
 }
 
 #hypercube1Bonus {
+    width: 1500px;
+}
+
+#platonicCube1Bonus {
     width: 1500px;
 }
 

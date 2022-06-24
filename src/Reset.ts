@@ -81,7 +81,7 @@ export const resetdetails = (input: resetNames) => {
             }
             currencyImage1.style.display = 'block'
             resetCurrencyGain.textContent = '+' + format(G['transcendPointGain']);
-            resetInfo.textContent = '重置所有金币和钻石的升级和特性，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：' + format(player.coinsThisTranscension) + '/1e100金币 || 花费时间：' + format(player.transcendcounter) + '秒。';
+            resetInfo.textContent = '重置所有金币和钻石的升级和机制，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：' + format(player.coinsThisTranscension) + '/1e100金币 || 花费时间：' + format(player.transcendcounter) + '秒。';
             resetInfo.style.color = 'orchid';
             break;
         case 'reincarnation':

@@ -14,44 +14,44 @@ export const displayRuneInformation = (i: number, updatelevelup = true) => {
 
     if (i === 1) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '+(Level/4)^1.25 Accelerator, +0.25% Accelerators per level. +1 Accelerator Boost every 20 levels!'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '使加速器数量增加(等级/4)^1.25，且每级再增加0.25%。每20级使加速器加成数量增加1！'
         }
-        DOMCacheGetOrSet('runeshowpower1').textContent = '加速符文奖励：加速器数量增加' + format(Math.floor(Math.pow(G['rune1level'] * m / 4, 1.25))) + '，加速器数量再增加' + format((G['rune1level'] / 4 * m), 2, true) + '%，加速器加成数量增加' + format(Math.floor(G['rune1level'] / 20 * m)) + '。'
+        DOMCacheGetOrSet('runeshowpower1').textContent = '加速符文奖励：使加速器数量增加' + format(Math.floor(Math.pow(G['rune1level'] * m / 4, 1.25))) + '，再增加' + format((G['rune1level'] / 4 * m), 2, true) + '%，加速器加成数量增加' + format(Math.floor(G['rune1level'] / 20 * m)) + '。'
     }
     if (i === 2) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '+(Level/10) Multipliers every 10th level, +0.25% Multipliers per level. Tax growth is delayed more for each level!'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '每10级使加倍器数量增加(等级/10)，且每级再增加0.25%。每级使税收增长减缓更多！'
         }
-        DOMCacheGetOrSet('runeshowpower2').textContent = '重叠符文奖励：加倍器数量增加' + format(Math.floor(G['rune2level'] * m / 10) * Math.floor(1 + G['rune2level'] * m / 10) / 2) + '，加倍器数量再增加' + format(m * G['rune2level'] / 4, 1, true) + '%，税收增长减缓' + (99.9 * (1 - Math.pow(6, -(G['rune2level'] * m) / 1000))).toPrecision(4) + '%。'
+        DOMCacheGetOrSet('runeshowpower2').textContent = '重叠符文奖励：使加倍器数量增加' + format(Math.floor(G['rune2level'] * m / 10) * Math.floor(1 + G['rune2level'] * m / 10) / 2) + '，再增加' + format(m * G['rune2level'] / 4, 1, true) + '%，税收增长减缓' + (99.9 * (1 - Math.pow(6, -(G['rune2level'] * m) / 1000))).toPrecision(4) + '%。'
     }
     if (i === 3) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '~(1 + (Level/2)^2 * 2^(Level/2) / 256)x Crystal Production. +1 free level for each Crystal upgrade per 16 levels!'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '使水晶产量变为[1+(等级/2)^2*2^(等级/2)/256]倍。每16级使每个水晶升级免费增加1级！'
         }
-        DOMCacheGetOrSet('runeshowpower3').textContent = '棱柱符文奖励：水晶产量变为' + format(Decimal.pow(G['rune3level'] * m / 2, 2).times(Decimal.pow(2, G['rune3level'] * m / 2 - 8)).add(1), 3) + '倍，水晶升级免费增加' + format(Math.floor(G['rune3level'] / 16 * m)) + '级。'
+        DOMCacheGetOrSet('runeshowpower3').textContent = '棱柱符文奖励：使水晶产量变为' + format(Decimal.pow(G['rune3level'] * m / 2, 2).times(Decimal.pow(2, G['rune3level'] * m / 2 - 8)).add(1), 3) + '倍，每个水晶升级免费增加' + format(Math.floor(G['rune3level'] / 16 * m)) + '级。'
     }
     if (i === 4) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '+0.125% building cost growth delay per level, +0.0625% offering recycle chance per level [MAX: 25%], 2^((1000 - Level)/1100) Tax growth multiplier AFTER level 400'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '每级使建筑成本增长减缓0.125%，每级使祭品回收概率增加0.0625%[上限：25%]。另外当等级超过400以后，还可以使税收增长倍率变为2^[(1000-等级)/1100]倍'
         }
-        DOMCacheGetOrSet('runeshowpower4').textContent = '节俭符文奖励：所有建筑成本增长减缓' + (G['rune4level'] / 8 * m).toPrecision(3) + '%。祭品回收概率：' + Math.min(25, G['rune4level'] / 16) + '%。税收增长减缓' + (99 * (1 - Math.pow(4, Math.min(0, (400 - G['rune4level']) / 1100)))).toPrecision(4) + '%。'
+        DOMCacheGetOrSet('runeshowpower4').textContent = '节俭符文奖励：使所有建筑成本增长减缓' + (G['rune4level'] / 8 * m).toPrecision(3) + '%。祭品回收概率增加' + Math.min(25, G['rune4level'] / 16) + '%。税收增长减缓' + (99 * (1 - Math.pow(4, Math.min(0, (400 - G['rune4level']) / 1100)))).toPrecision(4) + '%。'
     }
     if (i === 5) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '~(1 + level/200)x Obtainium, (1 + Level^2/2500)x Ant Hatch Speed, +0.005 base offerings for each tier per level'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '使难得素获取数量变为(1+等级/200)倍，蚂蚁速度变为(1+等级^2/2500)倍，每级使每一阶重置的基础祭品数量增加0.005'
         }
-        DOMCacheGetOrSet('runeshowpower5').textContent = '卓越智慧符文奖励：难得素获取数量变为' + format((1 + G['rune5level'] / 200 * m * SILevelMult), 2, true) + '倍。蚂蚁速度变为' + format(1 + Math.pow(G['rune5level'] * m * SILevelMult, 2) / 2500) + '倍。基础祭品数量：增加' + format((G['rune5level'] * m * SILevelMult * 0.005), 3, true)
+        DOMCacheGetOrSet('runeshowpower5').textContent = '卓越智慧符文奖励：使难得素获取数量变为' + format((1 + G['rune5level'] / 200 * m * SILevelMult), 2, true) + '倍，蚂蚁速度变为' + format(1 + Math.pow(G['rune5level'] * m * SILevelMult, 2) / 2500) + '倍，基础祭品数量增加' + format((G['rune5level'] * m * SILevelMult * 0.005), 3, true)
     }
     if (i === 6) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '+0.2% Quarks, +1% all cube types per level! Start with +10% Quarks.'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '每级使夸克获取数量增加0.2%，所有类型的方盒及立方获取数量增加1%！初始状态下使夸克获取数量增加10%。'
         }
-        DOMCacheGetOrSet('runeshowpower6').textContent = '无限晋升符文奖励：夸克获取数量增加' + format(10 + 15/75 * calculateEffectiveIALevel(), 1, true) + '%，飞升时所有类型的方盒及立方获取数量增加' + format(1 * calculateEffectiveIALevel(), 0, true) + '%。'
+        DOMCacheGetOrSet('runeshowpower6').textContent = '无限晋升符文奖励：使夸克获取数量增加' + format(10 + 15/75 * calculateEffectiveIALevel(), 1, true) + '%，飞升时所有类型的方盒及立方获取数量增加' + format(1 * calculateEffectiveIALevel(), 0, true) + '%。'
     }
 
     if (i === 7) {
         if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = 'I wonder what happens if you feed it ' + format(1e256 * (1 + player.singularityCount)) + ' Rune EXP.'
+            DOMCacheGetOrSet('runeshowlevelup').textContent = '如果给它' + format(1e256 * (1 + player.singularityCount)) + '符文经验值，或许会发生什么事情。'
         }
         DOMCacheGetOrSet('runeshowpower7').textContent = 'You cannot grasp the true form of Ant God\'s treasure.'
     }

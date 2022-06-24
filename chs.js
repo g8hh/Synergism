@@ -1553,6 +1553,7 @@ var cnItems = {
     'Best Obtainium/sec': '最佳难得素/秒',
     'Current Obtainium/sec': '当前难得素/秒',
     'Ascension Count': '飞升次数',
+    'Total Quarks Ever (TQE': '夸克获取量(TQE',
     'Free Accelerators': '免费加速器',
     'Accelerators from Upgrades/Misc': '来自升级和杂项的加速器',
     'Accelerators from Boosts': '来自加速器加成的加速器',

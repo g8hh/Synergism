@@ -491,6 +491,7 @@ export const visualUpdateSettings = () => {
     DOMCacheGetOrSet('runeSumStatistic').childNodes[1].textContent = format(G['runeSum'])
     DOMCacheGetOrSet('obtainiumPerSecondStatistic').childNodes[1].textContent = format(player.obtainiumpersecond, 2, true)
     DOMCacheGetOrSet('ascensionCountStatistic').childNodes[1].textContent = format(player.ascensionCount, 0, true)
+    DOMCacheGetOrSet('totalQuarkCountStatistic').childNodes[1].textContent = format(player.quarksThisSingularity, 0, true)
 
     DOMCacheGetOrSet('saveString').textContent =
         `上方输入存档名称，当前为：${player.saveString.replace('$VERSION$', 'v' + version)}`;

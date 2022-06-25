@@ -37,6 +37,7 @@ var cnItems = {
     'Auto [OFF]': '自动[关]',
     'Mode: AMOUNT': '模式：数量',
     'Mode: TIME': '模式：时间',
+    'Mode: PERCENTAGE': '模式：百分比',
     'Auto Buy: ON': '自动购买：开',
     'Auto Buy: OFF': '自动购买：关',
     'Auto Rune: ON': '自动符文：开',
@@ -2047,6 +2048,7 @@ var cnExcludePostfix = [
 var cnRegReplace = new Map([
     [/^You have (.+) Wow! Tesseracts. Gain more by beating Challenge 10 on each Ascension.$/, '您有$1惊奇超立方。飞升时通过挑战10以获取更多。'], //主界面及建筑
     [/^Auto buyer will save at least (.+) tesseracts. \[Enter number above\].$/, '自动购买至少保留$1超立方[在上方输入设置数值]。'], //主界面及建筑
+    [/^On Ascension, Auto buyer will save at least (.+)% of your current amount of tesseracts. \[Enter number above\].$/, '飞升时，自动购买至少保留$1%超立方[在上方输入设置数值]。'], //主界面及建筑
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面及建筑
     [/^Gain (.+)\* EXP per Offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面及建筑
     [/^You have (.+)% chance of recycling your Offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面及建筑

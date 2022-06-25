@@ -85,10 +85,13 @@ export class SingularityUpgrade {
             ? `最少需要进入奇点次数：${this.minimumSingularity}`
             : '无进入奇点次数要求'
 
+        const freeLevelInfo = this.freeLevels > 0 ?
+            `<span style="color: orange"> [+${format(this.freeLevels, 1, true)}]</span>` : ''
+
         return `<span style="color: gold">${this.name}</span>
                 <span style="color: lightblue">${this.description}</span>
                 <span style="color: ${minReqColor}">${minimumSingularity}</span>
-                <span style="color: ${color}">等级 ${this.level}${maxLevel} <span style="color: orange"> [+${format(this.freeLevels, 1, true)}] </span> </span>
+                <span style="color: ${color}">等级 ${this.level}${maxLevel}${freeLevelInfo}</span>
                 <span style="color: gold">${this.getEffect().desc}</span>
                 下一级的花费：${format(costNextLevel,0,true)}金夸克。
                 已花费金夸克数量：${format(this.goldenQuarksInvested, 0, true)}`

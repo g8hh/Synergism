@@ -130,7 +130,7 @@
                 <span id="ascLen" alt="ascLen" label="ascLen">x</span>
             </span>
             <span id="ascC10CompletionsStats" alt="ascC10CompletionsStats" label="ascC10CompletionsStats">
-                <img src="Pictures/Transparent%20Pics/ChallengeTen.png" id="mini10" class="corruptionImg" title="挑战10完成次数" loading="lazy">
+                <img src="Pictures/Challenge10.png" class="corruptionImg" title="挑战10完成次数" loading="lazy">
                 <span id="ascC10" alt="ascC10" label="ascC10">x</span>
             </span>
             <span id="ascTimeFactorStats" alt="ascTimeFactorStats" label="ascTimeFactorStats">
@@ -318,7 +318,7 @@
 
         <div id="buildingtext" alt="buildingtext" label="buildingtext">
             <p class="prestigeunlock" id="taxinfo" alt="taxinfo" label="taxinfo" style="color: orange;">Due to your excessive wealth, all coin production is divided by 1.00 to pay taxes!</p>
-            <p class="prestigeunlock" id="buildinghotkeys" alt="buildinghotkeys" label="buildinghotkeys">Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost. Press [left arrow] or [right arrow] to switch tabs. Enjoy!</p>
+            <p class="prestigeunlock" id="buildinghotkeys" alt="buildinghotkeys" label="buildinghotkeys">Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost.<br>Press [Left arrow] or [Right arrow] to switch tabs. Enjoy!</p>
         </div>
     </div>
     <div id="prestige" alt="prestige" label="prestige" style="display: none;">
@@ -869,7 +869,7 @@
             <div id="achievements" alt="achievements" label="achievements">
                 <div class="NotificationToggle">
                     <p id="achievementprogress" alt="achievementprogress" label="achievementprogress" style="color:white"></p>
-                    <img class="achNotification" id="notificationpic" alt="notificationpic" label="notificationpic" src = "Pictures/Achievement Notifications.png" title='跳出提示框' loading="lazy">
+                    <img class="achNotification" id="achnotificationpic" alt="achnotificationpic" label="achnotificationpic" src = "Pictures/Notifications.png" title='跳出提示框' loading="lazy">
                     <button class="auto nonSquare" id="toggle34" alt="toggle34" label="toggle34" toggleid="34" alt="34" label="34" format="[$]" style="border: 2px solid green">[ON]</button>
                 </div>
                 <table id="achievementstable" alt="achievementstable" label="achievementstable" style="padding: 0; font-size:0;">
@@ -2524,8 +2524,10 @@
                     <span id="hepteractExpository2" alt="hepteractExpository2" label="hepteractExpository2" class="cubePlacement3" style="color: orchid;">Hepteracts do not provide passive bonuses. They must be made useful through crafting.</span>
                     <div class="openGrid">
                         <img class="openImage" src="Pictures/Hepteract.png" loading="lazy">
-                        <div class="openButtons">
+                        <div class="NotificationToggle">
                             <span id="hepteractCubeInventory" alt="hepteractCubeInventory" label="hepteractCubeInventory" class="inventory" style="color:pink">You possess <span id="hepteractQuantity" alt="hepteractQuantity" label="hepteractQuantity" style="color: yellow">13</span> Hepteracts! You know where to get these, right?</span>
+                            <img class="heptNotification" id="heptnotificationpic" alt="heptnotificationpic" label="heptnotificationpic" src = "Pictures/Notifications.png" title='跳出提示框' loading="lazy">
+                            <button class="auto nonSquare" id="toggle35" alt="toggle35" label="toggle35" toggleid="35" alt="35" label="35" format="[$]" style="border: 2px solid green">[ON]</button>
                         </div>
                     </div>
 
@@ -2882,7 +2884,7 @@ $GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量"></p
         <div id="versionnumber" alt="versionnumber" label="versionnumber">You're playing Synergism</div>
         <div id="event" alt="event" label="event" style="color: orchid">Event Status: <span id="eventCurrent" alt="eventCurrent" label="eventCurrent" style="color:orangered"></span></div>
         <div id="eventBuffs" alt="eventBuffs" label="eventBuffs" style="color: lime;">Buffs: </div>
-        <a href="https://www.bilibili.com/video/BV1PJ411b7oL" target="_blank" id="happyHolidays" alt="happyHolidays" label="happyHolidays" style="color: greenyellow"></a>
+        <a href="#" target="_blank" id="happyHolidays" alt="happyHolidays" label="happyHolidays" style="color: greenyellow"></a>
     </div>
     <div class="subtabContent" id="creditssubtab" alt="creditssubtab" label="creditssubtab">
         <h1>Coders</h1>
@@ -2983,6 +2985,7 @@ $GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量"></p
             <p id="statOff26" alt="statOff26" label="statOff26" class="statPortion singularity">Offering Storm [GQ]: <span id="sOff26" alt="sOff26" label="sOff26" class="statNumber">0</span></p>
             <p id="statOff27" alt="statOff27" label="statOff27" class="statPortion singularity">Offering Tempest [GQ]: <span id="sOff27" alt="sOff27" label="sOff27" class="statNumber">0</span></p>
             <p id="statOff28" alt="statOff28" label="statOff28" class="statPortion singularity">Cube Upgrade Cx4: <span id="sOff28" alt="sOff28" label="sOff28" class="statNumber">0</span></p>
+            <p id="statOff29" alt="statOff29" label="statOff29" class="statPortion">Event: <span id="sOff29" alt="sOff29" label="sOff29" class="statNumber">0</span></p>
             <p id="statOffT" alt="statOffT" label="statOffT" class="statPortion statTotal" style='color: gold'>TOTAL OFFERING MULTIPLIER: <span id="sOffT" alt="sOffT" label="sOffT" class="statNumber statTotal">0</span></p>
         </div>
         <div id="globalQuarkMultiplierStats" alt="globalQuarkMultiplierStats" label="globalQuarkMultiplierStats" class="statContainer">

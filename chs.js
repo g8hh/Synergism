@@ -1147,7 +1147,7 @@ var cnItems = {
     'Keynesian Statue': '凯恩斯塑像',
     'High-Scoring Statue': '高分塑像',
     'Chronos Statue': '柯罗诺斯塑像',
-    '： Platonic Cubes opened!': 'PLATONIC方盒已开启！',
+    ' Platonic Cubes opened!': 'PLATONIC方盒已开启！',
     'Wow! I want more Cubes.': '真惊奇！我想要更多方盒。',
     'Wow! I want passive Offering gain too.': '真惊奇！我也想被动获得祭品。',
     'Wow! I want better passive Obtainium': '真惊奇！我想更好地被动获得难得素',

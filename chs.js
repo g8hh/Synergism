@@ -1761,7 +1761,7 @@ var cnItems = {
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
     //#endregion
     //#region 奇点
-    'Penalties': '负面效果',
+    'Penalties': '惩罚',
     'Perks': '特权',
     'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
     'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',

@@ -422,7 +422,7 @@ export const player: Player = {
 
     // create a Map with keys defaulting to false
     codes: new Map(
-        Array.from({ length: 39 }, (_, i) => [i + 1, false])
+        Array.from({ length: 40 }, (_, i) => [i + 1, false])
     ),
 
     loaded1009: true,
@@ -3583,10 +3583,10 @@ document.addEventListener('keydown', (event) => {
         }
         if (player.challengecompletions[11] > 0 && !isNaN(num)) {
             if (num >= 0 && num < player.corruptionLoadoutNames.length) {
-                void Notification(`${player.corruptionLoadoutNames[num]}(第${num + 1}个预设)已载入。飞升后即可生效。`, 5000);
+                void Notification(`第${num + 1}个预设"${player.corruptionLoadoutNames[num]}"已载入。飞升后即可生效。`, 5000);
                 corruptionLoadoutSaveLoad(false, num + 1);
             } else {
-                void Notification('All next Corruption Stats are now Zero. This will take effect on the next ascension.', 5000);
+                void Notification('All Corruptions have been set to Zero. This will take effect on the next ascension.', 5000);
                 corruptionLoadoutSaveLoad(false, 0);
             }
         }

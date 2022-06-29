@@ -4,24 +4,23 @@ import type { Player } from './types/Synergism'
 import { Alert, Prompt } from './UpdateHTML'
 import { toOrdinal } from './Utility'
 
-/**
- *
- * Updates all statistics related to Singularities in the Singularity Tab.
- *
- */
-export const updateSingularityStats = (): void => {
+export const updateSingularityPenalties = (): void => {
     const color = player.runelevels[6] > 0 ? 'green' : 'red';
-    const str = `You are in the <span style="color: gold">${toOrdinal(player.singularityCount)} Singularity</span>, and have<span style="color: gold">${format(player.goldenQuarks,0,true)} Golden Quarks.</span>
-                 <br>全局速度除以${format(calculateSingularityDebuff('Global Speed'), 2, true)}。
-                 飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed'), 2, true)}。
-                 祭品获取数量除以${format(calculateSingularityDebuff('Offering'), 2, true)}。
-                 难得素获取数量除以${format(calculateSingularityDebuff('Obtainium'), 2, true)}。
-                 所有类型的方盒及立方获取数量除以${format(calculateSingularityDebuff('Cubes'), 2, true)}。
-                 研究花费乘以${format(calculateSingularityDebuff('Researches'), 2, true)}。
-                 方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades'), 2, true)}。
+    const str = getSingularityOridnalText(player.singularityCount) +
+                `<br>全局速度除以${format(calculateSingularityDebuff('Global Speed'), 2, true)}。
+                飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed'), 2, true)}。
+                祭品获取数量除以${format(calculateSingularityDebuff('Offering'), 2, true)}。
+                难得素获取数量除以${format(calculateSingularityDebuff('Obtainium'), 2, true)}。
+                所有类型的方盒及立方获取数量除以${format(calculateSingularityDebuff('Cubes'), 2, true)}。
+                研究花费乘以${format(calculateSingularityDebuff('Researches'), 2, true)}。
+                方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades'), 2, true)}。
                  <br><span style='color: ${color}'>Antiquities of Ant God is ${(player.runelevels[6] > 0) ? '' : 'NOT'} purchased. Penalties are ${(player.runelevels[6] > 0) ? '' : 'NOT'} dispelled!</span>`
 
-    DOMCacheGetOrSet('singularityMultiline').innerHTML = str;
+    DOMCacheGetOrSet('singularityPenaltiesMultiline').innerHTML = str;
+}
+
+function getSingularityOridnalText(singularityCount: number): string {
+    return 'You are in the <span style="color: gold">' + toOrdinal(singularityCount) + '次奇点</span>';
 }
 
 export interface ISingularityData {
@@ -38,7 +37,7 @@ export interface ISingularityData {
 }
 
 /**
- * Singularity Upgrades are bought in the singularity tab, and all have their own
+ * Singularity Upgrades are bought in the Shop of the singularity tab, and all have their own
  * name, description, level and maxlevel, plus a feature to toggle buy on each.
  */
 export class SingularityUpgrade {
@@ -93,8 +92,8 @@ export class SingularityUpgrade {
                 <span style="color: ${minReqColor}">${minimumSingularity}</span>
                 <span style="color: ${color}">等级 ${this.level}${maxLevel}${freeLevelInfo}</span>
                 <span style="color: gold">${this.getEffect().desc}</span>
-                下一级的花费：${format(costNextLevel,0,true)}金夸克。
-                已花费金夸克数量：${format(this.goldenQuarksInvested, 0, true)}`
+                <i></i>下一级的花费：${format(costNextLevel,0,true)}金夸克。<i></i>
+                <i></i>已花费金夸克数量：${format(this.goldenQuarksInvested, 0, true)}<i></i>`
     }
 
     public updateUpgradeHTML(): void {
@@ -149,7 +148,8 @@ export class SingularityUpgrade {
         }
 
         this.updateUpgradeHTML();
-        updateSingularityStats();
+        updateSingularityPenalties();
+        updateSingularityPerks();
     }
 
     public async changeToggle(): Promise<void> {
@@ -646,6 +646,223 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
     }
 }
 
+/**
+ * Singularity Perks are automatically obtained and upgraded, based on player.singularityCount
+ * They can have one or several levels with a description for each level
+ */
+export class SingularityPerk {
+    public readonly name: string
+    public readonly levels: number[]
+    public readonly description: (n: number, levels: number[]) => string
+
+    public constructor(perk: SingularityPerk) {
+        this.name = perk.name;
+        this.levels = perk.levels;
+        this.description = perk.description;
+    }
+}
+
+// List of Singularity Perks based on player.singularityCount
+// The list is ordered on first level acquisition, so be careful when inserting a new one ;)
+export const singularityPerks: SingularityPerk[] = [
+    {
+        name: 'Daily代码额外奖励',
+        levels: [1],
+        description: () => {
+            return '输入Daily代码后可以获得金夸克和随机奇点升级的免费等级'
+        }
+    },
+    {
+        name: '无限成长',
+        levels: [1],
+        description: (n: number) => {
+            return `每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了${format(10*n)}%)`
+        }
+    },
+    {
+        name: '超级初始',
+        levels: [2, 3, 4, 7],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[3]) {
+                return '飞升后初始获得1次超越，1次转世，1001神话，1e100粒子和500难得素'
+            } else if (n >= levels[2]) {
+                return '飞升后初始获得1次超越，1次转世，1001神话，10粒子和500难得素'
+            } else if (n >= levels[1]) {
+                return '飞升后初始获得1次超越，1次转世，1001神话和10粒子'
+            } else {
+                return '飞升后初始获得1次超越和1001神话'
+            }
+        }
+    },
+    {
+        name: '这就是挑战？',
+        levels: [4, 7, 10, 15, 20],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[4]) {
+                return '飞升后初始完成5次挑战8，1次挑战6、挑战7和挑战9'
+            } else if (n >= levels[3]) {
+                return '飞升后初始完成5次挑战8，1次挑战6和挑战7'
+            } else if (n >= levels[2]) {
+                return '飞升后初始完成1次挑战6、挑战7和挑战8'
+            } else if (n >= levels[1]) {
+                return '飞升后初始完成1次挑战6和挑战7'
+            } else {
+                return '飞升后初始完成1次挑战6'
+            }
+        }
+    },
+    {
+        name: '商店特惠',
+        levels: [5, 20],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)'
+            } else {
+                return '进入奇点后您直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克'
+            }
+        }
+    },
+    {
+        name: '粒子皆辛苦',
+        levels: [5],
+        description: () => {
+            return '飞升后初始获得粒子建筑自动购买'
+        }
+    },
+    {
+        name: '更多夸克',
+        levels: [5, 20],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '夸克获取数量额外增加5%，之后再额外增加5%！'
+            } else {
+                return '夸克获取数量额外增加5%！'
+            }
+        }
+    },
+    {
+        name: '别了，洗点！',
+        levels: [7],
+        description: () => {
+            return '护身符的额外等级对所有符文均生效！'
+        }
+    },
+    {
+        name: '看在(蚁)神的份上',
+        levels: [10, 15, 25],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[2]) {
+                return '您可以保留所有蚂蚁自动购买，飞升后初始获得一只神使蚁'
+            } else if (n >= levels[1]) {
+                return '您可以保留所有蚂蚁自动购买，飞升后初始获得一只蚁后'
+            } else {
+                return '您可以保留所有蚂蚁自动购买，飞升后初始获得一只工蚁'
+            }
+        }
+    },
+    {
+        name: '傻瓜式研究教学',
+        levels: [11],
+        description: () => {
+            return '您可以保留更好的自动研究，即方盒升级[1x9]'
+        }
+    },
+    {
+        name: '魂灵的祝福',
+        levels: [15],
+        description: () => {
+            return '开启自动符文时您可以自动购买祝福和魂灵'
+        }
+    },
+    {
+        name: '自动无限晋升',
+        levels: [30],
+        description: () => {
+            return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升'
+        }
+    }
+]
+
+export const updateSingularityPerks = (): void => {
+    const singularityCount = player.singularityCount;
+    const str = getSingularityOridnalText(singularityCount) +
+                `<br/><br/>以下是您在奇点中获得的特权
+                (鼠标停留在特权上可以查看效果。<span class="newPerk">gold text</span> were added or improved in this singularity)<br/>`
+                + getAvailablePerksDescription(singularityCount)
+
+    DOMCacheGetOrSet('singularityPerksMultiline').innerHTML = str;
+}
+
+export interface ISingularityPerkDisplayInfo {
+    name: string
+    description: string
+    currentLevel: number
+    lastUpgraded: number
+    acquired: number
+}
+
+/*
+* Indicate current level of the Perk and when it was reached
+*/
+const getLastUpgradeInfo = (perk: SingularityPerk, singularityCount: number): {level: number, singularity: number} => {
+    for (let i=perk.levels.length - 1; i >= 0; i--) {
+        if (singularityCount >= perk.levels[i]) {
+            return { level: i + 1, singularity: perk.levels[i] } ;
+        }
+    }
+
+    return { level: 0, singularity: perk.levels[0] };
+}
+
+const getAvailablePerksDescription = (singularityCount: number): string => {
+    let perksText = '';
+    let availablePerks: ISingularityPerkDisplayInfo[] = [];
+    let singularityCountForNextPerk: number | null = null;
+    for (const perk of singularityPerks) {
+        const upgradeInfo = getLastUpgradeInfo(perk, singularityCount);
+        if (upgradeInfo.level > 0) {
+            availablePerks.push({
+                name: perk.name,
+                description: perk.description(singularityCount, perk.levels),
+                currentLevel: upgradeInfo.level,
+                lastUpgraded: upgradeInfo.singularity,
+                acquired: perk.levels[0]
+            });
+        } else {
+            singularityCountForNextPerk = upgradeInfo.singularity;
+            break;
+        }
+    }
+
+    // We want to sort the perks so that the most recently upgraded or lastUpgraded are listed first
+    availablePerks = availablePerks.sort((p1, p2) => {
+        if (p1.acquired == p2.acquired && p1.lastUpgraded == p2.lastUpgraded) {
+            return 0;
+        }
+        if (p1.lastUpgraded > p2.lastUpgraded) {
+            return -1;
+        } else if (p1.lastUpgraded == p2.lastUpgraded && p1.acquired > p2.acquired) {
+            return -1;
+        }
+        return 1;
+    })
+
+    for (const availablePerk of availablePerks) {
+        perksText += '<br/>' + formatPerkDescription(availablePerk, singularityCount);
+    }
+    if (singularityCountForNextPerk) {
+        perksText += '<br/><br/>您将在第' + singularityCountForNextPerk + '次进入奇点后解锁新特权';
+    }
+    return perksText;
+}
+
+function formatPerkDescription(perkData: ISingularityPerkDisplayInfo, singularityCount: number): string {
+    const isNew = perkData.lastUpgraded === singularityCount;
+    const levelInfo = perkData.currentLevel > 1 ? ' - ' + perkData.currentLevel + '级' : '';
+    //const acquiredUpgraded = ' / Acq ' + perkData.acquired + ' / Upg ' + perkData.lastUpgraded;
+    return `<span${isNew?' class="newPerk"':''} title="${perkData.description}">${perkData.name}${levelInfo}</span>`;
+}
+
 export const getGoldenQuarkCost = (): {
     cost: number
     costReduction: number
@@ -712,33 +929,33 @@ export async function buyGoldenQuarks(): Promise<void> {
 
 export type SingularityDebuffs = 'Offering' | 'Obtainium' | 'Global Speed' | 'Researches' | 'Ascension Speed' | 'Cubes' | 'Cube Upgrades'
 
-export const calculateSingularityDebuff = (debuff: SingularityDebuffs) => {
-    if (player.singularityCount === 0) {
+export const calculateSingularityDebuff = (debuff: SingularityDebuffs, singularityCount: number=player.singularityCount) => {
+    if (singularityCount === 0) {
         return 1
     }
     if (player.runelevels[6] > 0) {
         return 1
     }
 
-    let effectiveSingularities = player.singularityCount;
-    effectiveSingularities *= Math.min(4.75, 0.75 * player.singularityCount / 10 + 1)
-    if (player.singularityCount > 10) {
+    let effectiveSingularities = singularityCount;
+    effectiveSingularities *= Math.min(4.75, 0.75 * singularityCount / 10 + 1)
+    if (singularityCount > 10) {
         effectiveSingularities *= 1.5
-        effectiveSingularities *= Math.min(4, 1.25 * player.singularityCount / 10 - 0.25)
+        effectiveSingularities *= Math.min(4, 1.25 * singularityCount / 10 - 0.25)
     }
-    if (player.singularityCount > 25) {
+    if (singularityCount > 25) {
         effectiveSingularities *= 2.5
-        effectiveSingularities *= Math.min(6, 1.5 * player.singularityCount / 25 - 0.5)
+        effectiveSingularities *= Math.min(6, 1.5 * singularityCount / 25 - 0.5)
     }
-    if (player.singularityCount > 50) {
+    if (singularityCount > 50) {
         effectiveSingularities *= 6
-        effectiveSingularities *= Math.min(8, 2 * player.singularityCount / 50 - 1)
+        effectiveSingularities *= Math.min(8, 2 * singularityCount / 50 - 1)
     }
-    if (player.singularityCount > 100) {
-        effectiveSingularities *= player.singularityCount / 25
+    if (singularityCount > 100) {
+        effectiveSingularities *= singularityCount / 25
     }
-    if (player.singularityCount > 250) {
-        effectiveSingularities *= player.singularityCount / 62.5
+    if (singularityCount > 250) {
+        effectiveSingularities *= singularityCount / 62.5
     }
 
     if (debuff === 'Offering') {

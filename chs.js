@@ -1138,8 +1138,6 @@ var cnItems = {
     'This seems very familiar.': '这看上去总感觉……很眼熟。',
     'Open up some Lootb-- er, Platonic! Cubes, for epic perks!.': '开启一些作者方——呃，我是说PLATONIC方盒，来获得一些强大的特权！',
     ' Platonic! Cubes. Get more from really hard ascensions.': 'PLATONIC方盒。您可以通过超高难度的飞升获取更多。',
-    'Open x40,': '开启 x40',
-    'Open x1 Million': '开启 x1000000',
     'Cube Shard': '方盒碎片',
     'Tesseract Shard': '超立方碎片',
     'Hypercube Shard': '五阶立方碎片',
@@ -1514,13 +1512,13 @@ var cnItems = {
     'Themes': '主题',
     'Light Mode': '明亮模式',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.8 Decanter - The Reality Update pt.1 [Last Update: 10:29 UTC 14-Jun-2022].': '您目前玩的版本为V2.9.8 药水瓶 - 现实升级第一部分 [2022年6月14日 UTC 10:29更新]。',
+    'You\'re playing v2.9.9 Community - The Reality Update pt.1 [Last Update: 7:36 UTC 29-Jun-2022].': '您目前玩的版本为V2.9.9 社区 - 现实升级第一部分 [2022年6月29日 UTC 7:36更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +125% Quarks from all sources, +13.37% Powder Conversion, +200% Time Acceleration!': '当前加成：夸克获取数量增加125%，超通量粉转化效率增加13.37%，全局时间速率增加200%！',
-    '💗 2.9.7 Event! 💗': '💗2.9.7版的活动！💗',
+    'Current Buffs: +40% Quarks, +40% Powder Conversion, +75% Ascension Speed, +175% Global Speed, +10% Ascension Score, +75% Ant Sacrifice rewards, +150% Offerings, +150% Obtainiums!': '当前加成：夸克获取数量增加40%，超通量粉转化效率增加40%，飞升的速度增加75%，全局速度增加175%，飞升分数增加10%，蚂蚁献祭奖励增加75%，祭品获取数量和难得素获取数量增加150%！',
+    '💗 Community Event! 💗 [Musical Link Here!]': '💗社区活动！💗[点击后链接向音乐！]',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1675,6 +1673,7 @@ var cnItems = {
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
     'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
+    'Corruption Loadout from previous run has been applied. This will take effect on the next ascension.': '之前周目的腐化已载入。飞升后即可生效。',
     'Buy Accelerators': '购买加速器',
     'Boost Accelerator': '加速器加成',
     'Auto Challenge': '自动扫荡挑战',
@@ -1762,6 +1761,8 @@ var cnItems = {
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
     //#endregion
     //#region 奇点
+    'Penalties': '负面效果',
+    'Perks': '特权',
     'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
     'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',
     'You\'re too powerful for this current universe. The multiverse of Synergism is truly endless, but out there are even more challenging universes parallel to your very own.': '这个宇宙已经容纳不了您的力量了。协同放置的多元宇宙可谓是无穷无尽，但对您现在这个宇宙来说，还有更多更具挑战性的平行宇宙。',
@@ -1883,6 +1884,8 @@ var cnItems = {
     'Sorry, I cannnot sell you this many Golden Quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
+    'gold text': '金色文本',
+    ' were added or improved in this singularity': '的特权将在本次奇点后增加或者加强',
     //#endregion
 
     //原样
@@ -1895,7 +1898,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sun Jun 12 2022 23:59:59 GMT+0800 (": "活动持续到2022年6月12日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sun Jul 03 2022 23:59:59 GMT+0800 (": "活动持续到2022年7月3日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑
@@ -2035,6 +2038,7 @@ var cnExcludeWhole = [
     /^([e\d\,\.]+)[A-Za-rt-z]{0,4} \[([e%\d\,\.\+]+)[A-Za-rt-z]{0,4}\]$/, //数字处理
     /^([e\d\,\.]+)\s\/$/, //数字处理
     /^\d\.\d+e\d\.\d+e\+\d+ \[(.+)\]$/, //数字处理
+    /^ \[\+\d+\.\d\]$/, //数字处理
     /^(.*)[\u4E00-\u9FFF]+(.*)$/, //不抓取内容
 ];
 var cnExcludePostfix = [
@@ -2241,8 +2245,6 @@ var cnRegReplace = new Map([
     [/^You have reached the end of the game, on Singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter Singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) Golden Quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
-    [/^(.+) Singularity$/, '$1次奇点'], //奇点
-    [/^(.+) Golden$/, '$1金'], //奇点
     [/^Permanently gain (.+)% more Golden Quarks on Singularities.$/, '使进入奇点的金夸克获取数量增加$1%。'], //奇点
     [/^Every hour, you gain (.+) Golden Quarks from exporting.$/, '每小时导出存档可以获得$1金夸克。'], //奇点
     [/^Ascension Count increases (.+)% faster.$/, '飞升次数获取数量增加$1%。'], //奇点

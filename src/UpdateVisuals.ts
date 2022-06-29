@@ -516,6 +516,13 @@ export const visualUpdateSettings = () => {
 
 }
 
+export const visualUpdateSingularity = () => {
+    if (G['currentTab'] !== 'singularity') {
+        return
+    }
+    DOMCacheGetOrSet('goldenQuarkamount').textContent = '您有' + format(player.goldenQuarks) + '金夸克！'
+}
+
 export const visualUpdateShop = () => {
     if (G['currentTab'] !== 'shop') {
         return

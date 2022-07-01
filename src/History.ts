@@ -310,7 +310,7 @@ const resetHistoryRenderRow = (
         const diff = newMulti - oldMulti;
         extra.push(
             `<span title="蚂蚁倍率：${format(oldMulti, 3, false)}--&gt;${format(newMulti, 3, false)}"><img src="Pictures/Multiplier.png" alt="Ant Multiplier">+${format(diff, 3, false)}</span>`,
-            `<span title="每秒增加${formatDecimalSource(data.crumbsPerSecond)}银河碎屑"><img src="Pictures/GalacticCrumbs.png" alt="Crumbs">${extractStringExponent(formatDecimalSource(data.crumbs))}</span>`,
+            `<span title="每秒增加${formatDecimalSource(data.crumbsPerSecond)}银河碎屑"><img src="Pictures/crumb.png" alt="Crumbs">${extractStringExponent(formatDecimalSource(data.crumbs))}</span>`,
             `<span title="基础值为${format(data.baseELO)}"><img src="Pictures/ELO.png" alt="ELO">${format(data.effectiveELO)}</span>`
         );
     } else if (data.kind === 'ascend') {

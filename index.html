@@ -7,11 +7,11 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon" sizes="16x16">
     <title>协同放置 - Synergism</title>
     <link rel="stylesheet" href="Synergism.css">
-    <script src="./dist/out.js?20220628" defer></script>
+    <script src="./dist/out.js?20220701" defer></script>
 </head>
 <body class="dark loading">
-    <script src="chs.js?20220628"></script>
-    <script src="core.js?20220628"></script>
+    <script src="chs.js?20220701"></script>
+    <script src="core.js?20220701"></script>
     <div id="transparentBG" alt="transparentBG" label="transparentBG"></div>
     <div id="notification" alt="notification" label="notification">
         <div id="notifx" alt="notifx" label="notifx">
@@ -144,6 +144,10 @@
             <span id="ascSingularityCountStats" alt="ascSingularityCountStats" label="ascSingularityCountStats">
                 <img src="Pictures/Singularity.png" class="corruptionImg singularity" title="奇点次数" loading="lazy">
                 <span id="ascSingularityCount" class="singularity" alt="ascSingularityCount" label="ascSingularityCount">1</span>
+            </span>
+            <span id="ascSingTimeTakenStats" alt="ascSingTimeTakenStats" label="ascSingTimeTakenStats">
+                <img src="Pictures/Singularity.png" class="corruptionImg singularity" title="本次奇点时间" loading="lazy">
+                <span id="ascSingLen" class="singularity" alt="ascSingLen" label="ascSingLen">x</span>
             </span>
         </div>
         <div class="subHeader">
@@ -2819,8 +2823,8 @@
                 <button id="timeCode" alt="timeCode" label="timeCode" class="promocodeButton" style="border:2px solid green">Time</button>
                 <button id="promocodes" alt="promocodes" label="promocodes" class="promocodeButton" style="border:2px solid goldenrod">Enter a promotion code here!</button>
                 <p id="promocodeinfo" alt="promocodeinfo" label="promocodeinfo" style="color: goldenrod"></p>
-                <p class="prestigeunlock" id="themesTitle" alt="themesTitle" label="themesTitle" style="color: pink">Themes</p>
-                <button id="theme" alt="theme" label="theme" class="promocodeButton" style="border: 2px solid white">Light Mode</button>
+                <p class="prestigeunlock" id="themesTitle" alt="themesTitle" label="themesTitle" style="color: pink">Current Theme</p>
+                <button id="theme" alt="theme" label="theme" class="promocodeButton" style="border: 2px solid white">Dark Mode</button>
             </div>
             <div id="exportButtons" alt="exportButtons" label="exportButtons">
                 <p id="quarktimerdisplay" alt="quarktimerdisplay" label="quarktimerdisplay" class="tightText" style="color: gold">3600s until +1 export Quark</p>
@@ -3424,7 +3428,7 @@ $GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量"></p
         <div id="singularityContainer1" alt="singularityContainer1" label="singularityContainer1">
             <div id="singularityUpgradeContainer" alt="singularityUpgradeContainer" label="singularityUpgradeContainer">
                 <div id="goldenQuarksDisplay" alt="goldenQuarksDisplay" label="goldenQuarksDisplay">
-                    <img src="Pictures/PlatonicUpgrade16.png" width="32px" height="32px" loading="lazy">
+                    <img src="Pictures/Golden Quark.png" width="32px" height="32px" loading="lazy">
                     <p id="goldenQuarkamount" alt="goldenQuarkamount" label="goldenQuarkamount">You have 0 Golden Quarks!</p>
                 </div>
                 <div id="actualSingularityUpgradeContainer" alt="actualSingularityUpgradeContainer" label="actualSingularityUpgradeContainer">

@@ -141,7 +141,7 @@ export const resetdetails = (input: resetNames) => {
         case 'singularity':
             currencyImage1.style.display = 'none'
             resetCurrencyGain.textContent = '';
-            resetInfo.textContent = '您愿意放弃目前的一切荣耀，踏上更大挑战的征途吗？蚁神将赐予您' + format(calculateGoldenQuarkGain(), 2, true) + '金夸克。'
+            resetInfo.textContent = '您愿意放弃目前的一切荣耀，踏上更大挑战的征途吗？蚁神将赐予您' + format(calculateGoldenQuarkGain(), 2, true) + '金夸克。花费时间：' + format(player.singularityCounter, 0, false) + '秒。';
             resetInfo.style.color = 'lightgoldenrodyellow'
     }
     DOMCacheGetOrSet('resetofferings2').textContent = '+' + format(offering)

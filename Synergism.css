@@ -3030,7 +3030,7 @@ header #obtainiumDisplay {
 }
 
 #ascTimeTakenStats {
-    min-width: 125px; /* prevent bouncing around */
+    min-width: 150px; /* prevent bouncing around */
 }
 
 #ascTimeAccel {

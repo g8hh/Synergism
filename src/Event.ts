@@ -57,7 +57,7 @@ const events: Record<string, HolidayData> = {
         url: 'https://www.bilibili.com/video/BV1PJ411b7oL',
         everyYear: false,
         start: '06/27/2022 00:00:00',
-        end: '07/06/2022 11:59:59',
+        end: '07/06/2022 23:59:59',
         notice: 3,
         event: true,
         buffs: {

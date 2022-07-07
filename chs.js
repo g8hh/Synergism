@@ -1884,7 +1884,7 @@ var cnItems = {
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
     'gold text': '金色文本',
-    ' were added or improved in this singularity': '的特权将在本次奇点后增加或者加强',
+    ' were added or improved in this singularity': '的特权在本次奇点增加或者加强',
     //#endregion
 
     //原样

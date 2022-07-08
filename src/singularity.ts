@@ -680,13 +680,45 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '超级初始',
-        levels: [2, 3, 4, 7],
+        name: '金币之雨',
+        levels: [1],
+        description: () => {
+            return '根据未花费的金夸克增加金币产量。每次奇点的飞升前阶段效果最好。'
+        }
+    },
+    {
+        name: '慷慨之珠',
+        levels: [1, 2, 5, 10, 15, 20, 25, 30, 35],
         description: (n: number, levels: number[]) => {
-            if (n >= levels[3]) {
+            const overfluxBonus = {
+                8: 700, // How to read: levels[8] -> Sing 35 gives 700%
+                7: 500,
+                6: 415,
+                5: 360,
+                4: 315,
+                3: 280,
+                2: 255,
+                1: 230
+            } as const;
+
+            for (let i = 8; i > 0; i--) {
+                if (n >= levels[i]) {
+                    return `超通量珠加成夸克获取数量的效果上限变为${overfluxBonus[i as keyof typeof overfluxBonus]}%`
+                }
+            }
+            return '超通量珠加成夸克获取数量的效果上限变为215%'
+        }
+    },
+    {
+        name: '超级初始',
+        levels: [2, 3, 4, 7, 15],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[4]) {
+                return '飞升后初始获得1次超越，1次转世，1001神话，2.22e2222粒子和500难得素'
+            } else if (n >= levels[3]) {
                 return '飞升后初始获得1次超越，1次转世，1001神话，1e100粒子和500难得素'
             } else if (n >= levels[2]) {
-                return '飞升后初始获得1次超越，1次转世，1001神话，10粒子和500难得素'
+                return '飞升后初始获得1次超越，1次转世，1001神话，1e16粒子和500难得素'
             } else if (n >= levels[1]) {
                 return '飞升后初始获得1次超越，1次转世，1001神话和10粒子'
             } else {
@@ -787,7 +819,7 @@ export const updateSingularityPerks = (): void => {
     const singularityCount = player.singularityCount;
     const str = getSingularityOridnalText(singularityCount) +
                 `<br/><br/>以下是您在奇点中获得的特权
-                (鼠标停留在特权上可以查看效果。<span class="newPerk">gold text</span> were added or improved in this singularity)<br/>`
+                (鼠标停留在特权上可以查看效果。<span class="newPerk">gold text</span> were added or improved in this Singularity)<br/>`
                 + getAvailablePerksDescription(singularityCount)
 
     DOMCacheGetOrSet('singularityPerksMultiline').innerHTML = str;

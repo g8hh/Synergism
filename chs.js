@@ -1354,6 +1354,8 @@ var cnItems = {
     '===Affordable! Click to buy!===': '===资源充足！点击购买！===',
     '===You cannot afford this!===': '===资源不足，无法购买===',
     '===Maxed===': '===等级已达最大===',
+    'Save Offerings [ON]': '保留祭品[开]',
+    'Save Offerings [OFF]': '保留祭品[关]',
     'How did I get here?': '我是怎么到这里的？',
     'Oh well, no time to waste. This is your lab. Make cool stuff with your Hepteracts!': '好吧，没时间管那些了。这就是您的实验室。用惊奇七阶立方弄出一些有用的东西来吧！',
     'Hepteracts do not provide passive bonuses. They must be made useful through crafting.': '惊奇七阶立方没有任何被动加成。必须通过锻造才能变得有用。',
@@ -1694,6 +1696,8 @@ var cnItems = {
     'Exit Asc. Challenge': '退出飞升挑战',
     'Cleanse Corruptions': '清除腐化',
     'Reset Singularity': '奇点重置',
+    'Use Off. Potion': '使用祭品药剂',
+    'Use Obt. Potion': '使用难得素药剂',
     'You didn\'t enter anything, canceled!': '您什么也没有输入，因此不会有任何效果！',
     'That key is already binded to an action, use another key instead!': '这个按键已经被其他动作绑定了，请换一个按键！',
     'Why don\'t you try clicking on one of the item\'s': '为何不尝试点击上方的',
@@ -1705,7 +1709,7 @@ var cnItems = {
     'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
     'Own': '拥有',
     'Buy Yer\' Potions!': '买点药剂！',
-    'Buy 1 for 100 Quarks': '花费100夸克购买1瓶',
+    'Buy: 100 Quarks Each': '每瓶花费100夸克',
     'CONSUME': '使用',
     'Bought': '已购买',
     'Not Bought': '未购买',
@@ -1742,6 +1746,7 @@ var cnItems = {
     'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒及立方获取数量增加0.5%。',
     'This one is arguably very good. Gain +1% ALL Cubes per level, per Singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒及立方获取数量增加1%！',
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
+    'Completing an Ascension Challenge doesn\'t cause a reset (if retry is enabled) and you gain 1 more completion per tick per Singularity.': '只要开启重新尝试挑战，飞升挑战将不再重置资源，且每次奇点可以使每个时刻多完成1次。',
     'First up on the menu, why not gain +0.2% Quarks from Cube opening per level?': '兵马未动，粮草先行，每级使开启方盒及立方的夸克获取数量增加0.2%。',
     'This isn\'t even as good as the original. +0.5% Offerings and Obtainium per level.': '效果甚至还不如之前的。每级使祭品和难得素的获取数量增加0.5%。',
     'Gain +0.1% Ascension Speed per level per Singularity. It needs a lot of fuel to power up.': '对于每次奇点，每级使飞升的速度增加0.1%。加速需要消耗大量燃料。',
@@ -1752,11 +1757,19 @@ var cnItems = {
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
+    'You can\'t purchase Offering Potions because you already have the max level!': '您无法购买祭品药剂，因为它的数量已经达到上限了！',
+    'You can\'t purchase Obtainium Potions because you already have the max level!': '您无法购买难得素药剂，因为它的数量已经达到上限了！',
+    'You can\'t purchase Offering Potions because you don\'t have enough Quarks!': '您无法购买祭品药剂，因为您的夸克不够了！',
+    'You can\'t purchase Obtainium Potions because you don\'t have enough Quarks!': '您无法购买难得素药剂，因为您的夸克不够了！',
+    'Ok. No potions purchased.': '好吧。不买药剂了。',
+    'Value must be a finite, positive integer.': '这不是有效的数字啊。',
     'Would you like to use some of this potion?': '您想要使用一些此药剂吗？',
     'Reset Perm Shop [Cost: 15 Quarks]': '重置商店购买[花费：15夸克]',
     'This will fully refund most of your permanent upgrades for an upfront cost of 15 Quarks. Would you like to do this?': '这么做将重置大部分永久升级，但需要花费15夸克。您确定要这么做吗？',
     'Shop Confirmations: ON': '商店确认框：开',
     'Shop Confirmations: OFF': '商店确认框：关',
+    'Hide Maxed: ON': '隐藏最大等级物品：开',
+    'Hide Maxed: OFF': '隐藏最大等级物品：关',
     'Hover over each portion of the shop to see what each upgrade does!': '鼠标停在商店物品上以查看详细介绍！',
     //#endregion
     //#region 奇点
@@ -2220,6 +2233,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Ascensions give (.+)% more Wow! Cubes and Tesseracts.$/, '当前效果：飞升的方盒和超立方获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Reincarnation Challenges may be completed an additional (.+) times.$/, '当前效果：转世挑战完成次数上限额外增加$1次。'], //商店
     [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+) Million. Past 60 completions of C9 or C10 the scaling multiplier is \[completions \* (.*)\]$/, '当前效果：挑战10的基础目标减少1e$1M。超过60次以后的挑战9或挑战10的挑战目标增长因子变为[挑战次数*$2]'], //商店
+    [/^CURRENT Effect: \+(.+) Challenges per tick$/, '当前效果：每个时刻完成$1次挑战'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Hypercubes and Platonic Cubes.$/, '当前效果：飞升的五阶立方和PLATONIC方盒获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Hepteracts and Octarets.$/, '当前效果：飞升的七阶立方和八阶立方获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Ascension timer runs (.+)% faster.$/, '当前效果：飞升的速度增加$1%。'], //商店
@@ -2240,6 +2254,8 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Obtainium \+(.+)%!$/, '当前效果：难得素的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Every (.+) purchased orbs grants 1 powder.$/, '当前效果：每锻造$1超通量珠就可以获得1超通量粉块。'], //商店
     [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶立方获取数量增加$1%。'], //商店
+    [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
+    [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^Do you wish to start singularity #(.+)\? Your next universe is harder but gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点
     [/^You have reached the end of the game, on Singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter Singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) Golden Quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点

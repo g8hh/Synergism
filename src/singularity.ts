@@ -683,7 +683,7 @@ export const singularityPerks: SingularityPerk[] = [
         name: '金币之雨',
         levels: [1],
         description: () => {
-            return '根据未花费的金夸克增加金币产量。每次奇点的飞升前阶段效果最好。'
+            return '根据未花费的金夸克增加金币产量。每次奇点的飞升前阶段效果最好'
         }
     },
     {
@@ -807,10 +807,21 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '自动无限晋升',
-        levels: [30],
+        name: '高级自动符文',
+        levels: [30,50],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升和符文7 - 蚁神之古物'
+            } else {
+                return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升'
+            }
+        }
+    },
+    {
+        name: '自动购买护身符的相关碎片',
+        levels: [40],
         description: () => {
-            return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升'
+            return '购买自动符文后，可以自动购买护身符的所有碎片'
         }
     }
 ]

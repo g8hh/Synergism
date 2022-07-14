@@ -135,7 +135,7 @@ export const resetdetails = (input: resetNames) => {
         case 'ascension':
             currencyImage1.style.display = 'none'
             resetCurrencyGain.textContent = '';
-            resetInfo.textContent = '进行飞升。需要完成一次挑战10才可飞升！可获得' + format(CalcCorruptionStuff()[4], 0, true) + '惊奇方盒！花费时间：' + format(player.ascensionCounter, 0, false) + '秒。';
+            resetInfo.textContent = '进行飞升。需要完成一次挑战10才可飞升！可获得' + format(CalcCorruptionStuff()[4], 0, true) + '惊奇方盒！花费时间：' + format(player.ascensionCounter, 0, false) + '秒。\n(现实时间' + format(player.ascensionCounterRealReal, 0, false) + '秒)';
             resetInfo.style.color = 'gold';
             break;
         case 'singularity':
@@ -558,6 +558,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
 
         player.ascensionCounter = 0;
         player.ascensionCounterReal = 0;
+        player.ascensionCounterRealReal = 0;
 
         updateTalismanInventory();
         updateTalismanAppearance(0);

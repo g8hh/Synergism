@@ -1465,8 +1465,6 @@ var cnItems = {
     'Auto Ascend [ON]': '自动飞升[开]',
     'Auto Ascend [OFF]': '自动飞升[关]',
     'Mode: C10 Completions': '模式：挑战10完成数',
-    'Ascend when you\'ve completed Sadistic Challenge I a total of': '完成以下次数挑战10以后飞升：',
-    ' times.': '次。',
     'The name you provided is too long! Try again.': '名字太长了！换个短一点的再来吧。',
     'Ant God approves of your joke!': '蚁神批准了你的玩笑！',
     'The Loadout Renamer didn\'t like a character in your name! Try something else.': '名字里有系统不支持的字符(比如中文)！换个其他的再来吧。',
@@ -2204,6 +2202,8 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
     [/^What would you like to name Loadout (.+)\? Names cannot be longer than (.+) characters. Nothing crazy!$/, '您想要重新命名档$1吗？名字无法超过$2个字符。就这样！'], //腐化
+    [/^Ascend when you\'ve completed Sadistic Challenge I a total of (.+) times, Currently: (.+).$/, '进行$1次挑战10以后飞升，目前为：$2次。'], //腐化
+    [/^Ascend when the timer is at least (.+) seconds \(Real-time\), Currently: (.+).$/, '当时间至少经过$1秒(现实时间)后飞升，目前为：$2秒。'], //腐化
     [/^Promo Code 'synergism2021' Applied! \+25 Offerings, \+(.+) Quarks$/, '奖励代码“synergism2021”已生效！获得25祭品，$1夸克'], //设置
     [/^Khafra has blessed you with (.+) Quarks!$/, 'Khafra祝福了您，您获得了$1夸克！'], //设置
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置

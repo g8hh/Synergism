@@ -231,7 +231,7 @@ export const visualUpdateRunes = () => {
         const blessingMultiplierArray = [0, 8, 10, 6.66, 2, 1]
         let t = 0;
         for (let i = 1; i <= 5; i++) {
-            DOMCacheGetOrSet(`runeBlessingLevel${i}Value`).textContent = format(player.runeBlessingLevels[i], 0, true)
+            DOMCacheGetOrSet(`runeBlessingLevel${i}Value`).textContent = format(player.runeBlessingLevels[i], 0, false)
             DOMCacheGetOrSet(`runeBlessingPower${i}Value1`).textContent = format(G['runeBlessings'][i])
             const levelsPurchasable = calculateSummationLinear(player.runeBlessingLevels[i], G['blessingBaseCost'], player.runeshards, player.runeBlessingBuyAmount)[0] - player.runeBlessingLevels[i]
             levelsPurchasable > 0
@@ -251,7 +251,7 @@ export const visualUpdateRunes = () => {
         const subtract = [0, 0, 0, 1, 0, 0]
         for (let i = 1; i <= 5; i++) {
             spiritMultiplierArray[i] *= (calculateCorruptionPoints() / 400)
-            DOMCacheGetOrSet(`runeSpiritLevel${i}Value`).textContent = format(player.runeSpiritLevels[i], 0, true)
+            DOMCacheGetOrSet(`runeSpiritLevel${i}Value`).textContent = format(player.runeSpiritLevels[i], 0, false)
             DOMCacheGetOrSet(`runeSpiritPower${i}Value1`).textContent = format(G['runeSpirits'][i])
             const levelsPurchasable = calculateSummationLinear(player.runeSpiritLevels[i], G['spiritBaseCost'], player.runeshards, player.runeSpiritBuyAmount)[0] - player.runeSpiritLevels[i]
             levelsPurchasable > 0
@@ -430,26 +430,34 @@ export const visualUpdateCubes = () => {
 }
 
 const UpdateHeptGridValues = (type: hepteractTypes) => {
-    const text = type + 'ProgressBarText'
-    const bar = type + 'ProgressBar'
-    const textEl = document.getElementById(text)!
-    const barEl = document.getElementById(bar)!
-    const balance = player.hepteractCrafts[type].BAL
-    const cap = player.hepteractCrafts[type].CAP
-    const barWidth = Math.round((balance / cap) * 100)
+    const text = type + 'ProgressBarText';
+    const bar = type + 'ProgressBar';
+    const textEl = DOMCacheGetOrSet(text);
+    const barEl = DOMCacheGetOrSet(bar);
+    const unlocked = player.hepteractCrafts[type].UNLOCKED;
 
-    let barColor = '';
-    if (barWidth < 34) {
-        barColor = 'red';
-    } else if (barWidth >= 34 && barWidth < 68) {
-        barColor = '#cca300';
+    if (!unlocked) {
+        textEl.textContent = 'LOCKED';
+        barEl.style.width = '100%';
+        barEl.style.backgroundColor = 'red';
     } else {
-        barColor = 'green';
-    }
+        const balance = player.hepteractCrafts[type].BAL;
+        const cap = player.hepteractCrafts[type].CAP;
+        const barWidth = Math.round((balance / cap) * 100);
 
-    textEl.textContent = format(balance) + ' / ' + format(cap)
-    barEl.style.width = barWidth + '%'
-    barEl.style.backgroundColor = barColor
+        let barColor = '';
+        if (barWidth < 34) {
+            barColor = 'red';
+        } else if (barWidth >= 34 && barWidth < 68) {
+            barColor = '#cca300';
+        } else {
+            barColor = 'green';
+        }
+
+        textEl.textContent = format(balance) + ' / ' + format(cap);
+        barEl.style.width = barWidth + '%';
+        barEl.style.backgroundColor = barColor;
+    }
 }
 
 export const visualUpdateCorruptions = () => {

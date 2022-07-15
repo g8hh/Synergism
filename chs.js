@@ -1380,6 +1380,7 @@ var cnItems = {
     'Effect': '效果',
     'Powder': '超通量粉',
     'Warps': '跃迁次数',
+    'LOCKED': '未解锁',
     '< UNLOCKED >': '< 已解锁 >',
     '< LOCKED >': '< 未解锁 >',
     'This hepteract bends time, in your favor. +0.06% Ascension Speed per Chronos Hepteract.': '此类惊奇七阶立方可以扭曲时间，为您所用。每个惊奇七阶立方·时光可以使飞升的速度增加0.06%。',

@@ -2257,7 +2257,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶立方获取数量增加$1%。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
-    [/^Do you wish to start singularity #(.+)\? Your next universe is harder but gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点
+    [/^Do you wish to start singularity #(.+)\? Your next universe is harder but you will gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点
     [/^You have reached the end of the game, on Singularity #(.+). Platonic and the Ant God are proud of you.$/, '您到达了第$1次奇点的游戏终点。Platonic和蚁神都为您而感到骄傲。'], //奇点
     [/^Start anew, and enter Singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) Golden Quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点

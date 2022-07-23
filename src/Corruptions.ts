@@ -213,28 +213,41 @@ export const corruptionLoadoutTableCreate = () => {
         for (let j = 0; j <= corrCount; j++) {
             const cell = row.insertCell();
             cell.className = `test${j}`
-            if (j === 0) {
-                if (i === 0) {
+            if (j === 0) { // First column
+                if (i === 0) { // First row
                     cell.textContent = 'Next:'
+                } else {
+                    // Custom loadout names are loaded later, via updateCorruptionLoadoutNames()
+                    cell.title = `点击后可以重命名。载入预设的快捷键为：SHIFT+${i}`
                 }
-                // Other loadout names are updated after player load in Synergism.ts > loadSynergy
+
             } else if (j <= corrCount) {
-                // start two-indexed (WTF!)
-                cell.textContent = ((i === 0) ? player.prototypeCorruptions[j+1] : player.corruptionLoadouts[i][j+1]).toString();
+                if (i === 0) { // Next Ascension Corruption values
+                    cell.textContent = player.prototypeCorruptions[j+1].toString()
+                } else { // Loadout Corruption values
+                    cell.textContent = player.corruptionLoadouts[i][j+1].toString()
+                }
                 cell.style.textAlign = 'center'
+                cell.style.color = 'white'
             }
         }
         if (i === 0) {
+            // First line is special : "Import" and "Zero" buttons
             let cell = row.insertCell();
-            //empty
+            let btn: HTMLButtonElement= document.createElement('button');
+            btn.className = 'corrImport'
+            btn.textContent = 'Import'
+            btn.onclick = () => importCorruptionsPrompt();
+            cell.appendChild(btn);
+            cell.title = '以字符串形式导入腐化预设'
 
             cell = row.insertCell();
-            const btn = document.createElement('button');
+            btn = document.createElement('button');
             btn.className = 'corrLoad'
             btn.textContent = 'Zero'
             btn.onclick = () => corruptionLoadoutSaveLoad(false, i);
             cell.appendChild(btn);
-            cell.title = '下次飞升时将所有腐化重置为零'
+            cell.title = '下次飞升时将所有腐化重置为零。快捷键：SHIFT+9'
         } else {
             let cell = row.insertCell();
             let btn = document.createElement('button');
@@ -242,6 +255,7 @@ export const corruptionLoadoutTableCreate = () => {
             btn.textContent = 'Save'
             btn.onclick = () => corruptionLoadoutSaveLoad(true, i);
             cell.appendChild(btn);
+            cell.title = '将当前腐化保存到该预设'
 
             cell = row.insertCell();
             btn = document.createElement('button');
@@ -281,8 +295,33 @@ export const corruptionLoadoutSaveLoad = (save = true, loadout = 1) => {
 export const applyCorruptions = (corruptions: string) => {
     if (corruptions && corruptions.indexOf('/') > -1 && corruptions.split('/').length === 13) {
         // Converts the '/' separated string into a number[]
-        player.prototypeCorruptions = corruptions.split('/').map(x => +x);
+        const newCorruptions = corruptions.split('/').map(corr => Number(corr));
+
+        for (const value of newCorruptions) {
+            if (
+                !Number.isInteger(value) ||
+                Number.isNaN(value) ||
+                value < 0 ||
+                value > 14
+            ) {
+                return false;
+            }
+        }
+
+        player.prototypeCorruptions = newCorruptions;
+        corruptionLoadoutTableUpdate();
         corruptionStatsUpdate();
+        return true;
+    }
+
+    return false;
+}
+
+async function importCorruptionsPrompt() {
+    const input = await Prompt('Enter a Corruption Loadout to import for next Ascension. It must be in the following text format: 1/2/3/4/5/6/7/8');
+
+    if (!applyCorruptions('0/0/' + input + '/0/0/0')) {
+        void Alert('Your input was not in the correct format, try again.');
     }
 }
 

@@ -667,6 +667,7 @@ export const player: Player = {
     platonicCubeOpenedDaily: 0,
     platonicCubeQuarkDaily: 0,
     overfluxOrbs: 0,
+    overfluxOrbsAutoBuy: false,
     overfluxPowder: 0,
     dailyPowderResetUses: 1,
     loadedOct4Hotfix: false,
@@ -684,6 +685,7 @@ export const player: Player = {
     singularityCounter: 0,
     goldenQuarks: 0,
     quarksThisSingularity: 0,
+    totalQuarksEver: 0,
 
     singularityUpgrades: {
         goldenQuarks1: new SingularityUpgrade(singularityData['goldenQuarks1']),
@@ -3649,7 +3651,7 @@ document.addEventListener('keydown', (event) => {
                 void Notification(`第${num + 1}个预设"${player.corruptionLoadoutNames[num]}"已载入。飞升后即可生效。`, 5000);
                 corruptionLoadoutSaveLoad(false, num + 1);
             } else {
-                void Notification('All Corruptions have been set to Zero. This will take effect on the next ascension.', 5000);
+                void Notification('All Corruptions have been set to Zero. This will take effect on the next Ascension.', 5000);
                 corruptionLoadoutSaveLoad(false, 0);
             }
         }

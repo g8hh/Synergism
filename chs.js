@@ -104,7 +104,7 @@ var cnItems = {
     //#endregion
     //#region 重置
     'You\'re not in a Transcension Challenge right now. Get in one before you can leave it, duh!': '您目前并没有在进行超越挑战。进行挑战后再来考虑离开的事，懂了吧！',
-    'You\'re not in a Reincarnation Challenge right now. How could you leave what you are not in?': '您目前并没有在进行转世挑战。如果您都没在进行挑战，你又要怎么离开？',
+    'You\'re not in a Reincarnation Challenge right now. How could you leave what you are not in?': '您目前并没有在进行转世挑战。如果您都没在进行挑战，又要怎么离开？',
     'Click this if you\'re in an Ascension Challenge and want to leave. You get it already!': '如果您想要退出飞升挑战，请点击这里。您懂的！',
     'Prestige will reset coin upgrades, coin producers AND crystals. The first Prestige unlocks new features. Would you like to Prestige? [Toggle this message in settings.]': '转生后金币升级，金币生产者和水晶都将被重置。首次转生可以解锁新的游戏机制。您确定要转生吗？[您可以在设置中调整是否弹出此对话框。]',
     'Transcends will reset coin and prestige upgrades, coin producers, crystal producers AND diamonds. The first Transcension unlocks new features. Would you like to Transcend? [Toggle this message in settings.]': '超越后金币、钻石升级，金币生产者，水晶生产者和钻石都将被重置。首次超越可以解锁新的游戏机制。您确定要超越吗？[您可以在设置中调整是否弹出此对话框。]',
@@ -1247,7 +1247,7 @@ var cnItems = {
     '[3x8] Well, I think you got it? Gain +1% of particles on Reincarnation per second.': '[3x8]嗯，如您所愿？每秒获得粒子，数量为转世的粒子每秒产量的1%。',
     '[3x9] Add +4 to Reincarnation Challenge cap per level. Completions after 25 scale faster in requirement!': '[3x9]每级增加4次转世挑战次数上限。超过25次以后，挑战的目标将大幅上升！',
     '[3x10] You now get +25% Cubes and Tesseracts forever!': '[3x10]从现在起，您永久多获得25%的方盒和超立方！',
-    '[4x1] You again? +5% more score on Ascensions per level.': '[4x1]又是你啊？每级增加5%飞升分数。',
+    '[4x1] You again? +5% more score on Ascensions per level.': '[4x1]又是您啊？每级增加5%飞升分数。',
     '[4x2] Gain +0.1% Rune EXP per second you have spent in an Ascension. This has no cap!': '[4x2]本次飞升每经过一秒，符文经验值获取数量就增加0.1%。此效果没有上限！',
     '[4x3] For each 20 Cubes opened at once, you get yet another additional tribute at random.': '[4x3]每开启20个方盒，就再次额外获得1个随机贡品。',
     '[4x4] Chronos overclocks the universe for your personal benefit. (Rewards the same as others': '[4x4]柯罗诺斯将宇宙加速以使您受益。(与其他的奖励相同',
@@ -1276,7 +1276,7 @@ var cnItems = {
     '[Cx7] Yum yum! Now we\'re talking... or maybe not. Increase the cap of Cube Upgrades 1x1, 2x1, 3x1, 4x1, 5x1 by 1.': '[Cx7]嚼嚼……就是这个味……吧。使方盒升级1x1，2x1，3x1，4x1，5x1的等级上限增加1。',
     '[Cx8] A bit festive! If there is an event, All Cube gain is multiplied by 1.25.': '[Cx8]再增添一些节日的气息！如果有活动，则使所有类型的方盒及立方产量乘以1.25。',
     '[Cx9] Quite sour for a cookie. But it increases your Ascension speed by 0.25% per level, so who is to complain?': '[Cx9]很酸很酸。但它每级可以使飞升的速度增加0.25%，所以估计没什么人会抱怨了。',
-    '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使购买金夸克的夸克花费减少1。',
+    '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使商店购买金夸克的夸克花费减少1。',
     '[Cx11] Edible but prone to mistakes. Adds 125 whole milliseconds to the tolerance of code \'time\', and increases reward by +2% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加125毫秒，且奖励增加2%。',
     '[Cx12] Platonic loves toffee. Octuple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为8倍。',
     '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使惊奇方盒的获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
@@ -1833,7 +1833,7 @@ var cnItems = {
     'You have paid your price for salvation.': '您已替饼干付费。',
     'You have not paid your price for salvation.': '您未替饼干付费。',
     'Improved Ascension Gain': '更多飞升次数',
-    'Buying this, you will gain +2% Ascension Count forever, per level! Every 10 levels grants an additional, multiplicative +1% Ascension Count.': '购买后，每级使飞升次数获取数量增加2%！每10级还可以使飞升次数获取数量额外乘以1.01。',
+    'Buying this, you will gain +2% Ascension Count forever, per level! Every 10 levels grants an additional, multiplicative +1% Ascension Count.': '购买后，每级使飞升次数获取数量增加2%！每10级还可以使飞升次数获取数量额外增加1%。',
     'Buy this to unlock level fourteen corruptions. :': '购买后解锁腐化等级14。:',
     'You have gained the ability to use level 14 corruptions. :': '您已解锁腐化等级14。:',
     'You have not gained the ability to use level 14 corruptions. :(': '您未解锁腐化等级14。:(',
@@ -1908,9 +1908,19 @@ var cnItems = {
     'Still not the right game. Same as the previous upgrade.': '还是走错游戏了。效果与之前类似。',
     'I wish my Quark Hepteract was marginally better III.': '我希望惊奇七阶立方·夸克的效果略微增加 III。',
     'I AM NOT THE GODMOTHER YOU ARE LOOKING FOR, DYLAN!': '我！才！不！是！那！个！游！戏！里！的！教！母！(译者注：指NGU的Titan: Godmother)',
+    'Octeract Absinthe': '惊奇八阶立方苦艾酒',
+    'You would have never known this tonic can boost your Octeracts! [+1% per level, in fact!]': '想不到吧，这玩意可以增加惊奇八阶立方的获取数量[事实上每级可以使它增加1%！]',
+    'Pieces of Eight': '八个里亚尔',
+    'There is indeed eight of them, but each only gives +0.5% bonus, so each level gives +4% Octeract per level.': '确实有八个，但每个的加成只有0.5%，所以合起来，每级可以使惊奇八阶立方的获取数量增加4%。',
+    'The Obelisk Shaped like an Octagon.': '八角方尖碑',
+    'Platonic had to reach pretty far here. +2% Octeracts yeah!': 'PLATONIC要走很远了。每级可以使惊奇八阶立方的获取数量增加2%！',
+    'Octahedral Synthesis': '八面合成',
+    'How does this even work!?? +1% Octeracts, you bet!': '这到底是怎么生效的！？？每级可以使惊奇八阶立方的获取数量增加1%！',
+    'The Eighth Wonder of the World': '世界第八大奇迹',
+    'is the wonder of the world we live in. [+0.5% Octeracts. Platonic, this is so stingy! but, he does not care one bit.]': '正是我们所生所处的世界。[每级使惊奇八阶立方的获取数量增加0.5%。PLATONIC真是太小气了！但看起来他对此也并不在意。]',
     'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
     'you\'re not powerful enough to purchase this yet.': '您还不够强大，无法升级。',
-    'You cannot afford this upgrade. Sorry!': '金夸克不够，无法升级。很遗憾！',
+    'You cannot afford this upgrade. Sorry!': '您无法承担该升级的花费。很遗憾！',
     'Sorry, I can\'t give credit. Come back when you\'re a little... mmm... richer!': '抱歉，您的夸克不是太够……请之后再来吧！',
     'Sorry, I cannnot sell you this many Golden Quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
@@ -1921,6 +1931,40 @@ var cnItems = {
     ' Total Generated': '共产生',
     ' //3-7 Dimensional Cubes +': '//惊奇方盒至惊奇七阶立方获取数量增加',
     ' //Quarks +': '//夸克获取数量增加',
+    'Octeracts for Dummies': '萌新的惊奇八阶立方',
+    'Hello... I Am Derpsmith... The Ancestor Of Ant God... I Did Not Expect You To Get Here. Here Is 25% More Quarks, 20% More Octeracts, And 100,000x Ant Speed...': '您好……我是Derpsmith……蚁神的先祖……没想到您能走到这一步。该升级可以使您的夸克获取数量增加25%，惊奇八阶立方获取数量增加20%，蚂蚁速度变为100000倍……',
+    'You have  paid your respects to Derpsmith.': '您已向Derpsmith致敬。',
+    'You have not paid your respects to Derpsmith.': '您未向Derpsmith致敬。',
+    'Octeract Cogenesis': '惊奇八阶立方同生',
+    'Have you despised how slow these damn things are? Gain 1% more of them per level! Simple.': '您有没有感觉这些玩意慢得捉急？每级可以使惊奇八阶立方获取数量增加1%！很简单吧。',
+    'Quark Octeract': '惊奇八阶立方·夸克',
+    'An altered forme of the hepteract, this gives a 1% Quark Bonus per level without Diminishing Return.': '惊奇七阶立方的变体版本，每级使夸克获取数量增加1%，且效果不衰减。',
+    'EXTRA CHONKY Corruptions': '更多腐化',
+    'Adds one level to the cap on corruptions. Derpsmith approves.': '使腐化等级上限再增加1级。Derpsmith表示赞同。',
+    'EXTRA WIMPY Golden Quark Costs!': '金夸克购买花费再度降低',
+    'Reduces the cost of Golden Quarks in the shop by 1% per level.': '每级使商店购买金夸克的夸克花费减少1%。',
+    'Improved Download Speeds': '改善下载速度',
+    'Thanks to ethernet technology, export quarks are increased by 100% per level! Only normal ones.': '感谢伟大的以太网技术，每级使导出夸克奖励增加100%！',
+    'CHONKER Daily Code': '加强Daily代码效果',
+    'Derpsmith hacks into the source code, and adds +1 free GQ upgrade per day from Daily.': 'Derpsmith使用技术手段调整源代码，使Daily代码获得的免费金夸克升级增加1级。',
+    'CHONKERER Daily Code': '再度加强Daily代码效果',
+    'Derpsmith implemented hyperspeed multiplication. +2% more GQ upgrades per day from Daily!': 'Derpsmith实现了超高速乘法。使Daily代码获得的免费金夸克升级增加2%！',
+    'I wish for even better Quark Hepteracts.': '我希望惊奇七阶立方·夸克的效果还能增加。',
+    'The godmother is absent, but Derpsmith is here! +2% DR exponent per level. Stacks additively with all the others!': '教母跑路了，但Derpsmith还在！每级使超过软上限后的指数增加2%，与其他类似升级之间叠加！',
+    'The forbidden clock of time': '禁忌时钟',
+    'Hypothesized to be locked in a hyperbolic time chamber. +1% Global Speed per level per singularity!': '就像是时间与精神之屋那样。对于每次奇点，每级使全局速度增加1%！',
+    'Wow! I want free upgrades to be better.': '真惊奇！我希望免费升级效果变得更好。',
+    'Singularity Upgrade level is (paid level * free levels)^0.6 instead of being added.': '奇点商店升级的效果从购买等级与免费等级直接相加改为 [购买等级×免费等级]的0.6次方。',
+    'Singularity Upgrade free levels are  being powered!': '奇点商店的免费等级效果已强化！',
+    'Singularity Upgrade free levels are NOT being powered!': '奇点商店的免费等级效果未强化！',
+    'Wow! Free upgrades still suck.': '真惊奇！免费升级还是不够给力。',
+    'Who said beggars can\'t be choosers? Extends the exponent of the first upgrade to 0.65.': '谁规定免费就不能置喙了？使第一个升级的指数变为0.65。',
+    'Wow! Make free upgrades good already, Platonic!': '真惊奇！PLATONIC，让免费升级再度强大吧！',
+    'Extends the exponent of the free upgrades to 0.70.': '使免费升级的指数变为0.70。',
+    'Voided Warranty': '保修失效',
+    'Gain +1% Ascension Count per level, with a 2% bonus for every 10 levels.': '每级使飞升次数获取数量增加1%，每10级还可以使飞升次数获取数量额外增加2%。',
+    'Digital Octeract Accumulator': '八进制数码累加器',
+    'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶立方的获取数量增加1%！',
     //#endregion
 
     //原样
@@ -1993,7 +2037,7 @@ var cnPrefix = {
     "Level Fifteen Corruptions": "腐化等级-十五", //奇点，前置
     "Level ": "等级 ", //主界面及建筑
     "Achievement Points: ": "成就点数：", //成就
-    "You unlocked an achievement: ": "你解锁了成就：", //成就
+    "You unlocked an achievement: ": "您解锁了成就：", //成就
     "Bonus Speed Rune Levels: ": "加速符文额外等级：", //符文等
     "Bonus Duplication Rune Levels: ": "重叠符文额外等级：", //符文等
     "Bonus Prism Rune Levels: ": "棱柱符文额外等级：", //符文等
@@ -2295,6 +2339,19 @@ var cnRegReplace = new Map([
     [/^Potions currently give (.+)x items!$/, '药剂的效果变为了$1倍！'], //奇点
     [/^You feel motivated enough to complete (.+) more Reincarnation Challenges, and (.+) more Ascension Challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
     [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点
+    [/^Octeract Gain \+(.*)$/, '惊奇八阶立方获取数量增加$1'], //奇点
     [/^You can buy Golden Quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) Golden Quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
+    [/^Octeract Gain is increased by (.+)%.$/, '惊奇八阶立方获取数量增加$1%。'], //奇点
+    [/^Quark gain is increased by (.+)%.$/, '夸克获取数量增加$1%。'], //奇点
+    [/^Corruption level cap is increased by (.+).$/, '腐化等级上限增加$1。'], //奇点
+    [/^Golden Quarks are (.+)% cheaper!$/, '购买金夸克的花费减少了$1%！'], //奇点
+    [/^Export quarks \+(.*)$/, '导出夸克奖励增加$1'], //奇点
+    [/^Code 'daily' gives \+(.+)% more GQ upgrades per use.$/, 'Daily代码可以额外提供$1%的免费金夸克升级。'], //奇点，前置
+    [/^Code 'daily' gives \+(.+) GQ upgrades per use.$/, 'Daily代码可以额外提供$1级免费金夸克升级。'], //奇点
+    [/^Quark Hepteract DR \+(.+).$/, '惊奇七阶立方·夸克超过软上限后的指数增加$1。'], //奇点
+    [/^Global Speed per singularity \+(.*)$/, '每次奇点使全局速度增加$1'], //奇点
+    [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
+    [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
+    [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶立方获取数量增加$1'], //奇点
 ]);

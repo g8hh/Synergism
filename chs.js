@@ -1447,7 +1447,7 @@ var cnItems = {
     'Load': '载入',
     'This Ascension\'s climate raises Ant production to the power of': '此飞升的气候使蚂蚁产量变为蚂蚁产量^',
     'However, it also multiplies Rune Spirit Effects by': '但它也会使符文魂灵效果乘以',
-    'You have': '您有',
+    'You have': '您拥有',
     ' Wow! Cubes in the Ascension bank. Gain more by finishing Challenges! Ascend to redeem them.': '个惊奇方盒还存在飞升库中。完成更多挑战，以获得更多惊奇方盒！飞升后才可以获得它们。',
     'Your Ascension Score is': '您的飞升分数为',
     ' (base) *': '(基础值)*',
@@ -1515,7 +1515,7 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Current Theme': '当前主题',
     'Dark Mode': '黑暗模式',
-    'You\'re playing v2.9.9 Liquidation - The Reality Update pt.1 [Last Update: 7:36 UTC 29-Jun-2022].': '您目前玩的版本为V2.9.9 清仓 - 现实升级第一部分 [2022年6月29日 UTC 7:36更新]。',
+    'You\'re playing v2.9.10 - The Alternate Reality [Last Update: 6:12 UTC 30-Jul-2022].': '您目前玩的版本为V2.9.10 - 另一个现实 [2022年7月30日 UTC 6:12更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1600,11 +1600,13 @@ var cnItems = {
     'Powder Bonus': '超通量粉加成',
     'Achievement 266 Reward': '成就266奖励',
     'Singularity Bonus': '奇点加成',
-    'Singularity 5 Milestone': '奇点5里程碑',
-    'Singularity 20 Milestone': '奇点20里程碑',
+    'Singularity Milestones': '奇点里程碑',
     'Cookie 3 Bonus': '饼干升级3加成',
     'Cookie 18 Bonus': '饼干升级18加成',
     'All Pack Bonuses': '所有礼包加成',
+    'Octeract Starter Pack': '八阶立方新手大礼包',
+    'Quark Oct Bonus': '惊奇八阶立方·夸克加成',
+    'Total Octeract Bonus': '惊奇八阶立方数量加成',
     'TOTAL QUARK MULTIPLIER': '全局夸克总倍率',
     'Global Cube Multipliers': '所有类型的方盒及立方倍率',
     'Ascension Time Multiplier': '飞升时间倍率',
@@ -1757,10 +1759,17 @@ var cnItems = {
     'Gain +1% Offerings per level per Singularity. Putting the Singularity Debuff industry out of business.': '对于每次奇点，每级使祭品获取数量增加1%。让奇点削弱行业倒闭去吧。',
     'Gain +1% Obtainium per level per Singularity!!!': '对于每次奇点，每级使难得素获取数量增加1%！！！',
     'Your grandparents had to wait a full day for powder, but not you! Per level gain +1% of orbs to powder based on the conversion rate.': '您的爷爷奶奶可能还在等着一天结束获得超通量粉，但您已经可以直接获得了！每级可以将1%的超通量珠直接转化为超通量粉，且不减少超通量珠数量。',
-    'One would be advised not to touch this. +0.05% Octeracts per level, whatever those are...': '触碰它可不是什么明智之举。每级使八阶立方获取数量增加0.05%，但这些是……',
+    'One would be advised not to touch this. +0.1% Octeracts per level, whatever those are...': '触碰它可不是什么明智之举。每级使八阶立方获取数量增加0.1%，但这些是……',
+    'Your grandparents had to bend dimensions to gain Challenge 15 score, but not you! Updates Challenge 15 Exponent every tick while in challenge 15!': '您的爷爷奶奶可能还要退出挑战才能获得挑战15指数，但您已经可以直接获得了！在挑战15中，每个时刻可以自动更新挑战15指数！',
+    '"Hey dude, get in this portal I built up last night in my shed!" said the Quack Merchant': '“喂，老兄，快进来，这是我昨天在棚子里鼓捣出的传送门！”夸克商人如是说',
+    'Did you know that after 1,000 Quark Hepteracts, their effect is raised to ^0.5? The Seal disapproves. Gain +2% to the diminishing return exponent.': '您知道当惊奇七阶立方·夸克超过1000库存后，它们的效果会变为0.5次方吗？印记表示反对。使它的效果指数增加2%。',
+    'After 1,024,000 Quark Hepts, their effect is raised to ^0.25!!! Nonsense. Gain +2% to all Quark Hept DRs.': '当惊奇七阶立方·夸克超过1024000库存后，它们的效果会变为0.25次方！！！简直是胡言乱语。使它的所有效果指数增加2%。',
+    'After ~100 million Quark Hepts, their effect is raised to ^0.16! Absolute rubbish. Gain +2% to all Quark Hept DRs, yet again.': '当惊奇七阶立方·夸克超过约一亿库存后，它们的效果会变为0.16次方！！！真的烂透了。使它的所有效果指数再次增加2%。',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
+    'CURRENT Effect: Challenge 15 Exponent is  automatically gained!': '当前效果：可以自动更新挑战15指数了！',
+    'CURRENT Effect: Challenge 15 Exponent is NOT automatically gained!': '当前效果：不可以自动更新挑战15指数！',
     'You can\'t purchase Offering Potions because you already have the max level!': '您无法购买祭品药剂，因为它的数量已经达到上限了！',
     'You can\'t purchase Obtainium Potions because you already have the max level!': '您无法购买难得素药剂，因为它的数量已经达到上限了！',
     'You can\'t purchase Offering Potions because you don\'t have enough Quarks!': '您无法购买祭品药剂，因为您的夸克不够了！',
@@ -1779,6 +1788,7 @@ var cnItems = {
     //#region 奇点
     'Penalties': '惩罚',
     'Perks': '特权',
+    'Octeracts': '惊奇八阶立方',
     'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
     'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',
     'You\'re too powerful for this current universe. The multiverse of Synergism is truly endless, but out there are even more challenging universes parallel to your very own.': '这个宇宙已经容纳不了您的力量了。协同放置的多元宇宙可谓是无穷无尽，但对您现在这个宇宙来说，还有更多更具挑战性的平行宇宙。',
@@ -1791,12 +1801,13 @@ var cnItems = {
     ', and have': '，并拥有',
     'Antiquities of Ant God is  purchased. Penalties are  dispelled!': '蚁神之古物已购买。奇点相关惩罚已驱散！',
     'Antiquities of Ant God is NOT purchased. Penalties are NOT dispelled!': '蚁神之古物未购买。奇点相关惩罚未驱散！',
+    ' (Softcapped': ' (已达软上限',
     'Golden Quarks I': '金夸克 I',
     'In the future, you will gain 5% more Golden Quarks on Singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.': '每级使进入奇点的金夸克获取数量增加5%！同时每级使商店购买金夸克的花费减少500。',
     'Golden Quarks II': '金夸克 II',
     'If you buy this, you will gain 2% more Golden Quarks on Singularities. This also reduces the cost to buy Golden Quarks in the shop by 200 per level. Stacks with the first upgrade.': '每级使进入奇点的金夸克获取数量增加2%。同时每级使商店购买金夸克的花费减少200。效果与第一个升级叠加。',
     'Golden Quarks III': '金夸克 III',
-    'If you buy this, you will gain 1 Golden Quark per hour from Exports. Also reduces the cost to buy Golden Quarks in the shop by 1,000 per level.': '购买后，每级使每小时导出存档奖励增加1金夸克。同时每级使商店购买金夸克的花费减少1000。',
+    'If you buy this, you will gain Golden Quarks per hour from Exports. Leveling up gives (level) additional per hour!': '购买后，每小时导出存档奖励还会增加金夸克。每级使每小时导出存档的金夸克奖励增加下一级等级的数值！',
     'Starter Pack': '新手大礼包',
     'Buy this! Buy This! Cube gain is permanently multiplied by 5, and gain 6x the Obtainium and Offerings from all sources, post-corruption.': '买这个就对了！使所有类型的方盒及立方获取数量乘以5，并使最终难得素获取数量和祭品获取数量(计算腐化后)变为6倍。',
     'You have unlocked a 5x multiplier to Cubes and 6x multiplier to Obtainium and Offerings.': '您已使所有类型的方盒及立方获取数量乘以5，最终难得素获取数量和祭品获取数量变为6倍。',
@@ -1847,14 +1858,14 @@ var cnItems = {
     'Burn some more Golden Quarks! +8% gained Cubes per level.': '再挥霍一些金夸克吧！每级使所有类型的方盒及立方获取数量永久增加8%。',
     'Cube Inferno': '方盒炼狱',
     'Even Dante is impressed. +4% gained Cubes per level.': '连但丁都会为之而惊讶。每级使所有类型的方盒及立方获取数量永久增加4%。',
-    'Octeracts ;) (WIP': '惊奇八阶立方;)(未实装',
     'Hey!!! What are you trying to do?!?': '喂！！！您到底要做什么？！？',
     'You have bought into the Octeract hype.': '您已解锁八阶立方。',
     'You have not bought into the Octeract hype.': '您未解锁八阶立方。',
-    'Offering Lootzifer (WIP': '祭品自动获取(未实装',
-    'Black Magic. Don\'t make deals with the devil. Each second, you get +2% of Offering gain automatically per level. Also +10% Offerings!': '利用黑暗魔法强化自身。别和魔鬼做交易。每级使您自动获得祭品获取数量2%的祭品。另外还使祭品获取数量增加10%！',
+    'Offering Lootzifer (Depreciated': '祭品自动获取(贬值',
+    'Black Magic. Don\'t make deals with the devil.': '利用黑暗魔法强化自身。别和魔鬼做交易。',
+    'No one can speak to Lootzifer at this moment.': '现在谁也没法获得自动获取。',/*
     'You have made a deal with the devil Lootzifer.': '您已与魔鬼做交易获得祭品自动获取的能力。',
-    'You have not made a deal with the devil Lootzifer.': '您未与魔鬼做交易获得祭品自动获取的能力。',
+    'You have not made a deal with the devil Lootzifer.': '您未与魔鬼做交易获得祭品自动获取的能力。',*/
     'Intermediate Pack': '中级礼包',
     'Double Global Speed, Multiply Ascension speed by 1.5, and gain +2% Quarks forever. Yum... 2% Quark Milk.': '使全局速度翻倍，飞升的速度变为1.5倍，夸克获取数量增加2%。',
     'You have upgraded your package to intermediate.': '您已将礼包升级为中级。',
@@ -1879,6 +1890,10 @@ var cnItems = {
     'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.': '印记商人想要抛售掉一些奇异商品。价格的确是有点高昂了。大甩卖大概不是这个样子的。',
     'You have triggered the Liquidation event!': '您已开启清仓大甩卖！',
     'You have not triggered the Liquidation event!': '您未开启清仓大甩卖！',
+    'QUAAAACK': '夸夸夸夸克',
+    'QUAAAAAAAACK. The Merchant has gone crazy for your QUARKS!': '夸夸夸夸夸夸夸夸克。商人已经对夸克痴狂了！',
+    'You have triggered the QUACKSTRAVAGANZA!!': '您已开启夸克大盛典！！',
+    'You have not triggered the QUACKSTRAVAGANZA!!': '您未开启夸克大盛典！！',
     'Potion Decanter of Enlightenment': '启迪药水瓶',
     'Purported to actually be the fountain of youth, this item powers up potions considerably!': '据称它其实是不老泉水，它可以极大地强化药剂！',
     'Bigger Challenge Caps': '挑战上限增加',
@@ -1902,6 +1917,10 @@ var cnItems = {
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
     'gold text': '金色文本',
     ' were added or improved in this Singularity': '的特权在本次奇点增加或者加强',
+    ' Octeracts!': '惊奇八阶立方！',
+    ' Total Generated': '共产生',
+    ' //3-7 Dimensional Cubes +': '//惊奇方盒至惊奇七阶立方获取数量增加',
+    ' //Quarks +': '//夸克获取数量增加',
     //#endregion
 
     //原样
@@ -2174,13 +2193,13 @@ var cnRegReplace = new Map([
     [/^Current Effect: Uncorruptable Accelerators \+(.*)$/, '当前效果：不受腐化影响的加速器数量+$1'], //惊奇方盒
     [/^Current Effect: Accelerator Boosts \+(.*)$/, '当前效果：加速器加成数量+$1'], //惊奇方盒
     [/^Current Effect: Uncorruptable Multipliers \+(.*)$/, '当前效果：不受腐化影响的加倍器数量+$1'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e115 Obtainium$/, '锻造一个将消耗$1七阶立方及1e115难得素'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e80 Offerings.$/, '锻造一个将消耗$1七阶立方及1e80祭品'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts, 1e11 Platonic Cubes and 1e22 Cubes.$/, '锻造一个将消耗$1七阶立方，1e11 PLATONIC方盒及1e22惊奇方盒'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 69 Wow! Cubes \(lol$/, '锻造一个将消耗$1七阶立方及69惊奇方盒(笑'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e14 Wow!$/, '锻造一个将消耗$1七阶立方及1e14惊奇'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e10 Hypercubes$/, '锻造一个将消耗$1七阶立方及1e10惊奇五阶立方'], //惊奇方盒
-    [/^One of these will cost you (.*) Hepteracts and 1e130 Obtainium$/, '锻造一个将消耗$1七阶立方及1e130难得素'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and (.+) Obtainium$/, '锻造一个将消耗$1七阶立方及$2难得素'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and (.+) Offerings.$/, '锻造一个将消耗$1七阶立方及$2祭品'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts, (.+) Platonic Cubes and (.+) Cubes.$/, '锻造一个将消耗$1七阶立方，$2 PLATONIC方盒及$3惊奇方盒'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and (.+) Wow! Cubes \(lol$/, '锻造一个将消耗$1七阶立方及$2惊奇方盒(笑'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and (.+) Wow!$/, '锻造一个将消耗$1七阶立方及$2惊奇'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and (.+) Hypercubes$/, '锻造一个将消耗$1七阶立方及$2惊奇五阶立方'], //惊奇方盒
+    [/^One of these will cost you (.*) Hepteracts and (.+) Obtainium$/, '锻造一个将消耗$1七阶立方及$2难得素'], //惊奇方盒
     [/^Orb Effect: Opening Cubes gives (.*)% more$/, '超通量珠效果：开启方盒及立方时额外获得$1%'], //惊奇方盒
     [/^Orbs Purchased Today: (.*).$/, '今日购买的超通量珠数量：$1。'], //惊奇方盒
     [/^You have purchased (.*) Overflux Orbs \[\+(.*)% to effect\]. You have also gained (.+) powder immediately, thanks to your shop upgrades. Enjoy!$/, '您购买了$1超通量珠[效果增加$2%]。由于商店升级的效果，您还立即获得了$3超通量粉。祝您开心！'], //惊奇方盒
@@ -2260,6 +2279,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Obtainium \+(.+)%!$/, '当前效果：难得素的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Every (.+) purchased orbs grants 1 powder.$/, '当前效果：每锻造$1超通量珠就可以获得1超通量粉块。'], //商店
     [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶立方获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: You can warp (.+) extra times.$/, '当前效果：您可以额外进行$1次时空跃迁。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^Do you wish to start singularity #(.+)\? Your next universe is harder but you will gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点
@@ -2274,7 +2294,7 @@ var cnRegReplace = new Map([
     [/^Permanently gain (.+)% more Cubes.$/, '使所有类型的方盒及立方获取数量增加$1%。'], //奇点
     [/^Potions currently give (.+)x items!$/, '药剂的效果变为了$1倍！'], //奇点
     [/^You feel motivated enough to complete (.+) more Reincarnation Challenges, and (.+) more Ascension Challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
-    [/^The DR exponent is now (.+) larger!$/, '超过软上限后的指数增加了$1！'], //奇点
+    [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点
     [/^You can buy Golden Quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) Golden Quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
 ]);

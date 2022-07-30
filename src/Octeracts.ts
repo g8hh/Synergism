@@ -88,10 +88,10 @@ export class OcteractUpgrade extends DynamicUpgrade {
 
         return `<span style="color: gold">${this.name}</span>
                 <span style="color: lightblue">${this.description}</span>
-                <span style="color: ${color}"> Level ${this.level}${maxLevel}${freeLevelInfo}</span>
+                <span style="color: ${color}">等级 ${this.level}${maxLevel}${freeLevelInfo}</span>
                 <span style="color: gold">${this.getEffect().desc}</span>
-                Cost for next level: ${format(costNextLevel,2,true, true, true)} Octeracts.
-                Spent Octeracts: ${format(this.octeractsInvested, 2, true, true, true)}`
+                下一级的花费：${format(costNextLevel,2,true, true, true)}惊奇八阶立方。
+                已花费惊奇八阶立方数量：${format(this.octeractsInvested, 2, true, true, true)}`
     }
 
     public updateUpgradeHTML(): void {

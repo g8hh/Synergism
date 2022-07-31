@@ -812,7 +812,7 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [5, 20, 35, 50, 65, 80, 90, 100],
         description: (n: number, levels: number[]) => {
             if (n >= levels[7]) {
-                return '夸克获取数量额外八次增加5%！(相互叠乘)是不是很像八阶立方了？'
+                return '夸克获取数量额外八次增加5%！(相互叠乘)是不是很像八阶方块了？'
             } else if (n >= levels[6]) {
                 return '夸克获取数量额外七次增加5%！(相互叠乘)'
             } else if (n >= levels[5]) {
@@ -906,7 +906,7 @@ export const singularityPerks: SingularityPerk[] = [
                 }
             }
 
-            return `Derpsmith祝福了您，每次奇点可以多获得${counter}%惊奇八阶立方！`
+            return `Derpsmith祝福了您，每次奇点可以多获得${counter}%惊奇八阶方块！`
         }
     }
 ]

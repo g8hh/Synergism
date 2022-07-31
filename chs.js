@@ -1286,7 +1286,7 @@ var cnItems = {
     '[Cx17] What the hell are in these??? Anyway, Metaphysics Talisman level cap is increased by 1,337.': '[Cx17]这里面都是什么玩意？？？不管了，总之玄学护身符的等级上限增加1337。',
     '[Cx18] What the heck! These aren\'t even cookies. +0.01% Quarks per level purchased of this upgrade. +5% more at level 1,000!': '[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.01%，达到等级上限1000时可以使夸克获取数量再增加5%！',
     '[Cx19] Cookies that you\'ll never remember again. +12% Golden Quarks this Singularity.': '[Cx19]永远无法再回忆起来的饼干。使本次进入奇点的金夸克获取数量增加12%。',
-    '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +0.01% more Octeracts on Ascension if every corruption is set to level 14.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果腐化等级全部为14，则使飞升时惊奇八阶立方产量增加0.01%。',
+    '[Cx20] The pinnacle of baking. Nothing you\'ll eat will taste better than this. Gain +0.01% more Octeracts on Ascension if every corruption is set to level 14.': '[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果腐化等级总和(不考虑视为增加的等级)超过14×8，则使惊奇八阶方块产量增加0.01%。',
     'Wow! Hover over the upgrades you want to look at!': '真惊奇！鼠标停在您想要的升级上可以看到详情！',
     'Upgrade: 1 Level wow': '升级：1级(惊奇)',
     'Upgrade: MAX [if possible wow]': '升级：最大[尽可能(惊奇)]',
@@ -1604,15 +1604,15 @@ var cnItems = {
     'Cookie 3 Bonus': '饼干升级3加成',
     'Cookie 18 Bonus': '饼干升级18加成',
     'All Pack Bonuses': '所有礼包加成',
-    'Octeract Starter Pack': '八阶立方新手大礼包',
-    'Quark Oct Bonus': '惊奇八阶立方·夸克加成',
-    'Total Octeract Bonus': '惊奇八阶立方数量加成',
+    'Octeract Starter Pack': '八阶方块新手大礼包',
+    'Quark Oct Bonus': '惊奇八阶方块·夸克加成',
+    'Total Octeract Bonus': '惊奇八阶方块数量加成',
     'TOTAL QUARK MULTIPLIER': '全局夸克总倍率',
     'Global Cube Multipliers': '所有类型的方盒及立方倍率',
     'Ascension Time Multiplier': '飞升时间倍率',
     'Sun and Moon Achievements': '[烈日千阳]及[静月千阴]成就',
     'Speed Achievement': '成就240的全局速度加成',
-    'Challenge 15 All Cube Bonus': '挑战15的所有类型的方盒及立方产量加成',
+    'Challenge 15 All Cube Bonus': '挑战15-所有类型的方盒及立方产量加成',
     'Rune 6 - Infinite Ascent': '符文6 - 无限晋升',
     'Platonic Beta': 'Platonic Beta升级',
     'Platonic Omega': 'Platonic Omega升级',
@@ -1670,11 +1670,11 @@ var cnItems = {
     'Achievement': '成就',
     'Platonic Upgrade 16 [4x1]': 'PLATONIC方盒升级16[4x1]',
     'FINAL COEFFICIENT': '最终系数',
-    'Octeract Multipliers': '八阶立方倍率',
+    'Octeract Multipliers': '八阶方块倍率',
     'Season Pass Y': '季票 Y',
     'Season Pass Z': '季票 Z',
     'Season Pass Lost': '季票 遗物',
-    'TOTAL OCTERACT MULTIPLIER': '八阶立方总倍率',
+    'TOTAL OCTERACT MULTIPLIER': '八阶方块总倍率',
     'You have unlocked all reward types from Challenge 15!': '您解锁了挑战15的所有奖励类型！',
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
@@ -1739,7 +1739,7 @@ var cnItems = {
     'Are your Quark gains from Tesseracts wimpy? Well, buy this for +50% Quarks from opening Wow! Tesseracts, forever!': '是不是觉得开启惊奇超立方获得的夸克太少了？此项升级可以使开启惊奇超立方获得的夸克永久增加50%！',
     'Are your Quark gains from Hypercubes wimpy? Well, buy this for +50% Quarks from opening Wow! Hypercubes, forever!': '是不是觉得开启惊奇五阶立方获得的夸克太少了？此项升级可以使开启惊奇五阶立方获得的夸克永久增加50%！',
     'Five times the price gouge, twice the fun! +1% Wow! Hypercubes and Platonic Cubes per level.': '价格五倍，欢乐成对！每级使五阶立方和PLATONIC方盒获取数量增加1%！',
-    'Okay, now this is just ridiculous. +1% Wow! Hepteracts and Octeracts per level!': '好吧，越来离谱了。每级使七阶立方和八阶立方获取数量增加1%！',
+    'Okay, now this is just ridiculous. +1% Wow! Hepteracts and Octeracts per level!': '好吧，越来离谱了。每级使七阶立方和八阶方块获取数量增加1%！',
     'You know, those Ascensions are kinda slow. Why don\'t I give you a +1% speedup to the timer per level?': '您知道的，飞升慢的很。不如，每级使飞升的速度增加1%？',
     'Okay, for an exorbitant amount, you can obtain the 6th rune, which gives +35% Quarks and +125% all Cube types when maxed!': '嗯，支付高昂的费用以后，您就可以获得第六个符文了，满级时可以增加35%夸克获取数量及125%所有类型的方盒及立方获取数量!',
     'The PL-AT can do addition in the blink of an eye. Not much else though. +14% Quarks from using code \'add\' per level, the first level provides the answer and the final level does it automatically!': 'PL-AT在眨眼间就能做完加法。不过它也没其他什么用途了。每级使您使用“add”代码获取的夸克数量增加14%，另外，第一级可以直接显示答案，而最后一级可以自动完成加法！',
@@ -1749,8 +1749,8 @@ var cnItems = {
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
     'Okay, fine. Here\'s another +0.5% Ascension Speed per level, stacks multiplicatively with the first upgrade!': '嗯，很好。飞升的速度每级再增加0.5%，效果与第一个升级叠乘！',
     'OKAY. FINE. Here\'s yet ANOTHER +1.5% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1.5%，效果与之前类似，也是叠乘计算。',
-    'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒及立方获取数量增加0.5%。',
-    'This one is arguably very good. Gain +1% ALL Cubes per level, per Singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒及立方获取数量增加1%！',
+    'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒、立方和方块获取数量增加0.5%。',
+    'This one is arguably very good. Gain +1% ALL Cubes per level, per Singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒、立方和方块获取数量增加1%！',
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
     'Completing an Ascension Challenge doesn\'t cause a reset (if retry is enabled) and you gain 1 more completion per tick per Singularity.': '只要开启重新尝试挑战，飞升挑战将不再重置资源，且每次奇点可以使每个时刻多完成1次超越和转世挑战。',
     'First up on the menu, why not gain +0.2% Quarks from Cube opening per level?': '兵马未动，粮草先行，每级使开启方盒及立方的夸克获取数量增加0.2%。',
@@ -1759,7 +1759,7 @@ var cnItems = {
     'Gain +1% Offerings per level per Singularity. Putting the Singularity Debuff industry out of business.': '对于每次奇点，每级使祭品获取数量增加1%。让奇点削弱行业倒闭去吧。',
     'Gain +1% Obtainium per level per Singularity!!!': '对于每次奇点，每级使难得素获取数量增加1%！！！',
     'Your grandparents had to wait a full day for powder, but not you! Per level gain +1% of orbs to powder based on the conversion rate.': '您的爷爷奶奶可能还在等着一天结束获得超通量粉，但您已经可以直接获得了！每级可以将1%的超通量珠直接转化为超通量粉，且不减少超通量珠数量。',
-    'One would be advised not to touch this. +0.1% Octeracts per level, whatever those are...': '触碰它可不是什么明智之举。每级使八阶立方获取数量增加0.1%，但这些是……',
+    'One would be advised not to touch this. +0.1% Octeracts per level, whatever those are...': '触碰它可不是什么明智之举。每级使八阶方块获取数量增加0.1%，但这些是……',
     'Your grandparents had to bend dimensions to gain Challenge 15 score, but not you! Updates Challenge 15 Exponent every tick while in challenge 15!': '您的爷爷奶奶可能还要退出挑战才能获得挑战15指数，但您已经可以直接获得了！在挑战15中，每个时刻可以自动更新挑战15指数！',
     '"Hey dude, get in this portal I built up last night in my shed!" said the Quack Merchant': '“喂，老兄，快进来，这是我昨天在棚子里鼓捣出的传送门！”夸克商人如是说',
     'Did you know that after 1,000 Quark Hepteracts, their effect is raised to ^0.5? The Seal disapproves. Gain +2% to the diminishing return exponent.': '您知道当惊奇七阶立方·夸克超过1000库存后，它们的效果会变为0.5次方吗？印记表示反对。使它的效果指数增加2%。',
@@ -1788,7 +1788,7 @@ var cnItems = {
     //#region 奇点
     'Penalties': '惩罚',
     'Perks': '特权',
-    'Octeracts': '惊奇八阶立方',
+    'Octeracts': '惊奇八阶方块',
     'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
     'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',
     'You\'re too powerful for this current universe. The multiverse of Synergism is truly endless, but out there are even more challenging universes parallel to your very own.': '这个宇宙已经容纳不了您的力量了。协同放置的多元宇宙可谓是无穷无尽，但对您现在这个宇宙来说，还有更多更具挑战性的平行宇宙。',
@@ -1853,14 +1853,14 @@ var cnItems = {
     'Obtainium Tsunami': '难得素海啸',
     'A rising tide lifts all boats. +4% gained Obtainium per level.': '它卷起了所有船只。每级使难得素获取数量永久增加4%。',
     'Cube Flame': '方盒之焰',
-    'Upgrade this to get +2% Cubes per level, forever!': '购买后，每级使所有类型的方盒及立方获取数量永久增加2%！',
+    'Upgrade this to get +2% Cubes per level, forever!': '购买后，每级使所有类型的方盒、立方和方块获取数量永久增加2%！',
     'Cube Blaze': '方盒烈火',
-    'Burn some more Golden Quarks! +8% gained Cubes per level.': '再挥霍一些金夸克吧！每级使所有类型的方盒及立方获取数量永久增加8%。',
+    'Burn some more Golden Quarks! +8% gained Cubes per level.': '再挥霍一些金夸克吧！每级使所有类型的方盒、立方和方块获取数量永久增加8%。',
     'Cube Inferno': '方盒炼狱',
-    'Even Dante is impressed. +4% gained Cubes per level.': '连但丁都会为之而惊讶。每级使所有类型的方盒及立方获取数量永久增加4%。',
+    'Even Dante is impressed. +4% gained Cubes per level.': '连但丁都会为之而惊讶。每级使所有类型的方盒、立方和方块获取数量永久增加4%。',
     'Hey!!! What are you trying to do?!?': '喂！！！您到底要做什么？！？',
-    'You have bought into the Octeract hype.': '您已解锁八阶立方。',
-    'You have not bought into the Octeract hype.': '您未解锁八阶立方。',
+    'You have bought into the Octeract hype.': '您已解锁八阶方块。',
+    'You have not bought into the Octeract hype.': '您未解锁八阶方块。',
     'Offering Lootzifer (Depreciated': '祭品自动获取(贬值',
     'Black Magic. Don\'t make deals with the devil.': '利用黑暗魔法强化自身。别和魔鬼做交易。',
     'No one can speak to Lootzifer at this moment.': '现在谁也没法获得自动获取。',/*
@@ -1883,7 +1883,7 @@ var cnItems = {
     'You have mastered your inner chakras.': '您已能开宗立派。',
     'You have not mastered your inner chakras.': '您未能开宗立派。',
     'Divine Pack': '神圣礼包',
-    'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14.': '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级全部为14，则使八阶立方获取数量变为7.77倍。',
+    'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14.': '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级总和(不考虑视为增加的等级)超过14×8，则使惊奇八阶方块获取数量变为7.77倍。',
     'You have found the reason for existence .': '您已发觉生存的理由',
     'You have not found the reason for existence  just yet.': '您暂未发觉生存的理由。',
     'Shop Liquidation Sale': '商店清仓大甩卖',
@@ -1908,16 +1908,16 @@ var cnItems = {
     'Still not the right game. Same as the previous upgrade.': '还是走错游戏了。效果与之前类似。',
     'I wish my Quark Hepteract was marginally better III.': '我希望惊奇七阶立方·夸克的效果略微增加 III。',
     'I AM NOT THE GODMOTHER YOU ARE LOOKING FOR, DYLAN!': '我！才！不！是！那！个！游！戏！里！的！教！母！(译者注：指NGU的Titan: Godmother)',
-    'Octeract Absinthe': '惊奇八阶立方苦艾酒',
-    'You would have never known this tonic can boost your Octeracts! [+1% per level, in fact!]': '想不到吧，这玩意可以增加惊奇八阶立方的获取数量[事实上每级可以使它增加1%！]',
+    'Octeract Absinthe': '惊奇八阶方块苦艾酒',
+    'You would have never known this tonic can boost your Octeracts! [+1% per level, in fact!]': '想不到吧，这玩意可以增加惊奇八阶方块的获取数量[事实上每级可以使它增加1%！]',
     'Pieces of Eight': '八个里亚尔',
-    'There is indeed eight of them, but each only gives +0.5% bonus, so each level gives +4% Octeract per level.': '确实有八个，但每个的加成只有0.5%，所以合起来，每级可以使惊奇八阶立方的获取数量增加4%。',
+    'There is indeed eight of them, but each only gives +0.5% bonus, so each level gives +4% Octeract per level.': '确实有八个，但每个的加成只有0.5%，所以合起来，每级可以使惊奇八阶方块的获取数量增加4%。',
     'The Obelisk Shaped like an Octagon.': '八角方尖碑',
-    'Platonic had to reach pretty far here. +2% Octeracts yeah!': 'PLATONIC要走很远了。每级可以使惊奇八阶立方的获取数量增加2%！',
+    'Platonic had to reach pretty far here. +2% Octeracts yeah!': 'PLATONIC要走很远了。每级可以使惊奇八阶方块的获取数量增加2%！',
     'Octahedral Synthesis': '八面合成',
-    'How does this even work!?? +1% Octeracts, you bet!': '这到底是怎么生效的！？？每级可以使惊奇八阶立方的获取数量增加1%！',
+    'How does this even work!?? +1% Octeracts, you bet!': '这到底是怎么生效的！？？每级可以使惊奇八阶方块的获取数量增加1%！',
     'The Eighth Wonder of the World': '世界第八大奇迹',
-    'is the wonder of the world we live in. [+0.5% Octeracts. Platonic, this is so stingy! but, he does not care one bit.]': '正是我们所生所处的世界。[每级使惊奇八阶立方的获取数量增加0.5%。PLATONIC真是太小气了！但看起来他对此也并不在意。]',
+    'is the wonder of the world we live in. [+0.5% Octeracts. Platonic, this is so stingy! but, he does not care one bit.]': '正是我们所生所处的世界。[每级使惊奇八阶方块的获取数量增加0.5%。PLATONIC真是太小气了！但看起来他对此也并不在意。]',
     'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
     'you\'re not powerful enough to purchase this yet.': '您还不够强大，无法升级。',
     'You cannot afford this upgrade. Sorry!': '您无法承担该升级的花费。很遗憾！',
@@ -1927,17 +1927,17 @@ var cnItems = {
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
     'gold text': '金色文本',
     ' were added or improved in this Singularity': '的特权在本次奇点增加或者加强',
-    ' Octeracts!': '惊奇八阶立方！',
+    ' Octeracts!': '惊奇八阶方块！',
     ' Total Generated': '共产生',
     ' //3-7 Dimensional Cubes +': '//惊奇方盒至惊奇七阶立方获取数量增加',
     ' //Quarks +': '//夸克获取数量增加',
-    'Octeracts for Dummies': '萌新的惊奇八阶立方',
-    'Hello... I Am Derpsmith... The Ancestor Of Ant God... I Did Not Expect You To Get Here. Here Is 25% More Quarks, 20% More Octeracts, And 100,000x Ant Speed...': '您好……我是Derpsmith……蚁神的先祖……没想到您能走到这一步。该升级可以使您的夸克获取数量增加25%，惊奇八阶立方获取数量增加20%，蚂蚁速度变为100000倍……',
+    'Octeracts for Dummies': '萌新的惊奇八阶方块',
+    'Hello... I Am Derpsmith... The Ancestor Of Ant God... I Did Not Expect You To Get Here. Here Is 25% More Quarks, 20% More Octeracts, And 100,000x Ant Speed...': '您好……我是Derpsmith……蚁神的先祖……没想到您能走到这一步。该升级可以使您的夸克获取数量增加25%，惊奇八阶方块获取数量增加20%，蚂蚁速度变为100000倍……',
     'You have  paid your respects to Derpsmith.': '您已向Derpsmith致敬。',
     'You have not paid your respects to Derpsmith.': '您未向Derpsmith致敬。',
-    'Octeract Cogenesis': '惊奇八阶立方同生',
-    'Have you despised how slow these damn things are? Gain 1% more of them per level! Simple.': '您有没有感觉这些玩意慢得捉急？每级可以使惊奇八阶立方获取数量增加1%！很简单吧。',
-    'Quark Octeract': '惊奇八阶立方·夸克',
+    'Octeract Cogenesis': '惊奇八阶方块同生',
+    'Have you despised how slow these damn things are? Gain 1% more of them per level! Simple.': '您有没有感觉这些玩意慢得捉急？每级可以使惊奇八阶方块获取数量增加1%！很简单吧。',
+    'Quark Octeract': '惊奇八阶方块·夸克',
     'An altered forme of the hepteract, this gives a 1% Quark Bonus per level without Diminishing Return.': '惊奇七阶立方的变体版本，每级使夸克获取数量增加1%，且效果不衰减。',
     'EXTRA CHONKY Corruptions': '更多腐化',
     'Adds one level to the cap on corruptions. Derpsmith approves.': '使腐化等级上限再增加1级。Derpsmith表示赞同。',
@@ -1964,7 +1964,7 @@ var cnItems = {
     'Voided Warranty': '保修失效',
     'Gain +1% Ascension Count per level, with a 2% bonus for every 10 levels.': '每级使飞升次数获取数量增加1%，每10级还可以使飞升次数获取数量额外增加2%。',
     'Digital Octeract Accumulator': '八进制数码累加器',
-    'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶立方的获取数量增加1%！',
+    'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶方块的获取数量增加1%！',
     //#endregion
 
     //原样
@@ -2304,7 +2304,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+) Million. Past 60 completions of C9 or C10 the scaling multiplier is \[completions \* (.*)\]$/, '当前效果：挑战10的基础目标减少1e$1M。超过60次以后的挑战9或挑战10的挑战目标增长因子变为[挑战次数*$2]'], //商店
     [/^CURRENT Effect: \+(.+) Challenges per tick$/, '当前效果：每个时刻多完成$1次挑战'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Hypercubes and Platonic Cubes.$/, '当前效果：飞升的五阶立方和PLATONIC方盒获取数量增加$1%。'], //商店
-    [/^CURRENT Effect: Ascensions give (.+)% more Hepteracts and Octarets.$/, '当前效果：飞升的七阶立方和八阶立方获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Ascensions give (.+)% more Hepteracts and Octarets.$/, '当前效果：飞升的七阶立方和八阶方块获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Ascension timer runs (.+)% faster.$/, '当前效果：飞升的速度增加$1%。'], //商店
     [/^CURRENT Effect: Code 'add' provides (.+)% more Quarks. AutoAnswer: true, AutoFill: true$/, '当前效果：使用“add”代码获取的夸克数量增加$1%。显示答案：生效，自动回答：生效'], //商店
     [/^CURRENT Effect: Code 'add' provides (.+)% more Quarks. AutoAnswer: true, AutoFill: false$/, '当前效果：使用“add”代码获取的夸克数量增加$1%。显示答案：生效，自动回答：未生效'], //商店
@@ -2315,14 +2315,14 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: \+(.+)% Overflux Powder gained when Overflux Orbs expire.$/, '当前效果：超通量粉转换效率增加$1%。'], //商店
     [/^CURRENT Effect: \+(.+)% faster Ascensions!$/, '当前效果：飞升的速度增加$1%！'], //商店
     [/^CURRENT Effect: \+(.+)% faster Ascensions! FOREVER!$/, '当前效果：飞升的速度增加$1%！效果永久生效！'], //商店
-    [/^CURRENT Effect: \+(.+)% more Cubes on Ascension.$/, '当前效果：所有类型的方盒及立方获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: \+(.+)% more Cubes on Ascension.$/, '当前效果：所有类型的方盒、立方和方块获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Offering, Obtainium \+(.+)%!$/, '当前效果：难得素和祭品的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Opening any cube gives \+(.+)% Quarks!$/, '当前效果：开启方盒及立方的夸克获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Ascension Speed \+(.+)%!$/, '当前效果：飞升的速度增加$1%！'], //商店
     [/^CURRENT Effect: Offerings \+(.+)%!$/, '当前效果：祭品的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Obtainium \+(.+)%!$/, '当前效果：难得素的获取数量增加$1%！'], //商店
     [/^CURRENT Effect: Every (.+) purchased orbs grants 1 powder.$/, '当前效果：每锻造$1超通量珠就可以获得1超通量粉块。'], //商店
-    [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶立方获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶方块获取数量增加$1%。'], //商店
     [/^CURRENT Effect: You can warp (.+) extra times.$/, '当前效果：您可以额外进行$1次时空跃迁。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
@@ -2339,10 +2339,10 @@ var cnRegReplace = new Map([
     [/^Potions currently give (.+)x items!$/, '药剂的效果变为了$1倍！'], //奇点
     [/^You feel motivated enough to complete (.+) more Reincarnation Challenges, and (.+) more Ascension Challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
     [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点
-    [/^Octeract Gain \+(.*)$/, '惊奇八阶立方获取数量增加$1'], //奇点
+    [/^Octeract Gain \+(.*)$/, '惊奇八阶方块获取数量增加$1'], //奇点
     [/^You can buy Golden Quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) Golden Quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
-    [/^Octeract Gain is increased by (.+)%.$/, '惊奇八阶立方获取数量增加$1%。'], //奇点
+    [/^Octeract Gain is increased by (.+)%.$/, '惊奇八阶方块获取数量增加$1%。'], //奇点
     [/^Quark gain is increased by (.+)%.$/, '夸克获取数量增加$1%。'], //奇点
     [/^Corruption level cap is increased by (.+).$/, '腐化等级上限增加$1。'], //奇点
     [/^Golden Quarks are (.+)% cheaper!$/, '购买金夸克的花费减少了$1%！'], //奇点
@@ -2353,5 +2353,5 @@ var cnRegReplace = new Map([
     [/^Global Speed per singularity \+(.*)$/, '每次奇点使全局速度增加$1'], //奇点
     [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
     [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
-    [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶立方获取数量增加$1'], //奇点
+    [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
 ]);

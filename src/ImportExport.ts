@@ -574,6 +574,10 @@ function dailyCodeFormatFreeLevelMessage(upgradeKey: string, freeLevelAmount: nu
     let CNNiceName = upgradeNiceName
     if (CNNiceName == 'Golden Quarks I'){
         CNNiceName = '金夸克 I'
+    } else if (CNNiceName == 'Golden Quarks II'){
+        CNNiceName = '金夸克 II'
+    } else if (CNNiceName == 'Golden Quarks III'){
+        CNNiceName = '金夸克 III'
     } else if (CNNiceName == 'Cube Flame'){
         CNNiceName = '方盒之焰'
     } else if (CNNiceName == 'Cube Blaze'){

@@ -1520,8 +1520,8 @@ var cnItems = {
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +40% Quarks, +40% Powder Conversion, +75% Ascension Speed, +175% Global Speed, +10% Ascension Score, +75% Ant Sacrifice rewards, +150% Offerings, +150% Obtainiums!': '当前加成：夸克获取数量增加40%，超通量粉转化效率增加40%，飞升的速度增加75%，全局速度增加175%，飞升分数增加10%，蚂蚁献祭奖励增加75%，祭品获取数量和难得素获取数量增加150%！',
-    '💗 Community Event! 💗 [Musical Link Here!]': '💗社区活动！💗[点击后链接向音乐！]',
+    'Current Buffs: +25% Quarks, +25% Powder Conversion, +50% Ascension Speed, +50% Global Speed, +15% Ascension Score, +100% Ant Sacrifice rewards, +100% Offering, +100% Obtainium, +25% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量增加25%，超通量粉转化效率增加25%，飞升的速度增加50%，全局速度增加50%，飞升分数增加15%，蚂蚁献祭奖励增加100%，祭品获取数量和难得素获取数量增加100%，惊奇八阶方块获取数量增加25%！',
+    '💗 Derpsmith Arrival Ceremony! 💗 [link!]': '💗Derpsmith降临仪式！💗[点击后链接向音乐！]',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1977,7 +1977,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sun Jul 03 2022 23:59:59 GMT+0800 (": "活动持续到2022年7月3日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Mon Aug 08 2022 23:59:59 GMT+0800 (": "活动持续到2022年8月8日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

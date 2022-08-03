@@ -5,10 +5,10 @@ import { DOMCacheGetOrSet } from './Cache/DOM';
 import { calculateSingularityDebuff } from './singularity';
 
 const platonicUpgradeDesc = [
-    '每有一级此升级，每级腐化就使飞升时方盒获取数量增加0.0075%！',
-    '每有一级此升级，每级腐化就使飞升时超立方获取数量增加0.015%！',
-    '每有一级此升级，每级腐化就使飞升时五阶立方获取数量增加0.045%！',
-    'Gain +2% Platonic Cubes per level! It is that simple.',
+    '每有一级此升级，每级腐化就使飞升时方盒获取数量增加0.0090%！',
+    '每有一级此升级，每级腐化就使飞升时超立方获取数量增加0.018%！',
+    '每有一级此升级，每级腐化就使飞升时五阶立方获取数量增加0.054%！',
+    'Gain +2.4% Platonic Cubes per level! It is that simple.',
     'C10 Exponent: 1.035 --> 1.0375, Constant tax exponent +0.10, 2x faster Constant production, +10% Quarks, +10 Reincarnation Challenge Cap, +5 Ascension Challenge Cap, 2x Obtainium and Offerings, ^1.10 coin gain in C15, as well +1 Corruption Cap Level!',
     'Multiplies Viscosity exponent by (1 + level/30), capacity of ^1 on Multipliers and Accelerators.',
     'Raises speed below 1x to the power of ^(1 - level/30).',
@@ -48,7 +48,7 @@ export const platUpgradeBaseCosts: Record<number, IPlatBaseCost> = {
         hypercubes: 1e5,
         platonics: 1e4,
         abyssals: 0,
-        maxLevel: 100
+        maxLevel: 125
     },
     2: {
         obtainium: 3e70,
@@ -58,7 +58,7 @@ export const platUpgradeBaseCosts: Record<number, IPlatBaseCost> = {
         hypercubes: 1e5,
         platonics: 1e4,
         abyssals: 0,
-        maxLevel: 100
+        maxLevel: 125
     },
     3: {
         obtainium: 1e71,
@@ -68,7 +68,7 @@ export const platUpgradeBaseCosts: Record<number, IPlatBaseCost> = {
         hypercubes: 1e7,
         platonics: 1e4,
         abyssals: 0,
-        maxLevel: 100
+        maxLevel: 125
     },
     4: {
         obtainium: 4e71,
@@ -78,7 +78,7 @@ export const platUpgradeBaseCosts: Record<number, IPlatBaseCost> = {
         hypercubes: 1e6,
         platonics: 1e6,
         abyssals: 0,
-        maxLevel: 100
+        maxLevel: 125
     },
     5: {
         obtainium: 1e80,

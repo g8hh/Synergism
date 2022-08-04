@@ -1065,6 +1065,8 @@ var cnItems = {
     'You can\'t open a negative number of cubes.': '您无法开启负数数量。',
     'You can\'t open a negative percent of cubes.': '您无法开启负数百分比。',
     'Open All': '开启全部',
+    'Auto Open': '自动开启',
+    'Auto Open [OFF]': '自动开启[关]',
     'Hermes\' Tribute': '赫尔墨斯的贡品',
     'Aphrodite\'s Tribute': '阿佛洛狄忒的贡品',
     'Plutus\' Tribute': '普路托斯的贡品',
@@ -1464,6 +1466,11 @@ var cnItems = {
     'Req Score: >2,666,000,000,': '需要分数大于2,666,000,000,',
     ' HEPTERACTS. [': '个惊奇七阶立方。[',
     'Req Score: >': '需要分数大于',
+    'Ascend when': '当',
+    ' you\'ve completed Sadistic Challenge I a total of': '进行',
+    ' the timer is at least': '时间至少经过',
+    ' times, Currently': '次挑战10以后飞升，目前次数为',
+    ' seconds (Real-time), Currently': '秒(现实时间)后飞升，目前秒数为',
     'Auto Ascend [ON]': '自动飞升[开]',
     'Auto Ascend [OFF]': '自动飞升[关]',
     'Mode: C10 Completions': '模式：挑战10完成数',
@@ -1538,8 +1545,8 @@ var cnItems = {
     'Best Obtainium/sec': '最佳难得素/秒',
     'Current Obtainium/sec': '当前难得素/秒',
     'Ascension Count': '飞升次数',
-    'Total Quarks Ever (TQE': '夸克获取量(TQE',
     'Total Quarks This Singularity': '本次奇点夸克获取量',
+    'Total Quarks Ever (TQE': '夸克获取量(TQE',
     'Free Accelerators': '免费加速器',
     'Accelerators from Upgrades/Misc': '来自升级和杂项的加速器',
     'Accelerators from Boosts': '来自加速器加成的加速器',
@@ -1889,8 +1896,8 @@ var cnItems = {
     'You have not mastered your inner chakras.': '您未能开宗立派。',
     'Divine Pack': '神圣礼包',
     'OHHHHH. Gain +10% Quarks stack with master, and multiply Octeract gain by 7.77 if corruptions are all set to 14.': '哦—————使夸克获取数量增加10%(可以与大师礼包叠加)，如果腐化等级总和(不考虑视为增加的等级)超过14×8，则使惊奇八阶方块获取数量变为7.77倍。',
-    'You have found the reason for existence .': '您已发觉生存的理由',
-    'You have not found the reason for existence  just yet.': '您暂未发觉生存的理由。',
+    'You have found the reason for existence.': '您已发觉生存的理由。',
+    'You have not found the reason for existence just yet.': '您暂未发觉生存的理由。',
     'Shop Liquidation Sale': '商店清仓大甩卖',
     'The Seal Merchant needs to get rid of some exotic goods. Only for a steep price. I do not think that is how sales work.': '印记商人想要抛售掉一些奇异商品。价格的确是有点高昂了。大甩卖大概不是这个样子的。',
     'You have triggered the Liquidation event!': '您已开启清仓大甩卖！',
@@ -1931,7 +1938,7 @@ var cnItems = {
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
     'gold text': '金色文本',
-    ' were added or improved in this Singularity': '的特权在本次奇点增加或者加强',
+    ' were added or improved in this Singularity': '的特权在本次奇点解锁或者加强',
     ' Octeracts!': '惊奇八阶方块！',
     ' Total Generated': '共产生',
     ' //3-7 Dimensional Cubes +': '//惊奇方盒至惊奇七阶立方获取数量增加',
@@ -2276,15 +2283,13 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
     [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
     [/^What would you like to name Loadout (.+)\? Names cannot be longer than (.+) characters. Nothing crazy!$/, '您想要重新命名档$1吗？名字无法超过$2个字符。就这样！'], //腐化
-    [/^Ascend when you\'ve completed Sadistic Challenge I a total of (.+) times, Currently: (.+).$/, '进行$1次挑战10以后飞升，目前为：$2次。'], //腐化
-    [/^Ascend when the timer is at least (.+) seconds \(Real-time\), Currently: (.+).$/, '当时间至少经过$1秒(现实时间)后飞升，目前为：$2秒。'], //腐化
     [/^Promo Code 'synergism2021' Applied! \+25 Offerings, \+(.+) Quarks$/, '奖励代码“synergism2021”已生效！获得25祭品，$1夸克'], //设置
     [/^Khafra has blessed you with (.+) Quarks!$/, 'Khafra祝福了您，您获得了$1夸克！'], //设置
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use\?$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) quarks  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。您还有$5次“Add”代码的使用机会。$6秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) Quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
+    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) Quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。您还有$5次“Add”代码的使用机会。$6秒后可以获得1次。'], //每小时奖励代码
     [/^For (.+) Quarks or nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
     [/^For (.+) Quarks or nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
     [/^You were awarded (.+) Quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！由于PL-AT Ω的效果，您同时获得了$2秒的飞升时间！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
@@ -2309,7 +2314,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Challenge 10 Exponent Requirement reduced by (.+) Million. Past 60 completions of C9 or C10 the scaling multiplier is \[completions \* (.*)\]$/, '当前效果：挑战10的基础目标减少1e$1M。超过60次以后的挑战9或挑战10的挑战目标增长因子变为[挑战次数*$2]'], //商店
     [/^CURRENT Effect: \+(.+) Challenges per tick$/, '当前效果：每个时刻多完成$1次挑战'], //商店
     [/^CURRENT Effect: Ascensions give (.+)% more Hypercubes and Platonic Cubes.$/, '当前效果：飞升的五阶立方和PLATONIC方盒获取数量增加$1%。'], //商店
-    [/^CURRENT Effect: Ascensions give (.+)% more Hepteracts and Octarets.$/, '当前效果：飞升的七阶立方和八阶方块获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: Ascensions give (.+)% more Hepteracts and Octeracts.$/, '当前效果：飞升的七阶立方和八阶方块获取数量增加$1%。'], //商店
     [/^CURRENT Effect: Ascension timer runs (.+)% faster.$/, '当前效果：飞升的速度增加$1%。'], //商店
     [/^CURRENT Effect: Code 'add' provides (.+)% more Quarks. AutoAnswer: true, AutoFill: true$/, '当前效果：使用“add”代码获取的夸克数量增加$1%。显示答案：生效，自动回答：生效'], //商店
     [/^CURRENT Effect: Code 'add' provides (.+)% more Quarks. AutoAnswer: true, AutoFill: false$/, '当前效果：使用“add”代码获取的夸克数量增加$1%。显示答案：生效，自动回答：未生效'], //商店
@@ -2359,4 +2364,5 @@ var cnRegReplace = new Map([
     [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
     [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
+    [/^Purchased (.*) levels, thanks to MAX Buy!$/, '一次性升级了$1级，最大化购买真是太棒了！'], //奇点
 ]);

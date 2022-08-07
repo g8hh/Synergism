@@ -2131,6 +2131,7 @@ var cnExcludeWhole = [
     /^\d\.\d+e\d\.\d+e\+\d+ \[(.+)\]$/, //数字处理
     /^ \[\+\d+\.\d\]$/, //数字处理
     /^(.*)[\u4E00-\u9FFF]+(.*)$/, //不抓取内容
+    /^进行飞升。需要完成一次挑战10才可飞升！(.*)$/, //不抓取内容
 ];
 var cnExcludePostfix = [
     /:?\s*x?\d+(\.\d+)?(e[+\-]?\d+)?\s*$/, //12.34e+4
@@ -2215,6 +2216,13 @@ var cnRegReplace = new Map([
     [/^Cost to buy (.+) Epic Fragments?: (.+) Obtainium and (.+) Offerings.$/, '购买$1个史诗碎片花费：$2难得素及$3祭品。'], //符文等
     [/^Cost to buy (.+) Legendary Fragments?: (.+) Obtainium and (.+) Offerings.$/, '购买$1个传奇碎片花费：$2难得素及$3祭品。'], //符文等
     [/^Cost to buy (.+) Mythical Fragments?: (.+) Obtainium and (.+) Offerings.$/, '购买$1个神秘碎片花费：$2难得素及$3祭品。'], //符文等
+    [/^Cost to buy (.+) Talisman Shards$/, '购买$1个护身符碎片花费'], //符文等
+    [/^Cost to buy (.+) Common Fragments$/, '购买$1个普通碎片花费'], //符文等
+    [/^Cost to buy (.+) Uncommon Fragments$/, '购买$1个罕见碎片花费'], //符文等
+    [/^Cost to buy (.+) Rare Fragments$/, '购买$1个稀有碎片花费'], //符文等
+    [/^Cost to buy (.+) Epic Fragments$/, '购买$1个史诗碎片花费'], //符文等
+    [/^Cost to buy (.+) Legendary Fragments$/, '购买$1个传奇碎片花费'], //符文等
+    [/^Cost to buy (.+) Mythical Fragments$/, '购买$1个神秘碎片花费'], //符文等
     [/^Gain \+(.+)% Global Speed Acceleration.$/, '全局速度增加$1%。'], //符文等
     [/^Talismans' Bonus Rune Levels \+(.+) per level$/, '护身符的符文额外等级每级多增加$1'], //符文等
     [/^Gain (.+) Quarks for completing this challenge \[First Time Bonus\]!$/, '完成挑战后可以获得$1夸克[首次完成奖励]！'], //挑战
@@ -2281,7 +2289,7 @@ var cnRegReplace = new Map([
     [/^On next Ascension, this corruption will be level (.+). Effect: Offering EXP divided by(.*)$/, '下次飞升，此腐化等级将变为$1。效果为：祭品经验值除以$2'], //腐化
     [/^On this Ascension, this corruption is level (.+). Effect: Coin Gain \^$/, '本次飞升，此腐化等级为$1。效果为：金币获取数量指数变为'], //腐化
     [/^On next Ascension, this corruption will be level (.+). Effect: Coin Gain \^$/, '下次飞升，此腐化等级将变为$1。效果为：金币获取数量指数变为'], //腐化
-    [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+'], //腐化
+    [/^This Ascension gives Rune Spirit Effect \+(.+)% \/ Next Ascension Rune Spirit Effect \+(.*)$/, '当前魂灵效果加成：+$1% / 下次飞升魂灵效果加成：+$2'], //腐化
     [/^What would you like to name Loadout (.+)\? Names cannot be longer than (.+) characters. Nothing crazy!$/, '您想要重新命名档$1吗？名字无法超过$2个字符。就这样！'], //腐化
     [/^Promo Code 'synergism2021' Applied! \+25 Offerings, \+(.+) Quarks$/, '奖励代码“synergism2021”已生效！获得25祭品，$1夸克'], //设置
     [/^Khafra has blessed you with (.+) Quarks!$/, 'Khafra祝福了您，您获得了$1夸克！'], //设置

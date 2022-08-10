@@ -80,8 +80,8 @@ export const loadStatisticsMiscellaneous = () => {
     DOMCacheGetOrSet('sMisc10').textContent = format(player.maxobtainiumpersecond, 2, true)
     DOMCacheGetOrSet('sMisc11').textContent = format(player.obtainiumpersecond, 2, true)
     DOMCacheGetOrSet('sMisc12').textContent = format(player.ascensionCount, 0, true)
-    DOMCacheGetOrSet('sMisc13').textContent = format(player.totalQuarksEver + player.quarksThisSingularity, 0, true)
-    DOMCacheGetOrSet('sMisc14').textContent = format(player.quarksThisSingularity, 0, true)
+    DOMCacheGetOrSet('sMisc13').textContent = format(player.quarksThisSingularity, 0, true)
+    DOMCacheGetOrSet('sMisc14').textContent = format(player.totalQuarksEver + player.quarksThisSingularity, 0, true)
     DOMCacheGetOrSet('sMisc15').textContent = formatTimeShort(player.quarkstimer) + ' / ' + formatTimeShort(90000 + 18000 * player.researches[195])
     DOMCacheGetOrSet('sMisc16').textContent = synergismStage(0);
 }
@@ -167,7 +167,8 @@ export const loadStatisticsCubeMultipliers = () => {
         16: {acc: 2, desc: 'Wow Pass Z:'},
         17: {acc: 2, desc: 'Cookie Upgrade 16:'},
         18: {acc: 2, desc: 'Cookie Upgrade 8:'},
-        19: {acc: 2, desc: 'Total Octeract Bonus:'}
+        19: {acc: 2, desc: 'Total Octeract Bonus:'},
+        20: {acc: 4, desc: 'Platonic DELTA'}
     }
     for (let i = 0; i < arr0.length; i++) {
         const statGCMi = DOMCacheGetOrSet(`statGCM${i + 1}`);

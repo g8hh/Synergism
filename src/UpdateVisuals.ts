@@ -528,13 +528,13 @@ export const visualUpdateSettings = () => {
         const onExportQuarks = quarkData.gain
         const maxExportQuarks = quarkData.capacity
         const patreonLOL = 1 + player.worlds.BONUS / 100
-        DOMCacheGetOrSet('quarktimerdisplay').textContent = '距离增加导出奖励' + player.worlds.toString(1) + '夸克还有' + format((3600 / (quarkData.perHour) - (player.quarkstimer % (3600.00001 / (quarkData.perHour)))), 2) + '秒'
+        DOMCacheGetOrSet('quarktimerdisplay').textContent = format((3600 / (quarkData.perHour) - (player.quarkstimer % (3600.00001 / (quarkData.perHour)))), 2) + '秒后导出奖励增加' + player.worlds.toString(1) + '夸克'
         DOMCacheGetOrSet('quarktimeramount').textContent =
-            `导出奖励的夸克总和：${player.worlds.toString(onExportQuarks)}[最大为${player.worlds.toString(maxExportQuarks)}]`;
+            `导出奖励夸克：${player.worlds.toString(onExportQuarks)}[最高${player.worlds.toString(maxExportQuarks)}]`;
 
-        DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = '距离增加导出奖励' + format(patreonLOL, 2, true) + '金夸克还有' + format(3600 / Math.max(1, +player.singularityUpgrades.goldenQuarks3.getEffect().bonus) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,+player.singularityUpgrades.goldenQuarks3.getEffect().bonus)))) + '秒'
+        DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = format(3600 / Math.max(1, +player.singularityUpgrades.goldenQuarks3.getEffect().bonus) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,+player.singularityUpgrades.goldenQuarks3.getEffect().bonus)))) + '秒后导出奖励增加' + format(patreonLOL, 2, true) + '金夸克'
         DOMCacheGetOrSet('goldenQuarkTimerAmount').textContent =
-            `导出奖励的金夸克总和：${format(Math.floor(player.goldenQuarksTimer * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus/ 3600) * patreonLOL, 2)}[最大为${format(Math.floor(168 * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus * patreonLOL))}]`
+            `导出奖励金夸克：${format(Math.floor(player.goldenQuarksTimer * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus/ 3600) * patreonLOL, 2)}[最高${format(Math.floor(168 * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus * patreonLOL))}]`
     }
     if (player.subtabNumber === 2) {
         loadStatisticsUpdate();

@@ -40,6 +40,8 @@ var cnItems = {
     'Mode: PERCENTAGE': '模式：百分比',
     'Auto Buy: ON': '自动购买：开',
     'Auto Buy: OFF': '自动购买：关',
+    '[ON]': '[开]',
+    '[OFF]': '[关]',
     'Auto Rune: ON': '自动符文：开',
     'Auto Rune: OFF': '自动符文：关',
     'Auto Runes: ON': '自动符文：开',
@@ -58,7 +60,7 @@ var cnItems = {
     'Buy Max: OFF': '最大化购买：关',
     'Auto ON': '自动：开',
     'Auto OFF': '自动：关',
-    'Auto Setting --- Percentage': '自动比例',
+    'Auto Setting': '自动比例',
     'Autocraft Percentage': '自动锻造比例',
     'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
     //#endregion
@@ -81,7 +83,6 @@ var cnItems = {
     'Mythos Buildings': '神话建筑',
     'Particle Buildings': '粒子建筑',
     'Tesseract Buildings': '超立方建筑',
-    'Toggle amount to buy': '切换购买数量',
     'Press [1], [2], [3], [4], or [5] to buy the corresponding tier starting from the top. Press [A] to buy Accelerator, [M] to buy Multiplier, or [B] to buy Accelerator Boost.': '按[1]，[2]，[3]，[4]或[5]来购买生产者，按[A]来购买加速器，按[M]来购买加倍器，按[B]来购买加速器加成。',
     'Press [Left arrow] or [Right arrow] to switch tabs. Enjoy!': '用[←]和[→]来切换选项卡。祝您玩的开心！',
     'Hover over a crystal upgrade to get information!': '将鼠标停在水晶升级上可以获得更多信息！',
@@ -158,8 +159,8 @@ var cnItems = {
     'Multiply Crystal production by Diamonds, maximum 1e5000x.': '将水晶产量乘以钻石数量，最高乘以1e5000倍。',
     'Multiply Mythos Shard production by the squared logarithm of Diamonds.': '将神话碎片产量乘以一个数值对数的平方，此数值为钻石。',
     'Multiply Mythos Shard production by the squared logarithm of': '将神话碎片产量乘以一个数值对数的平方，此数值为',
-    'Gain +15% more Offerings thanks to generous Discord Server Boosters!': '感谢每个进行Discord助力的朋友们！祭品获取数量增加15%！',
-    'Gain +50% more Ant Speed thanks to generous Discord Server Boosters!': '感谢每个进行Discord助力的朋友们！蚂蚁速度增加50%！',
+    'Gain +20% more Offerings thanks to generous Discord Server Boosters!': '感谢每个进行Discord助力的朋友们！祭品获取数量增加20%！',
+    'Gain +60% more Ant Speed thanks to generous Discord Server Boosters!': '感谢每个进行Discord助力的朋友们！蚂蚁速度增加60%！',
     'Gain +25% more Ant Sacrifice rewards thanks to generous Discord Server Boosters!': '感谢每个进行Discord助力的朋友们！蚂蚁献祭奖励增加25%！',
     'Multiply production based on unspent Mythos.': '根据未花费的神话增加金币产量。',
     'Multiply Mythos Shard production based on unspent Diamonds.': '增加神话碎片产量，根据未花费的钻石。',
@@ -282,6 +283,7 @@ var cnItems = {
     'Hover over an upgrade to view details!': '鼠标停在升级上可以查看详细信息！',
     'Hover-to-Buy [ON]': '鼠标停留购买[开]',
     'Hover-to-Buy [OFF]': '鼠标停留购买[关]',
+    'Press [1], [2], [3], [4], [5] or [6] on your keyboard to use resources for each upgrades.': '按[1]，[2]，[3]，[4]，[5]或[6]可以花费资源购买对应位置的升级。',
     //#endregion
     //#region 成就
     '[1] A Loyal Employee: Hire your first Worker.':'[1]一个忠实的雇员：雇佣第1个工人。',
@@ -595,14 +597,13 @@ var cnItems = {
     'Superior Intellect': '卓越智慧',
     'Infinite Ascent': '无限晋升',
     'Antiquities of Ant God': '蚁神之古物',
-    'Max level!': '等级已达最大！',
+    'Maxed Level!': '等级已达最大！',
     '[Bonus: Nope!]': '[额外等级：无！]',
     'SACRIFICE': '献祭',
     'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!': '鼠标停在符文上来查看它有什么作用！',
     '=====RUNE EFFECT SUMMARY=====': '=====符文效果总结=====',
     'You cannot grasp the true form of Ant God\'s treasure.': '您无法掌握蚁神至宝的真面目。',
     'Press [1], [2], [3], [4] or [5] on your keyboard to use offerings for each rune, starting with Speed Rune on the left; must have rune unlocked to use hotkey!': '按[1]，[2]，[3]，[4]或[5]来为每个符文进行献祭，从加速符文开始从左往右依次对应。需要解锁了相应符文才可以使用快捷键献祭！',
-    'Toggle percent resources used': '切换使用的资源比例',
     'BUY ALL': '全部购买',
     'Click to buy every type of Talisman Shards and Fragments, if affordable': '点击后将尽可能购买所有碎片',
     'BUY': '购买',
@@ -989,7 +990,7 @@ var cnItems = {
     ' Reincarnations': '转世',
     '. I\'d recommend studying the': '获得。我个人建议优先研究',
     'green-bordered': '绿色边框',
-    ' researches first. The': '的升级。',
+    ' researches first.\n                    The': '的升级。',
     'red-bordered': '红色边框',
     ' researches are never reset whereas the': '的升级不会被重置，',
     'white-bordered': '白色边框',
@@ -1490,8 +1491,8 @@ var cnItems = {
     'Ascend History': '历史飞升数据',
     'Hotkeys': '快捷键',
     'Confirmation Toggles': '相应重置时是否弹窗确认',
-    '[ON]': '[开]',
-    '[OFF]': '[关]',
+    'ON': '开',
+    'OFF': '关',
     'These do not work with hotkeys. Too bad!': '这些对快捷键无效。糟透了！',
     'Copy to Clipboard': '是否将存档导出到剪贴板',
     'Export the game here': '点击此处导出游戏存档',
@@ -1524,6 +1525,10 @@ var cnItems = {
     'Your code is either invalid or already used. Try again!': '奖励代码输入错误，或者已经使用过。请再次尝试！',
     'Current Theme': '当前主题',
     'Dark Mode': '黑暗模式',
+    'Darker Mode': '更黑暗模式',
+    'Lighter Dark Mode': '浅暗模式',
+    'Light Mode': '光明模式',
+    'Dracula Mode': '德古拉模式',
     'You\'re playing v2.9.10 Balance 1 - The Alternate Reality [Last Update: 6:12 UTC 30-Jul-2022].': '您目前玩的版本为V2.9.10 平衡补丁 1 - 另一个现实 [2022年7月30日 UTC 6:12更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
@@ -1549,6 +1554,8 @@ var cnItems = {
     'Ascension Count': '飞升次数',
     'Total Quarks This Singularity': '本次奇点夸克获取量',
     'Total Quarks Ever (TQE': '夸克获取量(TQE',
+    'Quarks on export with Timer': '导出夸克奖励计时',
+    'Synergism Stage': '游戏阶段',
     'Free Accelerators': '免费加速器',
     'Accelerators from Upgrades/Misc': '来自升级和杂项的加速器',
     'Accelerators from Boosts': '来自加速器加成的加速器',
@@ -1694,10 +1701,12 @@ var cnItems = {
     'Auto Challenge': '自动扫荡挑战',
     'Exit T / R Challenge': '退出超越/转世挑战',
     'Multipliers': '加倍器',
+    'No (Cancel': '否(取消',
     'Reset Prestige': '转生重置',
     'Reset Reincarnate': '转世重置',
     'Sacrifice Ants': '蚂蚁献祭',
     'Reset Transcend': '超越重置',
+    'Yes (OK': '是(确定',
     'ARROWLEFT': '左方向键',
     'Back a tab': '切换到前一个选项卡',
     'ARROWRIGHT': '右方向键',
@@ -1707,18 +1716,28 @@ var cnItems = {
     'ARROWDOWN': '下方向键',
     'Next subtab': '切换到后一个子选项卡',
     'Reset Ascend': '飞升重置',
-    'Exit Asc. Challenge': '退出飞升挑战',
     'Cleanse Corruptions': '清除腐化',
-    'Reset Singularity': '奇点重置',
+    'Spec. Action Add': '使用Add代码',
+    'Exit Asc. Challenge': '退出飞升挑战',
     'Use Off. Potion': '使用祭品药剂',
     'Use Obt. Potion': '使用难得素药剂',
-    'Spec. Action Add x1': '使用1次Add代码',
+    'Reset Singularity': '奇点重置',
     'You didn\'t enter anything, canceled!': '您什么也没有输入，因此不会有任何效果！',
+    'Number keys are currently unavailable!': '数字快捷键已关闭！',
+    'Last enabled key': '最后一次使用的按键',
     'That key is already binded to an action, use another key instead!': '这个按键已经被其他动作绑定了，请换一个按键！',
+    'You haven\'t changed the hotkey': '您未改变过快捷键。',
     'Why don\'t you try clicking on one of the item\'s': '为何不尝试点击上方的',
     'gold': '金色',
     ' text above to get started? You can always cancel!': '文本来进行设置？反正您还可以取消的。',
     'Loadouts correspond from SHIFT + 0 to SHIFT + 8 and SHIFT + BACKQUOTE. But you can\'t change it!': '您可以使用SHIFT+1到SHIFT+8来载入对应预设，SHIFT+9，SHIFT+0，SHIFT+`来清除腐化，但您无法更改对应快捷键！',
+    'Reset Hotkeys': '快捷键重置',
+    'Hotkeys: ON': '快捷键：开',
+    'Hotkeys: OFF': '快捷键：关',
+    'Number Hotkeys: ON': '数字快捷键：开',
+    'Number Hotkeys: OFF': '数字快捷键：关',
+    'Loadouts Notifx: ON': '腐化预设快捷键：开',
+    'Loadouts Notifx: OFF': '腐化预设快捷键：关',
     //#endregion
     //#region 商店
     'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
@@ -1758,7 +1777,7 @@ var cnItems = {
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
     'Okay, fine. Here\'s another +0.6% Ascension Speed per level, stacks multiplicatively with the first upgrade!': '嗯，很好。飞升的速度每级再增加0.6%，效果与第一个升级叠乘！',
     'OKAY. FINE. Here\'s yet ANOTHER +1.5% Ascension Speed per level, stacking multiplicatively like always.': '嗯，很 好。飞升的速度每级 再 增加1.5%，效果与之前类似，也是叠乘计算。',
-    'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒、立方和方块获取数量增加0.5%。',
+    'This is even more insane than the last one, but you\'ll buy it anyway. +0.75% ALL Cubes per level.': '这个效果比之前的那个升级还疯狂，但怎么样也好，反正您已经买了。每级使所有类型的方盒、立方和方块获取数量增加0.75%。',
     'This one is arguably very good. Gain +1% ALL Cubes per level, per Singularity!': '这个的效果就没什么争议了，绝对一流。对于每次奇点，每级使所有类型的方盒、立方和方块获取数量增加1%！',
     'You find the final pages of the lost tome. It functionally acts the same as the rest of the pages, but you can have up to five more!': '您找到了后传遗失的最后几页。它的效果跟其他的类似，但您可以购买五次！',
     'Completing an Ascension Challenge doesn\'t cause a reset (if retry is enabled) and you gain 1 more completion per tick per Singularity.': '只要开启重新尝试挑战，飞升挑战将不再重置资源，且每次奇点可以使每个时刻多完成1次超越和转世挑战。',
@@ -1946,9 +1965,9 @@ var cnItems = {
     'gold text': '金色文本',
     ' were added or improved in this Singularity': '的特权在本次奇点解锁或者加强',
     ' Octeracts!': '惊奇八阶方块！',
-    ' Total Generated': '共产生',
-    ' //3-7 Dimensional Cubes +': '//惊奇方盒至惊奇七阶立方获取数量增加',
-    ' //Quarks +': '//夸克获取数量增加',
+    'Total Generated': '共产生',
+    '3-7 Dimensional Cubes': '惊奇方盒至惊奇七阶立方获取数量',
+    'Quarks': '夸克获取数量',
     'Octeracts for Dummies': '萌新的惊奇八阶方块',
     'Hello... I Am Derpsmith... The Ancestor Of Ant God... I Did Not Expect You To Get Here. Here Is 25% More Quarks, 20% More Octeracts, And 100,000x Ant Speed...': '您好……我是Derpsmith……蚁神的先祖……没想到您能走到这一步。该升级可以使您的夸克获取数量增加25%，惊奇八阶方块获取数量增加20%，蚂蚁速度变为100000倍……',
     'You have  paid your respects to Derpsmith.': '您已向Derpsmith致敬。',
@@ -2154,14 +2173,13 @@ var cnRegReplace = new Map([
     [/^Auto buyer will save at least (.+) tesseracts. \[Enter number above\].$/, '自动购买至少保留$1超立方[在上方输入设置数值]。'], //主界面及建筑
     [/^On Ascension, Auto buyer will save at least (.+)% of your current amount of tesseracts. \[Enter number above\].$/, '飞升时，自动购买至少保留$1%超立方[在上方输入设置数值]。'], //主界面及建筑
     [/^(.*) \[\+(\d+) LVL\]$/, '$1[可提升$2级]'], //主界面及建筑
-    [/^Gain (.+)\* EXP per Offering sacrificed.$/, '献祭每个祭品可以获得$1经验值。'], //主界面及建筑
+    [/^Gain (.+)x EXP per Offering sacrificed.$/, '献祭每个祭品可以获得$1倍经验值。'], //主界面及建筑
     [/^You have (.+)% chance of recycling your Offerings. This multiplies EXP gain by (.+)!$/, '您有$1%概率回收祭品。这意味着您可以获得$2倍的经验值！'], //主界面及建筑
     [/^You have (.+) Galactic Crumbs \[(.+)\/s\], providing a (.+)x Coin Multiplier.$/, '您有$1银河碎屑[每秒$2]，使金币产量变为$3倍。'], //主界面及建筑
     [/^You have (.+) Wow! Cubes =$/, '您有$1个惊奇方盒 ='], //主界面及建筑
     [/^Generous patrons give you a bonus of (.+)% more Quarks!$/, '因赞助者慷慨解囊，夸克获取数量增加了$1%！'], //主界面及建筑
     [/^You have (.+) Quarks!$/, '您有$1夸克！'], //主界面及建筑
     [/^Upgrade for (.+) Quarks$/, '使用$1夸克进行升级'], //主界面及建筑
-    [/^Upgrade \+(.+) for (.+) Quarks$/, '使用$2夸克升级$1级'], //主界面及建筑
     [/^Buy for (.+) Quarks$/, '使用$1夸克进行购买'], //主界面及建筑
     [/^Buy! (.+) Quarks Each$/, '进行购买！每个花费$1夸克'], //主界面及建筑
     [/^You have (.+) seconds of Offline Progress!$/, '您离线了$1秒！'], //离线计算
@@ -2235,6 +2253,8 @@ var cnRegReplace = new Map([
     [/^Completing the challenge adds (.+) to Ascension Bank and increase base Score by (.+).$/, '完成挑战后飞升库增加$1个惊奇方盒，飞升基础分数增加$2。'], //挑战
     [/^Automatically Run Chal.(.+) \[ON\]$/, '自动运行挑战$1[开]'], //挑战
     [/^Automatically Run Chal.(.+) \[OFF\]$/, '自动运行挑战$1[关]'], //挑战
+    [/^Auto Ascension Run Chal.(.+) \[ON\]$/, '自动飞升运行挑战$1[开]'], //挑战
+    [/^Auto Ascension Run Chal.(.+) \[OFF\]$/, '自动飞升运行挑战$1[关]'], //挑战
     [/^ Cost: (.*) Obtainium \[\+(.+) Levels\]$/, '花费：$1难得素[可提升$2级]'], //研究
     [/^How many cubes would you like to open\? You have (.+)! You can input a percentage of cubes to open, for example: "50%" or "100%".$/, '您想要开启多少？您目前拥有$1！您可以输入想要开启的百分比，例如输入“50%”或“100%”。'], //惊奇方盒
     [/^You can't open (.+)% of your cubes...$/, '无法开启$1%……'], //惊奇方盒

@@ -304,7 +304,7 @@ export const shopData: Record<keyof Player['shopUpgrades'], IShopData> = {
         type: shopUpgradeTypes.UPGRADE,
         refundable: true,
         refundMinimumLevel: 0,
-        description: 'This is even more insane than the last one, but you\'ll buy it anyway. +0.5% ALL Cubes per level.'
+        description: 'This is even more insane than the last one, but you\'ll buy it anyway. +0.75% ALL Cubes per level.'
     },
     seasonPassZ: {
         tier: 'Singularity',
@@ -572,7 +572,7 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
             lol.textContent = 'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?'
             break;
         case 'seasonPass':
-            lol.textContent = 'CURRENT Effect: Ascensions give ' + format(3 / 2 * player.shopUpgrades.seasonPass) + '% more Wow! Cubes and Tesseracts.'
+            lol.textContent = 'CURRENT Effect: Ascensions give ' + format(2.25 * player.shopUpgrades.seasonPass) + '% more Wow! Cubes and Tesseracts.'
             break;
         case 'challengeExtension':
             lol.textContent = 'CURRENT Effect: Reincarnation Challenges may be completed an additional ' + format(2*player.shopUpgrades.challengeExtension) + ' times.'
@@ -590,13 +590,13 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
             lol.textContent = 'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?'
             break;
         case 'seasonPass2':
-            lol.textContent = 'CURRENT Effect: Ascensions give ' + format(player.shopUpgrades.seasonPass2) + '% more Hypercubes and Platonic Cubes.'
+            lol.textContent = 'CURRENT Effect: Ascensions give ' + format(1.5 * player.shopUpgrades.seasonPass2) + '% more Hypercubes and Platonic Cubes.'
             break;
         case 'seasonPass3':
-            lol.textContent = 'CURRENT Effect: Ascensions give ' + format(player.shopUpgrades.seasonPass3) + '% more Hepteracts and Octeracts.'
+            lol.textContent = 'CURRENT Effect: Ascensions give ' + format(1.5 * player.shopUpgrades.seasonPass3) + '% more Hepteracts and Octeracts.'
             break;
         case 'chronometer':
-            lol.textContent = 'CURRENT Effect: Ascension timer runs ' + format(player.shopUpgrades.chronometer) + '% faster.'
+            lol.textContent = 'CURRENT Effect: Ascension timer runs ' + format(1.2 * player.shopUpgrades.chronometer) + '% faster.'
             break;
         case 'infiniteAscent':
             lol.textContent = 'CURRENT Effect: Idk, depends if you bought it or not.'
@@ -617,13 +617,13 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
             lol.textContent = 'CURRENT Effect: +' + format(2 * player.shopUpgrades.powderEX) + '% Overflux Powder gained when Overflux Orbs expire.'
             break;
         case 'chronometer2':
-            lol.textContent = `CURRENT Effect: +${format(0.5 * player.shopUpgrades.chronometer2, 1)}% faster Ascensions!`
+            lol.textContent = `CURRENT Effect: +${format(0.6 * player.shopUpgrades.chronometer2, 1)}% faster Ascensions!`
             break;
         case 'chronometer3':
             lol.textContent = `CURRENT Effect: +${format(1.5 * player.shopUpgrades.chronometer3, 1)}% faster Ascensions! FOREVER!`
             break;
         case 'seasonPassY':
-            lol.textContent = `CURRENT Effect: +${format(0.5 * player.shopUpgrades.seasonPassY, 1)}% more Cubes on Ascension.`
+            lol.textContent = `CURRENT Effect: +${format(0.75 * player.shopUpgrades.seasonPassY, 1)}% more Cubes on Ascension.`
             break;
         case 'seasonPassZ':
             lol.textContent = `CURRENT Effect: +${format(1 * player.shopUpgrades.seasonPassZ * player.singularityCount, 0, true)}% more Cubes on Ascension.`
@@ -687,15 +687,15 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
         hypercubeToQuark: '开启惊奇五阶立方时50%夸克加成',
         seasonPass2: '季票 2',
         seasonPass3: '季票 3',
-        chronometer: '飞升的速度1%加成',
+        chronometer: '飞升的速度加成',
         infiniteAscent: '无限晋升符文',
         calculator: 'PL-AT计算器',
         calculator2: 'PL-AT X计算器',
         calculator3: 'PL-AT Ω计算器',
         constantEX: 'EX数学常数',
         powderEX: 'EX超通量粉',
-        chronometer2: '飞升的速度0.5%加成',
-        chronometer3: '永久飞升的速度1.5%加成',
+        chronometer2: '飞升的速度加成',
+        chronometer3: '永久飞升的速度加成',
         seasonPassY: '季票 Y',
         seasonPassZ: '永久季票 Z',
         challengeTome2: '永久挑战10减少需求',
@@ -725,10 +725,18 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
 
 export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
     let p = true;
-    const maxLevel = player.shopUpgrades[input] === shopData[input].maxLevel;
+    const maxLevel = player.shopUpgrades[input] >= shopData[input].maxLevel;
     const canAfford = Number(player.worlds) >= getShopCosts(input);
 
-    if (player.shopConfirmationToggle || !shopData[input].refundable) {
+    // Actually lock for HTML exploit
+    if ((shopData[input].tier === 'Ascension' && player.ascensionCount <= 0) ||
+        (shopData[input].tier === 'Singularity' && !player.singularityUpgrades.wowPass.getEffect().bonus) ||
+        (shopData[input].tier === 'SingularityVol2' && !player.singularityUpgrades.wowPass2.getEffect().bonus) ||
+        (shopData[input].tier === 'SingularityVol3' && !player.singularityUpgrades.wowPass3.getEffect().bonus)) {
+        return Alert('You do not have the right to purchase ' + friendlyShopName(input) + '!');
+    }
+
+    if (player.shopConfirmationToggle || (!shopData[input].refundable && player.shopBuyMaxToggle)) {
         if (maxLevel) {
             await Alert('您无法购买' + friendlyShopName(input) + '，因为您已经达到最大等级！')
         } else if (!canAfford) {
@@ -764,7 +772,7 @@ export const buyConsumable = async (input: ShopUpgradeNames) => {
     const maxBuyablePotions = Math.min(Math.floor(Number(player.worlds)/100),shopData[input].maxLevel-player.shopUpgrades[input]);
     const potionKind = input === 'offeringPotion' ? 'Offering Potions' : 'Obtainium Potions';
 
-    if (shopData[input].maxLevel === player.shopUpgrades[input]) {
+    if (shopData[input].maxLevel >= player.shopUpgrades[input]) {
         return Alert(`You can't purchase ${potionKind} because you already have the max level!`);
     }
     if (maxBuyablePotions === 0) {

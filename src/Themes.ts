@@ -1,10 +1,11 @@
+import { player } from './Synergism';
 import { DOMCacheGetOrSet } from './Cache/DOM';
 
-export const toggleTheme = () => {
+export const toggleTheme = (setting = true) => {
     const themeButton = DOMCacheGetOrSet('theme');
     const current = themeButton.textContent;
 
-    if (current === 'Dark Mode') { //Switches to 'Darker Mode'
+    if (current === '黑暗模式') { //Switches to 'Darker Mode'
         DOMCacheGetOrSet('singularitybtn').style.backgroundColor = '#171717'; //One time, until auto will be added
         document.body.style.setProperty('--bg-color', '#0c0c0f');
         document.body.style.setProperty('--alert-color', '#040406');
@@ -30,7 +31,7 @@ export const toggleTheme = () => {
 
         themeButton.textContent = 'Darker Mode';
     }
-    if (current === 'Darker Mode') { //Switches to 'Lighter Dark Mode'
+    if (current === '更黑暗模式') { //Switches to 'Lighter Dark Mode'
         document.body.style.setProperty('--bg-color', '#1c1b22');
         document.body.style.setProperty('--alert-color', '#141319');
         document.body.style.setProperty('--history-lines', '#083a3a');
@@ -58,7 +59,7 @@ export const toggleTheme = () => {
 
         themeButton.textContent = 'Lighter Dark Mode';
     }
-    if (current === 'Lighter Dark Mode') { //Switches to 'Light Mode' (Might be reworked soon)
+    if (current === '浅暗模式') { //Switches to 'Light Mode' (Might be reworked soon)
         document.body.style.setProperty('--bg-color', '#7c7891');
         document.body.style.setProperty('--alert-color', '#444250');
         document.body.style.setProperty('--history-lines', '#156e71');
@@ -92,7 +93,7 @@ export const toggleTheme = () => {
 
         themeButton.textContent = 'Light Mode';
     }
-    if (current === 'Light Mode') { //Switches to 'Dracula Mode'
+    if (current === '光明模式') { //Switches to 'Dracula Mode'
         document.body.style.setProperty('--bg-color', '#131319');
         document.body.style.setProperty('--alert-color', '#2a1035');
         document.body.style.setProperty('--history-lines', '#012d1c');
@@ -147,7 +148,7 @@ export const toggleTheme = () => {
     // '--tab-color' - doesnt include text, as well Shop and Singularity tab; '--singtab-color' - for Singularity tab and '--hoversing-color' for hover color; Shop tab currently cant be changed, but easy to add
     // '--buttonbuy-color' buying buldings buttons (When can't afford); '--buildings-canbuy-color' and '--blessings-canbuy-color' if you can afford; '--buildings-hover-color' and '--blessings-hover-color' if you can afford and hovering over it
     // If you change any individual ID's dont forget to remove inline CSS in next theme (Unless HTML gives color)
-    if (current === 'Dracula Mode') { //Switches to 'Dark Mode' and returns all colors back to deffault
+    if (current === '德古拉模式') { //Switches to 'Dark Mode' and returns all colors back to deffault
         document.body.style.setProperty('--bg-color', '#111');
         document.body.style.setProperty('--alert-color', '#141414');
         document.body.style.setProperty('--history-lines', '#262626');
@@ -194,5 +195,32 @@ export const toggleTheme = () => {
         DOMCacheGetOrSet('themesTitle').style.color = 'pink'
 
         themeButton.textContent = 'Dark Mode';
+    }
+
+    if (setting === true && themeButton.textContent !== null) {
+        player.theme = themeButton.textContent;
+    }
+}
+
+export const settingTheme = () => {
+    let userTheme = player.theme;
+    const maxThemes = 10;
+    const themeButton = DOMCacheGetOrSet('theme');
+    for (let i = 0; i < maxThemes; i++) {
+        const current = themeButton.textContent;
+        if (current !== null && userTheme.toUpperCase() !== current.toUpperCase()) {
+            toggleTheme(false);
+        } else {
+            return;
+        }
+    }
+    userTheme = 'Dark Mode'.toUpperCase();
+    for (let i = 0; i < maxThemes; i++) {
+        const current = themeButton.textContent;
+        if (current !== null && userTheme.toUpperCase() !== current.toUpperCase()) {
+            toggleTheme(false);
+        } else {
+            return;
+        }
     }
 }

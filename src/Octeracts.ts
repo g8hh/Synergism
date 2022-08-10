@@ -2,8 +2,6 @@ import { format, player } from './Synergism';
 import { Alert } from './UpdateHTML';
 import type { IUpgradeData } from './DynamicUpgrade';
 import { DynamicUpgrade } from './DynamicUpgrade';
-import { calculateAscensionAcceleration, calculateAscensionScore, calculateEventBuff } from './Calculate';
-import { productContents, sumContents } from './Utility';
 import type { Player } from './types/Synergism';
 import { DOMCacheGetOrSet } from './Cache/DOM';
 
@@ -83,7 +81,7 @@ export class OcteractUpgrade extends DynamicUpgrade {
         const costNextLevel = this.getCostTNL();
         const maxLevel = this.maxLevel === -1
             ? ''
-            : `/${this.maxLevel}`;
+            : `/${format(this.maxLevel, 0 , true)}`;
         const color = this.maxLevel === this.level ? 'plum' : 'white';
 
         let freeLevelInfo = this.freeLevels > 0 ?
@@ -95,7 +93,7 @@ export class OcteractUpgrade extends DynamicUpgrade {
 
         return `<span style="color: gold">${this.name}</span>
                 <span style="color: lightblue">${this.description}</span>
-                <span style="color: ${color}">等级 ${this.level}${maxLevel}${freeLevelInfo}</span>
+                <span style="color: ${color}">等级 ${format(this.level, 0 , true)}${maxLevel}${freeLevelInfo}</span>
                 <span style="color: gold">${this.getEffect().desc}</span>
                 下一级的花费：${format(costNextLevel,2,true, true, true)}惊奇八阶方块。
                 已花费惊奇八阶方块数量：${format(this.octeractsInvested, 2, true, true, true)}`
@@ -103,6 +101,7 @@ export class OcteractUpgrade extends DynamicUpgrade {
 
     public updateUpgradeHTML(): void {
         DOMCacheGetOrSet('singularityOcteractsMultiline').innerHTML = this.toString()
+        DOMCacheGetOrSet('singOcts').textContent = format(player.wowOcteracts, 2, true, true, true)
     }
 
 }
@@ -134,7 +133,7 @@ export const octeractData: Record<keyof Player['octeractUpgrades'], IOcteractDat
         effect: (n: number) => {
             return {
                 bonus: 1 + 0.01 * n,
-                desc: `Octeract Gain is increased by ${n}%.`
+                desc: `Octeract Gain is increased by ${format(n, 0 , true)}%.`
             }
         }
     },
@@ -149,7 +148,7 @@ export const octeractData: Record<keyof Player['octeractUpgrades'], IOcteractDat
         effect: (n: number) => {
             return {
                 bonus: 1 + 0.01 * n,
-                desc: `Quark gain is increased by ${n}%.`
+                desc: `Quark gain is increased by ${format(n, 0 , true)}%.`
             }
         }
     },

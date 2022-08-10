@@ -1529,13 +1529,13 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.10 Balance 1 - The Alternate Reality [Last Update: 6:12 UTC 30-Jul-2022].': '您目前玩的版本为V2.9.10 平衡补丁 1 - 另一个现实 [2022年7月30日 UTC 6:12更新]。',
+    'You\'re playing v2.9.10 Bugfix 1 - The Alternate Reality [Last Update: 7:46 UTC 10-Aug-2022].': '您目前玩的版本为V2.9.10 修复错误 1 - 另一个现实 [2022年8月10日 UTC 7:46更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
     'Current Buffs: +25% Quarks, +25% Powder Conversion, +50% Ascension Speed, +50% Global Speed, +15% Ascension Score, +100% Ant Sacrifice rewards, +100% Offering, +100% Obtainium, +25% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量增加25%，超通量粉转化效率增加25%，飞升的速度增加50%，全局速度增加50%，飞升分数增加15%，蚂蚁献祭奖励增加100%，祭品获取数量和难得素获取数量增加100%，惊奇八阶方块获取数量增加25%！',
-    '💗 Derpsmith Arrival Ceremony! 💗 [link!]': '💗Derpsmith降临仪式！💗[点击后链接向音乐！]',
+    'Challenge 15 Compensation!': '挑战15的补偿！',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1803,8 +1803,8 @@ var cnItems = {
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
     'CURRENT Effect: Challenge 15 Exponent is  automatically gained!': '当前效果：可以自动更新挑战15指数了！',
     'CURRENT Effect: Challenge 15 Exponent is NOT automatically gained!': '当前效果：不可以自动更新挑战15指数！',
-    'You can\'t purchase Offering Potions because you already have the max level!': '您无法购买祭品药剂，因为它的数量已经达到上限了！',
-    'You can\'t purchase Obtainium Potions because you already have the max level!': '您无法购买难得素药剂，因为它的数量已经达到上限了！',
+    'You can\'t purchase Offering Potions because you already have capacity!': '您无法购买祭品药剂，因为它的数量已经达到上限了！',
+    'You can\'t purchase Obtainium Potions because you already have capacity!': '您无法购买难得素药剂，因为它的数量已经达到上限了！',
     'You can\'t purchase Offering Potions because you don\'t have enough Quarks!': '您无法购买祭品药剂，因为您的夸克不够了！',
     'You can\'t purchase Obtainium Potions because you don\'t have enough Quarks!': '您无法购买难得素药剂，因为您的夸克不够了！',
     'Ok. No potions purchased.': '好吧。不买药剂了。',
@@ -2014,7 +2014,8 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Mon Aug 08 2022 23:59:59 GMT+0800 (": "活动持续到2022年8月8日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sat Aug 14 2022 23:59:59 GMT+0800 (": "活动持续到2022年8月14日 23:59:59 东八区 (", //主界面
+    "STARTS Sat Aug 13 2022 00:00:00 GMT+0800 (": "活动开始时间：2022年8月13日 00:00:00 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

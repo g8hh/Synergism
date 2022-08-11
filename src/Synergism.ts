@@ -662,7 +662,7 @@ export const player: Player = {
     corruptionShowStats: true,
 
     constantUpgrades: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    history: { ants: [], ascend: [], reset: [] },
+    history: { ants: [], ascend: [], reset: [], singularity: [] },
     historyShowPerSecond: false,
 
     autoChallengeRunning: false,
@@ -859,6 +859,12 @@ const loadSynergy = async () => {
     if (testing) {
         Object.defineProperty(window, 'player', {
             value: player
+        });
+        Object.defineProperty(window, 'G', {
+            value: G
+        });
+        Object.defineProperty(window, 'Decimal', {
+            value: Decimal
         });
     }
 
@@ -1253,7 +1259,7 @@ const loadSynergy = async () => {
         }
 
         if (data.history === undefined) {
-            player.history = { ants: [], ascend: [], reset: [] };
+            player.history = { ants: [], ascend: [], reset: [], singularity: [] };
         } else {
             // See: https://discord.com/channels/677271830838640680/964168000360038481/964168002071330879
             const keys = Object.keys(blankSave.history) as (keyof typeof blankSave['history'])[];
@@ -1882,6 +1888,7 @@ export const format = (
     }
 
     // If the power is less than 15 it's effectively 0
+
     if (power < -15) {
         return '0';
     }
@@ -2692,10 +2699,15 @@ export const resourceGain = (dt: number): void => {
             G['autoChallengeTimerIncrement'] = 0;
         }
     }
-    if (ascendchal !== 0 && ascendchal <= 15) {
-        if ((ascendchal === 15 && player.autoChallengeRunning) || player.challengecompletions[10] >= challengeRequirement(ascendchal, player.challengecompletions[ascendchal], ascendchal)) {
+    if (ascendchal !== 0 && ascendchal < 15) {
+        if (player.challengecompletions[10] >= challengeRequirement(ascendchal, player.challengecompletions[ascendchal], ascendchal)) {
             void resetCheck('ascensionChallenge', false)
             challengeachievementcheck(ascendchal, true)
+        }
+    }
+    if (ascendchal === 15) {
+        if (player.coins.gte(challengeRequirement(ascendchal, player.challengecompletions[ascendchal], ascendchal))) {
+            void resetCheck('ascensionChallenge', false)
         }
     }
 }
@@ -3029,11 +3041,19 @@ export const resetCheck = async (i: resetNames, manual = true, leaving = false):
                 challengeachievementcheck(a, true);
             }
         }
-
-        if (a === 15 && (manual || leaving || player.shopUpgrades.challenge15Auto > 0) && player.usedCorruptions.slice(2, 10).every((a) => a === 11)) {
-            if (player.coins.gte(Decimal.pow(10, player.challenge15Exponent / challenge15ScoreMultiplier()))) {
-                player.challenge15Exponent = Decimal.log(player.coins.add(1), 10) * challenge15ScoreMultiplier();
-                c15RewardUpdate();
+        if (a === 15) {
+            const c15SM = challenge15ScoreMultiplier();
+            if (player.coins.gte(challengeRequirement(a, player.challengecompletions[a], a)) && player.challengecompletions[a] < maxCompletions) {
+                player.challengecompletions[a] += 1;
+                updateChallengeLevel(a);
+                challengeDisplay(a, false);
+                challengeachievementcheck(a, true);
+            }
+            if ((manual || leaving || player.shopUpgrades.challenge15Auto > 0) && player.usedCorruptions.slice(2, 10).every((a) => a === 11)) {
+                if (player.coins.gte(Decimal.pow(10, player.challenge15Exponent / c15SM))) {
+                    player.challenge15Exponent = Decimal.log(player.coins.add(1), 10) * c15SM;
+                    c15RewardUpdate();
+                }
             }
         }
 
@@ -3054,7 +3074,7 @@ export const resetCheck = async (i: resetNames, manual = true, leaving = false):
             }
         }
 
-        if (player.shopUpgrades.instantChallenge2 === 0 || manual) {
+        if ((player.shopUpgrades.instantChallenge2 === 0 && a !== 15) || manual) {
             reset('ascensionChallenge', false);
         }
     }
@@ -3560,6 +3580,15 @@ export const updateAll = (): void => {
             const num = G['ordinals'][i as ZeroToFour];
             const buyTo = player[`${num}OwnedParticles` as const] + 1
             player[`${num}CostParticles` as const] = new Decimal(Decimal.pow(2, buyTo - 1).times(Decimal.pow(1.001, Math.max(0, (buyTo - 325000)) * Math.max(0, (buyTo - 325000) + 1) / 2))).times(particleOriginalCost[i])
+        }
+    }
+
+    // Challenge 15 autoupdate
+    if (player.shopUpgrades.challenge15Auto > 0 && player.currentChallenge.ascension === 15 && player.usedCorruptions.slice(2, 10).every((a) => a === 11)) {
+        const c15SM = challenge15ScoreMultiplier();
+        if (player.coins.gte(Decimal.pow(10, player.challenge15Exponent / c15SM))) {
+            player.challenge15Exponent = Decimal.log(player.coins.add(1), 10) * c15SM;
+            c15RewardUpdate();
         }
     }
 

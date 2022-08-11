@@ -1489,6 +1489,7 @@ var cnItems = {
     'Stats for Nerds': '高玩特供统计',
     'Reset History': '历史重置数据',
     'Ascend History': '历史飞升数据',
+    'Singularity History': '历史奇点数据',
     'Hotkeys': '快捷键',
     'Confirmation Toggles': '相应重置时是否弹窗确认',
     'ON': '开',
@@ -1695,6 +1696,7 @@ var cnItems = {
     'Here\'s what you got from your last resets (except challenges': '这就是您从之前重置中获得的东西(挑战除外',
     'Your sacrifices got you the following': '从献祭中您获得了以下内容',
     'Your last ascensions got you the following': '之前的飞升中您获得了以下内容',
+    'Your last singularities got you the following': '之前的奇点中您获得了以下内容',
     'Corruption Loadout from previous run has been applied. This will take effect on the next Ascension.': '之前周目的腐化已载入。飞升后即可生效。',
     'Buy Accelerators': '购买加速器',
     'Boost Accelerator': '加速器加成',
@@ -2373,6 +2375,9 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Every (.+) purchased orbs grants 1 powder.$/, '当前效果：每锻造$1超通量珠就可以获得1超通量粉块。'], //商店
     [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶方块获取数量增加$1%。'], //商店
     [/^CURRENT Effect: You can warp (.+) extra times.$/, '当前效果：您可以额外进行$1次时空跃迁。'], //商店
+    [/^CURRENT Effect: Quark Hepteract DR \+(.*)$/, '当前效果：惊奇七阶立方·夸克的效果指数增加$1'], //商店
+    [/^CURRENT Effect: \+ (.+)% more quarks from daily.$/, '当前效果：Daily代码的夸克获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: \+ (.+)% more golden quarks and (.+) additional free singularity upgrades from daily.$/, '当前效果：Daily代码的金夸克获取数量增加$1%，获得的免费奇点升级增加$2级。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^Do you wish to start singularity #(.+)\? Your next universe is harder but you will gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点

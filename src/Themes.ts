@@ -207,7 +207,24 @@ export const settingTheme = () => {
     const maxThemes = 10;
     const themeButton = DOMCacheGetOrSet('theme');
     for (let i = 0; i < maxThemes; i++) {
-        const current = themeButton.textContent;
+        let current = themeButton.textContent;
+        switch (current){
+            case '黑暗模式':
+                current = 'Dark Mode';
+                break;
+            case '更黑暗模式':
+                current = 'Darker Mode';
+                break;
+            case '浅暗模式':
+                current = 'Lighter Dark Mode';
+                break;
+            case '光明模式':
+                current = 'Light Mode';
+                break;
+            case '德古拉模式':
+                current = 'Dracula Mode';
+                break;
+        }
         if (current !== null && userTheme.toUpperCase() !== current.toUpperCase()) {
             toggleTheme(false);
         } else {
@@ -216,7 +233,24 @@ export const settingTheme = () => {
     }
     userTheme = 'Dark Mode'.toUpperCase();
     for (let i = 0; i < maxThemes; i++) {
-        const current = themeButton.textContent;
+        let current = themeButton.textContent;
+        switch (current){
+            case '黑暗模式':
+                current = 'Dark Mode';
+                break;
+            case '更黑暗模式':
+                current = 'Darker Mode';
+                break;
+            case '浅暗模式':
+                current = 'Lighter Dark Mode';
+                break;
+            case '光明模式':
+                current = 'Light Mode';
+                break;
+            case '德古拉模式':
+                current = 'Dracula Mode';
+                break;
+        }
         if (current !== null && userTheme.toUpperCase() !== current.toUpperCase()) {
             toggleTheme(false);
         } else {

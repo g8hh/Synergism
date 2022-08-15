@@ -7,17 +7,18 @@ import { Alert, Prompt, revealStuff } from './UpdateHTML'
 import { toOrdinal } from './Utility'
 
 export const updateSingularityPenalties = (): void => {
+    const singularityCount = player.singularityCount;
     const color = player.runelevels[6] > 0 ? 'green' : 'red';
-    const platonic = (player.singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs'), 2, true)}。` : '';
-    const hepteract = (player.singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs'), 2, true)}。` : '';
-    const str = getSingularityOridnalText(player.singularityCount) +
-                `<br>全局速度除以${format(calculateSingularityDebuff('Global Speed'), 2, true)}。
-                 飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed'), 2, true)}。
-                 祭品获取数量除以${format(calculateSingularityDebuff('Offering'), 2, true)}。
-                 难得素获取数量除以${format(calculateSingularityDebuff('Obtainium'), 2, true)}。
-                 所有类型的方盒及立方获取数量除以${format(calculateSingularityDebuff('Cubes'), 2, true)}。
-                 研究花费乘以${format(calculateSingularityDebuff('Researches'), 2, true)}。
-                 方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades'), 2, true)}。
+    const platonic = (singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}。` : '';
+    const hepteract = (singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}。` : '';
+    const str = getSingularityOridnalText(singularityCount) +
+                `<br>全局速度除以${format(calculateSingularityDebuff('Global Speed', singularityCount), 2, true)}。
+                 飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed', singularityCount), 2, true)}。
+                 祭品获取数量除以${format(calculateSingularityDebuff('Offering', singularityCount), 2, true)}。
+                 难得素获取数量除以${format(calculateSingularityDebuff('Obtainium', singularityCount), 2, true)}。
+                 所有类型的方盒及立方获取数量除以${format(calculateSingularityDebuff('Cubes', singularityCount), 2, true)}。
+                 研究花费乘以${format(calculateSingularityDebuff('Researches', singularityCount), 2, true)}。
+                 方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades', singularityCount), 2, true)}。
                  ${platonic}
                  ${hepteract}
                  <br><span style='color: ${color}'>Antiquities of Ant God is ${(player.runelevels[6] > 0) ? '' : 'NOT'} purchased. Penalties are ${(player.runelevels[6] > 0) ? '' : 'NOT'} dispelled!</span>`
@@ -804,6 +805,13 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
+        name: '七阶立方自动锻造',
+        levels: [1],
+        description: () => {
+            return '可以自动进行七阶立方锻造'
+        }
+    },
+    {
         name: '慷慨之珠',
         levels: [1, 2, 5, 10, 15, 20, 25, 30, 35],
         description: (n: number, levels: number[]) => {
@@ -824,6 +832,17 @@ export const singularityPerks: SingularityPerk[] = [
                 }
             }
             return '超通量珠加成夸克获取数量的效果上限变为215%'
+        }
+    },
+    {
+        name: '傻瓜式研究教学',
+        levels: [1, 11],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '您可以保留更好的自动研究，即方盒升级[1x9]'
+            } else {
+                return '您可以使用鼠标停留购买升级研究'
+            }
         }
     },
     {
@@ -861,36 +880,10 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '商店特惠',
-        levels: [5, 20, 51],
-        description: (n: number, levels: number[]) => {
-            if (n >= levels[2]) {
-                return '商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成变为无法重置！'
-            } else if (n >= levels[1]) {
-                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)'
-            } else {
-                return '进入奇点后您直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克'
-            }
-        }
-    },
-    {
         name: '粒子皆辛苦',
         levels: [5],
         description: () => {
             return '飞升后初始获得粒子建筑自动购买'
-        }
-    },
-    {
-        name: '永久保留自动升级',
-        levels: [10, 25, 101],
-        description: (n: number, levels: number[]) => {
-            if (n >= levels[2]) {
-                return '您常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！100次进入奇点后，您永远记住了巧克力曲奇饼干(方盒升级Cx1)的味道，并可以永久保留它的效果！'
-            } else if (n >= levels[1]) {
-                return '您常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！'
-            } else {
-                return '您常时获得方盒升级1x4，1x5和1x6。'
-            }
         }
     },
     {
@@ -917,6 +910,19 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
+        name: '商店特惠',
+        levels: [5, 20, 51],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[2]) {
+                return '商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成变为无法重置！'
+            } else if (n >= levels[1]) {
+                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)'
+            } else {
+                return '进入奇点后您直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克'
+            }
+        }
+    },
+    {
         name: '别了，洗点！',
         levels: [7],
         description: () => {
@@ -937,27 +943,17 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '七阶立方自动锻造',
-        levels: [1],
-        description: () => {
-            return '可以自动进行七阶立方锻造'
-        }
-    },
-    {
-        name: '自动开启方盒及立方',
-        levels: [35],
-        description: () => {
-            return '飞升时可以自动开启方盒及立方'
-        }
-    },
-    {
-        name: '傻瓜式研究教学',
-        levels: [1, 11],
+        name: '永久保留自动升级',
+        levels: [10, 25, 30, 101],
         description: (n: number, levels: number[]) => {
-            if (n >= levels[1]) {
-                return '您可以保留更好的自动研究，即方盒升级[1x9]'
+            if (n >= levels[3]) {
+                return '您常时自动加强和升阶护身符，常时自动购买死神蚁，常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！100次进入奇点后，您永远记住了巧克力曲奇饼干(方盒升级Cx1)的味道，并可以永久保留它的效果！'
+            } else if (n >= levels[2]) {
+                return '您常时自动加强和升阶护身符，常时自动购买死神蚁，常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！'
+            } else if (n >= levels[1]) {
+                return '您常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！'
             } else {
-                return '您可以使用鼠标停留购买升级研究'
+                return '您常时获得方盒升级1x4，1x5和1x6。'
             }
         }
     },
@@ -969,21 +965,42 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
+        name: 'Derpsmith的聚宝盆',
+        levels: [18, 38, 58, 78, 88, 98, 118, 148],
+        description: (n: number, levels: number[]) => {
+            let counter = 0
+            for (const singCount of levels) {
+                if (n >= singCount) {
+                    counter += 1
+                }
+            }
+
+            return `Derpsmith祝福了您，每次奇点可以多获得${counter}%惊奇八阶方块！`
+        }
+    },
+    {
+        name: '强化开盒',
+        levels: [25],
+        description: () => {
+            return '飞升时，研究6x13、7x3、7x18、8x8、8x23不再重置'
+        }
+    },
+    {
+        name: '实时自动飞升',
+        levels: [25],
+        description: () => {
+            return '您可以根据现实时间自动飞升了'
+        }
+    },
+    {
         name: '高级自动符文',
-        levels: [30,50],
+        levels: [30, 50],
         description: (n: number, levels: number[]) => {
             if (n >= levels[1]) {
                 return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升和符文7 - 蚁神之古物'
             } else {
                 return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升'
             }
-        }
-    },
-    {
-        name: '自动购买护身符的相关碎片',
-        levels: [40],
-        description: () => {
-            return '购买自动符文后，可以自动购买护身符的所有碎片'
         }
     },
     {
@@ -1000,17 +1017,24 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: 'Derpsmith的聚宝盆',
-        levels: [18, 38, 58, 78, 88, 98, 118, 148],
-        description: (n: number, levels: number[]) => {
-            let counter = 0
-            for (const singCount of levels) {
-                if (n >= singCount) {
-                    counter += 1
-                }
-            }
-
-            return `Derpsmith祝福了您，每次奇点可以多获得${counter}%惊奇八阶方块！`
+        name: '自动开启方盒及立方',
+        levels: [35],
+        description: () => {
+            return '飞升时可以自动开启方盒及立方'
+        }
+    },
+    {
+        name: '自动购买护身符的相关碎片',
+        levels: [40],
+        description: () => {
+            return '购买自动符文后，可以自动购买护身符的所有碎片'
+        }
+    },
+    {
+        name: '自动扫荡飞升挑战',
+        levels: [101],
+        description: () => {
+            return '购买更加好用的立即完成挑战后，可以自动扫荡飞升挑战'
         }
     }
 ]
@@ -1207,23 +1231,23 @@ export const calculateSingularityDebuff = (debuff: SingularityDebuffs, singulari
         effectiveSingularities *= 2.5
         effectiveSingularities *= Math.min(6, 1.5 * singularityCount / 25 - 0.5)
     }
-    if (player.singularityCount > 36) {
+    if (singularityCount > 36) {
         effectiveSingularities *= 4
-        effectiveSingularities *= Math.min(5, player.singularityCount / 18 - 1)
-        effectiveSingularities *= Math.pow(1.1, Math.min(player.singularityCount - 36, 64))
+        effectiveSingularities *= Math.min(5, singularityCount / 18 - 1)
+        effectiveSingularities *= Math.pow(1.1, Math.min(singularityCount - 36, 64))
     }
     if (singularityCount > 50) {
         effectiveSingularities *= 6
         effectiveSingularities *= Math.min(8, 2 * singularityCount / 50 - 1)
-        effectiveSingularities *= Math.pow(1.1, Math.min(player.singularityCount - 50, 50))
+        effectiveSingularities *= Math.pow(1.1, Math.min(singularityCount - 50, 50))
     }
     if (singularityCount > 100) {
         effectiveSingularities *= singularityCount / 25
-        effectiveSingularities *= Math.pow(1.05, player.singularityCount - 100)
+        effectiveSingularities *= Math.pow(1.05, singularityCount - 100)
     }
     if (singularityCount > 250) {
         effectiveSingularities *= singularityCount / 62.5
-        effectiveSingularities *= Math.pow(1.04, player.singularityCount - 250)
+        effectiveSingularities *= Math.pow(1.04, singularityCount - 250)
     }
 
     if (debuff === 'Offering') {
@@ -1239,9 +1263,9 @@ export const calculateSingularityDebuff = (debuff: SingularityDebuffs, singulari
     } else if (debuff === 'Cubes') {
         return 1 + Math.sqrt(effectiveSingularities) / 4
     } else if (debuff === 'Platonic Costs') {
-        return (player.singularityCount > 36) ? 1 + Math.pow(effectiveSingularities, 3/10) / 12 : 1
+        return (singularityCount > 36) ? 1 + Math.pow(effectiveSingularities, 3/10) / 12 : 1
     } else if (debuff === 'Hepteract Costs') {
-        return (player.singularityCount > 50) ? 1 + Math.pow(effectiveSingularities, 11/50) / 25 : 1
+        return (singularityCount > 50) ? 1 + Math.pow(effectiveSingularities, 11/50) / 25 : 1
     } else {
         // Cube upgrades
         return Math.cbrt(effectiveSingularities + 1)

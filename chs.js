@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.10 Bugfix 1 - The Alternate Reality [Last Update: 7:46 UTC 10-Aug-2022].': '您目前玩的版本为V2.9.10 修复错误 1 - 另一个现实 [2022年8月10日 UTC 7:46更新]。',
+    'You\'re playing v2.9.10 FastForward - The Alternate Reality [Last Update: 7:46 UTC 10-Aug-2022].': '您目前玩的版本为V2.9.10 加速前进 - 另一个现实 [2022年8月10日 UTC 7:46更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1958,7 +1958,17 @@ var cnItems = {
     'Platonic ALPHA...?': 'PLATONIC·阿 尔 法……？',
     'Confusion ensues as to why there are two of these. This one is capitalized, so buying this ensures Platonic Alpha is always maxxed!': '有两个阿尔法简直令人大惑不解。不过这一个阿尔法中间有空格，它可以使PLATONIC ALPHA升级永久为已升级！',
     'Platonic DELTA': 'PLATONIC·德尔塔',
-    'Time follows you towards the future, after getting this bad boy. Gain +100% more cubes per day in your current singularity, up to +900% at day 9.': '获得这个玩意以后，时间的力量会变得更加强大。在本次奇点中，每经过一天，所有类型的方盒、立方和方块获取数量就增加100%，最高为第九天增加900%。',
+    'Time follows you towards the future, after getting this bad boy. Gain +100% more cubes per day in your current singularity, up to +900% at day 9.': '获得这个玩意以后，时间的力量会向着未来变得更加强大。在本次奇点中，每经过一天，所有类型的方盒、立方和方块获取数量就增加100%，最高为第九天增加900%。',
+    'Platonic PHI': 'PLATONIC·斐',
+    'Time follows you toward the past as well. Gain 5 additional free Singularity Upgrades per day in your singularity from code daily, up to +50 after 10 days.': '时间的力量也可以向着过去变得更加强大。在本次奇点中，每经过一天，Daily代码获得的免费奇点升级增加5级，最高为第十天增加50级。',
+    'Etherflux Singularities': '以太通量·奇点',
+    'Golden Quark gained by Singularity is increased by 100% (additive), and going singular at your all time highest count gives +1 singularity count!': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！',
+    'You\'ve  transformed the Etherflux!': '您已转化以太通量！',
+    'You\'ve NOT transformed the Etherflux!': '您未转化以太通量！',
+    'Aetherflux Singularities': '超以太通量·奇点',
+    'Golden Quark gained by Singularity is increased by 100% (additive) and going singular at your all time highest count gives +1 singularity count! It\'s like Etherflux but with an A.': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！它的效果与以太通量类似，只是名字多了个超字。',
+    'You\'ve  transformed the Aetherflux!': '您已转化超以太通量！',
+    'You\'ve NOT transformed the Aetherflux!': '您未转化超以太通量！',
     'This upgrade has  been purchased!': '已购买该升级！',
     'This upgrade has NOT been purchased!': '未购买该升级！',
     'hey! You have already maxxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
@@ -2008,6 +2018,8 @@ var cnItems = {
     'Gain +1% Ascension Count per level, with a 2% bonus for every 10 levels.': '每级使飞升次数获取数量增加1%，每10级还可以使飞升次数获取数量额外增加2%。',
     'Digital Octeract Accumulator': '八进制数码累加器',
     'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶方块的获取数量增加1%！',
+    'Derpsmith\'s Singularity Discombobulator': 'Derpsmith的奇点小玩意',
+    'Each level makes Singularity give +100% Golden Quarks (additive) and singularity at all time highest count grants +1 singularity count!': '每级使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！',
     //#endregion
 
     //原样
@@ -2408,5 +2420,6 @@ var cnRegReplace = new Map([
     [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
     [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
-    [/^Purchased (.*) levels, thanks to MAX Buy!$/, '一次性升级了$1级，最大化购买真是太棒了！'], //奇点
+    [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数视为增加$2次。'], //奇点
+    [/^Purchased (.+) levels, thanks to MAX Buy!$/, '一次性升级了$1级，最大化购买真是太棒了！'], //奇点
 ]);

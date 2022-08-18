@@ -282,6 +282,7 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
         singCubes1: new SingularityUpgrade(singularityData['singCubes1']),
         singCubes2: new SingularityUpgrade(singularityData['singCubes2']),
         singCubes3: new SingularityUpgrade(singularityData['singCubes3']),
+        singCitadel: new SingularityUpgrade(singularityData['singCitadel']),
         octeractUnlock: new SingularityUpgrade(singularityData['octeractUnlock']),
         offeringAutomatic: new SingularityUpgrade(singularityData['offeringAutomatic']),
         intermediatePack: new SingularityUpgrade(singularityData['intermediatePack']),
@@ -748,5 +749,21 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
 
     if (data.totalWowOcteracts === undefined) {
         player.totalWowOcteracts = 0;
+    }
+
+    if (data.highestSingularityCount === undefined) {
+        player.highestSingularityCount = player.singularityCount
+        if (player.singularityCount > 0) {
+            player.goldenQuarks += 200;
+            player.goldenQuarks += 100 * Math.min(10, player.singularityCount)
+
+            if (player.singularityCount >= 5) {
+                player.singularityUpgrades.goldenQuarks3.freeLevels += 1;
+            }
+
+            if (player.singularityCount >= 10) {
+                player.singularityUpgrades.goldenQuarks3.freeLevels += 2;
+            }
+        }
     }
 }

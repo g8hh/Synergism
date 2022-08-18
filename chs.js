@@ -1281,7 +1281,7 @@ var cnItems = {
     '[Cx7] Yum yum! Now we\'re talking... or maybe not. Increase the cap of Cube Upgrades 1x1, 2x1, 3x1, 4x1, 5x1 by 1.': '[Cx7]嚼嚼……就是这个味……吧。使方盒升级1x1，2x1，3x1，4x1，5x1的等级上限增加1。',
     '[Cx8] A bit festive! If there is an event, All Cube gain is multiplied by 1.25.': '[Cx8]再增添一些节日的气息！如果有活动，则使所有类型的方盒及立方产量乘以1.25。',
     '[Cx9] Quite sour for a cookie. But it increases your Ascension speed by 0.25% per level, so who is to complain?': '[Cx9]很酸很酸。但它每级可以使飞升的速度增加0.25%，所以估计没什么人会抱怨了。',
-    '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 1 Quark per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使商店购买金夸克的夸克花费减少1。',
+    '[Cx10] Wow! Bakery had extra ginger from their christmas sale. Reduce the cost of buying Golden Quarks by 0.003% per level.': '[Cx10]惊奇烘焙坊在圣诞特卖时有更多东西可以出售了。每级使商店购买金夸克的花费减少0.003%。',
     '[Cx11] Edible but prone to mistakes. Adds 125 whole milliseconds to the tolerance of code \'time\', and increases reward by +2% per level.': '[Cx11]吃起来是没啥问题，但容易出错。每级使输入代码 time 的时间间隔容错增加125毫秒，且奖励增加2%。',
     '[Cx12] Platonic loves toffee. Octuple Obtainium and Offering gain in Challenge 15.': '[Cx12]Platonic很喜欢太妃糖。使挑战15中难得素获取数量和祭品获取数量变为8倍。',
     '[Cx13] Brownie Cookies, the best of both worlds. Increase Regular Cube Gain by 1% based on owned Hepteracts (+3% per OOM).': '[Cx13]布朗尼曲奇，两全其美。使惊奇方盒获取数量基于七阶立方的数量而增加1%(每数量级增加3%)。',
@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.10 FastForward - The Alternate Reality [Last Update: 7:46 UTC 10-Aug-2022].': '您目前玩的版本为V2.9.10 加速前进 - 另一个现实 [2022年8月10日 UTC 7:46更新]。',
+    'You\'re playing v2.9.11 Balance 2 - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 平衡补丁 2 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1602,6 +1602,7 @@ var cnItems = {
     'Offering Charge [GQ]': '祭品增压[金夸克]',
     'Offering Storm [GQ]': '祭品风暴[金夸克]',
     'Offering Tempest [GQ]': '祭品狂风[金夸克]',
+    'Citadel [GQ]': '堡垒[金夸克]',
     'Cube Upgrade C': '方盒升级C',
     'Event': '活动加成',
     'TOTAL OFFERING MULTIPLIER': '祭品总倍率',
@@ -1838,9 +1839,9 @@ var cnItems = {
     'Antiquities of Ant God is NOT purchased. Penalties are NOT dispelled!': '蚁神之古物未购买。奇点相关惩罚未驱散！',
     ' (Softcapped': ' (已达软上限',
     'Golden Quarks I': '金夸克 I',
-    'In the future, you will gain 5% more Golden Quarks on Singularities! This also reduces the cost to buy Golden Quarks in the shop by 500 per level.': '每级使进入奇点的金夸克获取数量增加5%！同时每级使商店购买金夸克的花费减少500。',
+    'In the future, you will gain 10% more Golden Quarks on Singularities per level!': '每级使进入奇点的金夸克获取数量增加10%！',
     'Golden Quarks II': '金夸克 II',
-    'If you buy this, you will gain 2% more Golden Quarks on Singularities. This also reduces the cost to buy Golden Quarks in the shop by 200 per level. Stacks with the first upgrade.': '每级使进入奇点的金夸克获取数量增加2%。同时每级使商店购买金夸克的花费减少200。效果与第一个升级叠加。',
+    'Buying GQ is 0.2% cheaper per level! [-50% maximum reduction]': '每级使商店购买金夸克的花费减少0.2%！[最高减少50%]',
     'Golden Quarks III': '金夸克 III',
     'If you buy this, you will gain Golden Quarks per hour from Exports. Leveling up gives (level) additional per hour!': '购买后，每小时导出存档奖励还会增加金夸克。每级使每小时导出存档的金夸克奖励增加下一级等级的数值！',
     'Starter Pack': '新手大礼包',
@@ -1893,6 +1894,8 @@ var cnItems = {
     'Burn some more Golden Quarks! +8% gained Cubes per level.': '再挥霍一些金夸克吧！每级使所有类型的方盒、立方和方块获取数量永久增加8%。',
     'Cube Inferno': '方盒炼狱',
     'Even Dante is impressed. +4% gained Cubes per level.': '连但丁都会为之而惊讶。每级使所有类型的方盒、立方和方块获取数量永久增加4%。',
+    'Citadel of Singularity': '奇点堡垒',
+    'This structure is so obscured by Singularity Fog! But it gives +1% Obtainium, Offerings, and 3-7D cubes per level!': '它在奇点迷雾中只是依稀可辨，但它每级可以使难得素获取数量、祭品获取数量、所有类型的方盒及立方获取数量永久增加1%！',
     'Hey!!! What are you trying to do?!?': '喂！！！您到底要做什么？！？',
     'You have bought into the Octeract hype.': '您已解锁八阶方块。',
     'You have not bought into the Octeract hype.': '您未解锁八阶方块。',
@@ -1995,7 +1998,7 @@ var cnItems = {
     'EXTRA CHONKY Corruptions': '更多腐化',
     'Adds one level to the cap on corruptions. Derpsmith approves.': '使腐化等级上限再增加1级。Derpsmith表示赞同。',
     'EXTRA WIMPY Golden Quark Costs!': '金夸克购买花费再度降低',
-    'Reduces the cost of Golden Quarks in the shop by 1% per level.': '每级使商店购买金夸克的夸克花费减少1%。',
+    'Reduces the cost of Golden Quarks in the shop by 1% per level.': '每级使商店购买金夸克的花费减少1%。',
     'Improved Download Speeds': '改善下载速度',
     'Thanks to ethernet technology, export quarks are increased by 100% per level! Only normal ones.': '感谢伟大的以太网技术，每级使导出夸克奖励增加100%！',
     'CHONKER Daily Code': '加强Daily代码效果',
@@ -2397,11 +2400,13 @@ var cnRegReplace = new Map([
     [/^Start anew, and enter Singularity #(.+). Your next universe is harder than your current one, but unlock a permanent \+10% Quark Bonus, \+10% Ascension Count Bonus, and Gain (.+) Golden Quarks, which can purchase game-changing endgame upgrades \[Boosted by (.+)% due to patreon bonus!\].$/, '让我们重新开始，进入第$1次奇点吧。下一个宇宙比目前的宇宙要来得更艰难，但夸克获取数量永久增加10%，飞升次数永久增加10%，且您可以获得$2金夸克，它可以用于购买游戏内最后阶段的升级。[Patreon加成了$3%！]'], //奇点
     [/^Welcome to Singularity #(.+). You're back to familiar territory, but something doesn't seem right.$/, '欢迎来到第$1次奇点。您回到了熟悉的领域内，但好像有什么东西不大对劲。'], //奇点
     [/^Permanently gain (.+)% more Golden Quarks on Singularities.$/, '使进入奇点的金夸克获取数量增加$1%。'], //奇点
+    [/^Purchasing Golden Quarks in the shop is (.+)% cheaper.$/, '商店购买金夸克的花费减少$1%。'], //奇点
     [/^Every hour, you gain (.+) Golden Quarks from exporting.$/, '每小时导出存档可以获得$1金夸克。'], //奇点
     [/^Ascension Count increases (.+)% faster.$/, '飞升次数获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Offerings.$/, '使祭品获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Obtainium.$/, '使难得素获取数量增加$1%。'], //奇点
     [/^Permanently gain (.+)% more Cubes.$/, '使所有类型的方盒及立方获取数量增加$1%。'], //奇点
+    [/^Obtainium, Offerings, and 3-7D Cubes \+(.+)%, forever!$/, '使难得素获取数量、祭品获取数量、所有类型的方盒及立方获取数量增加$1%。'], //奇点
     [/^Potions currently give (.+)x items!$/, '药剂的效果变为了$1倍！'], //奇点
     [/^You feel motivated enough to complete (.+) more Reincarnation Challenges, and (.+) more Ascension Challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
     [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点

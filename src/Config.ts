@@ -1,4 +1,4 @@
-export const version = '2.9.10 FastForward';
+export const version = '2.9.11 Balance 2';
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 7, 9, 23, 46, 6));
+export const lastUpdated = new Date(Date.UTC(2022, 7, 17, 23, 0, 6));

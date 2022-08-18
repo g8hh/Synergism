@@ -711,6 +711,7 @@ export const player: Player = {
         time: 0
     },
     singularityCount: 0,
+    highestSingularityCount: 0,
     singularityCounter: 0,
     goldenQuarks: 0,
     quarksThisSingularity: 0,
@@ -741,6 +742,7 @@ export const player: Player = {
         singCubes1: new SingularityUpgrade(singularityData['singCubes1']),
         singCubes2: new SingularityUpgrade(singularityData['singCubes2']),
         singCubes3: new SingularityUpgrade(singularityData['singCubes3']),
+        singCitadel: new SingularityUpgrade(singularityData['singCitadel']),
         octeractUnlock: new SingularityUpgrade(singularityData['octeractUnlock']),
         offeringAutomatic: new SingularityUpgrade(singularityData['offeringAutomatic']),
         intermediatePack: new SingularityUpgrade(singularityData['intermediatePack']),

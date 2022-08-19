@@ -966,7 +966,7 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [5, 20, 51],
         description: (n: number, levels: number[]) => {
             if (n >= levels[2]) {
-                return '商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成变为无法重置！'
+                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)。商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成变为无法重置！'
             } else if (n >= levels[1]) {
                 return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)'
             } else {

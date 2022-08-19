@@ -50,7 +50,7 @@ export const visualUpdateBuildings = () => {
         DOMCacheGetOrSet('buildtext11').textContent = 'Accelerators: ' + format(player.acceleratorBought, 0, true) + ' [+' + format(G['freeAccelerator'], 0, true) + ']'
         DOMCacheGetOrSet('buildtext12').textContent = '加速器效果：' + format((G['acceleratorPower'] - 1) * 100, 2) + '% || 加速器倍率：' + format(G['acceleratorEffect'], 2) + 'x'
         DOMCacheGetOrSet('buildtext13').textContent = 'Multipliers: ' + format(player.multiplierBought, 0, true) + ' [+' + format(G['freeMultiplier'], 0, true) + ']'
-        DOMCacheGetOrSet('buildtext14').textContent = '加倍器效果：' + G['multiplierPower'].toPrecision(4) + 'x || 加倍器倍率：' + format(G['multiplierEffect'], 2) + 'x'
+        DOMCacheGetOrSet('buildtext14').textContent = '加倍器效果：' + format(G['multiplierPower'], 2) + 'x || 加倍器倍率：' + format(G['multiplierEffect'], 2) + 'x'
         DOMCacheGetOrSet('buildtext15').textContent = 'Accelerator Boost: ' + format(player.acceleratorBoostBought, 0, true) + ' [+' + format(G['freeAcceleratorBoost'], 0, false) + ']'
         DOMCacheGetOrSet('buildtext16').textContent = 'Reset Diamonds and Prestige Upgrades, but add ' + format(G['tuSevenMulti'] * (1 + player.researches[16] / 50) * (1 + CalcECC('transcend', player.challengecompletions[2]) / 100), 2) + '% Acceleration Power and 5 free Accelerators.'
         DOMCacheGetOrSet('buyaccelerator').textContent = 'Cost: ' + format(player.acceleratorCost) + ' coins.'
@@ -527,14 +527,18 @@ export const visualUpdateSettings = () => {
         const quarkData = quarkHandler();
         const onExportQuarks = quarkData.gain
         const maxExportQuarks = quarkData.capacity
-        const patreonLOL = 1 + player.worlds.BONUS / 100
+
+        let goldenQuarkMultiplier = 1
+        goldenQuarkMultiplier *= 1 + player.worlds.BONUS / 100
+        goldenQuarkMultiplier *= (player.highestSingularityCount >= 100 ? 1 + player.highestSingularityCount / 50 : 1)
+
         DOMCacheGetOrSet('quarktimerdisplay').textContent = format((3600 / (quarkData.perHour) - (player.quarkstimer % (3600.00001 / (quarkData.perHour)))), 2) + '秒后导出奖励增加' + player.worlds.toString(1) + '夸克'
         DOMCacheGetOrSet('quarktimeramount').textContent =
             `导出奖励夸克：${player.worlds.toString(onExportQuarks)}[最高${player.worlds.toString(maxExportQuarks)}]`;
 
-        DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = format(3600 / Math.max(1, +player.singularityUpgrades.goldenQuarks3.getEffect().bonus) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,+player.singularityUpgrades.goldenQuarks3.getEffect().bonus)))) + '秒后导出奖励增加' + format(patreonLOL, 2, true) + '金夸克'
+        DOMCacheGetOrSet('goldenQuarkTimerDisplay').textContent = format(3600 / Math.max(1, +player.singularityUpgrades.goldenQuarks3.getEffect().bonus) - (player.goldenQuarksTimer % (3600.00001 / Math.max(1,+player.singularityUpgrades.goldenQuarks3.getEffect().bonus)))) + '秒后导出奖励增加' + format(goldenQuarkMultiplier, 2, true) + '金夸克'
         DOMCacheGetOrSet('goldenQuarkTimerAmount').textContent =
-            `导出奖励金夸克：${format(Math.floor(player.goldenQuarksTimer * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus/ 3600) * patreonLOL, 2)}[最高${format(Math.floor(168 * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus * patreonLOL))}]`
+            `导出奖励金夸克：${format(Math.floor(player.goldenQuarksTimer * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus/ 3600) * goldenQuarkMultiplier, 2)}[最高${format(Math.floor(168 * +player.singularityUpgrades.goldenQuarks3.getEffect().bonus * goldenQuarkMultiplier))}]`
     }
     if (player.subtabNumber === 2) {
         loadStatisticsUpdate();

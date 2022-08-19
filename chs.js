@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.11 Balance 2 - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 平衡补丁 2 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
+    'You\'re playing v2.9.11 Photokenesis - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 趋光性 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2009,6 +2009,10 @@ var cnItems = {
     'The godmother is absent, but Derpsmith is here! +2% DR exponent per level. Stacks additively with all the others!': '教母跑路了，但Derpsmith还在！每级使超过软上限后的指数增加2%，与其他类似升级之间叠加！',
     'The forbidden clock of time': '禁忌时钟',
     'Hypothesized to be locked in a hyperbolic time chamber. +1% Global Speed per level per singularity!': '就像是时间与精神之屋那样。对于每次奇点，每级使全局速度增加1%！',
+    'Abstract Photokinetics': '抽象趋光性',
+    'Gain +0.05% Ascension Speed per level per singularity!': '对于每次奇点，每级使飞升的速度增加0.05%！',
+    'Abstract Exokinetics': '抽象外动力',
+    'Gain +0.02% Ascension Speed per level per singularity!': '对于每次奇点，每级使飞升的速度增加0.02%！',
     'Wow! I want free upgrades to be better.': '真惊奇！我希望免费升级效果变得更好。',
     'Singularity Upgrade level is (paid level * free levels)^0.6 instead of being added.': '奇点商店升级的效果从购买等级与免费等级直接相加改为 [购买等级×免费等级]的0.6次方。',
     'Singularity Upgrade free levels are  being powered!': '奇点商店的免费等级效果已强化！',
@@ -2422,6 +2426,7 @@ var cnRegReplace = new Map([
     [/^Code 'daily' gives \+(.+) free Singularity upgrades per use.$/, 'Daily代码可以额外提供$1级免费奇点升级。'], //奇点
     [/^Quark Hepteract DR \+(.+).$/, '惊奇七阶立方·夸克超过软上限后的指数增加$1。'], //奇点
     [/^Global Speed per singularity \+(.*)$/, '每次奇点使全局速度增加$1'], //奇点
+    [/^Ascension Speed per singularity \+(.*)$/, '每次奇点使飞升的速度增加$1'], //奇点
     [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
     [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点

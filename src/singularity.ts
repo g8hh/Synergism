@@ -779,7 +779,7 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         name: 'Etherflux Singularities',
         description: 'Golden Quark gained by Singularity is increased by 100% (additive), and going singular at your all time highest count gives +1 singularity count!',
         maxLevel: 1,
-        costPerLevel: 1e7,
+        costPerLevel: 7e6 - 1,
         minimumSingularity: 50,
         effect: (n: number) => {
             return {
@@ -1083,6 +1083,27 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
+        name: '金之革命',
+        levels: [100],
+        description: () => {
+            return '每次奇点使商店购买金夸克的花费减少0.2%(最高减少50%)'
+        }
+    },
+    {
+        name: '金之革命 II',
+        levels: [100],
+        description: () => {
+            return '每次奇点使进入奇点的金夸克获取数量增加0.4%(最高增加100%)'
+        }
+    },
+    {
+        name: '金之革命 III',
+        levels: [100],
+        description: () => {
+            return '每次奇点使每小时导出存档的金夸克奖励增加2%(最高增加500%)'
+        }
+    },
+    {
         name: '自动扫荡飞升挑战',
         levels: [101],
         description: () => {
@@ -1198,6 +1219,7 @@ export const getGoldenQuarkCost = (): {
     costReduction *= (1 - 0.3 * player.cubeUpgrades[60] / 10000)
     costReduction *= +player.singularityUpgrades.goldenQuarks2.getEffect().bonus
     costReduction *= +player.octeractUpgrades.octeractGQCostReduce.getEffect().bonus
+    costReduction *= (player.highestSingularityCount >= 100 ? 1 - 0.5 * player.highestSingularityCount / 250 : 1)
     costReduction = 10000 - costReduction
 
     return {

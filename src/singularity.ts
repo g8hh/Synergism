@@ -1114,7 +1114,7 @@ export const singularityPerks: SingularityPerk[] = [
         name: 'PL-AT Σ',
         levels: [125, 200],
         description: () => {
-            return '每次奇点使“add”代码的使用次数加快0.1%恢复(最高增加50%)'
+            return '对于每次奇点，每级特权使“add”代码的使用次数加快0.1%恢复(最高增加50%)'
         }
     }
 ]

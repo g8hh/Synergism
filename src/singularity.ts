@@ -836,10 +836,10 @@ export class SingularityPerk {
 // The list is ordered on first level acquisition, so be careful when inserting a new one ;)
 export const singularityPerks: SingularityPerk[] = [
     {
-        name: 'Daily代码额外奖励',
+        name: '“Daily”代码额外奖励',
         levels: [1],
         description: () => {
-            return '输入Daily代码后可以获得金夸克和随机奇点升级的免费等级'
+            return '输入“Daily”代码后可以获得金夸克和随机奇点升级的免费等级'
         }
     },
     {
@@ -1108,6 +1108,13 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [101],
         description: () => {
             return '购买更加好用的立即完成挑战后，可以自动扫荡飞升挑战'
+        }
+    },
+    {
+        name: 'PL-AT Σ',
+        levels: [125, 200],
+        description: () => {
+            return '每次奇点使“add”代码的使用次数加快0.1%恢复(最高增加50%)'
         }
     }
 ]

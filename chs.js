@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.11 Photokenesis - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 趋光性 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
+    'You\'re playing v2.9.11 PL-AT v3 - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 PL-AT v3 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1776,6 +1776,9 @@ var cnItems = {
     'The PL-AT can do addition in the blink of an eye. Not much else though. +14% Quarks from using code \'add\' per level, the first level provides the answer and the final level does it automatically!': 'PL-AT在眨眼间就能做完加法。不过它也没其他什么用途了。每级使您使用“add”代码获取的夸克数量增加14%，另外，第一级可以直接显示答案，而最后一级可以自动完成加法！',
     'The PL-AT X has improved memory capacity, allowing you to store 2 additional uses to code \'add\' per level. Final level makes \'add\' give 25% more Quarks!': 'PL-AT X提升了内存容量，每级使您使用“add”代码的次数上限增加2。另外，最后一级可以使您使用“add”代码获取的夸克数量增加25%！',
     'The PL-AT Ω is infused with some Unobtainium, which is epic! But furthermore, it reduces the variance of Quarks by code \'add\' by 10% per level, which makes you more likely to get the maximum multiplier. It also has the ability to give +60 seconds to Ascension Timer per level using that code.': 'PL-AT Ω注入了难得素，这使它的性能进一步提升了！每级使您使用“add”代码获得的夸克数量变化范围减少10%，因此您更有可能获得最高的数值。另外，每级可以使您使用“add”代码时同时增加60秒飞升时间。',
+    'The PL-AT δ runs at 4,096Hz, which is a huge improvement over previous models. Add attempts refill 2% faster per level! Final level adds 8 additional capacity!': 'PL-AT δ的主频为4096Hz，这是一项巨大的进步。每级使“add”代码的使用次数加快2%恢复。另外，最后一级可以使您使用“add”代码的次数上限增加8。',
+    'The PL-AT Γ model somehow performs more \'powerful\' computations, whatever that means. +6 seconds of GQ Export timer per level. +1 capcaity every 10 levels, with 6 more at final level!': 'PL-AT Γ可以进行“更强大”的计算。每级使您使用“add”代码时导出存档的金夸克奖励计时增加6秒。另外，每10级使您使用“add”代码的次数上限增加1，且最后一级可以使您使用“add”代码的次数上限再增加6。',
+    'The PL-AT _ model was made by Derpsmith, before he was banished from the industry forever. Gain 1 second of Octeract per usage per level. Final level grants 24 additional capacity!': 'PL-AT _由Derpsmith制造，之后他就被永远逐出了这个行业。每级使您使用“add”代码时获得相当于1秒产量的惊奇八阶方块。另外，最后一级可以使您使用“add”代码的次数上限增加24。',
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
     'Okay, fine. Here\'s another +0.6% Ascension Speed per level, stacks multiplicatively with the first upgrade!': '嗯，很好。飞升的速度每级再增加0.6%，效果与第一个升级叠乘！',
@@ -1797,10 +1800,10 @@ var cnItems = {
     'After 1,024,000 Quark Hepts, their effect is raised to ^0.25!!! Nonsense. Gain +2% to all Quark Hept DRs.': '当惊奇七阶立方·夸克超过1024000库存后，它们的效果会变为0.25次方！！！简直是胡言乱语。使它的所有效果指数增加2%。',
     'After ~100 million Quark Hepts, their effect is raised to ^0.16! Absolute rubbish. Gain +2% to all Quark Hept DRs, yet again.': '当惊奇七阶立方·夸克超过约一亿库存后，它们的效果会变为0.16次方！！！真的烂透了。使它的所有效果指数再次增加2%。',
     'And when they\'ve given you their all, some stagger and fall after all it\'s not easy...': '当他们给予您他们的一切，一些人举棋不定或是干脆放弃，毕竟做出抉择并非易事……',
-    'Hey you. Yeah, you! Quarks make seal merchant happy. Get +5% more of them from code \'daily\' per level.': '嘿，那边的那位，对，就是你！夸克让印记商人们很高兴。每级使Daily代码的夸克获取数量增加5%。',
-    'Gain 1 additional free Singularity Upgrade and 20% more Golden Quarks per use of \'daily\' per level!': '每级使Daily代码获得的免费奇点升级增加1级，获得的金夸克数量增加20%！',
-    'Gain 1 additional free Singularity Upgrade and 15% more Golden Quarks per use of \'daily\' per level!': '每级使Daily代码获得的免费奇点升级增加1级，获得的金夸克数量增加15%！',
-    'Gain 1 additional free Singularity Upgrade and 100% more Golden Quarks per use of \'daily\' per level!': '每级使Daily代码获得的免费奇点升级增加1级，获得的金夸克数量增加100%！',
+    'Hey you. Yeah, you! Quarks make seal merchant happy. Get +5% more of them from code \'daily\' per level.': '嘿，那边的那位，对，就是你！夸克让印记商人们很高兴。每级使“Daily”代码的夸克获取数量增加5%。',
+    'Gain 1 additional free Singularity Upgrade and 20% more Golden Quarks per use of \'daily\' per level!': '每级使“Daily”代码获得的免费奇点升级增加1级，获得的金夸克数量增加20%！',
+    'Gain 1 additional free Singularity Upgrade and 15% more Golden Quarks per use of \'daily\' per level!': '每级使“Daily”代码获得的免费奇点升级增加1级，获得的金夸克数量增加15%！',
+    'Gain 1 additional free Singularity Upgrade and 100% more Golden Quarks per use of \'daily\' per level!': '每级使“Daily”代码获得的免费奇点升级增加1级，获得的金夸克数量增加100%！',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
@@ -1913,7 +1916,7 @@ var cnItems = {
     'You have bought our advanced package.': '您已购买高级礼包。',
     'You have not bought our advanced package.': '您未购买高级礼包。',
     'Expert Pack': '专家礼包',
-    'That\'s a handful! Gain +6% Quarks stack with advanced, 1.5x Ascension Score, Code \'add\' gives 1.2x Ascension Timer.': '越来越难控制了！使夸克获取数量增加6%(可以与高级礼包叠加)，飞升分数变为1.5倍，输入代码 add 的飞升时间奖励变为1.2倍。',
+    'That\'s a handful! Gain +6% Quarks stack with advanced, 1.5x Ascension Score, Code \'add\' gives 1.2x Ascension Timer.': '越来越难控制了！使夸克获取数量增加6%(可以与高级礼包叠加)，飞升分数变为1.5倍，输入“add”代码的飞升时间奖励变为1.2倍。',
     'You have switched to the expert provider.': '您已切换至专家礼包。',
     'You have not switched to the expert provider.': '您未切换至专家礼包。',
     'Master Pack': '大师礼包',
@@ -1963,7 +1966,7 @@ var cnItems = {
     'Platonic DELTA': 'PLATONIC·德尔塔',
     'Time follows you towards the future, after getting this bad boy. Gain +100% more cubes per day in your current singularity, up to +900% at day 9.': '获得这个玩意以后，时间的力量会向着未来变得更加强大。在本次奇点中，每经过一天，所有类型的方盒、立方和方块获取数量就增加100%，最高为第九天增加900%。',
     'Platonic PHI': 'PLATONIC·斐',
-    'Time follows you toward the past as well. Gain 5 additional free Singularity Upgrades per day in your singularity from code daily, up to +50 after 10 days.': '时间的力量也可以向着过去变得更加强大。在本次奇点中，每经过一天，Daily代码获得的免费奇点升级增加5级，最高为第十天增加50级。',
+    'Time follows you toward the past as well. Gain 5 additional free Singularity Upgrades per day in your singularity from code daily, up to +50 after 10 days.': '时间的力量也可以向着过去变得更加强大。在本次奇点中，每经过一天，“Daily”代码获得的免费奇点升级增加5级，最高为第十天增加50级。',
     'Etherflux Singularities': '以太通量·奇点',
     'Golden Quark gained by Singularity is increased by 100% (additive), and going singular at your all time highest count gives +1 singularity count!': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！',
     'You\'ve  transformed the Etherflux!': '您已转化以太通量！',
@@ -2000,11 +2003,11 @@ var cnItems = {
     'EXTRA WIMPY Golden Quark Costs!': '金夸克购买花费再度降低',
     'Reduces the cost of Golden Quarks in the shop by 1% per level.': '每级使商店购买金夸克的花费减少1%。',
     'Improved Download Speeds': '改善下载速度',
-    'Thanks to ethernet technology, export quarks are increased by 100% per level! Only normal ones.': '感谢伟大的以太网技术，每级使导出夸克奖励增加100%！',
-    'CHONKER Daily Code': '加强Daily代码效果',
-    'Derpsmith hacks into the source code, and adds +1 free Singularity upgrade per day from Daily.': 'Derpsmith使用技术手段调整源代码，使Daily代码获得的免费奇点升级增加1级。',
-    'CHONKERER Daily Code': '再度加强Daily代码效果',
-    'Derpsmith implemented hyperspeed multiplication. +1% more free Singularity upgrades per day from Daily!': 'Derpsmith实现了超高速乘法。使Daily代码获得的免费奇点升级增加1%！',
+    'Thanks to ethernet technology, export quarks are increased by 40% per level! Only normal ones.': '感谢伟大的以太网技术，每级使导出夸克奖励增加40%！',
+    'CHONKER Daily Code': '加强“Daily”代码效果',
+    'Derpsmith hacks into the source code, and adds +1 free Singularity upgrade per day from Daily.': 'Derpsmith使用技术手段调整源代码，使“Daily”代码获得的免费奇点升级增加1级。',
+    'CHONKERER Daily Code': '再度加强“Daily”代码效果',
+    'Derpsmith implemented hyperspeed multiplication. +1% more free Singularity upgrades per day from Daily!': 'Derpsmith实现了超高速乘法。使“Daily”代码获得的免费奇点升级增加1%！',
     'I wish for even better Quark Hepteracts.': '我希望惊奇七阶立方·夸克的效果还能增加。',
     'The godmother is absent, but Derpsmith is here! +2% DR exponent per level. Stacks additively with all the others!': '教母跑路了，但Derpsmith还在！每级使超过软上限后的指数增加2%，与其他类似升级之间叠加！',
     'The forbidden clock of time': '禁忌时钟',
@@ -2348,12 +2351,8 @@ var cnRegReplace = new Map([
     [/^Answer the question to confirm you'd like to reset: what is (.*)\+(.*)\? \(Hint$/, '如果想要删除存档，请正确回答以下问题：$1加$2等于多少？(提示：答案为'], //设置
     [/^You do not have an 'Add' code attempt! You will gain 1 in (.+) seconds.$/, '您暂时还没有使用“Add”代码的次数！$1秒后可以获得1次。'], //每小时奖励代码
     [/^You can use up to (.+) attempts at once. How many would you like to use\?$/, '您最多可以同时使用$1个次数。您想要使用多少次？'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) Quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。由于PL-AT Ω的效果，您同时获得了$5秒的飞升时间！您还有$6次“Add”代码的使用机会。$7秒后可以获得1次。'], //每小时奖励代码
-    [/^Your calculator figured out that (.+) \+ (.+) = (.+) on its own, so you were awarded (.+) Quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您的计算器自动算出了$1+$2=$3，因此您直接获得了$4夸克。您还有$5次“Add”代码的使用机会。$6秒后可以获得1次。'], //每小时奖励代码
     [/^For (.+) Quarks or nothing: What is (.+) \+ (.+)\?$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？'], //每小时奖励代码
     [/^For (.+) Quarks or nothing: What is (.+) \+ (.+)\? The answer is (.+) according to your calculator.$/, '答对可以获得$1夸克，答错则一无所有：$2+$3等于多少？根据计算器，答案应该为$4。'], //每小时奖励代码
-    [/^You were awarded (.+) Quarks! Thanks to PL-AT Ω you have also gained (.+) real-life seconds to your Ascension Timer! You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！由于PL-AT Ω的效果，您同时获得了$2秒的飞升时间！您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
-    [/^You were awarded (.+) Quarks!  You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您获得了$1夸克！您还有$2次“Add”代码的使用机会。$3秒后可以获得1次。'], //每小时奖励代码
     [/^You guessed (.+), but the answer was (.+). You have (.+) uses of Add. You will gain 1 in (.+) seconds.$/, '您输入的是$1，但正确答案是$2。您还有$3次“Add”代码的使用机会。$4秒后可以获得1次。'], //每小时奖励代码
     [/^You won. The Syncasino offers you a grand total of 25% of the pot! \[\+(.+) Quarks\]$/, '您赢了。协同赌场额外返还了下注额的25%给您！[增加$1夸克]'], //下注奖励代码
     [/^Try again... you can do it! \[-(.+) quarks\]$/, '不要灰心……下次，一定能赢！[减少$1夸克]'], //下注失败代码
@@ -2381,6 +2380,9 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Code 'add' provides (.+)% more Quarks. AutoAnswer: false, AutoFill: false$/, '当前效果：使用“add”代码获取的夸克数量增加$1%。显示答案：未生效，自动回答：未生效'], //商店
     [/^CURRENT Effect: Code 'add' has (.+) more capacity. 'add' uses generate (.+)% more$/, '当前效果：使用“add”代码的次数上限增加$1。使用“add”代码可以额外获取$2%的'], //商店
     [/^CURRENT Effect: Code 'add' variance -(.+)%, Each use gives (.+) seconds to Ascension Timer.$/, '当前效果：使用“add”代码获得的夸克数量变化范围减少$1%，使用“add”代码时同时增加$2秒飞升时间。'], //商店
+    [/^CURRENT Effect: Code add refills (.+)% faster. Capacity \+(.+).$/, '当前效果：使“add”代码的使用次数加快$1%恢复。使用“add”代码的次数上限增加$2。'], //商店
+    [/^CURRENT Effect: Code add adds (.+)s to GQ export timer. Capacity \+(.+).$/, '当前效果：使用“add”代码时导出存档的金夸克奖励计时增加$1秒。使用“add”代码的次数上限增加$2。'], //商店
+    [/^CURRENT Effect: Code add generates (.+)s of Octeracts. Capacity \+(.+).$/, '当前效果：使用“add”代码时获得相当于$1秒产量的惊奇八阶方块。使用“add”代码的次数上限增加$2。'], //商店
     [/^CURRENT Effect: \+(.+) effect on Constant Upgrade 2.$/, '当前效果：数学常数升级2的效果再增加$1。'], //商店
     [/^CURRENT Effect: \+(.+)% Overflux Powder gained when Overflux Orbs expire.$/, '当前效果：超通量粉转换效率增加$1%。'], //商店
     [/^CURRENT Effect: \+(.+)% faster Ascensions!$/, '当前效果：飞升的速度增加$1%！'], //商店
@@ -2395,8 +2397,8 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: \+(.+)% of those Eight-Dimensional Thingies.$/, '当前效果：八阶方块获取数量增加$1%。'], //商店
     [/^CURRENT Effect: You can warp (.+) extra times.$/, '当前效果：您可以额外进行$1次时空跃迁。'], //商店
     [/^CURRENT Effect: Quark Hepteract DR \+(.*)$/, '当前效果：惊奇七阶立方·夸克的效果指数增加$1'], //商店
-    [/^CURRENT Effect: \+ (.+)% more quarks from daily.$/, '当前效果：Daily代码的夸克获取数量增加$1%。'], //商店
-    [/^CURRENT Effect: \+ (.+)% more golden quarks and (.+) additional free singularity upgrades from daily.$/, '当前效果：Daily代码的金夸克获取数量增加$1%，获得的免费奇点升级增加$2级。'], //商店
+    [/^CURRENT Effect: \+ (.+)% more quarks from daily.$/, '当前效果：“Daily”代码的夸克获取数量增加$1%。'], //商店
+    [/^CURRENT Effect: \+ (.+)% more golden quarks and (.+) additional free singularity upgrades from daily.$/, '当前效果：“Daily”代码的金夸克获取数量增加$1%，获得的免费奇点升级增加$2级。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^Do you wish to start singularity #(.+)\? Your next universe is harder but you will gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点
@@ -2422,8 +2424,8 @@ var cnRegReplace = new Map([
     [/^Corruption level cap is increased by (.+).$/, '腐化等级上限增加$1。'], //奇点
     [/^Golden Quarks are (.+)% cheaper!$/, '购买金夸克的花费减少了$1%！'], //奇点
     [/^Export quarks \+(.*)$/, '导出夸克奖励增加$1'], //奇点
-    [/^Code 'daily' gives \+(.+)% more free Singularity upgrades per use.$/, 'Daily代码可以额外提供$1%的免费奇点升级。'], //奇点，前置
-    [/^Code 'daily' gives \+(.+) free Singularity upgrades per use.$/, 'Daily代码可以额外提供$1级免费奇点升级。'], //奇点
+    [/^Code 'daily' gives \+(.+)% more free Singularity upgrades per use.$/, '“Daily”代码可以额外提供$1%的免费奇点升级。'], //奇点，前置
+    [/^Code 'daily' gives \+(.+) free Singularity upgrades per use.$/, '“Daily”代码可以额外提供$1级免费奇点升级。'], //奇点
     [/^Quark Hepteract DR \+(.+).$/, '惊奇七阶立方·夸克超过软上限后的指数增加$1。'], //奇点
     [/^Global Speed per singularity \+(.*)$/, '每次奇点使全局速度增加$1'], //奇点
     [/^Ascension Speed per singularity \+(.*)$/, '每次奇点使飞升的速度增加$1'], //奇点

@@ -419,7 +419,9 @@ export const promocodes = async (input: string | null, amount?: number) => {
         return;
     } else if (input.toLowerCase() === 'add') {
         const availableUses = addCodeAvailableUses();
+        const maxUses = addCodeMaxUses();
         const timeToNextUse = format(addCodeTimeToNextUse(), 0);
+        const timeInterval = addCodeInterval();
 
         if (availableUses < 1) {
             el.textContent = `You do not have an 'Add' code attempt! You will gain 1 in ${timeToNextUse} seconds.`;
@@ -454,29 +456,44 @@ export const promocodes = async (input: string | null, amount?: number) => {
         const [first, second] = window.crypto.getRandomValues(new Uint8Array(2));
 
         //Allows storage of up to (24 + 2 * calc2 levels) Add Codes, lol!
-        const v = Math.max(Date.now() - (24 + 2 * player.shopUpgrades.calculator2 - realAttemptsUsed) * hour, player.rngCode + hour * realAttemptsUsed);
-        const remaining = Math.floor((Date.now() - v) / hour)
-        const timeToNext = Math.floor((hour - (Date.now() - v - hour * remaining)) / 1000)
+        const v = Math.max(Date.now() - (maxUses - realAttemptsUsed) * timeInterval, player.rngCode + timeInterval * realAttemptsUsed)
+        const remaining = Math.floor((Date.now() - v) / timeInterval)
+        const timeToNext = Math.floor((timeInterval - (Date.now() - v - timeInterval * remaining)) / 1000)
 
         // Calculator 3: Adds ascension timer.
         const ascMult = (player.singularityUpgrades.expertPack.level > 0) ? 1.2 : 1;
         const ascensionTimer = 60 * player.shopUpgrades.calculator3 * realAttemptsUsed * ascMult;
         const ascensionTimerText = (player.shopUpgrades.calculator3 > 0)
-            ? `Thanks to PL-AT Ω you have also gained ${format(ascensionTimer)} real-life seconds to your Ascension Timer!`
+            ? `由于PL-AT Ω的效果，您同时获得了${format(ascensionTimer)}秒的飞升时间！`
+            : '';
+
+        // Calculator 5: Adds GQ export timer.
+        const gqTimer = 6 * player.shopUpgrades.calculator5 * realAttemptsUsed;
+        const gqTimerText = (player.shopUpgrades.calculator5 > 0)
+            ? `由于PL-AT Γ的效果，您还使导出存档的金夸克奖励计时增加了${format(gqTimer)}秒！`
+            : '';
+
+        // Calculator 6: Octeract Generation
+        const octeractTime = player.shopUpgrades.calculator6 * realAttemptsUsed;
+        const octeractTimeText = (player.shopUpgrades.calculator6 > 0)
+            ? `最后，由于PL-AT _的效果，您还获得了相当于${format(octeractTime)}秒产量的惊奇八阶方块！`
             : '';
 
         // Calculator Maxed: you don't need to insert anything!
         if (player.shopUpgrades.calculator === shopData['calculator'].maxLevel) {
             player.worlds.add(actualQuarks);
             addTimers('ascension', ascensionTimer)
+            player.goldenQuarksTimer += gqTimer
+            addTimers('octeracts', octeractTime)
+
             player.rngCode = v;
             if (amount) {
                 // No message when using Add x1 Special action, we refresh the info message
                 void promocodesInfo('add')
                 return
             } else {
-                return Alert(`Your calculator figured out that ${first} + ${second} = ${first + second} on its own, so you were awarded ${player.worlds.toString(actualQuarks)} Quarks! ` +
-                    `${ ascensionTimerText } You have ${ remaining } uses of Add. You will gain 1 in ${ timeToNext.toLocaleString(navigator.language) } seconds.`);
+                return Alert(`您的计算器自动算出了${first}+${second}=${first + second}，因此您直接获得了${player.worlds.toString(actualQuarks)}夸克。` +
+                    `${ ascensionTimerText }${ gqTimerText }${ octeractTimeText }您还有${ remaining }次“Add”代码的使用机会。${ timeToNext.toLocaleString(navigator.language) }秒后可以获得1次。`);
             }
         }
 
@@ -496,8 +513,11 @@ export const promocodes = async (input: string | null, amount?: number) => {
         if (first + second === +addPrompt) {
             player.worlds.add(actualQuarks);
             addTimers('ascension', ascensionTimer)
-            await Alert(`You were awarded ${player.worlds.toString(actualQuarks)} Quarks! ${ascensionTimerText} You have ${remaining} uses of Add. ` +
-                `You will gain 1 in ${ timeToNext.toLocaleString(navigator.language) } seconds.`);
+            player.goldenQuarksTimer += gqTimer
+            addTimers('octeracts', octeractTime)
+
+            await Alert(`您获得了${player.worlds.toString(actualQuarks)}夸克！${ ascensionTimerText }${ gqTimerText }${ octeractTimeText }您还有${remaining}次“Add”代码的使用机会。` +
+                `${ timeToNext.toLocaleString(navigator.language) }秒后可以获得1次。`);
         } else {
             await Alert(`You guessed ${addPrompt}, but the answer was ${first + second}. You have ${remaining} uses of Add. You will gain 1 in ${timeToNext.toLocaleString(navigator.language)} seconds.`);
         }
@@ -604,12 +624,43 @@ export const promocodes = async (input: string | null, amount?: number) => {
     setTimeout(() => el.textContent = '', 15000);
 }
 
+const addCodeMaxUses = () : number => {
+    let maxUses = 24
+    maxUses += 2 * player.shopUpgrades.calculator2
+    if (player.shopUpgrades.calculator4 === shopData.calculator4.maxLevel) {
+        maxUses += 8
+    }
+    maxUses += Math.floor(player.shopUpgrades.calculator5 / 10)
+    if (player.shopUpgrades.calculator5 === shopData.calculator5.maxLevel) {
+        maxUses += 6
+    }
+    if (player.shopUpgrades.calculator6 === shopData.calculator6.maxLevel) {
+        maxUses += 24
+    }
+
+    return maxUses
+}
+
+const addCodeInterval = () : number => {
+    let time = hour
+    time *= (1 - 0.02 * player.shopUpgrades.calculator4)
+    return time
+}
+
 const addCodeAvailableUses = (): number => {
-    return Math.floor(Math.min(24 + 2 * player.shopUpgrades.calculator2, (Date.now() - player.rngCode) / hour));
+    const maxUses = addCodeMaxUses()
+    const timeInterval = addCodeInterval()
+
+    return Math.floor(Math.min(maxUses, (Date.now() - player.rngCode) / timeInterval));
 }
 
 const addCodeTimeToNextUse = (): number => {
-    return Math.floor(hour + player.rngCode - Date.now())/1000;
+    let timeInterval = hour
+    timeInterval *= (1 - 0.02 * player.shopUpgrades.calculator4)
+    timeInterval *= (1 - (player.highestSingularityCount >= 125 ? player.highestSingularityCount / 1000 : 0)
+                       - (player.highestSingularityCount >= 200 ? player.highestSingularityCount / 1000 : 0))
+
+    return Math.floor(timeInterval + player.rngCode - Date.now())/1000;
 }
 
 const timeCodeAvailableUses = (): number => {

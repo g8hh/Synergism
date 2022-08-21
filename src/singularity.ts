@@ -940,25 +940,15 @@ export const singularityPerks: SingularityPerk[] = [
     },
     {
         name: '更多夸克',
-        levels: [5, 20, 35, 50, 65, 80, 90, 100],
+        levels: [5, 20, 35, 50, 65, 80, 90, 100, 121, 144, 150, 169, 196, 200, 225, 250],
         description: (n: number, levels: number[]) => {
-            if (n >= levels[7]) {
-                return '夸克获取数量额外八次增加5%！(相互叠乘)是不是很像八阶方块了？'
-            } else if (n >= levels[6]) {
-                return '夸克获取数量额外七次增加5%！(相互叠乘)'
-            } else if (n >= levels[5]) {
-                return '夸克获取数量额外六次增加5%！(相互叠乘)'
-            } else if (n >= levels[4]) {
-                return '夸克获取数量额外五次增加5%！(相互叠乘)这一共能叠几次来着？？？'
-            } else if (n >= levels[3]) {
-                return '夸克获取数量额外四次增加5%！(相互叠乘)真惊奇！'
-            } else if (n >= levels[2]) {
-                return '夸克获取数量额外增加5%，之后再额外增加5%，之后再再额外增加5%！'
-            } else if (n >= levels[1]) {
-                return '夸克获取数量额外增加5%，之后再额外增加5%！'
-            } else {
-                return '夸克获取数量额外增加5%！'
+
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (n >= levels[i]) {
+                    return `夸克获取数量额外${i+1}次增加5%(相互叠乘)！总加成：${format(100 * (Math.pow(1.05, i+1) - 1), 2)}%`
+                }
             }
+            return 'This is a bug! Contact Platonic if you see this message, somehow.'
         }
     },
     {
@@ -1017,8 +1007,15 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
+        name: '高位成就',
+        levels: [16],
+        description: () => {
+            return '解锁新的，更加困难的成就！获取方式与其余的成就不同……(制作中)'
+        }
+    },
+    {
         name: 'Derpsmith的聚宝盆',
-        levels: [18, 38, 58, 78, 88, 98, 118, 148],
+        levels: [18, 38, 58, 78, 88, 98, 118, 148, 178, 188, 198, 208, 218, 228, 238, 248],
         description: (n: number, levels: number[]) => {
             let counter = 0
             for (const singCount of levels) {
@@ -1208,7 +1205,12 @@ const getAvailablePerksDescription = (singularityCount: number): string => {
 }
 
 function formatPerkDescription(perkData: ISingularityPerkDisplayInfo, singularityCount: number): string {
-    const isNew = perkData.lastUpgraded === singularityCount;
+    let singTolerance = 0
+    singTolerance += +player.singularityUpgrades.singFastForward.getEffect().bonus
+    singTolerance += +player.singularityUpgrades.singFastForward2.getEffect().bonus
+    singTolerance += +player.octeractUpgrades.octeractFastForward.getEffect().bonus
+
+    const isNew = (singularityCount - perkData.lastUpgraded <= singTolerance);
     const levelInfo = perkData.currentLevel > 1 ? ' - ' + perkData.currentLevel + '级' : '';
     //const acquiredUpgraded = ' / Acq ' + perkData.acquired + ' / Upg ' + perkData.lastUpgraded;
     return `<span${isNew?' class="newPerk"':''} title="${perkData.description}">${perkData.name}${levelInfo}</span>`;

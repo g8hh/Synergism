@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.11 PL-AT v3 - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 PL-AT v3 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
+    'You\'re playing v2.9.11 Exalt - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 高位 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',

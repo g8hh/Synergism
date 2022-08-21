@@ -67,7 +67,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             : '无进入奇点次数要求'
 
         let freeLevelInfo = this.freeLevels > 0 ?
-            `<span style="color: orange"> [+${format(this.freeLevels, 1, true)}]</span>` : ''
+            `<span style="color: orange"> [+${format(this.freeLevels, 2, true)}]</span>` : ''
 
         if (this.freeLevels > this.level) {
             freeLevelInfo = freeLevelInfo + '<span style="color: maroon"> (Softcapped) </span>'
@@ -986,7 +986,7 @@ export const singularityPerks: SingularityPerk[] = [
     },
     {
         name: '永久保留自动升级',
-        levels: [10, 25, 30, 101],
+        levels: [10, 25, 30, 100],
         description: (n: number, levels: number[]) => {
             if (n >= levels[3]) {
                 return '您常时自动加强和升阶护身符，常时自动购买死神蚁，常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！100次进入奇点后，您永远记住了巧克力曲奇饼干(方盒升级Cx1)的味道，并可以永久保留它的效果！'
@@ -1011,6 +1011,13 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [16],
         description: () => {
             return '解锁新的，更加困难的成就！获取方式与其余的成就不同……(制作中)'
+        }
+    },
+    {
+        name: '米达斯的横财',
+        levels: [20],
+        description: () => {
+            return '每天输入“Daily”代码后一定能获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III！'
         }
     },
     {
@@ -1112,6 +1119,13 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [125, 200],
         description: () => {
             return '对于每次奇点，每级特权使“add”代码的使用次数加快0.1%恢复(最高增加50%)'
+        }
+    },
+    {
+        name: '米达斯的千年之金',
+        levels: [150],
+        description: () => {
+            return '每次使用“add”代码后还可以使金夸克 I的免费等级增加0.01，金夸克 III的免费等级增加0.05。'
         }
     }
 ]

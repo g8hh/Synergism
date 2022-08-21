@@ -411,6 +411,16 @@ export const promocodes = async (input: string | null, amount?: number) => {
                 }
             }
 
+            if (player.highestSingularityCount >= 20) {
+                player.singularityUpgrades.goldenQuarks1.freeLevels += 0.2
+                freeLevels['goldenQuarks1'] ? freeLevels['goldenQuarks1'] += 0.2 : freeLevels['goldenQuarks1'] = 0.2
+                player.singularityUpgrades.goldenQuarks2.freeLevels += 0.2
+                freeLevels['goldenQuarks2'] ? freeLevels['goldenQuarks2'] += 0.2 : freeLevels['goldenQuarks2'] = 0.2
+                player.singularityUpgrades.goldenQuarks3.freeLevels += 1
+                freeLevels['goldenQuarks3'] ? freeLevels['goldenQuarks3'] += 1 : freeLevels['goldenQuarks3'] = 1
+
+            }
+
             for (const key of Object.keys(freeLevels)) {
                 rewardMessage += dailyCodeFormatFreeLevelMessage(key, freeLevels[key])
             }
@@ -479,12 +489,22 @@ export const promocodes = async (input: string | null, amount?: number) => {
             ? `最后，由于PL-AT _的效果，您还获得了相当于${format(octeractTime)}秒产量的惊奇八阶方块！`
             : '';
 
+        // Midas' Millenium-Aged Gold perk
+        const freeLevelsText = (player.highestSingularityCount >= 150)
+            ? `最后的最后，您还获得了${format(0.01 * realAttemptsUsed, 2)}级的免费金夸克 I升级和${format(0.05 * realAttemptsUsed, 2)}级的免费金夸克 III升级！！！`
+            : '';
+
         // Calculator Maxed: you don't need to insert anything!
         if (player.shopUpgrades.calculator === shopData['calculator'].maxLevel) {
             player.worlds.add(actualQuarks);
             addTimers('ascension', ascensionTimer)
             player.goldenQuarksTimer += gqTimer
             addTimers('octeracts', octeractTime)
+
+            if (player.highestSingularityCount >= 150) {
+                player.singularityUpgrades.goldenQuarks1.freeLevels += 0.01 * realAttemptsUsed
+                player.singularityUpgrades.goldenQuarks3.freeLevels += 0.05 * realAttemptsUsed
+            }
 
             player.rngCode = v;
             if (amount) {
@@ -493,7 +513,7 @@ export const promocodes = async (input: string | null, amount?: number) => {
                 return
             } else {
                 return Alert(`您的计算器自动算出了${first}+${second}=${first + second}，因此您直接获得了${player.worlds.toString(actualQuarks)}夸克。` +
-                    `${ ascensionTimerText }${ gqTimerText }${ octeractTimeText }您还有${ remaining }次“Add”代码的使用机会。${ timeToNext.toLocaleString(navigator.language) }秒后可以获得1次。`);
+                    `${ ascensionTimerText }${ gqTimerText }${ octeractTimeText }${ freeLevelsText }您还有${ remaining }次“Add”代码的使用机会。${ timeToNext.toLocaleString(navigator.language) }秒后可以获得1次。`);
             }
         }
 

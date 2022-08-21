@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.11 Exalt - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 高位 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
+    'You\'re playing v2.9.11 Midas - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11 米达斯 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1604,6 +1604,7 @@ var cnItems = {
     'Offering Tempest [GQ]': '祭品狂风[金夸克]',
     'Citadel [GQ]': '堡垒[金夸克]',
     'Cube Upgrade C': '方盒升级C',
+    'Offering Electrolosis [OC]': '祭品电解[八阶方块]',
     'Event': '活动加成',
     'TOTAL OFFERING MULTIPLIER': '祭品总倍率',
     'Global Quark Multipliers': '全局夸克倍率',
@@ -2024,6 +2025,10 @@ var cnItems = {
     'Who said beggars can\'t be choosers? Extends the exponent of the first upgrade to 0.65.': '谁规定免费就不能置喙了？使第一个升级的指数变为0.65。',
     'Wow! Make free upgrades good already, Platonic!': '真惊奇！PLATONIC，让免费升级再度强大吧！',
     'Extends the exponent of the free upgrades to 0.70.': '使免费升级的指数变为0.70。',
+    'Offering Electrolosis': '祭品电解',
+    'Gain 1% more offerings per level.': '每级使祭品获取数量增加1%。',
+    'Obtainium Deluge': '难得素之涌',
+    'Gain 1% more obtainium per level.': '每级使难得素获取数量增加1%。',
     'Voided Warranty': '保修失效',
     'Gain +1% Ascension Count per level, with a 2% bonus for every 10 levels.': '每级使飞升次数获取数量增加1%，每10级还可以使飞升次数获取数量额外增加2%。',
     'Digital Octeract Accumulator': '八进制数码累加器',
@@ -2431,6 +2436,8 @@ var cnRegReplace = new Map([
     [/^Ascension Speed per singularity \+(.*)$/, '每次奇点使飞升的速度增加$1'], //奇点
     [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
     [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
+    [/^Offering gain \+(.*)$/, '祭品获取数量增加$1'], //奇点
+    [/^Obtainium gain \+(.*)$/, '难得素获取数量增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
     [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数视为增加$2次。'], //奇点
     [/^Purchased (.+) levels, thanks to MAX Buy!$/, '一次性升级了$1级，最大化购买真是太棒了！'], //奇点

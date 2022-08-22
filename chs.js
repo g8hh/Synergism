@@ -1969,11 +1969,11 @@ var cnItems = {
     'Platonic PHI': 'PLATONIC·斐',
     'Time follows you toward the past as well. Gain 5 additional free Singularity Upgrades per day in your singularity from code daily, up to +50 after 10 days.': '时间的力量也可以向着过去变得更加强大。在本次奇点中，每经过一天，“Daily”代码获得的免费奇点升级增加5级，最高为第十天增加50级。',
     'Etherflux Singularities': '以太通量·奇点',
-    'Golden Quark gained by Singularity is increased by 100% (additive), and going singular at your all time highest count gives +1 singularity count!': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！',
+    'Golden Quark gained by Singularity is increased by 100% (additive), and going singular at your all time highest count gives +1 singularity count!': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数增加1次！',
     'You\'ve  transformed the Etherflux!': '您已转化以太通量！',
     'You\'ve NOT transformed the Etherflux!': '您未转化以太通量！',
     'Aetherflux Singularities': '超以太通量·奇点',
-    'Golden Quark gained by Singularity is increased by 100% (additive) and going singular at your all time highest count gives +1 singularity count! It\'s like Etherflux but with an A.': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！它的效果与以太通量类似，只是名字多了个超字。',
+    'Golden Quark gained by Singularity is increased by 100% (additive) and going singular at your all time highest count gives +1 singularity count! It\'s like Etherflux but with an A.': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数增加1次！它的效果与以太通量类似，只是名字多了个超字。',
     'You\'ve  transformed the Aetherflux!': '您已转化超以太通量！',
     'You\'ve NOT transformed the Aetherflux!': '您未转化超以太通量！',
     'This upgrade has  been purchased!': '已购买该升级！',
@@ -2034,7 +2034,7 @@ var cnItems = {
     'Digital Octeract Accumulator': '八进制数码累加器',
     'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶方块的获取数量增加1%！',
     'Derpsmith\'s Singularity Discombobulator': 'Derpsmith的奇点小玩意',
-    'Each level makes Singularity give +100% Golden Quarks (additive) and singularity at all time highest count grants +1 singularity count!': '每级使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数视为增加1次！',
+    'Each level makes Singularity give +100% Golden Quarks (additive) and singularity at all time highest count grants +1 singularity count!': '每级使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且奇点次数增加1次！',
     //#endregion
 
     //原样
@@ -2439,6 +2439,6 @@ var cnRegReplace = new Map([
     [/^Offering gain \+(.*)$/, '祭品获取数量增加$1'], //奇点
     [/^Obtainium gain \+(.*)$/, '难得素获取数量增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
-    [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数视为增加$2次。'], //奇点
+    [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数增加$2次。'], //奇点
     [/^Purchased (.+) levels, thanks to MAX Buy!$/, '一次性升级了$1级，最大化购买真是太棒了！'], //奇点
 ]);

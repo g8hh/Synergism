@@ -460,67 +460,66 @@ export const generateExportSummary = async():Promise<void> => {
 
             let CNoctname = octUpg.name
             switch (CNoctname) {
-                case 'Golden Quarks I':
-                    case 'Octeracts for Dummies':
-                        CNoctname = '萌新的惊奇八阶方块';
-                        break;
-                    case 'Octeract Cogenesis':
-                        CNoctname = '惊奇八阶方块同生';
-                        break;
-                    case 'Quark Octeract':
-                        CNoctname = '惊奇八阶方块·夸克';
-                        break;
-                    case 'EXTRA CHONKY Corruptions':
-                        CNoctname = '更多腐化';
-                        break;
-                    case 'EXTRA WIMPY Golden Quark Costs!':
-                        CNoctname = '金夸克购买花费再度降低';
-                        break;
-                    case 'Improved Download Speeds':
-                        CNoctname = '改善下载速度';
-                        break;
-                    case 'CHONKER Daily Code':
-                        CNoctname = '加强“Daily”代码效果';
-                        break;
-                    case 'CHONKERER Daily Code':
-                        CNoctname = '再度加强“Daily”代码效果';
-                        break;
-                    case 'I wish for even better Quark Hepteracts.':
-                        CNoctname = '我希望惊奇七阶立方·夸克的效果还能增加。';
-                        break;
-                    case 'The forbidden clock of time':
-                        CNoctname = '禁忌时钟';
-                        break;
-                    case 'Abstract Photokinetics':
-                        CNoctname = '抽象趋光性';
-                        break;
-                    case 'Abstract Exokinetics':
-                        CNoctname = '抽象外动力';
-                        break;
-                    case 'Wow! I want free upgrades to be better.':
-                        CNoctname = '真惊奇！我希望免费升级效果变得更好。';
-                        break;
-                    case 'Wow! Free upgrades still suck.':
-                        CNoctname = '真惊奇！免费升级还是不够给力。';
-                        break;
-                    case 'Wow! Make free upgrades good already, Platonic!':
-                        CNoctname = '真惊奇！PLATONIC，让免费升级再度强大吧！';
-                        break;
-                    case 'Offering Electrolosis':
-                        CNoctname = '祭品电解';
-                        break;
-                    case 'Obtainium Deluge':
-                        CNoctname = '难得素之涌';
-                        break;
-                    case 'Voided Warranty':
-                        CNoctname = '保修失效';
-                        break;
-                    case 'Digital Octeract Accumulator':
-                        CNoctname = '八进制数码累加器';
-                        break;
-                    case 'Derpsmith\'s Singularity Discombobulator':
-                        CNoctname = 'Derpsmith的奇点小玩意';
-                        break;
+                case 'Octeracts for Dummies':
+                    CNoctname = '萌新的惊奇八阶方块';
+                    break;
+                case 'Octeract Cogenesis':
+                    CNoctname = '惊奇八阶方块同生';
+                    break;
+                case 'Quark Octeract':
+                    CNoctname = '惊奇八阶方块·夸克';
+                    break;
+                case 'EXTRA CHONKY Corruptions':
+                    CNoctname = '更多腐化';
+                    break;
+                case 'EXTRA WIMPY Golden Quark Costs!':
+                    CNoctname = '金夸克购买花费再度降低';
+                    break;
+                case 'Improved Download Speeds':
+                    CNoctname = '改善下载速度';
+                    break;
+                case 'CHONKER Daily Code':
+                    CNoctname = '加强“Daily”代码效果';
+                    break;
+                case 'CHONKERER Daily Code':
+                    CNoctname = '再度加强“Daily”代码效果';
+                    break;
+                case 'I wish for even better Quark Hepteracts.':
+                    CNoctname = '我希望惊奇七阶立方·夸克的效果还能增加。';
+                    break;
+                case 'The forbidden clock of time':
+                    CNoctname = '禁忌时钟';
+                    break;
+                case 'Abstract Photokinetics':
+                    CNoctname = '抽象趋光性';
+                    break;
+                case 'Abstract Exokinetics':
+                    CNoctname = '抽象外动力';
+                    break;
+                case 'Wow! I want free upgrades to be better.':
+                    CNoctname = '真惊奇！我希望免费升级效果变得更好。';
+                    break;
+                case 'Wow! Free upgrades still suck.':
+                    CNoctname = '真惊奇！免费升级还是不够给力。';
+                    break;
+                case 'Wow! Make free upgrades good already, Platonic!':
+                    CNoctname = '真惊奇！PLATONIC，让免费升级再度强大吧！';
+                    break;
+                case 'Offering Electrolosis':
+                    CNoctname = '祭品电解';
+                    break;
+                case 'Obtainium Deluge':
+                    CNoctname = '难得素之涌';
+                    break;
+                case 'Voided Warranty':
+                    CNoctname = '保修失效';
+                    break;
+                case 'Digital Octeract Accumulator':
+                    CNoctname = '八进制数码累加器';
+                    break;
+                case 'Derpsmith\'s Singularity Discombobulator':
+                    CNoctname = 'Derpsmith的奇点小玩意';
+                    break;
             }
 
             upgradeText = upgradeText + unicodeSymbol

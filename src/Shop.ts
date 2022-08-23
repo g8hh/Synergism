@@ -743,15 +743,15 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
         cashGrab: '昂贵物品',
         shopTalisman: '信卡护身符',
         seasonPass: '季票 1',
-        challengeExtension: '转世挑战上限',
+        challengeExtension: 'EX转世挑战',
         challengeTome: '挑战10减少需求',
         cubeToQuark: '开启惊奇方盒时50%夸克加成',
         tesseractToQuark: '开启惊奇超立方时50%夸克加成',
         hypercubeToQuark: '开启惊奇五阶立方时50%夸克加成',
         seasonPass2: '季票 2',
         seasonPass3: '季票 3',
-        chronometer: '飞升的速度加成',
-        infiniteAscent: '无限晋升符文',
+        chronometer: '时计 1',
+        infiniteAscent: '无限晋升',
         calculator: 'PL-AT计算器',
         calculator2: 'PL-AT X计算器',
         calculator3: 'PL-AT Ω计算器',
@@ -760,29 +760,29 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
         calculator6: 'QUAAA-T计算器',
         constantEX: 'EX数学常数',
         powderEX: 'EX超通量粉',
-        chronometer2: '飞升的速度加成',
-        chronometer3: '永久飞升的速度加成',
+        chronometer2: '时计 2',
+        chronometer3: '时计 3',
         seasonPassY: '季票 Y',
-        seasonPassZ: '永久季票 Z',
-        challengeTome2: '永久挑战10减少需求',
-        instantChallenge2: '更加好用的立即完成挑战',
-        cubeToQuarkAll: '昂贵的夸克加成',
-        cashGrab2: '更加昂贵的物品',
-        chronometerZ: '昂贵的飞升速度加成',
-        obtainiumEX2: '昂贵的额外难得素',
-        offeringEX2: '昂贵的额外祭品',
-        powderAuto: '昂贵的超通量粉自动转化',
-        seasonPassLost: '昂贵的超现实神秘遗物',
-        challenge15Auto: '顶夸夸的自动升级？',
-        extraWarp: '顶夸夸的通量？',
-        improveQuarkHept: '使惊奇七阶立方·夸克的效果增加2%',
-        improveQuarkHept2: '再使惊奇七阶立方·夸克的效果增加2%',
-        improveQuarkHept3: '三度使惊奇七阶立方·夸克的效果增加2%',
-        improveQuarkHept4: '使惊奇七阶立方·夸克的效果增加2%',
-        shopImprovedDaily: '略微强化“Daily”代码',
-        shopImprovedDaily2: '稍微强化“Daily”代码',
-        shopImprovedDaily3: '昂贵的“Daily”代码强化',
-        shopImprovedDaily4: '顶夸夸的“Daily”代码强化'
+        seasonPassZ: '季票 Z',
+        challengeTome2: '挑战10减少需求 2',
+        instantChallenge2: '立即完成挑战 2',
+        cubeToQuarkAll: '夸克加成 2',
+        cashGrab2: '昂贵的物品 2',
+        chronometerZ: '时计 Z',
+        obtainiumEX2: 'EX额外难得素 2',
+        offeringEX2: 'EX额外祭品 2',
+        powderAuto: '超通量粉自动转化',
+        seasonPassLost: '季票 遗物',
+        challenge15Auto: '自动挑战15',
+        extraWarp: '额外跃迁',
+        improveQuarkHept: '惊奇七阶立方·夸克 1',
+        improveQuarkHept2: '惊奇七阶立方·夸克 2',
+        improveQuarkHept3: '惊奇七阶立方·夸克 3',
+        improveQuarkHept4: '惊奇七阶立方·夸克 4',
+        shopImprovedDaily: '强化“Daily”代码 1',
+        shopImprovedDaily2: '强化“Daily”代码 2',
+        shopImprovedDaily3: '强化“Daily”代码 3',
+        shopImprovedDaily4: '强化“Daily”代码 4'
     }
 
     return names[input];
@@ -940,4 +940,111 @@ export const getQuarkInvestment = (upgrade: ShopUpgradeNames) => {
                 shopData[upgrade].priceIncrease * (player.shopUpgrades[upgrade] - 1) * (player.shopUpgrades[upgrade]) / 2
 
     return val;
+}
+
+export const isShopUpgradeUnlocked = (upgrade: ShopUpgradeNames):boolean => {
+    switch (upgrade) {
+        case 'offeringPotion':
+            return true
+        case 'obtainiumPotion':
+            return true
+        case 'offeringEX':
+            return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+        case 'offeringAuto':
+            return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+        case 'obtainiumEX':
+            return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+        case 'obtainiumAuto':
+            return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+        case 'instantChallenge':
+            return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+        case 'antSpeed':
+            return player.highestchallengecompletions[8] > 0 || player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'cashGrab':
+            return player.highestchallengecompletions[8] > 0 || player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'shopTalisman':
+            return player.highestchallengecompletions[9] > 0 || player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'seasonPass':
+            return player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'challengeExtension':
+            return player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'challengeTome':
+            return player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'cubeToQuark':
+            return player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'tesseractToQuark':
+            return player.highestchallengecompletions[11] > 0 || player.highestSingularityCount > 0
+        case 'hypercubeToQuark':
+            return player.highestchallengecompletions[13] > 0 || player.highestSingularityCount > 0
+        case 'seasonPass2':
+            return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+        case 'seasonPass3':
+            return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+        case 'chronometer':
+            return player.highestchallengecompletions[12] > 0 || player.highestSingularityCount > 0
+        case 'infiniteAscent':
+            return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+        case 'calculator':
+            return player.ascensionCount > 0 || player.highestSingularityCount > 0
+        case 'calculator2':
+            return player.highestchallengecompletions[11] > 0 || player.highestSingularityCount > 0
+        case 'calculator3':
+            return player.highestchallengecompletions[13] > 0 || player.highestSingularityCount > 0
+        case 'calculator4':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'calculator5':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'calculator6':
+            return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
+        case 'constantEX':
+            return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+        case 'powderEX':
+            return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+        case 'chronometer2':
+            return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+        case 'chronometer3':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'seasonPassY':
+            return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+        case 'seasonPassZ':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'challengeTome2':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'instantChallenge2':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'cashGrab2':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'cubeToQuarkAll':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'chronometerZ':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'offeringEX2':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'obtainiumEX2':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'powderAuto':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'seasonPassLost':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'challenge15Auto':
+            return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
+        case 'extraWarp':
+            return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
+        case 'improveQuarkHept':
+            return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+        case 'improveQuarkHept2':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'improveQuarkHept3':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'improveQuarkHept4':
+            return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
+        case 'shopImprovedDaily':
+            return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+        case 'shopImprovedDaily2':
+            return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
+        case 'shopImprovedDaily3':
+            return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
+        case 'shopImprovedDaily4':
+            return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
+    }
 }

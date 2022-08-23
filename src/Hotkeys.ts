@@ -229,76 +229,76 @@ export const resetHotkeys = async () => {
         const toSet = player.hotkeys[key][1];
         if (hotkey.has(oldKey)) {
             const old = hotkey.get(oldKey)!;
-            let CHold = old[0];
-            switch (CHold) {
+            let CNold = old[0];
+            switch (CNold) {
                 case 'Buy Accelerators':
-                    CHold ='购买加速器';
+                    CNold ='购买加速器';
                     break;
                 case 'Boost Accelerator':
-                    CHold ='加速器加成';
+                    CNold ='加速器加成';
                     break;
                 case 'Auto Challenge':
-                    CHold ='自动扫荡挑战';
+                    CNold ='自动扫荡挑战';
                     break;
                 case 'Exit T / R Challenge':
-                    CHold ='退出超越/转世挑战';
+                    CNold ='退出超越/转世挑战';
                     break;
                 case 'Multipliers':
-                    CHold ='加倍器';
+                    CNold ='加倍器';
                     break;
                 case 'No (Cancel)':
-                    CHold ='否(取消';
+                    CNold ='否(取消';
                     break;
                 case 'Reset Prestige':
-                    CHold ='转生重置';
+                    CNold ='转生重置';
                     break;
                 case 'Reset Reincarnate':
-                    CHold ='转世重置';
+                    CNold ='转世重置';
                     break;
                 case 'Sacrifice Ants':
-                    CHold ='蚂蚁献祭';
+                    CNold ='蚂蚁献祭';
                     break;
                 case 'Reset Transcend':
-                    CHold ='超越重置';
+                    CNold ='超越重置';
                     break;
                 case 'Yes (OK)':
-                    CHold ='是(确定';
+                    CNold ='是(确定';
                     break;
                 case 'Back a tab':
-                    CHold ='切换到前一个选项卡';
+                    CNold ='切换到前一个选项卡';
                     break;
                 case 'Next tab':
-                    CHold ='切换到后一个选项卡';
+                    CNold ='切换到后一个选项卡';
                     break;
                 case 'Back a subtab':
-                    CHold ='切换到前一个子选项卡';
+                    CNold ='切换到前一个子选项卡';
                     break;
                 case 'Next subtab':
-                    CHold ='切换到后一个子选项卡';
+                    CNold ='切换到后一个子选项卡';
                     break;
                 case 'Reset Ascend':
-                    CHold ='飞升重置';
+                    CNold ='飞升重置';
                     break;
                 case 'Cleanse Corruptions':
-                    CHold ='清除腐化';
+                    CNold ='清除腐化';
                     break;
                 case 'Spec. Action Add x1':
-                    CHold ='使用Add代码x1';
+                    CNold ='使用Add代码x1';
                     break;
                 case 'Exit Asc. Challenge':
-                    CHold ='退出飞升挑战';
+                    CNold ='退出飞升挑战';
                     break;
                 case 'Use Off. Potion':
-                    CHold ='使用祭品药剂';
+                    CNold ='使用祭品药剂';
                     break;
                 case 'Use Obt. Potion':
-                    CHold ='使用难得素药剂';
+                    CNold ='使用难得素药剂';
                     break;
                 case 'Reset Singularity':
-                    CHold ='奇点重置';
+                    CNold ='奇点重置';
                     break;
             }
-            settext += `\t${oldKey}[${CHold}]改为了${toSet}，`;
+            settext += `\t${oldKey}[${CNold}]改为了${toSet}，`;
             hotkey.set(toSet, old);
             hotkey.delete(oldKey);
         }

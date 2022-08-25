@@ -1530,7 +1530,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.11: Statistician\'s Edition v2 - The Alternate Reality [Last Update: 7:0 UTC 18-Aug-2022].': '您目前玩的版本为V2.9.11：统计学家v2 - 另一个现实 [2022年8月18日 UTC 7:00更新]。',
+    'You\'re playing v2.9.11: August 24 Edition - The Alternate Reality [Last Update: 13:2 UTC 25-Aug-2022].': '您目前玩的版本为V2.9.11：8月24日版本 - 另一个现实 [2022年8月25日 UTC 13:02更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1940,6 +1940,10 @@ var cnItems = {
     'You have not triggered the QUACKSTRAVAGANZA!!': '您未开启夸克大盛典！！',
     'Potion Decanter of Enlightenment': '启迪药水瓶',
     'Purported to actually be the fountain of youth, this item powers up potions considerably!': '据称它其实是不老泉水，它可以极大地强化药剂！',
+    'Potion Decanter of Inquisition': '审查药水瓶',
+    'Staring at the glass, you aren\'t actually sure what this potion is.': '盯着瓶子看了一会儿，您还是没弄明白这到底是什么药水。',
+    'Potion Decanter of Maddening Instability': '暴躁不稳定药水瓶',
+    'SHE\'S GONNA BLOW!!!! Said Midas, the Golden Quark Salesman. Oh yeah, did we mention he\'s in the game?': '快要炸了！米达斯，也就是金夸克商人，如是说。哦，我们之前没有提到过他吗？',
     'Bigger Challenge Caps': '挑战上限增加',
     'Need more Challenges? Well, add 2 more Reincarnation Challenges and 1 Ascension Challenge to the cap, per level.': '需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。',
     'Biggerer Challenge Caps': '挑战上限再度增加',
@@ -1993,6 +1997,8 @@ var cnItems = {
     'Total Generated': '共产生',
     '3-7 Dimensional Cubes': '惊奇方盒至惊奇七阶立方获取数量',
     'Quarks': '夸克获取数量',
+    'Buy multiple levels at once by holding': '按住',
+    ' while clicking!': '键再购买升级，则可以一次性进行多次升级！',
     'Octeracts for Dummies': '萌新的惊奇八阶方块',
     'Hello... I Am Derpsmith... The Ancestor Of Ant God... I Did Not Expect You To Get Here. Here Is 25% More Quarks, 20% More Octeracts, And 100,000x Ant Speed...': '您好……我是Derpsmith……蚁神的先祖……没想到您能走到这一步。该升级可以使您的夸克获取数量增加25%，惊奇八阶方块获取数量增加20%，蚂蚁速度变为100000倍……',
     'You have  paid your respects to Derpsmith.': '您已向Derpsmith致敬。',
@@ -2037,6 +2043,7 @@ var cnItems = {
     'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶方块的获取数量增加1%！',
     'Derpsmith\'s Singularity Discombobulator': 'Derpsmith的奇点小玩意',
     'Each level makes Singularity give +100% Golden Quarks (additive) and singularity at all time highest count grants +1 singularity count!': '每级使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且在最高奇点次数时进入奇点将使奇点次数增加1次！',
+    'Purchase cancelled!': '已取消购买！',
     //#endregion
 
     //原样
@@ -2442,5 +2449,7 @@ var cnRegReplace = new Map([
     [/^Obtainium gain \+(.*)$/, '难得素获取数量增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
     [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数增加$2次。'], //奇点
-    [/^Purchased (.+) levels, thanks to MAX Buy!$/, '一次性升级了$1级，最大化购买真是太棒了！'], //奇点
+    [/^How many Golden Quarks would you like to spend\? You have (.+) GQ. Type -1 to use max!$/, '您想要花费多少金夸克？您拥有$1金夸克。如果想要购买最大数量，请输入-1！'], //奇点
+    [/^How many Octeracts would you like to spend\? You have (.+) OCT. Type -1 to use max!$/, '您想要花费多少惊奇八阶方块？您拥有$1惊奇八阶方块。如果想要购买最大数量，请输入-1！'], //奇点
+    [/^Purchased (.+) levels, thanks to Multi Buy!$/, '一次性升级了$1级，多重购买真是太棒了！'], //奇点
 ]);

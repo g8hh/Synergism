@@ -10,7 +10,7 @@ import { calculateEffectiveSingularities } from './singularity'
 import { format, player } from './Synergism'
 import type { Player } from './types/Synergism'
 import { Alert } from './UpdateHTML'
-import { formatS } from './Utility'
+import { formatS, sumContents } from './Utility'
 import { Globals as G } from './Variables'
 import ClipboardJS from 'clipboard'
 
@@ -20,6 +20,8 @@ export const generateExportSummary = async():Promise<void> => {
     const ver = `版本：${version}`
 
     const subCategoryDivisor = '-----+-----\n'
+
+    const firstPlayed = `开始游戏时间：${player.firstPlayed}\n`
 
     let resources = '===== 资源 =====\n'
     resources = resources + (player.reincarnationCount > 0 || player.highestSingularityCount > 0 ? `夸克：${format(Number(player.worlds), 0, true)}\n` : '')
@@ -41,11 +43,20 @@ export const generateExportSummary = async():Promise<void> => {
         resources = resources + `难得素：${format(player.researchPoints, 0, true)}\n`
     }
     if (player.ascensionCount > 0 || player.singularityCount > 0) {
+        const cubeArray = [null, player.cubeBlessings.accelerator, player.cubeBlessings.multiplier, player.cubeBlessings.offering, player.cubeBlessings.runeExp, player.cubeBlessings.obtainium, player.cubeBlessings.antSpeed, player.cubeBlessings.antSacrifice, player.cubeBlessings.antELO, player.cubeBlessings.talismanBonus, player.cubeBlessings.globalSpeed]
+        const tesseractArray = [null, player.tesseractBlessings.accelerator, player.tesseractBlessings.multiplier, player.tesseractBlessings.offering, player.tesseractBlessings.runeExp, player.tesseractBlessings.obtainium, player.tesseractBlessings.antSpeed, player.tesseractBlessings.antSacrifice, player.tesseractBlessings.antELO, player.tesseractBlessings.talismanBonus, player.tesseractBlessings.globalSpeed]
+        const hypercubeArray = [null, player.hypercubeBlessings.accelerator, player.hypercubeBlessings.multiplier, player.hypercubeBlessings.offering, player.hypercubeBlessings.runeExp, player.hypercubeBlessings.obtainium, player.hypercubeBlessings.antSpeed, player.hypercubeBlessings.antSacrifice, player.hypercubeBlessings.antELO, player.hypercubeBlessings.talismanBonus, player.hypercubeBlessings.globalSpeed]
+        const platonicArray = [player.platonicBlessings.cubes, player.platonicBlessings.tesseracts, player.platonicBlessings.hypercubes, player.platonicBlessings.platonics, player.platonicBlessings.hypercubeBonus, player.platonicBlessings.taxes, player.platonicBlessings.scoreBonus, player.platonicBlessings.globalSpeed]
+        const cubeSum = format(sumContents(cubeArray.slice(1) as number[]), 0, true)
+        const tesseractSum = format(sumContents(tesseractArray.slice(1) as number[]), 0, true)
+        const hypercubeSum = format(sumContents(hypercubeArray.slice(1) as number[]), 0, true)
+        const platonicSum = format(sumContents(platonicArray), 0, true)
+
         resources = resources + subCategoryDivisor
-        resources = resources + `惊奇方盒：${format(Number(player.wowCubes), 0, true)}\n`
-        resources = resources + `惊奇超立方：${format(Number(player.wowTesseracts), 0, true)}\n`
-        resources = resources + `惊奇五阶立方：${format(Number(player.wowHypercubes), 0, true)}\n`
-        resources = resources + `PLATONIC方盒：${format(Number(player.wowPlatonicCubes), 0, true)}\n`
+        resources = resources + `惊奇方盒：${format(Number(player.wowCubes), 0, true)} -+- 贡品总数：${cubeSum}\n`
+        resources = resources + `惊奇超立方：${format(Number(player.wowTesseracts), 0, true)} -+- 赠礼总数：${tesseractSum}\n`
+        resources = resources + `惊奇五阶立方：${format(Number(player.wowHypercubes), 0, true)} -+- 恩赐总数：${hypercubeSum}\n`
+        resources = resources + `PLATONIC方盒：${format(Number(player.wowPlatonicCubes), 0, true)} -+- 已开启总数：${platonicSum}\n`
         resources = resources + `惊奇七阶立方：${format(player.wowAbyssals, 0, true)}\n`
         if (player.singularityUpgrades.octeractUnlock.getEffect().bonus) {
             resources = resources + `惊奇八阶方块：${format(player.wowOcteracts, 0, true)}\n`
@@ -89,7 +100,7 @@ export const generateExportSummary = async():Promise<void> => {
         ascension = ascension + `挑战12完成次数：${player.challengecompletions[12]}/${getMaxChallenges(12)}\n`
         ascension = ascension + `挑战13完成次数：${player.challengecompletions[13]}/${getMaxChallenges(13)}\n`
         ascension = ascension + `挑战14完成次数：${player.challengecompletions[14]}/${getMaxChallenges(14)}\n`
-        if (player.highestchallengecompletions[14] > 0) {
+        if (player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0) {
             ascension = ascension + `挑战15指数：${format(player.challenge15Exponent, 2, true)}\n`
             ascension = ascension + `研究[8x25]是否升级满：${(player.researches[200] === 1e5) ? '✔' : '✖'}\n`
             ascension = ascension + `方盒升级[5x10]是否升级满：${(player.cubeUpgrades[50] === 1e5) ? '✔' : '✖'}\n`
@@ -97,7 +108,7 @@ export const generateExportSummary = async():Promise<void> => {
             ascension = ascension + `Platonic β是否已升级：${player.platonicUpgrades[10] > 0 ? '✔' : '✖'}\n`
             ascension = ascension + `Platonic Ω是否已升级：${player.platonicUpgrades[15] > 0 ? '✔' : '✖'}\n`
         }
-        if (player.challenge15Exponent >= 1e15) {
+        if (player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0) {
             ascension = ascension + '----- 惊奇七阶立方 -----\n'
             ascension = ascension + `惊奇七阶立方·时光库存：${format(player.hepteractCrafts.chronos.BAL,0,true)}/${format(player.hepteractCrafts.chronos.CAP, 0, true)}\n`
             ascension = ascension + `惊奇七阶立方·超真实库存：${format(player.hepteractCrafts.hyperrealism.BAL,0,true)}/${format(player.hepteractCrafts.hyperrealism.CAP, 0, true)}\n`
@@ -545,7 +556,7 @@ export const generateExportSummary = async():Promise<void> => {
     }
 
 
-    const returnString = titleText + '\n' + time + '\n' + ver + '\n' +
+    const returnString = titleText + '\n' + time + '\n' + ver + '\n' + firstPlayed +
                         resources + octeract + singularity + ascension +
                         reincarnation + transcension + prestige +
                         shopUpgradeStats + singularityUpgradeStats + octeractUpgradeStats

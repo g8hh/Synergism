@@ -847,6 +847,45 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
             }
         }
     },
+    singAscensionSpeed: {
+        name: 'A hecking good ascension speedup!',
+        description: 'Ascension Speed is raised to the power of 1.03, raised to 0.97 if less than 1x.',
+        maxLevel: 1,
+        costPerLevel: 1e10,
+        minimumSingularity: 130,
+        effect: (n: number) => {
+            return {
+                bonus: n,
+                desc: `Ascension Speed ^${format(1 + 0.03 * n, 2, true)}, ^${format(1 - 0.03 * n, 2, true)} if < 1x` // TODO
+            }
+        }
+    },
+    singAscensionSpeed2: {
+        name: 'A mediocre ascension speedup!',
+        description: 'Ascension speed is increased by 30% if Ascension timer is less than 10 seconds, for every second below it is.',
+        maxLevel: 1,
+        costPerLevel: 3e12,
+        minimumSingularity: 150,
+        effect: (n: number) => {
+            return {
+                bonus: n,
+                desc: `For every second under 10 on Ascension timer, Ascension Speed +${format(30 * n, 0, true)}%.` // TODO
+            }
+        }
+    },
+    WIP: {
+        name: 'WIP TEMPLATE',
+        description: 'This is a template! Bottom Text.',
+        maxLevel: 100,
+        costPerLevel: 1e300,
+        minimumSingularity: 251,
+        effect: (n: number) => {
+            return {
+                bonus: n,
+                desc: 'Update this description at a later time!!!!!!!!!!' // TODO
+            }
+        }
+    },
     ultimatePen: {
         name: 'The Ultimate Pen',
         description: 'You. It is you who is the author of your own story!',

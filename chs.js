@@ -1531,7 +1531,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.11: August 25 Edition - The Alternate Reality [Last Update: 13:2 UTC 25-Aug-2022].': '您目前玩的版本为V2.9.11：8月25日版本 - 另一个现实 [2022年8月25日 UTC 13:02更新]。',
+    'You\'re playing v2.9.11: September 13 Edition - The Alternate Reality [Last Update: 8:14 UTC 14-Sep-2022].': '您目前玩的版本为V2.9.11：9月13日版本 - 另一个现实 [2022年9月14日 UTC 8:14更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1983,6 +1983,10 @@ var cnItems = {
     'Golden Quark gained by Singularity is increased by 100% (additive) and going singular at your all time highest count gives +1 singularity count! It\'s like Etherflux but with an A.': '使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且在最高奇点次数时进入奇点将使奇点次数增加1次！它的效果与以太通量类似，只是名字多了个超字。',
     'You\'ve  transformed the Aetherflux!': '您已转化超以太通量！',
     'You\'ve NOT transformed the Aetherflux!': '您未转化超以太通量！',
+    'A hecking good ascension speedup!': '飞升的速度强力提升！',
+    'Ascension Speed is raised to the power of 1.03, raised to 0.97 if less than 1x.': '如果飞升的速度低于1倍，则变为原来的0.97次方，否则变为原来的1.03次方。',
+    'A mediocre ascension speedup!': '飞升的速度普通提升！',
+    'Ascension speed is increased by 30% if Ascension timer is less than 10 seconds, for every second below it is.': '飞升时间每比10秒少1秒，就使飞升的速度增加30%。',
     'This upgrade has  been purchased!': '已购买该升级！',
     'This upgrade has NOT been purchased!': '未购买该升级！',
     'Hey! You have already maxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
@@ -2432,6 +2436,8 @@ var cnRegReplace = new Map([
     [/^You feel motivated enough to complete (.+) more Reincarnation Challenges, and (.+) more Ascension Challenges.$/, '您更有动力迎接挑战了，转世挑战次数上限增加$1次，飞升挑战次数上限增加$2次。'], //奇点
     [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点
     [/^Octeract Gain \+(.*)$/, '惊奇八阶方块获取数量增加$1'], //奇点
+    [/^Ascension Speed \^(.+), \^(.+) if <$/, '飞升的速度变为原来的$1次方。飞升的速度在以下条件时变为原来的$2次方：低于'], //奇点
+    [/^For every second under 10 on Ascension timer, Ascension Speed \+(.+)%.$/, '飞升时间每比10秒少1秒，就使飞升的速度增加$1%。'], //奇点
     [/^You can buy Golden Quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) Golden Quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
     [/^Octeract Gain is increased by (.+)%.$/, '惊奇八阶方块获取数量增加$1%。'], //奇点

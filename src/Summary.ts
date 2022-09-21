@@ -528,6 +528,9 @@ export const generateExportSummary = async():Promise<void> => {
                 case 'Wow! Make free upgrades good already, Platonic!':
                     CNoctname = '真惊奇！PLATONIC，让免费升级再度强大吧！';
                     break;
+                case 'Coupon of Ultimate Penniless Derpsmiths':
+                    CNoctname = '身无分文的Derpsmith之终级兑换券';
+                    break;
                 case 'Offering Electrolosis':
                     CNoctname = '祭品电解';
                     break;

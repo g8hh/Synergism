@@ -47,33 +47,7 @@ import { eventCheck } from './Event';
 import { disableHotkeys } from './Hotkeys';
 import { octeractData, OcteractUpgrade } from './Octeracts';
 import { settingTheme } from './Themes';
-
-/**
- * Whether or not the current version is a testing version or a main version.
- * This should be detected when importing a file.
- */
-//export const isTesting = false;
-//export const version = '2.5.5';
-
-export const intervalHold = new Set<ReturnType<typeof setInterval>>();
-export const interval = new Proxy(setInterval, {
-    apply(target, thisArg, args: Parameters<typeof setInterval>) {
-        const set = target.apply(thisArg, args);
-        intervalHold.add(set);
-        return set;
-    }
-});
-
-export const clearInt = new Proxy(clearInterval, {
-    apply(target, thisArg, args: [ReturnType<typeof setInterval>]) {
-        const id = args[0];
-        if (intervalHold.has(id)) {
-            intervalHold.delete(id);
-        }
-
-        return target.apply(thisArg, args);
-    }
-});
+import { setInterval, setTimeout, clearTimeout, clearTimers } from './Timers'
 
 export const player: Player = {
     firstPlayed: new Date().toISOString(),
@@ -797,6 +771,7 @@ export const player: Player = {
         octeractImprovedFree: new OcteractUpgrade(octeractData['octeractImprovedFree']),
         octeractImprovedFree2: new OcteractUpgrade(octeractData['octeractImprovedFree2']),
         octeractImprovedFree3: new OcteractUpgrade(octeractData['octeractImprovedFree3']),
+        octeractImprovedFree4: new OcteractUpgrade(octeractData['octeractImprovedFree4']),
         octeractOfferings1: new OcteractUpgrade(octeractData['octeractOfferings1']),
         octeractObtainium1: new OcteractUpgrade(octeractData['octeractObtainium1']),
         octeractAscensions: new OcteractUpgrade(octeractData['octeractAscensions']),
@@ -3625,9 +3600,9 @@ export const slowUpdates = (): void => {
 }
 
 export const constantIntervals = (): void => {
-    interval(saveSynergy, 5000);
-    interval(slowUpdates, 200);
-    interval(fastUpdates, 50);
+    setInterval(saveSynergy, 5000);
+    setInterval(slowUpdates, 200);
+    setInterval(fastUpdates, 50);
 
     if (!G['timeWarp']) {
         exitOffline();
@@ -3638,7 +3613,7 @@ let lastUpdate = 0;
 
 export const createTimer = (): void => {
     lastUpdate = performance.now();
-    interval(tick, 5);
+    setInterval(tick, 5);
 }
 
 const dt = 5;
@@ -3927,17 +3902,12 @@ export const showExitOffline = () => {
  * @param reset if this param is passed, offline progression will not be calculated.
  */
 export const reloadShit = async (reset = false) => {
+    clearTimers()
 
     // Shows a reset button when page loading seems to stop or cause an error
     const preloadDeleteGame = setTimeout(() => DOMCacheGetOrSet('preloadDeleteGame').style.display = 'block', 10000);
 
     disableHotkeys();
-
-    for (const timer of intervalHold) {
-        clearInt(timer);
-    }
-
-    intervalHold.clear();
 
     // Wait a tick to continue. This is a (likely futile) attempt to see if this solves save corrupting.
     // This ensures all queued tasks are executed before continuing on.
@@ -3997,13 +3967,13 @@ export const reloadShit = async (reset = false) => {
     toggleSubTab(-1, 0); // set 'statistics main'
 
     dailyResetCheck();
-    interval(dailyResetCheck, 30000);
+    setInterval(dailyResetCheck, 30000);
 
     constantIntervals();
     changeTabColor();
 
     eventCheck();
-    interval(eventCheck, 15000);
+    setInterval(eventCheck, 15000);
     showExitOffline();
     clearTimeout(preloadDeleteGame);
 

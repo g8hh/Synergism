@@ -362,6 +362,12 @@ export const generateExportSummary = async():Promise<void> => {
                 case 'Potion Decanter of Enlightenment':
                     CNsingname ='启迪药水瓶';
                     break;
+                case 'Potion Decanter of Inquisition':
+                    CNsingname ='审查药水瓶';
+                    break;
+                case 'Potion Decanter of Maddening Instability':
+                    CNsingname ='暴躁不稳定药水瓶';
+                    break;
                 case 'Bigger Challenge Caps':
                     CNsingname ='挑战上限增加';
                     break;
@@ -415,6 +421,12 @@ export const generateExportSummary = async():Promise<void> => {
                     break;
                 case 'Aetherflux Singularities':
                     CNsingname ='超以太通量·奇点';
+                    break;
+                case 'A hecking good ascension speedup!':
+                    CNsingname ='飞升的速度强力提升！';
+                    break;
+                case 'A mediocre ascension speedup!':
+                    CNsingname ='飞升的速度普通提升！';
                     break;
             }
 

@@ -30,8 +30,8 @@ export class OcteractUpgrade extends DynamicUpgrade {
     }
 
     /**
-     * Buy levels up until togglebuy or maxxed.
-     * @returns An alert indicating cannot afford, already maxxed or purchased with how many
+     * Buy levels up until togglebuy or maxed.
+     * @returns An alert indicating cannot afford, already maxed or purchased with how many
      *          levels purchased
      */
     public async buyLevel(event: MouseEvent): Promise<void> {
@@ -160,6 +160,21 @@ export const octeractData: Record<keyof Player['octeractUpgrades'], IOcteractDat
         },
         maxLevel: -1,
         costPerLevel: 1e-8,
+        effect: (n: number) => {
+            return {
+                bonus: 1 + 0.01 * n,
+                desc: `Octeract Gain is increased by ${format(n, 0 , true)}%.`
+            }
+        }
+    },
+    octeractGain2: {
+        name: 'Octeract Trigenesis',
+        description: 'It turns out that you have six additional dimensions to modify your Cogenesis. +1% more Octs per level!',
+        costFormula: (level: number, baseCost: number) => {
+            return baseCost * Math.pow(10, Math.pow(level, 0.5) / 3)
+        },
+        maxLevel: -1,
+        costPerLevel: 1e10,
         effect: (n: number) => {
             return {
                 bonus: 1 + 0.01 * n,
@@ -378,6 +393,21 @@ export const octeractData: Record<keyof Player['octeractUpgrades'], IOcteractDat
             return {
                 bonus: 0.001 * n + ((n > 0)? 0.01: 0),
                 desc: `Exponent of the first upgrade +${format(0.001 * n + ((n > 0)? 0.01: 0), 3, true)}`
+            }
+        }
+    },
+    octeractSingUpgradeCap: {
+        name: 'Overwriting Pointers',
+        description: 'Derpsmith encountered a SegFault after reassigning null... +1 to level cap on certain Singularity Upgrades per level!',
+        costFormula: (level: number, baseCost: number) => {
+            return baseCost * Math.pow(1e3, level)
+        },
+        maxLevel: 10,
+        costPerLevel: 1e10,
+        effect: (n: number) => {
+            return {
+                bonus: n,
+                desc: `Some Singularity Upgrades have +${n} max level!`
             }
         }
     },

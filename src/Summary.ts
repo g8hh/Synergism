@@ -489,6 +489,9 @@ export const generateExportSummary = async():Promise<void> => {
                 case 'Octeract Cogenesis':
                     CNoctname = '惊奇八阶方块同生';
                     break;
+                case 'Octeract Trigenesis':
+                    CNoctname = '惊奇八阶方块三度起源';
+                    break;
                 case 'Quark Octeract':
                     CNoctname = '惊奇八阶方块·夸克';
                     break;
@@ -530,6 +533,9 @@ export const generateExportSummary = async():Promise<void> => {
                     break;
                 case 'Coupon of Ultimate Penniless Derpsmiths':
                     CNoctname = '身无分文的Derpsmith之终级兑换券';
+                    break;
+                case 'Overwriting Pointers':
+                    CNoctname = '重写指针';
                     break;
                 case 'Offering Electrolosis':
                     CNoctname = '祭品电解';

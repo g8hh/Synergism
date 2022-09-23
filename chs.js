@@ -1531,7 +1531,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.20: September 20 Edition - The Alternate Reality [Last Update: 15:19 UTC 21-Sep-2022].': '您目前玩的版本为V2.9.20：9月20日版本 - 另一个现实 [2022年9月21日 UTC 15:19更新]。',
+    'You\'re playing v2.9.20: September 23 Edition - The Alternate Reality [Last Update: 15:19 UTC 21-Sep-2022].': '您目前玩的版本为V2.9.20：9月23日版本 - 另一个现实 [2022年9月21日 UTC 15:19更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1743,8 +1743,8 @@ var cnItems = {
     'Hotkeys: OFF': '快捷键：关',
     'Number Hotkeys: ON': '数字快捷键：开',
     'Number Hotkeys: OFF': '数字快捷键：关',
-    'Loadouts Notifx: ON': '腐化预设快捷键：开',
-    'Loadouts Notifx: OFF': '腐化预设快捷键：关',
+    'Loadouts Notify: ON': '腐化预设快捷键：开',
+    'Loadouts Notify: OFF': '腐化预设快捷键：关',
     //#endregion
     //#region 商店
     'Welcome to the Quark Shop. You can\'t believe what\'s in stock!': '欢迎来到夸克商店，您肯定想不到这里会有些什么！',
@@ -1781,7 +1781,7 @@ var cnItems = {
     'The PL-AT X has improved memory capacity, allowing you to store 2 additional uses to code \'add\' per level. Final level makes \'add\' give 25% more Quarks!': 'PL-AT X提升了内存容量，每级使您使用“add”代码的次数上限增加2。另外，最后一级可以使您使用“add”代码获取的夸克数量增加25%！',
     'The PL-AT Ω is infused with some Unobtainium, which is epic! But furthermore, it reduces the variance of Quarks by code \'add\' by 10% per level, which makes you more likely to get the maximum multiplier. It also has the ability to give +60 seconds to Ascension Timer per level using that code.': 'PL-AT Ω注入了难得素，这使它的性能进一步提升了！每级使您使用“add”代码获得的夸克数量变化范围减少10%，因此您更有可能获得最高的数值。另外，每级可以使您使用“add”代码时同时增加60秒飞升时间。',
     'The PL-AT δ runs at 4,096Hz, which is a huge improvement over previous models. Add attempts refill 2% faster per level! Final level adds 8 additional capacity!': 'PL-AT δ的主频为4096Hz，这是一项巨大的进步。每级使“add”代码的使用次数加快2%恢复。另外，最后一级可以使您使用“add”代码的次数上限增加8。',
-    'The PL-AT Γ model somehow performs more \'powerful\' computations, whatever that means. +6 seconds of GQ Export timer per level. +1 capcaity every 10 levels, with 6 more at final level!': 'PL-AT Γ可以进行“更强大”的计算。每级使您使用“add”代码时导出存档的金夸克奖励计时增加6秒。另外，每10级使您使用“add”代码的次数上限增加1，且最后一级可以使您使用“add”代码的次数上限再增加6。',
+    'The PL-AT Γ model somehow performs more \'powerful\' computations, whatever that means. +6 seconds of GQ Export timer per level. +1 capacity every 10 levels, with 6 more at final level!': 'PL-AT Γ可以进行“更强大”的计算。每级使您使用“add”代码时导出存档的金夸克奖励计时增加6秒。另外，每10级使您使用“add”代码的次数上限增加1，且最后一级可以使您使用“add”代码的次数上限再增加6。',
     'The PL-AT _ model was made by Derpsmith, before he was banished from the industry forever. Gain 1 second of Octeract per usage per level. Final level grants 24 additional capacity!': 'PL-AT _由Derpsmith制造，之后他就被永远逐出了这个行业。每级使您使用“add”代码时获得相当于1秒产量的惊奇八阶方块。另外，最后一级可以使您使用“add”代码的次数上限增加24。',
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
     'Platonic himself gives you 2% better conversion rate on Overflux Orbs to Powder per level. This activates when Orbs expire.': 'Platonic使您的超通量粉转换效率每级增加2%。超通量珠粉碎时生效。',
@@ -2010,6 +2010,8 @@ var cnItems = {
     'You have not paid your respects to Derpsmith.': '您未向Derpsmith致敬。',
     'Octeract Cogenesis': '惊奇八阶方块同生',
     'Have you despised how slow these damn things are? Gain 1% more of them per level! Simple.': '您有没有感觉这些玩意慢得捉急？每级可以使惊奇八阶方块获取数量增加1%！很简单吧。',
+    'Octeract Trigenesis': '惊奇八阶方块三度起源',
+    'It turns out that you have six additional dimensions to modify your Cogenesis. +1% more Octs per level!': '以结果来看，您还有六个维度可以升级同生。每级可以使惊奇八阶方块获取数量增加1%！',
     'Quark Octeract': '惊奇八阶方块·夸克',
     'An altered forme of the hepteract, this gives a 1% Quark Bonus per level without Diminishing Return.': '惊奇七阶立方的变体版本，每级使夸克获取数量增加1%，且效果不衰减。',
     'EXTRA CHONKY Corruptions': '更多腐化',
@@ -2040,6 +2042,8 @@ var cnItems = {
     'Extends the exponent of the free upgrades to 0.70.': '使免费升级的指数变为0.70。',
     'Coupon of Ultimate Penniless Derpsmiths': '身无分文的Derpsmith之终级兑换券',
     'Each level adds 0.001 to the exponent of free upgrades, with the first level adding another 0.01!': '每级使免费升级的指数增加0.001，并且第一级额外增加0.01！',
+    'Overwriting Pointers': '重写指针',
+    'Derpsmith encountered a SegFault after reassigning null... +1 to level cap on certain Singularity Upgrades per level!': 'Derpsmith在NULL指针重分配时遇到了段出错……每级可以使特定奇点升级的等级上限增加1！',
     'Offering Electrolosis': '祭品电解',
     'Gain 1% more offerings per level.': '每级使祭品获取数量增加1%。',
     'Obtainium Deluge': '难得素之涌',
@@ -2454,6 +2458,7 @@ var cnRegReplace = new Map([
     [/^Ascension Speed per singularity \+(.*)$/, '每次奇点使飞升的速度增加$1'], //奇点
     [/^Exponent of previous upgrade \+(.+).$/, '前一个升级的指数增加$1。'], //奇点
     [/^Exponent of the first upgrade \+(.*)$/, '第一个升级的指数增加$1'], //奇点
+    [/^Some Singularity Upgrades have \+(.+) max level!$/, '特定奇点升级的等级上限增加了$1！'], //奇点
     [/^Offering gain \+(.*)$/, '祭品获取数量增加$1'], //奇点
     [/^Obtainium gain \+(.*)$/, '难得素获取数量增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点

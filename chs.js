@@ -1531,7 +1531,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.20: September 23 Edition - The Alternate Reality [Last Update: 15:19 UTC 21-Sep-2022].': '您目前玩的版本为V2.9.20：9月23日版本 - 另一个现实 [2022年9月21日 UTC 15:19更新]。',
+    'You\'re playing v2.9.20: September 24 Event Special! - The Alternate Reality [Last Update: 15:19 UTC 21-Sep-2022].': '您目前玩的版本为V2.9.20：9月24日特别活动！ - 另一个现实 [2022年9月21日 UTC 15:19更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',

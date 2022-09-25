@@ -1536,8 +1536,8 @@ var cnItems = {
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +40% Quarks, +50% Ascension Speed, +50% Global Speed, +100% Ant Sacrifice rewards, +100% Offering, +100% Obtainium, +50% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量增加40%，飞升的速度增加50%，全局速度增加50%，蚂蚁献祭奖励增加100%，祭品获取数量和难得素获取数量增加100%，惊奇八阶方块获取数量增加50%！',
-    'Challenge 15 Compensation!': '挑战15的补偿！',
+    'Current Buffs: +25% Quarks, +100% Ascension Speed, +100% Global Speed, +100% Ant Sacrifice rewards, +100% Offering, +100% Obtainium, +30% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量增加25%，飞升的速度增加100%，全局速度增加100%，蚂蚁献祭奖励增加100%，祭品获取数量和难得素获取数量增加100%，惊奇八阶方块获取数量增加30%！',
+    'Derpsmith Tea Party': 'Derpsmith的茶会',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -2067,7 +2067,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sun Aug 14 2022 23:59:59 GMT+0800 (": "活动持续到2022年8月14日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sat Oct 01 2022 23:59:59 GMT+0800 (": "活动持续到2022年10月1日 23:59:59 东八区 (", //主界面
     "STARTS Sat Aug 13 2022 00:00:00 GMT+0800 (": "活动开始时间：2022年8月13日 00:00:00 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑

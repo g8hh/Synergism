@@ -2,7 +2,7 @@ import type { DecimalSource } from 'break_infinity.js';
 import Decimal from 'break_infinity.js';
 import LZString from 'lz-string';
 
-import { isDecimal, sortWithIndices, sumContents, btoa } from './Utility';
+import { isDecimal, sortWithIndices, sumContents, btoa, cleanString } from './Utility';
 import { blankGlobals, Globals as G } from './Variables';
 import { CalcECC, getChallengeConditions, challengeDisplay, highestChallengeRewards, challengeRequirement, runChallengeSweep, getMaxChallenges, challenge15ScoreMultiplier, getNextChallenge, autoAscensionChallengeSweepUnlock } from './Challenges';
 
@@ -796,7 +796,7 @@ export const blankSave = Object.assign({}, player, {
 // entering a Singularity.
 let canSave = true;
 
-export const saveSynergy = async (button?: boolean, element?: HTMLButtonElement) => {
+export const saveSynergy = async (button?: boolean, element?: HTMLButtonElement): Promise<boolean> => {
     player.offlinetick = Date.now();
     player.loaded1009 = true;
     player.loaded1009hotfix1 = true;
@@ -811,8 +811,12 @@ export const saveSynergy = async (button?: boolean, element?: HTMLButtonElement)
         wowPlatonicCubes: Number(player.wowPlatonicCubes)
     });
 
+    if (!canSave) {
+        return false
+    }
+
     const save = btoa(JSON.stringify(p));
-    if (save !== null && canSave) {
+    if (save !== null) {
         const saveBlob = new Blob([save], { type: 'text/plain' });
 
         if (element) {
@@ -821,13 +825,18 @@ export const saveSynergy = async (button?: boolean, element?: HTMLButtonElement)
         }
 
         await localforage.setItem<Blob>('Synergysave2', saveBlob);
+    } else {
+        await Alert('An error prevented this file from being saved.')
+        return false
     }
 
-    if (button && canSave) {
+    if (button) {
         const el = DOMCacheGetOrSet('saveinfo');
         el.textContent = 'Game saved successfully!';
         setTimeout(() => el.textContent = '', 4000);
     }
+
+    return true
 }
 
 /**
@@ -861,9 +870,6 @@ const loadSynergy = async () => {
         Object.defineProperty(window, 'Decimal', {
             value: Decimal
         });
-        if (data) {
-            data.exporttest = false;
-        }
     }
 
     Object.assign(G, { ...blankGlobals });
@@ -1336,7 +1342,7 @@ const loadSynergy = async () => {
                 'Synergism-$VERSION$-$TIME$.txt' :
                 'Synergism-$VERSION$-$TIME$-$SING$.txt'
         }
-        (DOMCacheGetOrSet('saveStringInput') as HTMLInputElement).value = player.saveString;
+        (DOMCacheGetOrSet('saveStringInput') as HTMLInputElement).value = cleanString(player.saveString);
 
         for (let j = 1; j < 126; j++) {
             upgradeupdate(j, true);
@@ -1769,6 +1775,7 @@ const loadSynergy = async () => {
         resetHistoryRenderAllTables();
         updateSingularityAchievements();
     }
+
     updateAchievementBG();
     if (player.currentChallenge.reincarnation) {
         resetrepeat('reincarnationChallenge');
@@ -3954,7 +3961,11 @@ export const reloadShit = async (reset = false) => {
         await calculateOffline();
     } else {
         player.worlds = new QuarkHandler({ bonus: 0, quarks: 0 });
-        await saveSynergy();
+        const saved = await saveSynergy();
+
+        if (!saved) {
+            return
+        }
     }
 
     settingTheme();

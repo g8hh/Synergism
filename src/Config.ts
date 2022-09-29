@@ -15,4 +15,4 @@ export const lastUpdated = new Date(Date.UTC(2022, 8, 21, 7, 19, 6));
  * CHANGE THIS ONE INSTEAD
  */
 // eslint-disable-next-line
-export const prod: boolean = true
+export const prod: boolean = false

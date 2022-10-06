@@ -157,5 +157,5 @@ export const cleanString = (s: string): string => {
         cleaned += code > 255 ? '_' : s[i]
     }
 
-    return cleaned
+    return s
 }

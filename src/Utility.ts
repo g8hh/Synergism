@@ -151,11 +151,12 @@ export const formatS = (s: number) => {
 export const cleanString = (s: string): string => {
     let cleaned = ''
 
-    for (let i = 0; i < s.length; i++) {
+    /*for (let i = 0; i < s.length; i++) {
         const code = s.charCodeAt(i)
 
         cleaned += code > 255 ? '_' : s[i]
-    }
+    }*/
+    cleaned = s
 
-    return s
+    return cleaned
 }

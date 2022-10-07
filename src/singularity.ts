@@ -9,8 +9,8 @@ import { toOrdinal } from './Utility'
 export const updateSingularityPenalties = (): void => {
     const singularityCount = player.singularityCount;
     const color = player.runelevels[6] > 0 ? 'green' : 'red';
-    const platonic = (singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}。` : '';
-    const hepteract = (singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}。` : '';
+    const platonic = (singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}。` : '<span style="color: grey">????????？？？？？？？？</span> <span style="color: red">(第37次进入奇点)</span>';
+    const hepteract = (singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}。` : '<span style="color: grey">？？？？？？？？？？</span> <span style="color: red">(第51次进入奇点)</span>';
     const str = getSingularityOridnalText(singularityCount) +
                 `<br>全局速度除以${format(calculateSingularityDebuff('Global Speed', singularityCount), 2, true)}。
                  飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed', singularityCount), 2, true)}。
@@ -21,7 +21,8 @@ export const updateSingularityPenalties = (): void => {
                  方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades', singularityCount), 2, true)}。
                  ${platonic}
                  ${hepteract}
-                 <br><span style='color: ${color}'>Antiquities of Ant God is ${(player.runelevels[6] > 0) ? '' : 'NOT'} purchased. Penalties are ${(player.runelevels[6] > 0) ? '' : 'NOT'} dispelled!</span>`
+                 惩罚将${singularityCount >= 250 ? '永远平滑地增加下去。' : `在<span style="color: red">第${format(calculateNextSpike(player.singularityCount), 0, true)}次进入奇点</span>后大幅增加。`}
+                 <span style='color: ${color}'>Antiquities of Ant God is ${(player.runelevels[6] > 0) ? '' : 'NOT'} purchased. Penalties are ${(player.runelevels[6] > 0) ? '' : 'NOT'} dispelled!</span>`
 
     DOMCacheGetOrSet('singularityPenaltiesMultiline').innerHTML = str;
 }
@@ -904,14 +905,14 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
     },
     singAscensionSpeed2: {
         name: 'A mediocre ascension speedup!',
-        description: 'Ascension speed is increased by 30% if Ascension timer is less than 10 seconds, for every second below it is.',
+        description: 'Ascension speed is multiplied by 6 if you have not purchased Antiquities in your current Singularity.',
         maxLevel: 1,
         costPerLevel: 1e12,
         minimumSingularity: 150,
         effect: (n: number) => {
             return {
                 bonus: n,
-                desc: `For every second under 10 on Ascension timer, Ascension Speed +${format(30 * n, 0, true)}%.` // TODO
+                desc: 'The effect is clear!' // TODO
             }
         }
     },
@@ -1089,6 +1090,13 @@ export const singularityPerks: SingularityPerk[] = [
             } else {
                 return '进入奇点后您直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克'
             }
+        }
+    },
+    {
+        name: '自动生成药剂',
+        levels: [6],
+        description: () => {
+            return '每60秒自动各使用一瓶难得素药剂和一瓶祭品药剂！每次奇点使时间间隔减少3%。您还可以以20%的比率恢复药剂！'
         }
     },
     {
@@ -1471,7 +1479,15 @@ export const calculateEffectiveSingularities = (singularityCount: number = playe
 
     return effectiveSingularities
 }
-
+export const calculateNextSpike = (singularityCount: number = player.singularityCount): number => {
+    const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 250];
+    for (const sing of singularityPenaltyThreshold) {
+        if (sing > singularityCount) {
+            return sing;
+        }
+    }
+    return -1;
+}
 export const calculateSingularityDebuff = (debuff: SingularityDebuffs, singularityCount: number=player.singularityCount) => {
     if (singularityCount === 0) {
         return 1

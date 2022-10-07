@@ -63,6 +63,8 @@ var cnItems = {
     'Auto Setting': '自动比例',
     'Autocraft Percentage': '自动锻造比例',
     'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
+    'Auto Use: ON': '自动使用：开',
+    'Auto Use: OFF': '自动使用：关',
     //#endregion
     //#region 主界面及建筑
     '/s': '/秒',
@@ -1531,7 +1533,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.20: September 24 Event Special! - The Alternate Reality [Last Update: 15:19 UTC 21-Sep-2022].': '您目前玩的版本为V2.9.20：9月24日特别活动！ - 另一个现实 [2022年9月21日 UTC 15:19更新]。',
+    'You\'re playing v2.9.20: October 6 Auto Potion Edition - The Alternate Reality [Last Update: 12:55 UTC 07-Oct-2022].': '您目前玩的版本为V2.9.20：10月6日自动药剂版本 - 另一个现实 [2022年10月7日 UTC 12:55更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1986,7 +1988,8 @@ var cnItems = {
     'A hecking good ascension speedup!': '飞升的速度强力提升！',
     'Ascension Speed is raised to the power of 1.03, raised to 0.97 if less than 1x.': '如果飞升的速度低于1倍，则变为原来的0.97次方，否则变为原来的1.03次方。',
     'A mediocre ascension speedup!': '飞升的速度普通提升！',
-    'Ascension speed is increased by 30% if Ascension timer is less than 10 seconds, for every second below it is.': '飞升时间每比10秒少1秒，就使飞升的速度增加30%。',
+    'Ascension speed is multiplied by 6 if you have not purchased Antiquities in your current Singularity.': '只要本次奇点未购买蚁神之古物，就使飞升的速度变为原来的6倍。',
+    'The effect is clear!': '效果很显然了！',
     'This upgrade has  been purchased!': '已购买该升级！',
     'This upgrade has NOT been purchased!': '未购买该升级！',
     'Hey! You have already maxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
@@ -2050,10 +2053,16 @@ var cnItems = {
     'Gain 1% more obtainium per level.': '每级使难得素获取数量增加1%。',
     'Voided Warranty': '保修失效',
     'Gain +1% Ascension Count per level, with a 2% bonus for every 10 levels.': '每级使飞升次数获取数量增加1%，每10级还可以使飞升次数获取数量额外增加2%。',
+    'Hidden Late Fees': '隐藏滞纳金',
+    'Gain +1% Ascension Count per level, with a 2% bonus for every 10 levels. But... this scales a lot faster. Must be those hidden late fees.': '每级使飞升次数获取数量增加1%，每10级还可以使飞升次数获取数量额外增加2%。这一项升级……总之它的价格增加得更快，像隐藏滞纳金一样。',
     'Digital Octeract Accumulator': '八进制数码累加器',
     'Octeract gain is 1% faster for every digit in your Ascension count!': '飞升次数每个数量级可以使惊奇八阶方块的获取数量增加1%！',
     'Derpsmith\'s Singularity Discombobulator': 'Derpsmith的奇点小玩意',
     'Each level makes Singularity give +100% Golden Quarks (additive) and singularity at all time highest count grants +1 singularity count!': '每级使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且在最高奇点次数时进入奇点将使奇点次数增加1次！',
+    'Pill of Increased Thirst': '口渴药片',
+    'You can buy pills of thirst-making to consume potions automatically faster! 2% faster per level to be precise.': '这些药瓶可以让您加快使用药剂！准确来说，每级可以使速度增加2%。',
+    'This one is on the house!': '免费续杯',
+    'Thanks to the generosity of your Derpsmith, Auto Potion replenishes 4% more per level of this upgrade! At max level, Auto Potion no longer consumes anything.': '感谢慷慨的Derpsmith，每级使自动生成药剂特权恢复药剂的速度增加4%！满级时，自动生成药剂特权不再花费药剂。',
     'Purchase cancelled!': '已取消购买！',
     //#endregion
 
@@ -2443,7 +2452,6 @@ var cnRegReplace = new Map([
     [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点
     [/^Octeract Gain \+(.*)$/, '惊奇八阶方块获取数量增加$1'], //奇点
     [/^Ascension Speed \^(.+), \^(.+) if <$/, '飞升的速度变为原来的$1次方。飞升的速度在以下条件时变为原来的$2次方：低于'], //奇点
-    [/^For every second under 10 on Ascension timer, Ascension Speed \+(.+)%.$/, '飞升时间每比10秒少1秒，就使飞升的速度增加$1%。'], //奇点
     [/^You can buy Golden Quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) Golden Quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
     [/^Octeract Gain is increased by (.+)%.$/, '惊奇八阶方块获取数量增加$1%。'], //奇点
@@ -2463,6 +2471,8 @@ var cnRegReplace = new Map([
     [/^Obtainium gain \+(.*)$/, '难得素获取数量增加$1'], //奇点
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
     [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数增加$2次。'], //奇点
+    [/^Auto Potion Singularity Perk works (.+)% faster than before!$/, '自动生成药剂的奇点特权生效速度增加$1%！'], //奇点
+    [/^Auto Potion Singularity Perk replenishes potions (.+)% faster than before!$/, '自动生成药剂的奇点特权恢复药剂速度增加$1%！'], //奇点
     [/^How many Golden Quarks would you like to spend\? You have (.+) GQ. Type -1 to use max!$/, '您想要花费多少金夸克？您拥有$1金夸克。如果想要购买最大数量，请输入-1！'], //奇点
     [/^How many Octeracts would you like to spend\? You have (.+) OCT. Type -1 to use max!$/, '您想要花费多少惊奇八阶方块？您拥有$1惊奇八阶方块。如果想要购买最大数量，请输入-1！'], //奇点
     [/^Purchased (.+) levels, thanks to Multi Buy!$/, '一次性升级了$1级，多重购买真是太棒了！'], //奇点

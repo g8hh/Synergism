@@ -1533,7 +1533,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.20: October 6 Auto Potion Edition - The Alternate Reality [Last Update: 12:55 UTC 07-Oct-2022].': '您目前玩的版本为V2.9.20：10月6日自动药剂版本 - 另一个现实 [2022年10月7日 UTC 12:55更新]。',
+    'You\'re playing v2.9.20: October 7 Auto Potion 2 - The Alternate Reality [Last Update: 12:55 UTC 07-Oct-2022].': '您目前玩的版本为V2.9.20：10月7日自动药剂2 - 另一个现实 [2022年10月7日 UTC 12:55更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2060,9 +2060,9 @@ var cnItems = {
     'Derpsmith\'s Singularity Discombobulator': 'Derpsmith的奇点小玩意',
     'Each level makes Singularity give +100% Golden Quarks (additive) and singularity at all time highest count grants +1 singularity count!': '每级使进入奇点的金夸克获取数量增加100%(效果相互叠加)，且在最高奇点次数时进入奇点将使奇点次数增加1次！',
     'Pill of Increased Thirst': '口渴药片',
-    'You can buy pills of thirst-making to consume potions automatically faster! 2% faster per level to be precise.': '这些药瓶可以让您加快使用药剂！准确来说，每级可以使速度增加2%。',
-    'This one is on the house!': '免费续杯',
-    'Thanks to the generosity of your Derpsmith, Auto Potion replenishes 4% more per level of this upgrade! At max level, Auto Potion no longer consumes anything.': '感谢慷慨的Derpsmith，每级使自动生成药剂特权恢复药剂的速度增加4%！满级时，自动生成药剂特权不再花费药剂。',
+    'You can buy pills of thirst-making to consume potions automatically faster! 4% faster per level to be precise.': '这些药瓶可以让您加快使用药剂！准确来说，每级可以使速度增加4%。',
+    'Vitamin O Infusion': '维生素O灌注',
+    'Thanks to the generosity of your Derpsmith, Potions are 2% more potent per level!': '感谢慷慨的Derpsmith，每级使药剂的效果增加2%！',
     'Purchase cancelled!': '已取消购买！',
     //#endregion
 
@@ -2472,7 +2472,7 @@ var cnRegReplace = new Map([
     [/^Octeract Gain per OOM Ascension count \+(.*)$/, '飞升次数每个数量级可以使惊奇八阶方块获取数量增加$1'], //奇点
     [/^Singularities give (.+)% more GQ and count as (.+) more.$/, '进入奇点的金夸克获取数量增加$1%，且奇点次数增加$2次。'], //奇点
     [/^Auto Potion Singularity Perk works (.+)% faster than before!$/, '自动生成药剂的奇点特权生效速度增加$1%！'], //奇点
-    [/^Auto Potion Singularity Perk replenishes potions (.+)% faster than before!$/, '自动生成药剂的奇点特权恢复药剂速度增加$1%！'], //奇点
+    [/^Potions give (.+)% more Offerings and Obtainium.$/, '使用药剂获得的祭品和难得素增加$1%。'], //奇点
     [/^How many Golden Quarks would you like to spend\? You have (.+) GQ. Type -1 to use max!$/, '您想要花费多少金夸克？您拥有$1金夸克。如果想要购买最大数量，请输入-1！'], //奇点
     [/^How many Octeracts would you like to spend\? You have (.+) OCT. Type -1 to use max!$/, '您想要花费多少惊奇八阶方块？您拥有$1惊奇八阶方块。如果想要购买最大数量，请输入-1！'], //奇点
     [/^Purchased (.+) levels, thanks to Multi Buy!$/, '一次性升级了$1级，多重购买真是太棒了！'], //奇点

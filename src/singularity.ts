@@ -1093,10 +1093,10 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '自动生成药剂',
+        name: '自动使用药剂',
         levels: [6],
         description: () => {
-            return '每60秒自动各使用一瓶难得素药剂和一瓶祭品药剂！每次奇点使时间间隔减少3%。您还可以以20%的比率恢复药剂！'
+            return '每300秒自动各使用一瓶难得素药剂和一瓶祭品药剂！每次奇点使时间间隔减少3%。'
         }
     },
     {

@@ -1467,7 +1467,7 @@ const loadSynergy = async () => {
                 (ouch.textContent = 'Auto [OFF]', ouch.style.border = '2px solid red');
         }
 
-        DOMCacheGetOrSet('researchrunebonus').textContent = 'Thanks to researches, your effective levels are increased by ' + format(100 * G['effectiveLevelMult'] - 100, 4, true) + '%';
+        DOMCacheGetOrSet('researchrunebonus').textContent = '由于研究效果，符文有效等级增加了' + format(100 * G['effectiveLevelMult'] - 100, 4, true) + '%';
 
         DOMCacheGetOrSet('talismanlevelup').style.display = 'none'
         DOMCacheGetOrSet('talismanrespec').style.display = 'none'

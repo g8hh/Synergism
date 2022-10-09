@@ -62,7 +62,6 @@ var cnItems = {
     'Auto OFF': '自动：关',
     'Auto Setting': '自动比例',
     'Autocraft Percentage': '自动锻造比例',
-    'Thanks to researches, your effective levels are increased by': '由于研究效果，符文有效等级增加了',
     'Auto Use: ON': '自动使用：开',
     'Auto Use: OFF': '自动使用：关',
     //#endregion

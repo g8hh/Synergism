@@ -563,7 +563,7 @@ export const hideStuff = () => {
         DOMCacheGetOrSet('runes').style.display = 'block'
         DOMCacheGetOrSet('runestab').style.backgroundColor = 'blue'
         DOMCacheGetOrSet('runeshowlevelup').textContent = 'Hey, hover over a rune icon to get details on what each one does and what benefits they\'re giving you!'
-        DOMCacheGetOrSet('researchrunebonus').textContent = 'Thanks to researches, your effective levels are increased by ' + format(100 * G['effectiveLevelMult'] - 100, 4, true) + '%'
+        DOMCacheGetOrSet('researchrunebonus').textContent = '由于研究效果，符文有效等级增加了' + format(100 * G['effectiveLevelMult'] - 100, 4, true) + '%'
         displayRuneInformation(1, false)
         displayRuneInformation(2, false)
         displayRuneInformation(3, false)

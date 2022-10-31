@@ -598,7 +598,7 @@ export const promocodes = async (input: string | null, amount?: number) => {
     } else if (input === 'time') {
         const availableUses = timeCodeAvailableUses();
         if (availableUses === 0) {
-            return Alert(`If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, you must wait at least 15 minutes between each use.`);
+            return Alert('If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, you must wait at least 15 minutes between each use.');
         }
 
         const rewardMult = timeCodeRewardMultiplier();

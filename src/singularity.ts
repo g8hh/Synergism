@@ -1084,9 +1084,9 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [5, 20, 51],
         description: (n: number, levels: number[]) => {
             if (n >= levels[2]) {
-                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)。商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成变为无法重置！'
+                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级，常时保留商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成'
             } else if (n >= levels[1]) {
-                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级(同时变为无法重置)'
+                return '您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级'
             } else {
                 return '进入奇点后您直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克'
             }
@@ -1264,8 +1264,15 @@ export const singularityPerks: SingularityPerk[] = [
     {
         name: 'PL-AT Σ',
         levels: [125, 200],
-        description: () => {
-            return '对于每次奇点，每级特权使“add”代码的使用次数加快0.1%恢复(最高增加50%)'
+        description: (n: number, levels: number[]) => {
+            let counter = 0
+            for (const singCount of levels) {
+                if (n >= singCount) {
+                    counter += 0.1
+                }
+            }
+
+            return `对于每次奇点，每级特权使“add”代码的使用次数加快${counter}%恢复(最高增加50%)`
         }
     },
     {
@@ -1366,15 +1373,21 @@ const getAvailablePerksDescription = (singularityCount: number): string => {
 }
 
 function formatPerkDescription(perkData: ISingularityPerkDisplayInfo, singularityCount: number): string {
-    let singTolerance = 0
-    singTolerance += +player.singularityUpgrades.singFastForward.getEffect().bonus
-    singTolerance += +player.singularityUpgrades.singFastForward2.getEffect().bonus
-    singTolerance += +player.octeractUpgrades.octeractFastForward.getEffect().bonus
-
+    const singTolerance = getFastForwardTotalMultiplier();
     const isNew = (singularityCount - perkData.lastUpgraded <= singTolerance);
     const levelInfo = perkData.currentLevel > 1 ? ' - ' + perkData.currentLevel + '级' : '';
     //const acquiredUpgraded = ' / Acq ' + perkData.acquired + ' / Upg ' + perkData.lastUpgraded;
     return `<span${isNew?' class="newPerk"':''} title="${perkData.description}">${perkData.name}${levelInfo}</span>`;
+}
+
+// Indicates the number of extra Singularity count gained on Singularity reset
+export const getFastForwardTotalMultiplier = (): number => {
+    let fastForward = 0;
+    fastForward += +player.singularityUpgrades.singFastForward.getEffect().bonus
+    fastForward += +player.singularityUpgrades.singFastForward2.getEffect().bonus
+    fastForward += +player.octeractUpgrades.octeractFastForward.getEffect().bonus
+
+    return fastForward;
 }
 
 export const getGoldenQuarkCost = (): {

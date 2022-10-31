@@ -730,13 +730,27 @@ export const toggleShopConfirmation = () => {
     player.shopConfirmationToggle = !player.shopConfirmationToggle;
 }
 
-export const toggleBuyMaxShop = () => {
+export const toggleBuyMaxShop = (event: MouseEvent) => {
     const el = DOMCacheGetOrSet('toggleBuyMaxShop')
-    el.textContent = player.shopBuyMaxToggle
-        ? 'Buy Max: OFF'
-        : 'Buy Max: ON';
-
-    player.shopBuyMaxToggle = !player.shopBuyMaxToggle;
+    if (event.shiftKey) {
+        el.textContent = '购买：任意';
+        player.shopBuyMaxToggle = 'ANY';
+        return;
+    }
+    const suf = '<br><span style=\'color: gold; font-size:75%;\'>按住Shift键再点击为购买：任意</span>';
+    switch (player.shopBuyMaxToggle) {
+        case false:
+            el.innerHTML = `购买：10${suf}`;
+            player.shopBuyMaxToggle = 'TEN';
+            break;
+        case 'TEN':
+            el.innerHTML = `购买：最大${suf}`;
+            player.shopBuyMaxToggle = true;
+            break;
+        default:
+            el.innerHTML = `购买：1${suf}`;
+            player.shopBuyMaxToggle = false;
+    }
 }
 
 export const toggleHideShop = () => {

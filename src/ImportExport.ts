@@ -598,7 +598,7 @@ export const promocodes = async (input: string | null, amount?: number) => {
     } else if (input === 'time') {
         const availableUses = timeCodeAvailableUses();
         if (availableUses === 0) {
-            return Confirm('If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, you must wait at least 15 minutes between each use.');
+            return Alert(`If you imported a save, you cannot use this code for 15 minutes to prevent cheaters. Regardless, you must wait at least 15 minutes between each use.`);
         }
 
         const rewardMult = timeCodeRewardMultiplier();
@@ -624,9 +624,9 @@ export const promocodes = async (input: string | null, amount?: number) => {
                 }
 
                 player.worlds.add(actualQuarkAward * rewardMult, false);
-                return Confirm(`You clicked at the right time! [+${format(actualQuarkAward * rewardMult, 0, true)} Quarkies]`);
+                return Alert(`You clicked at the right time! [+${format(actualQuarkAward * rewardMult, 0, true)} Quarkies]`);
             } else {
-                return Confirm('You didn\'t guess the right time, try again soon!');
+                return Alert('You didn\'t guess the right time, try again soon!');
             }
         }
     } else if (input === 'spoiler') {
@@ -673,7 +673,7 @@ const addCodeInterval = () : number => {
     let time = hour
     time *= (1 - 0.02 * player.shopUpgrades.calculator4)
     time *= (1 - Math.min(.5, (player.highestSingularityCount >= 125 ? player.highestSingularityCount / 1000 : 0)
-                            - (player.highestSingularityCount >= 200 ? player.highestSingularityCount / 1000 : 0)))
+                            + (player.highestSingularityCount >= 200 ? player.highestSingularityCount / 1000 : 0)))
     return time
 }
 

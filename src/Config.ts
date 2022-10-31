@@ -10,7 +10,7 @@ export const version = '2.9.20: October 9 Auto Potion Revision 3';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 9, 7, 4, 55, 6));
+export const lastUpdated = new Date(Date.UTC(2022, 9, 31, 4, 46, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

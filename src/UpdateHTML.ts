@@ -413,6 +413,8 @@ export const revealStuff = () => {
         (DOMCacheGetOrSet('heptnotificationpic').style.display = 'block'):
         (DOMCacheGetOrSet('heptnotificationpic').style.display = 'none');
 
+    DOMCacheGetOrSet('warpAuto').style.display = player.shopUpgrades.autoWarp > 0 ? '' : 'none';
+
     if (player.unlocks.reincarnate || player.singularityCount > 0) {
         DOMCacheGetOrSet('shoptab').style.display = 'block';
     }
@@ -656,6 +658,8 @@ export const buttoncolorchange = () => {
 
     DOMCacheGetOrSet('ascendbtn').style.backgroundColor = player.autoAscend && player.challengecompletions[11] > 0 && player.cubeUpgrades[10] > 0 ? 'green' : '';
 
+    DOMCacheGetOrSet('singularitybtn').style.filter = player.runelevels[6] > 0 ? '' : 'contrast(1.25) sepia(1) grayscale(0.25)';
+
     // Notify new players the reset
     if (player.toggles[33] === true && player.singularityCount === 0) {
         if (player.toggles[28] === true && player.unlocks.prestige === false) {
@@ -861,7 +865,11 @@ export const updateChallengeLevel = (k: number) => {
     const el = DOMCacheGetOrSet('challenge' + k + 'level');
     const maxChallenges = getMaxChallenges(k);
 
-    el.textContent = `${player.challengecompletions[k]}/${maxChallenges}`;
+    if (k === 15) {
+        el.textContent = format(player.challenge15Exponent, 0, true);
+    } else {
+        el.textContent = `${player.challengecompletions[k]}/${maxChallenges}`;
+    }
 }
 
 export const updateAchievementBG = () => {

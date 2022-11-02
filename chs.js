@@ -1538,7 +1538,7 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
-    'You\'re playing v2.9.20: October 9 Auto Potion Revision 3 - The Alternate Reality [Last Update: 12:46 UTC 31-Oct-2022].': '您目前玩的版本为V2.9.20：10月9日自动药剂修正第3版 - 另一个现实 [2022年10月31日 UTC 12:46更新]。',
+    'You\'re playing v2.9.21: November 2 v3: The Duck - The Alternate Reality [Last Update: 06:34 UTC 03-Nov-2022].': '您目前玩的版本为V2.9.21：11月2日第3版：鸭子 - 另一个现实 [2022年11月3日 UTC 06:34更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1651,6 +1651,7 @@ var cnItems = {
     'Cube Inferno [GQ]': '方盒炼狱[金夸克]',
     'Wow Pass Z': '季票 Z',
     'Platonic DELTA': 'Platonic·德尔塔升级',
+    'Wow Pass ∞': '季票 ∞',
     'TOTAL GLOBAL CUBE MULTIPLIER': '所有类型的方盒及立方总倍率',
     'Cube Multipliers': '方盒倍率',
     'Ascension Score Multiplier': '飞升分数倍率',
@@ -1832,6 +1833,11 @@ var cnItems = {
     'Gain 1 additional free Singularity Upgrade and 20% more Golden Quarks per use of \'daily\' per level!': '每级使“Daily”代码获得的免费奇点升级增加1级，获得的金夸克数量增加20%！',
     'Gain 1 additional free Singularity Upgrade and 15% more Golden Quarks per use of \'daily\' per level!': '每级使“Daily”代码获得的免费奇点升级增加1级，获得的金夸克数量增加15%！',
     'Gain 1 additional free Singularity Upgrade and 100% more Golden Quarks per use of \'daily\' per level!': '每级使“Daily”代码获得的免费奇点升级增加1级，获得的金夸克数量增加100%！',
+    'Gain 2% more Offerings per level, multiplicative! (Multiplier is 1.02^level': '每级使祭品获取数量增加2%，且各级效果叠乘！(即总效果变为1.02的 等级 次方',
+    'Gain 2% more Obtainium per level, multiplicative! (Multiplier is 1.02^level': '每级使难得素获取数量增加2%，且各级效果叠乘！(即总效果变为1.02的 等级 次方',
+    'This is 1/50 as effective as a normal improver. Why? Because of balancing...': '它的效果只有正常强化的1/50。原因？为了平衡啊……',
+    'Gain +1% Ascension Speed per level, multiplicative! (Multiplier is 1.01^level': '每级使飞升的速度增加1%，且各级效果叠乘！(即总效果变为1.01的 等级 次方',
+    'Gain +2% more cubes per level, multiplicative! (Multiplier is 1.02^level': '每级使所有类型的方盒、立方和方块获取数量增加2%，且各级效果叠乘！(即总效果变为1.02的 等级 次方',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
@@ -2073,8 +2079,19 @@ var cnItems = {
     'The effect is clear!': '效果很显然了！',
     'This upgrade has  been purchased!': '已购买该升级！',
     'This upgrade has NOT been purchased!': '未购买该升级！',
+    '[56] ONE MIND': '[56] 一心',
+    '[NEW!] ONE MIND': '[新！] 一心',
+    'A note, you found on the ground: seems like an advertisement for a cult. "Lock your ascension speed to 10x, and multiply all cubes based on the difference." Hmm...': '您在地上发现一张纸条，似乎是什么异教的宣传单。“将飞升的速度限制在10倍，然后使所有类型的方盒、立方和方块获取数量乘以飞升的速度变化的倍数。”嗯……',
+    'You have  joined the cult!': '您已加入异教！',
+    'You have NOT joined the cult!': '您未加入异教！',
+    '[57] QUQUQUQUAAKCKCKKCKKCKK': '[57] 夸夸夸夸克克克克克克',
+    '[NEW!] QUQUQUQUAAKCKCKKCKKCKK': '[新！] 夸夸夸夸克克克克克克',
+    'Deals that\'ll cost you a beak and a wing!': '就算再怎么贵也要冲鸭！',
+    'You have  quacked your last QUARK': '嘎嘎嘎，冲鸭',
+    'You have NOT quacked your last QUARK': '嘎嘎嘎，快跟上来',
     'Hey! You have already maxed this upgrade. :D': '嘿！您已经升满此升级了！:D',
     'You\'re not powerful enough to purchase this yet.': '您还不够强大，无法升级。',
+    'You have succumbed to the cult. Your ascension progress was reset as a one-time precaution...': '您没能抵挡住异教的诱惑。为了以防万一，飞升进度进行了一次性的重置……',
     'You cannot afford this upgrade. Sorry!': '您无法承担该升级的花费。很遗憾！',
     'Sorry, I can\'t give credit. Come back when you\'re a little... mmm... richer!': '抱歉，您的夸克不是太够……请之后再来吧！',
     'Sorry, I cannnot sell you this many Golden Quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
@@ -2538,6 +2555,10 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Quark Hepteract DR \+(.*)$/, '当前效果：惊奇七阶立方·夸克的效果指数增加$1'], //商店
     [/^CURRENT Effect: \+ (.+)% more quarks from daily.$/, '当前效果：“Daily”代码的夸克获取数量增加$1%。'], //商店
     [/^CURRENT Effect: \+ (.+)% more golden quarks and (.+) additional free singularity upgrades from daily.$/, '当前效果：“Daily”代码的金夸克获取数量增加$1%，获得的免费奇点升级增加$2级。'], //商店
+    [/^CURRENT Effect: Offering gain is multiplied by (.+).$/, '当前效果：祭品的获取数量变为$1倍。'], //商店
+    [/^CURRENT Effect: Obtainium gain is multiplied by (.+).$/, '当前效果：难得素的获取数量变为$1倍。'], //商店
+    [/^CURRENT Effect: All Dimensional Cubes are multiplied by (.+).$/, '当前效果：所有类型的方盒、立方和方块获取数量变为$1倍。'], //商店
+    [/^CURRENT Effect: Ascension Speed is multiplied by (.+).$/, '当前效果：飞升的速度变为$1倍。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^Do you wish to start singularity #(.+)\? Your next universe is harder but you will gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点

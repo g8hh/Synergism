@@ -156,11 +156,11 @@ export class SingularityUpgrade extends DynamicUpgrade {
                 purchased += 1;
                 maxPurchasable -= 1;
             }
-            if (this.name === '[56] ONE MIND') {
+            if (this.name === player.singularityUpgrades.oneMind.name) {
                 player.ascensionCounter = 0
                 player.ascensionCounterReal = 0
                 player.ascensionCounterRealReal = 0
-                return Alert('You have succumbed to the cult. Your ascension progress was reset as a one-time precaution...')
+                void Alert('You have succumbed to the cult. Your ascension progress was reset as a one-time precaution...')
             }
         }
 
@@ -168,7 +168,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             return Alert('You cannot afford this upgrade. Sorry!')
         }
         if (purchased > 1) {
-            return Alert(`Purchased ${format(purchased)} levels, thanks to Multi Buy!`)
+            void Alert(`Purchased ${format(purchased)} levels, thanks to Multi Buy!`)
         }
 
         this.updateUpgradeHTML();
@@ -996,10 +996,10 @@ export class SingularityPerk {
 // The list is ordered on first level acquisition, so be careful when inserting a new one ;)
 export const singularityPerks: SingularityPerk[] = [
     {
-        name: '“Daily”代码额外奖励',
+        name: '“daily”代码额外奖励',
         levels: [1],
         description: () => {
-            return '输入“Daily”代码后可以获得金夸克和随机奇点升级的免费等级'
+            return '输入“daily”代码后可以获得金夸克和随机奇点升级的免费等级'
         }
     },
     {
@@ -1184,7 +1184,7 @@ export const singularityPerks: SingularityPerk[] = [
         name: '米达斯的横财',
         levels: [20],
         description: () => {
-            return '每天输入“Daily”代码后一定能获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III！'
+            return '每天输入“daily”代码后一定能获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III！'
         }
     },
     {
@@ -1312,6 +1312,27 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [150],
         description: () => {
             return '每次使用“add”代码后还可以使金夸克 I的免费等级增加0.01，金夸克 III的免费等级增加0.05。'
+        }
+    },
+    {
+        name: '元同生',
+        levels: [200],
+        description: () => {
+            return '每次使用“daily”代码后可以使惊奇八阶方块同生的免费等级增加当前等级的1%！'
+        }
+    },
+    {
+        name: '产业化“daily”代码',
+        levels: [201],
+        description: () => {
+            return '使用“daily”代码获得的免费等级数量翻倍！'
+        }
+    },
+    {
+        name: '元三度起源',
+        levels: [205],
+        description: () => {
+            return '每次使用“daily”代码后可以使惊奇八阶方块三度起源的免费等级增加当前等级的1%！'
         }
     }
 ]

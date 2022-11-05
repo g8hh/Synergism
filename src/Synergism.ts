@@ -21,7 +21,7 @@ import { calculatePlatonicBlessings } from './PlatonicCubes';
 import { antSacrificePointsToMultiplier, autoBuyAnts, calculateCrumbToCoinExp } from './Ants';
 import { calculatetax } from './Tax';
 import { ascensionAchievementCheck, challengeachievementcheck, achievementaward, resetachievementcheck, buildingAchievementCheck } from './Achievements';
-import { reset, resetrepeat, singularity, updateSingularityAchievements, updateAutoReset, updateTesseractAutoBuyAmount, updateAutoCubesOpens } from './Reset';
+import { reset, resetrepeat, singularity, updateSingularityAchievements, updateAutoReset, updateTesseractAutoBuyAmount, updateAutoCubesOpens, updateSingularityGlobalPerks } from './Reset';
 import type { TesseractBuildings} from './Buy';
 import { buyMax, buyAccelerator, buyMultiplier, boostAccelerator, buyCrystalUpgrades, buyParticleBuilding, getReductionValue, getCost, buyRuneBonusLevels, buyTesseractBuilding, calculateTessBuildingsInBudget } from './Buy';
 import { autoUpgrades } from './Automation';
@@ -778,6 +778,7 @@ export const player: Player = {
         octeractExportQuarks: new OcteractUpgrade(octeractData['octeractExportQuarks']),
         octeractImprovedDaily: new OcteractUpgrade(octeractData['octeractImprovedDaily']),
         octeractImprovedDaily2: new OcteractUpgrade(octeractData['octeractImprovedDaily2']),
+        octeractImprovedDaily3: new OcteractUpgrade(octeractData['octeractImprovedDaily3']),
         octeractImprovedQuarkHept: new OcteractUpgrade(octeractData['octeractImprovedQuarkHept']),
         octeractImprovedGlobalSpeed: new OcteractUpgrade(octeractData['octeractImprovedGlobalSpeed']),
         octeractImprovedAscensionSpeed: new OcteractUpgrade(octeractData['octeractImprovedAscensionSpeed']),
@@ -794,7 +795,8 @@ export const player: Player = {
         octeractAscensionsOcteractGain: new OcteractUpgrade(octeractData['octeractAscensionsOcteractGain']),
         octeractFastForward: new OcteractUpgrade(octeractData['octeractFastForward']),
         octeractAutoPotionSpeed: new OcteractUpgrade(octeractData['octeractAutoPotionSpeed']),
-        octeractAutoPotionEfficiency: new OcteractUpgrade(octeractData['octeractAutoPotionEfficiency'])
+        octeractAutoPotionEfficiency: new OcteractUpgrade(octeractData['octeractAutoPotionEfficiency']),
+        octeractOneMindImprover: new OcteractUpgrade(octeractData['octeractOneMindImprover'])
     },
 
     dailyCodeUsed: false,
@@ -1808,6 +1810,7 @@ const loadSynergy = async () => {
         calculateRuneLevels();
         resetHistoryRenderAllTables();
         updateSingularityAchievements();
+        updateSingularityGlobalPerks();
     }
 
     updateAchievementBG();

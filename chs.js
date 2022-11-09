@@ -1538,6 +1538,10 @@ var cnItems = {
     'Lighter Dark Mode': '浅暗模式',
     'Light Mode': '光明模式',
     'Dracula Mode': '德古拉模式',
+    'Current Annotation': '当前计数法',
+    'Default': '默认',
+    'Pure Scientific': '纯科学计数法',
+    'Pure Engineering': '纯工程计数法',
     'You\'re playing v2.9.22: November 3 v3: The Duck - The Alternate Reality [Last Update: 06:34 UTC 03-Nov-2022].': '您目前玩的版本为V2.9.22：11月3日第3版：鸭子 - 另一个现实 [2022年11月3日 UTC 06:34更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
@@ -2447,7 +2451,7 @@ var cnRegReplace = new Map([
     [/^Auto Ascension Run Chal.(.+) \[ON\]$/, '自动飞升运行挑战$1[开]'], //挑战
     [/^Auto Ascension Run Chal.(.+) \[OFF\]$/, '自动飞升运行挑战$1[关]'], //挑战
     [/^ Cost: (.*) Obtainium \[\+(.+) Levels\]$/, '花费：$1难得素[可提升$2级]'], //研究
-    [/^How many cubes would you like to open\? You have (.+)! You can input a percentage of cubes to open, for example: "50%" or "100%".$/, '您想要开启多少？您目前拥有$1！您可以输入想要开启的百分比，例如输入“50%”或“100%”。'], //惊奇方盒
+    [/^How many cubes would you like to open\? You have (.+)! You can input a percentage of cubes to open, for example: "50%" or "100%". You can start the input with "-" \(put in a negative value\) to put in a value, that will be saved, which means you open all cubes except the specified number. \(also works with $/, '您想要开启多少？您目前拥有$1！您可以输入想要开启的百分比，例如输入“50%”或“100%”。您还可以输入以-开头的数字，意味着保留相应数字不开启，并开启剩下的所有。(同样生效于'], //惊奇方盒
     [/^You can't open (.+)% of your cubes...$/, '无法开启$1%……'], //惊奇方盒
     [/^(.+) Wow! Cubes \[\+(.+) Levels\]$/, '$1惊奇方盒[可提升$2级]'], //惊奇方盒
     [/^(\d+)\/(\d+) \[MAX\]$/, '$1/$2 [最大]'], //惊奇方盒

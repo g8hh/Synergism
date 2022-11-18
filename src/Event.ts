@@ -53,22 +53,24 @@ const events: Record<string, HolidayData> = {
     },
     // Last active event
     last: {
-        name: 'Derpsmith Tea Party',
+        name: 'Maternal 🧠 Genesis',
         color: 'white',
-        url: 'https://www.bilibili.com/video/BV1Xf4y1g7xf',
+        url: 'https://www.bilibili.com/video/BV1Mb411x7JT?p=35',
         everyYear: false,
-        start: '09/24/2022 00:00:00',
-        end: '10/01/2022 23:59:59',
+        start: '11/18/2022 23:30:00',
+        end: '11/22/2022 23:59:59',
         notice: 3,
         event: true,
         buffs: {
             quark: 0.25,
-            globalSpeed: 1,
-            ascensionSpeed: 1,
-            antSacrifice: 1,
-            offering: 1,
-            obtainium: 1,
-            octeract: 0.3
+            globalSpeed: 0.75,
+            ascensionSpeed: 0.5,
+            antSacrifice: 0.5,
+            offering: 0.5,
+            obtainium: 0.5,
+            octeract: 0.25,
+            powderConversion: 2,
+            goldenQuark: 0.125
         }
     }
     // Event example

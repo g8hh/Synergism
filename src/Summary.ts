@@ -269,164 +269,353 @@ export const generateExportSummary = async():Promise<void> => {
 
             let CNsingname = singUpg.name
             switch (CNsingname) {
-                case 'Golden Quarks I':
-                    CNsingname ='金夸克 I';
+                case '[1] Golden Quarks I':
+                    CNsingname ='[1] 金夸克 I';
                     break;
-                case 'Golden Quarks II':
-                    CNsingname ='金夸克 II';
+                case '[2] Golden Quarks II':
+                    CNsingname ='[2] 金夸克 II';
                     break;
-                case 'Golden Quarks III':
-                    CNsingname ='金夸克 III';
+                case '[3] Golden Quarks III':
+                    CNsingname ='[3] 金夸克 III';
                     break;
-                case 'Starter Pack':
-                    CNsingname ='新手大礼包';
+                case '[4] Starter Pack':
+                    CNsingname ='[4] 新手大礼包';
                     break;
-                case 'Shop Bonanza':
-                    CNsingname ='商店促销';
+                case '[5] Shop Bonanza':
+                    CNsingname ='[5] 商店促销';
                     break;
-                case 'Cookie Recipes I':
-                    CNsingname ='饼干配方 I';
+                case '[6] Cookie Recipes I':
+                    CNsingname ='[6] 饼干配方 I';
                     break;
-                case 'Cookie Recipes II':
-                    CNsingname ='饼干配方 II';
+                case '[7] Cookie Recipes II':
+                    CNsingname ='[7] 饼干配方 II';
                     break;
-                case 'Cookie Recipes III':
-                    CNsingname ='饼干配方 III';
+                case '[8] Cookie Recipes III':
+                    CNsingname ='[8] 饼干配方 III';
                     break;
-                case 'Cookie Recipes IV':
-                    CNsingname ='饼干配方 IV';
+                case '[9] Cookie Recipes IV':
+                    CNsingname ='[9] 饼干配方 IV';
                     break;
-                case 'Improved Ascension Gain':
-                    CNsingname ='更多飞升次数';
+                case '[11] Improved Ascension Gain':
+                    CNsingname ='[11] 更多飞升次数';
                     break;
-                case 'Level Fourteen Corruptions':
-                    CNsingname ='腐化等级-十四';
+                case '[12] Level Fourteen Corruptions':
+                    CNsingname ='[12] 腐化等级-十四';
                     break;
-                case 'Level Fifteen Corruptions':
-                    CNsingname ='腐化等级-十五';
+                case '[13] Level Fifteen Corruptions':
+                    CNsingname ='[13] 腐化等级-十五';
                     break;
-                case 'Offering Charge':
-                    CNsingname ='祭品增压';
+                case '[14] Offering Charge':
+                    CNsingname ='[14] 祭品增压';
                     break;
-                case 'Offering Storm':
-                    CNsingname ='祭品风暴';
+                case '[15] Offering Storm':
+                    CNsingname ='[15] 祭品风暴';
                     break;
-                case 'Offering Tempest':
-                    CNsingname ='祭品狂风';
+                case '[16] Offering Tempest':
+                    CNsingname ='[16] 祭品狂风';
                     break;
-                case 'Obtainium Wave':
-                    CNsingname ='难得素波浪';
+                case '[17] Obtainium Wave':
+                    CNsingname ='[17] 难得素波浪';
                     break;
-                case 'Obtainium Flood':
-                    CNsingname ='难得素洪峰';
+                case '[18] Obtainium Flood':
+                    CNsingname ='[18] 难得素洪峰';
                     break;
-                case 'Obtainium Tsunami':
-                    CNsingname ='难得素海啸';
+                case '[19] Obtainium Tsunami':
+                    CNsingname ='[19] 难得素海啸';
                     break;
-                case 'Cube Flame':
-                    CNsingname ='方盒之焰';
+                case '[20] Cube Flame':
+                    CNsingname ='[20] 方盒之焰';
                     break;
-                case 'Cube Blaze':
-                    CNsingname ='方盒烈火';
+                case '[21] Cube Blaze':
+                    CNsingname ='[21] 方盒烈火';
                     break;
-                case 'Cube Inferno':
-                    CNsingname ='方盒炼狱';
+                case '[22] Cube Inferno':
+                    CNsingname ='[22] 方盒炼狱';
                     break;
-                case 'Citadel of Singularity':
-                    CNsingname ='奇点堡垒';
+                case '[23] Citadel of Singularity':
+                    CNsingname ='[23] 奇点堡垒';
                     break;
-                case 'Octeracts':
-                    CNsingname ='惊奇八阶方块';
+                case '[24] Octeracts':
+                    CNsingname ='[24] 惊奇八阶方块';
                     break;
-                case 'Offering Lootzifer (Depreciated)':
-                    CNsingname ='祭品自动获取(贬值)';
+                case '[25] Platonic $ells out!!!':
+                    CNsingname ='[25] Platonic脱销！！！';
                     break;
-                case 'Intermediate Pack':
-                    CNsingname ='中级礼包';
+                case '[26] Offering Lootzifer (Depreciated)':
+                    CNsingname ='[26] 祭品自动获取(贬值)';
                     break;
-                case 'Advanced Pack':
-                    CNsingname ='高级礼包';
+                case '[27] Intermediate Pack':
+                    CNsingname ='[27] 中级礼包';
                     break;
-                case 'Expert Pack':
-                    CNsingname ='专家礼包';
+                case '[28] Advanced Pack':
+                    CNsingname ='[28] 高级礼包';
                     break;
-                case 'Master Pack':
-                    CNsingname ='大师礼包';
+                case '[29] Expert Pack':
+                    CNsingname ='[29] 专家礼包';
                     break;
-                case 'Divine Pack':
-                    CNsingname ='神圣礼包';
+                case '[30] Master Pack':
+                    CNsingname ='[30] 大师礼包';
                     break;
-                case 'Shop Liquidation Sale':
-                    CNsingname ='商店清仓大甩卖';
+                case '[31] Divine Pack':
+                    CNsingname ='[31] 神圣礼包';
                     break;
-                case 'Potion Decanter of Enlightenment':
-                    CNsingname ='启迪药水瓶';
+                case '[32] Shop Liquidation Sale':
+                    CNsingname ='[32] 商店清仓大甩卖';
                     break;
-                case 'Potion Decanter of Inquisition':
-                    CNsingname ='审查药水瓶';
+                case '[33] Potion Decanter of Enlightenment':
+                    CNsingname ='[33] 启迪药水瓶';
                     break;
-                case 'Potion Decanter of Maddening Instability':
-                    CNsingname ='暴躁不稳定药水瓶';
+                case '[34] Potion Decanter of Inquisition':
+                    CNsingname ='[34] 审查药水瓶';
                     break;
-                case 'Bigger Challenge Caps':
-                    CNsingname ='挑战上限增加';
+                case '[35] Potion Decanter of Maddening Instability':
+                    CNsingname ='[35] 暴躁不稳定药水瓶';
                     break;
-                case 'Biggerer Challenge Caps':
-                    CNsingname ='挑战上限再度增加';
+                case '[36] Bigger Challenge Caps':
+                    CNsingname ='[36] 挑战上限增加';
                     break;
-                case 'BiggererEST Challenge Caps':
-                    CNsingname ='挑战上限超级增加';
+                case '[37] Biggerer Challenge Caps':
+                    CNsingname ='[37] 挑战上限再度增加';
                     break;
-                case 'I wish my Quark Hepteract was marginally better.':
-                    CNsingname ='我希望惊奇七阶立方·夸克的效果略微增加。';
+                case '[38] BiggererEST Challenge Caps':
+                    CNsingname ='[38] 挑战上限超级增加';
                     break;
-                case 'I wish my Quark Hepteract was marginally better II.':
-                    CNsingname ='我希望惊奇七阶立方·夸克的效果略微增加 II。';
+                case '[39] Marginal Quark Gain Improver Thingy':
+                    CNsingname ='[39] 略微增加夸克获取数量的小装置';
                     break;
-                case 'I wish my Quark Hepteract was marginally better III.':
-                    CNsingname ='我希望惊奇七阶立方·夸克的效果略微增加 III。';
+                case '[40] I wish my Quark Hepteract was marginally better.':
+                    CNsingname ='[40] 我希望惊奇七阶立方·夸克的效果略微增加。';
                     break;
-                case 'Octeract Absinthe':
-                    CNsingname ='惊奇八阶方块苦艾酒';
+                case '[41] I wish my Quark Hepteract was marginally better II.':
+                    CNsingname ='[41] 我希望惊奇七阶立方·夸克的效果略微增加 II。';
                     break;
-                case 'Pieces of Eight':
-                    CNsingname ='八个里亚尔';
+                case '[42] I wish my Quark Hepteract was marginally better III.':
+                    CNsingname ='[42] 我希望惊奇七阶立方·夸克的效果略微增加 III。';
                     break;
-                case 'The Obelisk Shaped like an Octagon.':
-                    CNsingname ='八角方尖碑';
+                case '[43] Octeract Absinthe':
+                    CNsingname ='[43] 惊奇八阶方块苦艾酒';
                     break;
-                case 'Octahedral Synthesis':
-                    CNsingname ='八面合成';
+                case '[44] Pieces of Eight':
+                    CNsingname ='[44] 八个里亚尔';
                     break;
-                case 'The Eighth Wonder of the World':
-                    CNsingname ='世界第八大奇迹';
+                case '[45] The Obelisk Shaped like an Octagon.':
+                    CNsingname ='[45] 八角方尖碑';
                     break;
-                case 'QUAAAACK':
-                    CNsingname ='夸夸夸夸克';
+                case '[46] Octahedral Synthesis':
+                    CNsingname ='[46] 八面合成';
                     break;
-                case 'Platonic TAU':
-                    CNsingname ='PLATONIC·陶';
+                case '[47] The Eighth Wonder of the World':
+                    CNsingname ='[47] 世界第八大奇迹';
                     break;
-                case 'Platonic ALPHA...?':
-                    CNsingname ='PLATONIC·阿 尔 法……？';
+                case '[48] QUAAAACK':
+                    CNsingname ='[48] 夸夸夸夸克';
                     break;
-                case 'Platonic DELTA':
-                    CNsingname ='PLATONIC·德尔塔';
+                case '[49] The Ultimate Pen':
+                    CNsingname ='[49] 终级妙笔';
                     break;
-                case 'Platonic PHI':
-                    CNsingname ='PLATONIC·斐';
+                case '[50] Platonic TAU':
+                    CNsingname ='[50] PLATONIC·陶';
                     break;
-                case 'Etherflux Singularities':
-                    CNsingname ='以太通量·奇点';
+                case '[51] Platonic ALPHA...?':
+                    CNsingname ='[51] PLATONIC·阿 尔 法……？';
                     break;
-                case 'Aetherflux Singularities':
-                    CNsingname ='超以太通量·奇点';
+                case '[52] Platonic DELTA':
+                    CNsingname ='[52] PLATONIC·德尔塔';
                     break;
-                case 'A hecking good ascension speedup!':
-                    CNsingname ='飞升的速度强力提升！';
+                case '[53] Platonic PHI':
+                    CNsingname ='[53] PLATONIC·斐';
                     break;
-                case 'A mediocre ascension speedup!':
-                    CNsingname ='飞升的速度普通提升！';
+                case '[54] Etherflux Singularities':
+                    CNsingname ='[54] 以太通量·奇点';
+                    break;
+                case '[55] Aetherflux Singularities':
+                    CNsingname ='[55] 超以太通量·奇点';
+                    break;
+                case '[56] A hecking good ascension speedup!':
+                    CNsingname ='[56] 飞升的速度强力提升！';
+                    break;
+                case '[57] A mediocre ascension speedup!':
+                    CNsingname ='[57] 飞升的速度普通提升！';
+                    break;
+                case '[58] ONE MIND':
+                    CNsingname ='[58] 一心';
+                    break;
+                case '[59] QUQUQUQUAAKCKCKKCKKCKK':
+                    CNsingname ='[59] 夸夸夸夸克克克克克克';
+                    break;
+                case '[NEW!] Golden Quarks I':
+                    CNsingname ='[新！] 金夸克 I';
+                    break;
+                case '[NEW!] Golden Quarks II':
+                    CNsingname ='[新！] 金夸克 II';
+                    break;
+                case '[NEW!] Golden Quarks III':
+                    CNsingname ='[新！] 金夸克 III';
+                    break;
+                case '[NEW!] Starter Pack':
+                    CNsingname ='[新！] 新手大礼包';
+                    break;
+                case '[NEW!] Shop Bonanza':
+                    CNsingname ='[新！] 商店促销';
+                    break;
+                case '[NEW!] Cookie Recipes I':
+                    CNsingname ='[新！] 饼干配方 I';
+                    break;
+                case '[NEW!] Cookie Recipes II':
+                    CNsingname ='[新！] 饼干配方 II';
+                    break;
+                case '[NEW!] Cookie Recipes III':
+                    CNsingname ='[新！] 饼干配方 III';
+                    break;
+                case '[NEW!] Cookie Recipes IV':
+                    CNsingname ='[新！] 饼干配方 IV';
+                    break;
+                case '[NEW!] Improved Ascension Gain':
+                    CNsingname ='[新！] 更多飞升次数';
+                    break;
+                case '[NEW!] Level Fourteen Corruptions':
+                    CNsingname ='[新！] 腐化等级-十四';
+                    break;
+                case '[NEW!] Level Fifteen Corruptions':
+                    CNsingname ='[新！] 腐化等级-十五';
+                    break;
+                case '[NEW!] Offering Charge':
+                    CNsingname ='[新！] 祭品增压';
+                    break;
+                case '[NEW!] Offering Storm':
+                    CNsingname ='[新！] 祭品风暴';
+                    break;
+                case '[NEW!] Offering Tempest':
+                    CNsingname ='[新！] 祭品狂风';
+                    break;
+                case '[NEW!] Obtainium Wave':
+                    CNsingname ='[新！] 难得素波浪';
+                    break;
+                case '[NEW!] Obtainium Flood':
+                    CNsingname ='[新！] 难得素洪峰';
+                    break;
+                case '[NEW!] Obtainium Tsunami':
+                    CNsingname ='[新！] 难得素海啸';
+                    break;
+                case '[NEW!] Cube Flame':
+                    CNsingname ='[新！] 方盒之焰';
+                    break;
+                case '[NEW!] Cube Blaze':
+                    CNsingname ='[新！] 方盒烈火';
+                    break;
+                case '[NEW!] Cube Inferno':
+                    CNsingname ='[新！] 方盒炼狱';
+                    break;
+                case '[NEW!] Citadel of Singularity':
+                    CNsingname ='[新！] 奇点堡垒';
+                    break;
+                case '[NEW!] Octeracts':
+                    CNsingname ='[新！] 惊奇八阶方块';
+                    break;
+                case '[NEW!] Platonic $ells out!!!':
+                    CNsingname ='[新！] Platonic脱销！！！';
+                    break;
+                case '[NEW!] Offering Lootzifer (Depreciated)':
+                    CNsingname ='[新！] 祭品自动获取(贬值)';
+                    break;
+                case '[NEW!] Intermediate Pack':
+                    CNsingname ='[新！] 中级礼包';
+                    break;
+                case '[NEW!] Advanced Pack':
+                    CNsingname ='[新！] 高级礼包';
+                    break;
+                case '[NEW!] Expert Pack':
+                    CNsingname ='[新！] 专家礼包';
+                    break;
+                case '[NEW!] Master Pack':
+                    CNsingname ='[新！] 大师礼包';
+                    break;
+                case '[NEW!] Divine Pack':
+                    CNsingname ='[新！] 神圣礼包';
+                    break;
+                case '[NEW!] Shop Liquidation Sale':
+                    CNsingname ='[新！] 商店清仓大甩卖';
+                    break;
+                case '[NEW!] Potion Decanter of Enlightenment':
+                    CNsingname ='[新！] 启迪药水瓶';
+                    break;
+                case '[NEW!] Potion Decanter of Inquisition':
+                    CNsingname ='[新！] 审查药水瓶';
+                    break;
+                case '[NEW!] Potion Decanter of Maddening Instability':
+                    CNsingname ='[新！] 暴躁不稳定药水瓶';
+                    break;
+                case '[NEW!] Bigger Challenge Caps':
+                    CNsingname ='[新！] 挑战上限增加';
+                    break;
+                case '[NEW!] Biggerer Challenge Caps':
+                    CNsingname ='[新！] 挑战上限再度增加';
+                    break;
+                case '[NEW!] BiggererEST Challenge Caps':
+                    CNsingname ='[新！] 挑战上限超级增加';
+                    break;
+                case '[NEW!] Marginal Quark Gain Improver Thingy':
+                    CNsingname ='[新！] 略微增加夸克获取数量的小装置';
+                    break;
+                case '[NEW!] I wish my Quark Hepteract was marginally better.':
+                    CNsingname ='[新！] 我希望惊奇七阶立方·夸克的效果略微增加。';
+                    break;
+                case '[NEW!] I wish my Quark Hepteract was marginally better II.':
+                    CNsingname ='[新！] 我希望惊奇七阶立方·夸克的效果略微增加 II。';
+                    break;
+                case '[NEW!] I wish my Quark Hepteract was marginally better III.':
+                    CNsingname ='[新！] 我希望惊奇七阶立方·夸克的效果略微增加 III。';
+                    break;
+                case '[NEW!] Octeract Absinthe':
+                    CNsingname ='[新！] 惊奇八阶方块苦艾酒';
+                    break;
+                case '[NEW!] Pieces of Eight':
+                    CNsingname ='[新！] 八个里亚尔';
+                    break;
+                case '[NEW!] The Obelisk Shaped like an Octagon.':
+                    CNsingname ='[新！] 八角方尖碑';
+                    break;
+                case '[NEW!] Octahedral Synthesis':
+                    CNsingname ='[新！] 八面合成';
+                    break;
+                case '[NEW!] The Eighth Wonder of the World':
+                    CNsingname ='[新！] 世界第八大奇迹';
+                    break;
+                case '[NEW!] QUAAAACK':
+                    CNsingname ='[新！] 夸夸夸夸克';
+                    break;
+                case '[NEW!] The Ultimate Pen':
+                    CNsingname ='[新！] 终级妙笔';
+                    break;
+                case '[NEW!] Platonic TAU':
+                    CNsingname ='[新！] PLATONIC·陶';
+                    break;
+                case '[NEW!] Platonic ALPHA...?':
+                    CNsingname ='[新！] PLATONIC·阿 尔 法……？';
+                    break;
+                case '[NEW!] Platonic DELTA':
+                    CNsingname ='[新！] PLATONIC·德尔塔';
+                    break;
+                case '[NEW!] Platonic PHI':
+                    CNsingname ='[新！] PLATONIC·斐';
+                    break;
+                case '[NEW!] Etherflux Singularities':
+                    CNsingname ='[新！] 以太通量·奇点';
+                    break;
+                case '[NEW!] Aetherflux Singularities':
+                    CNsingname ='[新！] 超以太通量·奇点';
+                    break;
+                case '[NEW!] A hecking good ascension speedup!':
+                    CNsingname ='[新！] 飞升的速度强力提升！';
+                    break;
+                case '[NEW!] A mediocre ascension speedup!':
+                    CNsingname ='[新！] 飞升的速度普通提升！';
+                    break;
+                case '[NEW!] ONE MIND':
+                    CNsingname ='[新！] 一心';
+                    break;
+                case '[NEW!] QUQUQUQUAAKCKCKKCKKCKK':
+                    CNsingname ='[新！] 夸夸夸夸克克克克克克';
                     break;
             }
 
@@ -483,75 +672,181 @@ export const generateExportSummary = async():Promise<void> => {
 
             let CNoctname = octUpg.name
             switch (CNoctname) {
-                case 'Octeracts for Dummies':
-                    CNoctname = '萌新的惊奇八阶方块';
+                case '[1] Octeracts for Dummies':
+                    CNoctname = '[1] 萌新的惊奇八阶方块';
                     break;
-                case 'Octeract Cogenesis':
-                    CNoctname = '惊奇八阶方块同生';
+                case '[2] Octeract Cogenesis':
+                    CNoctname = '[2] 惊奇八阶方块同生';
                     break;
-                case 'Octeract Trigenesis':
-                    CNoctname = '惊奇八阶方块三度起源';
+                case '[3] Octeract Trigenesis':
+                    CNoctname = '[3] 惊奇八阶方块三度起源';
                     break;
-                case 'Quark Octeract':
-                    CNoctname = '惊奇八阶方块·夸克';
+                case '[4] Quark Octeract':
+                    CNoctname = '[4] 惊奇八阶方块·夸克';
                     break;
-                case 'EXTRA CHONKY Corruptions':
-                    CNoctname = '更多腐化';
+                case '[5] Octo-Hepteract Primality Synergism':
+                    CNoctname = '[5] 七-八阶原始协同';
                     break;
-                case 'EXTRA WIMPY Golden Quark Costs!':
-                    CNoctname = '金夸克购买花费再度降低';
+                case '[6] EXTRA CHONKY Corruptions':
+                    CNoctname = '[6] 更多腐化';
                     break;
-                case 'Improved Download Speeds':
-                    CNoctname = '改善下载速度';
+                case '[7] EXTRA WIMPY Golden Quark Costs!':
+                    CNoctname = '[7] 金夸克购买花费再度降低';
                     break;
-                case 'CHONKER Daily Code':
-                    CNoctname = '加强“Daily”代码效果';
+                case '[8] Improved Download Speeds':
+                    CNoctname = '[8] 改善下载速度';
                     break;
-                case 'CHONKERER Daily Code':
-                    CNoctname = '再度加强“Daily”代码效果';
+                case '[9] CHONKER Daily Code':
+                    CNoctname = '[9] 加强“Daily”代码效果';
                     break;
-                case 'I wish for even better Quark Hepteracts.':
-                    CNoctname = '我希望惊奇七阶立方·夸克的效果还能增加。';
+                case '[10] CHONKERER Daily Code':
+                    CNoctname = '[10] 再度加强“Daily”代码效果';
                     break;
-                case 'The forbidden clock of time':
-                    CNoctname = '禁忌时钟';
+                case '[11] CHONKEREREST Daily Code':
+                    CNoctname = '[11] 超级加强“Daily”代码效果';
                     break;
-                case 'Abstract Photokinetics':
-                    CNoctname = '抽象趋光性';
+                case '[12] I wish for even better Quark Hepteracts.':
+                    CNoctname = '[12] 我希望惊奇七阶立方·夸克的效果还能增加。';
                     break;
-                case 'Abstract Exokinetics':
-                    CNoctname = '抽象外动力';
+                case '[13] The forbidden clock of time':
+                    CNoctname = '[13] 禁忌时钟';
                     break;
-                case 'Wow! I want free upgrades to be better.':
-                    CNoctname = '真惊奇！我希望免费升级效果变得更好。';
+                case '[14] Abstract Photokinetics':
+                    CNoctname = '[14] 抽象趋光性';
                     break;
-                case 'Wow! Free upgrades still suck.':
-                    CNoctname = '真惊奇！免费升级还是不够给力。';
+                case '[15] Abstract Exokinetics':
+                    CNoctname = '[15] 抽象外动力';
                     break;
-                case 'Wow! Make free upgrades good already, Platonic!':
-                    CNoctname = '真惊奇！PLATONIC，让免费升级再度强大吧！';
+                case '[16] Wow! I want free upgrades to be better.':
+                    CNoctname = '[16] 真惊奇！我希望免费升级效果变得更好。';
                     break;
-                case 'Coupon of Ultimate Penniless Derpsmiths':
-                    CNoctname = '身无分文的Derpsmith之终级兑换券';
+                case '[17] Wow! Free upgrades still suck.':
+                    CNoctname = '[17] 真惊奇！免费升级还是不够给力。';
                     break;
-                case 'Overwriting Pointers':
-                    CNoctname = '重写指针';
+                case '[18] Wow! Make free upgrades good already, Platonic!':
+                    CNoctname = '[18] 真惊奇！PLATONIC，让免费升级再度强大吧！';
                     break;
-                case 'Offering Electrolosis':
-                    CNoctname = '祭品电解';
+                case '[19] Coupon of Ultimate Penniless Derpsmiths':
+                    CNoctname = '[19] 身无分文的Derpsmith之终级兑换券';
                     break;
-                case 'Obtainium Deluge':
-                    CNoctname = '难得素之涌';
+                case '[20] Overwriting Pointers':
+                    CNoctname = '[20] 重写指针';
                     break;
-                case 'Voided Warranty':
-                    CNoctname = '保修失效';
+                case '[21] Offering Electrolosis':
+                    CNoctname = '[21] 祭品电解';
                     break;
-                case 'Digital Octeract Accumulator':
-                    CNoctname = '八进制数码累加器';
+                case '[22] Obtainium Deluge':
+                    CNoctname = '[22] 难得素之涌';
                     break;
-                case 'Derpsmith\'s Singularity Discombobulator':
-                    CNoctname = 'Derpsmith的奇点小玩意';
+                case '[23] Voided Warranty':
+                    CNoctname = '[23] 保修失效';
                     break;
+                case '[24] Hidden Late Fees':
+                    CNoctname = '[24] 隐藏滞纳金';
+                    break;
+                case '[25] Digital Octeract Accumulator':
+                    CNoctname = '[25] 八进制数码累加器';
+                    break;
+                case '[26] Derpsmith\'s Singularity Discombobulator':
+                    CNoctname = '[26] Derpsmith的奇点小玩意';
+                    break;
+                case '[27] Pill of Increased Thirst':
+                    CNoctname = '[27] 口渴药片';
+                    break;
+                case '[28] Vitamin O Infusion':
+                    CNoctname = '[28] 维生素O灌注';
+                    break;
+                case '[29] Infinite Transcription of the One Mind':
+                    CNoctname = '[29] 无限转录一心';
+                    break;
+                case '[NEW!] Octeracts for Dummies':
+                    CNoctname = '[新！] 萌新的惊奇八阶方块';
+                    break;
+                case '[NEW!] Octeract Cogenesis':
+                    CNoctname = '[新！] 惊奇八阶方块同生';
+                    break;
+                case '[NEW!] Octeract Trigenesis':
+                    CNoctname = '[新！] 惊奇八阶方块三度起源';
+                    break;
+                case '[NEW!] Quark Octeract':
+                    CNoctname = '[新！] 惊奇八阶方块·夸克';
+                    break;
+                case '[NEW!] Octo-Hepteract Primality Synergism':
+                    CNoctname = '[新！] 七-八阶原始协同';
+                    break;
+                case '[NEW!] EXTRA CHONKY Corruptions':
+                    CNoctname = '[新！] 更多腐化';
+                    break;
+                case '[NEW!] EXTRA WIMPY Golden Quark Costs!':
+                    CNoctname = '[新！] 金夸克购买花费再度降低';
+                    break;
+                case '[NEW!] Improved Download Speeds':
+                    CNoctname = '[新！] 改善下载速度';
+                    break;
+                case '[NEW!] CHONKER Daily Code':
+                    CNoctname = '[新！] 加强“Daily”代码效果';
+                    break;
+                case '[NEW!] CHONKERER Daily Code':
+                    CNoctname = '[新！] 再度加强“Daily”代码效果';
+                    break;
+                case '[NEW!] CHONKEREREST Daily Code':
+                    CNoctname = '[新！] 超级加强“Daily”代码效果';
+                    break;
+                case '[NEW!] I wish for even better Quark Hepteracts.':
+                    CNoctname = '[新！] 我希望惊奇七阶立方·夸克的效果还能增加。';
+                    break;
+                case '[NEW!] The forbidden clock of time':
+                    CNoctname = '[新！] 禁忌时钟';
+                    break;
+                case '[NEW!] Abstract Photokinetics':
+                    CNoctname = '[新！] 抽象趋光性';
+                    break;
+                case '[NEW!] Abstract Exokinetics':
+                    CNoctname = '[新！] 抽象外动力';
+                    break;
+                case '[NEW!] Wow! I want free upgrades to be better.':
+                    CNoctname = '[新！] 真惊奇！我希望免费升级效果变得更好。';
+                    break;
+                case '[NEW!] Wow! Free upgrades still suck.':
+                    CNoctname = '[新！] 真惊奇！免费升级还是不够给力。';
+                    break;
+                case '[NEW!] Wow! Make free upgrades good already, Platonic!':
+                    CNoctname = '[新！] 真惊奇！PLATONIC，让免费升级再度强大吧！';
+                    break;
+                case '[NEW!] Coupon of Ultimate Penniless Derpsmiths':
+                    CNoctname = '[新！] 身无分文的Derpsmith之终级兑换券';
+                    break;
+                case '[NEW!] Overwriting Pointers':
+                    CNoctname = '[新！] 重写指针';
+                    break;
+                case '[NEW!] Offering Electrolosis':
+                    CNoctname = '[新！] 祭品电解';
+                    break;
+                case '[NEW!] Obtainium Deluge':
+                    CNoctname = '[新！] 难得素之涌';
+                    break;
+                case '[NEW!] Voided Warranty':
+                    CNoctname = '[新！] 保修失效';
+                    break;
+                case '[NEW!] Hidden Late Fees':
+                    CNoctname = '[新！] 隐藏滞纳金';
+                    break;
+                case '[NEW!] Digital Octeract Accumulator':
+                    CNoctname = '[新！] 八进制数码累加器';
+                    break;
+                case '[NEW!] Derpsmith\'s Singularity Discombobulator':
+                    CNoctname = '[新！] Derpsmith的奇点小玩意';
+                    break;
+                case '[NEW!] Pill of Increased Thirst':
+                    CNoctname = '[新！] 口渴药片';
+                    break;
+                case '[NEW!] Vitamin O Infusion':
+                    CNoctname = '[新！] 维生素O灌注';
+                    break;
+                case '[NEW!] Infinite Transcription of the One Mind':
+                    CNoctname = '[新！] 无限转录一心';
+                    break;
+                
             }
 
             upgradeText = upgradeText + unicodeSymbol

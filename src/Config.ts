@@ -1,4 +1,4 @@
-export const version = '2.9.23: November 18 v1: Patreon Expansion v1';
+export const version = '2.9.24: November 22 v2: Endgame Balancing and Event Prep';
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '2.9.23: November 18 v1: Patreon Expansion v1';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 10, 17, 16, 0, 6));
+export const lastUpdated = new Date(Date.UTC(2022, 10, 21, 16, 0, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

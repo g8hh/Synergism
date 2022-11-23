@@ -53,16 +53,16 @@ const events: Record<string, HolidayData> = {
     },
     // Last active event
     last: {
-        name: 'Maternal 🧠 Genesis',
+        name: 'Giving Thanks to Derpsmith',
         color: 'white',
-        url: 'https://www.bilibili.com/video/BV1Mb411x7JT?p=35',
+        url: 'https://www.bilibili.com/video/BV1Fs411c7aR',
         everyYear: false,
-        start: '11/18/2022 23:30:00',
-        end: '11/22/2022 23:59:59',
+        start: '11/24/2022 00:00:00',
+        end: '11/27/2022 23:59:59',
         notice: 3,
         event: true,
         buffs: {
-            quark: 0.25,
+            quark: 0.20,
             globalSpeed: 0.75,
             ascensionSpeed: 0.5,
             antSacrifice: 0.5,
@@ -70,7 +70,7 @@ const events: Record<string, HolidayData> = {
             obtainium: 0.5,
             octeract: 0.25,
             powderConversion: 2,
-            goldenQuark: 0.125
+            goldenQuark: 0.15
         }
     }
     // Event example

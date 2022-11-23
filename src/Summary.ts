@@ -846,7 +846,6 @@ export const generateExportSummary = async():Promise<void> => {
                 case '[NEW!] Infinite Transcription of the One Mind':
                     CNoctname = '[新！] 无限转录一心';
                     break;
-                
             }
 
             upgradeText = upgradeText + unicodeSymbol

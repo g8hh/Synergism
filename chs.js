@@ -1542,7 +1542,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.24: November 22 v2: Endgame Balancing and Event Prep - The Alternate Reality [Last Update: 00:00 UTC 22-Nov-2022].': '您目前玩的版本为V2.9.24：11月22日第2版：最后阶段平衡及活动准备 - 另一个现实 [2022年11月22日 UTC 00:00更新]。',
+    'You\'re playing v2.9.24: November 23 v1: Endgame Balancing and Event Prep - The Alternate Reality [Last Update: 00:00 UTC 22-Nov-2022].': '您目前玩的版本为V2.9.24：11月23日第1版：最后阶段平衡及活动准备 - 另一个现实 [2022年11月22日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2229,7 +2229,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Sun Nov 27 2022 23:59:59 GMT+0800 (": "活动持续到2022年11月27日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Mon Nov 28 2022 23:59:59 GMT+0800 (": "活动持续到2022年11月28日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

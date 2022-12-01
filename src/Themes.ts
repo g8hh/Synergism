@@ -263,16 +263,13 @@ export const toggleAnnotation = (setting = true) => {
     const notationButton = DOMCacheGetOrSet('notation');
     const current = notationButton.textContent;
 
-    switch (current) {
-        case '纯科学计数法':
+        if (current == '纯科学计数法' || current == 'Pure Scientific') {
             notationButton.textContent = 'Pure Engineering';
-            break;
-        case '纯工程计数法':
+        } else if (current == '纯工程计数法' || current == 'Pure Engineering') {
             notationButton.textContent = 'Default';
-            break;
-        default:
+        } else {
             notationButton.textContent = 'Pure Scientific';
-    }
+        }
     if (setting === true) {
         player.notation = notationButton.textContent;
     }

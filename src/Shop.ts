@@ -876,11 +876,17 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
 
 export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
     const shopItem = shopData[input];
+
     if (player.shopUpgrades[input] >= shopItem.maxLevel) {
-        return Alert(`您无法购买${friendlyShopName(input)}，因为${shopItem.type === shopUpgradeTypes.UPGRADE ? '等级' : '数量'}已达最大！`);
+        return player.shopConfirmationToggle
+            ? Alert(`您无法购买${friendlyShopName(input)}，因为${shopItem.type === shopUpgradeTypes.UPGRADE ? '等级' : '数量'}已达最大！`)
+            : null;
     } else if (Number(player.worlds) < getShopCosts(input)) {
-        return Alert(`您无法购买${friendlyShopName(input)}，因为夸克不够！`);
+        return player.shopConfirmationToggle
+            ? Alert(`您无法购买${friendlyShopName(input)}，因为夸克不够！`)
+            : null;
     }
+
     // Actually lock for HTML exploit
     if (!isShopUpgradeUnlocked(input)) {
         return Alert(`您还无法购买${friendlyShopName(input)}！`);

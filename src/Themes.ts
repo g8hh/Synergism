@@ -262,14 +262,13 @@ export const settingTheme = () => {
 export const toggleAnnotation = (setting = true) => {
     const notationButton = DOMCacheGetOrSet('notation');
     const current = notationButton.textContent;
-
-        if (current == '纯科学计数法' || current == 'Pure Scientific') {
-            notationButton.textContent = 'Pure Engineering';
-        } else if (current == '纯工程计数法' || current == 'Pure Engineering') {
-            notationButton.textContent = 'Default';
-        } else {
-            notationButton.textContent = 'Pure Scientific';
-        }
+    if (current == '纯科学计数法' || current == 'Pure Scientific') {
+        notationButton.textContent = 'Pure Engineering';
+    } else if (current == '纯工程计数法' || current == 'Pure Engineering') {
+        notationButton.textContent = 'Default';
+    } else {
+        notationButton.textContent = 'Pure Scientific';
+    }
     if (setting === true) {
         player.notation = notationButton.textContent;
     }

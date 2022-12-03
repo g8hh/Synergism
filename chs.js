@@ -1542,13 +1542,15 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.25: November 24 v1: Some Final Additions - The Alternate Reality [Last Update: 00:00 UTC 24-Nov-2022].': '您目前玩的版本为V2.9.25：11月24日第1版：追加最后阶段内容 - 另一个现实 [2022年11月24日 UTC 00:00更新]。',
+    'You\'re playing v2.9.25: December 2 v1: Derpmas Event Preparations - The Alternate Reality [Last Update: 00:00 UTC 02-Dec-2022].': '您目前玩的版本为V2.9.25：12月2日第1版：圣诞活动准备 - 另一个现实 [2022年12月2日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +20% Quarks, +15% Golden Quarks, +200% Powder Conversion, +50% Ascension Speed, +75% Global Speed, +50% Ant Sacrifice rewards, +50% Offering, +50% Obtainium, +25% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量增加20%，金夸克获取数量增加15%，超通量粉转化效率增加200%，飞升的速度增加50%，全局速度增加75%，蚂蚁献祭奖励增加50%，祭品获取数量和难得素获取数量增加50%，惊奇八阶方块获取数量增加25%！',
-    'Giving Thanks to Derpsmith': '感谢Derpsmith',
+    'Current Buffs: +300% Quarks!': '当前加成：夸克获取数量增加300%！',
+    'Current Buffs: +20% Quarks!': '当前加成：夸克获取数量增加20%！',
+    'Derpmas 2022: Quark Extravaganza!': '2022圣诞：夸克大盛典！',
+    'Thanks for Boosting the Discord': '感谢进行Discord助力',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
     'Artists': '画师',
@@ -1968,7 +1970,7 @@ var cnItems = {
     '[23] Citadel of Singularity': '[23] 奇点堡垒',
     '[NEW!] Citadel of Singularity': '[新！] 奇点堡垒',
     'What a unique structual phenomenon... but it gives +2% Obtainium, Offerings, and 3-7D cubes per level! +1% Additional for every 10 levels!': '何等独特的堡垒……它每级可以使难得素获取数量、祭品获取数量、所有类型的方盒及立方获取数量永久增加2%！每10级还可以使加成数值额外增加1%！',
-    '[24] Citadel of Singularity: The Real Edition': '[23] 真·奇点堡垒',
+    '[24] Citadel of Singularity: The Real Edition': '[24] 真·奇点堡垒',
     '[NEW!] Citadel of Singularity: The Real Edition': '[新！] 真·奇点堡垒',
     'This actual Citadel gives +2% Obtainium, Offerings, and 3-7D cubes per level! +1% Additional for every 10 levels! Also sets the free level of the fake citadel to whatever level this is.': '真·奇点堡垒每级可以使难得素获取数量、祭品获取数量、所有类型的方盒及立方获取数量永久增加2%！每10级还可以使加成数值额外增加1%！另外还可以使前面那个假奇点堡垒升级的免费等级变为真·奇点堡垒升级的等级。',
     '[25] Octeracts': '[25] 惊奇八阶方块',
@@ -1978,11 +1980,11 @@ var cnItems = {
     'You have not bought into the Octeract hype.': '您未解锁八阶方块。',
     '[26] Platonic $ells out!!!': '[26] Platonic脱销！！！',
     '[NEW!] Platonic $ells out!!!': '[新！] Platonic脱销！！！',
-    'You know that Patreon bonus? Yeah, that\'s cool and all, but what if it also boosted Octeract production by the same amount?': '您应该知道Patreon的加成吧？对的，它酷毙啦，但如果它也能加成惊奇八阶方块的获取数量，是不是更酷了？',
+    'You know that Patreon bonus? Yeah, that\'s cool and all, but what if it also boosted Octeract production by the same amount?': '您应该知道Patreon的加成吧？对的，它酷毙啦，但如果它也能加成惊奇八阶方块的获取数量，是不是更酷了？',/*
     '[27] Offering Lootzifer (Depreciated': '[27] 祭品自动获取(贬值',
     '[NEW!] Offering Lootzifer (Depreciated': '[新！] 祭品自动获取(贬值',
     'Black Magic. Don\'t make deals with the devil.': '利用黑暗魔法强化自身。别和魔鬼做交易。',
-    'No one can speak to Lootzifer at this moment.': '现在谁也没法获得自动获取。',/*
+    'No one can speak to Lootzifer at this moment.': '现在谁也没法获得自动获取。',
     'You have made a deal with the devil Lootzifer.': '您已与魔鬼做交易获得祭品自动获取的能力。',
     'You have not made a deal with the devil Lootzifer.': '您未与魔鬼做交易获得祭品自动获取的能力。',*/
     '[28] Intermediate Pack': '[28] 中级礼包',
@@ -2119,6 +2121,7 @@ var cnItems = {
     'Sorry, I cannnot sell you this many Golden Quarks! Try buying fewer of them or typing -1 to buy max!': '抱歉，您无法购买这个数量的金夸克！请减少购买数量，或者直接输入-1购买最大数量！',
     'Sorry. I only sell whole Golden Quarks. None of that fractional transaction!': '抱歉，我们不会把金夸克拿来做分割商法的。请输入整数！',
     'You nearly triggered a double singularity bug! Oh no! Luckily, our staff prevented this from happening.': '您差点就触发了双奇点的错误！真糟糕！幸好，我们设法阻止了它的发生。',
+    'The highest Singularity you\'ve reached is the': '您的最高奇点次数为',
     'gold text': '金色文本',
     ' were added or improved in this Singularity': '的特权在本次奇点解锁或者加强',
     ' Octeracts!': '惊奇八阶方块！',
@@ -2233,7 +2236,10 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Mon Nov 28 2022 23:59:59 GMT+0800 (": "活动持续到2022年11月28日 23:59:59 东八区 (", //主界面
+    "STARTS Wed Dec 07 2022 00:00:00 GMT+0800 (": "活动开始时间为2022年12月7日 00:00:00 东八区 (", //主界面
+    "STARTS Sat Dec 17 2022 00:00:00 GMT+0800 (": "活动开始时间为2022年12月17日 00:00:00 东八区 (", //主界面
+    "ACTIVE UNTIL Thu Dec 08 2022 23:59:59 GMT+0800 (": "活动持续到2022年12月8日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Sun Dec 18 2022 23:59:59 GMT+0800 (": "活动持续到2022年12月18日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑
@@ -2612,6 +2618,7 @@ var cnRegReplace = new Map([
     [/^The DR exponent is now (.+)% larger!$/, '超过软上限后的指数增加了$1%！'], //奇点
     [/^Octeract Gain \+(.*)$/, '惊奇八阶方块获取数量增加$1'], //奇点
     [/^Ascension Speed \^(.+), \^(.+) if <$/, '飞升的速度变为原来的$1次方。飞升的速度在以下条件时变为原来的$2次方：低于'], //奇点
+    [/^(\d+) Singularity.$/, '$1次奇点。'], //奇点
     [/^You can buy Golden Quarks here for (.+) Quarks \(Discounted by (.+)\)! You can buy up to (.+). How many do you want\? Type -1 to buy max!$/, '您可以使用夸克来购买金夸克，单价为$1(花费减少了$2)！您至多可以购买$3金夸克，想要购买多少？如果想要购买最大数量，请输入-1！'], //奇点
     [/^Transaction of (.+) Golden Quarks successful! \[-(.+) Quarks\]$/, '购买了$1金夸克！[夸克减少$2]'], //奇点
     [/^Octeract Gain is increased by (.+)%.$/, '惊奇八阶方块获取数量增加$1%。'], //奇点

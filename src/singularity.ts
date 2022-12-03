@@ -71,7 +71,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             ? ''
             : `/${format(this.computeMaxLevel(), 0 , true)}`;
         const color = this.computeMaxLevel() === this.level ? 'plum' : 'white';
-        const minReqColor = player.singularityCount < this.minimumSingularity ? 'crimson' : 'green';
+        const minReqColor = player.highestSingularityCount < this.minimumSingularity ? 'crimson' : 'green';
         const minimumSingularity = this.minimumSingularity > 0
             ? `最少需要进入奇点次数：${this.minimumSingularity}`
             : '无进入奇点次数要求'
@@ -161,7 +161,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             return Alert('Hey! You have already maxed this upgrade. :D')
         }
 
-        if (player.singularityCount < this.minimumSingularity) {
+        if (player.highestSingularityCount < this.minimumSingularity) {
             return Alert('You\'re not powerful enough to purchase this yet.')
         }
         while (maxPurchasable > 0) {
@@ -212,7 +212,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             let cap = this.maxLevel
             const overclockPerks = [50, 60, 75, 100, 125, 150, 175, 200, 225, 250]
             for (let i = 0; i < overclockPerks.length; i++) {
-                if (player.singularityCount >= overclockPerks[i]) {
+                if (player.highestSingularityCount >= overclockPerks[i]) {
                     cap += 1
                 } else {
                     break
@@ -364,7 +364,8 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         name: 'Cookie Recipes V (WIP)',
         description: 'The worst atrocity a man can commit is witnessing, without anguish, the suffering of others.',
         maxLevel: 1,
-        costPerLevel: 5e7 - 1,
+        costPerLevel: 1.66e15,
+        minimumSingularity: 215,
         effect: (n: number) => {
             return {
                 bonus: (n > 0),
@@ -577,15 +578,15 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         }
     },
     offeringAutomatic: {
-        name: 'Offering Lootzifer (Depreciated)',
-        description: 'Black Magic. Don\'t make deals with the devil.',
-        maxLevel: 50,
-        costPerLevel: 100000000000,
-        minimumSingularity: 1337,
+        name: 'Blueberry Shards! (WIP)',
+        description: 'The legends are true. \n The Prophecies are fulfilled. \n Ant God has heard your prayers. \n Let there be blueberries! \n And they were good.',
+        maxLevel: -1,
+        costPerLevel: 1e14,
+        minimumSingularity: 222,
         effect: (n: number) => {
             return {
-                bonus: (n > 0),
-                desc: 'No one can speak to Lootzifer at this moment.'
+                bonus: n,
+                desc: `You have purchased ${n} tasty blueberries.`
             }
         }
     },
@@ -1058,7 +1059,7 @@ export class SingularityPerk {
     }
 }
 
-// List of Singularity Perks based on player.singularityCount
+// List of Singularity Perks based on player.highestSingularityCount
 // The list is ordered on first level acquisition, so be careful when inserting a new one ;)
 export const singularityPerks: SingularityPerk[] = [
     {
@@ -1166,7 +1167,7 @@ export const singularityPerks: SingularityPerk[] = [
     },
     {
         name: '更多夸克',
-        levels: [5, 20, 35, 50, 65, 80, 90, 100, 121, 144, 150, 160, 166, 169, 170, 175, 180, 190, 196, 200, 201, 202, 203, 204, 205, 225, 250],
+        levels: [5, 20, 35, 50, 65, 80, 90, 100, 121, 144, 150, 160, 166, 169, 170, 175, 180, 190, 196, 200, 200, 201, 202, 203, 204, 205, 210, 212, 214, 216, 218, 220, 225, 250],
         description: (n: number, levels: number[]) => {
 
             for (let i = levels.length - 1; i >= 0; i--) {
@@ -1432,9 +1433,9 @@ export const singularityPerks: SingularityPerk[] = [
 ]
 
 export const updateSingularityPerks = (): void => {
-    const singularityCount = player.singularityCount;
-    const str = getSingularityOridnalText(singularityCount) +
-                `<br/><br/>以下是您在奇点中获得的特权
+    const singularityCount = player.highestSingularityCount;
+    const str = `The highest Singularity you've reached is the <span style="color: gold">${toOrdinal(singularityCount)} Singularity.</span><br/>
+                以下是您在奇点中获得的特权
                 (鼠标停留在特权上可以查看效果。<span class="newPerk">gold text</span> were added or improved in this Singularity)<br/>`
                 + getAvailablePerksDescription(singularityCount)
 
@@ -1534,7 +1535,15 @@ export const getFastForwardTotalMultiplier = (): number => {
     fastForward += +player.singularityUpgrades.singFastForward2.getEffect().bonus
     fastForward += +player.octeractUpgrades.octeractFastForward.getEffect().bonus
 
-    return (player.singularityCount < 200) ? fastForward : 0;
+    // Stop at sing 200 even if you include fast forward
+    fastForward = Math.max(0, Math.min(fastForward, 200 - player.singularityCount - 1));
+
+    // If the next singularityCount is greater than the highestSingularityCount, fast forward to be equal to the highestSingularityCount
+    if (player.highestSingularityCount !== player.singularityCount && player.singularityCount + fastForward + 1 >= player.highestSingularityCount) {
+        return Math.max(0, Math.min(fastForward, player.highestSingularityCount - player.singularityCount - 1))
+    }
+
+    return fastForward;
 }
 
 export const getGoldenQuarkCost = (): {

@@ -217,43 +217,43 @@ const historyGains: Record<
         img: 'Pictures/Singularity.png',
         formatter: formatDecimalSource,
         imgTitle: '奇点次数',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     quarks: {
         img: 'Pictures/Quark.png',
         formatter: formatDecimalSource,
         imgTitle: '夸克',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     goldenQuarks: {
         img: 'Pictures/Golden Quark.png',
         formatter: formatDecimalSource,
         imgTitle: '金夸克',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     wowTribs: {
         img: 'Pictures/WowCube.png',
         formatter: formatDecimalSource,
         imgTitle: '方盒的贡品',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     tessTribs: {
         img: 'Pictures/WowTessaract.png',
         formatter: formatDecimalSource,
         imgTitle: '超立方的赠礼',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     hyperTribs: {
         img: 'Pictures/WowHypercube.png',
         formatter: formatDecimalSource,
         imgTitle: '五阶立方的恩赐',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     platTribs: {
         img: 'Pictures/Platonic Cube.png',
         formatter: formatDecimalSource,
         imgTitle: 'PLATONIC方盒已开启',
-        onlyif: () => player.singularityCount > 0
+        onlyif: () => player.highestSingularityCount > 0
     },
     octeracts: {
         img: 'Pictures/Octaret.png',

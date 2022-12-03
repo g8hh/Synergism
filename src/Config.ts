@@ -1,4 +1,4 @@
-export const version = '2.9.25: November 24 v1: Some Final Additions';
+export const version = '2.9.25: December 2 v1: Derpmas Event Preparations';
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '2.9.25: November 24 v1: Some Final Additions';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 10, 23, 16, 0, 6));
+export const lastUpdated = new Date(Date.UTC(2022, 11, 1, 16, 0, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

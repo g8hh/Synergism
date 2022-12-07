@@ -1728,6 +1728,7 @@ var cnItems = {
     'Digital Octeract Accumulator': '八进制数码累加器',
     'Event Buff': '活动加成',
     'Ascension Speed Multiplier': '飞升的速度倍率',
+    'One Mind Multiplier': '一心倍率',
     'TOTAL OCTERACT MULTIPLIER': '八阶方块总倍率',
     'Generate Savefile Stats Summary': '生成统计数据报告',
     'Summary Stats saved to clipboard! We also gave you a file, for easy sharing, if that is available on your browser.': '统计数据报告已保存到剪贴板！同时还生成了一份报告文档，以便分享或查阅。',

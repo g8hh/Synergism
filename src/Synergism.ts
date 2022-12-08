@@ -3168,7 +3168,7 @@ export const resetCheck = async (i: resetNames, manual = true, leaving = false):
         }
 
         if (player.singularityCount >= thankSing) {
-            return Alert(`Well. It seems you've reached the eye of the Singularity. I'm pleased. This also means there is nowhere to go from here. At least, not until higher powers expand your journey.`)
+            return Alert('Well. It seems you\'ve reached the eye of the Singularity. I\'m pleased. This also means there is nowhere to go from here. At least, not until higher powers expand your journey.')
         }
 
         let confirmed = false;

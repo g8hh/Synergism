@@ -1542,7 +1542,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.25: December 2 v1: Derpmas Event Preparations - The Alternate Reality [Last Update: 00:00 UTC 02-Dec-2022].': '您目前玩的版本为V2.9.25：12月2日第1版：圣诞活动准备 - 另一个现实 [2022年12月2日 UTC 00:00更新]。',
+    'You\'re playing v2.9.26: December 8 v1: Singularity Challenge Introduction - The Alternate Reality [Last Update: 00:00 UTC 08-Dec-2022].': '您目前玩的版本为V2.9.26：12月8日第1版：引入奇点挑战 - 另一个现实 [2022年12月8日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1641,6 +1641,7 @@ var cnItems = {
     'Octeract Starter Pack': '八阶方块新手大礼包',
     'Quark Oct Bonus': '惊奇八阶方块·夸克加成',
     'Total Octeract Bonus': '惊奇八阶方块数量加成',
+    'No Singularity Upgrades Challenge': '无奇点升级挑战',
     'Doohickey Bonus': '小装置加成',
     'Octo-Hepteract Primality Synergy': '七-八阶原始协同',
     'TOTAL QUARK MULTIPLIER': '全局夸克总倍率',
@@ -1876,7 +1877,10 @@ var cnItems = {
     'Penalties': '惩罚',
     'Perks': '特权',
     'Octeracts': '惊奇八阶方块',
+    'EXALT': '拔擢',
     'Hmph. Please return with an Antiquity. Thank you. -Ant God': '哼，请带着古物再来。谢谢。————蚁神',
+    'Derpsmith thinks you are in a Singularity Challenge. You may exit it by clicking on the challenge icon in the Singularity tab.': 'Derpsmith提醒您，您还在奇点挑战中。您可以在奇点选项卡下点击相应挑战的图标退出挑战。',
+    'Well. It seems you\'ve reached the eye of the Singularity. I\'m pleased. This also means there is nowhere to go from here. At least, not until higher powers expand your journey.': '很好。您已经到了奇点之眼。我很满意。但这也意味着您无法继续前进了。除非有什么更强的力量，为您开辟新道路……',
     'You may choose to sit on your laurels, and consider the game \'beaten\', or you may do something more interesting.': '您可以选择就此封盘，认为您已经“通关”了，又或着您还愿意做一些更有趣的事情。',
     'You\'re too powerful for this current universe. The multiverse of Synergism is truly endless, but out there are even more challenging universes parallel to your very own.': '这个宇宙已经容纳不了您的力量了。协同放置的多元宇宙可谓是无穷无尽，但对您现在这个宇宙来说，还有更多更具挑战性的平行宇宙。',
     'However, all your past accomplishments are gone! ALL Challenges, Refundable Shop upgrades, Upgrade Tab, Runes, All Cube upgrades, All Cube Openings, Hepteracts (Except for your Quark Hepteracts), Achievements will be wiped clean.': '但是，您之前的一切成果都将离您而去！所有的挑战完成次数，可重置的商店购买项，升级，符文，所有类型的方盒及立方升级，所有类型的方盒及立方已获取量，七阶立方库存(除了七阶立方·夸克)，成就，一切的一切，都将成为过去。',
@@ -2225,6 +2229,20 @@ var cnItems = {
     '[NEW!] Infinite Transcription of the One Mind': '[新！] 无限转录一心',
     'You ask what this upgrade does, but Derpsmith just nods his head. What is he hiding from you?': '您想知道这个升级的效果，但Derpsmith只是点了点头。他到底在隐瞒着什么？',
     'Purchase cancelled!': '已取消购买！',
+    'Do you have what it takes to earn EXALT from Ant God?': '您知道如何蒙蚁神拔擢吗？',
+    'You are about to enter No Singularity Upgrades. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行无奇点升级挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
+    'Derpsmith nods his head. Come back when you are ready...': 'Derpsmith点了点头。准备好以后再来吧……',
+    'Derpsmith declares you are already in a singularity challenge and prohibits you from destroying the fabric of your Reality.': 'Derpsmith表示您已经在进行奇点挑战，为了现实的安全着想，您不可以再进行挑战了。',
+    'Derpsmith tries to hug you, but he has no arms.': 'Derpsmith想抱抱您，可惜他没有胳膊。',
+    'You have been transported back to your highest reached Singularity. Try again soon! -Derpsmith': '您回到了最高完成次数的奇点。之后再试吧！————Derpsmith',
+    '[ENABLED]': '[已启用]',
+    'The current tier of this challenge takes place in Singularity': '当前阶层的该挑战将进入第',
+    'No Singularity Upgrades': '无奇点升级',
+    'Simply put, you have to beat the target singularity without (most) Singularity Upgrades. Octeracts, Perks and Quality of Life Singularity Upgrades are preserved.': '简而言之，您需要在没有大部分奇点升级的前提下通过目标奇点。惊奇八阶方块，特权和游戏体验相关的奇点升级将仍然保留。',
+    'Each completion increases cube gain of every dimension by 25%! First completion gives +12% Golden Quarks. Final completion awards something `special` ;) (WIP': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加25%！第一次完成后还可以使金夸克获取数量增加12%。最后一次完成后，可以获得一些“特别”的东西 ;)(制作中',
+    '': '',
+    '': '',
+    '': '',
     //#endregion
 
     //原样
@@ -2646,4 +2664,7 @@ var cnRegReplace = new Map([
     [/^How many Golden Quarks would you like to spend\? You have (.+) GQ. Type -1 to use max!$/, '您想要花费多少金夸克？您拥有$1金夸克。如果想要购买最大数量，请输入-1！'], //奇点
     [/^How many Octeracts would you like to spend\? You have (.+) OCT. Type -1 to use max!$/, '您想要花费多少惊奇八阶方块？您拥有$1惊奇八阶方块。如果想要购买最大数量，请输入-1！'], //奇点
     [/^Purchased (.+) levels, thanks to Multi Buy!$/, '一次性升级了$1级，多重购买真是太棒了！'], //奇点
+    [/^You are attempting No Singularity Upgrades #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次无奇点升级挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
+    [/^Are you sure you want to quit No Singularity Upgrades Tier (.+)\?$/, '您确定要退出第$1阶无奇点升级挑战吗？'], //奇点
+    [/^You have completed the (.+) tier of No Singularity Upgrades! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶无奇点升级挑战！相应的挑战奖励已经更新。'], //奇点
 ]);

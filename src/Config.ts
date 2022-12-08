@@ -1,4 +1,4 @@
-export const version = '2.9.25: December 2 v1: Derpmas Event Preparations';
+export const version = '2.9.26: December 8 v1: Singularity Challenge Introduction';
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '2.9.25: December 2 v1: Derpmas Event Preparations';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 11, 1, 16, 0, 6));
+export const lastUpdated = new Date(Date.UTC(2022, 11, 7, 16, 0, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

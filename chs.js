@@ -2047,7 +2047,7 @@ var cnItems = {
     'Need even MORE Challenges? Well, add 2 more Reincarnation Challenges and 1 Ascension Challenge to the cap, per level. Does it not seem excessive?': '还……还需要更多挑战吗？每级使转世挑战次数上限增加2次，飞升挑战次数上限增加1次。是不是有点太勉强了？',
     '[40] Marginal Quark Gain Improver Thingy': '[40] 略微增加夸克获取数量的小装置',
     '[NEW!] Marginal Quark Gain Improver Thingy': '[新！] 略微增加夸克获取数量的小装置',
-    'A doohickey that I forgot what it looked like. +0.5% Quarks per level, multiplicative with all other bonuses! Seems like it grows in cost a lot faster than anything else though. Also, did you know these descriptions can be arbitarily long?': '我忘记长什么的小装置。每级可以使夸克获取数量增加0.5%，效果与其他加成叠乘！不过它的花费增长比其他任何升级都快。另外，您知道描述文本可以这么长的吗？',
+    'A doohickey that I forgot what it looked like. +0.5% Quarks per level, multiplicative with all other bonuses! Seems like it grows in cost a lot faster than anything else though. Also, did you know these descriptions can be arbitarily long?': '我忘记长什么样的小装置。每级可以使夸克获取数量增加0.5%，效果与其他加成叠乘！不过它的花费增长比其他任何升级都快。另外，您知道描述文本可以这么长的吗？',
     '[41] I wish my Quark Hepteract was marginally better.': '[41] 我希望惊奇七阶立方·夸克的效果略微增加。',
     '[NEW!] I wish my Quark Hepteract was marginally better.': '[新！] 我希望惊奇七阶立方·夸克的效果略微增加。',
     'Wrong game, oops. Anyway, would you like a very slightly better DR exponent on Quark Hepteract?': '这个升级似乎走错游戏了，啊哦。总之，您想要让惊奇七阶立方·夸克超过软上限后的效果变得更好吗？',

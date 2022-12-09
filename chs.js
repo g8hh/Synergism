@@ -1542,7 +1542,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.26: December 8 v1: Singularity Challenge Introduction - The Alternate Reality [Last Update: 00:00 UTC 08-Dec-2022].': '您目前玩的版本为V2.9.26：12月8日第1版：引入奇点挑战 - 另一个现实 [2022年12月8日 UTC 00:00更新]。',
+    'You\'re playing v2.9.27: December 9 v1: Singularity Challenge v2 - The Alternate Reality [Last Update: 00:00 UTC 09-Dec-2022].': '您目前玩的版本为V2.9.27：12月9日第1版：奇点挑战第2版 - 另一个现实 [2022年12月9日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2239,10 +2239,7 @@ var cnItems = {
     'The current tier of this challenge takes place in Singularity': '当前阶层的该挑战将进入第',
     'No Singularity Upgrades': '无奇点升级',
     'Simply put, you have to beat the target singularity without (most) Singularity Upgrades. Octeracts, Perks and Quality of Life Singularity Upgrades are preserved.': '简而言之，您需要在没有大部分奇点升级的前提下通过目标奇点。惊奇八阶方块，特权和游戏体验相关的奇点升级将仍然保留。',
-    'Each completion increases cube gain of every dimension by 25%! First completion gives +12% Golden Quarks. Final completion awards something `special` ;) (WIP': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加25%！第一次完成后还可以使金夸克获取数量增加12%。最后一次完成后，可以获得一些“特别”的东西 ;)(制作中',
-    '': '',
-    '': '',
-    '': '',
+    'Each completion increases cube gain of every dimension by 50%! First completion gives +12% Golden Quarks. Final completion awards something `special` ;) (WIP': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加50%！第一次完成后还可以使金夸克获取数量增加12%。最后一次完成后，可以获得一些“特别”的东西 ;)(制作中',
     //#endregion
 
     //原样

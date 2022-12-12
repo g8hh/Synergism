@@ -268,7 +268,8 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
                 bonus: 1 + 0.10 * n,
                 desc: `Permanently gain ${format(10 * n, 0, true)}% more Golden Quarks on Singularities.`
             }
-        }
+        },
+        qualityOfLife: true
     },
     goldenQuarks2: {
         name: 'Golden Quarks II',
@@ -281,7 +282,8 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
                 bonus: (n > 250) ? 1 / Math.log2(n / 62.5) : 1 - Math.min(0.5, n / 500),
                 desc: `Purchasing Golden Quarks in the shop is ${(n > 250)? format(100 - 100 / Math.log2(n / 62.5), 2, true) : format(Math.min(50, n / 5),2,true)}% cheaper.`
             }
-        }
+        },
+        qualityOfLife: true
     },
     goldenQuarks3: {
         name: 'Golden Quarks III',
@@ -1099,8 +1101,8 @@ export const singularityPerks: SingularityPerk[] = [
     {
         name: '无限成长',
         levels: [1],
-        description: (n: number) => {
-            return `每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了${format(10*n)}%)`
+        description: () => {
+            return `目前每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了${format(10 * player.singularityCount)}%)`
         }
     },
     {
@@ -1360,6 +1362,17 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
+        name: '惊奇方盒自动运输',
+        levels: [50, 150],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '每次飞升自动购买方盒升级！'
+            } else {
+                return '每次飞升自动购买方盒升级，只在奇点挑战中有效'
+            }
+        }
+    },
+    {
         name: '金之革命',
         levels: [100],
         description: () => {
@@ -1378,6 +1391,17 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [100],
         description: () => {
             return '每次奇点使每小时导出存档的金夸克奖励增加2%(最高增加500%)'
+        }
+    },
+    {
+        name: 'PLATONIC桌面点击之克隆',
+        levels: [100, 200],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '每次飞升自动购买PLATONIC升级，且不花费难得素和祭品！'
+            } else {
+                return '每次飞升自动购买PLATONIC升级，且不花费难得素和祭品，只在奇点挑战中有效'
+            }
         }
     },
     {
@@ -1563,6 +1587,11 @@ export const getFastForwardTotalMultiplier = (): number => {
     // Stop at sing 200 even if you include fast forward
     fastForward = Math.max(0, Math.min(fastForward, 200 - player.singularityCount - 1));
 
+    // Please for the love of god don't allow FF during a challenge
+    if (player.insideSingularityChallenge) {
+        return 0
+    }
+
     // If the next singularityCount is greater than the highestSingularityCount, fast forward to be equal to the highestSingularityCount
     if (player.highestSingularityCount !== player.singularityCount && player.singularityCount + fastForward + 1 >= player.highestSingularityCount) {
         return Math.max(0, Math.min(fastForward, player.highestSingularityCount - player.singularityCount - 1))
@@ -1668,11 +1697,12 @@ export const calculateEffectiveSingularities = (singularityCount: number = playe
         effectiveSingularities *= Math.pow(1.1, Math.min(singularityCount - 36, 64))
     }
     if (singularityCount > 50) {
-        effectiveSingularities *= 6
+        effectiveSingularities *= 5
         effectiveSingularities *= Math.min(8, 2 * singularityCount / 50 - 1)
         effectiveSingularities *= Math.pow(1.1, Math.min(singularityCount - 50, 50))
     }
     if (singularityCount > 100) {
+        effectiveSingularities *= 2
         effectiveSingularities *= singularityCount / 25
         effectiveSingularities *= Math.pow(1.1, singularityCount - 100)
     }
@@ -1684,6 +1714,10 @@ export const calculateEffectiveSingularities = (singularityCount: number = playe
         effectiveSingularities *= 1.5
         effectiveSingularities *= Math.pow(1.275, singularityCount - 200)
     }
+    if (singularityCount > 215) {
+        effectiveSingularities *= 1.25
+        effectiveSingularities *= Math.pow(1.2, singularityCount - 215)
+    }
     if (singularityCount >= 250) {
         effectiveSingularities *= 100
     }
@@ -1691,7 +1725,7 @@ export const calculateEffectiveSingularities = (singularityCount: number = playe
     return effectiveSingularities
 }
 export const calculateNextSpike = (singularityCount: number = player.singularityCount): number => {
-    const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 250];
+    const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 216, 250];
     for (const sing of singularityPenaltyThreshold) {
         if (sing > singularityCount) {
             return sing;

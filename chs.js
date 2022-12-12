@@ -58,6 +58,8 @@ var cnItems = {
     'Per second: OFF': '每秒产量：关',
     'Auto ON': '自动：开',
     'Auto OFF': '自动：关',
+    'Auto Upgrades: [ON]': '自动升级：[开]',
+    'Auto Upgrades: [OFF]': '自动升级：[关]',
     'Auto Setting': '自动比例',
     'Autocraft Percentage': '自动锻造比例',
     'Auto Catalyze: ON': '自动催化：开',
@@ -1542,7 +1544,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.27: December 9 v1: Singularity Challenge v2 - The Alternate Reality [Last Update: 00:00 UTC 09-Dec-2022].': '您目前玩的版本为V2.9.27：12月9日第1版：奇点挑战第2版 - 另一个现实 [2022年12月9日 UTC 00:00更新]。',
+    'You\'re playing v2.9.28: December 11 v3: Challenges Balanced Again! - The Alternate Reality [Last Update: 00:00 UTC 11-Dec-2022].': '您目前玩的版本为V2.9.28：12月11日第3版：挑战再度平衡！ - 另一个现实 [2022年12月11日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -2230,7 +2232,11 @@ var cnItems = {
     'You ask what this upgrade does, but Derpsmith just nods his head. What is he hiding from you?': '您想知道这个升级的效果，但Derpsmith只是点了点头。他到底在隐瞒着什么？',
     'Purchase cancelled!': '已取消购买！',
     'Do you have what it takes to earn EXALT from Ant God?': '您知道如何蒙蚁神拔擢吗？',
+    'Derpsmith prohibits you from entering this challenge. Go do some more singing first.': 'Derpsmith阻止了您进入挑战。先进入更多次奇点吧。',
     'You are about to enter No Singularity Upgrades. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行无奇点升级挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
+    'You are about to enter [NEW!] No Singularity Upgrades. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行[新！]无奇点升级挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
+    'You are about to enter One Challenge Caps. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行挑战上限恒为一挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
+    'You are about to enter [NEW!] One Challenge Caps. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行[新！]挑战上限恒为一挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
     'Derpsmith nods his head. Come back when you are ready...': 'Derpsmith点了点头。准备好以后再来吧……',
     'Derpsmith declares you are already in a singularity challenge and prohibits you from destroying the fabric of your Reality.': 'Derpsmith表示您已经在进行奇点挑战，为了现实的安全着想，您不可以再进行挑战了。',
     'Derpsmith tries to hug you, but he has no arms.': 'Derpsmith想抱抱您，可惜他没有胳膊。',
@@ -2238,8 +2244,13 @@ var cnItems = {
     '[ENABLED]': '[已启用]',
     'The current tier of this challenge takes place in Singularity': '当前阶层的该挑战将进入第',
     'No Singularity Upgrades': '无奇点升级',
+    '[NEW!] No Singularity Upgrades': '[新！]无奇点升级',
     'Simply put, you have to beat the target singularity without (most) Singularity Upgrades. Octeracts, Perks and Quality of Life Singularity Upgrades are preserved.': '简而言之，您需要在没有大部分奇点升级的前提下通过目标奇点。惊奇八阶方块，特权和游戏体验相关的奇点升级将仍然保留。',
-    'Each completion increases cube gain of every dimension by 50%! First completion gives +12% Golden Quarks. Final completion awards something `special` ;) (WIP': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加50%！第一次完成后还可以使金夸克获取数量增加12%。最后一次完成后，可以获得一些“特别”的东西 ;)(制作中',
+    'Each completion increases cube gain of every dimension by 50%! First completion gives +12% Golden Quarks. Final completion awards something `special` ;) (WIP': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加50%！完成第一阶层后还可以使金夸克获取数量增加12%。完成最后一阶层后，可以获得一些“特别”的东西 ;)(制作中',
+    'One Challenge Caps': '挑战上限恒为一',
+    '[NEW!] One Challenge Caps': '[新！]挑战上限恒为一',
+    'Beat the target Singularity, but the first 14 Challenges have cap of only 1!': '您需要在前14个挑战的上限只有1的前提下通过目标奇点！',
+    'Each completion increases Corruption Multiplier Values by 0.03, no matter what. First Completion gives +3 to Reincarnation Challenge Cap. Final completion grants +1 free Corruption level!': '每完成一阶层就可以使腐化的相关加成倍率增加0.03。完成第一阶层后还可以使转世挑战次数上限增加3。完成最后一阶层后，可以使腐化的相关加成倍率直接视为增加1级！',
     //#endregion
 
     //原样
@@ -2506,7 +2517,7 @@ var cnRegReplace = new Map([
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Wow!$/, '$1/$2 惊奇'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Platonic! Cubes$/, '$1/$2 PLATONIC方盒'], //惊奇方盒
     [/^([e\,\.\d]+)\/([e\,\.\d]+) Hepteracts of the Abyss$/, '$1/$2 惊奇七阶立方·深渊'], //惊奇方盒
-    [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数到达$1。'], //惊奇方盒
+    [/^Next reward type requires (.+) exponent.$/, '下一类奖励需要指数达到$1。'], //惊奇方盒
     [/^You have reached the current capacity of (.+). Please expand to craft more.$/, '这种七阶立方达到了上限$1。请进行延展。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts.$/, '您锻造了$1七阶立方。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
@@ -2661,7 +2672,13 @@ var cnRegReplace = new Map([
     [/^How many Golden Quarks would you like to spend\? You have (.+) GQ. Type -1 to use max!$/, '您想要花费多少金夸克？您拥有$1金夸克。如果想要购买最大数量，请输入-1！'], //奇点
     [/^How many Octeracts would you like to spend\? You have (.+) OCT. Type -1 to use max!$/, '您想要花费多少惊奇八阶方块？您拥有$1惊奇八阶方块。如果想要购买最大数量，请输入-1！'], //奇点
     [/^Purchased (.+) levels, thanks to Multi Buy!$/, '一次性升级了$1级，多重购买真是太棒了！'], //奇点
+    [/^Can be entered at highest Singularity (.+) \[Your highest: (.+)\]$/, '最高奇点次数达到$1以后可以进入挑战[您的最高奇点次数为：$2]'], //奇点
     [/^You are attempting No Singularity Upgrades #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次无奇点升级挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
+    [/^You are attempting \[NEW!\] No Singularity Upgrades #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次[新！]无奇点升级挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
+    [/^You are attempting One Challenge Caps #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次挑战上限恒为一挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
+    [/^You are attempting \[NEW!\] One Challenge Caps #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次[新！]挑战上限恒为一挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
     [/^Are you sure you want to quit No Singularity Upgrades Tier (.+)\?$/, '您确定要退出第$1阶无奇点升级挑战吗？'], //奇点
+    [/^Are you sure you want to quit One Challenge Caps Tier (.+)\?$/, '您确定要退出第$1阶挑战上限恒为一挑战吗？'], //奇点
     [/^You have completed the (.+) tier of No Singularity Upgrades! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶无奇点升级挑战！相应的挑战奖励已经更新。'], //奇点
+    [/^You have completed the (.+) tier of One Challenge Caps! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶挑战上限恒为一挑战！相应的挑战奖励已经更新。'], //奇点
 ]);

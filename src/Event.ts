@@ -297,7 +297,7 @@ export const eventCheck = () => {
             const eventBuff = calculateEventSourceBuff(eventBuffType[i]);
             if (eventBuff !== 0) {
                 if (eventBuffType[i] === 'One Mind' && player.singularityUpgrades.oneMind.level > 0) {
-                    buffs += `<span style="color: gold">${eventBuff >= 0 ? '+' : '-'}${Math.round(Math.abs(eventBuff) * 100)}% ${eventBuffName[i]}</span> ,`
+                    buffs += `<span style="color: gold">!${eventBuff >= 0 ? '+' : '-'}${Math.round(Math.abs(eventBuff) * 100)}% ${eventBuffName[i]}</span> ,`
                 } else if (eventBuffType[i] !== 'One Mind' || player.singularityUpgrades.oneMind.level === 0) {
                     buffs += `${eventBuff >= 0 ? '+' : '-'}${Math.round(Math.abs(eventBuff) * 100)}% ${eventBuffName[i]}, `;
                 }

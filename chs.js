@@ -13,6 +13,7 @@ var cnItems = {
 
     //#region 标点处理
     '.': '。',
+    '!': '！',
     //#endregion
     //#region 主脚本
     'OK': '确定',
@@ -1550,7 +1551,8 @@ var cnItems = {
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
     'Current Buffs: +300% Quarks!': '当前加成：夸克获取数量增加300%！',
-    'Current Buffs: +20% Quarks!': '当前加成：夸克获取数量增加20%！',
+    'Current Buffs: +300% Quarks,': '当前加成：夸克获取数量增加300%，',
+    '!+40% One Mind Quark Bonus': '由于拥有一心升级，夸克获取数量再增加40%',
     'Derpmas 2022: Quark Extravaganza!': '2022圣诞：夸克大盛典！',
     'Thanks for Boosting the Discord': '感谢进行Discord助力',
     'Game saved successfully!': '游戏已保存！',

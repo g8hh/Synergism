@@ -146,12 +146,12 @@ export class SingularityChallenge {
      */
     toString(): string {
 
-        const color = (this.completions === this.maxCompletions) ? 'orchid' : 'white'
-        const enabled = (this.enabled) ? '<span style="color: red">[ENABLED]</span>' : '';
+        const color = (this.completions === this.maxCompletions) ? 'var(--orchid-text-color)' : 'white'
+        const enabled = (this.enabled) ? '<span style="color: var(--red-text-color)">[ENABLED]</span>' : '';
         return `<span style="color: gold">${this.name}</span> ${enabled}
                 <span style="color: lightblue">${this.description}</span>
                 <span style="color: pink">Can be entered at highest Singularity ${this.unlockSingularity} [Your highest: ${player.highestSingularityCount}]</span></br>阶层完成数：<span style="color: ${color}">${this.completions}/${this.maxCompletions}</span>
-                <span style="color: gold">The current tier of this challenge takes place in Singularity <span style="color: orchid">${this.singularityRequirement(this.baseReq, this.completions)}</span>次奇点</span>
+                <span style="color: gold">The current tier of this challenge takes place in Singularity <span style="color: var(--orchid-text-color)">${this.singularityRequirement(this.baseReq, this.completions)}</span>次奇点</span>
                 <span>${this.rewardDescription}</span>`
     }
 
@@ -205,6 +205,25 @@ export const singularityChallengeData: Record<keyof Player['singularityUpgrades'
                 corrScoreIncrease: 0.03 * n,
                 capIncrease: 3 * +(n > 0),
                 freeCorruptionLevel: (n === 20)
+            }
+        }
+    },
+    noOcteracts: {
+        name: 'No Octeract Effects',
+        descripton: 'Beat the target Singularity, but octeracts and their upgrades do nothing! Effective Singularity is also much higher based on tier.',
+        rewardDescription: 'Each completion increases Octeract to Cube Bonus power by 0.02 (BASE: 2.00). First completion adds a bonus to Offerings based on Octeracts. Final completion adds a bonus to Obtainium based on Octeracts.',
+        baseReq: 75,
+        maxCompletions: 10,
+        unlockSingularity: 100,
+        HTMLTag: 'noOcteracts',
+        singularityRequirement: (baseReq: number, completions: number) => {
+            return baseReq + 13 * completions
+        },
+        effect: (n: number) => {
+            return {
+                octeractPow: 0.02 * n,
+                offeringBonus: (n > 0),
+                obtainiumBonus: (n === 10)
             }
         }
     }

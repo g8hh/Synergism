@@ -34,7 +34,7 @@ import { resetShopUpgrades, shopData } from './Shop';
 import { QuarkHandler } from './Quark';
 import { calculateSingularityDebuff, getFastForwardTotalMultiplier } from './singularity';
 import { updateCubeUpgradeBG, awardAutosCookieUpgrade, autoBuyCubeUpgrades } from './Cubes';
-import { autoBuyPlatonicUpgrades } from './Platonic';
+import { autoBuyPlatonicUpgrades, updatePlatonicUpgradeBG } from './Platonic';
 import { calculateTessBuildingsInBudget, buyTesseractBuilding } from './Buy'
 import { getAutoHepteractCrafts } from './Hepteracts'
 import type { TesseractBuildings } from './Buy';
@@ -88,7 +88,7 @@ export const resetdetails = (input: resetNames) => {
             currencyImage1.style.display = 'block'
             resetCurrencyGain.textContent = '+' + format(G['transcendPointGain']);
             resetInfo.textContent = '重置所有金币和钻石的升级和机制，以及水晶升级和水晶生产者，获得神话和一些祭品。需要：' + format(player.coinsThisTranscension) + '/1e100金币 || 花费时间：' + format(player.transcendcounter) + '秒。';
-            resetInfo.style.color = 'orchid';
+            resetInfo.style.color = 'var(--orchid-text-color)';
             break;
         case 'reincarnation':
             if (!currencyImage1.src.endsWith('Pictures/Particle.png')) {
@@ -114,7 +114,7 @@ export const resetdetails = (input: resetNames) => {
 
             (transcensionChallenge !== 0)?
                 (resetInfo.style.color = 'aquamarine', resetInfo.textContent = '您已经厌倦了挑战，或者是单纯想退出了吗？点击此处将离开挑战' + transcensionChallenge + '。进度：' + format(player.coinsThisTranscension) + '/' + format(challengeRequirement(transcensionChallenge, player.challengecompletions[transcensionChallenge])) + '金币。花费时间：' + format(player.transcendcounter) + '秒。'):
-                (resetInfo.style.color = 'crimson', resetInfo.textContent = 'You\'re not in a Transcension Challenge right now. Get in one before you can leave it, duh!');
+                (resetInfo.style.color = 'var(--crimson-text-color)', resetInfo.textContent = 'You\'re not in a Transcension Challenge right now. Get in one before you can leave it, duh!');
             break;
         case 'reincarnationChallenge':
             currencyImage1.style.display = 'none'
@@ -127,7 +127,7 @@ export const resetdetails = (input: resetNames) => {
                 resetInfo.style.color = 'silver';
                 resetInfo.textContent = '您已经不想再继续了，或者是厌倦了挑战吗？点击此处将离开挑战' + reincarnationChallenge + '。进度：' + format(player[goal]) + '/' + format(challengeRequirement(reincarnationChallenge, player.challengecompletions[reincarnationChallenge], reincarnationChallenge)) + goaldesc + '。花费时间：' + format(player.reincarnationcounter) + '秒。';
             } else {
-                resetInfo.style.color = 'crimson';
+                resetInfo.style.color = 'var(--crimson-text-color)';
                 resetInfo.textContent = 'You\'re not in a Reincarnation Challenge right now. How could you leave what you are not in?';
             }
             break;
@@ -567,7 +567,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
                 player.wowTesseracts.add(metaData[5]);
                 player.wowHypercubes.add(metaData[6]);
                 player.wowPlatonicCubes.add(metaData[7]);
-                player.wowAbyssals += metaData[8];
+                player.wowAbyssals = Math.min(1e300, player.wowAbyssals + metaData[8]);
             }
         }
 
@@ -717,7 +717,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
         autoBuyCubeUpgrades();
 
         // Auto open Cubes. If to remove !== 0, game will lag a bit if it was set to 0
-        if (player.highestSingularityCount >= 35 && numberOfAutoCraftsAndOrbs > 0) {
+        if (player.highestSingularityCount >= 35) {
             if (player.autoOpenCubes && player.openCubes !== 0 && player.cubeUpgrades[51] > 0) {
                 player.wowCubes.open(Math.floor(Number(player.wowCubes) * player.openCubes / 100), false)
             }
@@ -950,6 +950,11 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
     if (player.highestSingularityCount >= 101 && singularityReset) {
         player.cubeUpgrades[51] = 1;
         awardAutosCookieUpgrade();
+    }
+
+    if (player.singularityUpgrades.platonicAlpha.getEffect().bonus && player.platonicUpgrades[5] === 0) {
+        player.platonicUpgrades[5] = 1;
+        updatePlatonicUpgradeBG(5);
     }
 
     if (singularityReset) {

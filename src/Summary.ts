@@ -414,7 +414,7 @@ export const generateExportSummary = async():Promise<void> => {
                     CNsingname ='[49] 夸夸夸夸克';
                     break;
                 case '[50] The Ultimate Pen':
-                    CNsingname ='[50] 终级妙笔';
+                    CNsingname ='[50] 终极妙笔';
                     break;
                 case '[51] Platonic TAU':
                     CNsingname ='[51] PLATONIC·陶';
@@ -591,7 +591,7 @@ export const generateExportSummary = async():Promise<void> => {
                     CNsingname ='[新！] 夸夸夸夸克';
                     break;
                 case '[NEW!] The Ultimate Pen':
-                    CNsingname ='[新！] 终级妙笔';
+                    CNsingname ='[新！] 终极妙笔';
                     break;
                 case '[NEW!] Platonic TAU':
                     CNsingname ='[新！] PLATONIC·陶';
@@ -733,7 +733,7 @@ export const generateExportSummary = async():Promise<void> => {
                     CNoctname = '[18] 真惊奇！PLATONIC，让免费升级再度强大吧！';
                     break;
                 case '[19] Coupon of Ultimate Penniless Derpsmiths':
-                    CNoctname = '[19] 身无分文的Derpsmith之终级兑换券';
+                    CNoctname = '[19] 身无分文的Derpsmith之终极兑换券';
                     break;
                 case '[20] Overwriting Pointers':
                     CNoctname = '[20] 重写指针';
@@ -820,7 +820,7 @@ export const generateExportSummary = async():Promise<void> => {
                     CNoctname = '[新！] 真惊奇！PLATONIC，让免费升级再度强大吧！';
                     break;
                 case '[NEW!] Coupon of Ultimate Penniless Derpsmiths':
-                    CNoctname = '[新！] 身无分文的Derpsmith之终级兑换券';
+                    CNoctname = '[新！] 身无分文的Derpsmith之终极兑换券';
                     break;
                 case '[NEW!] Overwriting Pointers':
                     CNoctname = '[新！] 重写指针';

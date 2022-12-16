@@ -8,9 +8,9 @@ import { toOrdinal } from './Utility'
 
 export const updateSingularityPenalties = (): void => {
     const singularityCount = player.singularityCount;
-    const color = player.runelevels[6] > 0 ? 'green' : 'red';
-    const platonic = (singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}。` : '<span style="color: grey">????????？？？？？？？？</span> <span style="color: red">(第37次进入奇点)</span>';
-    const hepteract = (singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}。` : '<span style="color: grey">？？？？？？？？？？</span> <span style="color: red">(第51次进入奇点)</span>';
+    const color = player.runelevels[6] > 0 ? 'var(--green-text-color)' : 'var(--red-text-color)';
+    const platonic = (singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}。` : '<span class="grayText">????????？？？？？？？？</span> <span class="redText">(第37次进入奇点)</span>';
+    const hepteract = (singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}。` : '<span class="grayText">？？？？？？？？？？</span> <span class="redText">(第51次进入奇点)</span>';
     const str = getSingularityOridnalText(singularityCount) +
                 `<br>全局速度除以${format(calculateSingularityDebuff('Global Speed', singularityCount), 2, true)}。
                  飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed', singularityCount), 2, true)}。
@@ -21,7 +21,7 @@ export const updateSingularityPenalties = (): void => {
                  方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades', singularityCount), 2, true)}。
                  ${platonic}
                  ${hepteract}
-                 惩罚将${singularityCount >= 250 ? '永远平滑地增加下去。' : `在<span style="color: red">第${format(calculateNextSpike(player.singularityCount), 0, true)}次进入奇点</span>后大幅增加。`}
+                 惩罚将${singularityCount >= 250 ? '永远平滑地增加下去。' : `在<span class="redText">第${format(calculateNextSpike(player.singularityCount), 0, true)}次进入奇点</span>后大幅增加。`}
                  <span style='color: ${color}'>Antiquities of Ant God is ${(player.runelevels[6] > 0) ? '' : 'NOT'} purchased. Penalties are ${(player.runelevels[6] > 0) ? '' : 'NOT'} dispelled!</span>`
 
     DOMCacheGetOrSet('singularityPenaltiesMultiline').innerHTML = str;
@@ -74,7 +74,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             ? ''
             : `/${format(this.computeMaxLevel(), 0 , true)}`;
         const color = this.computeMaxLevel() === this.level ? 'plum' : 'white';
-        const minReqColor = player.highestSingularityCount < this.minimumSingularity ? 'crimson' : 'green';
+        const minReqColor = player.highestSingularityCount < this.minimumSingularity ? 'var(--crimson-text-color)' : 'var(--green-text-color)';
         const minimumSingularity = this.minimumSingularity > 0
             ? `最少需要进入奇点次数：${this.minimumSingularity}`
             : '无进入奇点次数要求'
@@ -83,7 +83,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
             `<span style="color: orange"> [+${format(this.freeLevels, 2, true)}]</span>` : ''
 
         if (this.freeLevels > this.level) {
-            freeLevelInfo = freeLevelInfo + '<span style="color: maroon"> (Softcapped) </span>'
+            freeLevelInfo = freeLevelInfo + '<span style="color: var(--maroon-text-color)"> (Softcapped) </span>'
         }
 
         return `<span style="color: gold">${this.name}</span>
@@ -1457,7 +1457,7 @@ export const singularityPerks: SingularityPerk[] = [
         name: '完美炼金术',
         levels: [200, 208, 221],
         description: () => {
-            return '从第200次奇点开始，增加奇点次数的升级不再升级！但还是可以让您的金夸克获取数量变为3倍。(2级变为5倍，3级变为8倍。)另外，还会相应地减少购买金夸克的花费！'
+            return '从第200次奇点开始，增加奇点次数的升级不再生效！但还是可以让您的金夸克获取数量变为3倍。(2级变为5倍，3级变为8倍。)另外，还会相应地减少购买金夸克的花费！'
         }
     },
     {
@@ -1469,7 +1469,7 @@ export const singularityPerks: SingularityPerk[] = [
     },
     {
         name: '产业化“daily”代码',
-        levels: [201],
+        levels: [200],
         description: () => {
             return '使用“daily”代码获得的免费等级数量翻倍！'
         }
@@ -1683,6 +1683,13 @@ export type SingularityDebuffs = 'Offering' | 'Obtainium' | 'Global Speed' | 'Re
 export const calculateEffectiveSingularities = (singularityCount: number = player.singularityCount): number => {
     let effectiveSingularities = singularityCount;
     effectiveSingularities *= Math.min(4.75, 0.75 * singularityCount / 10 + 1)
+
+    if (player.insideSingularityChallenge) {
+        if (player.singularityChallenges.noOcteracts.enabled) {
+            effectiveSingularities *= Math.pow(player.singularityChallenges.noOcteracts.completions + 1, 3)
+        }
+    }
+
     if (singularityCount > 10) {
         effectiveSingularities *= 1.5
         effectiveSingularities *= Math.min(4, 1.25 * singularityCount / 10 - 0.25)

@@ -2279,7 +2279,7 @@ var cnItems = {
     'Each completion increases Corruption Multiplier Values by 0.03, no matter what. First Completion gives +3 to Reincarnation Challenge Cap. Final completion grants +1 free Corruption level!': '每完成一阶层就可以使腐化的相关加成倍率增加0.03。完成第一阶层后可以使转世挑战次数上限增加3。完成最后一阶层后，可以使腐化的相关加成倍率直接视为增加1级！',
     'No Octeract Effects': '无八阶方块效果',
     '[NEW!] No Octeract Effects': '[新！]无八阶方块效果',
-    'Beat the target Singularity, but octeracts and their upgrades do nothing! Effective Singularity is also much higher based on tier.': '您需要在惊奇八阶方块和相应升级没有效果的前提下通过目标奇点！另外，奇点相关惩罚也会根据阶层变得更高。',
+    'Beat the target Singularity, but octeracts and their upgrades do nothing! Effective Singularity is also much higher based on tier.': '您需要在惊奇八阶方块和相应升级没有效果的前提下通过目标奇点！另外，奇点相关惩罚也会根据当前阶层数量变得更高。',
     'Each completion increases Octeract to Cube Bonus power by 0.02 (BASE: 2.00). First completion adds a bonus to Offerings based on Octeracts. Final completion adds a bonus to Obtainium based on Octeracts.': '每完成一阶层就可以使惊奇八阶方块对惊奇方盒至惊奇七阶立方获取数量的加成指数增加0.02(基础值为2)。完成第一阶层后可以使惊奇八阶方块增加对祭品获取数量的加成。完成最后一阶层后，可以使惊奇八阶方块增加对难得素获取数量的加成。',
     //#endregion
 

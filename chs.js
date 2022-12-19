@@ -1545,7 +1545,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.29: December 15 v1: Exalt 3 Premiere - The Alternate Reality [Last Update: 00:00 UTC 16-Dec-2022].': '您目前玩的版本为V2.9.29：12月15日第1版：奇点挑战3首发 - 另一个现实 [2022年12月16日 UTC 00:00更新]。',
+    'You\'re playing v2.9.30: December 17 v1 - The Alternate Reality [Last Update: 00:00 UTC 17-Dec-2022].': '您目前玩的版本为V2.9.30：12月17日第1版 - 另一个现实 [2022年12月17日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1842,7 +1842,7 @@ var cnItems = {
     'The PL-AT can do addition in the blink of an eye. Not much else though. +14% Quarks from using code \'add\' per level, the first level provides the answer and the final level does it automatically!': 'PL-AT在眨眼间就能做完加法。不过它也没其他什么用途了。每级使您使用“add”代码获取的夸克数量增加14%，另外，第一级可以直接显示答案，而最后一级可以自动完成加法！',
     'The PL-AT X has improved memory capacity, allowing you to store 2 additional uses to code \'add\' per level. Final level makes \'add\' give 25% more Quarks!': 'PL-AT X提升了内存容量，每级使您使用“add”代码的次数上限增加2。另外，最后一级可以使您使用“add”代码获取的夸克数量增加25%！',
     'The PL-AT Ω is infused with some Unobtainium, which is epic! But furthermore, it reduces the variance of Quarks by code \'add\' by 10% per level, which makes you more likely to get the maximum multiplier. It also has the ability to give +60 seconds to Ascension Timer per level using that code.': 'PL-AT Ω注入了难得素，这使它的性能进一步提升了！每级使您使用“add”代码获得的夸克数量变化范围减少10%，因此您更有可能获得最高的数值。另外，每级可以使您使用“add”代码时同时增加60秒飞升时间。',
-    'The PL-AT δ runs at 4,096Hz, which is a huge improvement over previous models. Add attempts refill 2% faster per level! Final level adds 8 additional capacity!': 'PL-AT δ的主频为4096Hz，这是一项巨大的进步。每级使“add”代码的使用次数加快2%恢复。另外，最后一级可以使您使用“add”代码的次数上限增加8。',
+    'The PL-AT δ runs at 4,096Hz, which is a huge improvement over previous models. Add attempts refill 4% faster per level! Final level adds 32 additional capacity!': 'PL-AT δ的主频为4096Hz，这是一项巨大的进步。每级使“add”代码的使用次数加快4%恢复。另外，最后一级可以使您使用“add”代码的次数上限增加32。',
     'The PL-AT Γ model somehow performs more \'powerful\' computations, whatever that means. +6 seconds of GQ Export timer per level. +1 capacity every 10 levels, with 6 more at final level!': 'PL-AT Γ可以进行“更强大”的计算。每级使您使用“add”代码时导出存档的金夸克奖励计时增加6秒。另外，每10级使您使用“add”代码的次数上限增加1，且最后一级可以使您使用“add”代码的次数上限再增加6。',
     'The PL-AT _ model was made by Derpsmith, before he was banished from the industry forever. Gain 1 second of Octeract per usage per level. Final level grants 24 additional capacity!': 'PL-AT _由Derpsmith制造，之后他就被永远逐出了这个行业。每级使您使用“add”代码时获得相当于1秒产量的惊奇八阶方块。另外，最后一级可以使您使用“add”代码的次数上限增加24。',
     'The merchant has one last trick up its sleeve: It can augment your second constant upgrade to be marginally better, but it\'ll cost an arm and a leg! Instead of the cap being 10% (or 11% with achievements) it will be raised by 1% per level.': '商人居然还留了一手……它可以使数学常数升级2的效果稍微再好一些，但它的价格也是天文数字了！之前的上限为10%(或者在获得特定成就后变为11%)，每级还可以使这个数字再增加1%。',
@@ -2712,8 +2712,11 @@ var cnRegReplace = new Map([
     [/^You are attempting No Octeract Effects #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次无八阶方块效果挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
     [/^You are attempting \[NEW!\] No Octeract Effects #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次[新！]无八阶方块效果挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
     [/^Are you sure you want to quit No Singularity Upgrades Tier (.+)\?$/, '您确定要退出第$1阶无奇点升级挑战吗？'], //奇点
+    [/^Are you sure you want to quit No Singularity Upgrades Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶无奇点升级挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
     [/^Are you sure you want to quit One Challenge Caps Tier (.+)\?$/, '您确定要退出第$1阶挑战上限恒为一挑战吗？'], //奇点
+    [/^Are you sure you want to quit One Challenge Caps Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶挑战上限恒为一挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
     [/^Are you sure you want to quit No Octeract Effects Tier (.+)\?$/, '您确定要退出第$1阶无八阶方块效果挑战吗？'], //奇点
+    [/^Are you sure you want to quit No Octeract Effects Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶无八阶方块效果挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
     [/^You have completed the (.+) tier of No Singularity Upgrades! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶无奇点升级挑战！相应的挑战奖励已经更新。'], //奇点
     [/^You have completed the (.+) tier of One Challenge Caps! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶挑战上限恒为一挑战！相应的挑战奖励已经更新。'], //奇点
     [/^You have completed the (.+) tier of No Octeract Effects! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶无八阶方块效果挑战！相应的挑战奖励已经更新。'], //奇点

@@ -755,6 +755,10 @@ const dailyCodeFormatFreeLevelMessage = (upgradeKey: string, freeLevelAmount: nu
         CNNiceName = '祭品狂风'
     } else if (CNNiceName == 'Improved Ascension Gain'){
         CNNiceName = '更多飞升次数'
+    } else if (CNNiceName == 'Octeract Cogenesis'){
+        CNNiceName = '惊奇八阶方块同生'
+    } else if (CNNiceName == 'Octeract Trigenesis'){
+        CNNiceName = '惊奇八阶方块三度起源'
     }
     return `\n“${CNNiceName}”的免费等级+${freeLevelAmount}级`;
 }

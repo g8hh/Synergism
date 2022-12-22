@@ -1,4 +1,4 @@
-export const version = '2.9.30: December 17 v1';
+export const version = '2.9.31: December 22 v1';
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '2.9.30: December 17 v1';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 11, 16, 16, 0, 6));
+export const lastUpdated = new Date(Date.UTC(2022, 11, 21, 16, 0, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

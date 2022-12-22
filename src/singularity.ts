@@ -1069,6 +1069,20 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
             }
         },
         qualityOfLife: true
+    },
+    blueberries: {
+        name: 'Blueberry Shards! (WIP)',
+        description: 'The legends are true. \n The Prophecies are fulfilled. \n Ant God has heard your prayers. \n Let there be blueberries! \n And they were good.',
+        maxLevel: -1,
+        costPerLevel: 1e14,
+        minimumSingularity: 222,
+        effect: (n: number) => {
+            return {
+                bonus: n,
+                desc: `You have purchased ${n} tasty blueberries.`
+            }
+        },
+        specialCostForm: 'Cubic'
     }
 }
 
@@ -1245,6 +1259,18 @@ export const singularityPerks: SingularityPerk[] = [
             } else {
                 return '您可以保留所有蚂蚁自动购买，飞升后初始获得一只工蚁'
             }
+        }
+    },
+    {
+        name: '集腋成裘',
+        levels: [10, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 235, 240],
+        description: (n: number, levels: number[]) => {
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (n >= levels[i]) {
+                    return `使用“add”代码的奖励除以${format(1 + (i+1)/5, 2, true)}，但恢复时间也除以${format(1 + (i+1)/5, 2, true)}，且使用次数上限乘以${format(1 + (i+1)/5, 2, true)}(向上取整)。`
+                }
+            }
+            return 'BUG!!!'
         }
     },
     {

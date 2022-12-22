@@ -347,104 +347,104 @@ export const generateExportSummary = async():Promise<void> => {
                 case '[27] Offering Lootzifer (Depreciated)':
                     CNsingname ='[27] 祭品自动获取(贬值)';
                     break;
-                case '[28] Intermediate Pack':
-                    CNsingname ='[28] 中级礼包';
+                case '[27] Intermediate Pack':
+                    CNsingname ='[27] 中级礼包';
                     break;
-                case '[29] Advanced Pack':
-                    CNsingname ='[29] 高级礼包';
+                case '[28] Advanced Pack':
+                    CNsingname ='[28] 高级礼包';
                     break;
-                case '[30] Expert Pack':
-                    CNsingname ='[30] 专家礼包';
+                case '[29] Expert Pack':
+                    CNsingname ='[29] 专家礼包';
                     break;
-                case '[31] Master Pack':
-                    CNsingname ='[31] 大师礼包';
+                case '[30] Master Pack':
+                    CNsingname ='[30] 大师礼包';
                     break;
-                case '[32] Divine Pack':
-                    CNsingname ='[32] 神圣礼包';
+                case '[31] Divine Pack':
+                    CNsingname ='[31] 神圣礼包';
                     break;
-                case '[33] Shop Liquidation Sale':
-                    CNsingname ='[33] 商店清仓大甩卖';
+                case '[32] Shop Liquidation Sale':
+                    CNsingname ='[32] 商店清仓大甩卖';
                     break;
-                case '[34] Potion Decanter of Enlightenment':
-                    CNsingname ='[34] 启迪药水瓶';
+                case '[33] Potion Decanter of Enlightenment':
+                    CNsingname ='[33] 启迪药水瓶';
                     break;
-                case '[35] Potion Decanter of Inquisition':
-                    CNsingname ='[35] 审查药水瓶';
+                case '[34] Potion Decanter of Inquisition':
+                    CNsingname ='[34] 审查药水瓶';
                     break;
-                case '[36] Potion Decanter of Maddening Instability':
-                    CNsingname ='[36] 暴躁不稳定药水瓶';
+                case '[35] Potion Decanter of Maddening Instability':
+                    CNsingname ='[35] 暴躁不稳定药水瓶';
                     break;
-                case '[37] Bigger Challenge Caps':
-                    CNsingname ='[37] 挑战上限增加';
+                case '[36] Bigger Challenge Caps':
+                    CNsingname ='[36] 挑战上限增加';
                     break;
-                case '[38] Biggerer Challenge Caps':
-                    CNsingname ='[38] 挑战上限再度增加';
+                case '[37] Biggerer Challenge Caps':
+                    CNsingname ='[37] 挑战上限再度增加';
                     break;
-                case '[39] BiggererEST Challenge Caps':
-                    CNsingname ='[39] 挑战上限超级增加';
+                case '[38] BiggererEST Challenge Caps':
+                    CNsingname ='[38] 挑战上限超级增加';
                     break;
-                case '[40] Marginal Quark Gain Improver Thingy':
-                    CNsingname ='[40] 略微增加夸克获取数量的小装置';
+                case '[39] Marginal Quark Gain Improver Thingy':
+                    CNsingname ='[39] 略微增加夸克获取数量的小装置';
                     break;
-                case '[41] I wish my Quark Hepteract was marginally better.':
-                    CNsingname ='[41] 我希望惊奇七阶立方·夸克的效果略微增加。';
+                case '[40] I wish my Quark Hepteract was marginally better.':
+                    CNsingname ='[40] 我希望惊奇七阶立方·夸克的效果略微增加。';
                     break;
-                case '[42] I wish my Quark Hepteract was marginally better II.':
-                    CNsingname ='[42] 我希望惊奇七阶立方·夸克的效果略微增加 II。';
+                case '[41] I wish my Quark Hepteract was marginally better II.':
+                    CNsingname ='[41] 我希望惊奇七阶立方·夸克的效果略微增加 II。';
                     break;
-                case '[43] I wish my Quark Hepteract was marginally better III.':
-                    CNsingname ='[43] 我希望惊奇七阶立方·夸克的效果略微增加 III。';
+                case '[42] I wish my Quark Hepteract was marginally better III.':
+                    CNsingname ='[42] 我希望惊奇七阶立方·夸克的效果略微增加 III。';
                     break;
-                case '[44] Octeract Absinthe':
-                    CNsingname ='[44] 惊奇八阶方块苦艾酒';
+                case '[43] Octeract Absinthe':
+                    CNsingname ='[43] 惊奇八阶方块苦艾酒';
                     break;
-                case '[45] Pieces of Eight':
-                    CNsingname ='[45] 八个里亚尔';
+                case '[44] Pieces of Eight':
+                    CNsingname ='[44] 八个里亚尔';
                     break;
-                case '[46] The Obelisk Shaped like an Octagon.':
-                    CNsingname ='[46] 八角方尖碑';
+                case '[45] The Obelisk Shaped like an Octagon.':
+                    CNsingname ='[45] 八角方尖碑';
                     break;
-                case '[47] Octahedral Synthesis':
-                    CNsingname ='[47] 八面合成';
+                case '[46] Octahedral Synthesis':
+                    CNsingname ='[46] 八面合成';
                     break;
-                case '[48] The Eighth Wonder of the World':
-                    CNsingname ='[48] 世界第八大奇迹';
+                case '[47] The Eighth Wonder of the World':
+                    CNsingname ='[47] 世界第八大奇迹';
                     break;
-                case '[49] QUAAAACK':
-                    CNsingname ='[49] 夸夸夸夸克';
+                case '[48] QUAAAACK':
+                    CNsingname ='[48] 夸夸夸夸克';
                     break;
-                case '[50] The Ultimate Pen':
-                    CNsingname ='[50] 终极妙笔';
+                case '[49] The Ultimate Pen':
+                    CNsingname ='[49] 终极妙笔';
                     break;
-                case '[51] Platonic TAU':
-                    CNsingname ='[51] PLATONIC·陶';
+                case '[50] Platonic TAU':
+                    CNsingname ='[50] PLATONIC·陶';
                     break;
-                case '[52] Platonic ALPHA...?':
-                    CNsingname ='[52] PLATONIC·阿 尔 法……？';
+                case '[51] Platonic ALPHA...?':
+                    CNsingname ='[51] PLATONIC·阿 尔 法……？';
                     break;
-                case '[53] Platonic DELTA':
-                    CNsingname ='[53] PLATONIC·德尔塔';
+                case '[52] Platonic DELTA':
+                    CNsingname ='[52] PLATONIC·德尔塔';
                     break;
-                case '[54] Platonic PHI':
-                    CNsingname ='[54] PLATONIC·斐';
+                case '[53] Platonic PHI':
+                    CNsingname ='[53] PLATONIC·斐';
                     break;
-                case '[55] Etherflux Singularities':
-                    CNsingname ='[55] 以太通量·奇点';
+                case '[54] Etherflux Singularities':
+                    CNsingname ='[54] 以太通量·奇点';
                     break;
-                case '[56] Aetherflux Singularities':
-                    CNsingname ='[56] 超以太通量·奇点';
+                case '[55] Aetherflux Singularities':
+                    CNsingname ='[55] 超以太通量·奇点';
                     break;
-                case '[57] A hecking good ascension speedup!':
-                    CNsingname ='[57] 飞升的速度强力提升！';
+                case '[56] A hecking good ascension speedup!':
+                    CNsingname ='[56] 飞升的速度强力提升！';
                     break;
-                case '[58] A mediocre ascension speedup!':
-                    CNsingname ='[58] 飞升的速度普通提升！';
+                case '[57] A mediocre ascension speedup!':
+                    CNsingname ='[57] 飞升的速度普通提升！';
                     break;
-                case '[59] ONE MIND':
-                    CNsingname ='[59] 一心';
+                case '[58] ONE MIND':
+                    CNsingname ='[58] 一心';
                     break;
-                case '[60] QUQUQUQUAAKCKCKKCKKCKK':
-                    CNsingname ='[60] 夸夸夸夸克克克克克克';
+                case '[59] QUQUQUQUAAKCKCKKCKKCKK':
+                    CNsingname ='[59] 夸夸夸夸克克克克克克';
                     break;
                 case '[NEW!] Golden Quarks I':
                     CNsingname ='[新！] 金夸克 I';

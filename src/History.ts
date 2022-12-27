@@ -202,7 +202,7 @@ const historyGains: Record<
         imgTitle: '惊奇方盒'
     },
     wowPlatonicCubes: {
-        img: 'Pictures/Platonic Cube.png',
+        img: 'Pictures/PlatonicCube.png',
         formatter: conditionalFormatPerSecond,
         imgTitle: 'PLATONIC方盒',
         onlyif: () => player.challengecompletions[14] > 0
@@ -226,7 +226,7 @@ const historyGains: Record<
         onlyif: () => player.highestSingularityCount > 0
     },
     goldenQuarks: {
-        img: 'Pictures/Golden Quark.png',
+        img: 'Pictures/GoldenQuark.png',
         formatter: formatDecimalSource,
         imgTitle: '金夸克',
         onlyif: () => player.highestSingularityCount > 0
@@ -250,7 +250,7 @@ const historyGains: Record<
         onlyif: () => player.highestSingularityCount > 0
     },
     platTribs: {
-        img: 'Pictures/Platonic Cube.png',
+        img: 'Pictures/PlatonicCube.png',
         formatter: formatDecimalSource,
         imgTitle: 'PLATONIC方盒已开启',
         onlyif: () => player.highestSingularityCount > 0
@@ -305,13 +305,13 @@ const resetHistoryTableMapping: Record<Category, string> = {
 // Images associated with the various corruptions.
 const resetHistoryCorruptionImages = [
     'Pictures/Viscocity.png',
-    'Pictures/Spatial Dilation.png',
+    'Pictures/SpatialDilation.png',
     'Pictures/Hyperchallenged.png',
-    'Pictures/Scientific Illiteracy.png',
+    'Pictures/ScientificIlliteracy.png',
     'Pictures/Deflation.png',
     'Pictures/Extinction.png',
     'Pictures/Drought.png',
-    'Pictures/Financial Collapse.png'
+    'Pictures/FinancialCollapse.png'
 ];
 
 const resetHistoryCorruptionTitles = [

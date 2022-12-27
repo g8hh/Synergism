@@ -1545,7 +1545,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.9.31: December 22 v2 - The Alternate Reality [Last Update: 00:00 UTC 22-Dec-2022].': '您目前玩的版本为V2.9.31：12月22日第2版 - 另一个现实 [2022年12月22日 UTC 00:00更新]。',
+    'You\'re playing v2.10.0: December 26 v1: Code of Codes - The Alternate Reality [Last Update: 00:00 UTC 26-Dec-2022].': '您目前玩的版本为V2.10.0：12月26日第1版 - 另一个现实 [2022年12月26日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',

@@ -21,7 +21,7 @@ export const updateSingularityPenalties = (): void => {
                  方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades', singularityCount), 2, true)}。
                  ${platonic}
                  ${hepteract}
-                 惩罚将${singularityCount >= 250 ? '永远平滑地增加下去。' : `在<span class="redText">第${format(calculateNextSpike(player.singularityCount), 0, true)}次进入奇点</span>后大幅增加。`}
+                 惩罚将${singularityCount >= 230 ? '永远平滑地增加下去。' : `在<span class="redText">第${format(calculateNextSpike(player.singularityCount), 0, true)}次进入奇点</span>后大幅增加。`}
                  <span style='color: ${color}'>Antiquities of Ant God is ${(player.runelevels[6] > 0) ? '' : 'NOT'} purchased. Penalties are ${(player.runelevels[6] > 0) ? '' : 'NOT'} dispelled!</span>`
 
     DOMCacheGetOrSet('singularityPenaltiesMultiline').innerHTML = str;
@@ -1033,8 +1033,8 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
         name: 'The Ultimate Pen',
         description: 'You. It is you who is the author of your own story!',
         maxLevel: 1,
-        costPerLevel: Number.MAX_SAFE_INTEGER,
-        minimumSingularity: 250,
+        costPerLevel: 2.22e22,
+        minimumSingularity: 300,
         effect: (n: number) => {
             return {
                 bonus: n > 0,
@@ -1753,16 +1753,12 @@ export const calculateEffectiveSingularities = (singularityCount: number = playe
     }
     if (singularityCount > 230) {
         effectiveSingularities *= 2
-        effectiveSingularities *= Math.pow(1.3, singularityCount - 230)
-    }
-    if (singularityCount >= 250) {
-        effectiveSingularities *= 100
     }
 
     return effectiveSingularities
 }
 export const calculateNextSpike = (singularityCount: number = player.singularityCount): number => {
-    const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 216, 250];
+    const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 216, 230];
     for (const sing of singularityPenaltyThreshold) {
         if (sing > singularityCount) {
             return sing;

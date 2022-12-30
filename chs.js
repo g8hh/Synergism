@@ -1545,7 +1545,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.10.0: December 26 v1: Code of Codes - The Alternate Reality [Last Update: 00:00 UTC 26-Dec-2022].': '您目前玩的版本为V2.10.0：12月26日第1版 - 另一个现实 [2022年12月26日 UTC 00:00更新]。',
+    'You\'re playing v2.10.1: December 29 v2: Oops! All Exalts - The Alternate Reality [Last Update: 00:00 UTC 29-Dec-2022].': '您目前玩的版本为V2.10.1：12月29日第2版：噢！所有拔擢 - 另一个现实 [2022年12月29日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1662,6 +1662,8 @@ var cnItems = {
     'Chronometer INF': '最终时计',
     'Ascension Speedup [GQ]': '飞升的速度强力提升！[金夸克]',
     'Singularity Penalty': '奇点相关惩罚',
+    'Limited Ascensions Penalty': '限定飞升惩罚',
+    'Limited Ascensions Reward': '限定飞升奖励',
     'TOTAL ASCENSION SPEED MULTIPLIER': '飞升的速度总倍率',
     'Global Cube Multipliers': '所有类型的方盒及立方倍率',
     'Ascension Time Multiplier': '飞升时间倍率',
@@ -2259,6 +2261,8 @@ var cnItems = {
     'You are about to enter [NEW!] One Challenge Caps. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行[新！]挑战上限恒为一挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
     'You are about to enter No Octeract Effects. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行无八阶方块效果挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
     'You are about to enter [NEW!] No Octeract Effects. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行[新！]无八阶方块效果挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
+    'You are about to enter Twenty Ascensions Challenge. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行二十飞升挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
+    'You are about to enter [NEW!] Twenty Ascensions Challenge. Your Singularity Timer will not reset but you will be taken back to the beginning of a Singularity. Do you proceed?': '您将要进行[新！]二十飞升挑战。您的奇点时长不会重置，但您将回到奇点的开头，确定要继续吗？',
     'Derpsmith nods his head. Come back when you are ready...': 'Derpsmith点了点头。准备好以后再来吧……',
     'Derpsmith declares you are already in a singularity challenge and prohibits you from destroying the fabric of your Reality.': 'Derpsmith表示您已经在进行奇点挑战，为了现实的安全着想，您不可以再进行挑战了。',
     'Derpsmith tries to hug you, but he has no arms.': 'Derpsmith想抱抱您，可惜他没有胳膊。',
@@ -2277,6 +2281,10 @@ var cnItems = {
     '[NEW!] No Octeract Effects': '[新！]无八阶方块效果',
     'Beat the target Singularity, but octeracts and their upgrades do nothing! Effective Singularity is also much higher based on tier.': '您需要在惊奇八阶方块和相应升级没有效果的前提下通过目标奇点！另外，奇点相关惩罚也会根据当前阶层数量变得更高。',
     'Each completion increases Octeract to Cube Bonus power by 0.02 (BASE: 2.00). First completion adds a bonus to Offerings based on Octeracts. Final completion adds a bonus to Obtainium based on Octeracts.': '每完成一阶层就可以使惊奇八阶方块对惊奇方盒至惊奇七阶立方获取数量的加成指数增加0.02(基础值为2)。完成第一阶层后可以使惊奇八阶方块增加对祭品获取数量的加成。完成最后一阶层后，可以使惊奇八阶方块增加对难得素获取数量的加成。',
+    'Twenty Ascensions Challenge': '二十飞升挑战',
+    '[NEW!] Twenty Ascensions Challenge': '[新！]二十飞升挑战',
+    'Derpsmith put an embargo on Ascensions. Only (20 - completions) are allowed throughout the entire Singularity, before Ascensions trigger massive debuffs! Ascension Count Multiplier is hardcapped at 1. Oh and Delta is disabled. Ha.': 'Derpsmith颁布了飞升禁令。整个奇点只能进行 (20 - 阶层完成数) 次飞升，之后将触发极其巨大的惩罚！飞升次数倍率锁定为1。哦对了，PLATONIC·德尔塔在该挑战中失效，哈。',
+    'Each completion grants 0.1% Ascension Speed per completion per digit in your Ascension count! First completion doubles the cap of all hepteract. Final completion adds another calculator in the shop!': '每完成一阶层，飞升次数每有一个数量级，就可以使飞升的速度增加0.1%！完成第一阶层后可以使所有七阶立方的上限翻倍。完成最后一阶层后，可以解锁商店中的另一个计算器！',
     //#endregion
 
     //原样
@@ -2544,8 +2552,9 @@ var cnRegReplace = new Map([
     [/^You have reached the current capacity of (.+). Please expand to craft more.$/, '这种七阶立方达到了上限$1。请进行延展。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts.$/, '您锻造了$1七阶立方。'], //惊奇方盒
     [/^You have successfully crafted (.+) hepteracts. If this is less than your input, you either hit the inventory limit or you had insufficient resources.$/, '您锻造了$1七阶立方。如果这个数量比您输入的数字要小，可能是数量达到了上限，或者是原材料不足。'], //惊奇方盒
-    [/^This will empty your balance, but capacity will increase from (.+) to (.+) \[Expansion Multiplier: (.+)\]. Agree to the terms and conditions and stuff\?$/, '延展将清空此类惊奇七阶立方，但可以使上限从$1变为$2[延展倍率：$3倍]。您确定这么做没问题吧？'], //惊奇方盒
+    [/^This will reduce your balance by (.+), but capacity will increase from (.+) to (.+) \[Expansion Multiplier: (.+)\]. Agree to the terms and conditions and stuff\?$/, '延展将使此类惊奇七阶立方减少$1，但可以使上限从$2变为$3[延展倍率：$4倍]。您确定这么做没问题吧？'], //惊奇方盒
     [/^Successfully expanded your inventory. You can now fit (.+).$/, '延展完毕。上限变为$1。'], //惊奇方盒
+    [/^Hepteract capacities are currently multiplied by (.+). Expansions cost what they would if this multiplier were 1.$/, '七阶立方的上限目前为$1倍。但延展的花费仍然以该倍率为1时进行计算。'], //惊奇方盒
     [/^Your percentage is kept at (.+)%.$/, '您的自动锻造比例仍然为$1%。'], //惊奇方盒
     [/^Okay. On Ascension, (.+)% of your Hepteracts will be used in crafting.$/, '好的。飞升时，将有$1%的七阶立方用于锻造。'], //惊奇方盒
     [/^Inventory: (.+)\/(.*)$/, '库存：$1 /$2'], //惊奇方盒
@@ -2702,13 +2711,18 @@ var cnRegReplace = new Map([
     [/^You are attempting \[NEW!\] One Challenge Caps #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次[新！]挑战上限恒为一挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
     [/^You are attempting No Octeract Effects #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次无八阶方块效果挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
     [/^You are attempting \[NEW!\] No Octeract Effects #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次[新！]无八阶方块效果挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
+    [/^You are attempting Twenty Ascensions Challenge #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次二十飞升挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
+    [/^You are attempting \[NEW!\] Twenty Ascensions Challenge #(.+)! You were sent to Singularity (.+). Buy Antiquities to complete the challenge!$/, '您正在进行第$1次[新！]二十飞升挑战！您目前相当于进入了$2次奇点。购买蚁神之古物后可以完成挑战！'], //奇点
     [/^Are you sure you want to quit No Singularity Upgrades Tier (.+)\?$/, '您确定要退出第$1阶无奇点升级挑战吗？'], //奇点
     [/^Are you sure you want to quit No Singularity Upgrades Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶无奇点升级挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
     [/^Are you sure you want to quit One Challenge Caps Tier (.+)\?$/, '您确定要退出第$1阶挑战上限恒为一挑战吗？'], //奇点
     [/^Are you sure you want to quit One Challenge Caps Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶挑战上限恒为一挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
     [/^Are you sure you want to quit No Octeract Effects Tier (.+)\?$/, '您确定要退出第$1阶无八阶方块效果挑战吗？'], //奇点
     [/^Are you sure you want to quit No Octeract Effects Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶无八阶方块效果挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
+    [/^Are you sure you want to quit Twenty Ascensions Challenge Tier (.+)\?$/, '您确定要退出第$1阶二十飞升挑战吗？'], //奇点
+    [/^Are you sure you want to quit Twenty Ascensions Challenge Tier (.+)\? \nWARNING: You will not get a completion as you have not yet purchased Antiquities.$/, '您确定要退出第$1阶二十飞升挑战吗？注意：您的阶层完成数不会增加，因为您还没有购买古物。'], //奇点
     [/^You have completed the (.+) tier of No Singularity Upgrades! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶无奇点升级挑战！相应的挑战奖励已经更新。'], //奇点
     [/^You have completed the (.+) tier of One Challenge Caps! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶挑战上限恒为一挑战！相应的挑战奖励已经更新。'], //奇点
     [/^You have completed the (.+) tier of No Octeract Effects! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶无八阶方块效果挑战！相应的挑战奖励已经更新。'], //奇点
+    [/^You have completed the (.+) tier of Twenty Ascensions Challenge! The corresponding challenge rewards have been updated.$/, '您完成了第$1阶二十飞升挑战！相应的挑战奖励已经更新。'], //奇点
 ]);

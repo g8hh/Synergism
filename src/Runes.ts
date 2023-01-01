@@ -60,13 +60,12 @@ export const displayRuneInformation = (i: number, updatelevelup = true) => {
         const arr = calculateOfferingsToLevelXTimes(i - 1, player.runelevels[i - 1], player.offeringbuyamount);
         let offerings = 0;
         let j = 0;
-        while (offerings < player.runeshards && j < arr.length) {
+        while (j < arr.length && (offerings + arr[j] <= player.runeshards || j === 0)) {
             offerings += arr[j]
             j++;
         }
-        const check = player.offeringbuyamount === j && offerings <= player.runeshards
-        const s = player.offeringbuyamount === 1 ? '1级' : `${check ? j : Math.max(j - 1, 0)}级`
-        DOMCacheGetOrSet('runeDisplayInfo').textContent = `每个祭品增加${format(amountPerOffering)}经验值。需要${format(offerings)}祭品以提升${s}。`
+        const s = j === 1 ? '1级' : `${j}级`
+        DOMCacheGetOrSet('runeDisplayInfo').textContent = `每个祭品增加${format(amountPerOffering)}经验值。提升${s}需要${format(offerings)}祭品。`
     }
 
 }

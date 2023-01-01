@@ -1737,6 +1737,19 @@ var cnItems = {
     'Immaculate Alchemy': '完美炼金术',
     'Total Quarks Coefficient': '夸克总系数',
     'TOTAL GOLDEN QUARK MULTIPLIER': '金夸克总倍率',
+    'Add Code Stats': 'Add代码数据',
+    'Add Code Effects': 'Add代码效果',
+    'PL-AT X - bonus ascension time': 'PL-AT X - 额外飞升时间',
+    'PL-AT Γ - bonus GQ export time': 'PL-AT Γ - 额外金夸克奖励计时',
+    'PL-AT _ - bonus octeract time': 'PL-AT _ - 额外八阶方块时间',
+    'Add Code Timer': 'Add代码恢复时间',
+    'PL-AT δ calculator': 'PL-AT δ计算器',
+    'ADD REGEN INTERVAL': 'Add代码恢复时间间隔',
+    'Add Code Capacity': 'Add代码次数上限',
+    'TOTAL ADDS / CAPACITY': '目前Add代码可用次数 / 次数上限',
+    'PL-AT Σ sing perk': 'PL-AT Σ奇点特权',
+    'Ascension of Ant God': '蚁神之飞升',
+    'Singularity factor': '奇点因子',
     'Octeract Multipliers': '八阶方块倍率',
     'Season Pass Y': '季票 Y',
     'Season Pass Z': '季票 Z',
@@ -2352,7 +2365,6 @@ var cnPrefix = {
     "Three-Space/sec: ": "三维空间每秒产量：", //主界面及建筑
     "Bent Time/sec: ": "时间扭曲每秒产量：", //主界面及建筑
     "Level: ": "等级：", //主界面及建筑
-    "+1 in ": "升1级需要", //主界面及建筑
     "Level ": "等级 ", //主界面及建筑
     "Achievement Points: ": "成就点数：", //成就
     "You unlocked an achievement: ": "您解锁了成就：", //成就
@@ -2396,7 +2408,6 @@ var cnPostfix = {
     " Mythos": "神话", //主界面及建筑
     " Particles": "粒子", //主界面及建筑
     " Tesseracts": "超立方", //主界面及建筑
-    " EXP": "经验值", //主界面及建筑
     " Coins": "金币", //升级
     " Galactic Crumbs": "银河碎屑", //蚂蚁
     " Crumbs/sec": "银河碎屑", //蚂蚁

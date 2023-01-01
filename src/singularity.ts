@@ -1111,16 +1111,22 @@ export class SingularityPerk {
 export const singularityPerks: SingularityPerk[] = [
     {
         name: '“daily”代码额外奖励',
-        levels: [1],
-        description: () => {
-            return '输入“daily”代码后可以获得金夸克和随机奇点升级的免费等级'
+        levels: [1, 20, 200],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[2]) {
+                return '输入“daily”代码后可以获得金夸克和随机奇点升级的免费等级，额外获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III，另外再使获得的免费等级数量翻倍！'
+            } else if (n >= levels[1]) {
+                return '输入“daily”代码后可以获得金夸克和随机奇点升级的免费等级，还可以额外获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III。'
+            } else {
+                return '输入“daily”代码后可以获得金夸克和随机奇点升级的免费等级，且效果随着奇点次数而增长！'
+            }
         }
     },
     {
         name: '无限成长',
         levels: [1],
         description: () => {
-            return `目前每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了${format(10 * player.singularityCount)}%)`
+            return `每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了${format(10*player.singularityCount)}%)`
         }
     },
     {
@@ -1206,10 +1212,22 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '粒子皆辛苦',
-        levels: [5],
-        description: () => {
-            return '飞升后初始获得粒子建筑自动购买'
+        name: '永久保留自动升级',
+        levels: [5, 10, 15, 25, 30, 100],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[5]) {
+                return '您常时获得方盒升级1x4至1x8和方盒升级2x10。您常时自动加强和升阶护身符，常时自动购买死神蚁。您常时自动购买自动化升级！100次进入奇点后，您永远记住了巧克力曲奇饼干(方盒升级Cx1)的味道，并可以永久保留它的效果！'
+            } else if (n >= levels[4]) {
+                return '您常时获得方盒升级1x4至1x8和方盒升级2x10。您常时自动加强和升阶护身符，常时自动购买死神蚁。您常时自动购买自动化升级！'
+            } else if (n >= levels[3]) {
+                return '您常时获得方盒升级1x4至1x8和方盒升级2x10。您常时自动购买自动化升级！'
+            } else if (n >= levels[2]) {
+                return '您常时获得方盒升级1x4至1x8和方盒升级2x10。'
+            } else if (n >= levels[1]) {
+                return '您常时获得方盒升级1x4至1x8。'
+            } else {
+                return '您常时获得方盒升级1x7(粒子建筑自动购买)。'
+            }
         }
     },
     {
@@ -1278,25 +1296,18 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '永久保留自动升级',
-        levels: [10, 25, 30, 100],
+        name: '自动魔法符文',
+        levels: [15, 30, 40, 50],
         description: (n: number, levels: number[]) => {
             if (n >= levels[3]) {
-                return '您常时自动加强和升阶护身符，常时自动购买死神蚁，常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！100次进入奇点后，您永远记住了巧克力曲奇饼干(方盒升级Cx1)的味道，并可以永久保留它的效果！'
+                return '开启自动符文时您可以自动购买祝福、魂灵、护身符的所有碎片，并会将祭品分配给符文6 - 无限晋升和符文7 - 蚁神之古物'
             } else if (n >= levels[2]) {
-                return '您常时自动加强和升阶护身符，常时自动购买死神蚁，常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！'
+                return '开启自动符文时您可以自动购买祝福、魂灵、护身符的所有碎片，并会将祭品分配给符文6 - 无限晋升'
             } else if (n >= levels[1]) {
-                return '您常时获得方盒升级1x4，1x5和1x6。常时自动购买自动化升级！'
+                return '开启自动符文时您可以自动购买祝福和魂灵，并会将祭品分配给符文6 - 无限晋升'
             } else {
-                return '您常时获得方盒升级1x4，1x5和1x6。'
+                return '开启自动符文时您可以自动购买祝福和魂灵'
             }
-        }
-    },
-    {
-        name: '魂灵的祝福',
-        levels: [15],
-        description: () => {
-            return '开启自动符文时您可以自动购买祝福和魂灵'
         }
     },
     {
@@ -1304,13 +1315,6 @@ export const singularityPerks: SingularityPerk[] = [
         levels: [25],
         description: () => {
             return '解锁新的，更加困难的成就！获取方式与其余的成就不同……(制作中)'
-        }
-    },
-    {
-        name: '米达斯的横财',
-        levels: [20],
-        description: () => {
-            return '每天输入“daily”代码后一定能获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III！'
         }
     },
     {
@@ -1328,27 +1332,24 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '强化开盒',
-        levels: [25],
-        description: () => {
-            return '飞升时，研究6x13、7x3、7x18、8x8、8x23不再重置'
-        }
-    },
-    {
-        name: '实时自动飞升',
-        levels: [25],
-        description: () => {
-            return '您可以根据现实时间自动飞升了'
-        }
-    },
-    {
-        name: '高级自动符文',
-        levels: [30, 50],
+        name: '酷炫的开盒体验',
+        levels: [25, 35],
         description: (n: number, levels: number[]) => {
             if (n >= levels[1]) {
-                return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升和符文7 - 蚁神之古物'
+                return '飞升时，研究6x13、7x3、7x18、8x8、8x23不再重置，并可以自动开启特定比例的方盒及立方！'
             } else {
-                return '自动符文自动献祭祭品时，也会将祭品分配给符文6 - 无限晋升'
+                return '飞升时，研究6x13、7x3、7x18、8x8、8x23不再重置'
+            }
+        }
+    },
+    {
+        name: '永恒飞升',
+        levels: [25, 101],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '您可以根据现实时间自动飞升了，并且购买立即完成挑战 2后，可以自动扫荡飞升挑战！'
+            } else {
+                return '您可以根据现实时间自动飞升了'
             }
         }
     },
@@ -1363,20 +1364,6 @@ export const singularityPerks: SingularityPerk[] = [
             } else {
                 return '蚂蚁速度变为1000倍！该效果不受任何等级的任何腐化影响。'
             }
-        }
-    },
-    {
-        name: '自动开启方盒及立方',
-        levels: [35],
-        description: () => {
-            return '飞升时可以自动开启方盒及立方'
-        }
-    },
-    {
-        name: '自动购买护身符的相关碎片',
-        levels: [40],
-        description: () => {
-            return '购买自动符文后，可以自动购买护身符的所有碎片'
         }
     },
     {
@@ -1406,21 +1393,21 @@ export const singularityPerks: SingularityPerk[] = [
         name: '金之革命',
         levels: [100],
         description: () => {
-            return '每次奇点使商店购买金夸克的花费减少0.2%(最高减少50%)'
+            return `每次奇点使进入奇点的金夸克获取数量增加0.4%。目前增加了${format(Math.min(100, 0.4*player.singularityCount), 1)}%(最高增加100%)`
         }
     },
     {
         name: '金之革命 II',
         levels: [100],
         description: () => {
-            return '每次奇点使进入奇点的金夸克获取数量增加0.4%(最高增加100%)'
+            return `每次奇点使商店购买金夸克的花费减少0.2%。目前减少了${format(Math.min(50, 0.2*player.singularityCount), 1)}%(最高减少50%)`
         }
     },
     {
         name: '金之革命 III',
         levels: [100],
         description: () => {
-            return '每次奇点使每小时导出存档的金夸克奖励增加2%(最高增加500%)'
+            return `每次奇点使每小时导出存档的金夸克奖励增加2%。目前增加了${format(Math.min(500, 2*player.singularityCount))}%(最高增加500%)`
         }
     },
     {
@@ -1435,13 +1422,6 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '自动扫荡飞升挑战',
-        levels: [101],
-        description: () => {
-            return '购买立即完成挑战 2后，可以自动扫荡飞升挑战'
-        }
-    },
-    {
         name: 'PL-AT Σ',
         levels: [125, 200],
         description: (n: number, levels: number[]) => {
@@ -1451,8 +1431,7 @@ export const singularityPerks: SingularityPerk[] = [
                     counter += 0.125
                 }
             }
-
-            return `对于每次奇点，每级特权使“add”代码的使用次数加快${counter}%恢复(最高使恢复时间减少60%)`
+            return `对于每次奇点，每级特权使“add”代码的使用次数加快${counter}%恢复。目前加快了${format(Math.min(50, counter*player.singularityCount), 1)}%(最高使恢复时间减少60%)`
         }
     },
     {
@@ -1477,38 +1456,35 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '元同生',
-        levels: [200],
-        description: () => {
-            return '每次使用“daily”代码后可以使惊奇八阶方块同生的免费等级增加当前等级的1%！'
+        name: '八阶方块世代交替',
+        levels: [200, 205],
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[1]) {
+                return '每次使用“daily”代码后可以使惊奇八阶方块同生和惊奇八阶方块三度起源的免费等级增加当前等级的1%！'
+            } else {
+                return '每次使用“daily”代码后可以使惊奇八阶方块同生的免费等级增加当前等级的1%！'
+            }
         }
     },
     {
         name: '完美炼金术',
         levels: [200, 208, 221],
-        description: () => {
-            return '从第200次奇点开始，增加奇点次数的升级不再生效！但还是可以让您的金夸克获取数量变为3倍。(2级变为5倍，3级变为8倍。)另外，还会相应地减少购买金夸克的花费！'
+        description: (n: number, levels: number[]) => {
+            if (n >= levels[2]) {
+                return '从第200次奇点开始，增加奇点次数的升级不再生效！但使您的金夸克获取数量变为8倍，并使购买金夸克的花费除以8。'
+            } else if (n >= levels[1]) {
+                return '从第200次奇点开始，增加奇点次数的升级不再生效！但使您的金夸克获取数量变为5倍，并使购买金夸克的花费除以5。'
+            } else {
+                return '从第200次奇点开始，增加奇点次数的升级不再生效！但使您的金夸克获取数量变为3倍，并使购买金夸克的花费除以3。'
+            }
         }
     },
     {
         name: '克夸',
         levels: [200],
         description: () => {
-            return '使夸克获取数量变为((奇点次数-179)/20)的平方倍……是的，就是这么好。'
-        }
-    },
-    {
-        name: '产业化“daily”代码',
-        levels: [200],
-        description: () => {
-            return '使用“daily”代码获得的免费等级数量翻倍！'
-        }
-    },
-    {
-        name: '元三度起源',
-        levels: [205],
-        description: () => {
-            return '每次使用“daily”代码后可以使惊奇八阶方块三度起源的免费等级增加当前等级的1%！'
+            const amt = Math.pow((player.singularityCount - 179) / 20, 2)
+            return `使夸克获取数量变为((奇点次数-179)/20)的平方倍。目前倍率为${format(amt)}……是的，就是这么好。`
         }
     }
 ]

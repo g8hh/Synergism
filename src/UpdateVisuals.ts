@@ -202,7 +202,7 @@ export const visualUpdateRunes = () => {
             const maxLevel = calculateMaxRunes(i)
             DOMCacheGetOrSet(`rune${i}level`).childNodes[0].textContent = 'Level: ' + format(runeLevel) + '/' + format(maxLevel)
             if (runeLevel < maxLevel) {
-                DOMCacheGetOrSet(`rune${i}exp`).textContent = `+1 in ${format(calculateRuneExpToLevel(i - 1) - player.runeexp[i - 1], 2)} EXP`
+                DOMCacheGetOrSet(`rune${i}exp`).textContent = `升1级需要${format(calculateRuneExpToLevel(i - 1) - player.runeexp[i - 1], 2)}经验`
             } else {
                 DOMCacheGetOrSet(`rune${i}exp`).textContent = 'Maxed Level!'
             }
@@ -551,7 +551,53 @@ export const visualUpdateSingularity = () => {
     }
     if (player.subtabNumber === 0) {
         DOMCacheGetOrSet('goldenQuarkamount').textContent = '您有' + format(player.goldenQuarks, 0, true) + '金夸克！'
+
+        const keys = Object.keys(player.singularityUpgrades) as (keyof Player['singularityUpgrades'])[];
+        const val = G['shopEnhanceVision'];
+
+        for (const key of keys) {
+            if (key === 'offeringAutomatic') {
+                continue
+            }
+            const singItem = player.singularityUpgrades[key];
+            const el = DOMCacheGetOrSet(`${String(key)}`);
+            if (singItem.maxLevel !== -1 && singItem.level >= singItem.computeMaxLevel()) {
+                el.style.filter = val ? 'brightness(.9)' : 'none';
+            } else if  (singItem.getCostTNL() > player.goldenQuarks || player.singularityCount < singItem.minimumSingularity) {
+                el.style.filter = val ? 'grayscale(.9) brightness(.8)' : 'none';
+            } else if (singItem.maxLevel === -1 || singItem.level < singItem.computeMaxLevel()) {
+                if (singItem.freeLevels > singItem.level) {
+                    el.style.filter = val ? 'blur(1px) invert(.9) saturate(200)' : 'none';
+                } else {
+                    el.style.filter = val ? 'invert(.9) brightness(1.1)' : 'none';
+                }
+            }
+        }
     }
+    if (player.subtabNumber === 3) {
+        const keys = Object.keys(player.octeractUpgrades) as (keyof Player['octeractUpgrades'])[];
+        const val = G['shopEnhanceVision'];
+
+        for (const key of keys) {
+            const octItem = player.octeractUpgrades[key];
+            const el = DOMCacheGetOrSet(`${String(key)}`);
+            if (octItem.maxLevel !== -1 && octItem.level >= octItem.maxLevel) {
+                el.style.filter = val ? 'brightness(.9)' : 'none';
+            } else if  (octItem.getCostTNL() > player.wowOcteracts) {
+                el.style.filter = val ? 'grayscale(.9) brightness(.8)' : 'none';
+            } else if (octItem.maxLevel === -1 || octItem.level < octItem.maxLevel) {
+                if (octItem.freeLevels > octItem.level) {
+                    el.style.filter = val ? 'blur(2px) invert(.9) saturate(200)' : 'none';
+                } else {
+                    el.style.filter = val ? 'invert(.9) brightness(1.1)' : 'none';
+                }
+            }
+        }
+    }
+}
+
+export const shopMouseover = (value: boolean) => {
+    G['shopEnhanceVision'] = value;
 }
 
 export const visualUpdateOcteracts = () => {

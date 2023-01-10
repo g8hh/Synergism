@@ -1,4 +1,4 @@
-export const version = '2.10.1: December 29 v2: Oops! All Exalts';
+export const version = '2.10.2: January 4, 2023: Exalt Buff 1';
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '2.10.1: December 29 v2: Oops! All Exalts';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2022, 11, 28, 16, 0, 6));
+export const lastUpdated = new Date(Date.UTC(2023, 0, 3, 16, 0, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

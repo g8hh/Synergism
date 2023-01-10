@@ -9,16 +9,16 @@ import { toOrdinal } from './Utility'
 export const updateSingularityPenalties = (): void => {
     const singularityCount = player.singularityCount;
     const color = player.runelevels[6] > 0 ? 'var(--green-text-color)' : 'var(--red-text-color)';
-    const platonic = (singularityCount > 36) ? `PLATONIC方盒升级花费乘以${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}。` : '<span class="grayText">????????？？？？？？？？</span> <span class="redText">(第37次进入奇点)</span>';
-    const hepteract = (singularityCount > 50) ? `七阶立方锻炉花费乘以${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}。` : '<span class="grayText">？？？？？？？？？？</span> <span class="redText">(第51次进入奇点)</span>';
+    const platonic = (singularityCount > 36) ? `<span style="color: var(--orchid-text-color)">PLATONIC方盒升级</span>花费乘以<span style="color: var(--orchid-text-color)">${format(calculateSingularityDebuff('Platonic Costs', singularityCount), 2, true)}</span>。` : '<span class="grayText">????????？？？？？？？？</span> <span class="redText">(第37次进入奇点)</span>';
+    const hepteract = (singularityCount > 50) ? `<span style="color: Pink">七阶立方锻炉</span>花费乘以<span style="color: Pink">${format(calculateSingularityDebuff('Hepteract Costs', singularityCount), 2, true)}</span>。` : '<span class="grayText">？？？？？？？？？？</span> <span class="redText">(第51次进入奇点)</span>';
     const str = getSingularityOridnalText(singularityCount) +
-                `<br>全局速度除以${format(calculateSingularityDebuff('Global Speed', singularityCount), 2, true)}。
-                 飞升的速度除以${format(calculateSingularityDebuff('Ascension Speed', singularityCount), 2, true)}。
-                 祭品获取数量除以${format(calculateSingularityDebuff('Offering', singularityCount), 2, true)}。
-                 难得素获取数量除以${format(calculateSingularityDebuff('Obtainium', singularityCount), 2, true)}。
-                 所有类型的方盒及立方获取数量除以${format(calculateSingularityDebuff('Cubes', singularityCount), 2, true)}。
-                 研究花费乘以${format(calculateSingularityDebuff('Researches', singularityCount), 2, true)}。
-                 方盒升级花费(饼干升级除外)乘以${format(calculateSingularityDebuff('Cube Upgrades', singularityCount), 2, true)}。
+                `<br><span style="color: RoyalBlue">全局速度</span>除以<span style="color: RoyalBlue">${format(calculateSingularityDebuff('Global Speed', singularityCount), 2, true)}</span>。
+                 <span style="color: Orange">飞升的速度</span>除以<span style="color: Orange">${format(calculateSingularityDebuff('Ascension Speed', singularityCount), 2, true)}</span>。
+                 <span style="color: Gold">祭品获取数量</span>除以<span style="color: Gold">${format(calculateSingularityDebuff('Offering', singularityCount), 2, true)}</span>。
+                 <span style="color: Steelblue">难得素获取数量</span>除以<span style="color: Steelblue">${format(calculateSingularityDebuff('Obtainium', singularityCount), 2, true)}</span>。
+                 <span style="color: Yellow">所有类型的方盒及立方获取数量</span>除以<span style="color: Yellow">${format(calculateSingularityDebuff('Cubes', singularityCount), 2, true)}</span>。
+                 <span style="color: var(--green-text-color)">研究花费</span>乘以<span style="color: var(--green-text-color)">${format(calculateSingularityDebuff('Researches', singularityCount), 2, true)}</span>。
+                 <span style="color: Silver">方盒升级花费</span>(饼干升级除外)乘以<span style="color: Silver">${format(calculateSingularityDebuff('Cube Upgrades', singularityCount), 2, true)}</span>。
                  ${platonic}
                  ${hepteract}
                  惩罚将${singularityCount >= 230 ? '永远平滑地增加下去。' : `在<span class="redText">第${format(calculateNextSpike(player.singularityCount), 0, true)}次进入奇点</span>后大幅增加。`}
@@ -1076,9 +1076,9 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
     },
     blueberries: {
         name: 'Blueberry Shards! (WIP)',
-        description: 'The legends are true. \n The Prophecies are fulfilled. \n Ant God has heard your prayers. \n Let there be blueberries! \n And they were good.',
+        description: 'Blueberries! Yeah, Platonic is out of ideas. Well, each Blueberry gives a 0.01% chance per second to generate some Ambrosia!',
         maxLevel: -1,
-        costPerLevel: 1e14,
+        costPerLevel: 1e16,
         minimumSingularity: 222,
         effect: (n: number) => {
             return {
@@ -1086,7 +1086,7 @@ export const singularityData: Record<keyof Player['singularityUpgrades'], ISingu
                 desc: `You have purchased ${n} tasty blueberries.`
             }
         },
-        specialCostForm: 'Cubic'
+        specialCostForm: 'Exponential2'
     }
 }
 
@@ -1739,9 +1739,12 @@ export const calculateEffectiveSingularities = (singularityCount: number = playe
 }
 export const calculateNextSpike = (singularityCount: number = player.singularityCount): number => {
     const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 216, 230];
+    let penaltyDebuff = 0
+    penaltyDebuff += player.shopUpgrades.shopSingularityPenaltyDebuff
+
     for (const sing of singularityPenaltyThreshold) {
-        if (sing > singularityCount) {
-            return sing;
+        if (sing + penaltyDebuff > singularityCount) {
+            return (sing + penaltyDebuff);
         }
     }
     return -1;
@@ -1754,7 +1757,10 @@ export const calculateSingularityDebuff = (debuff: SingularityDebuffs, singulari
         return 1
     }
 
-    const effectiveSingularities = calculateEffectiveSingularities(singularityCount);
+    let constitutiveSingularityCount = singularityCount
+    constitutiveSingularityCount -= player.shopUpgrades.shopSingularityPenaltyDebuff
+
+    const effectiveSingularities = calculateEffectiveSingularities(constitutiveSingularityCount);
 
     if (debuff === 'Offering') {
         return Math.sqrt(Math.min(effectiveSingularities, calculateEffectiveSingularities(150)) + 1)

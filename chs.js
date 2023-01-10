@@ -1545,7 +1545,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.10.1: December 29 v2: Oops! All Exalts - The Alternate Reality [Last Update: 00:00 UTC 29-Dec-2022].': '您目前玩的版本为V2.10.1：12月29日第2版：噢！所有拔擢 - 另一个现实 [2022年12月29日 UTC 00:00更新]。',
+    'You\'re playing v2.10.2: January 4, 2023: Exalt Buff 1 - The Alternate Reality [Last Update: 00:00 UTC 04-Jan-2023].': '您目前玩的版本为V2.10.2：2023年1月4日：拔擢强化1 - 另一个现实 [2023年1月4日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
@@ -1649,6 +1649,14 @@ var cnItems = {
     'Doohickey Bonus': '小装置加成',
     'Octo-Hepteract Primality Synergy': '七-八阶原始协同',
     'TOTAL QUARK MULTIPLIER': '全局夸克总倍率',
+    'Global Speed Multipliers': '全局速度倍率',
+    'Chronos\' Tribute Multiplier': '柯罗诺斯的贡品倍率',
+    'Mortuus Est Formicidae': '死神蚁',
+    'Exemption Talisman': '免税护身符',
+    'Corruption (Spacial Dilation': '腐化 II(空间膨胀',
+    'Global speed softcap': '全局速度软上限',
+    'Forbidden Clock of Time': '禁忌时钟',
+    'TOTAL GLOBAL SPEED MULTIPLIER': '全局速度总倍率',
     'Ascension Speed Multipliers': '飞升的速度倍率',
     'Chronometer': '时计',
     'Chronos Hepteract': '惊奇七阶立方·时光',
@@ -1891,6 +1899,7 @@ var cnItems = {
     'This is 1/50 as effective as a normal improver. Why? Because of balancing...': '它的效果只有正常强化的1/50。原因？为了平衡啊……',
     'Gain +1% Ascension Speed per level, multiplicative! (Multiplier is 1.01^level': '每级使飞升的速度增加1%，且各级效果叠乘！(即总效果变为1.01的 等级 次方',
     'Gain +2% more cubes per level, multiplicative! (Multiplier is 1.02^level': '每级使所有类型的方盒、立方和方块获取数量增加2%，且各级效果叠乘！(即总效果变为1.02的 等级 次方',
+    'Derpsmith was so proud of your performance in the first EXALT that he wants to make your singularity debuffs weaker. At a cost. A big cost.': 'Derpsmith对您在第一个拔擢里的表现感到很骄傲，他决定让奇点的惩罚弱化一些。但是花费，您懂的。',
     'This item CANNOT be refunded! Take caution.': '请注意！您无法重置此项购买！',
     'CURRENT Effect: Even in a premium shop it\'s kinda obvious, right?': '当前效果：就算在这个高档商店中，它的效果仍然很明显，不是么？',
     'CURRENT Effect: Idk, depends if you bought it or not.': '当前效果：未知，取决于您买了还是没买。',
@@ -2285,11 +2294,11 @@ var cnItems = {
     'No Singularity Upgrades': '无奇点升级',
     '[NEW!] No Singularity Upgrades': '[新！]无奇点升级',
     'Simply put, you have to beat the target singularity without (most) Singularity Upgrades. Octeracts, Perks and Quality of Life Singularity Upgrades are preserved.': '简而言之，您需要在没有大部分奇点升级的前提下通过目标奇点。惊奇八阶方块，特权和游戏体验相关的奇点升级将仍然保留。',
-    'Each completion increases cube gain of every dimension by 50%! First completion gives +12% Golden Quarks. Final completion awards something `special` ;) (WIP': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加50%！完成第一阶层后可以使金夸克获取数量增加12%。完成最后一阶层后，可以获得一些“特别”的东西 ;)(制作中',
+    'Each completion increases cube gain of every dimension by 50%! First completion gives +12% Golden Quarks. 20th awards something `special` ;': '每完成一阶层就可以使所有类型的方盒、立方和方块获取数量增加50%！完成第一阶层后可以使金夸克获取数量增加12%。完成第二十阶层后，可以获得一些“特别”的东西 ;',
     'One Challenge Caps': '挑战上限恒为一',
     '[NEW!] One Challenge Caps': '[新！]挑战上限恒为一',
     'Beat the target Singularity, but the first 14 Challenges have cap of only 1!': '您需要在前14个挑战的上限只有1的前提下通过目标奇点！',
-    'Each completion increases Corruption Multiplier Values by 0.03, no matter what. First Completion gives +3 to Reincarnation Challenge Cap. Final completion grants +1 free Corruption level!': '每完成一阶层就可以使腐化的相关加成倍率增加0.03。完成第一阶层后可以使转世挑战次数上限增加3。完成最后一阶层后，可以使腐化的相关加成倍率直接视为增加1级！',
+    'Each completion increases Corruption Multiplier Values by 0.03, no matter what. First Completion gives +3 to Reincarnation Challenge Cap. 20th completion grants +1 free Corruption level!': '每完成一阶层就可以使腐化的相关加成倍率增加0.03。完成第一阶层后可以使转世挑战次数上限增加3。完成第二十阶层后，可以使腐化的相关加成倍率直接视为增加1级！',
     'No Octeract Effects': '无八阶方块效果',
     '[NEW!] No Octeract Effects': '[新！]无八阶方块效果',
     'Beat the target Singularity, but octeracts and their upgrades do nothing! Effective Singularity is also much higher based on tier.': '您需要在惊奇八阶方块和相应升级没有效果的前提下通过目标奇点！另外，奇点相关惩罚也会根据当前阶层数量变得更高。',
@@ -2667,6 +2676,7 @@ var cnRegReplace = new Map([
     [/^CURRENT Effect: Obtainium gain is multiplied by (.+).$/, '当前效果：难得素的获取数量变为$1倍。'], //商店
     [/^CURRENT Effect: All Dimensional Cubes are multiplied by (.+).$/, '当前效果：所有类型的方盒、立方和方块获取数量变为$1倍。'], //商店
     [/^CURRENT Effect: Ascension Speed is multiplied by (.+).$/, '当前效果：飞升的速度变为$1倍。'], //商店
+    [/^CURRENT Effect: Singularity Debuffs are as if you had (.+) fewer Singularities.$/, '当前效果：奇点相关惩罚视为减少$1次奇点。'], //商店
     [/^How many Offering Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少祭品药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^How many Obtainium Potions would you like\?\nYou can buy up to (.+) for 100 Quarks each.$/, '您想要购买多少难得素药剂？每瓶花费100夸克，您至多可以购买$1瓶。'], //商店
     [/^Do you wish to start singularity #(.+)\? Your next universe is harder but you will gain (.+) Golden$/, '您想要进入第$1次奇点吗？下一个宇宙比目前的宇宙要来得更艰难，但您可以获得$2金'], //奇点

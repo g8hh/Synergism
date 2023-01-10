@@ -131,7 +131,7 @@ export const generateExportSummary = async():Promise<void> => {
         reincarnation = reincarnation + `转世次数：${format(player.reincarnationCount, 0, true)}\n`
         reincarnation = reincarnation + `转世时间：${formatS(player.reincarnationcounter)}\n`
         reincarnation = reincarnation + `最快转世时间：${formatS(player.fastestreincarnate)}\n`
-        reincarnation = reincarnation + `全局速度倍率：${format(calculateTimeAcceleration(), 2, true)}\n`
+        reincarnation = reincarnation + `全局速度倍率：${format(calculateTimeAcceleration().mult, 2, true)}\n`
         reincarnation = reincarnation + `挑战6完成次数：${player.highestchallengecompletions[6]}/${getMaxChallenges(6)}\n`
         reincarnation = reincarnation + `挑战7完成次数：${player.highestchallengecompletions[7]}/${getMaxChallenges(7)}\n`
         reincarnation = reincarnation + `挑战8完成次数：${player.highestchallengecompletions[8]}/${getMaxChallenges(8)}\n`

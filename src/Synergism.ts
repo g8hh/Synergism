@@ -473,7 +473,8 @@ export const player: Player = {
         obtainiumEX3: 0,
         improveQuarkHept5: 0,
         seasonPassInfinity: 0,
-        chronometerInfinity: 0
+        chronometerInfinity: 0,
+        shopSingularityPenaltyDebuff: 0
     },
     shopBuyMaxToggle: false,
     shopHideToggle: false,
@@ -700,6 +701,7 @@ export const player: Player = {
     loadedV2927Hotfix1: true,
     loadedV2930Hotfix1: true,
     loadedV2931Hotfix1: true,
+    loadedV21003Hotfix1: true,
     version,
     rngCode: 0,
     promoCodeTiming: {
@@ -808,7 +810,8 @@ export const player: Player = {
         octeractFastForward: new OcteractUpgrade(octeractData['octeractFastForward']),
         octeractAutoPotionSpeed: new OcteractUpgrade(octeractData['octeractAutoPotionSpeed']),
         octeractAutoPotionEfficiency: new OcteractUpgrade(octeractData['octeractAutoPotionEfficiency']),
-        octeractOneMindImprover: new OcteractUpgrade(octeractData['octeractOneMindImprover'])
+        octeractOneMindImprover: new OcteractUpgrade(octeractData['octeractOneMindImprover']),
+        octeractAmbrosiaLuck: new OcteractUpgrade(octeractData['octeractAmbrosiaLuck'])
     },
 
     dailyCodeUsed: false,
@@ -3748,7 +3751,7 @@ const tick = () => {
 const tack = (dt: number) => {
     if (!G['timeWarp']) {
         //Adds Resources (coins, ants, etc)
-        const timeMult = calculateTimeAcceleration();
+        const timeMult = calculateTimeAcceleration().mult;
         resourceGain(dt * timeMult)
         //Adds time (in milliseconds) to all reset functions, and quarks timer.
         addTimers('prestige', dt)
@@ -3780,7 +3783,8 @@ const tack = (dt: number) => {
         }
 
         //Automatically tries and buys researches lol
-        if (player.autoResearchToggle && autoResearchEnabled() && player.autoResearch > 0 && player.autoResearch <= maxRoombaResearchIndex(player)) {
+        if (player.autoResearchToggle && player.autoResearch > 0 && player.autoResearch <= maxRoombaResearchIndex(player) &&
+                (autoResearchEnabled() || player.autoResearchMode === 'manual')) {
             // buyResearch() probably shouldn't even be called if player.autoResearch exceeds the highest unlocked research
             let counter = 0;
             const maxCount = 1 + player.challengecompletions[14];

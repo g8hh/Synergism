@@ -1549,7 +1549,7 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.10.3: January 12, 2023: Iconography - The Alternate Reality [Last Update: 00:00 UTC 12-Jan-2023].': '您目前玩的版本为V2.10.3：2023年1月12日：图标翻新 - 另一个现实 [2023年1月12日 UTC 00:00更新]。',
+    'You\'re playing v2.10.4: January 13, 2023: Iconography v2 - The Alternate Reality [Last Update: 00:00 UTC 13-Jan-2023].': '您目前玩的版本为V2.10.4：2023年1月13日：图标翻新第2版 - 另一个现实 [2023年1月13日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',

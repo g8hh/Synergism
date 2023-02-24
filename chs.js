@@ -619,8 +619,8 @@ var cnItems = {
     'Plastic': '信卡',
     'FORTIFY': '加强',
     'ENHANCE': '升阶',
-    'RESPEC': '洗点',
-    'RESPEC ALL': '全部洗点',
+    'RESPEC': '变配',
+    'RESPEC ALL': '全部变配',
     '=-=-=-= Exemption Talisman Effects =-=-=-=': '=-=-=-= 免税护身符效果 =-=-=-=',
     'Taxes -': '税收减少',
     'Mythic Effect: +400 Duplication Rune Levels!': '神秘效果：重叠符文等级增加400！',
@@ -643,9 +643,9 @@ var cnItems = {
     'Get Max Enhance for a Mythical bonus effect!': '升阶到最大后可获得一个神秘效果！',
     '=-=- Resources Required to Level Up -=-=-': '=-=- 加强所需的资源 -=-=-',
     '=-=-= Resources Required to ENHANCE =-=-=': '=-=-= 升阶所需的资源 =-=-=',
-    '-==-+ Select for 3 GREEN Runes, for Respec! +-==-+': '-==-+ 请正好选择3个符文，否则无法洗点！ +-==-+',
-    'Confirm [-100,000 Offerings]': '确认洗点[花费100,000祭品]',
-    'Confirm ALL [-400,000 Offerings]': '确认全部洗点[花费400,000祭品]',
+    '-==-+ Select for 3 GREEN Runes, for Respec! +-==-+': '-==-+ 请正好选择3个符文，否则无法变配！ +-==-+',
+    'Confirm [-100,000 Offerings]': '确认变配[花费100,000祭品]',
+    'Confirm ALL [-400,000 Offerings]': '确认全部变配[花费400,000祭品]',
     'Speed Rune: Positive': '加速符文：获得加成',
     'Speed Rune: Negative': '加速符文：无加成',
     'Duplication Rune: Positive': '重叠符文：获得加成',
@@ -656,7 +656,7 @@ var cnItems = {
     'Thrift Rune: Negative': '节俭符文：无加成',
     'SI Rune: Positive': '卓越智慧：获得加成',
     'SI Rune: Negative': '卓越智慧：无加成',
-    'Cancel respec changes': '取消洗点',
+    'Cancel respec changes': '取消变配',
     'ALL Increase Level': '提升所有等级',
     'Blessing level': '祝福等级',
     'Increase Level By': '提升等级：',
@@ -1549,15 +1549,15 @@ var cnItems = {
     'Default': '默认',
     'Pure Scientific': '纯科学计数法',
     'Pure Engineering': '纯工程计数法',
-    'You\'re playing v2.10.4: January 13, 2023: Iconography v2 - The Alternate Reality [Last Update: 00:00 UTC 13-Jan-2023].': '您目前玩的版本为V2.10.4：2023年1月13日：图标翻新第2版 - 另一个现实 [2023年1月13日 UTC 00:00更新]。',
+    'You\'re playing v2.10.5: Febuary 23, 2023: Birth Event! - The Alternate Reality [Last Update: 00:00 UTC 23-Feb-2023].': '您目前玩的版本为V2.10.5：2023年2月23日：周年庆典！ - 另一个现实 [2023年2月23日 UTC 00:00更新]。',
     'Current Bonus: N/A% (offline)!': '当前加成：无(因为离线)！',
     'Current Bonus: N/A% (unfocused)!': '当前加成：无(因为非前台)！',
     'Event Status': '活动状态',
     'INACTIVE': '暂无活动',
-    'Current Buffs: +11% Quarks, +11% Golden Quarks, +11% Powder Conversion, +11% Ascension Speed, +11% Global Speed, +11% Ant Sacrifice rewards, +11% Offering, +11% Obtainium, +11% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量、金夸克获取数量、超通量粉转化效率、飞升的速度、全局速度、蚂蚁献祭奖励、祭品获取数量、难得素获取数量和惊奇八阶方块获取数量增加11%！',
-    'Current Buffs: +11% Quarks, +11% Golden Quarks, +11% Powder Conversion, +11% Ascension Speed, +11% Global Speed, +11% Ant Sacrifice rewards, +11% Offering, +11% Obtainium, +11% Eight Dimensional Hypercubes,': '当前加成：夸克获取数量、金夸克获取数量、超通量粉转化效率、飞升的速度、全局速度、蚂蚁献祭奖励、祭品获取数量、难得素获取数量和惊奇八阶方块获取数量增加11%，',
-    '!+1% One Mind Quark Bonus': '由于拥有一心升级，夸克获取数量再增加1%',
-    'Derpmas 2022: Gift of Gamebreak!': '2022圣诞：游戏击破之赠礼！',
+    'Current Buffs: +100% Quarks, +22% Golden Quarks, +22% Powder Conversion, +22% Ascension Speed, +22% Global Speed, +22% Ant Sacrifice rewards, +22% Offering, +22% Obtainium, +22% Eight Dimensional Hypercubes!': '当前加成：夸克获取数量增加100%、金夸克获取数量、超通量粉转化效率、飞升的速度、全局速度、蚂蚁献祭奖励、祭品获取数量、难得素获取数量和惊奇八阶方块获取数量增加22%！',
+    'Current Buffs: +100% Quarks, +22% Golden Quarks, +22% Powder Conversion, +22% Ascension Speed, +22% Global Speed, +22% Ant Sacrifice rewards, +22% Offering, +22% Obtainium, +22% Eight Dimensional Hypercubes,': '当前加成：夸克获取数量增加100%、金夸克获取数量、超通量粉转化效率、飞升的速度、全局速度、蚂蚁献祭奖励、祭品获取数量、难得素获取数量和惊奇八阶方块获取数量增加22%，',
+    '!+2% One Mind Quark Bonus': '由于拥有一心升级，夸克获取数量再增加2%',
+    'Platonic\'s Feelin\'': 'Platonic 感觉',
     'Thanks for Boosting the Discord': '感谢进行Discord助力',
     'Game saved successfully!': '游戏已保存！',
     'Coders': '码农',
@@ -2323,7 +2323,7 @@ var cnItems = {
 //需处理的前缀
 var cnPrefix = {
     "Thanks to researches you automatically gain ": "由于研究效果，您在现实时间每秒自动获得", //主脚本
-    "ACTIVE UNTIL Mon Jan 02 2023 23:59:59 GMT+0800 (": "活动持续到2023年1月2日 23:59:59 东八区 (", //主界面
+    "ACTIVE UNTIL Wed Mar 01 2023 23:59:59 GMT+0800 (": "活动持续到2023年3月1日 23:59:59 东八区 (", //主界面
     "Workers: ": "工人：", //主界面及建筑
     "Investments: ": "投资：", //主界面及建筑
     "Printers: ": "打印机：", //主界面及建筑

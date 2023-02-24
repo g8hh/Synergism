@@ -4135,6 +4135,12 @@ window.addEventListener('load', () => {
 
     corruptionButtonsAdd();
     corruptionLoadoutTableCreate();
+
+    if (!localStorage.getItem('playTestingVersion')) {
+        localStorage.setItem('playTestingVersion', 'true')
+
+        void Alert('Do you want to play the beta version that has localizations? If so, go to https://khafradev.github.io/SynergismOfficial! Saves can be imported to and from here without issues.')
+    }
 });
 
 window.addEventListener('unload', () => {

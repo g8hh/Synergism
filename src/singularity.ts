@@ -1264,7 +1264,7 @@ export const singularityPerks: SingularityPerk[] = [
         }
     },
     {
-        name: '别了，洗点！',
+        name: '别了，变配！',
         levels: [7],
         description: () => {
             return '护身符的额外等级对所有符文均生效！'

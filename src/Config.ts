@@ -1,4 +1,4 @@
-export const version = '2.10.4: January 13, 2023: Iconography v2';
+export const version = '2.10.5: Febuary 23, 2023: Birth Event!';
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '2.10.4: January 13, 2023: Iconography v2';
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2023, 0, 12, 16, 0, 6));
+export const lastUpdated = new Date(Date.UTC(2023, 1, 22, 16, 0, 6));
 /**
  * CHANGE THIS ONE INSTEAD
  */

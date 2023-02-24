@@ -54,25 +54,25 @@ const events: Record<string, HolidayData> = {
     },
     // Last active event
     last: {
-        name: 'Derpmas 2022: Gift of Gamebreak!',
-        color: 'white',
+        name: 'Platonic\'s Feelin\' 22',
+        color: 'gold',
         url: 'https://www.bilibili.com/video/BV1Ae4y1f77x',
         everyYear: false,
-        start: '12/21/2022 00:00:00',
-        end: '01/02/2023 23:59:59',
+        start: '02/22/2022 00:00:00',
+        end: '03/01/2023 23:59:59',
         notice: 20,
         event: true,
         buffs: {
-            quark: 0.11,
-            globalSpeed: 0.11,
-            ascensionSpeed: 0.11,
-            antSacrifice: 0.11,
-            offering: 0.11,
-            obtainium: 0.11,
-            octeract: 0.11,
-            powderConversion: 0.11,
-            goldenQuark: 0.11,
-            oneMind: 0.01
+            quark: 1,
+            globalSpeed: 0.22,
+            ascensionSpeed: 0.22,
+            antSacrifice: 0.22,
+            offering: 0.22,
+            obtainium: 0.22,
+            octeract: 0.22,
+            powderConversion: 0.22,
+            goldenQuark: 0.22,
+            oneMind: 0.022
         }
     },
     khafra: {

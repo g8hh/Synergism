@@ -5,56 +5,58 @@ import { Globals as G } from './Variables';
 import Decimal from 'break_infinity.js';
 import type { resetNames } from './types/Synergism';
 import { DOMCacheGetOrSet } from './Cache/DOM';
+import i18next, { type StringMap } from 'i18next';
 
 export const displayRuneInformation = (i: number, updatelevelup = true) => {
     const m = G['effectiveLevelMult']
     const SILevelMult = (1 + player.researches[84] / 200 * (1 + 1 * G['effectiveRuneSpiritPower'][5] * calculateCorruptionPoints()/400))
     const amountPerOffering = calculateRuneExpGiven(i - 1, false, player.runelevels[i - 1]);
 
+    let options: StringMap
 
     if (i === 1) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '使加速器数量增加(等级/4)^1.25，且每级再增加0.25%。每20级使加速器加成数量增加1！'
+        options = {
+            bonus: format(Math.floor(Math.pow(G['rune1level'] * m / 4, 1.25))),
+            percent: format((G['rune1level'] / 4 * m), 2, true),
+            boost: format(Math.floor(G['rune1level'] / 20 * m))
         }
-        DOMCacheGetOrSet('runeshowpower1').textContent = '加速符文奖励：使加速器数量增加' + format(Math.floor(Math.pow(G['rune1level'] * m / 4, 1.25))) + '，再增加' + format((G['rune1level'] / 4 * m), 2, true) + '%，加速器加成数量增加' + format(Math.floor(G['rune1level'] / 20 * m)) + '。'
-    }
-    if (i === 2) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '每10级使加倍器数量增加(等级/10)，且每级再增加0.25%。每级使税收增长减缓更多！'
+    } else if (i === 2) {
+        options = {
+            mult1: format(Math.floor(G['rune2level'] * m / 10) * Math.floor(1 + G['rune2level'] * m / 10) / 2),
+            mult2: format(m * G['rune2level'] / 4, 1, true),
+            tax: (99.9 * (1 - Math.pow(6, -(G['rune2level'] * m) / 1000))).toPrecision(4)
         }
-        DOMCacheGetOrSet('runeshowpower2').textContent = '重叠符文奖励：使加倍器数量增加' + format(Math.floor(G['rune2level'] * m / 10) * Math.floor(1 + G['rune2level'] * m / 10) / 2) + '，再增加' + format(m * G['rune2level'] / 4, 1, true) + '%，税收增长减缓' + (99.9 * (1 - Math.pow(6, -(G['rune2level'] * m) / 1000))).toPrecision(4) + '%。'
-    }
-    if (i === 3) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '使水晶产量变为[1+(等级/2)^2*2^(等级/2)/256]倍。每16级使每个水晶升级免费增加1级！'
+    } else if (i === 3) {
+        options = {
+            mult: format(Decimal.pow(G['rune3level'] * m / 2, 2).times(Decimal.pow(2, G['rune3level'] * m / 2 - 8)).add(1), 3),
+            gain: format(Math.floor(G['rune3level'] / 16 * m))
         }
-        DOMCacheGetOrSet('runeshowpower3').textContent = '棱柱符文奖励：使水晶产量变为' + format(Decimal.pow(G['rune3level'] * m / 2, 2).times(Decimal.pow(2, G['rune3level'] * m / 2 - 8)).add(1), 3) + '倍，每个水晶升级免费增加' + format(Math.floor(G['rune3level'] / 16 * m)) + '级。'
-    }
-    if (i === 4) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '每级使建筑成本增长减缓0.125%，每级使祭品回收概率增加0.0625%[上限：25%]。另外当等级超过400以后，还可以使税收增长倍率变为2^[(1000-等级)/1100]倍'
+    } else if (i === 4) {
+        options = {
+            delay: (G['rune4level'] / 8 * m).toPrecision(3),
+            chance: Math.min(25, G['rune4level'] / 16),
+            tax: (99 * (1 - Math.pow(4, Math.min(0, (400 - G['rune4level']) / 1100)))).toPrecision(4)
         }
-        DOMCacheGetOrSet('runeshowpower4').textContent = '节俭符文奖励：使所有建筑成本增长减缓' + (G['rune4level'] / 8 * m).toPrecision(3) + '%。祭品回收概率增加' + Math.min(25, G['rune4level'] / 16) + '%。税收增长减缓' + (99 * (1 - Math.pow(4, Math.min(0, (400 - G['rune4level']) / 1100)))).toPrecision(4) + '%。'
-    }
-    if (i === 5) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '使难得素获取数量变为(1+等级/200)倍，蚂蚁速度变为(1+等级^2/2500)倍，每级使每一阶重置的基础祭品数量增加0.005'
+    } else if (i === 5) {
+        options = {
+            gain: format((1 + G['rune5level'] / 200 * m * SILevelMult), 2, true),
+            speed: format(1 + Math.pow(G['rune5level'] * m * SILevelMult, 2) / 2500),
+            offerings: format((G['rune5level'] * m * SILevelMult * 0.005), 3, true)
         }
-        DOMCacheGetOrSet('runeshowpower5').textContent = '卓越智慧符文奖励：使难得素获取数量变为' + format((1 + G['rune5level'] / 200 * m * SILevelMult), 2, true) + '倍，蚂蚁速度变为' + format(1 + Math.pow(G['rune5level'] * m * SILevelMult, 2) / 2500) + '倍，基础祭品数量增加' + format((G['rune5level'] * m * SILevelMult * 0.005), 3, true)
-    }
-    if (i === 6) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '每级使夸克获取数量增加0.2%，所有类型的方盒及立方获取数量增加1%！初始状态下使夸克获取数量增加10%。'
+    } else if (i === 6) {
+        options = {
+            percent1: format(10 + 15/75 * calculateEffectiveIALevel(), 1, true),
+            percent2: format(1 * calculateEffectiveIALevel(), 0, true)
         }
-        DOMCacheGetOrSet('runeshowpower6').textContent = '无限晋升符文奖励：使夸克获取数量增加' + format(10 + 15/75 * calculateEffectiveIALevel(), 1, true) + '%，飞升时所有类型的方盒及立方获取数量增加' + format(1 * calculateEffectiveIALevel(), 0, true) + '%。'
+    } else if (i === 7 && updatelevelup) {
+        options = { exp: format(1e256 * (1 + player.singularityCount)) }
     }
 
-    if (i === 7) {
-        if (updatelevelup) {
-            DOMCacheGetOrSet('runeshowlevelup').textContent = '如果给它' + format(1e256 * (1 + player.singularityCount)) + '符文经验值，或许会发生什么事情。'
-        }
-        DOMCacheGetOrSet('runeshowpower7').textContent = 'You cannot grasp the true form of Ant God\'s treasure.'
+    if (updatelevelup) {
+        DOMCacheGetOrSet('runeshowlevelup').textContent = i18next.t(`runes.levelup.${i}`, options!)
     }
+
+    DOMCacheGetOrSet(`runeshowpower${i}`).textContent = i18next.t(`runes.power.${i}`, options!)
 
     if (updatelevelup) {
         const arr = calculateOfferingsToLevelXTimes(i - 1, player.runelevels[i - 1], player.offeringbuyamount);
@@ -64,8 +66,13 @@ export const displayRuneInformation = (i: number, updatelevelup = true) => {
             offerings += arr[j]
             j++;
         }
-        const s = j === 1 ? '1级' : `${j}级`
-        DOMCacheGetOrSet('runeDisplayInfo').textContent = `每个祭品增加${format(amountPerOffering)}经验值。提升${s}需要${format(offerings)}祭品。`
+        const s = j === 1 ? 'once' : `${j} times`
+
+        DOMCacheGetOrSet('runeDisplayInfo').textContent = i18next.t('runes.perOfferingText', {
+            exp: format(amountPerOffering),
+            x: format(offerings),
+            y: s
+        })
     }
 
 }

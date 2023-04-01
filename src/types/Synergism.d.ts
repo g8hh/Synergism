@@ -554,6 +554,7 @@ export interface Player {
     loadedV2930Hotfix1: boolean
     loadedV2931Hotfix1: boolean
     loadedV21003Hotfix1: boolean,
+    loadedV21007Hotfix1: boolean,
     version: string
 
     rngCode: number
@@ -863,8 +864,7 @@ export interface GlobalVariables {
 
     researchOrderByCost: number[],
 
-    divisivenessPower: number[]
-    maladaptivePower: number[]
+    viscosityPower: number[]
     lazinessMultiplier: number[]
     hyperchallengedMultiplier: number[]
     illiteracyPower: number[]

@@ -1,6 +1,7 @@
 import { player, getTimePinnedToLoadDate } from './Synergism'
 import { Globals as G } from './Variables';
 import { DOMCacheGetOrSet } from './Cache/DOM';
+import i18next from 'i18next';
 
 interface HolidayData {
     name: string
@@ -54,25 +55,25 @@ const events: Record<string, HolidayData> = {
     },
     // Last active event
     last: {
-        name: 'Platonic\'s Feelin\' 22',
-        color: 'gold',
-        url: 'https://www.bilibili.com/video/BV1Ae4y1f77x',
+        name: 'April Showers',
+        color: 'turquoise',
+        url: 'https://www.bilibili.com/video/BV1BJ411Y7Tp',
         everyYear: false,
-        start: '02/22/2022 00:00:00',
-        end: '03/01/2023 23:59:59',
+        start: '03/29/2022 00:00:00',
+        end: '04/04/2023 23:59:59',
         notice: 20,
         event: true,
         buffs: {
-            quark: 1,
-            globalSpeed: 0.22,
-            ascensionSpeed: 0.22,
-            antSacrifice: 0.22,
-            offering: 0.22,
-            obtainium: 0.22,
-            octeract: 0.22,
-            powderConversion: 0.22,
-            goldenQuark: 0.22,
-            oneMind: 0.022
+            quark: 0.25,
+            globalSpeed: 0.2,
+            ascensionSpeed: 0,
+            antSacrifice: 0.2,
+            offering: 0.25,
+            obtainium: 0.25,
+            octeract: 0.25,
+            powderConversion: 0,
+            goldenQuark: 0.1,
+            oneMind: 0.025
         }
     },
     khafra: {
@@ -307,7 +308,9 @@ export const eventCheck = () => {
             buffs = buffs.substring(0, buffs.length - 2);
             buffs += '!';
         }
-        DOMCacheGetOrSet('eventCurrent').textContent = G['isEvent'] ? 'ACTIVE UNTIL ' + end : 'STARTS ' + start;
+        DOMCacheGetOrSet('eventCurrent').textContent = G['isEvent']
+            ? i18next.t('settings.events.activeUntil', { x: end })
+            : i18next.t('settings.events.starts', { x: start })
         eventBuffs.innerHTML = G['isEvent'] ? 'Current Buffs: ' + buffs : '';
         //eventBuffs.style.color = 'lime';
         happyHolidays.innerHTML = nowEvent.name;
@@ -315,7 +318,7 @@ export const eventCheck = () => {
         happyHolidays.href = nowEvent.url.length > 0 ? nowEvent.url : '#';
     } else {
         G['isEvent'] = false;
-        DOMCacheGetOrSet('eventCurrent').textContent = 'INACTIVE';
+        DOMCacheGetOrSet('eventCurrent').innerHTML = i18next.t('settings.events.inactive')
         eventBuffs.textContent = now.getTime() >= player.dayCheck.getTime() ? '' : ''
         eventBuffs.style.color = 'var(--red-text-color)';
         happyHolidays.innerHTML = '';

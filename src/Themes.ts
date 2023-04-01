@@ -1,5 +1,6 @@
 import { player } from './Synergism';
 import { DOMCacheGetOrSet } from './Cache/DOM';
+import i18next from 'i18next';
 
 export const toggleTheme = (initial = false, themeNumber = 1, change = false) => {
     const themeButton = DOMCacheGetOrSet('theme');
@@ -81,9 +82,10 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
         DOMCacheGetOrSet('cubetab').style.color = 'red';
         DOMCacheGetOrSet('ascTimeAccel').style.color = 'royalblue';
         DOMCacheGetOrSet('buildinghotkeys').style.color = 'lightgray';
+        DOMCacheGetOrSet('buildinghotkeys2').style.color = 'lightgray';
         DOMCacheGetOrSet('antspecies').style.color = 'royalblue'; //HTML colors
         DOMCacheGetOrSet('achievementcolorcode2').style.color = 'purple';
-        DOMCacheGetOrSet('corruptionTesseractsValue').style.color = 'darkviolet';
+        DOMCacheGetOrSet('corruptionTesseracts').style.color = 'darkviolet';
         DOMCacheGetOrSet('antwelcome').style.color = 'lightslategrey';
         DOMCacheGetOrSet('confirmationToggleTitle').style.color = 'pink';
         DOMCacheGetOrSet('specialActionsTitle').style.color = 'pink';
@@ -96,7 +98,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
         DOMCacheGetOrSet('hypercube6Bonus').style.color = 'brown';
         DOMCacheGetOrSet('runeshowpower5').style.color = 'tomato';
         DOMCacheGetOrSet('hypercubeWelcome').style.color = '#ff004c'; //Hypercube colors
-        DOMCacheGetOrSet('hypercubeInventory').style.color = '#ff004c';
+        DOMCacheGetOrSet('hypercubeQuantity').style.color = '#ff004c';
         DOMCacheGetOrSet('hypercubeBlessingsTotal').style.color = '#ff004c';
     } else {
         if (themeNumber === 4) {
@@ -200,7 +202,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
         body.style.setProperty('--gray-text-color', '#a5a5a5');
         DOMCacheGetOrSet('achievementcolorcode2').style.color = '#dc7dff';
         DOMCacheGetOrSet('corruptionDescription').style.color = '#d272ff';
-        DOMCacheGetOrSet('corruptionTesseractsValue').style.color = '#d272ff';
+        DOMCacheGetOrSet('corruptionTesseracts').style.color = '#d272ff';
         DOMCacheGetOrSet('antwelcome').style.color = '#b1b1b1';
         DOMCacheGetOrSet('versionnumber').style.color = '#ff5aff';
         DOMCacheGetOrSet('singularitytab').style.color = '#ff5252';
@@ -212,7 +214,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
         DOMCacheGetOrSet('tesseract6Bonus').style.color = '#a5a5a5';
         DOMCacheGetOrSet('hypercube6Bonus').style.color = '#a5a5a5';
         DOMCacheGetOrSet('hypercubeWelcome').style.color = '#f58';
-        DOMCacheGetOrSet('hypercubeInventory').style.color = '#f58';
+        DOMCacheGetOrSet('hypercubeQuantity').style.color = '#f58';
         DOMCacheGetOrSet('hypercubeBlessingsTotal').style.color = '#f58';
         DOMCacheGetOrSet('runeshowpower5').style.color = '#ff7158';
 
@@ -267,7 +269,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
         DOMCacheGetOrSet('heptGrid').style.borderColor = '#9b7306';
         DOMCacheGetOrSet('achievementcolorcode2').style.color = '#ef00e4'; //Text colors
         DOMCacheGetOrSet('corruptionDescription').style.color = '#c205ff';
-        DOMCacheGetOrSet('corruptionTesseractsValue').style.color = '#c205ff';
+        DOMCacheGetOrSet('corruptionTesseracts').style.color = '#c205ff';
         DOMCacheGetOrSet('antwelcome').style.color = 'darkgrey';
         DOMCacheGetOrSet('confirmationToggleTitle').style.color = '#eb0000';
         DOMCacheGetOrSet('specialActionsTitle').style.color = '#eb0000';
@@ -278,6 +280,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
         DOMCacheGetOrSet('antspecies').style.color = '#184ff3';
         DOMCacheGetOrSet('bonussummation').style.color = '#eb0000';
         DOMCacheGetOrSet('buildinghotkeys').style.color = '#838383';
+        DOMCacheGetOrSet('buildinghotkeys2').style.color = '#838383';
 
         themeButton.textContent = '德古拉模式';
     }
@@ -292,15 +295,19 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
 export const toggleAnnotation = (setting = true) => {
     const notationButton = DOMCacheGetOrSet('notation');
     const current = notationButton.textContent;
-    if (current == '纯科学计数法' || current == 'Pure Scientific') {
-        notationButton.textContent = 'Pure Engineering';
-    } else if (current == '纯工程计数法' || current == 'Pure Engineering') {
-        notationButton.textContent = 'Default';
-    } else {
-        notationButton.textContent = 'Pure Scientific';
+
+    switch (current) {
+        case 'Pure Scientific':
+            notationButton.textContent = i18next.t('settings.notation.pureEngineering')
+            break;
+        case 'Pure Engineering':
+            notationButton.textContent = i18next.t('settings.notation.default')
+            break;
+        default:
+            notationButton.textContent = i18next.t('settings.notation.pureScientific')
     }
     if (setting === true) {
-        player.notation = notationButton.textContent;
+        player.notation = current ?? 'Default';
     }
 }
 
@@ -347,7 +354,7 @@ export const toggleIconSet = (changeTo = player.iconSet) => {
             img.src = img.src.replace(IconSetsRegex, IconSets[player.iconSet][0]);
         }
     );
-    DOMCacheGetOrSet('iconSet').textContent = IconSets[player.iconSet][0];
+    DOMCacheGetOrSet('iconSet').textContent = i18next.t(`settings.iconSets.${IconSets[player.iconSet][0].toLowerCase()}`)
 }
 
 // If no image is found falls back to designated fallback, then Legacy, then MISSINGIMAGE.png

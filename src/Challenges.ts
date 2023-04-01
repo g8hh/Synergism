@@ -7,6 +7,7 @@ import { hepteractEffective } from './Hepteracts';
 import { productContents } from './Utility';
 import { DOMCacheGetOrSet } from './Cache/DOM';
 import { autoResearchEnabled } from './Research';
+import i18next from 'i18next';
 
 export const getMaxChallenges = (i: number) => {
     let maxChallenge = 0;
@@ -103,9 +104,12 @@ export const challengeDisplay = (i: number, changefocus = true) => {
     const maxChallenges = getMaxChallenges(i);
     if (i <= 5 && changefocus){
         if (player.challengecompletions[i] >= 100){
-            DOMCacheGetOrSet('completionSoftcap').textContent = '|| Softcapped past 100! Effective completion count: ' + format(CalcECC('transcend',player.challengecompletions[i]),2,true)
+            DOMCacheGetOrSet('completionSoftcap').innerHTML = i18next.t('challenges.perCompletionBonus', {
+                x: 100,
+                y: format(CalcECC('transcend',player.challengecompletions[i]),2,true)
+            })
         } else {
-            DOMCacheGetOrSet('completionSoftcap').textContent = ''
+            DOMCacheGetOrSet('completionSoftcap').textContent = i18next.t('challenges.perCompletionBonusEmpty')
         }
     }
 
@@ -113,16 +117,22 @@ export const challengeDisplay = (i: number, changefocus = true) => {
     if (i > 5 && i <= 10) {
         quarksMultiplier = 10;
         if (player.challengecompletions[i] >= 25 && changefocus){
-            DOMCacheGetOrSet('completionSoftcap').textContent = '|| Softcapped past 25! Effective completion count: ' + format(CalcECC('reincarnation',player.challengecompletions[i]),2,true)
+            DOMCacheGetOrSet('completionSoftcap').innerHTML = i18next.t('challenges.perCompletionBonus', {
+                x: 25,
+                y: format(CalcECC('reincarnation',player.challengecompletions[i]),2,true)
+            })
         } else {
-            DOMCacheGetOrSet('completionSoftcap').textContent = ''
+            DOMCacheGetOrSet('completionSoftcap').textContent = i18next.t('challenges.perCompletionBonusEmpty')
         }
     }
     if (i > 10) {
         if (player.challengecompletions[i] >= 10){
-            DOMCacheGetOrSet('completionSoftcap').textContent = '|| Softcapped past 10! Effective completion count: ' + format(CalcECC('ascension',player.challengecompletions[i]),2,true)
+            DOMCacheGetOrSet('completionSoftcap').innerHTML = i18next.t('challenges.perCompletionBonus', {
+                x: 10,
+                y: format(CalcECC('ascension',player.challengecompletions[i]),2,true)
+            })
         } else {
-            DOMCacheGetOrSet('completionSoftcap').textContent = ''
+            DOMCacheGetOrSet('completionSoftcap').textContent = i18next.t('challenges.perCompletionBonusEmpty')
         }
     }
     let descriptor = ''
@@ -140,221 +150,119 @@ export const challengeDisplay = (i: number, changefocus = true) => {
     const m = DOMCacheGetOrSet('challengeCurrent2');
     const n = DOMCacheGetOrSet('challengeCurrent3');
 
+    if (i === G['challengefocus']) {
+        const completions = `${player.challengecompletions[i]}/${format(maxChallenges)}`
+        const special = (i >= 6 && i <= 10) || i === 15
+        const goal = format(challengeRequirement(i, player.challengecompletions[i], special ? i : 0))
 
-    if (i === 1 && G['challengefocus'] === 1) {
-        a.textContent = '无加倍器挑战 || 完成' + player.challengecompletions[1] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'Multipliers make the game a little too fast. Let\'s take them out!'
-        c.textContent = 'Transcend and reach the goal except Multipliers do nothing but act like Accelerators, which are nerfed by 50%!'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i])) + '金币。'
-        e.textContent = '基础加倍器加成增加10个！[效果增加0.05！]当前效果：'
-        f.textContent = '总加倍器加成增加10%！当前效果：'
-        g.textContent = '每个祭品的基础符文经验值增加0.04！当前效果：'
-        h.textContent = '免费加倍器增加1个！每个祭品的基础符文经验值增加1！'
-        k.textContent = 'Start [No Multipliers]'
-        l.textContent = '增加' + format(10 * CalcECC('transcend', player.challengecompletions[1])) + '个'
-        m.textContent = '增加' + format(10 * CalcECC('transcend', player.challengecompletions[1])) + '%'
-        n.textContent = '增加' + format(0.04 * CalcECC('transcend', player.challengecompletions[1]), 2, true) + '[取最高完成次数]'
-    }
-    if (i === 2 && G['challengefocus'] === 2) {
-        a.textContent = '无加速器挑战 || 完成' + player.challengecompletions[2] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'Who needs accelerators? They do basically nothing now.'
-        c.textContent = 'Transcend and reach the goal except Accelerators do nothing! Multipliers are nerfed a bit as well.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i])) + '金币。'
-        e.textContent = '免费加速器增加5个！当前效果：'
-        f.textContent = '加速器加成效果增加5%！当前效果：'
-        g.textContent = '加速器效果增加0.25%！当前效果：'
-        h.textContent = '转生和超越的基础祭品获取数量增加1。'
-        k.textContent = 'Start [No Accelerators]'
-        l.textContent = '加速器增加' + format(5 * CalcECC('transcend', player.challengecompletions[2])) + '个'
-        m.textContent = '加速器加成效果增加' + format(5 * CalcECC('transcend', player.challengecompletions[2])) + '%'
-        n.textContent = '加速器效果增加' + format(0.25 * CalcECC('transcend', player.challengecompletions[2]), 2, true) + '%'
-    }
-    if (i === 3 && G['challengefocus'] === 3) {
-        a.textContent = '无碎片挑战 || 完成' + player.challengecompletions[3] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'Alright, now you\'re thinking, how else can I make the game harder?'
-        c.textContent = 'Transcend and reach the goal except you do not produce Crystals or Mythos Shards.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i])) + '金币。'
-        e.textContent = 'Crystal --> Coin conversion exponent +0.04! Current: '
-        f.textContent = '每购买1个神话生产者，就使宗师产量增加0.5%。当前效果：'
-        g.textContent = 'When you use a rune, all other runes gain +0.01 EXP. Current: '
-        h.textContent = 'Gain an offering automatically every 2 seconds!'
-        k.textContent = 'Start [No Shards]'
-        l.textContent = 'Exponent +' + format(0.04 * player.challengecompletions[3], 2, true)
-        m.textContent = '增加' + format(0.5 * CalcECC('transcend', player.challengecompletions[3]), 2, true) + '%'
-        n.textContent = '经验值增加' + format(0.01 * CalcECC('transcend', player.challengecompletions[3]), 2, true) + ''
-    }
-    if (i === 4 && G['challengefocus'] === 4) {
-        a.textContent = '花费增加挑战 || 完成' + player.challengecompletions[4] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'You\'re getting rich now, but inflation hasn\'t happened yet? I don\'t think so!'
-        c.textContent = 'Transcend and reach the goal except Coin/Crystal producers, Accelerators and Multipliers cost more. [Gets harder each time!]'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i])) + '金币。'
-        e.textContent = 'Accelerator Cost scale slows down by +5 purchases. Current: '
-        f.textContent = 'Multiplier Cost scale slows down by +2 purchases. Current: '
-        g.textContent = 'Building Cost Delay +0.5%. Current: '
-        h.textContent = 'None'
-        k.textContent = 'Start [Cost+]'
-        l.textContent = '加速器减缓' + format(5 * CalcECC('transcend', player.challengecompletions[4])) + '次'
-        m.textContent = '加倍器减缓' + format(2 * CalcECC('transcend', player.challengecompletions[4])) + '次'
-        n.textContent = '建筑成本增长减缓' + format(0.5 * CalcECC('transcend', player.challengecompletions[4]), 2, true) + '%'
-    }
-    if (i === 5 && G['challengefocus'] === 5) {
-        a.textContent = '钻石减少挑战 || 完成' + player.challengecompletions[5] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'You ever wonder how you get so many diamonds?'
-        c.textContent = 'Transcend and reach the goal except you gain far fewer Diamonds from all sources [Gets harder each time!]'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i])) + '金币。'
-        e.textContent = '转生时金币对钻石的转换指数增加0.01！当前效果：'
-        f.textContent = 'Multiply Crystal production by 10! Current: '
-        g.textContent = ''
-        h.textContent = 'None'
-        k.textContent = 'Start [Reduced Diamonds]'
-        l.textContent = 'Exponent = ^' + format(0.5 + CalcECC('transcend', player.challengecompletions[5]) / 100, 2, true)
-        m.textContent = '水晶产量变为' + format(Math.pow(10, CalcECC('transcend', player.challengecompletions[5]))) + '倍'
-        n.textContent = ''
-    }
-    if (i === 6 && G['challengefocus'] === 6) {
-        a.textContent = '税收增加挑战 || 完成' + player.challengecompletions[6] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'The tax man caught wind that you reincarnated recently...'
-        c.textContent = 'Reincarnate and reach the goal except tax has a lower cap, and Coin production is divided by 1e250.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i], 6)) + '神话碎片。'
-        e.textContent = '税收减少3.5%[效果叠乘]！当前效果：'
-        f.textContent = 'Thrift Rune Exp +10%! Current: '
-        g.textContent = 'Prestige Offerings +2%! Current: '
-        h.textContent = '税收减少7.5%！'
-        k.textContent = 'Start <Higher Tax>'
-        l.textContent = '税收变为' + format(Math.pow(0.965, CalcECC('reincarnation', player.challengecompletions[6])), 3, true) + '倍'
-        m.textContent = '经验值增加' + format(10 * CalcECC('reincarnation', player.challengecompletions[6])) + '%'
-        n.textContent = '转生相关的祭品数量增加' + format(2 * CalcECC('reincarnation', player.challengecompletions[6])) + '%'
-    }
-    if (i === 7 && G['challengefocus'] === 7) {
-        a.textContent = '无加倍器/加速器挑战 || 完成' + player.challengecompletions[7] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'You\'re really going to hate this one.'
-        c.textContent = 'Reincarnate and reach the goal except Accelerators and Multipliers do nothing. Coin Production is divided by 1e1,250.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i],7)) + '神话碎片。'
-        e.textContent = 'Accelerator/Multiplier boost power exponent +0.04! Current: '
-        f.textContent = 'Speed Rune Exp +10%! Current: '
-        g.textContent = 'Duplication Rune Exp +10%! Current: '
-        h.textContent = 'Multiplier Boost power +25%! The first Discord-Booster Global Diamond Upgrade.'
-        k.textContent = 'Start <No Multipliers/Accelerators>'
-        l.textContent = 'Exponent = ^' + format(1 + 0.04 * CalcECC('reincarnation', player.challengecompletions[7]), 2, true)
-        m.textContent = '经验值增加' + format(10 * CalcECC('reincarnation', player.challengecompletions[7])) + '%'
-        n.textContent = '经验值增加' + format(10 * CalcECC('reincarnation', player.challengecompletions[7])) + '%'
-    }
-    if (i === 8 && G['challengefocus'] === 8) {
-        a.textContent = '花费暴增挑战 || 完成' + player.challengecompletions[8] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'You thought you could outgrow inflation by Reincarnating?'
-        c.textContent = 'Reincarnate and reach the goal except Cost Scaling for producers and Accelerators/Multipliers scale much, much faster.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i],8)) + '神话碎片。'
-        e.textContent = 'Base Building Power +0.25! Current: '
-        f.textContent = 'Prism Rune Exp +20%! Current: '
-        g.textContent = 'Transcend Offerings +4%! Current: '
-        h.textContent = 'Unlock the Anthill feature! Includes 20 new Researches. A Global Diamond Upgrade.'
-        k.textContent = 'Start <Cost++>'
-        l.textContent = '增加' + format(0.25 * CalcECC('reincarnation', player.challengecompletions[8]), 2, true)
-        m.textContent = '经验值增加' + format(20 * CalcECC('reincarnation', player.challengecompletions[8]), 2, true) + '%'
-        n.textContent = '超越相关的祭品数量增加' + format(4 * CalcECC('reincarnation', player.challengecompletions[8]), 2, true) + '%'
-    }
-    if (i === 9 && G['challengefocus'] === 9) {
-        a.textContent = '无符文挑战 || 完成' + player.challengecompletions[9] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'You\'ll never complain about Prism being bad again.'
-        c.textContent = 'Reincarnate and reach the goal except runes always have level 1 effects. All coin production is divided by e2,000,000.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i], 9)) + '金币。'
-        e.textContent = '免费蚂蚁等级增加1！当前效果：'
-        f.textContent = '蚂蚁速度增加10%[效果叠乘！]当前效果：'
-        g.textContent = 'SI Rune Exp +20%! Current: '
-        h.textContent = 'Unlock the Talismans feature! [In Runes tab]. A Global Diamond Upgrade.'
-        k.textContent = 'Start <No Runes>'
-        l.textContent = '免费等级增加' + format(CalcECC('reincarnation', player.challengecompletions[9])) + ''
-        m.textContent = '蚂蚁速度变为' + format(Math.pow(1.1, CalcECC('reincarnation', player.challengecompletions[9])), 2, true) + '倍'
-        n.textContent = '经验值增加' + format(20 * CalcECC('reincarnation', player.challengecompletions[9]), 2, true) + '%'
-    }
-    if (i === 10 && G['challengefocus'] === 10) {
-        a.textContent = '虐待狂挑战 I || 完成' + player.challengecompletions[10] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'I\'m sorry for what I\'ve unleashed onto the world.'
-        c.textContent = 'Reincarnate and reach the goal except run the first five challenges AT THE SAME TIME! Coin Production /e12,500,000.'
-        d.textContent = '目标：在挑战中达到' + format(challengeRequirement(i, player.challengecompletions[i], 10)) + '金币。'
-        e.textContent = '蚂蚁基础强度分增加100！当前效果：'
-        f.textContent = '蚂蚁献祭奖励增加2%！当前效果：'
-        g.textContent = 'Reincarnation Offerings +10%! Current: '
-        h.textContent = 'Unlock the Ascension Reset Tier!'
-        k.textContent = 'Start <Sadistic I>'
-        l.textContent = '蚂蚁强度分增加' + format(100 * CalcECC('reincarnation', player.challengecompletions[10])) + ''
-        m.textContent = '蚂蚁献祭奖励增加' + format(2 * CalcECC('reincarnation', player.challengecompletions[10])) + '%'
-        n.textContent = '转世相关的祭品数量增加' + format(10 * CalcECC('reincarnation', player.challengecompletions[10]), 2, true) + '%'
-    }
-    if (i === 11 && G['challengefocus'] === 11) {
-        a.textContent = '蚂蚁减少挑战 || 完成' + player.challengecompletions[11] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'The great Ant War of \'21 wiped off all of the skilled ants.'
-        c.textContent = 'Ascend and reach the goal but only get free ant upgrades and from Challenge8/9 completions. FOR ASCENSION CHALLENGES YOU MUST CLEAR CHALLENGE 10 TO ATTEMPT THEM.'
-        d.textContent = '目标：在挑战中完成' + format(challengeRequirement(i, player.challengecompletions[i])) + '次挑战10<虐待狂挑战 I>。'
-        e.textContent = '免费蚂蚁等级增加12！当前效果：'
-        f.textContent = 'Ant Speed x(1e5)^completions! Current: '
-        g.textContent = '符文等级上限增加80！当前效果：'
-        h.textContent = 'Unlock 15 Researches, and unlock the ability to open Tesseracts! You also get to toggle Corruptions ;)'
-        k.textContent = 'Start <[(Reduced Ants)]>'
-        l.textContent = '免费蚂蚁等级增加' + format(12 * CalcECC('ascension', player.challengecompletions[11])) + ''
-        m.textContent = '蚂蚁速度变为' + format(Decimal.pow(1e5, CalcECC('ascension', player.challengecompletions[11]))) + '倍'
-        n.textContent = '符文等级上限增加' + format(80 * CalcECC('ascension', player.challengecompletions[11])) + ''
-    }
-    if (i === 12 && G['challengefocus'] === 12) {
-        a.textContent = '无转世挑战 || 完成' + player.challengecompletions[12] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'For some reason, you just can\'t do it.'
-        c.textContent = 'Ascend and reach the goal but you do not gain Particles and you cannot Reincarnate at all! Ant production ^0.5.'
-        d.textContent = '目标：在挑战中完成' + format(challengeRequirement(i, player.challengecompletions[i])) + '次挑战10<虐待狂挑战 I>。'
-        e.textContent = '难得素获取数量增加50%！当前效果：'
-        f.textContent = '祭品获取数量增加12%！当前效果：'
-        g.textContent = '打开每个方盒的贡品获取数量增加1！当前效果：'
-        h.textContent = 'Unlock 15 Researches, and unlock the mystical Spirit Power! Find these in the Runes tab. Increase Corruption Cap by 2 levels. Finally, unlock two new corruptions! ;)'
-        k.textContent = 'Start <[(No Reincarnation)]>'
-        l.textContent = '难得素获取数量增加' + format(50 * CalcECC('ascension', player.challengecompletions[12])) + '%'
-        m.textContent = '祭品获取数量增加' + format(12 * CalcECC('ascension', player.challengecompletions[12])) + '%'
-        n.textContent = '方盒的贡品获取数量增加' + format(CalcECC('ascension', player.challengecompletions[12])) + '个'
-    }
-    if (i === 13 && G['challengefocus'] === 13) {
-        a.textContent = '税收激增挑战 || 完成' + player.challengecompletions[13] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'Good luck with the IRS, buddy.'
-        c.textContent = 'Ascend and reach the goal, but taxes are much higher and grow with challenge completions. Ant production ^0.23'
-        d.textContent = '目标：在挑战中完成' + format(challengeRequirement(i, player.challengecompletions[i])) + '次挑战10<虐待狂挑战 I>。'
-        e.textContent = 'Taxes -3.33%! Multiplicative! Current: '
-        f.textContent = '护身符等级上限增加6级！当前效果：'
-        g.textContent = '魂灵能量效果增加3%！当前效果：'
-        h.textContent = 'Unlock 15 Researches, and unlock the power of the Hypercube! Increase Corruption Cap by 2 levels, to 9! Finally, unlock two new corruptions! ;)'
-        k.textContent = 'Start <[(Tax+++)]>'
-        l.textContent = '腐化税收减少' + format(100 - 100 * Math.pow(0.966, CalcECC('ascension', player.challengecompletions[13])),3,true) + '%'
-        m.textContent = '护身符等级上限增加' + format(6 * CalcECC('ascension', player.challengecompletions[13])) + '级'
-        n.textContent = '效果增加' + format(3 * CalcECC('ascension', player.challengecompletions[13])) + '%'
-    }
-    if (i === 14 && G['challengefocus'] === 14) {
-        a.textContent = '无研究挑战 || 完成' + player.challengecompletions[14] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'The dimension that never progressed past the dark ages. Many fear to even step foot.'
-        c.textContent = 'Ascend and reach the goal but you do not gain Obtainium nor are any researches purchasable. Ant production ^0.2.'
-        d.textContent = '目标：在挑战中完成' + format(challengeRequirement(i, player.challengecompletions[i])) + '次挑战10<虐待狂挑战 I>。'
-        e.textContent = '研究1x1至研究1x5的效果增加50%。当前效果：'
-        f.textContent = '每个时刻自动购买的研究数量增加1！当前效果：'
-        g.textContent = '符文等级上限增加200！当前效果：'
-        h.textContent = 'Unlock 15 Researches, and a way to coalesce your power into the Singularity. Increase Corruption Cap by 2 levels, to 11! Finally, unlock two new corruptions! ;)'
-        k.textContent = 'Start <[(No Research)]>'
-        l.textContent = '效果增加' + format(50 * CalcECC('ascension', player.challengecompletions[14])) + '%'
-        m.textContent = '每个时刻自动购买' + format(1 * player.challengecompletions[14]) + '个研究'
-        n.textContent = '符文等级上限增加' + format(200 * CalcECC('ascension', player.challengecompletions[14])) + ''
-    }
-    if (i === 15 && G['challengefocus'] === 15) {
-        a.textContent = '虐待狂挑战 II || 完成' + player.challengecompletions[15] + '次，次数上限为' + format(maxChallenges)
-        b.textContent = 'The worst atrocity a man can commit is witnessing, without anguish, the suffering of others.'
-        c.textContent = 'Ascend and reach the goal but you\'re stuck in all corruptions at level 11, and Ant production ^0.01.'
-        if (maxChallenges === 0) {
-            d.textContent = 'You will find no goal in sight, but get bonuses based on your best attempt.'
-        } else {
-            d.textContent = 'Goal: ' + format(challengeRequirement(i, player.challengecompletions[i], 15)) + ' Coins, but get bonuses based on your best attempt.'
+        let current1 = ''
+        let current2 = ''
+        let current3 = ''
+
+        switch (i) {
+            case 1: {
+                current1 = current2 = format(10 * CalcECC('transcend', player.challengecompletions[1]))
+                current3 = format(0.04 * CalcECC('transcend', player.challengecompletions[1]), 2, true)
+                break
+            }
+            case 2: {
+                current1 = current2 = format(5 * CalcECC('transcend', player.challengecompletions[2]))
+                break
+            }
+            case 3: {
+                current1 = format(0.04 * player.challengecompletions[3], 2, true)
+                current2 = format(0.5 * CalcECC('transcend', player.challengecompletions[3]), 2, true)
+                current3 = format(0.01 * CalcECC('transcend', player.challengecompletions[3]), 2, true)
+                break
+            }
+            case 4: {
+                current1 = format(5 * CalcECC('transcend', player.challengecompletions[4]))
+                current2 = format(2 * CalcECC('transcend', player.challengecompletions[4]))
+                current3 = format(0.5 * CalcECC('transcend', player.challengecompletions[4]), 2, true)
+                break
+            }
+            case 5: {
+                current1 = format(0.5 + CalcECC('transcend', player.challengecompletions[5]) / 100, 2, true)
+                current2 = format(Math.pow(10, CalcECC('transcend', player.challengecompletions[5])))
+                break
+            }
+            case 6: {
+                current1 = format(Math.pow(0.965, CalcECC('reincarnation', player.challengecompletions[6])), 3, true)
+                current2 = format(10 * CalcECC('reincarnation', player.challengecompletions[6]))
+                current3 = format(2 * CalcECC('reincarnation', player.challengecompletions[6]))
+                break
+            }
+            case 7: {
+                current1 = format(1 + 0.04 * CalcECC('reincarnation', player.challengecompletions[7]), 2, true)
+                current2 = current3 = format(10 * CalcECC('reincarnation', player.challengecompletions[7]))
+                break
+            }
+            case 8: {
+                current1 = format(0.25 * CalcECC('reincarnation', player.challengecompletions[8]), 2, true)
+                current2 = format(20 * CalcECC('reincarnation', player.challengecompletions[8]), 2, true)
+                current3 = format(4 * CalcECC('reincarnation', player.challengecompletions[8]), 2, true)
+                break
+            }
+            case 9: {
+                current1 = format(CalcECC('reincarnation', player.challengecompletions[9]))
+                current2 = format(Math.pow(1.1, CalcECC('reincarnation', player.challengecompletions[9])), 2, true)
+                current3 = format(20 * CalcECC('reincarnation', player.challengecompletions[9]), 2, true)
+                break
+            }
+            case 10: {
+                current1 = format(100 * CalcECC('reincarnation', player.challengecompletions[10]))
+                current2 = format(2 * CalcECC('reincarnation', player.challengecompletions[10]))
+                current3 = format(10 * CalcECC('reincarnation', player.challengecompletions[10]), 2, true)
+                break
+            }
+            case 11: {
+                current1 = format(12 * CalcECC('ascension', player.challengecompletions[11]))
+                current2 = format(Decimal.pow(1e5, CalcECC('ascension', player.challengecompletions[11])))
+                current3 = format(80 * CalcECC('ascension', player.challengecompletions[11]))
+                break
+            }
+            case 12: {
+                current1 = format(50 * CalcECC('ascension', player.challengecompletions[12]))
+                current2 = format(12 * CalcECC('ascension', player.challengecompletions[12]))
+                current3 = format(CalcECC('ascension', player.challengecompletions[12]))
+                break
+            }
+            case 13: {
+                current1 = format(100 - 100 * Math.pow(0.966, CalcECC('ascension', player.challengecompletions[13])), 3, true)
+                current2 = format(6 * CalcECC('ascension', player.challengecompletions[13]))
+                current3 = format(3 * CalcECC('ascension', player.challengecompletions[13]))
+                break
+            }
+            case 14: {
+                current1 = format(50 * CalcECC('ascension', player.challengecompletions[14]))
+                current2 = format(1 * player.challengecompletions[14])
+                current3 = format(200 * CalcECC('ascension', player.challengecompletions[14]))
+                break
+            }
         }
-        e.textContent = 'Folly of mankind: '
-        f.textContent = 'to believe they can defeat '
-        g.textContent = 'what Ant God labored '
-        h.textContent = 'You would break the universe if you could!'
-        k.textContent = 'Start <[(Sadistic Challenge II)]>'
-        l.textContent = ''
-        m.textContent = ''
-        n.textContent = ''
+
+        a.textContent = i18next.t(`challenges.${i}.name`, {
+            value: completions,
+            completions: player.challengecompletions[i],
+            max: maxChallenges
+        })
+        b.textContent = i18next.t(`challenges.${i}.flavor`)
+        c.textContent = i18next.t(`challenges.${i}.restrictions`)
+        d.textContent = i18next.t(`challenges.${i}.goal`, { value: goal })
+        e.textContent = i18next.t(`challenges.${i}.per.1`)
+        f.textContent = i18next.t(`challenges.${i}.per.2`)
+        g.textContent = i18next.t(`challenges.${i}.per.3`)
+        h.textContent = i18next.t(`challenges.${i}.first`)
+        k.textContent = i18next.t(`challenges.${i}.start`)
+        l.textContent = i18next.t(`challenges.${i}.current.1`, { value: current1 })
+        m.textContent = i18next.t(`challenges.${i}.current.2`, { value: current2 })
+        n.textContent = i18next.t(`challenges.${i}.current.3`, { value: current3 })
     }
+
+    if (i === 15 && G['challengefocus'] === 15 && maxChallenges === 0) {
+        d.textContent = i18next.t('challenges.15.noGoal')
+    }
+
     const scoreArray1 = [0, 8, 10, 12, 15, 20, 60, 80, 120, 180, 300]
     const scoreArray2 = [0, 10, 12, 15, 20, 30, 80, 120, 180, 300, 450]
     const scoreArray3 = [0, 20, 30, 50, 100, 200, 250, 300, 400, 500, 750];
@@ -388,26 +296,44 @@ export const challengeDisplay = (i: number, changefocus = true) => {
         j.style.color = 'cyan'
     }
     if (player.challengecompletions[i] >= player.highestchallengecompletions[i] && player.highestchallengecompletions[i] < maxChallenges && changefocus && player.ascensionCount < 1) {
-        j.textContent = 'Gain ' + Math.floor(quarksMultiplier * player.highestchallengecompletions[i] / 10 + 1 + player.cubeUpgrades[1] + player.cubeUpgrades[11] + player.cubeUpgrades[21] + player.cubeUpgrades[31] + player.cubeUpgrades[41]) + ' ' + descriptor + ' for completing this challenge [First Time Bonus]!'
+        j.textContent = i18next.t(descriptor ? 'challenges.firstTimeBonusQuarks' : 'challenges.firstTimeBonus', {
+            x: Math.floor(quarksMultiplier * player.highestchallengecompletions[i] / 10 + 1 + player.cubeUpgrades[1] + player.cubeUpgrades[11] + player.cubeUpgrades[21] + player.cubeUpgrades[31] + player.cubeUpgrades[41])
+        })
     }
     if (player.challengecompletions[i] >= player.highestchallengecompletions[i] && player.highestchallengecompletions[i] < maxChallenges && changefocus && player.ascensionCount >= 1){
-        j.textContent = 'Completing the challenge adds ' + ((i > 5) ? 2 : 1) + ' to Ascension Bank and increase base Score by ' + scoreDisplay + '.'
+        j.textContent = i18next.t('challenges.ascensionBankAdd', {
+            x: i > 5 ? 2 : 1,
+            y: scoreDisplay
+        })
     }
     if (player.challengecompletions[i] >= player.highestchallengecompletions[i] && player.highestchallengecompletions[i] < 10 && i > 10) {
-        j.textContent = 'Gain 1 Wow! HYPERCUBE for completing this challenge (First Time Bonus)'
+        j.textContent = i18next.t('challenges.hypercubeOneTimeBonus')
     }
 
     if (changefocus) {
         const el = DOMCacheGetOrSet('toggleAutoChallengeIgnore');
         el.style.display = i <= (autoAscensionChallengeSweepUnlock() ? 15 : 10) && player.researches[150] > 0 ? 'block' : 'none';
         el.style.border = player.autoChallengeToggles[i] ? '2px solid green' : '2px solid red';
-        el.textContent = `${i >= 11 && i <= 15 ? 'Auto Ascension' : 'Automatically'} Run Chal.${i} [${player.autoChallengeToggles[i] ? 'ON' : 'OFF'}]`;
+
+        if (i >= 11 && i <= 15) {
+            if (player.autoChallengeToggles[i]) {
+                el.textContent = i18next.t('challenges.autoAscRunChalOn', { x: i })
+            } else {
+                el.textContent = i18next.t('challenges.autoAscRunChalOff', { x: i })
+            }
+        } else {
+            if (player.autoChallengeToggles[i]) {
+                el.textContent = i18next.t('challenges.autoRunChalOn', { x: i })
+            } else {
+                el.textContent = i18next.t('challenges.autoRunChalOff', { x: i })
+            }
+        }
     }
 
     const ella = DOMCacheGetOrSet('toggleAutoChallengeStart');
     (player.autoChallengeRunning) ?
-        (ella.textContent = 'Auto Challenge Sweep [ON]', ella.style.border = '2px solid gold') :
-        (ella.textContent = 'Auto Challenge Sweep [OFF]', ella.style.border = '2px solid red');
+        (ella.textContent = i18next.t('challenges.autoChallengeSweepOn'), ella.style.border = '2px solid gold') :
+        (ella.textContent = i18next.t('challenges.autoChallengeSweepOff'), ella.style.border = '2px solid red');
 }
 
 export const getChallengeConditions = (i?: number) => {
@@ -433,8 +359,8 @@ export const getChallengeConditions = (i?: number) => {
 
 export const toggleRetryChallenges = () => {
     DOMCacheGetOrSet('retryChallenge').textContent = player.retrychallenges
-        ? 'Retry Challenges: OFF'
-        : 'Retry Challenges: ON';
+        ? i18next.t('challenges.retryChallengesOff')
+        : i18next.t('challenges.retryChallengesOn')
 
     player.retrychallenges = !player.retrychallenges;
 }

@@ -13,13 +13,11 @@
     <meta property="og:description" content="The greatest idle game of all time. This is the best idle game ever." />
 
     <link rel="icon" href="favicon.ico" type="image/x-icon" sizes="16x16">
-    <title>协同放置 - Synergism</title>
+
     <link rel="stylesheet" href="Synergism.css">
-    <script src="./dist/out.js?20230113" defer></script>
+    <script src="./dist/out.js" defer></script>
 </head>
 <body class="bodycolor loading">
-    <!--<script src="chs.js?20230113"></script>
-    <script src="core.js?20230113"></script>!-->
     <div id="transparentBG" alt="transparentBG" label="transparentBG" style="display: block;"></div>
     <div id="notification" alt="notification" label="notification">
         <div id="notifx" alt="notifx" label="notifx">
@@ -115,82 +113,82 @@
     <header>
         <div id="ascensionStats" alt="ascensionStats" label="ascensionStats">
             <span id="ascCubeStats" alt="ascCubeStats" label="ascCubeStats">
-                <img src="Pictures/Default/TinyWow3.png" class="corruptionImg" title="方盒信息" loading="lazy">
+                <img src="Pictures/Default/TinyWow3.png" class="corruptionImg" title="Cube Information" loading="lazy">
                 <span id="ascCubes" alt="ascCubes" label="ascCubes">x</span> C<span id="unit1" alt="unit1" label="unit1">/s</span>
             </span>
             <span id="ascTessStats" alt="ascTessStats" label="ascTessStats">
-                <img src="Pictures/Default/TinyWow4.png" class="corruptionImg" title="超立方信息" loading="lazy">
+                <img src="Pictures/Default/TinyWow4.png" class="corruptionImg" title="Tesseract Information" loading="lazy">
                 <span id="ascTess" alt="ascTess" label="ascTess">x</span> T<span id="unit2" alt="unit2" label="unit2">/s</span>
             </span>
             <span id="ascHyperStats" alt="ascHyperStats" label="ascHyperStats">
-                <img src="Pictures/Default/TinyWow5.png" class="corruptionImg" title="五阶立方信息" loading="lazy">
+                <img src="Pictures/Default/TinyWow5.png" class="corruptionImg" title="Hypercube Information" loading="lazy">
                 <span id="ascHyper" alt="ascHyper" label="ascHyper">x</span> Hy<span id="unit3" alt="unit3" label="unit3">/s</span>
             </span>
             <span id="ascPlatonicStats" alt="ascPlatonicStats" label="ascPlatonicStats">
-                <img src="Pictures/Default/TinyWow6.png" class="corruptionImg" title="PLATONIC方盒信息" loading="lazy">
+                <img src="Pictures/Default/TinyWow6.png" class="corruptionImg" title="Platonic Information" loading="lazy">
                 <span id="ascPlatonic" alt="ascPlatonic" label="ascPlatonic">x</span> P<span id="unit4" alt="unit4" label="unit4">/s</span>
             </span>
             <span id="ascHepteractStats" alt="ascHepteractStats" label="ascHepteractStats">
-                <img src="Pictures/Default/TinyWow7.png" class="corruptionImg" title="七阶立方信息" loading="lazy">
+                <img src="Pictures/Default/TinyWow7.png" class="corruptionImg" title="Hepteract Information" loading="lazy">
                 <span id="ascHepteract" alt="ascHepteract" label="ascHepteract">x</span> He<span id="unit5" alt="unit5" label="unit5">/s</span>
             </span>
             <span id="ascTimeTakenStats" alt="ascTimeTakenStats" label="ascTimeTakenStats">
-                <img src="Pictures/Default/TinyA.png" class="corruptionImg" title="本次飞升时间" loading="lazy">
+                <img src="Pictures/Default/TinyA.png" class="corruptionImg" title="Ascension Timer" loading="lazy">
                 <span id="ascLen" alt="ascLen" label="ascLen">x</span> <span id="unit6" alt="unit6" label="unit6"></span>
             </span>
             <span id="ascC10CompletionsStats" alt="ascC10CompletionsStats" label="ascC10CompletionsStats">
-                <img src="Pictures/Default/TinyChallenge10.png" class="corruptionImg" title="挑战10完成次数" loading="lazy">
+                <img src="Pictures/Default/TinyChallenge10.png" class="corruptionImg" title="Challenge 10 Completions" loading="lazy">
                 <span id="ascC10" alt="ascC10" label="ascC10">x</span>
             </span>
             <span id="ascTimeFactorStats" alt="ascTimeFactorStats" label="ascTimeFactorStats">
-                <img src="Pictures/Default/TinySpeed.png" class="corruptionImg" title="全局速度倍率" loading="lazy">
+                <img src="Pictures/Default/TinySpeed.png" class="corruptionImg" title="Global Speed Multiplier" loading="lazy">
                 <span id="ascTimeAccel" alt="ascTimeAccel" label="ascTimeAccel">x</span>
             </span>
             <span id="ascAscensionTimeFactorStats" alt="ascAscensionTimeFactorStats" label="ascAscensionTimeFactorStats">
-                <img src="Pictures/Default/TinySpeedAscension.png" class="corruptionImg" title="飞升的速度倍率" loading="lazy">
+                <img src="Pictures/Default/TinySpeedAscension.png" class="corruptionImg" title="Ascension Speed Multiplier" loading="lazy">
                 <span id="ascAscensionTimeAccel" alt="ascAscensionTimeAccel" label="ascAscensionTimeAccel">x</span>
             </span>
             <span id="ascSingularityCountStats" alt="ascSingularityCountStats" label="ascSingularityCountStats">
-                <img src="Pictures/Default/TinyS.png" class="corruptionImg singularity" title="奇点次数" loading="lazy">
+                <img src="Pictures/Default/TinyS.png" class="corruptionImg singularity" title="Singularity count" loading="lazy">
                 <span id="ascSingularityCount" class="singularity" alt="ascSingularityCount" label="ascSingularityCount">1</span>
             </span>
             <span id="ascSingTimeTakenStats" alt="ascSingTimeTakenStats" label="ascSingTimeTakenStats">
-                <img src="Pictures/Default/TinySTime.png" class="corruptionImg singularity" title="本次奇点时间" loading="lazy">
+                <img src="Pictures/Default/TinySTime.png" class="corruptionImg singularity" title="Singularity Timer" loading="lazy">
                 <span id="ascSingLen" class="singularity" alt="ascSingLen" label="ascSingLen">x</span>
             </span>
         </div>
         <div class="subHeader">
             <div class="currenciesContainer">
                 <div class="currencyContainer">
-                    <img class="img coin" src="Pictures/Default/Coin.png" alt="Coin" title='金币' loading="lazy">
+                    <img class="img coin" src="Pictures/Default/Coin.png" alt="Coin" title='Coin' loading="lazy">
                     <div class="statDisplay" id="coinDisplay" alt="coinDisplay" label="coinDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="prestigeunlock img diamond" src="Pictures/Default/Diamond.png" alt="Diamond" title='钻石' loading="lazy">
+                    <img class="prestigeunlock img diamond" src="Pictures/Default/Diamond.png" alt="Diamond" title='Diamond' loading="lazy">
                     <div class="prestigeunlock statDisplay" id="diamondDisplay" alt="diamondDisplay" label="diamondDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="prestigeunlock img offering" src="Pictures/Default/Offering.png" alt="Offering" title='祭品' loading="lazy">
+                    <img class="prestigeunlock img offering" src="Pictures/Default/Offering.png" alt="Offering" title='Offering' loading="lazy">
                     <div class="prestigeunlock statDisplay" id="offeringDisplay" alt="offeringDisplay" label="offeringDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="img quark" src="Pictures/Default/derpsmith_hyper.gif" alt="Quark" title='夸克' loading="lazy">
+                    <img class="img quark" src="Pictures/Default/derpsmith_hyper.gif" alt="Quark" title='Quark' loading="lazy">
                     <div class="statDisplay" id="quarkDisplay" alt="quarkDisplay" label="quarkDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="transcendunlock img mythos" src="Pictures/Default/Mythos.png" alt="Mythos" title='神话' loading="lazy">
+                    <img class="transcendunlock img mythos" src="Pictures/Default/Mythos.png" alt="Mythos" title='Mythos' loading="lazy">
                     <div class="transcendunlock statDisplay" id="mythosDisplay" alt="mythosDisplay" label="mythosDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="transcendunlock img mythosshard" src="Pictures/Default/MythosShard.png" alt="Mythos Shard" title='神话碎片' loading="lazy">
+                    <img class="transcendunlock img mythosshard" src="Pictures/Default/MythosShard.png" alt="Mythos Shard" title='Mythos Shard' loading="lazy">
                     <div class="transcendunlock statDisplay" id="mythosshardDisplay" alt="mythosshardDisplay" label="mythosshardDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="reincarnationunlock img particle" src="Pictures/Default/Particle.png" alt="Particle" title='粒子'  loading="lazy">
+                    <img class="reincarnationunlock img particle" src="Pictures/Default/Particle.png" alt="Particle" title='Particle'  loading="lazy">
                     <div class="reincarnationunlock statDisplay" id="particlesDisplay" alt="particlesDisplay" label="particlesDisplay">1</div>
                 </div>
                 <div class="currencyContainer">
-                    <img class="reincarnationunlock img obtanium" src="Pictures/Default/Obtainium.png" alt="Obtainium" title='难得素' loading="lazy">
+                    <img class="reincarnationunlock img obtanium" src="Pictures/Default/Obtainium.png" alt="Obtainium" title='Obtainium' loading="lazy">
                     <div class="reincarnationunlock statDisplay" id="obtainiumDisplay" alt="obtainiumDisplay" label="obtainiumDisplay">1</div>
                 </div>
             </div>
@@ -252,7 +250,7 @@
         </div>
         <div id="coinBuildings" alt="coinBuildings" label="coinBuildings">
         <div id="buyamountcoin" alt="buyamountcoin" label="buyamountcoin">
-            <table class="coinunlock3" id="coinbuyamount" alt="coinbuyamount" label="coinbuyamount" title="切换购买数量">
+            <table class="coinunlock3" id="coinbuyamount" alt="coinbuyamount" label="coinbuyamount" title="Toggle amount to buy">
                 <tr>
                 <td><img id="coinone" alt="coinone" label="coinone" class="buyAmountBtn" src="Pictures/Default/CoinOne.png" style="background-color: green;" loading="lazy"></td>
                 <td><img id="cointen" alt="cointen" label="cointen" class="buyAmountBtn" src="Pictures/Default/CoinTen.png" loading="lazy"></td>
@@ -337,7 +335,7 @@
     </div>
     <div id="prestige" alt="prestige" label="prestige" style="display: none;">
         <div id="buyamountcrystal" alt="buyamountcrystal" label="buyamountcrystal">
-            <table id="crystalbuyamount" alt="crystalbuyamount" label="crystalbuyamount" title="切换购买数量">
+            <table id="crystalbuyamount" alt="crystalbuyamount" label="crystalbuyamount" title="Toggle amount to buy">
                 <tr>
                 <td><img id="crystalone" alt="crystalone" label="crystalone" class="buyAmountBtn" src="Pictures/Default/CrystalOne.png" style="background-color: green;" loading="lazy"></td>
                 <td><img id="crystalten" alt="crystalten" label="crystalten" class="buyAmountBtn" src="Pictures/Default/CrystalTen.png" loading="lazy"></td>
@@ -416,7 +414,7 @@
     </div>
     <div id="transcension" alt="transcension" label="transcension" style="display: none;">
         <div id="buyamountmythos" alt="buyamountmythos" label="buyamountmythos">
-            <table id="mythosbuyamount" alt="mythosbuyamount" label="mythosbuyamount" title="切换购买数量">
+            <table id="mythosbuyamount" alt="mythosbuyamount" label="mythosbuyamount" title="Toggle amount to buy">
                 <tr>
                 <td><img id="mythosone" alt="mythosone" label="mythosone" class="buyAmountBtn" src="Pictures/Default/MythosOne.png" style="background-color: green;" loading="lazy"></td>
                 <td><img id="mythosten" alt="mythosten" label="mythosten" class="buyAmountBtn" src="Pictures/Default/MythosTen.png" loading="lazy"></td>
@@ -480,7 +478,7 @@
     </div>
     <div id="reincarnation" alt="reincarnation" label="reincarnation" style="display: none;">
         <div id="buyamountparticle" alt="buyamountparticle" label="buyamountparticle">
-            <table id="particlebuyamount" alt="particlebuyamount" label="particlebuyamount" title="切换购买数量">
+            <table id="particlebuyamount" alt="particlebuyamount" label="particlebuyamount" title="Toggle amount to buy">
                 <tr>
                 <td><img id="particleone" alt="particleone" label="particleone" class="buyAmountBtn" src="Pictures/Default/ParticleOne.png" style="background-color: green;" loading="lazy"></td>
                 <td><img id="particleten" alt="particleten" label="particleten" class="buyAmountBtn" src="Pictures/Default/ParticleTen.png" loading="lazy"></td>
@@ -548,7 +546,7 @@
     </div>
     <div id="ascension" alt="ascension" label="ascension" style="display: none">
         <div id="buyAmountTesseract" alt="buyAmountTesseract" label="buyAmountTesseract">
-            <table id="buyTesseractToggles" alt="buyTesseractToggles" label="buyTesseractToggles" title="切换购买数量">
+            <table id="buyTesseractToggles" alt="buyTesseractToggles" label="buyTesseractToggles" title="Toggle amount to buy">
                 <tr>
                     <td><img id="tesseractone" alt="tesseractone" label="tesseractone" class="buyAmountBtn" src="Pictures/Default/TesseractOne.png" style="background-color: green;" loading="lazy"></td>
                     <td><img id="tesseractten" alt="tesseractten" label="tesseractten" class="buyAmountBtn" src="Pictures/Default/TesseractTen.png" loading="lazy"></td>
@@ -888,7 +886,7 @@
         <div id="statistics" alt="statistics" label="statistics" style="display: none;">
             <div class="NotificationToggle">
                 <p class="mainText" id="achievementprogress" alt="achievementprogress" label="achievementprogress"></p>
-                <img class="achNotification" id="achnotificationpic" alt="achnotificationpic" label="achnotificationpic" src = "Pictures/Default/Notifications.png" title='跳出提示框' loading="lazy">
+                <img class="achNotification" id="achnotificationpic" alt="achnotificationpic" label="achnotificationpic" src = "Pictures/Default/Notifications.png" title='Notifications' loading="lazy">
                 <button class="auto nonSquare" id="toggle34" alt="toggle34" label="toggle34" toggleid="34" label="34" format="[$]" style="border: 2px solid green">[ON]</button>
             </div>
             <div id="achievements" alt="achievements" label="achievements">
@@ -1218,7 +1216,7 @@
             <div id="runeContainer1" alt="runeContainer1" label="runeContainer1">
 
                 <div id="buyamountoffering" alt="buyamountoffering" label="buyamountoffering">
-                    <table id="offeringbuyamount" alt="offeringbuyamount" label="offeringbuyamount" title="切换每次献祭祭品时购买的符文等级" style="font-size: 0;">
+                    <table id="offeringbuyamount" alt="offeringbuyamount" label="offeringbuyamount" title="Toggle the number of levels to buy per sacrifice" style="font-size: 0;">
                         <tr>
                         <td><img id="offeringone" alt="offeringone" label="offeringone" class="buyAmountBtn" src="Pictures/Default/OfferingOne.png" style="background-color: green;" loading="lazy"></td>
                         <td><img id="offeringten" alt="offeringten" label="offeringten" class="buyAmountBtn" src="Pictures/Default/OfferingTen.png" loading="lazy"></td>
@@ -1324,37 +1322,37 @@
                         <button id="buyTalismanAll" label="buyTalismanAll" style="border: 2px solid white" i18n="runes.talismans.buyAll"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShard.png" title='护身符碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShard.png" title='Talisman Shard' loading="lazy">
                         <span class="talismanShardAmount" id="talismanShardInventory" alt="talismanShardInventory" label="talismanShardInventory" style="color: yellow">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem1" label="buyTalismanItem1" style="border: 2px solid gold" i18n="runes.talismans.buy"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardCommon.png" title='普通碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardCommon.png" title='Common Fragment' loading="lazy">
                         <span class="talismanShardAmount" id="commonFragmentInventory" alt="commonFragmentInventory" label="commonFragmentInventory" style="color: white">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem2" label="buyTalismanItem2" style="border:2px solid white" i18n="runes.talismans.buy"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardUncommon.png" title='罕见碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardUncommon.png" title='Uncommon Fragment' loading="lazy">
                         <span class="talismanShardAmount" id="uncommonFragmentInventory" alt="uncommonFragmentInventory" label="uncommonFragmentInventory" style="color: limegreen">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem3" label="buyTalismanItem3" style="border:2px solid lime" i18n="runes.talismans.buy"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardRare.png" title='稀有碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardRare.png" title='Rare Fragment' loading="lazy">
                         <span class="talismanShardAmount darkcyanText" id="rareFragmentInventory" alt="rareFragmentInventory" label="rareFragmentInventory">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem4" label="buyTalismanItem4" style="border:2px solid aqua" i18n="runes.talismans.buy"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardEpic.png" title='史诗碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardEpic.png" title='Epic Fragment' loading="lazy">
                         <span class="talismanShardAmount" id="epicFragmentInventory" alt="epicFragmentInventory" label="epicFragmentInventory" style="color: plum">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem5" label="buyTalismanItem5" style="border:2px solid purple" i18n="runes.talismans.buy"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardLegendary.png" title='传奇碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardLegendary.png" title='Legendary Fragment' loading="lazy">
                         <span class="talismanShardAmount" id="legendaryFragmentInventory" alt="legendaryFragmentInventory" label="legendaryFragmentInventory" style="color: orange">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem6" label="buyTalismanItem6" style="border:2px solid orange" i18n="runes.talismans.buy"></button>
                     </div>
                     <div class="talismanShardContainer">
-                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardMythical.png" title='神秘碎片' loading="lazy">
+                        <img class="talismanShardIcon" src="Pictures/Default/TalismanShardMythical.png" title='Mythical Fragment' loading="lazy">
                         <span class="talismanShardAmount crimsonText" id="mythicalFragmentInventory" alt="mythicalFragmentInventory" label="mythicalFragmentInventory">0</span>
                         <button class="fragmentBtn" id="buyTalismanItem7" label="buyTalismanItem7" style="border:2px solid red" i18n="runes.talismans.buy"></button>
                     </div>
@@ -1477,7 +1475,7 @@
                 </div>
                 <div class="talismanBuyAmountContainer">
                     <div id="buyamounttalisman" alt="buyamounttalisman" label="buyamounttalisman">
-                        <table style="font-size: 0;" title="切换使用的资源比例">
+                        <table style="font-size: 0;" title="Toggle percent resources used">
                             <tr>
                                 <td><img id="talismanTen" alt="talismanTen" label="talismanTen" class="buyAmountBtn" src="Pictures/Default/TalismanTen.png" style="background-color: green;" loading="lazy"></td>
                                 <td><img id="talismanTwentyFive" alt="talismanTwentyFive" label="talismanTwentyFive" class="buyAmountBtn" src="Pictures/Default/TalismanTwentyFive.png" loading="lazy"></td>
@@ -2090,7 +2088,7 @@
                                 <button class="cubeBtn" id="openCustomCube" alt="openCustomCube" label="openCustomCube" i18n="wowCubes.openCustom"></button>
                                 <button class="cubeBtn" id="openMostCube" alt="openMostCube" label="openMostCube" i18n="wowCubes.openAll"></button>
                                 <div class="autoOpensBtn">
-                                    <button class="autoOpens" id="openCubes" alt="openCubes" label="openCubes" style="border: 1px solid red" title="飞升时将开启该百分比的惊奇方盒&#013需要购买了Cx1升级"></button>
+                                    <button class="autoOpens" id="openCubes" alt="openCubes" label="openCubes" style="border: 1px solid red" title="On Ascension will open % of Cubes&#013Cx1 is required"></button>
                                     <input class="autoOpensInput" type="number" id="cubeOpensInput" alt="cubeOpensInput" label="cubeOpensInput" style="border: 1px solid red" min="0" max="100" defaultValue="0">
                                 </div>
                             </div>
@@ -2179,7 +2177,7 @@
                                 <button id="openCustomTesseract" alt="openCustomTesseract" label="openCustomTesseract" class="cubeBtn" i18n="wowCubes.openCustom"></button>
                                 <button id="openMostTesseract" alt="openMostTesseract" label="openMostTesseract" class="cubeBtn" i18n="wowCubes.openAll"></button>
                                 <div class="autoOpensBtn">
-                                    <button class="autoOpens" id="openTesseracts" alt="openTesseracts" label="openTesseracts" style="border: 1px solid red" title="飞升时将开启该百分比的惊奇超立方&#013无法在超立方建筑自动购买模式为数量时生效"></button>
+                                    <button class="autoOpens" id="openTesseracts" alt="openTesseracts" label="openTesseracts" style="border: 1px solid red" title="On Ascension will open % of Tesseracts&#013Cant work with amount Mode (Auto Tesseract Buildings)"></button>
                                     <input class="autoOpensInput" type="number" id="tesseractsOpensInput" alt="tesseractsOpensInput" label="tesseractsOpensInput" style="border: 1px solid red" min="0" max="100" defaultValue="0">
                                 </div>
                             </div>
@@ -2268,7 +2266,7 @@
                                 <button id="openCustomHypercube" alt="openCustomHypercube" label="openCustomHypercube" class="cubeBtn" i18n="wowCubes.openCustom"></button>
                                 <button id="openMostHypercube" alt="openMostHypercube" label="openMostHypercube" class="cubeBtn" i18n="wowCubes.openAll"></button>
                                 <div class="autoOpensBtn">
-                                    <button class="autoOpens" id="openHypercubes" alt="openHypercubes" label="openHypercubes" style="border: 1px solid red" title="飞升时将开启该百分比的惊奇五阶立方"></button>
+                                    <button class="autoOpens" id="openHypercubes" alt="openHypercubes" label="openHypercubes" style="border: 1px solid red" title="On Ascension will open % of Hypercubes"></button>
                                     <input class="autoOpensInput" type="number" id="hypercubesOpensInput" alt="hypercubesOpensInput" label="hypercubesOpensInput" style="border: 1px solid red" min="0" max="100" defaultValue="0">
                                 </div>
                             </div>
@@ -2357,7 +2355,7 @@
                                 <button id="openCustomPlatonicCube" alt="openCustomPlatonicCube" label="openCustomPlatonicCube" class="cubeBtn" i18n="wowCubes.openCustom"></button>
                                 <button id="openMostPlatonicCube" alt="openMostPlatonicCube" label="openMostPlatonicCube" class="cubeBtn" i18n="wowCubes.openAll"></button>
                                 <div class="autoOpensBtn">
-                                    <button class="autoOpens" id="openPlatonicCube" alt="openPlatonicCube" label="openPlatonicCube" style="border: 1px solid red" title="飞升时将开启该百分比的PLATONIC方盒"></button>
+                                    <button class="autoOpens" id="openPlatonicCube" alt="openPlatonicCube" label="openPlatonicCube" style="border: 1px solid red" title="On Ascension will open % of Platonic Cubes"></button>
                                     <input class="autoOpensInput" type="number" id="platonicCubeOpensInput" alt="platonicCubeOpensInput" label="platonicCubeOpensInput" style="border: 1px solid red" min="0" max="100" defaultValue="0">
                                 </div>
                             </div>
@@ -2522,7 +2520,7 @@
                 <div id="cubeTab6" alt="cubeTab6" label="cubeTab6" class="cubeTab" style="display: none">
                     <div id="c15Rewards" alt="c15Rewards" label="c15Rewards" class="challengeContainer boxColor">
                         <p id="c15Reward0" alt="c15Reward0" label="c15Reward0" class="challengePortion">Best Challenge 15 Exponent: <span id="c15Reward0Num" alt="c15Reward0Num" label="c15Reward0Num" class="challengeNumber" style='color: gold; font-size: 1.2em;'></span></p>
-                        <p id="c15RequiredExponent" alt="c15RequiredExponent" label="c15RequiredExponent" class="challengePortion">在挑战15中达到<span id="c15RequiredExponentNum" alt="c15RequiredExponentNum" label="c15RequiredExponentNum" class="challengeNumber" style='color: gold; font-size: 1.2em;'></span>金币后可以提高指数！</p>
+                        <p id="c15RequiredExponent" alt="c15RequiredExponent" label="c15RequiredExponent" class="challengePortion">Gain <span id="c15RequiredExponentNum" alt="c15RequiredExponentNum" label="c15RequiredExponentNum" class="challengeNumber" style='color: gold; font-size: 1.2em;'></span> Coins in Challenge 15 to gain more score!</p>
                         <p id="c15RewardList" alt="c15RewardList" label="c15RewardList" class="challengePortion">Next Reward Unlocks at 0 coins.</p>
                         <p id="c15Reward1" alt="c15Reward1" label="c15Reward1" class="challengePortion">1. All Cube Types I: +<span id="c15Reward1Num" alt="c15Reward1Num" label="c15Reward1Num" class="challengeNumber"></span>%</p>
                         <p id="c15Reward2" alt="c15Reward2" label="c15Reward2" class="challengePortion">2. Ascension Count: +<span id="c15Reward2Num" alt="c15Reward2Num" label="c15Reward2Num" class="challengeNumber"></span>%</p>
@@ -2594,7 +2592,7 @@
                                 </tr>
                             </table>
                             <div class="platonicUpgrades2">
-                                <button id="saveOffToggle" alt="saveOffToggle" label="saveOffToggle" style="border: 2px solid gold" title="开启后将关闭自动符文">Save Offerings [OFF]</button>
+                                <button id="saveOffToggle" alt="saveOffToggle" label="saveOffToggle" style="border: 2px solid gold" title="If ON, then it will turn OFF Auto Runes toggle">Save Offerings [OFF]</button>
                                 <button id="toggleAutoPlatonicUpgrades" alt="toggleAutoPlatonicUpgrades" label="toggleAutoPlatonicUpgrades" style="border: 2px solid red">Auto Upgrades: [OFF]</button>
                             </div>
                         </div>
@@ -2622,7 +2620,7 @@
                         <img class="openImage" src="Pictures/Default/Hepteract.png" loading="lazy">
                         <div class="NotificationToggle">
                             <span id="hepteractQuantity" label="hepteractQuantity" style="color: mediumpurple"></span>
-                            <img class="heptNotification" id="heptnotificationpic" alt="heptnotificationpic" label="heptnotificationpic" src = "Pictures/Default/Notifications.png" title='跳出提示框' loading="lazy">
+                            <img class="heptNotification" id="heptnotificationpic" alt="heptnotificationpic" label="heptnotificationpic" src = "Pictures/Default/Notifications.png" title='Notifications' loading="lazy">
                             <button class="auto nonSquare" id="toggle35" alt="toggle35" label="toggle35" toggleid="35" label="35" format="[$]" style="border: 2px solid green">[ON]</button>
                         </div>
                     </div>
@@ -2774,28 +2772,28 @@
                 </span>
                 <div id="corruptionStats" alt="corruptionStats" label="corruptionStats" class="corruptionContainer">
                     <span class="corruptionStatRow chal11Corruption">
-                        <img src="Pictures/Default/CorruptViscocity.png" class="corruptionImg" title="粘性" loading="lazy">
+                        <img src="Pictures/Default/CorruptViscocity.png" class="corruptionImg" title="Viscocity" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal14Corruption">
-                        <img src="Pictures/Default/CorruptSpatialDilation.png" class="corruptionImg" title="空间膨胀" loading="lazy">
+                        <img src="Pictures/Default/CorruptSpatialDilation.png" class="corruptionImg" title="Spatial Dilation" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal14Corruption">
-                        <img src="Pictures/Default/CorruptHyperchallenged.png" class="corruptionImg" title="极致挑战" loading="lazy">
+                        <img src="Pictures/Default/CorruptHyperchallenged.png" class="corruptionImg" title="Hyperchallenged" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal13Corruption">
-                        <img src="Pictures/Default/CorruptScientificIlliteracy.png" class="corruptionImg" title="科盲" loading="lazy">
+                        <img src="Pictures/Default/CorruptScientificIlliteracy.png" class="corruptionImg" title="Scientific Illiteracy" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal12Corruption">
-                        <img src="Pictures/Default/CorruptDeflation.png" class="corruptionImg" title="市场通缩" loading="lazy">
+                        <img src="Pictures/Default/CorruptDeflation.png" class="corruptionImg" title="Deflation" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal12Corruption">
-                        <img src="Pictures/Default/CorruptExtinction.png" class="corruptionImg" title="灭绝" loading="lazy">
+                        <img src="Pictures/Default/CorruptExtinction.png" class="corruptionImg" title="Extinction" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal11Corruption">
-                        <img src="Pictures/Default/CorruptDrought.png" class="corruptionImg" title="干旱" loading="lazy">
+                        <img src="Pictures/Default/CorruptDrought.png" class="corruptionImg" title="Drought" loading="lazy">
                     </span>
                     <span class="corruptionStatRow chal13Corruption">
-                        <img src="Pictures/Default/CorruptFinancialCollapse.png" class="corruptionImg" title="经济衰退" loading="lazy">
+                        <img src="Pictures/Default/CorruptFinancialCollapse.png" class="corruptionImg" title="Financial Collapse" loading="lazy">
                     </span>
                     <!-- TODO: <script>corruptionButtonsAdd()</script> -->
                 </div>
@@ -2804,28 +2802,28 @@
                         <tr>
                             <th class="corrLoadoutNameCol"></th>
                             <th>
-                                <img src="Pictures/Default/CorruptViscocity.png" class="corruptionImg small" title="粘性" loading="lazy">
+                                <img src="Pictures/Default/CorruptViscocity.png" class="corruptionImg small" title="Viscocity" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptSpatialDilation.png" class="corruptionImg small" title="空间膨胀" loading="lazy">
+                                <img src="Pictures/Default/CorruptSpatialDilation.png" class="corruptionImg small" title="Spatial Dilation" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptHyperchallenged.png" class="corruptionImg small" title="极致挑战" loading="lazy">
+                                <img src="Pictures/Default/CorruptHyperchallenged.png" class="corruptionImg small" title="Hyperchallenged" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptScientificIlliteracy.png" class="corruptionImg small" title="科盲" loading="lazy">
+                                <img src="Pictures/Default/CorruptScientificIlliteracy.png" class="corruptionImg small" title="Scientific Illiteracy" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptDeflation.png" class="corruptionImg small" title="市场通缩" loading="lazy">
+                                <img src="Pictures/Default/CorruptDeflation.png" class="corruptionImg small" title="Deflation" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptExtinction.png" class="corruptionImg small" title="灭绝" loading="lazy">
+                                <img src="Pictures/Default/CorruptExtinction.png" class="corruptionImg small" title="Extinction" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptDrought.png" class="corruptionImg small" title="干旱" loading="lazy">
+                                <img src="Pictures/Default/CorruptDrought.png" class="corruptionImg small" title="Drought" loading="lazy">
                             </th>
                             <th>
-                                <img src="Pictures/Default/CorruptFinancialCollapse.png" class="corruptionImg small" title="经济衰退" loading="lazy">
+                                <img src="Pictures/Default/CorruptFinancialCollapse.png" class="corruptionImg small" title="Financial Collapse" loading="lazy">
                             </th>
                         </tr>
                     </table>
@@ -2947,32 +2945,32 @@
                 </div>
                 <button id="exportgame" label="exportgame" style="border:2px solid green" i18n="settings.exportHere"></button>
                 <p id="exportinfo" alt="exportinfo" label="exportinfo" class="tightText"></p>
-                <label title="文件名中：输入$VERSION$可指代完整版本号，$VER$可指代版本号，
-$TIME$指代24小时制的当前时间，$TIME12$指代12小时制的当前时间，
-$YEAR$或$Y$指代当前年份，$MONTH$或$M$指代当前月份，
-$DAY$或$D$指代当前天数，$HOUR$或$H$指代当前小时，
-$MINUTE$或$MI$指代当前分钟，$SECOND$或$S$指代当前秒数，
-$PERIOD$或$P$指代时段，$WEEKDAY$或$W$指代星期几，
-$DATE$指代时间戳，$DATES$指代有秒数的时间戳，
-$TIMES$指代短版本的24小时制当前时间，
-$SING$指代奇点次数，$SINGS$指代奇点次数的数字，
-$QUARK$指代夸克数量，$QUARKS$指代用记数法表示的夸克数量，
-$GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量，
-$STAGE$指代游戏阶段">
+                <label title="Use $VERSION$ for full version, $VER$ for version number,
+$TIME$ for 24h time, $TIME12$ for 12h,
+$YEAR$ or $Y$ for year, $MONTH$ or $M$ for month,
+$DAY$ or $D$ for day, $HOUR$ or $H$ for hour,
+$MINUTE$ or $MI$ for minute, $SECOND$ or $S$ for second,
+$PERIOD$ or $P$ for period, $WEEKDAY$ or $W$ for weekday,
+$DATE$ for date, $DATES$ for date seconds,
+$TIMES$ for 24h time short,
+$SING$ for singularity, $SINGS$ for singularity number,
+$QUARK$ for quarks, $QUARKS$ for format quarks,
+$GQ$ for golden quarks, $GQS$ for format golden quarks,
+$STAGE$ for synergism stage">
                     <input id="saveStringInput" alt="saveStringInput" label="saveStringInput">
                 </label>
-                <p id="saveString" alt="saveString" label="saveString" class="tightText" title="文件名中：输入$VERSION$可指代完整版本号，$VER$可指代版本号，
-$TIME$指代24小时制的当前时间，$TIME12$指代12小时制的当前时间，
-$YEAR$或$Y$指代当前年份，$MONTH$或$M$指代当前月份，
-$DAY$或$D$指代当前天数，$HOUR$或$H$指代当前小时，
-$MINUTE$或$MI$指代当前分钟，$SECOND$或$S$指代当前秒数，
-$PERIOD$或$P$指代时段，$WEEKDAY$或$W$指代星期几，
-$DATE$指代时间戳，$DATES$指代有秒数的时间戳，
-$TIMES$指代短版本的24小时制当前时间，
-$SING$指代奇点次数，$SINGS$指代奇点次数的数字，
-$QUARK$指代夸克数量，$QUARKS$指代用记数法表示的夸克数量，
-$GQ$指代金夸克数量，$GQS$指代用记数法表示的金夸克数量，
-$STAGE$指代游戏阶段"></p>
+                <p id="saveString" alt="saveString" label="saveString" class="tightText" title="Use $VERSION$ for full version, $VER$ for version number,
+$TIME$ for 24h time, $TIME12$ for 12h,
+$YEAR$ or $Y$ for year, $MONTH$ or $M$ for month,
+$DAY$ or $D$ for day, $HOUR$ or $H$ for hour,
+$MINUTE$ or $MI$ for minute, $SECOND$ or $S$ for second,
+$PERIOD$ or $P$ for period, $WEEKDAY$ or $W$ for weekday,
+$DATE$ for date, $DATES$ for date seconds,
+$TIMES$ for 24h time short,
+$SING$ for singularity, $SINGS$ for singularity number,
+$QUARK$ for quarks, $QUARKS$ for format quarks,
+$GQ$ for golden quarks, $GQS$ for format golden quarks,
+$STAGE$ for synergism stage"></p>
                 <p id="importgame" label="importgame" class="tightText" style="color: limegreen" i18n="settings.loadGameBelow"></p>
                 <label id="importFileButton" label="importFileButton" for="importfile" style="font-size: 0.9em; line-height: 1.4em;" i18n="settings.loadFromFile"></label>
                 <input type="file" id="importfile" label="importfile" accept=".txt" style="display: none">
@@ -2984,19 +2982,19 @@ $STAGE$指代游戏阶段"></p>
                 <div id="discord" alt="discord" label="discord">
                     <p style="color: gold" i18n="settings.joinDiscord"></p>
                     <a id="discordhref" alt="discordhref" label="discordhref" href="https://www.discord.gg/ameCknq" target="_blank" rel="noopener noreferrer nofollow">
-                        <img id="discordicon" alt="discordicon" label="discordicon" src="Pictures/Default/icon.gif" title="点击可加入Discord频道！" width="100" height="100" loading="lazy">
+                        <img id="discordicon" alt="discordicon" label="discordicon" src="Pictures/Default/icon.gif" title="Click to join the official Discord!" width="100" height="100" loading="lazy">
                     </a>
                 </div>
                 <div id="patreon" alt="patreon" label="patreon">
                     <p style="color: gold" i18n="settings.joinPatreon"></p>
                     <a id="patreonhref" alt="patreonhref" label="patreonhref" href="https://www.patreon.com/synergism" target="_blank" rel="noopener noreferrer nofollow">
-                        <img id="patreonicon" alt="patreonicon" label="patreonicon" src="Pictures/Default/Patreonlogo.png" title="点击支持本游戏开发！" loading="lazy">
+                        <img id="patreonicon" alt="patreonicon" label="patreonicon" src="Pictures/Default/Patreonlogo.png" title="Click to support development!" loading="lazy">
                     </a>
                     <p id="currentBonus" alt="currentBonus" label="currentBonus" style="color: springgreen">Current Bonus: 0%</p>
                 </div>
                 <div id="patchnotes" alt="patchnotes" label="patchnotes">
                     <a href="https://docs.google.com/document/d/1x0ljqZi5vsNE5FitoCsp6zbKGlZRvZ3tt-kZ96ngzSY/edit?usp=sharing" target="_blank" rel="noopener noreferrer nofollow">
-                        <img id="patchnotesicon" alt="patchnotesicon" label="patchnotesicon" src="Pictures/Default/patchnotes.png" title="点击可阅读更新说明！" loading="lazy">
+                        <img id="patchnotesicon" alt="patchnotesicon" label="patchnotesicon" src="Pictures/Default/patchnotes.png" title="Click to read the latest patch notes!" loading="lazy">
                     </a>
                 </div>
             </div>
@@ -3516,14 +3514,14 @@ $STAGE$指代游戏阶段"></p>
                             <p id="offeringpotionowned" alt="offeringpotionowned" label="offeringpotionowned">Own: 2222</p>
                             <button class="consumablebutton" id="buyofferingpotion" label="buyofferingpotion" style="border: 2px solid white">Buy: 100 Quarks Each</button>
                             <button class="consumablebutton" id="useofferingpotion" label="useofferingpotion" style="border: 2px solid orange" i18n="shop.consume"></button>
-                            <button class="consumablebutton auto" id="toggle42" alt="toggle42" label="toggle42" toggleid="42" label="42" format="Auto Catalyze: $" style="border:2px solid red" title="开启后将加速使用药剂&#013数量不足时将自动购买并以正常速度自动使用。">Auto Use: OFF</button>
+                            <button class="consumablebutton auto" id="toggle42" alt="toggle42" label="toggle42" toggleid="42" label="42" format="Auto Catalyze: $" style="border:2px solid red" title="Speeds up AutoPotion while enabled&#013If you run out of potions, it will refill/spend at normal rate, automatically.">Auto Use: OFF</button>
                         </div>
                         <div id="obtainiumPotionHide">
                             <img id="obtainiumPotions" alt="obtainiumPotions" label="obtainiumPotions" src="Pictures/Default/ObtainiumPotion.png" loading="lazy">
                             <p id="obtainiumpotionowned" alt="obtainiumpotionowned" label="obtainiumpotionowned">Own: 0</p>
                             <button class="consumablebutton" id="buyobtainiumpotion" label="buyobtainiumpotion" style="border: 2px solid white">Buy: 100 Quarks Each</button>
                             <button class="consumablebutton" id="useobtainiumpotion" label="useobtainiumpotion" style="border: 2px solid blue" i18n="shop.consume"></button>
-                            <button class="consumablebutton auto" id="toggle43" alt="toggle43" label="toggle43" toggleid="43" label="43" format="Auto Catalyze: $" style="border:2px solid red" title="开启后将加速使用药剂&#013数量不足时将自动购买并以正常速度自动使用。">Auto Use: OFF</button>
+                            <button class="consumablebutton auto" id="toggle43" alt="toggle43" label="toggle43" toggleid="43" label="43" format="Auto Catalyze: $" style="border:2px solid red" title="Speeds up AutoPotion while enabled&#013If you run out of potions, it will refill/spend at normal rate, automatically.">Auto Use: OFF</button>
                         </div>
                     </div>
                     <div id="quarksDisplay" alt="quarksDisplay" label="quarksDisplay">
@@ -3811,7 +3809,7 @@ $STAGE$指代游戏阶段"></p>
                         </div>
                         <div class="singularity">
                             <img id="buySingularityQuarks" alt="buySingularityQuarks" label="buySingularityQuarks" src="Pictures/Default/ShopGoldenQuarks.png" loading="lazy">
-                            <p id="buySingularityQuarksAmount" alt="buySingularityQuarksAmount" label="buySingularityQuarksAmount" title="您拥有的金夸克数量"></p>
+                            <p id="buySingularityQuarksAmount" alt="buySingularityQuarksAmount" label="buySingularityQuarksAmount" title="Amount of Golden Quarks you have"></p>
                             <button class="permshopbutton" id="buySingularityQuarksButton" alt="buySingularityQuarksButton" label="buySingularityQuarksButton" style="border: 2px solid gold;"></button>
                         </div>
                         <div class="exalt1Unlock" id="shopSingularityPenaltyDebuffHide">
@@ -3823,7 +3821,7 @@ $STAGE$指代游戏阶段"></p>
                     <div id="shopButtons" alt="shopButtons" label="shopButtons">
                         <button id="resetShopUpgrades" label="resetShopUpgrades" style="border: 2px solid orangered; color: white" i18n="shop.resetPermShop"></button>
                         <button id="toggleConfirmShop" label="toggleConfirmShop" style="border: 2px solid white">Shop Confirmations: ON</button>
-                        <button id="toggleHideShop" alt="toggleHideShop" label="toggleHideShop" title="只隐藏无法重置的物品" style="border: 2px solid white">Hide Maxed: OFF</button>
+                        <button id="toggleHideShop" alt="toggleHideShop" label="toggleHideShop" title="Only hides Non Refundable upgrades" style="border: 2px solid white">Hide Maxed: OFF</button>
                         <button id="toggleBuyMaxShop" label="toggleBuyMaxShop" style="border: 2px solid white">
                           <span id="toggleBuyMaxShopText"></span>
                           <br />
@@ -4076,9 +4074,6 @@ $STAGE$指代游戏阶段"></p>
                 <div id="octeractsMultiBuyInfo">
                     <p id="octeractMultiBuyText" i18n="general.multiBuyInstructions"></p>
                 </div>
-                <div>
-                    <p>(如果数字为A / B的格式，意味着A除以B)</p>
-                </div>
                 <div class="boxColor" id="octeractUpgradeContainer" alt="octeractUpgradeContainer" label="octeractUpgradeContainer">
                     <div class="octeractUpgrade">
                         <img id="octeractStarter" src='Pictures/Default/OcteractStarter.png' style="cursor: pointer">
@@ -4207,7 +4202,7 @@ $STAGE$指代游戏阶段"></p>
 
     </div>
     <div id="event">
-        <a target="_blank" href="https://www.bilibili.com/video/BV1GJ411x7h7"><img id="unsmith" src="Pictures/Default/Unsmith.png"></a>
+        <a target="_blank" href="https://www.youtube.com/watch?v=E9de-cmycx8"><img id="unsmith" src="Pictures/Default/Unsmith.png"></a>
         <p i18n="event.aprilFools.introText"></p>
         <p id="eventClicked" style="color: lime; display: none" i18n="event.aprilFools.clickedText"></p>
     </div>

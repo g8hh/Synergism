@@ -643,6 +643,10 @@ nav button {
     background-color: var(--hovershop-color);
 }
 
+button.isEvent:hover {
+    background-color: gold;
+}
+
 #anttab {
     border-color: maroon;
 }
@@ -2786,7 +2790,7 @@ p#ascendHotKeys {
 }
 
 #buyRuneBlessingInput {
-    min-width: 120px;
+    min-width: 100px;
     width: 5em;
     font-size: 0.8em;
     border: 2px solid crimson;
@@ -2794,7 +2798,7 @@ p#ascendHotKeys {
 }
 
 #buyRuneSpiritInput {
-    min-width: 120px;
+    min-width: 100px;
     width: 5em;
     font-size: 0.8em;
     border: 2px solid orange;

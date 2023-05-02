@@ -410,7 +410,7 @@ export const player: Player = {
 
   // create a Map with keys defaulting to false
   codes: new Map(
-    Array.from({ length: 40 }, (_, i) => [i + 1, false])
+    Array.from({ length: 46 }, (_, i) => [i + 1, false])
   ),
 
   loaded1009: true,
@@ -1915,6 +1915,7 @@ const FormatList = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qt', 'Sx', 'Sp', 'Oc', 'No', 
 
 // Bad browsers (like Safari) only recently implemented this.
 //
+// eslint-disable-next-line
 const supportsFormatToParts = typeof (Intl.NumberFormat.prototype).formatToParts === 'function'
 
 // In some browsers, this will return an empty-1 length array (?), causing a "TypeError: Cannot read property 'value' of undefined"

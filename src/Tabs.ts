@@ -142,7 +142,11 @@ const subtabInfo: Record<TabNames, SubTab> = {
       }, buttonID: 'toggleSingularitySubTab4' },
       { subTabID: 5, get unlocked () {
         return player.highestSingularityCount >= 25
-      }, buttonID: 'toggleSingularitySubTab5' }]
+      }, buttonID: 'toggleSingularitySubTab5' },
+      { subTabID: 6, get unlocked () {
+        return player.singularityChallenges.noSingularityUpgrades.completions >= 1
+      }, buttonID: 'toggleSingularitySubTab6'
+      }]
   },
   event: { subTabList: [] }
 }
@@ -283,6 +287,10 @@ export const changeSubTab = (tabOrName: Tab | TabNames, { page, step }: SubTabSw
     }
   } else if (subTabList.unlocked) {
     subTabs.tabSwitcher?.(subTabList.subTabID)
+    if (tabOrName === 'singularity' && page === 5) {
+      player.visitedAmbrosiaSubtab = true
+      player.caches.ambrosiaGeneration.updateVal('DefaultVal')
+    }
   }
 }
 

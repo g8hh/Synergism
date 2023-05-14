@@ -8,6 +8,7 @@ import type { QuarkHandler } from '../Quark';
 import { SingularityUpgrade } from '../singularity';
 import { SingularityChallenge, singularityChallengeData } from '../SingularityChallenges';
 import type { TabNames } from '../Tabs'
+import { AmbrosiaGenerationCache, AmbrosiaLuckCache, BlueberryInventoryCache } from '../StatCache';
 
 export interface Player {
     firstPlayed: string
@@ -600,7 +601,16 @@ export interface Player {
     insideSingularityChallenge: boolean
     singularityChallenges: Record<keyof typeof singularityChallengeData, SingularityChallenge>
 
+    ambrosia: number
+    lifetimeAmbrosia: number
+    ambrosiaRNG: number
+    visitedAmbrosiaSubtab: boolean
 
+    caches: {
+        ambrosiaLuck: AmbrosiaLuckCache,
+        ambrosiaGeneration: AmbrosiaGenerationCache
+        blueberryInventory: BlueberryInventoryCache
+    }
 }
 
 export interface GlobalVariables {
@@ -934,6 +944,8 @@ export interface GlobalVariables {
     shopEnhanceVision: boolean
     
     eventClicked: boolean
+
+    ambrosiaTimer: number
 }
 
 export interface SynergismEvents {

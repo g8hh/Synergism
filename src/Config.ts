@@ -1,4 +1,4 @@
-export const version = '3.0.0 pt 1: May 12, 2023: Amberberries!'
+export const version = '3.0.0 pt 1: May 25, 2023 v2: More Ambrosia v2!'
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -10,7 +10,7 @@ export const version = '3.0.0 pt 1: May 12, 2023: Amberberries!'
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2023, 4, 11, 16, 0, 6))
+export const lastUpdated = new Date(Date.UTC(2023, 4, 24, 16, 0, 6))
 /**
  * CHANGE THIS ONE INSTEAD
  */

@@ -31,7 +31,6 @@ import { DOMCacheGetOrSet } from './Cache/DOM'
 import { WowCubes } from './CubeExperimental'
 import { importSynergism } from './ImportExport'
 import { resetShopUpgrades, shopData } from './Shop'
-import { QuarkHandler } from './Quark'
 import { calculateSingularityDebuff, getFastForwardTotalMultiplier } from './singularity'
 import { updateCubeUpgradeBG, awardAutosCookieUpgrade, autoBuyCubeUpgrades } from './Cubes'
 import { autoBuyPlatonicUpgrades, updatePlatonicUpgradeBG } from './Platonic'
@@ -42,6 +41,7 @@ import { sumContents } from './Utility'
 import { setInterval, clearInterval } from './Timers'
 import { IconSets } from './Themes'
 import { changeTab, changeSubTab } from './Tabs'
+import type { BlueberryLoadoutMode } from './BlueberryUpgrades'
 
 let repeatreset: ReturnType<typeof setTimeout>
 
@@ -1077,7 +1077,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   hold.highestSingularityCount = player.highestSingularityCount
   hold.goldenQuarks = player.goldenQuarks
   hold.shopUpgrades = player.shopUpgrades
-  hold.worlds = new QuarkHandler({ quarks: 0, bonus: 0 })
+  hold.worlds.reset()
   // Exclude potentially non-latin1 characters from the save
   hold.singularityUpgrades = Object.fromEntries(
     Object.entries(player.singularityUpgrades).map(([key, value]) => {
@@ -1214,6 +1214,8 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   hold.lifetimeAmbrosia = player.lifetimeAmbrosia
   hold.visitedAmbrosiaSubtab = player.visitedAmbrosiaSubtab
   hold.blueberryTime = player.blueberryTime
+  hold.blueberryLoadouts = player.blueberryLoadouts
+  hold.blueberryLoadoutMode = player.blueberryLoadoutMode as BlueberryLoadoutMode
 
   const saveCode42 = player.codes.get(42) ?? false
   const saveCode43 = player.codes.get(43) ?? false

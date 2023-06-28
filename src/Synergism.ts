@@ -872,8 +872,24 @@ export const player: Player = {
     ambrosiaLuckCube1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaLuckCube1, 'ambrosiaLuckCube1'),
     ambrosiaQuarkCube1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarkCube1, 'ambrosiaQuarkCube1'),
     ambrosiaCubeLuck1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaCubeLuck1, 'ambrosiaCubeLuck1'),
-    ambrosiaQuarkLuck1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarkLuck1, 'ambrosiaQuarkLuck1')
+    ambrosiaQuarkLuck1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarkLuck1, 'ambrosiaQuarkLuck1'),
+    ambrosiaQuarks2: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarks2, 'ambrosiaQuarks2'),
+    ambrosiaCubes2: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaCubes2, 'ambrosiaQuarks2'),
+    ambrosiaLuck2: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaLuck2, 'ambrosiaLuck2'),
+    ambrosiaPatreon: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaPatreon, 'ambrosiaPatreon')
   },
+
+  blueberryLoadouts: {
+    1: {},
+    2: {},
+    3: {},
+    4: {},
+    5: {},
+    6: {},
+    7: {},
+    8: {}
+  },
+  blueberryLoadoutMode: 'saveTree',
 
   caches: {
     ambrosiaLuck: new AmbrosiaLuckCache(),
@@ -977,7 +993,7 @@ export const saveSynergy = async (button?: boolean): Promise<boolean> => {
  * Map of properties on the Player object to adapt
  */
 const toAdapt = new Map<keyof Player, (data: PlayerSave) => unknown>([
-  ['worlds', data => new QuarkHandler({ quarks: Number(data.worlds) || 0 })],
+  ['worlds', data => new QuarkHandler({ quarks: Number(data.worlds) || 0, bonus: player.worlds.BONUS })],
   ['wowCubes', data => new WowCubes(Number(data.wowCubes) || 0)],
   ['wowTesseracts', data => new WowTesseracts(Number(data.wowTesseracts) || 0)],
   ['wowHypercubes', data => new WowHypercubes(Number(data.wowHypercubes) || 0)],
@@ -1060,6 +1076,7 @@ const loadSynergy = async () => {
         }
       }
 
+      // eslint-disable-next-line
       return ((player[prop] as unknown) = data[prop])
     })
 
@@ -1951,6 +1968,8 @@ const loadSynergy = async () => {
       : i18next.t('general.autoOffColon')
     DOMCacheGetOrSet('hepteractToQuarkTradeAuto').style.border = `2px solid ${player.overfluxOrbsAutoBuy ? 'green' : 'red'}`
     toggleAutoBuyOrbs(true, true)
+
+    DOMCacheGetOrSet('blueberryToggleMode').innerHTML = (player.blueberryLoadoutMode === 'saveTree') ? i18next.t('ambrosia.loadouts.save') : i18next.t('ambrosia.loadouts.load')
 
     toggleTalismanBuy(player.buyTalismanShardPercent)
     updateTalismanInventory()
@@ -4192,7 +4211,7 @@ export const reloadShit = async (reset = false) => {
   if (!reset) {
     await calculateOffline()
   } else {
-    player.worlds = new QuarkHandler({ bonus: 0, quarks: 0 })
+    player.worlds.reset()
     // saving is disabled during a singularity event to prevent bug
     // early return here if the save fails can keep game state from properly resetting after a singularity
     if (saveCheck.canSave) {

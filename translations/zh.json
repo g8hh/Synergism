@@ -75,7 +75,43 @@
         "name": "神肴夸克-之运混合模块 I",
         "description": "第一代混合模块。当前夸克数量每有一个数量级，每级该升级就可以使&#9752 神肴之运增加0.02，然后再乘以当前夸克数量的数量级。",
         "effect": "第一代混合模块使&#9752 神肴之运增加了{{amount}}。"
+      },
+      "ambrosiaQuarks2": {
+        "name": "神肴夸克模块 II",
+        "description": "自我协同！每级使夸克获取数量增加1%，且神肴夸克模块 I每有10级，该数值还会再增加0.1%。",
+        "effect": "第二代夸克模块使夸克获取数量增加了{{amount}}%。"
+      },
+      "ambrosiaCubes2": {
+        "name": "神肴方盒模块 II",
+        "description": "自我协同！每级使所有类型的方盒、立方和方块获取数量增加6%，且神肴方盒模块 I每有10级，该数值还会再增加0.6%。另外，每10级还可以使所有类型的方盒、立方和方块获取数量变为原来的1.13倍。",
+        "effect": "第二代方盒模块使所有类型的方盒、立方和方块获取数量增加了{{amount}}%。"
+      },
+      "ambrosiaLuck2": {
+        "name": "神肴之运模块 II",
+        "description": "自我协同！每级使&#9752 神肴之运增加3，且神肴之运模块 I每有10级，该数值还会再增加0.3。另外，每10级还可以使&#9752 神肴之运额外增加40！",
+        "effect": "第二代神肴之运模块使&#9752 神肴之运增加了{{amount}}。"
+      },
+      "ambrosiaPatreon": {
+        "name": "厚颜的蓝莓Patreon提醒",
+        "description": "Platonic到哪都受欢迎。Patreon对夸克获取数量的加成每有1%，就使蓝莓秒的产生速度增加1%！",
+        "effect": "慷慨的Patreon支持者使蓝莓秒的产生速度增加 {{amount}}%。您也可以考虑在Patreon上支持本游戏的开发！"
       }
+    },
+    "loadouts": {
+      "load": "模式：载入预设",
+      "save": "模式：保存预设",
+      "none": "该槽位无预设！",
+      "loadout": "预设",
+      "confirmation": "保存至该槽位将覆盖之前的预设。您确定要这么做吗？",
+      "imported": "导入的预设"
+    },
+    "importTree": {
+      "success": "蓝莓树已导入！",
+      "failure": "无法导入蓝莓树，该文件有误！",
+      "error": "无法解析上传的文件！请确认它是不是蓝莓树预设的文件。"
+    },
+    "exportTree": {
+      "exportButton": "导出"
     }
   },
   "achievements": {
@@ -2388,7 +2424,8 @@
       "resetHistory": "历史重置数据",
       "ascendHistory": "历史飞升数据",
       "singularityHistory": "历史奇点数据",
-      "hotkeys": "快捷键"
+      "hotkeys": "快捷键",
+      "account": "账户"
     }
   },
   "offlineProgress": {
@@ -3007,8 +3044,9 @@
     "noHotkeyAvailable": "这些对快捷键无效。糟透了！",
     "specialActions": "特殊操作",
     "daily": "“每日”代码",
-    "add1": "1次“增加”代码",
     "add": "“增加”代码",
+    "addAll": "使用全部",
+    "add1": "使用1次",
     "time": "“时间”代码",
     "enterPromoCodeHere": "点击此处输入奖励代码！",
     "currentTheme": "当前主题",

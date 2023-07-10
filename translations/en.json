@@ -2424,7 +2424,8 @@
       "resetHistory": "Reset History",
       "ascendHistory": "Ascend History",
       "singularityHistory": "Singularity History",
-      "hotkeys": "Hotkeys"
+      "hotkeys": "Hotkeys",
+      "account": "Account"
     }
   },
   "offlineProgress": {
@@ -3043,8 +3044,9 @@
     "noHotkeyAvailable": "These do not work with hotkeys. Too bad!",
     "specialActions": "Special Actions",
     "daily": "Daily",
-    "add1": "Add x1",
     "add": "Add",
+    "addAll": "xAll",
+    "add1": "x1",
     "time": "Time",
     "enterPromoCodeHere": "Enter a promotion code here!",
     "currentTheme": "Current Theme",

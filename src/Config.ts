@@ -11,7 +11,7 @@ export const version = '3.0.0 pt 2: June 27, 2023: The Blueberry Tree pt 1.2'
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2023, 5, 27, 16, 0, 6))
+export const lastUpdated = new Date(Date.UTC(2023, 6, 8, 16, 0, 6))
 /**
  * CHANGE THIS ONE INSTEAD
  */

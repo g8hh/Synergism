@@ -2894,12 +2894,29 @@
       "enhance": "升阶",
       "respec": "变配",
       "respecAll": "全部变配",
+      "respecConfirm": "确认 [-100,000 祭品]",
+      "respecConfirmAll": "确认全部 [-400,000 祭品]",
+      "respecCancel": "取消变配",
+      "respecSummary": "+-==-+ 选中 3 个绿色符文，以变配！+-=-+",
       "buy": "购买",
       "buyAll": "全部购买",
       "autoBuyOn": "自动购买：开",
       "autoBuyOff": "自动购买：关",
       "clickBuyEveryType": "点击后将尽可能购买所有碎片",
       "costToBuy": "购买{{buyAmount}}个{{name}}花费：{{obtainium}}难得素及{{offerings}}祭品。",
+      "modifiers": {
+        "positive": "{{name}}：是",
+        "negative": "{{name}}：否"
+      },
+      "shards": {
+        "shard": "护身符碎片",
+        "commonFragment": "普通碎片",
+        "uncommonFragment": "罕见碎片",
+        "rareFragment": "稀有碎片",
+        "epicFragment": "史诗碎片",
+        "legendaryFragment": "传奇碎片",
+        "mythicalFragment": "神话碎片"
+      },
       "names": {
         "exemption": "免税",
         "chronos": "时光",
@@ -3046,7 +3063,7 @@
     "daily": "“每日”代码",
     "add": "“增加”代码",
     "addAll": "使用全部",
-    "add1": "使用1次",
+    "add1": "1次“增加”代码",
     "time": "“时间”代码",
     "enterPromoCodeHere": "点击此处输入奖励代码！",
     "currentTheme": "当前主题",

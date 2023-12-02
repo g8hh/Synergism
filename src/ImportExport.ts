@@ -176,21 +176,25 @@ export const exportData = async (text: string, fileName: string) => {
   setTimeout(() => DOMCacheGetOrSet('exportinfo').textContent = '', 15_000)
 }
 
-export const exportSynergism = async () => {
-  player.lastExportedSave = Date.now()
+export const exportSynergism = async (shouldSetLastSaveSoWeStopFuckingBotheringPeople = true) => {
   player.offlinetick = Date.now()
-  const quarkData = quarkHandler()
 
-  let bonusGQMultiplier = 1
-  bonusGQMultiplier *= 1 + player.worlds.BONUS / 100
-  bonusGQMultiplier *= (player.highestSingularityCount >= 100 ? 1 + player.highestSingularityCount / 50 : 1)
-  if (+player.singularityUpgrades.goldenQuarks3.getEffect().bonus > 0) {
-    player.goldenQuarks += Math.floor(player.goldenQuarksTimer / (3600 / +player.singularityUpgrades.goldenQuarks3.getEffect().bonus)) * bonusGQMultiplier
-    player.goldenQuarksTimer = player.goldenQuarksTimer % (3600 / +player.singularityUpgrades.goldenQuarks3.getEffect().bonus)
-  }
-  if (quarkData.gain >= 1) {
-    player.worlds.add(quarkData.gain)
-    player.quarkstimer = (player.quarkstimer % (3600 / quarkData.perHour))
+  if (shouldSetLastSaveSoWeStopFuckingBotheringPeople) {
+    player.lastExportedSave = Date.now()
+
+    const quarkData = quarkHandler()
+
+    let bonusGQMultiplier = 1
+    bonusGQMultiplier *= 1 + player.worlds.BONUS / 100
+    bonusGQMultiplier *= (player.highestSingularityCount >= 100 ? 1 + player.highestSingularityCount / 50 : 1)
+    if (+player.singularityUpgrades.goldenQuarks3.getEffect().bonus > 0) {
+      player.goldenQuarks += Math.floor(player.goldenQuarksTimer / (3600 / +player.singularityUpgrades.goldenQuarks3.getEffect().bonus)) * bonusGQMultiplier
+      player.goldenQuarksTimer = player.goldenQuarksTimer % (3600 / +player.singularityUpgrades.goldenQuarks3.getEffect().bonus)
+    }
+    if (quarkData.gain >= 1) {
+      player.worlds.add(quarkData.gain)
+      player.quarkstimer = (player.quarkstimer % (3600 / quarkData.perHour))
+    }
   }
 
   const saved = await saveSynergy()
@@ -286,6 +290,7 @@ export const importSynergism = async (input: string | null, reset = false) => {
 
     saveCheck.canSave = false
     const item = new Blob([saveString], { type: 'text/plain' })
+    localStorage.setItem('Synergysave2', saveString)
     await localforage.setItem<Blob>('Synergysave2', item)
 
     localStorage.setItem('saveScumIsCheating', Date.now().toString())

@@ -55,6 +55,7 @@ import { changeTab, changeSubTab } from './Tabs'
 import { AmbrosiaGenerationCache, AmbrosiaLuckCache, BlueberryInventoryCache, cacheReinitialize } from './StatCache'
 import { BlueberryUpgrade, blueberryUpgradeData } from './BlueberryUpgrades'
 import { handleLogin } from './Login'
+import { exportSynergism } from './ImportExport'
 
 export const player: Player = {
   firstPlayed: new Date().toISOString(),
@@ -898,7 +899,7 @@ export const player: Player = {
     blueberryInventory: new BlueberryInventoryCache()
   },
 
-  lastExportedSave: Date.now()
+  lastExportedSave: 0
 }
 
 export const blankSave = Object.assign({}, player, {
@@ -975,6 +976,7 @@ export const saveSynergy = async (button?: boolean): Promise<boolean> => {
       return false
     }
 
+    localStorage.setItem('Synergysave2', save)
     await localforage.setItem<Blob>('Synergysave2', saveBlob)
   } else {
     await Alert(i18next.t('testing.errorSaving'))
@@ -1081,7 +1083,7 @@ const loadSynergy = async () => {
       return ((player[prop] as unknown) = data[prop])
     })
 
-    player.lastExportedSave = data.lastExportedSave ?? Date.now()
+    player.lastExportedSave = data.lastExportedSave ?? 0
 
     if (data.offerpromo24used !== undefined) {
       player.codes.set(25, false)
@@ -4210,6 +4212,7 @@ export const reloadShit = async (reset = false) => {
 
       localStorage.clear()
       const blob = new Blob([saveString], { type: 'text/plain' })
+      localStorage.setItem('Synergysave2', saveString)
       await localforage.setItem<Blob>('Synergysave2', blob)
       await Alert(i18next.t('main.transferredFromLZ'))
     }
@@ -4244,7 +4247,7 @@ export const reloadShit = async (reset = false) => {
   } else {
     changeTab('settings')
 
-    void Alert(i18next.t('general.exportYourGame'))
+    void Alert(i18next.t('general.exportYourGame')).finally(() => exportSynergism(false))
   }
 
   changeSubTab('buildings', { page: 0 })

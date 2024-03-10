@@ -147,16 +147,32 @@ import { Globals as G } from './Variables'
 */
 
 export const generateEventHandlers = () => {
-  const ordinals = ['null', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'] as const
+  const ordinals = [
+    'null',
+    'first',
+    'second',
+    'third',
+    'fourth',
+    'fifth',
+    'sixth',
+    'seventh',
+    'eighth'
+  ] as const
 
   if (testing) {
     const warp = document.createElement('button')
     const dayReset = document.createElement('button')
     warp.textContent = 'Click here to warp time! [TESTING ONLY]'
-    warp.setAttribute('style', 'width: auto; height: 30px; border: 6px solid gold;')
+    warp.setAttribute(
+      'style',
+      'width: auto; height: 30px; border: 6px solid gold;'
+    )
     warp.addEventListener('click', () => timeWarp())
     dayReset.textContent = 'Click to force a new day! [TESTING ONLY]'
-    dayReset.setAttribute('style', 'width: auto; height: 30px; border: 6px solid orange;')
+    dayReset.setAttribute(
+      'style',
+      'width: auto; height: 30px; border: 6px solid orange;'
+    )
     dayReset.addEventListener('click', () => forcedDailyReset())
 
     const consumables = DOMCacheGetOrSet('actualConsumables')
@@ -181,12 +197,19 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('reincarnatebtn').addEventListener('mouseover', () => resetrepeat('reincarnation'))
   DOMCacheGetOrSet('acceleratorboostbtn').addEventListener('mouseover', () => resetrepeat('acceleratorBoost'))
   DOMCacheGetOrSet('challengebtn').addEventListener('mouseover', () => resetrepeat('transcensionChallenge'))
-  DOMCacheGetOrSet('reincarnatechallengebtn').addEventListener('mouseover', () => resetrepeat('reincarnationChallenge'))
+  DOMCacheGetOrSet('reincarnatechallengebtn').addEventListener(
+    'mouseover',
+    () => resetrepeat('reincarnationChallenge')
+  )
   DOMCacheGetOrSet('ascendChallengeBtn').addEventListener('mouseover', () => resetrepeat('ascensionChallenge'))
   DOMCacheGetOrSet('ascendbtn').addEventListener('mouseover', () => resetrepeat('ascension'))
   DOMCacheGetOrSet('singularitybtn').addEventListener('mouseover', () => resetrepeat('singularity'))
 
-  for (const resetButton of Array.from(document.getElementsByClassName('resetbtn'))) {
+  for (
+    const resetButton of Array.from(
+      document.getElementsByClassName('resetbtn')
+    )
+  ) {
     resetButton.addEventListener('mouseover', () => {
       resetButton.classList.add('hover')
     })
@@ -220,25 +243,30 @@ export const generateEventHandlers = () => {
   // Part 1: Upper portion (Subtab toggle)
   const buildingTypes = ['Coin', 'Diamond', 'Mythos', 'Particle', 'Tesseract']
   for (let index = 0; index < buildingTypes.length; index++) {
-    DOMCacheGetOrSet(`switchTo${buildingTypes[index]}Building`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.Buildings, { page: index })
-    )
+    DOMCacheGetOrSet(
+      `switchTo${buildingTypes[index]}Building`
+    ).addEventListener('click', () => changeSubTab(Tabs.Buildings, { page: index }))
   }
   // Part 2: Building Amount Toggles
-  const buildingTypesAlternate = ['coin', 'crystal', 'mythos', 'particle', 'tesseract', 'offering'] as const
+  const buildingTypesAlternate = [
+    'coin',
+    'crystal',
+    'mythos',
+    'particle',
+    'tesseract',
+    'offering'
+  ] as const
   const buildingOrds = ['one', 'ten', 'hundred', 'thousand', '10k', '100k']
   const buildingOrdsToNum = [1, 10, 100, 1000, 10000, 100000] as const
   for (let index = 0; index < buildingOrds.length; index++) {
     for (let index2 = 0; index2 < buildingTypesAlternate.length; index2++) {
-      DOMCacheGetOrSet(buildingTypesAlternate[index2] + buildingOrds[index]).addEventListener(
-        'click',
-        () =>
-          toggleBuyAmount(
-            buildingOrdsToNum[index],
-            buildingTypesAlternate[index2]
-          )
-      )
+      DOMCacheGetOrSet(
+        buildingTypesAlternate[index2] + buildingOrds[index]
+      ).addEventListener('click', () =>
+        toggleBuyAmount(
+          buildingOrdsToNum[index],
+          buildingTypesAlternate[index2]
+        ))
     }
   }
   // Part 3: Building Purchasers + Upgrades
@@ -252,39 +280,47 @@ export const generateEventHandlers = () => {
   const buildingTypesAlternate3 = ['Coin', 'Diamonds', 'Mythos'] as const // TODO: A cleaner way to implement this dumb shit
   for (let index = 0; index < 3; index++) {
     for (let index2 = 1; index2 <= 5; index2++) {
-      DOMCacheGetOrSet(`buy${buildingTypesAlternate2[index]}${index2}`).addEventListener(
-        'click',
-        () =>
-          buyProducer(
-            ordinals[index2 as OneToFive],
-            buildingTypesAlternate3[index],
-            index === 0 ? index2 : index2 * (index2 + 1) / 2
-          )
-      )
+      DOMCacheGetOrSet(
+        `buy${buildingTypesAlternate2[index]}${index2}`
+      ).addEventListener('click', () =>
+        buyProducer(
+          ordinals[index2 as OneToFive],
+          buildingTypesAlternate3[index],
+          index === 0 ? index2 : (index2 * (index2 + 1)) / 2
+        ))
     }
   }
 
   // Crystal Upgrades (Mouseover and Onclick)
   for (let index = 1; index <= 5; index++) {
-    DOMCacheGetOrSet(`buycrystalupgrade${index}`).addEventListener('mouseover', () => crystalupgradedescriptions(index))
-    DOMCacheGetOrSet(`buycrystalupgrade${index}`).addEventListener('click', () => buyCrystalUpgrades(index))
+    DOMCacheGetOrSet(`buycrystalupgrade${index}`).addEventListener(
+      'mouseover',
+      () => crystalupgradedescriptions(index)
+    )
+    DOMCacheGetOrSet(`buycrystalupgrade${index}`).addEventListener(
+      'click',
+      () => buyCrystalUpgrades(index)
+    )
   }
 
   // Particle Buildings
   for (let index = 0; index < 5; index++) {
-    DOMCacheGetOrSet(`buyparticles${index + 1}`).addEventListener('click', () =>
-      buyParticleBuilding(
-        index + 1 as OneToFive
-      ))
+    DOMCacheGetOrSet(`buyparticles${index + 1}`).addEventListener(
+      'click',
+      () => buyParticleBuilding((index + 1) as OneToFive)
+    )
   }
 
   // Tesseract Buildings
   for (let index = 0; index < 5; index++) {
     DOMCacheGetOrSet(`buyTesseracts${index + 1}`).addEventListener(
       'click',
-      () => buyTesseractBuilding(index + 1 as OneToFive)
+      () => buyTesseractBuilding((index + 1) as OneToFive)
     )
-    DOMCacheGetOrSet(`tesseractAutoToggle${index + 1}`).addEventListener('click', () => toggleAutoTesseracts(index + 1))
+    DOMCacheGetOrSet(`tesseractAutoToggle${index + 1}`).addEventListener(
+      'click',
+      () => toggleAutoTesseracts(index + 1)
+    )
   }
 
   // Constant Upgrades
@@ -293,7 +329,10 @@ export const generateEventHandlers = () => {
       'mouseover',
       () => constantUpgradeDescriptions(index + 1)
     )
-    DOMCacheGetOrSet(`buyConstantUpgrade${index + 1}`).addEventListener('click', () => buyConstantUpgrades(index + 1))
+    DOMCacheGetOrSet(`buyConstantUpgrade${index + 1}`).addEventListener(
+      'click',
+      () => buyConstantUpgrades(index + 1)
+    )
   }
 
   // Part 4: Toggles
@@ -371,7 +410,10 @@ export const generateEventHandlers = () => {
     DOMCacheGetOrSet(`rune${index + 1}`).addEventListener('mouseover', () => displayRuneInformation(index + 1))
     DOMCacheGetOrSet(`rune${index + 1}`).addEventListener('click', () => toggleAutoSacrifice(index + 1))
 
-    DOMCacheGetOrSet(`activaterune${index + 1}`).addEventListener('mouseover', () => displayRuneInformation(index + 1))
+    DOMCacheGetOrSet(`activaterune${index + 1}`).addEventListener(
+      'mouseover',
+      () => displayRuneInformation(index + 1)
+    )
     DOMCacheGetOrSet(`activaterune${index + 1}`).addEventListener('click', () => redeemShards(index + 1))
   }
 
@@ -380,10 +422,9 @@ export const generateEventHandlers = () => {
   const talismanBuyPercentsOrd = ['Ten', 'TwentyFive', 'Fifty', 'Hundred']
 
   for (let index = 0; index < talismanBuyPercents.length; index++) {
-    DOMCacheGetOrSet(`talisman${talismanBuyPercentsOrd[index]}`).addEventListener(
-      'click',
-      () => toggleTalismanBuy(talismanBuyPercents[index])
-    )
+    DOMCacheGetOrSet(
+      `talisman${talismanBuyPercentsOrd[index]}`
+    ).addEventListener('click', () => toggleTalismanBuy(talismanBuyPercents[index]))
   }
 
   DOMCacheGetOrSet('toggleautoBuyFragments').addEventListener('click', () => toggleAutoBuyFragment())
@@ -416,14 +457,26 @@ export const generateEventHandlers = () => {
 
   for (let index = 0; index < 7; index++) {
     DOMCacheGetOrSet(`talisman${index + 1}`).addEventListener('click', () => showTalismanEffect(index))
-    DOMCacheGetOrSet(`leveluptalisman${index + 1}`).addEventListener('mouseover', () => showTalismanPrices(index))
-    DOMCacheGetOrSet(`leveluptalisman${index + 1}`).addEventListener('click', () => buyTalismanLevels(index))
+    DOMCacheGetOrSet(`leveluptalisman${index + 1}`).addEventListener(
+      'mouseover',
+      () => showTalismanPrices(index)
+    )
+    DOMCacheGetOrSet(`leveluptalisman${index + 1}`).addEventListener(
+      'click',
+      () => buyTalismanLevels(index)
+    )
     DOMCacheGetOrSet(`enhancetalisman${index + 1}`).addEventListener(
       'mouseover',
       () => showEnhanceTalismanPrices(index)
     )
-    DOMCacheGetOrSet(`enhancetalisman${index + 1}`).addEventListener('click', () => buyTalismanEnhance(index))
-    DOMCacheGetOrSet(`respectalisman${index + 1}`).addEventListener('click', () => showRespecInformation(index))
+    DOMCacheGetOrSet(`enhancetalisman${index + 1}`).addEventListener(
+      'click',
+      () => buyTalismanEnhance(index)
+    )
+    DOMCacheGetOrSet(`respectalisman${index + 1}`).addEventListener(
+      'click',
+      () => showRespecInformation(index)
+    )
   }
 
   DOMCacheGetOrSet('respecAllTalismans').addEventListener('click', () => showRespecInformation(7))
@@ -459,10 +512,13 @@ export const generateEventHandlers = () => {
   // Challenge 1-15 buttons
   for (let index = 0; index < 15; index++) {
     DOMCacheGetOrSet(`challenge${index + 1}`).addEventListener('click', () => challengeDisplay(index + 1))
-    DOMCacheGetOrSet(`challenge${index + 1}`).addEventListener('dblclick', () => {
-      challengeDisplay(index + 1)
-      toggleChallenges(G.triggerChallenge, false)
-    })
+    DOMCacheGetOrSet(`challenge${index + 1}`).addEventListener(
+      'dblclick',
+      () => {
+        challengeDisplay(index + 1)
+        toggleChallenges(G.triggerChallenge, false)
+      }
+    )
   }
   // Part 2: QoL Buttons
   // Individual buttons (Start, Retry)
@@ -474,9 +530,18 @@ export const generateEventHandlers = () => {
     () => toggleAutoChallengesIgnore(G.triggerChallenge)
   )
   DOMCacheGetOrSet('toggleAutoChallengeStart').addEventListener('click', () => toggleAutoChallengeRun())
-  DOMCacheGetOrSet('startAutoChallengeTimerInput').addEventListener('input', () => updateAutoChallenge(1))
-  DOMCacheGetOrSet('exitAutoChallengeTimerInput').addEventListener('input', () => updateAutoChallenge(2))
-  DOMCacheGetOrSet('enterAutoChallengeTimerInput').addEventListener('input', () => updateAutoChallenge(3))
+  DOMCacheGetOrSet('startAutoChallengeTimerInput').addEventListener(
+    'input',
+    () => updateAutoChallenge(1)
+  )
+  DOMCacheGetOrSet('exitAutoChallengeTimerInput').addEventListener(
+    'input',
+    () => updateAutoChallenge(2)
+  )
+  DOMCacheGetOrSet('enterAutoChallengeTimerInput').addEventListener(
+    'input',
+    () => updateAutoChallenge(3)
+  )
 
   // RESEARCH TAB
   // Part 1: Researches
@@ -497,7 +562,17 @@ export const generateEventHandlers = () => {
 
   // ANTHILL TAB
   // Part 1: Ant Producers (Tiers 1-8)
-  const antProducerCostVals = ['null', '1e700', '3', '100', '10000', '1e12', '1e36', '1e100', '1e300']
+  const antProducerCostVals = [
+    'null',
+    '1e700',
+    '3',
+    '100',
+    '10000',
+    '1e12',
+    '1e36',
+    '1e100',
+    '1e300'
+  ]
   for (let index = 1; index <= 8; index++) {
     // Onmouse Events
     DOMCacheGetOrSet(`anttier${index}`).addEventListener('mouseover', () => updateAntDescription(index))
@@ -577,44 +652,52 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('openMostCube').addEventListener('click', () => player.wowCubes.open(0, true))
   // Wow Tesseracts
   DOMCacheGetOrSet('open1Tesseract').addEventListener('click', () => player.wowTesseracts.open(1, false))
-  DOMCacheGetOrSet('open20Tesseract').addEventListener(
-    'click',
-    () => player.wowTesseracts.open(Math.floor(Number(player.wowTesseracts) / 10), false)
-  )
-  DOMCacheGetOrSet('open1000Tesseract').addEventListener(
-    'click',
-    () => player.wowTesseracts.open(Math.floor(Number(player.wowTesseracts) / 2), false)
-  )
+  DOMCacheGetOrSet('open20Tesseract').addEventListener('click', () =>
+    player.wowTesseracts.open(
+      Math.floor(Number(player.wowTesseracts) / 10),
+      false
+    ))
+  DOMCacheGetOrSet('open1000Tesseract').addEventListener('click', () =>
+    player.wowTesseracts.open(
+      Math.floor(Number(player.wowTesseracts) / 2),
+      false
+    ))
   DOMCacheGetOrSet('openCustomTesseract').addEventListener('click', () => player.wowTesseracts.openCustom())
   DOMCacheGetOrSet('openMostTesseract').addEventListener('click', () => player.wowTesseracts.open(1, true))
   // Wow Hypercubes
   DOMCacheGetOrSet('open1Hypercube').addEventListener('click', () => player.wowHypercubes.open(1, false))
-  DOMCacheGetOrSet('open20Hypercube').addEventListener(
-    'click',
-    () => player.wowHypercubes.open(Math.floor(Number(player.wowHypercubes) / 10), false)
-  )
-  DOMCacheGetOrSet('open1000Hypercube').addEventListener(
-    'click',
-    () => player.wowHypercubes.open(Math.floor(Number(player.wowHypercubes) / 2), false)
-  )
+  DOMCacheGetOrSet('open20Hypercube').addEventListener('click', () =>
+    player.wowHypercubes.open(
+      Math.floor(Number(player.wowHypercubes) / 10),
+      false
+    ))
+  DOMCacheGetOrSet('open1000Hypercube').addEventListener('click', () =>
+    player.wowHypercubes.open(
+      Math.floor(Number(player.wowHypercubes) / 2),
+      false
+    ))
   DOMCacheGetOrSet('openCustomHypercube').addEventListener('click', () => player.wowHypercubes.openCustom())
   DOMCacheGetOrSet('openMostHypercube').addEventListener('click', () => player.wowHypercubes.open(1, true))
   // Wow Platonic Cubes
   DOMCacheGetOrSet('open1PlatonicCube').addEventListener('click', () => player.wowPlatonicCubes.open(1, false))
-  DOMCacheGetOrSet('open40kPlatonicCube').addEventListener(
-    'click',
-    () => player.wowPlatonicCubes.open(Math.floor(Number(player.wowPlatonicCubes) / 10), false)
-  )
-  DOMCacheGetOrSet('open1mPlatonicCube').addEventListener(
-    'click',
-    () => player.wowPlatonicCubes.open(Math.floor(Number(player.wowPlatonicCubes) / 2), false)
-  )
+  DOMCacheGetOrSet('open40kPlatonicCube').addEventListener('click', () =>
+    player.wowPlatonicCubes.open(
+      Math.floor(Number(player.wowPlatonicCubes) / 10),
+      false
+    ))
+  DOMCacheGetOrSet('open1mPlatonicCube').addEventListener('click', () =>
+    player.wowPlatonicCubes.open(
+      Math.floor(Number(player.wowPlatonicCubes) / 2),
+      false
+    ))
   DOMCacheGetOrSet('openCustomPlatonicCube').addEventListener('click', () => player.wowPlatonicCubes.openCustom())
   DOMCacheGetOrSet('openMostPlatonicCube').addEventListener('click', () => player.wowPlatonicCubes.open(1, true))
 
   DOMCacheGetOrSet('saveOffToggle').addEventListener('click', () => toggleSaveOff())
   // Part 3: Platonic Upgrade Section
-  const platonicUpgrades = document.getElementsByClassName('platonicUpgradeImage')
+  const platonicUpgrades = document.getElementsByClassName(
+    'platonicUpgradeImage'
+  )
   for (let index = 0; index < platonicUpgrades.length; index++) {
     platonicUpgrades[index].addEventListener('mouseover', () => createPlatonicDescription(index + 1))
     platonicUpgrades[index].addEventListener('click', () => buyPlatonicUpgrades(index + 1))
@@ -735,7 +818,10 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('powderDayWarp').addEventListener('click', () => overfluxPowderWarp(false))
   DOMCacheGetOrSet('warpAuto').addEventListener('click', () => overfluxPowderWarp(true))
 
-  DOMCacheGetOrSet('hepteractAutoPercentageButton').addEventListener('click', () => toggleHepteractAutoPercentage())
+  DOMCacheGetOrSet('hepteractAutoPercentageButton').addEventListener(
+    'click',
+    () => toggleHepteractAutoPercentage()
+  )
 
   // CORRUPTION TAB
   // Part 0: Subtabs
@@ -753,12 +839,16 @@ export const generateEventHandlers = () => {
 
   // SETTNGS TAB
   // Part 0: Subtabs
-  const settingSubTabs = Array.from<HTMLElement>(document.querySelectorAll('[id^="switchSettingSubTab"]'))
+  const settingSubTabs = Array.from<HTMLElement>(
+    document.querySelectorAll('[id^="switchSettingSubTab"]')
+  )
   for (const subtab of settingSubTabs) {
     subtab.addEventListener('click', () => changeSubTab(Tabs.Settings, { page: settingSubTabs.indexOf(subtab) }))
   }
 
-  const t = Array.from(document.querySelectorAll<HTMLElement>('button.statsNerds'))
+  const t = Array.from(
+    document.querySelectorAll<HTMLElement>('button.statsNerds')
+  )
   for (const s of t) {
     s.addEventListener('click', (e) => displayStats(e.target as HTMLElement))
   }
@@ -780,7 +870,10 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('dailyCode').addEventListener('mouseover', () => promocodesInfo('daily'))
   DOMCacheGetOrSet('timeCode').addEventListener('click', () => promocodes('time'))
   DOMCacheGetOrSet('timeCode').addEventListener('mouseover', () => promocodesInfo('time'))
-  DOMCacheGetOrSet('historyTogglePerSecondButton').addEventListener('click', () => resetHistoryTogglePerSecond())
+  DOMCacheGetOrSet('historyTogglePerSecondButton').addEventListener(
+    'click',
+    () => resetHistoryTogglePerSecond()
+  )
   DOMCacheGetOrSet('resetHotkeys').addEventListener('click', () => resetHotkeys())
   DOMCacheGetOrSet('notation').addEventListener('click', () => toggleAnnotation())
   DOMCacheGetOrSet('iconSet').addEventListener('click', () => toggleIconSet(player.iconSet + 1))
@@ -794,16 +887,19 @@ TODO: Fix this entire tab it's utter shit
   */
 
   // Part 1: The Settings
-  /*Respec The Upgrades*/ DOMCacheGetOrSet('resetShopUpgrades').addEventListener('click', () => resetShopUpgrades())
-  /*Toggle Shop Confirmations*/ DOMCacheGetOrSet('toggleConfirmShop').addEventListener(
-    'click',
-    () => toggleShopConfirmation()
-  )
+  /*Respec The Upgrades*/ DOMCacheGetOrSet(
+    'resetShopUpgrades'
+  ).addEventListener('click', () => resetShopUpgrades())
+  /*Toggle Shop Confirmations*/ DOMCacheGetOrSet(
+    'toggleConfirmShop'
+  ).addEventListener('click', () => toggleShopConfirmation())
   /*Toggle Shop Buy Max*/ DOMCacheGetOrSet('toggleBuyMaxShop').addEventListener(
     'click',
     (event) => toggleBuyMaxShop(event)
   )
-  /*Toggle Hide Permanent Maxed*/ DOMCacheGetOrSet('toggleHideShop').addEventListener('click', () => toggleHideShop())
+  /*Toggle Hide Permanent Maxed*/ DOMCacheGetOrSet(
+    'toggleHideShop'
+  ).addEventListener('click', () => toggleHideShop())
 
   // Part 2: Potions
   /*Offering Potion*/
@@ -829,7 +925,9 @@ TODO: Fix this entire tab it's utter shit
     player.autoPotionTimerObtainium = 0
   })
   /* Permanent Upgrade Images */
-  const shopKeys = Object.keys(player.shopUpgrades) as (keyof Player['shopUpgrades'])[]
+  const shopKeys = Object.keys(
+    player.shopUpgrades
+  ) as (keyof Player['shopUpgrades'])[]
   for (const key of shopKeys) {
     const shopItem = shopData[key]
     if (shopItem.type === shopUpgradeTypes.UPGRADE) {
@@ -842,7 +940,9 @@ TODO: Fix this entire tab it's utter shit
   }
   DOMCacheGetOrSet('buySingularityQuarksButton').addEventListener('click', () => buyGoldenQuarks())
   // SINGULARITY TAB
-  const singularityUpgrades = Object.keys(player.singularityUpgrades) as (keyof Player['singularityUpgrades'])[]
+  const singularityUpgrades = Object.keys(
+    player.singularityUpgrades
+  ) as (keyof Player['singularityUpgrades'])[]
   for (const key of singularityUpgrades) {
     if (key === 'offeringAutomatic') {
       continue
@@ -856,10 +956,18 @@ TODO: Fix this entire tab it's utter shit
       (event) => player.singularityUpgrades[`${String(key)}`].buyLevel(event)
     )
   }
-  DOMCacheGetOrSet('actualSingularityUpgradeContainer').addEventListener('mouseover', () => shopMouseover(true))
-  DOMCacheGetOrSet('actualSingularityUpgradeContainer').addEventListener('mouseout', () => shopMouseover(false))
+  DOMCacheGetOrSet('actualSingularityUpgradeContainer').addEventListener(
+    'mouseover',
+    () => shopMouseover(true)
+  )
+  DOMCacheGetOrSet('actualSingularityUpgradeContainer').addEventListener(
+    'mouseout',
+    () => shopMouseover(false)
+  )
 
-  const perkImage = DOMCacheGetOrSet('singularityPerksIcon') as HTMLImageElement
+  const perkImage = DOMCacheGetOrSet(
+    'singularityPerksIcon'
+  ) as HTMLImageElement
   const perksText = DOMCacheGetOrSet('singularityPerksText')
   const perksDesc = DOMCacheGetOrSet('singularityPerksDesc')
   for (const perk of singularityPerks) {
@@ -876,13 +984,18 @@ TODO: Fix this entire tab it's utter shit
         singularity: perkInfo.singularity
       })
       perkImage.src = `Pictures/${IconSets[player.iconSet][0]}/perk${perk.ID}.png`
-      perksText.textContent = levelInfo
-      perksDesc.textContent = perk.description(player.highestSingularityCount, perk.levels)
+      perksText.innerHTML = levelInfo
+      perksDesc.innerHTML = perk.description(
+        player.highestSingularityCount,
+        perk.levels
+      )
     })
   }
 
   // Octeract Upgrades
-  const octeractUpgrades = Object.keys(player.octeractUpgrades) as (keyof Player['octeractUpgrades'])[]
+  const octeractUpgrades = Object.keys(
+    player.octeractUpgrades
+  ) as (keyof Player['octeractUpgrades'])[]
   for (const key of octeractUpgrades) {
     DOMCacheGetOrSet(`${String(key)}`).addEventListener(
       'mouseover',
@@ -894,11 +1007,19 @@ TODO: Fix this entire tab it's utter shit
     )
   }
 
-  DOMCacheGetOrSet('octeractUpgradeContainer').addEventListener('mouseover', () => shopMouseover(true))
-  DOMCacheGetOrSet('octeractUpgradeContainer').addEventListener('mouseout', () => shopMouseover(false))
+  DOMCacheGetOrSet('octeractUpgradeContainer').addEventListener(
+    'mouseover',
+    () => shopMouseover(true)
+  )
+  DOMCacheGetOrSet('octeractUpgradeContainer').addEventListener(
+    'mouseout',
+    () => shopMouseover(false)
+  )
 
   // EXALT
-  const singularityChallenges = Object.keys(player.singularityChallenges) as (keyof Player['singularityChallenges'])[]
+  const singularityChallenges = Object.keys(
+    player.singularityChallenges
+  ) as (keyof Player['singularityChallenges'])[]
   for (const key of singularityChallenges) {
     DOMCacheGetOrSet(`${String(key)}`).addEventListener(
       'mouseover',
@@ -911,7 +1032,9 @@ TODO: Fix this entire tab it's utter shit
   }
 
   // BLUEBERRY UPGRADES
-  const blueberryUpgrades = Object.keys(player.blueberryUpgrades) as (keyof Player['blueberryUpgrades'])[]
+  const blueberryUpgrades = Object.keys(
+    player.blueberryUpgrades
+  ) as (keyof Player['blueberryUpgrades'])[]
   for (const key of blueberryUpgrades) {
     DOMCacheGetOrSet(`${String(key)}`).addEventListener(
       'mouseover',
@@ -924,23 +1047,29 @@ TODO: Fix this entire tab it's utter shit
   }
 
   // BLUEBERRY LOADOUTS
-  const blueberryLoadouts = Array.from(document.querySelectorAll('[id^="blueberryLoadout"]'))
+  const blueberryLoadouts = Array.from(
+    document.querySelectorAll('[id^="blueberryLoadout"]')
+  )
   const loadoutContainer = DOMCacheGetOrSet('blueberryUpgradeContainer')
 
   for (let i = 0; i < blueberryLoadouts.length; i++) {
     const shiftedKey = i + 1
     const el = blueberryLoadouts[i]
     el.addEventListener('mouseover', () => {
-      createLoadoutDescription(shiftedKey, player.blueberryLoadouts[shiftedKey] ?? { ambrosiaTutorial: 0 })
+      createLoadoutDescription(
+        shiftedKey,
+        player.blueberryLoadouts[shiftedKey] ?? { ambrosiaTutorial: 0 }
+      )
       loadoutContainer.classList.add(`hoveredBlueberryLoadout${shiftedKey}`)
     })
     el.addEventListener('mouseout', () => {
       loadoutContainer.classList.remove(`hoveredBlueberryLoadout${shiftedKey}`)
     })
-    el.addEventListener(
-      'click',
-      () => loadoutHandler(shiftedKey, player.blueberryLoadouts[shiftedKey] ?? { ambrosiaTutorial: 0 })
-    )
+    el.addEventListener('click', () =>
+      loadoutHandler(
+        shiftedKey,
+        player.blueberryLoadouts[shiftedKey] ?? { ambrosiaTutorial: 0 }
+      ))
   }
 
   DOMCacheGetOrSet('blueberryToggleMode').addEventListener('click', () => toggleBlueberryLoadoutmode())

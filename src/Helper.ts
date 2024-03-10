@@ -37,8 +37,13 @@ type TimerInput =
  * @param time
  */
 export const addTimers = (input: TimerInput, time = 0) => {
-  const timeMultiplier = (input === 'ascension' || input === 'quarks' || input === 'goldenQuarks'
-      || input === 'singularity' || input === 'octeracts' || input === 'autoPotion' || input === 'ambrosia')
+  const timeMultiplier = input === 'ascension'
+      || input === 'quarks'
+      || input === 'goldenQuarks'
+      || input === 'singularity'
+      || input === 'octeracts'
+      || input === 'autoPotion'
+      || input === 'ambrosia'
     ? 1
     : calculateTimeAcceleration().mult
 
@@ -55,8 +60,10 @@ export const addTimers = (input: TimerInput, time = 0) => {
       player.reincarnationcounter += time * timeMultiplier
       break
     }
-    case 'ascension': { // Anything in here is affected by add code
-      const ascensionSpeedMulti = (player.singularityUpgrades.oneMind.getEffect().bonus)
+    case 'ascension': {
+      // Anything in here is affected by add code
+      const ascensionSpeedMulti = player.singularityUpgrades.oneMind.getEffect()
+          .bonus
         ? 10
         : calculateAscensionAcceleration()
       player.ascensionCounter += time * timeMultiplier * ascensionSpeedMulti
@@ -74,7 +81,7 @@ export const addTimers = (input: TimerInput, time = 0) => {
       player.quarkstimer += time * timeMultiplier
       // Checks if this new time is greater than maximum, in which it will default to that time.
       // Otherwise returns itself.
-      player.quarkstimer = (player.quarkstimer > maxQuarkTimer) ? maxQuarkTimer : player.quarkstimer
+      player.quarkstimer = player.quarkstimer > maxQuarkTimer ? maxQuarkTimer : player.quarkstimer
       break
     }
     case 'goldenQuarks': {
@@ -82,7 +89,9 @@ export const addTimers = (input: TimerInput, time = 0) => {
         return
       } else {
         player.goldenQuarksTimer += time * timeMultiplier
-        player.goldenQuarksTimer = (player.goldenQuarksTimer > 3600 * 168) ? 3600 * 168 : player.goldenQuarksTimer
+        player.goldenQuarksTimer = player.goldenQuarksTimer > 3600 * 168
+          ? 3600 * 168
+          : player.goldenQuarksTimer
       }
       break
     }
@@ -133,25 +142,40 @@ export const addTimers = (input: TimerInput, time = 0) => {
         player.autoPotionTimer += time * timeMultiplier
         player.autoPotionTimerObtainium += time * timeMultiplier
 
-        const timerThreshold = 180 * Math.pow(1.03, -player.highestSingularityCount)
+        const timerThreshold = (180 * Math.pow(1.03, -player.highestSingularityCount))
           / +player.octeractUpgrades.octeractAutoPotionSpeed.getEffect().bonus
 
-        const effectiveOfferingThreshold = toggleOfferingOn ? Math.min(1, timerThreshold) / 20 : timerThreshold
-        const effectiveObtainiumThreshold = toggleObtainiumOn ? Math.min(1, timerThreshold) / 20 : timerThreshold
+        const effectiveOfferingThreshold = toggleOfferingOn
+          ? Math.min(1, timerThreshold) / 20
+          : timerThreshold
+        const effectiveObtainiumThreshold = toggleObtainiumOn
+          ? Math.min(1, timerThreshold) / 20
+          : timerThreshold
 
         if (player.autoPotionTimer >= effectiveOfferingThreshold) {
-          const amountOfPotions = ((player.autoPotionTimer) - (player.autoPotionTimer % effectiveOfferingThreshold))
+          const amountOfPotions = (player.autoPotionTimer
+            - (player.autoPotionTimer % effectiveOfferingThreshold))
             / effectiveOfferingThreshold
           player.autoPotionTimer %= effectiveOfferingThreshold
-          void useConsumable('offeringPotion', true, amountOfPotions, toggleOfferingOn)
+          void useConsumable(
+            'offeringPotion',
+            true,
+            amountOfPotions,
+            toggleOfferingOn
+          )
         }
 
         if (player.autoPotionTimerObtainium >= effectiveObtainiumThreshold) {
-          const amountOfPotions =
-            ((player.autoPotionTimerObtainium) - (player.autoPotionTimerObtainium % effectiveObtainiumThreshold))
+          const amountOfPotions = (player.autoPotionTimerObtainium
+            - (player.autoPotionTimerObtainium % effectiveObtainiumThreshold))
             / effectiveObtainiumThreshold
           player.autoPotionTimerObtainium %= effectiveObtainiumThreshold
-          void useConsumable('obtainiumPotion', true, amountOfPotions, toggleObtainiumOn)
+          void useConsumable(
+            'obtainiumPotion',
+            true,
+            amountOfPotions,
+            toggleObtainiumOn
+          )
         }
       }
       break
@@ -168,7 +192,7 @@ export const addTimers = (input: TimerInput, time = 0) => {
         break
       }
 
-      const ambrosiaLuck = player.caches.ambrosiaLuck.totalVal
+      const ambrosiaLuck = player.caches.ambrosiaLuck.usedTotal
       player.blueberryTime += Math.floor(G.ambrosiaTimer) * player.caches.ambrosiaGeneration.totalVal
       G.ambrosiaTimer %= 1
 
@@ -177,8 +201,11 @@ export const addTimers = (input: TimerInput, time = 0) => {
       if (player.blueberryTime >= timeToAmbrosia) {
         const RNG = Math.random()
         const ambrosiaMult = Math.floor(ambrosiaLuck / 100) + 1
-        const luckMult = (RNG < (ambrosiaLuck / 100 - Math.floor(ambrosiaLuck / 100))) ? 1 : 0
-        const timeMult = Math.min(100, Math.floor(player.blueberryTime / timeToAmbrosia))
+        const luckMult = RNG < ambrosiaLuck / 100 - Math.floor(ambrosiaLuck / 100) ? 1 : 0
+        const timeMult = Math.min(
+          100,
+          Math.floor(player.blueberryTime / timeToAmbrosia)
+        )
 
         player.ambrosia += 1 * (ambrosiaMult + luckMult) * timeMult
         player.lifetimeAmbrosia += 1 * (ambrosiaMult + luckMult) * timeMult
@@ -190,7 +217,11 @@ export const addTimers = (input: TimerInput, time = 0) => {
   }
 }
 
-type AutoToolInput = 'addObtainium' | 'addOfferings' | 'runeSacrifice' | 'antSacrifice'
+type AutoToolInput =
+  | 'addObtainium'
+  | 'addOfferings'
+  | 'runeSacrifice'
+  | 'antSacrifice'
 
 /**
  * Assortment of tools which are used when actions are automated.
@@ -198,7 +229,9 @@ type AutoToolInput = 'addObtainium' | 'addOfferings' | 'runeSacrifice' | 'antSac
  * @param time
  */
 export const automaticTools = (input: AutoToolInput, time: number) => {
-  const timeMultiplier = (input === 'runeSacrifice' || input === 'addOfferings') ? 1 : calculateTimeAcceleration().mult
+  const timeMultiplier = input === 'runeSacrifice' || input === 'addOfferings'
+    ? 1
+    : calculateTimeAcceleration().mult
 
   switch (input) {
     case 'addObtainium': {
@@ -210,7 +243,10 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       calculateObtainium()
       const obtainiumGain = calculateAutomaticObtainium()
       // Add Obtainium
-      player.researchPoints = Math.min(1e300, player.researchPoints + obtainiumGain * time * timeMultiplier)
+      player.researchPoints = Math.min(
+        1e300,
+        player.researchPoints + obtainiumGain * time * timeMultiplier
+      )
       // Update visual displays if appropriate
       if (G.currentTab === Tabs.Research) {
         visualUpdateResearch()
@@ -222,13 +258,20 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       // As well as cube upgrade 1x2 (2).
       G.autoOfferingCounter += time
       // Any time this exceeds 1 it adds an offering
-      player.runeshards = Math.min(1e300, player.runeshards + Math.floor(G.autoOfferingCounter))
+      player.runeshards = Math.min(
+        1e300,
+        player.runeshards + Math.floor(G.autoOfferingCounter)
+      )
       G.autoOfferingCounter %= 1
       break
     case 'runeSacrifice':
       // Every real life second this will trigger
       player.sacrificeTimer += time
-      if (player.sacrificeTimer >= 1 && isFinite(player.runeshards) && player.runeshards > 0) {
+      if (
+        player.sacrificeTimer >= 1
+        && isFinite(player.runeshards)
+        && player.runeshards > 0
+      ) {
         // Automatic purchase of Blessings
         if (player.highestSingularityCount >= 15) {
           let ratio = 4
@@ -241,18 +284,31 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
             ratio--
           }
         }
-        if (player.autoBuyFragment && player.highestSingularityCount >= 40 && player.cubeUpgrades[51] > 0) {
+        if (
+          player.autoBuyFragment
+          && player.highestSingularityCount >= 40
+          && player.cubeUpgrades[51] > 0
+        ) {
           buyAllTalismanResources()
         }
 
         // If you bought cube upgrade 2x10 then it sacrifices to all runes equally
         if (player.cubeUpgrades[20] === 1) {
-          const maxi = player.highestSingularityCount >= 50 ? 7 : (player.highestSingularityCount >= 30 ? 6 : 5)
+          const maxi = player.highestSingularityCount >= 50
+            ? 7
+            : player.highestSingularityCount >= 30
+            ? 6
+            : 5
           const notMaxed = maxi - checkMaxRunes(maxi)
           if (notMaxed > 0) {
             const baseAmount = Math.floor(player.runeshards / notMaxed / 2)
             for (let i = 0; i < maxi; i++) {
-              if (!(!unlockedRune(i + 1) || player.runelevels[i] >= calculateMaxRunes(i + 1))) {
+              if (
+                !(
+                  !unlockedRune(i + 1)
+                  || player.runelevels[i] >= calculateMaxRunes(i + 1)
+                )
+              ) {
                 redeemShards(i + 1, true, baseAmount)
               }
             }
@@ -272,14 +328,16 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       player.antSacrificeTimerReal += time
 
       // Equal to real time iff "Real Time" option selected in ants tab.
-      const antSacrificeTimer = (player.autoAntSacrificeMode === 2)
+      const antSacrificeTimer = player.autoAntSacrificeMode === 2
         ? player.antSacrificeTimerReal
         : player.antSacrificeTimer
 
       if (
-        antSacrificeTimer >= player.autoAntSacTimer && player.antSacrificeTimerReal > 0.1
+        antSacrificeTimer >= player.autoAntSacTimer
+        && player.antSacrificeTimerReal > 0.1
         && player.researches[124] === 1
-        && player.autoAntSacrifice && player.antPoints.gte('1e40')
+        && player.autoAntSacrifice
+        && player.antPoints.gte('1e40')
       ) {
         void sacrificeAnts(true)
       }

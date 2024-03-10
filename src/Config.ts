@@ -1,4 +1,4 @@
-export const version = '3.0.0 pt 3: December 13, 2023: Quarks'
+export const version = '3.0.0 pt 4: March 9, 2024: EXALTed Upgrades'
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE

@@ -24,7 +24,13 @@ import type { ISingularityData } from './singularity'
 import { singularityData, SingularityUpgrade } from './singularity'
 import type { ISingularityChallengeData } from './SingularityChallenges'
 import { SingularityChallenge, singularityChallengeData } from './SingularityChallenges'
-import { AmbrosiaGenerationCache, AmbrosiaLuckCache, BlueberryInventoryCache, cacheReinitialize } from './StatCache'
+import {
+  AmbrosiaGenerationCache,
+  AmbrosiaLuckAdditiveMultCache,
+  AmbrosiaLuckCache,
+  BlueberryInventoryCache,
+  cacheReinitialize
+} from './StatCache'
 import { c15RewardUpdate } from './Statistics'
 import { blankSave, player, resetCheck } from './Synergism'
 import type { LegacyShopUpgrades, PlayerSave } from './types/LegacySynergism'
@@ -50,19 +56,29 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
   data.shopUpgrades ??= { ...blankSave.shopUpgrades }
   data.ascStatToggles ??= { ...blankSave.ascStatToggles }
 
-  if (typeof data.promoCodeTiming === 'object' && data.promoCodeTiming != null) {
+  if (
+    typeof data.promoCodeTiming === 'object'
+    && data.promoCodeTiming != null
+  ) {
     for (const key of Object.keys(data.promoCodeTiming)) {
       const k = key as keyof typeof data.promoCodeTiming
       player.promoCodeTiming[k] = data.promoCodeTiming[k]
     }
   } else {
-    player.promoCodeTiming.time = Date.now() - (60 * 1000 * 15)
+    player.promoCodeTiming.time = Date.now() - 60 * 1000 * 15
   }
 
   // backwards compatibility for v1.0101 (and possibly older) saves
-  if (!Array.isArray(data.challengecompletions) && data.challengecompletions != null) {
+  if (
+    !Array.isArray(data.challengecompletions)
+    && data.challengecompletions != null
+  ) {
     player.challengecompletions = Object.values(data.challengecompletions)
-    padArray(player.challengecompletions, 0, blankSave.challengecompletions.length)
+    padArray(
+      player.challengecompletions,
+      0,
+      blankSave.challengecompletions.length
+    )
   }
 
   // backwards compatibility for v1.0101 (and possibly older) saves
@@ -78,7 +94,59 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.wowTesseracts = new WowTesseracts(0)
     player.wowHypercubes = new WowHypercubes(0)
     // dprint-ignore
-    player.cubeUpgrades = [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    player.cubeUpgrades = [
+      null,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+    ];
   }
   if (data.shoptoggles?.reincarnate === undefined) {
     player.shoptoggles.reincarnate = true
@@ -162,7 +230,24 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.autoChallengeRunning = false
     player.autoChallengeIndex = 1
     // dprint-ignore
-    player.autoChallengeToggles = [false, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false]
+    player.autoChallengeToggles = [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ];
     player.autoChallengeStartExponent = 10
     player.autoChallengeTimer = {
       start: 10,
@@ -207,7 +292,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.openPlatonicsCubes = 0
   }
 
-  if (player.prototypeCorruptions[0] === null || player.prototypeCorruptions[0] === undefined) {
+  if (
+    player.prototypeCorruptions[0] === null
+    || player.prototypeCorruptions[0] === undefined
+  ) {
     player.usedCorruptions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     player.prototypeCorruptions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   }
@@ -219,7 +307,7 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
 
   const corruptionLoadouts = Object.keys(
     blankSave.corruptionLoadouts
-  ) as (`${keyof Player['corruptionLoadouts']}`)[]
+  ) as `${keyof Player['corruptionLoadouts']}`[]
 
   for (const key of corruptionLoadouts.map((k) => Number(k))) {
     if (player.corruptionLoadouts[key] !== undefined) {
@@ -229,8 +317,13 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.corruptionLoadouts[key] = blankSave.corruptionLoadouts[key]
   }
 
-  if (player.corruptionLoadoutNames.length < blankSave.corruptionLoadoutNames.length) {
-    const diff = blankSave.corruptionLoadoutNames.slice(player.corruptionLoadoutNames.length)
+  if (
+    player.corruptionLoadoutNames.length
+      < blankSave.corruptionLoadoutNames.length
+  ) {
+    const diff = blankSave.corruptionLoadoutNames.slice(
+      player.corruptionLoadoutNames.length
+    )
 
     player.corruptionLoadoutNames.push(...diff)
   }
@@ -249,7 +342,11 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.shopUpgrades.tesseractToQuark = 0
     player.shopUpgrades.hypercubeToQuark = 0
   }
-  if (data.cubeUpgrades == null || data.cubeUpgrades[19] === 0 || player.cubeUpgrades[19] === 0) {
+  if (
+    data.cubeUpgrades == null
+    || data.cubeUpgrades[19] === 0
+    || player.cubeUpgrades[19] === 0
+  ) {
     for (let i = 121; i <= 125; i++) {
       player.upgrades[i] = 0
     }
@@ -278,93 +375,303 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
   }
 
   player.singularityUpgrades = {
-    goldenQuarks1: new SingularityUpgrade(singularityData.goldenQuarks1, 'goldenQuarks1'),
-    goldenQuarks2: new SingularityUpgrade(singularityData.goldenQuarks2, 'goldenQuarks2'),
-    goldenQuarks3: new SingularityUpgrade(singularityData.goldenQuarks3, 'goldenQuarks3'),
-    starterPack: new SingularityUpgrade(singularityData.starterPack, 'starterPack'),
+    goldenQuarks1: new SingularityUpgrade(
+      singularityData.goldenQuarks1,
+      'goldenQuarks1'
+    ),
+    goldenQuarks2: new SingularityUpgrade(
+      singularityData.goldenQuarks2,
+      'goldenQuarks2'
+    ),
+    goldenQuarks3: new SingularityUpgrade(
+      singularityData.goldenQuarks3,
+      'goldenQuarks3'
+    ),
+    starterPack: new SingularityUpgrade(
+      singularityData.starterPack,
+      'starterPack'
+    ),
     wowPass: new SingularityUpgrade(singularityData.wowPass, 'wowPass'),
     cookies: new SingularityUpgrade(singularityData.cookies, 'cookies'),
     cookies2: new SingularityUpgrade(singularityData.cookies2, 'cookies2'),
     cookies3: new SingularityUpgrade(singularityData.cookies3, 'cookies3'),
     cookies4: new SingularityUpgrade(singularityData.cookies4, 'cookies4'),
     cookies5: new SingularityUpgrade(singularityData.cookies5, 'cookies5'),
-    ascensions: new SingularityUpgrade(singularityData.ascensions, 'ascensions'),
-    corruptionFourteen: new SingularityUpgrade(singularityData.corruptionFourteen, 'corruptionFourteen'),
-    corruptionFifteen: new SingularityUpgrade(singularityData.corruptionFifteen, 'corruptionFifteen'),
-    singOfferings1: new SingularityUpgrade(singularityData.singOfferings1, 'singOfferings1'),
-    singOfferings2: new SingularityUpgrade(singularityData.singOfferings2, 'singOfferings2'),
-    singOfferings3: new SingularityUpgrade(singularityData.singOfferings3, 'singOfferings3'),
-    singObtainium1: new SingularityUpgrade(singularityData.singObtainium1, 'singObtainium1'),
-    singObtainium2: new SingularityUpgrade(singularityData.singObtainium2, 'singObtainium2'),
-    singObtainium3: new SingularityUpgrade(singularityData.singObtainium3, 'singObtainium3'),
-    singCubes1: new SingularityUpgrade(singularityData.singCubes1, 'singCubes1'),
-    singCubes2: new SingularityUpgrade(singularityData.singCubes2, 'singCubes2'),
-    singCubes3: new SingularityUpgrade(singularityData.singCubes3, 'singCubes3'),
-    singCitadel: new SingularityUpgrade(singularityData.singCitadel, 'singCitadel'),
-    singCitadel2: new SingularityUpgrade(singularityData.singCitadel2, 'singCitadel2'),
-    octeractUnlock: new SingularityUpgrade(singularityData.octeractUnlock, 'octeractUnlock'),
+    ascensions: new SingularityUpgrade(
+      singularityData.ascensions,
+      'ascensions'
+    ),
+    corruptionFourteen: new SingularityUpgrade(
+      singularityData.corruptionFourteen,
+      'corruptionFourteen'
+    ),
+    corruptionFifteen: new SingularityUpgrade(
+      singularityData.corruptionFifteen,
+      'corruptionFifteen'
+    ),
+    singOfferings1: new SingularityUpgrade(
+      singularityData.singOfferings1,
+      'singOfferings1'
+    ),
+    singOfferings2: new SingularityUpgrade(
+      singularityData.singOfferings2,
+      'singOfferings2'
+    ),
+    singOfferings3: new SingularityUpgrade(
+      singularityData.singOfferings3,
+      'singOfferings3'
+    ),
+    singObtainium1: new SingularityUpgrade(
+      singularityData.singObtainium1,
+      'singObtainium1'
+    ),
+    singObtainium2: new SingularityUpgrade(
+      singularityData.singObtainium2,
+      'singObtainium2'
+    ),
+    singObtainium3: new SingularityUpgrade(
+      singularityData.singObtainium3,
+      'singObtainium3'
+    ),
+    singCubes1: new SingularityUpgrade(
+      singularityData.singCubes1,
+      'singCubes1'
+    ),
+    singCubes2: new SingularityUpgrade(
+      singularityData.singCubes2,
+      'singCubes2'
+    ),
+    singCubes3: new SingularityUpgrade(
+      singularityData.singCubes3,
+      'singCubes3'
+    ),
+    singCitadel: new SingularityUpgrade(
+      singularityData.singCitadel,
+      'singCitadel'
+    ),
+    singCitadel2: new SingularityUpgrade(
+      singularityData.singCitadel2,
+      'singCitadel2'
+    ),
+    octeractUnlock: new SingularityUpgrade(
+      singularityData.octeractUnlock,
+      'octeractUnlock'
+    ),
     singOcteractPatreonBonus: new SingularityUpgrade(
       singularityData.singOcteractPatreonBonus,
       'singOcteractPatreonBonus'
     ),
-    intermediatePack: new SingularityUpgrade(singularityData.intermediatePack, 'intermediatePack'),
-    advancedPack: new SingularityUpgrade(singularityData.advancedPack, 'advancedPack'),
-    expertPack: new SingularityUpgrade(singularityData.expertPack, 'expertPack'),
-    masterPack: new SingularityUpgrade(singularityData.masterPack, 'masterPack'),
-    divinePack: new SingularityUpgrade(singularityData.divinePack, 'divinePack'),
+    intermediatePack: new SingularityUpgrade(
+      singularityData.intermediatePack,
+      'intermediatePack'
+    ),
+    advancedPack: new SingularityUpgrade(
+      singularityData.advancedPack,
+      'advancedPack'
+    ),
+    expertPack: new SingularityUpgrade(
+      singularityData.expertPack,
+      'expertPack'
+    ),
+    masterPack: new SingularityUpgrade(
+      singularityData.masterPack,
+      'masterPack'
+    ),
+    divinePack: new SingularityUpgrade(
+      singularityData.divinePack,
+      'divinePack'
+    ),
     wowPass2: new SingularityUpgrade(singularityData.wowPass2, 'wowPass2'),
-    potionBuff: new SingularityUpgrade(singularityData.potionBuff, 'potionBuff'),
-    potionBuff2: new SingularityUpgrade(singularityData.potionBuff2, 'potionBuff2'),
-    potionBuff3: new SingularityUpgrade(singularityData.potionBuff3, 'potionBuff3'),
-    singChallengeExtension: new SingularityUpgrade(singularityData.singChallengeExtension, 'singChallengeExtension'),
-    singChallengeExtension2: new SingularityUpgrade(singularityData.singChallengeExtension2, 'singChallengeExtension2'),
-    singChallengeExtension3: new SingularityUpgrade(singularityData.singChallengeExtension3, 'singChallengeExtension3'),
-    singQuarkImprover1: new SingularityUpgrade(singularityData.singQuarkImprover1, 'singQuarkImprover1'),
-    singQuarkHepteract: new SingularityUpgrade(singularityData.singQuarkHepteract, 'singQuarkHepteract'),
-    singQuarkHepteract2: new SingularityUpgrade(singularityData.singQuarkHepteract2, 'singQuarkHepteract2'),
-    singQuarkHepteract3: new SingularityUpgrade(singularityData.singQuarkHepteract3, 'singQuarkHepteract3'),
-    singOcteractGain: new SingularityUpgrade(singularityData.singOcteractGain, 'singOcteractGain'),
-    singOcteractGain2: new SingularityUpgrade(singularityData.singOcteractGain2, 'singOcteractGain2'),
-    singOcteractGain3: new SingularityUpgrade(singularityData.singOcteractGain3, 'singOcteractGain3'),
-    singOcteractGain4: new SingularityUpgrade(singularityData.singOcteractGain4, 'singOcteractGain4'),
-    singOcteractGain5: new SingularityUpgrade(singularityData.singOcteractGain5, 'singOcteractGain5'),
+    potionBuff: new SingularityUpgrade(
+      singularityData.potionBuff,
+      'potionBuff'
+    ),
+    potionBuff2: new SingularityUpgrade(
+      singularityData.potionBuff2,
+      'potionBuff2'
+    ),
+    potionBuff3: new SingularityUpgrade(
+      singularityData.potionBuff3,
+      'potionBuff3'
+    ),
+    singChallengeExtension: new SingularityUpgrade(
+      singularityData.singChallengeExtension,
+      'singChallengeExtension'
+    ),
+    singChallengeExtension2: new SingularityUpgrade(
+      singularityData.singChallengeExtension2,
+      'singChallengeExtension2'
+    ),
+    singChallengeExtension3: new SingularityUpgrade(
+      singularityData.singChallengeExtension3,
+      'singChallengeExtension3'
+    ),
+    singQuarkImprover1: new SingularityUpgrade(
+      singularityData.singQuarkImprover1,
+      'singQuarkImprover1'
+    ),
+    singQuarkHepteract: new SingularityUpgrade(
+      singularityData.singQuarkHepteract,
+      'singQuarkHepteract'
+    ),
+    singQuarkHepteract2: new SingularityUpgrade(
+      singularityData.singQuarkHepteract2,
+      'singQuarkHepteract2'
+    ),
+    singQuarkHepteract3: new SingularityUpgrade(
+      singularityData.singQuarkHepteract3,
+      'singQuarkHepteract3'
+    ),
+    singOcteractGain: new SingularityUpgrade(
+      singularityData.singOcteractGain,
+      'singOcteractGain'
+    ),
+    singOcteractGain2: new SingularityUpgrade(
+      singularityData.singOcteractGain2,
+      'singOcteractGain2'
+    ),
+    singOcteractGain3: new SingularityUpgrade(
+      singularityData.singOcteractGain3,
+      'singOcteractGain3'
+    ),
+    singOcteractGain4: new SingularityUpgrade(
+      singularityData.singOcteractGain4,
+      'singOcteractGain4'
+    ),
+    singOcteractGain5: new SingularityUpgrade(
+      singularityData.singOcteractGain5,
+      'singOcteractGain5'
+    ),
     wowPass3: new SingularityUpgrade(singularityData.wowPass3, 'wowPass3'),
-    ultimatePen: new SingularityUpgrade(singularityData.ultimatePen, 'ultimatePen'),
-    platonicTau: new SingularityUpgrade(singularityData.platonicTau, 'platonicTau'),
-    platonicAlpha: new SingularityUpgrade(singularityData.platonicAlpha, 'platonicAlpha'),
-    platonicDelta: new SingularityUpgrade(singularityData.platonicDelta, 'platonicDelta'),
-    platonicPhi: new SingularityUpgrade(singularityData.platonicPhi, 'platonicPhi'),
-    singFastForward: new SingularityUpgrade(singularityData.singFastForward, 'singFastForward'),
-    singFastForward2: new SingularityUpgrade(singularityData.singFastForward2, 'singFastForward2'),
-    singAscensionSpeed: new SingularityUpgrade(singularityData.singAscensionSpeed, 'singAscensionSpeed'),
-    singAscensionSpeed2: new SingularityUpgrade(singularityData.singAscensionSpeed2, 'singAscensionSpeed2'),
+    ultimatePen: new SingularityUpgrade(
+      singularityData.ultimatePen,
+      'ultimatePen'
+    ),
+    platonicTau: new SingularityUpgrade(
+      singularityData.platonicTau,
+      'platonicTau'
+    ),
+    platonicAlpha: new SingularityUpgrade(
+      singularityData.platonicAlpha,
+      'platonicAlpha'
+    ),
+    platonicDelta: new SingularityUpgrade(
+      singularityData.platonicDelta,
+      'platonicDelta'
+    ),
+    platonicPhi: new SingularityUpgrade(
+      singularityData.platonicPhi,
+      'platonicPhi'
+    ),
+    singFastForward: new SingularityUpgrade(
+      singularityData.singFastForward,
+      'singFastForward'
+    ),
+    singFastForward2: new SingularityUpgrade(
+      singularityData.singFastForward2,
+      'singFastForward2'
+    ),
+    singAscensionSpeed: new SingularityUpgrade(
+      singularityData.singAscensionSpeed,
+      'singAscensionSpeed'
+    ),
+    singAscensionSpeed2: new SingularityUpgrade(
+      singularityData.singAscensionSpeed2,
+      'singAscensionSpeed2'
+    ),
     oneMind: new SingularityUpgrade(singularityData.oneMind, 'oneMind'),
     wowPass4: new SingularityUpgrade(singularityData.wowPass4, 'wowPass4'),
-    offeringAutomatic: new SingularityUpgrade(singularityData.offeringAutomatic, 'offeringAutomatic'),
-    blueberries: new SingularityUpgrade(singularityData.blueberries, 'blueberries'),
-    singAmbrosiaLuck: new SingularityUpgrade(singularityData.singAmbrosiaLuck, 'singAmbrosiaLuck'),
-    singAmbrosiaLuck2: new SingularityUpgrade(singularityData.singAmbrosiaLuck2, 'singAmbrosiaLuck2'),
-    singAmbrosiaLuck3: new SingularityUpgrade(singularityData.singAmbrosiaLuck3, 'singAmbrosiaLuck3'),
-    singAmbrosiaLuck4: new SingularityUpgrade(singularityData.singAmbrosiaLuck4, 'singAmbrosiaLuck4'),
-    singAmbrosiaGeneration: new SingularityUpgrade(singularityData.singAmbrosiaGeneration, 'singAmbrosiaGeneration'),
-    singAmbrosiaGeneration2: new SingularityUpgrade(singularityData.singAmbrosiaGeneration2, 'singAmbrosiaGeneration2'),
-    singAmbrosiaGeneration3: new SingularityUpgrade(singularityData.singAmbrosiaGeneration3, 'singAmbrosiaGeneration3'),
-    singAmbrosiaGeneration4: new SingularityUpgrade(singularityData.singAmbrosiaGeneration4, 'singAmbrosiaGeneration4')
+    offeringAutomatic: new SingularityUpgrade(
+      singularityData.offeringAutomatic,
+      'offeringAutomatic'
+    ),
+    blueberries: new SingularityUpgrade(
+      singularityData.blueberries,
+      'blueberries'
+    ),
+    singAmbrosiaLuck: new SingularityUpgrade(
+      singularityData.singAmbrosiaLuck,
+      'singAmbrosiaLuck'
+    ),
+    singAmbrosiaLuck2: new SingularityUpgrade(
+      singularityData.singAmbrosiaLuck2,
+      'singAmbrosiaLuck2'
+    ),
+    singAmbrosiaLuck3: new SingularityUpgrade(
+      singularityData.singAmbrosiaLuck3,
+      'singAmbrosiaLuck3'
+    ),
+    singAmbrosiaLuck4: new SingularityUpgrade(
+      singularityData.singAmbrosiaLuck4,
+      'singAmbrosiaLuck4'
+    ),
+    singAmbrosiaGeneration: new SingularityUpgrade(
+      singularityData.singAmbrosiaGeneration,
+      'singAmbrosiaGeneration'
+    ),
+    singAmbrosiaGeneration2: new SingularityUpgrade(
+      singularityData.singAmbrosiaGeneration2,
+      'singAmbrosiaGeneration2'
+    ),
+    singAmbrosiaGeneration3: new SingularityUpgrade(
+      singularityData.singAmbrosiaGeneration3,
+      'singAmbrosiaGeneration3'
+    ),
+    singAmbrosiaGeneration4: new SingularityUpgrade(
+      singularityData.singAmbrosiaGeneration4,
+      'singAmbrosiaGeneration4'
+    )
   }
 
   player.octeractUpgrades = {
-    octeractStarter: new OcteractUpgrade(octeractData.octeractStarter, 'octeractStarter'),
-    octeractGain: new OcteractUpgrade(octeractData.octeractGain, 'octeractGain'),
-    octeractGain2: new OcteractUpgrade(octeractData.octeractGain2, 'octeractGain2'),
-    octeractQuarkGain: new OcteractUpgrade(octeractData.octeractQuarkGain, 'octeractQuarkGain'),
-    octeractQuarkGain2: new OcteractUpgrade(octeractData.octeractQuarkGain2, 'octeractQuarkGain2'),
-    octeractCorruption: new OcteractUpgrade(octeractData.octeractCorruption, 'octeractCorruption'),
-    octeractGQCostReduce: new OcteractUpgrade(octeractData.octeractGQCostReduce, 'octeractGQCostReduce'),
-    octeractExportQuarks: new OcteractUpgrade(octeractData.octeractExportQuarks, 'octeractExportQuarks'),
-    octeractImprovedDaily: new OcteractUpgrade(octeractData.octeractImprovedDaily, 'octeractImprovedDaily'),
-    octeractImprovedDaily2: new OcteractUpgrade(octeractData.octeractImprovedDaily2, 'octeractImprovedDaily2'),
-    octeractImprovedDaily3: new OcteractUpgrade(octeractData.octeractImprovedDaily3, 'octeractImprovedDaily3'),
-    octeractImprovedQuarkHept: new OcteractUpgrade(octeractData.octeractImprovedQuarkHept, 'octeractImprovedQuarkHept'),
+    octeractStarter: new OcteractUpgrade(
+      octeractData.octeractStarter,
+      'octeractStarter'
+    ),
+    octeractGain: new OcteractUpgrade(
+      octeractData.octeractGain,
+      'octeractGain'
+    ),
+    octeractGain2: new OcteractUpgrade(
+      octeractData.octeractGain2,
+      'octeractGain2'
+    ),
+    octeractQuarkGain: new OcteractUpgrade(
+      octeractData.octeractQuarkGain,
+      'octeractQuarkGain'
+    ),
+    octeractQuarkGain2: new OcteractUpgrade(
+      octeractData.octeractQuarkGain2,
+      'octeractQuarkGain2'
+    ),
+    octeractCorruption: new OcteractUpgrade(
+      octeractData.octeractCorruption,
+      'octeractCorruption'
+    ),
+    octeractGQCostReduce: new OcteractUpgrade(
+      octeractData.octeractGQCostReduce,
+      'octeractGQCostReduce'
+    ),
+    octeractExportQuarks: new OcteractUpgrade(
+      octeractData.octeractExportQuarks,
+      'octeractExportQuarks'
+    ),
+    octeractImprovedDaily: new OcteractUpgrade(
+      octeractData.octeractImprovedDaily,
+      'octeractImprovedDaily'
+    ),
+    octeractImprovedDaily2: new OcteractUpgrade(
+      octeractData.octeractImprovedDaily2,
+      'octeractImprovedDaily2'
+    ),
+    octeractImprovedDaily3: new OcteractUpgrade(
+      octeractData.octeractImprovedDaily3,
+      'octeractImprovedDaily3'
+    ),
+    octeractImprovedQuarkHept: new OcteractUpgrade(
+      octeractData.octeractImprovedQuarkHept,
+      'octeractImprovedQuarkHept'
+    ),
     octeractImprovedGlobalSpeed: new OcteractUpgrade(
       octeractData.octeractImprovedGlobalSpeed,
       'octeractImprovedGlobalSpeed'
@@ -377,30 +684,78 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       octeractData.octeractImprovedAscensionSpeed2,
       'octeractImprovedAscensionSpeed2'
     ),
-    octeractImprovedFree: new OcteractUpgrade(octeractData.octeractImprovedFree, 'octeractImprovedFree'),
-    octeractImprovedFree2: new OcteractUpgrade(octeractData.octeractImprovedFree2, 'octeractImprovedFree2'),
-    octeractImprovedFree3: new OcteractUpgrade(octeractData.octeractImprovedFree3, 'octeractImprovedFree3'),
-    octeractImprovedFree4: new OcteractUpgrade(octeractData.octeractImprovedFree4, 'octeractImprovedFree4'),
-    octeractSingUpgradeCap: new OcteractUpgrade(octeractData.octeractSingUpgradeCap, 'octeractSingUpgradeCap'),
-    octeractOfferings1: new OcteractUpgrade(octeractData.octeractOfferings1, 'octeractOfferings1'),
-    octeractObtainium1: new OcteractUpgrade(octeractData.octeractObtainium1, 'octeractObtainium1'),
-    octeractAscensions: new OcteractUpgrade(octeractData.octeractAscensions, 'octeractAscensions'),
-    octeractAscensions2: new OcteractUpgrade(octeractData.octeractAscensions2, 'octeractAscensions2'),
+    octeractImprovedFree: new OcteractUpgrade(
+      octeractData.octeractImprovedFree,
+      'octeractImprovedFree'
+    ),
+    octeractImprovedFree2: new OcteractUpgrade(
+      octeractData.octeractImprovedFree2,
+      'octeractImprovedFree2'
+    ),
+    octeractImprovedFree3: new OcteractUpgrade(
+      octeractData.octeractImprovedFree3,
+      'octeractImprovedFree3'
+    ),
+    octeractImprovedFree4: new OcteractUpgrade(
+      octeractData.octeractImprovedFree4,
+      'octeractImprovedFree4'
+    ),
+    octeractSingUpgradeCap: new OcteractUpgrade(
+      octeractData.octeractSingUpgradeCap,
+      'octeractSingUpgradeCap'
+    ),
+    octeractOfferings1: new OcteractUpgrade(
+      octeractData.octeractOfferings1,
+      'octeractOfferings1'
+    ),
+    octeractObtainium1: new OcteractUpgrade(
+      octeractData.octeractObtainium1,
+      'octeractObtainium1'
+    ),
+    octeractAscensions: new OcteractUpgrade(
+      octeractData.octeractAscensions,
+      'octeractAscensions'
+    ),
+    octeractAscensions2: new OcteractUpgrade(
+      octeractData.octeractAscensions2,
+      'octeractAscensions2'
+    ),
     octeractAscensionsOcteractGain: new OcteractUpgrade(
       octeractData.octeractAscensionsOcteractGain,
       'octeractAscensionsOcteractGain'
     ),
-    octeractFastForward: new OcteractUpgrade(octeractData.octeractFastForward, 'octeractFastForward'),
-    octeractAutoPotionSpeed: new OcteractUpgrade(octeractData.octeractAutoPotionSpeed, 'octeractAutoPotionSpeed'),
+    octeractFastForward: new OcteractUpgrade(
+      octeractData.octeractFastForward,
+      'octeractFastForward'
+    ),
+    octeractAutoPotionSpeed: new OcteractUpgrade(
+      octeractData.octeractAutoPotionSpeed,
+      'octeractAutoPotionSpeed'
+    ),
     octeractAutoPotionEfficiency: new OcteractUpgrade(
       octeractData.octeractAutoPotionEfficiency,
       'octeractAutoPotionEfficiency'
     ),
-    octeractOneMindImprover: new OcteractUpgrade(octeractData.octeractOneMindImprover, 'octeractOneMindImprover'),
-    octeractAmbrosiaLuck: new OcteractUpgrade(octeractData.octeractAmbrosiaLuck, 'octeractAmbrosiaLuck'),
-    octeractAmbrosiaLuck2: new OcteractUpgrade(octeractData.octeractAmbrosiaLuck2, 'octeractAmbrosiaLuck2'),
-    octeractAmbrosiaLuck3: new OcteractUpgrade(octeractData.octeractAmbrosiaLuck3, 'octeractAmbrosiaLuck3'),
-    octeractAmbrosiaLuck4: new OcteractUpgrade(octeractData.octeractAmbrosiaLuck4, 'octeractAmbrosiaLuck4'),
+    octeractOneMindImprover: new OcteractUpgrade(
+      octeractData.octeractOneMindImprover,
+      'octeractOneMindImprover'
+    ),
+    octeractAmbrosiaLuck: new OcteractUpgrade(
+      octeractData.octeractAmbrosiaLuck,
+      'octeractAmbrosiaLuck'
+    ),
+    octeractAmbrosiaLuck2: new OcteractUpgrade(
+      octeractData.octeractAmbrosiaLuck2,
+      'octeractAmbrosiaLuck2'
+    ),
+    octeractAmbrosiaLuck3: new OcteractUpgrade(
+      octeractData.octeractAmbrosiaLuck3,
+      'octeractAmbrosiaLuck3'
+    ),
+    octeractAmbrosiaLuck4: new OcteractUpgrade(
+      octeractData.octeractAmbrosiaLuck4,
+      'octeractAmbrosiaLuck4'
+    ),
     octeractAmbrosiaGeneration: new OcteractUpgrade(
       octeractData.octeractAmbrosiaGeneration,
       'octeractAmbrosiaGeneration'
@@ -424,26 +779,89 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       singularityChallengeData.noSingularityUpgrades,
       'noSingularityUpgrades'
     ),
-    oneChallengeCap: new SingularityChallenge(singularityChallengeData.oneChallengeCap, 'oneChallengeCap'),
-    noOcteracts: new SingularityChallenge(singularityChallengeData.noOcteracts, 'noOcteracts'),
-    limitedAscensions: new SingularityChallenge(singularityChallengeData.limitedAscensions, 'limitedAscensions')
+    oneChallengeCap: new SingularityChallenge(
+      singularityChallengeData.oneChallengeCap,
+      'oneChallengeCap'
+    ),
+    noOcteracts: new SingularityChallenge(
+      singularityChallengeData.noOcteracts,
+      'noOcteracts'
+    ),
+    limitedAscensions: new SingularityChallenge(
+      singularityChallengeData.limitedAscensions,
+      'limitedAscensions'
+    )
   }
 
   player.blueberryUpgrades = {
-    ambrosiaTutorial: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaTutorial, 'ambrosiaTutorial'),
-    ambrosiaQuarks1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarks1, 'ambrosiaQuarks1'),
-    ambrosiaCubes1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaCubes1, 'ambrosiaQuarks1'),
-    ambrosiaLuck1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaLuck1, 'ambrosiaLuck1'),
-    ambrosiaCubeQuark1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaCubeQuark1, 'ambrosiaCubeQuark1'),
-    ambrosiaLuckQuark1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaLuckQuark1, 'ambrosiaLuckQuark1'),
-    ambrosiaLuckCube1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaLuckCube1, 'ambrosiaLuckCube1'),
-    ambrosiaQuarkCube1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarkCube1, 'ambrosiaQuarkCube1'),
-    ambrosiaCubeLuck1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaCubeLuck1, 'ambrosiaCubeLuck1'),
-    ambrosiaQuarkLuck1: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarkLuck1, 'ambrosiaQuarkLuck1'),
-    ambrosiaQuarks2: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaQuarks2, 'ambrosiaQuarks2'),
-    ambrosiaCubes2: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaCubes2, 'ambrosiaQuarks2'),
-    ambrosiaLuck2: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaLuck2, 'ambrosiaLuck2'),
-    ambrosiaPatreon: new BlueberryUpgrade(blueberryUpgradeData.ambrosiaPatreon, 'ambrosiaPatreon')
+    ambrosiaTutorial: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaTutorial,
+      'ambrosiaTutorial'
+    ),
+    ambrosiaQuarks1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaQuarks1,
+      'ambrosiaQuarks1'
+    ),
+    ambrosiaCubes1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaCubes1,
+      'ambrosiaQuarks1'
+    ),
+    ambrosiaLuck1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaLuck1,
+      'ambrosiaLuck1'
+    ),
+    ambrosiaCubeQuark1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaCubeQuark1,
+      'ambrosiaCubeQuark1'
+    ),
+    ambrosiaLuckQuark1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaLuckQuark1,
+      'ambrosiaLuckQuark1'
+    ),
+    ambrosiaLuckCube1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaLuckCube1,
+      'ambrosiaLuckCube1'
+    ),
+    ambrosiaQuarkCube1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaQuarkCube1,
+      'ambrosiaQuarkCube1'
+    ),
+    ambrosiaCubeLuck1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaCubeLuck1,
+      'ambrosiaCubeLuck1'
+    ),
+    ambrosiaQuarkLuck1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaQuarkLuck1,
+      'ambrosiaQuarkLuck1'
+    ),
+    ambrosiaQuarks2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaQuarks2,
+      'ambrosiaQuarks2'
+    ),
+    ambrosiaCubes2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaCubes2,
+      'ambrosiaQuarks2'
+    ),
+    ambrosiaLuck2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaLuck2,
+      'ambrosiaLuck2'
+    ),
+    ambrosiaPatreon: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaPatreon,
+      'ambrosiaPatreon'
+    ),
+    ambrosiaObtainium1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaObtainium1,
+      'ambrosiaObtainium1'
+    ),
+    ambrosiaOffering1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaOffering1,
+      'ambrosiaOffering1'
+    ),
+    ambrosiaHyperflux: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaHyperflux,
+      'ambrosiaHyperflux'
+    )
   }
 
   if (data.loadedOct4Hotfix === undefined || !player.loadedOct4Hotfix) {
@@ -461,7 +879,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     }
   }
 
-  if (player.ascStatToggles === undefined || data.ascStatToggles === undefined) {
+  if (
+    player.ascStatToggles === undefined
+    || data.ascStatToggles === undefined
+  ) {
     player.ascStatToggles = {
       1: false,
       2: false,
@@ -469,7 +890,11 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       4: false
     }
   }
-  if (player.ascStatToggles[4] === undefined || !('ascStatToggles' in data) || data.ascStatToggles[4] === undefined) {
+  if (
+    player.ascStatToggles[4] === undefined
+    || !('ascStatToggles' in data)
+    || data.ascStatToggles[4] === undefined
+  ) {
     player.ascStatToggles[4] = false
   }
 
@@ -492,7 +917,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
   }
   if (data.platonicBlessings === undefined) {
     const ascCount = player.ascensionCount
-    if (player.currentChallenge.ascension !== 0 && player.currentChallenge.ascension !== 15) {
+    if (
+      player.currentChallenge.ascension !== 0
+      && player.currentChallenge.ascension !== 15
+    ) {
       void resetCheck('ascensionChallenge', false, true)
     }
     if (player.currentChallenge.ascension === 15) {
@@ -570,6 +998,7 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       calculator4: 0,
       calculator5: 0,
       calculator6: 0,
+      calculator7: 0,
       constantEX: 0,
       powderEX: 0,
       chronometer2: 0,
@@ -602,6 +1031,8 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       seasonPassInfinity: 0,
       chronometerInfinity: 0,
       shopSingularityPenaltyDebuff: 0,
+      shopAmbrosiaLuckMultiplier4: 0,
+      shopOcteractAmbrosiaLuck: 0,
       shopAmbrosiaGeneration1: 0,
       shopAmbrosiaGeneration2: 0,
       shopAmbrosiaGeneration3: 0,
@@ -613,33 +1044,47 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     }
 
     player.worlds.add(
-      150 * shop.offeringTimerLevel + 25 / 2 * (shop.offeringTimerLevel - 1) * shop.offeringTimerLevel,
+      150 * shop.offeringTimerLevel
+        + (25 / 2) * (shop.offeringTimerLevel - 1) * shop.offeringTimerLevel,
       false
     )
     player.worlds.add(
-      150 * shop.obtainiumTimerLevel + 25 / 2 * (shop.obtainiumTimerLevel - 1) * shop.obtainiumTimerLevel,
+      150 * shop.obtainiumTimerLevel
+        + (25 / 2) * (shop.obtainiumTimerLevel - 1) * shop.obtainiumTimerLevel,
       false
     )
     player.worlds.add(
-      150 * shop.offeringAutoLevel + 25 / 2 * (shop.offeringAutoLevel - 1) * shop.offeringAutoLevel
+      150 * shop.offeringAutoLevel
+        + (25 / 2) * (shop.offeringAutoLevel - 1) * shop.offeringAutoLevel
         - 150 * Math.min(1, shop.offeringAutoLevel),
       false
     )
     player.worlds.add(
-      150 * shop.obtainiumAutoLevel + 25 / 2 * (shop.obtainiumAutoLevel - 1) * shop.obtainiumAutoLevel
+      150 * shop.obtainiumAutoLevel
+        + (25 / 2) * (shop.obtainiumAutoLevel - 1) * shop.obtainiumAutoLevel
         - 150 * Math.min(1, shop.obtainiumAutoLevel),
       false
     )
-    player.worlds.add(100 * shop.cashGrabLevel + 100 / 2 * (shop.cashGrabLevel - 1) * shop.cashGrabLevel, false)
-    player.worlds.add(200 * shop.antSpeedLevel + 80 / 2 * (shop.antSpeedLevel - 1) * shop.antSpeedLevel, false)
+    player.worlds.add(
+      100 * shop.cashGrabLevel
+        + (100 / 2) * (shop.cashGrabLevel - 1) * shop.cashGrabLevel,
+      false
+    )
+    player.worlds.add(
+      200 * shop.antSpeedLevel
+        + (80 / 2) * (shop.antSpeedLevel - 1) * shop.antSpeedLevel,
+      false
+    )
 
     const tomes = shop.challenge10Tomes ?? shop.challengeTome
-    player.worlds.add(500 * tomes + 250 / 2 * (tomes - 1) * tomes, false)
+    player.worlds.add(500 * tomes + (250 / 2) * (tomes - 1) * tomes, false)
 
     player.worlds.add(
       typeof shop.seasonPass === 'number'
-        ? 500 * shop.seasonPass + 250 / 2 * (shop.seasonPass - 1) * shop.seasonPass
-        : 500 * shop.seasonPassLevel + 250 / 2 * (shop.seasonPassLevel - 1) * shop.seasonPassLevel,
+        ? 500 * shop.seasonPass
+          + (250 / 2) * (shop.seasonPass - 1) * shop.seasonPass
+        : 500 * shop.seasonPassLevel
+          + (250 / 2) * (shop.seasonPassLevel - 1) * shop.seasonPassLevel,
       false
     )
   }
@@ -675,7 +1120,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       const k = item as keyof Player['hepteractCrafts']
       // if more crafts are added, some keys might not exist in the save
       if (data.hepteractCrafts[k]) {
-        player.hepteractCrafts[k] = createHepteract({ ...player.hepteractCrafts[k], ...data.hepteractCrafts[k] })
+        player.hepteractCrafts[k] = createHepteract({
+          ...player.hepteractCrafts[k],
+          ...data.hepteractCrafts[k]
+        })
       }
     }
   }
@@ -720,17 +1168,23 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.loadedV253 = true
     player.worlds.add(
       10000 * player.shopUpgrades.calculator
-        + 10000 / 2 * (player.shopUpgrades.calculator - 1) * (player.shopUpgrades.calculator),
+        + (10000 / 2)
+          * (player.shopUpgrades.calculator - 1)
+          * player.shopUpgrades.calculator,
       false
     )
     player.worlds.add(
       10000 * player.shopUpgrades.calculator2
-        + 5000 / 2 * (player.shopUpgrades.calculator2 - 1) * (player.shopUpgrades.calculator2),
+        + (5000 / 2)
+          * (player.shopUpgrades.calculator2 - 1)
+          * player.shopUpgrades.calculator2,
       false
     )
     player.worlds.add(
       25000 * player.shopUpgrades.calculator3
-        + 25000 / 2 * (player.shopUpgrades.calculator3 - 1) * (player.shopUpgrades.calculator3),
+        + (25000 / 2)
+          * (player.shopUpgrades.calculator3 - 1)
+          * player.shopUpgrades.calculator3,
       false
     )
     player.shopUpgrades.calculator = 0
@@ -744,7 +1198,9 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.loadedV255 = true
     player.worlds.add(
       1000 * player.shopUpgrades.powderEX
-        + 1000 / 2 * (player.shopUpgrades.powderEX - 1) * (player.shopUpgrades.powderEX),
+        + (1000 / 2)
+          * (player.shopUpgrades.powderEX - 1)
+          * player.shopUpgrades.powderEX,
       false
     )
     player.shopUpgrades.powderEX = 0
@@ -763,7 +1219,9 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
 
     player.quarksThisSingularity = 0
     player.quarksThisSingularity += +player.worlds
-    const keys = Object.keys(player.shopUpgrades) as (keyof Player['shopUpgrades'])[]
+    const keys = Object.keys(
+      player.shopUpgrades
+    ) as (keyof Player['shopUpgrades'])[]
     for (const key of keys) {
       player.quarksThisSingularity += getQuarkInvestment(key)
     }
@@ -780,7 +1238,9 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
   }
 
   // Update (read: check) for undefined shop upgrades. Also checks above max level.
-  const shopKeys = Object.keys(blankSave.shopUpgrades) as (keyof Player['shopUpgrades'])[]
+  const shopKeys = Object.keys(
+    blankSave.shopUpgrades
+  ) as (keyof Player['shopUpgrades'])[]
   for (const shopUpgrade of shopKeys) {
     if (player.shopUpgrades[shopUpgrade] === undefined) {
       player.shopUpgrades[shopUpgrade] = 0
@@ -813,29 +1273,43 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
           qualityOfLife: singularityData[k].qualityOfLife,
           cacheUpdates: singularityData[k].cacheUpdates
         }
-        player.singularityUpgrades[k] = new SingularityUpgrade(updatedData, k.toString())
+        player.singularityUpgrades[k] = new SingularityUpgrade(
+          updatedData,
+          k.toString()
+        )
 
-        if (player.singularityUpgrades[k].minimumSingularity > player.highestSingularityCount) {
+        if (
+          player.singularityUpgrades[k].minimumSingularity
+            > player.highestSingularityCount
+        ) {
           player.singularityUpgrades[k].refund()
         }
 
-        const cost = player.singularityUpgrades[k].level * (player.singularityUpgrades[k].level + 1)
-          * player.singularityUpgrades[k].costPerLevel / 2
+        const cost = (player.singularityUpgrades[k].level
+          * (player.singularityUpgrades[k].level + 1)
+          * player.singularityUpgrades[k].costPerLevel)
+          / 2
         if (
           player.singularityUpgrades[k].maxLevel !== -1
-          && player.singularityUpgrades[k].level <= player.singularityUpgrades[k].maxLevel
-          && player.singularityUpgrades[k].goldenQuarksInvested.toExponential(10) !== cost.toExponential(10)
+          && player.singularityUpgrades[k].level
+            <= player.singularityUpgrades[k].maxLevel
+          && player.singularityUpgrades[k].goldenQuarksInvested.toExponential(
+              10
+            ) !== cost.toExponential(10)
           && player.singularityUpgrades[k].specialCostForm === 'Default'
         ) {
           player.singularityUpgrades[k].refund()
         }
       } else {
-        player.singularityUpgrades[k].name = `[NEW!] ${player.singularityUpgrades[k].name}`
+        player.singularityUpgrades[
+          k
+        ].name = `[NEW!] ${player.singularityUpgrades[k].name}`
       }
     }
   }
 
-  if (data.octeractUpgrades != null) { // TODO: Make this more DRY -Platonic, July 15 2022
+  if (data.octeractUpgrades != null) {
+    // TODO: Make this more DRY -Platonic, July 15 2022
     for (const item in blankSave.octeractUpgrades) {
       const k = item as keyof Player['octeractUpgrades']
       let updatedData: IOcteractData
@@ -853,7 +1327,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
           qualityOfLife: octeractData[k].qualityOfLife,
           cacheUpdates: octeractData[k].cacheUpdates
         }
-        player.octeractUpgrades[k] = new OcteractUpgrade(updatedData, k.toString())
+        player.octeractUpgrades[k] = new OcteractUpgrade(
+          updatedData,
+          k.toString()
+        )
 
         if (
           player.octeractUpgrades[k].maxLevel !== -1
@@ -862,7 +1339,9 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
           player.octeractUpgrades[k].refund()
         }
       } else {
-        player.octeractUpgrades[k].name = `[NEW!] ${player.octeractUpgrades[k].name}`
+        player.octeractUpgrades[
+          k
+        ].name = `[NEW!] ${player.octeractUpgrades[k].name}`
       }
     }
   }
@@ -873,7 +1352,13 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       const k = item as keyof Player['blueberryUpgrades']
       let updatedData: IBlueberryData
       if (data.blueberryUpgrades[k]) {
-        const { level, ambrosiaInvested, blueberriesInvested, toggleBuy, freeLevels } = data.blueberryUpgrades[k]
+        const {
+          level,
+          ambrosiaInvested,
+          blueberriesInvested,
+          toggleBuy,
+          freeLevels
+        } = data.blueberryUpgrades[k]
         updatedData = {
           maxLevel: blueberryUpgradeData[k].maxLevel,
           costPerLevel: blueberryUpgradeData[k].costPerLevel,
@@ -888,16 +1373,22 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
           prerequisites: blueberryUpgradeData[k].prerequisites,
           cacheUpdates: blueberryUpgradeData[k].cacheUpdates
         }
-        player.blueberryUpgrades[k] = new BlueberryUpgrade(updatedData, k.toString())
+        player.blueberryUpgrades[k] = new BlueberryUpgrade(
+          updatedData,
+          k.toString()
+        )
 
         if (
           player.blueberryUpgrades[k].maxLevel !== -1
-          && player.blueberryUpgrades[k].level > player.blueberryUpgrades[k].maxLevel
+          && player.blueberryUpgrades[k].level
+            > player.blueberryUpgrades[k].maxLevel
         ) {
           player.blueberryUpgrades[k].refund()
         }
       } else {
-        player.blueberryUpgrades[k].name = `[NEW!] ${player.blueberryUpgrades[k].name}`
+        player.blueberryUpgrades[
+          k
+        ].name = `[NEW!] ${player.blueberryUpgrades[k].name}`
       }
     }
 
@@ -910,7 +1401,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       let updatedData: ISingularityChallengeData
       if (data.singularityChallenges[k]) {
         // This is a HOTFIX. Please do not remove unless you can think of a better way
-        if (data.loadedV2927Hotfix1 === undefined && k === 'noSingularityUpgrades') {
+        if (
+          data.loadedV2927Hotfix1 === undefined
+          && k === 'noSingularityUpgrades'
+        ) {
           const comps = data.singularityChallenges[k].completions
           if (comps > 0) {
             data.singularityChallenges[k].highestSingularityCompleted = 4 * comps - 3
@@ -927,9 +1421,13 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
           highestSingularityCompleted,
           enabled,
           singularityRequirement: singularityChallengeData[k].singularityRequirement,
-          effect: singularityChallengeData[k].effect
+          effect: singularityChallengeData[k].effect,
+          cacheUpdates: singularityChallengeData[k].cacheUpdates
         }
-        player.singularityChallenges[k] = new SingularityChallenge(updatedData, k.toString())
+        player.singularityChallenges[k] = new SingularityChallenge(
+          updatedData,
+          k.toString()
+        )
       }
     }
   }
@@ -947,7 +1445,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.prototypeCorruptions[1] = 0
   }
 
-  if (data.goldenQuarksTimer === undefined || player.goldenQuarksTimer === undefined) {
+  if (
+    data.goldenQuarksTimer === undefined
+    || player.goldenQuarksTimer === undefined
+  ) {
     player.goldenQuarksTimer = 90000
   }
 
@@ -1050,11 +1551,26 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
 
   if (data.loadedV2931Hotfix1 === undefined) {
     player.loadedV2931Hotfix1 = true
-    player.shopUpgrades.obtainiumEX3 = Math.min(1000, player.shopUpgrades.obtainiumEX3 * 2)
-    player.shopUpgrades.offeringEX3 = Math.min(1000, player.shopUpgrades.offeringEX3 * 2)
-    player.shopUpgrades.seasonPassInfinity = Math.min(1000, player.shopUpgrades.seasonPassInfinity * 2)
-    player.shopUpgrades.chronometerInfinity = Math.min(1000, player.shopUpgrades.chronometerInfinity * 2)
-    player.shopUpgrades.improveQuarkHept5 = Math.min(100, player.shopUpgrades.improveQuarkHept5 * 2)
+    player.shopUpgrades.obtainiumEX3 = Math.min(
+      1000,
+      player.shopUpgrades.obtainiumEX3 * 2
+    )
+    player.shopUpgrades.offeringEX3 = Math.min(
+      1000,
+      player.shopUpgrades.offeringEX3 * 2
+    )
+    player.shopUpgrades.seasonPassInfinity = Math.min(
+      1000,
+      player.shopUpgrades.seasonPassInfinity * 2
+    )
+    player.shopUpgrades.chronometerInfinity = Math.min(
+      1000,
+      player.shopUpgrades.chronometerInfinity * 2
+    )
+    player.shopUpgrades.improveQuarkHept5 = Math.min(
+      100,
+      player.shopUpgrades.improveQuarkHept5 * 2
+    )
     player.singularityUpgrades.offeringAutomatic.refund()
     void Alert(i18next.t('general.updateAlerts.december22xxxx'))
   }
@@ -1090,7 +1606,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     }
 
     if (player.highestSingularityCount >= 100) {
-      const reduce = Math.min(6, Math.ceil(1 / 20 * (player.highestSingularityCount - 100)))
+      const reduce = Math.min(
+        6,
+        Math.ceil((1 / 20) * (player.highestSingularityCount - 100))
+      )
       player.highestSingularityCount -= reduce
       if (!player.insideSingularityChallenge) {
         player.singularityCount -= reduce
@@ -1102,6 +1621,7 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
   }
 
   player.caches = {
+    ambrosiaLuckAdditiveMult: new AmbrosiaLuckAdditiveMultCache(),
     ambrosiaLuck: new AmbrosiaLuckCache(),
     ambrosiaGeneration: new AmbrosiaGenerationCache(),
     blueberryInventory: new BlueberryInventoryCache()
@@ -1127,5 +1647,11 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
   if (data.autoCubeUpgradesToggle === undefined) {
     player.autoCubeUpgradesToggle = false
     player.autoPlatonicUpgradesToggle = false
+  }
+
+  if (player.shopUpgrades.calculator7 === undefined) {
+    player.shopUpgrades.calculator7 = 0
+    player.shopUpgrades.shopAmbrosiaLuckMultiplier4 = 0
+    player.shopUpgrades.shopOcteractAmbrosiaLuck = 0
   }
 }

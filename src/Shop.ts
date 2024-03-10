@@ -21,7 +21,10 @@ type shopResetTier =
   | 'SingularityVol2'
   | 'SingularityVol3'
   | 'SingularityVol4'
-  | 'Exalt'
+  | 'Exalt1'
+  | 'Exalt2'
+  | 'Exalt3'
+  | 'Exalt4'
 
 export interface IShopData {
   price: number
@@ -548,10 +551,37 @@ export const shopData: Record<keyof Player['shopUpgrades'], IShopData> = {
     refundMinimumLevel: 0
   },
   shopSingularityPenaltyDebuff: {
-    tier: 'Exalt',
+    tier: 'Exalt1',
     price: 1e17,
     priceIncrease: 9.99e19,
     maxLevel: 4,
+    type: shopUpgradeTypes.UPGRADE,
+    refundable: false,
+    refundMinimumLevel: 0
+  },
+  shopAmbrosiaLuckMultiplier4: {
+    tier: 'Exalt2',
+    price: 1e20,
+    priceIncrease: 3e20,
+    maxLevel: 4,
+    type: shopUpgradeTypes.UPGRADE,
+    refundable: false,
+    refundMinimumLevel: 0
+  },
+  calculator7: {
+    tier: 'Exalt3',
+    price: 1e20,
+    priceIncrease: 1e19,
+    maxLevel: 50,
+    type: shopUpgradeTypes.UPGRADE,
+    refundable: false,
+    refundMinimumLevel: 0
+  },
+  shopOcteractAmbrosiaLuck: {
+    tier: 'Exalt4',
+    price: 1e21,
+    priceIncrease: 9e21,
+    maxLevel: 2,
     type: shopUpgradeTypes.UPGRADE,
     refundable: false,
     refundMinimumLevel: 0
@@ -685,12 +715,15 @@ type ShopUpgradeNames =
   | 'calculator4'
   | 'calculator5'
   | 'calculator6'
+  | 'calculator7'
   | 'offeringEX3'
   | 'obtainiumEX3'
   | 'improveQuarkHept5'
   | 'seasonPassInfinity'
   | 'chronometerInfinity'
   | 'shopSingularityPenaltyDebuff'
+  | 'shopAmbrosiaLuckMultiplier4'
+  | 'shopOcteractAmbrosiaLuck'
   | 'shopAmbrosiaGeneration1'
   | 'shopAmbrosiaGeneration2'
   | 'shopAmbrosiaGeneration3'
@@ -701,11 +734,16 @@ type ShopUpgradeNames =
   | 'shopAmbrosiaLuck4'
 
 export const getShopCosts = (input: ShopUpgradeNames) => {
-  if (shopData[input].type === shopUpgradeTypes.CONSUMABLE || shopData[input].maxLevel === 1) {
+  if (
+    shopData[input].type === shopUpgradeTypes.CONSUMABLE
+    || shopData[input].maxLevel === 1
+  ) {
     return shopData[input].price
   } else {
     const priceIncreaseMult = player.shopUpgrades[input]
-    return shopData[input].price + shopData[input].priceIncrease * priceIncreaseMult
+    return (
+      shopData[input].price + shopData[input].priceIncrease * priceIncreaseMult
+    )
   }
 }
 
@@ -717,16 +755,18 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
   rofl.innerHTML = i18next.t(`shop.upgradeDescriptions.${input}`)
 
   shopData[input].refundable // TODO(@KhafraDev): i18n
-    ? refundable.textContent = `This item is refundable! Will be set to level ${
+    ? (refundable.textContent = `This item is refundable! Will be set to level ${
       shopData[input].refundMinimumLevel
-    } when refunded.`
-    : refundable.textContent = i18next.t('shop.cannotRefund')
+    } when refunded.`)
+    : (refundable.textContent = i18next.t('shop.cannotRefund'))
 
   switch (input) {
     case 'offeringPotion':
       lol.innerHTML = i18next.t('shop.upgradeEffects.offeringPotion', {
         amount: format(
-          7200 * player.offeringpersecond * calculateTimeAcceleration().mult
+          7200
+            * player.offeringpersecond
+            * calculateTimeAcceleration().mult
             * +player.singularityUpgrades.potionBuff.getEffect().bonus,
           0,
           true
@@ -736,7 +776,9 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
     case 'obtainiumPotion':
       lol.innerHTML = i18next.t('shop.upgradeEffects.obtainiumPotion', {
         amount: format(
-          7200 * player.maxobtainiumpersecond * calculateTimeAcceleration().mult
+          7200
+            * player.maxobtainiumpersecond
+            * calculateTimeAcceleration().mult
             * +player.singularityUpgrades.potionBuff.getEffect().bonus,
           0,
           true
@@ -773,7 +815,9 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       })
       break
     case 'cashGrab':
-      lol.innerHTML = i18next.t('shop.upgradeEffects.cashGrab', { amount: format(player.shopUpgrades.cashGrab, 2) })
+      lol.innerHTML = i18next.t('shop.upgradeEffects.cashGrab', {
+        amount: format(player.shopUpgrades.cashGrab, 2)
+      })
       break
     case 'shopTalisman':
       lol.innerHTML = i18next.t('shop.upgradeEffects.shopTalisman')
@@ -791,7 +835,14 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
     case 'challengeTome':
       lol.innerHTML = i18next.t('shop.upgradeEffects.challengeTome', {
         amount1: format(20 * player.shopUpgrades.challengeTome),
-        amount2: format(1 - (player.shopUpgrades.challengeTome + player.shopUpgrades.challengeTome2) / 100, 2, true)
+        amount2: format(
+          1
+            - (player.shopUpgrades.challengeTome
+                + player.shopUpgrades.challengeTome2)
+              / 100,
+          2,
+          true
+        )
       })
       break
     case 'cubeToQuark':
@@ -831,7 +882,11 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
     case 'calculator2':
       lol.innerHTML = i18next.t('shop.upgradeEffects.calculator2', {
         amount1: format(2 * player.shopUpgrades.calculator2),
-        amount2: format((player.shopUpgrades.calculator2 === shopData.calculator2.maxLevel) ? 25 : 0)
+        amount2: format(
+          player.shopUpgrades.calculator2 === shopData.calculator2.maxLevel
+            ? 25
+            : 0
+        )
       })
       break
     case 'calculator3':
@@ -850,13 +905,25 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       lol.innerHTML = i18next.t('shop.upgradeEffects.calculator5', {
         amount1: format(6 * player.shopUpgrades.calculator5),
         amount2: Math.floor(player.shopUpgrades.calculator5 / 10)
-          + (player.shopUpgrades.calculator4 === shopData.calculator5.maxLevel ? 6 : 0)
+          + (player.shopUpgrades.calculator4 === shopData.calculator5.maxLevel
+            ? 6
+            : 0)
       })
       break
     case 'calculator6':
       lol.innerHTML = i18next.t('shop.upgradeEffects.calculator6', {
         amount1: format(player.shopUpgrades.calculator6),
-        amount2: player.shopUpgrades.calculator6 === shopData.calculator6.maxLevel ? 24 : 0
+        amount2: player.shopUpgrades.calculator6 === shopData.calculator6.maxLevel
+          ? 24
+          : 0
+      })
+      break
+    case 'calculator7':
+      lol.innerHTML = i18next.t('shop.upgradeEffects.calculator7', {
+        amount1: format(player.shopUpgrades.calculator7, 0, true),
+        amount2: player.shopUpgrades.calculator7 === shopData.calculator7.maxLevel
+          ? 48
+          : 0
       })
       break
     case 'constantEX':
@@ -865,7 +932,9 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       })
       break
     case 'powderEX':
-      lol.innerHTML = i18next.t('shop.upgradeEffects.powderEX', { amount: format(2 * player.shopUpgrades.powderEX) })
+      lol.innerHTML = i18next.t('shop.upgradeEffects.powderEX', {
+        amount: format(2 * player.shopUpgrades.powderEX)
+      })
       break
     case 'chronometer2':
       lol.innerHTML = i18next.t('shop.upgradeEffects.chronometer2', {
@@ -884,18 +953,32 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       break
     case 'seasonPassZ':
       lol.innerHTML = i18next.t('shop.upgradeEffects.seasonPassZ', {
-        amount: format(1 * player.shopUpgrades.seasonPassZ * player.singularityCount, 0, true)
+        amount: format(
+          1 * player.shopUpgrades.seasonPassZ * player.singularityCount,
+          0,
+          true
+        )
       })
       break
     case 'challengeTome2':
       lol.innerHTML = i18next.t('shop.upgradeEffects.challengeTome2', {
         amount1: 20 * player.shopUpgrades.challengeTome2,
-        amount2: format(1 - (player.shopUpgrades.challengeTome + player.shopUpgrades.challengeTome2) / 100, 2, true)
+        amount2: format(
+          1
+            - (player.shopUpgrades.challengeTome
+                + player.shopUpgrades.challengeTome2)
+              / 100,
+          2,
+          true
+        )
       })
       break
     case 'instantChallenge2':
       lol.innerHTML = i18next.t('shop.upgradeEffects.instantChallenge2', {
-        amount: format(player.shopUpgrades.instantChallenge2 * player.singularityCount, 0)
+        amount: format(
+          player.shopUpgrades.instantChallenge2 * player.singularityCount,
+          0
+        )
       })
       break
     case 'cashGrab2':
@@ -910,22 +993,37 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       break
     case 'chronometerZ':
       lol.innerHTML = i18next.t('shop.upgradeEffects.chronometerZ', {
-        amount: format(0.1 * player.singularityCount * player.shopUpgrades.chronometerZ, 2)
+        amount: format(
+          0.1 * player.singularityCount * player.shopUpgrades.chronometerZ,
+          2
+        )
       })
       break
     case 'offeringEX2':
       lol.innerHTML = i18next.t('shop.upgradeEffects.offeringEX2', {
-        amount: format(1 * player.singularityCount * player.shopUpgrades.offeringEX2, 2)
+        amount: format(
+          1 * player.singularityCount * player.shopUpgrades.offeringEX2,
+          2
+        )
       })
       break
     case 'obtainiumEX2':
       lol.innerHTML = i18next.t('shop.upgradeEffects.obtainiumEX2', {
-        amount: format(1 * player.singularityCount * player.shopUpgrades.obtainiumEX2, 2)
+        amount: format(
+          1 * player.singularityCount * player.shopUpgrades.obtainiumEX2,
+          2
+        )
       })
       break
     case 'powderAuto':
       lol.innerHTML = i18next.t('shop.upgradeEffects.powderAuto', {
-        amount: format(100 / (Math.max(1, player.shopUpgrades.powderAuto) * calculatePowderConversion().mult), 2, true)
+        amount: format(
+          100
+            / (Math.max(1, player.shopUpgrades.powderAuto)
+              * calculatePowderConversion().mult),
+          2,
+          true
+        )
       })
       break
     case 'seasonPassLost':
@@ -937,7 +1035,9 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       lol.innerHTML = i18next.t('shop.upgradeEffects.challenge15Auto')
       break
     case 'extraWarp':
-      lol.innerHTML = i18next.t('shop.upgradeEffects.extraWarp', { amount: player.shopUpgrades.extraWarp })
+      lol.innerHTML = i18next.t('shop.upgradeEffects.extraWarp', {
+        amount: player.shopUpgrades.extraWarp
+      })
       break
     case 'autoWarp':
       lol.innerHTML = i18next.t('shop.upgradeEffects.autoWarp')
@@ -987,12 +1087,20 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       break
     case 'offeringEX3':
       lol.innerHTML = i18next.t('shop.upgradeEffects.offeringEX3', {
-        amount: format(100 * (Math.pow(1.02, player.shopUpgrades.offeringEX3) - 1), 2, true)
+        amount: format(
+          100 * (Math.pow(1.02, player.shopUpgrades.offeringEX3) - 1),
+          2,
+          true
+        )
       })
       break
     case 'obtainiumEX3':
       lol.innerHTML = i18next.t('shop.upgradeEffects.obtainiumEX3', {
-        amount: format(100 * (Math.pow(1.02, player.shopUpgrades.obtainiumEX3) - 1), 2, true)
+        amount: format(
+          100 * (Math.pow(1.02, player.shopUpgrades.obtainiumEX3) - 1),
+          2,
+          true
+        )
       })
       break
     case 'improveQuarkHept5':
@@ -1002,19 +1110,52 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       break
     case 'seasonPassInfinity':
       lol.innerHTML = i18next.t('shop.upgradeEffects.seasonPassInfinity', {
-        amount: format(100 * (Math.pow(1.02, player.shopUpgrades.seasonPassInfinity) - 1), 2, true)
+        amount: format(
+          100 * (Math.pow(1.02, player.shopUpgrades.seasonPassInfinity) - 1),
+          2,
+          true
+        )
       })
       break
     case 'chronometerInfinity':
       lol.innerHTML = i18next.t('shop.upgradeEffects.chronometerInfinity', {
-        amount: format(100 * (Math.pow(1.01, player.shopUpgrades.chronometerInfinity) - 1), 2, true)
+        amount: format(
+          100 * (Math.pow(1.01, player.shopUpgrades.chronometerInfinity) - 1),
+          2,
+          true
+        )
       })
       break
     case 'shopSingularityPenaltyDebuff':
-      lol.innerHTML = i18next.t('shop.upgradeEffects.shopSingularityPenaltyDebuff', {
-        amount1: format(player.singularityCount),
-        amount2: format(player.singularityCount - player.shopUpgrades.shopSingularityPenaltyDebuff)
-      })
+      lol.innerHTML = i18next.t(
+        'shop.upgradeEffects.shopSingularityPenaltyDebuff',
+        {
+          amount1: format(player.singularityCount),
+          amount2: format(
+            player.singularityCount
+              - player.shopUpgrades.shopSingularityPenaltyDebuff
+          )
+        }
+      )
+      break
+    case 'shopAmbrosiaLuckMultiplier4':
+      lol.innerHTML = i18next.t(
+        'shop.upgradeEffects.shopAmbrosiaLuckMultiplier4',
+        {
+          amount: format(player.shopUpgrades.shopAmbrosiaLuckMultiplier4)
+        }
+      )
+      break
+    case 'shopOcteractAmbrosiaLuck':
+      lol.innerHTML = i18next.t(
+        'shop.upgradeEffects.shopOcteractAmbrosiaLuck',
+        {
+          amount: format(
+            player.shopUpgrades.shopOcteractAmbrosiaLuck
+              * (1 + Math.floor(Math.log10(player.totalWowOcteracts + 1)))
+          )
+        }
+      )
       break
     case 'shopAmbrosiaGeneration1':
       lol.innerHTML = i18next.t('shop.upgradeEffects.shopAmbrosiaGeneration1', {
@@ -1033,7 +1174,11 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       break
     case 'shopAmbrosiaGeneration4':
       lol.innerHTML = i18next.t('shop.upgradeEffects.shopAmbrosiaGeneration4', {
-        amount: format(player.shopUpgrades.shopAmbrosiaGeneration4 / 10, 1, true)
+        amount: format(
+          player.shopUpgrades.shopAmbrosiaGeneration4 / 10,
+          1,
+          true
+        )
       })
       break
     case 'shopAmbrosiaLuck1':
@@ -1053,7 +1198,11 @@ export const shopDescriptions = (input: ShopUpgradeNames) => {
       break
     case 'shopAmbrosiaLuck4':
       lol.innerHTML = i18next.t('shop.upgradeEffects.shopAmbrosiaLuck4', {
-        amount: format(6 * player.shopUpgrades.shopAmbrosiaLuck4 / 10, 1, true)
+        amount: format(
+          (6 * player.shopUpgrades.shopAmbrosiaLuck4) / 10,
+          1,
+          true
+        )
       })
       break
   }
@@ -1089,6 +1238,7 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
     calculator4: 'PL-AT δ calculator',
     calculator5: 'PL-AT Γ calculator',
     calculator6: 'QUAAA-T calculator',
+    calculator7: 'PL-AT ΩΩ calculator',
     constantEX: 'Constant EX',
     powderEX: 'Powder EX',
     chronometer2: 'Chronometer 2',
@@ -1121,6 +1271,8 @@ export const friendlyShopName = (input: ShopUpgradeNames) => {
     chronometerInfinity: 'The final Chronometer',
     seasonPassInfinity: 'The final Season pass',
     shopSingularityPenaltyDebuff: 'A Singularity Tenderizer',
+    shopAmbrosiaLuckMultiplier4: 'The Fourth Multiplicative Ambrosia Luck Multiplier',
+    shopOcteractAmbrosiaLuck: 'Octeract-Based Ambrosia Luck Amplifier',
     shopAmbrosiaGeneration1: 'Ambrosia Generation Speedup',
     shopAmbrosiaGeneration2: 'Another Ambrosia Generation Speedup',
     shopAmbrosiaGeneration3: 'A better Ambrosia Generation Speedup',
@@ -1140,20 +1292,30 @@ export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
   if (player.shopUpgrades[input] >= shopItem.maxLevel) {
     return player.shopConfirmationToggle
       ? Alert(
-        `You can't purchase ${friendlyShopName(input)} because you are already at the maximum ${
-          shopItem.type === shopUpgradeTypes.UPGRADE ? 'level' : 'capacity'
-        }!`
+        `You can't purchase ${
+          friendlyShopName(
+            input
+          )
+        } because you are already at the maximum ${shopItem.type === shopUpgradeTypes.UPGRADE ? 'level' : 'capacity'}!`
       )
       : null
   } else if (Number(player.worlds) < getShopCosts(input)) {
     return player.shopConfirmationToggle
-      ? Alert(`You can't purchase ${friendlyShopName(input)} because you don't have enough Quarks!`)
+      ? Alert(
+        `You can't purchase ${
+          friendlyShopName(
+            input
+          )
+        } because you don't have enough Quarks!`
+      )
       : null
   }
 
   // Actually lock for HTML exploit
   if (!isShopUpgradeUnlocked(input)) {
-    return Alert(`You do not have the right to purchase ${friendlyShopName(input)}!`)
+    return Alert(
+      `You do not have the right to purchase ${friendlyShopName(input)}!`
+    )
   }
 
   let buyData: IMultiBuy
@@ -1189,9 +1351,12 @@ export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
   }
 
   const singular = shopItem.maxLevel === 1
-  const merch = buyAmount.toLocaleString() + (shopItem.type === shopUpgradeTypes.UPGRADE ? ' level' : ' vial')
+  const merch = buyAmount.toLocaleString()
+    + (shopItem.type === shopUpgradeTypes.UPGRADE ? ' level' : ' vial')
     + (buyAmount === 1 ? '' : 's')
-  const noRefunds = shopItem.refundable ? '' : '\n\n\u26A0\uFE0F !! No Refunds !! \u26A0\uFE0F'
+  const noRefunds = shopItem.refundable
+    ? ''
+    : '\n\n\u26A0\uFE0F !! No Refunds !! \u26A0\uFE0F'
   const maxPots = shopItem.type === shopUpgradeTypes.CONSUMABLE
     ? '\n\nType -1 in Buy: ANY to buy equal amounts of both Potions.'
     : ''
@@ -1199,11 +1364,16 @@ export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
   if (player.shopBuyMaxToggle === 'ANY' && !singular) {
     const buyInput = await Prompt(
       `You can afford to purchase up to ${merch} of ${
-        friendlyShopName(input)
+        friendlyShopName(
+          input
+        )
       } for ${buyCost.toLocaleString()} Quarks. How many would you like to buy?${maxPots + noRefunds}`
     )
     let buyAny: number
-    if (Number(buyInput) === -1 && shopItem.type === shopUpgradeTypes.CONSUMABLE) {
+    if (
+      Number(buyInput) === -1
+      && shopItem.type === shopUpgradeTypes.CONSUMABLE
+    ) {
       const other = input === 'offeringPotion' ? 'obtainiumPotion' : 'offeringPotion'
       const toSpend = Math.max(+player.worlds / 2, +player.worlds - buyCost)
       const otherPot: IMultiBuy = calculateSummationNonLinear(
@@ -1220,7 +1390,11 @@ export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
       buyAny = Math.floor(Number(buyInput))
       if (buyAny === 0) {
         return
-      } else if (Number.isNaN(buyAny) || !Number.isFinite(buyAny) || buyAny < 0) {
+      } else if (
+        Number.isNaN(buyAny)
+        || !Number.isFinite(buyAny)
+        || buyAny < 0
+      ) {
         return Alert('Amount must be a finite, positive integer.')
       }
     }
@@ -1240,10 +1414,15 @@ export const buyShopUpgrades = async (input: ShopUpgradeNames) => {
   }
 
   let p = true
-  if (player.shopConfirmationToggle || (!shopItem.refundable && player.shopBuyMaxToggle !== false)) {
+  if (
+    player.shopConfirmationToggle
+    || (!shopItem.refundable && player.shopBuyMaxToggle !== false)
+  ) {
     p = await Confirm(
       `You are about to ${singular ? 'unlock' : `purchase ${merch} of`} ${
-        friendlyShopName(input)
+        friendlyShopName(
+          input
+        )
       } for ${buyCost.toLocaleString()} Quarks. Press 'OK' to finalize purchase.${maxPots + noRefunds}`
     )
   }
@@ -1260,7 +1439,10 @@ export const autoBuyConsumable = (input: ShopUpgradeNames) => {
   const maxBuyablePotions = Math.floor(
     Math.min(
       Number(player.worlds) / 100,
-      Math.min(shopData[input].maxLevel - player.shopUpgrades[input], Math.pow(player.highestSingularityCount, 2) * 100)
+      Math.min(
+        shopData[input].maxLevel - player.shopUpgrades[input],
+        Math.pow(player.highestSingularityCount, 2) * 100
+      )
     )
   )
 
@@ -1275,8 +1457,13 @@ export const autoBuyConsumable = (input: ShopUpgradeNames) => {
   player.shopUpgrades[input] += maxBuyablePotions
 }
 
-export const useConsumable = async (input: ShopUpgradeNames, automatic = false, used = 1, spend = true) => {
-  const p = (player.shopConfirmationToggle && !automatic)
+export const useConsumable = async (
+  input: ShopUpgradeNames,
+  automatic = false,
+  used = 1,
+  spend = true
+) => {
+  const p = player.shopConfirmationToggle && !automatic
     ? await Confirm('Would you like to use some of this potion?')
     : true
 
@@ -1290,14 +1477,22 @@ export const useConsumable = async (input: ShopUpgradeNames, automatic = false, 
     if (input === 'offeringPotion') {
       if (player.shopUpgrades.offeringPotion >= used || !spend) {
         player.shopUpgrades.offeringPotion -= spend ? used : 0
-        player.runeshards += Math.floor(7200 * player.offeringpersecond * calculateTimeAcceleration().mult * multiplier)
+        player.runeshards += Math.floor(
+          7200
+            * player.offeringpersecond
+            * calculateTimeAcceleration().mult
+            * multiplier
+        )
         player.runeshards = Math.min(1e300, player.runeshards)
       }
     } else if (input === 'obtainiumPotion') {
       if (player.shopUpgrades.obtainiumPotion >= used || !spend) {
         player.shopUpgrades.obtainiumPotion -= spend ? used : 0
         player.researchPoints += Math.floor(
-          7200 * player.maxobtainiumpersecond * calculateTimeAcceleration().mult * multiplier
+          7200
+            * player.maxobtainiumpersecond
+            * calculateTimeAcceleration().mult
+            * multiplier
         )
         player.researchPoints = Math.min(1e300, player.researchPoints)
       }
@@ -1321,16 +1516,25 @@ export const resetShopUpgrades = async (ignoreBoolean = false) => {
     for (const shopItem in shopData) {
       const key = shopItem as keyof typeof shopData
       const item = shopData[key]
-      if (item.refundable && player.shopUpgrades[key] > item.refundMinimumLevel) {
+      if (
+        item.refundable
+        && player.shopUpgrades[key] > item.refundMinimumLevel
+      ) {
         refunds = true
         // Determines how many quarks one would not be refunded, based on minimum refund level
         const doNotRefund = item.price * item.refundMinimumLevel
-          + item.priceIncrease * (item.refundMinimumLevel) * (item.refundMinimumLevel - 1) / 2
+          + (item.priceIncrease
+              * item.refundMinimumLevel
+              * (item.refundMinimumLevel - 1))
+            / 2
 
         // Refunds Quarks based on the shop level and price vals
         player.worlds.add(
           item.price * player.shopUpgrades[key]
-            + item.priceIncrease * (player.shopUpgrades[key]) * (player.shopUpgrades[key] - 1) / 2
+            + (item.priceIncrease
+                * player.shopUpgrades[key]
+                * (player.shopUpgrades[key] - 1))
+              / 2
             - doNotRefund,
           false
         )
@@ -1353,7 +1557,10 @@ export const getQuarkInvestment = (upgrade: ShopUpgradeNames) => {
   }
 
   const val = shopData[upgrade].price * player.shopUpgrades[upgrade]
-    + shopData[upgrade].priceIncrease * (player.shopUpgrades[upgrade] - 1) * (player.shopUpgrades[upgrade]) / 2
+    + (shopData[upgrade].priceIncrease
+        * (player.shopUpgrades[upgrade] - 1)
+        * player.shopUpgrades[upgrade])
+      / 2
 
   return val
 }
@@ -1365,24 +1572,43 @@ export const isShopUpgradeUnlocked = (upgrade: ShopUpgradeNames): boolean => {
     case 'obtainiumPotion':
       return true
     case 'offeringEX':
-      return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      return (
+        player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      )
     case 'offeringAuto':
-      return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      return (
+        player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      )
     case 'obtainiumEX':
-      return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      return (
+        player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      )
     case 'obtainiumAuto':
-      return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      return (
+        player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      )
     case 'instantChallenge':
-      return player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      return (
+        player.reincarnationCount > 0 || player.highestSingularityCount > 0
+      )
     case 'antSpeed':
-      return player.highestchallengecompletions[8] > 0 || player.ascensionCount > 0
+      return (
+        player.highestchallengecompletions[8] > 0
+        || player.ascensionCount > 0
         || player.highestSingularityCount > 0
+      )
     case 'cashGrab':
-      return player.highestchallengecompletions[8] > 0 || player.ascensionCount > 0
+      return (
+        player.highestchallengecompletions[8] > 0
+        || player.ascensionCount > 0
         || player.highestSingularityCount > 0
+      )
     case 'shopTalisman':
-      return player.highestchallengecompletions[9] > 0 || player.ascensionCount > 0
+      return (
+        player.highestchallengecompletions[9] > 0
+        || player.ascensionCount > 0
         || player.highestSingularityCount > 0
+      )
     case 'seasonPass':
       return player.ascensionCount > 0 || player.highestSingularityCount > 0
     case 'challengeExtension':
@@ -1392,39 +1618,76 @@ export const isShopUpgradeUnlocked = (upgrade: ShopUpgradeNames): boolean => {
     case 'cubeToQuark':
       return player.ascensionCount > 0 || player.highestSingularityCount > 0
     case 'tesseractToQuark':
-      return player.highestchallengecompletions[11] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[11] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'hypercubeToQuark':
-      return player.highestchallengecompletions[13] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[13] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'seasonPass2':
-      return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[14] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'seasonPass3':
-      return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[14] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'chronometer':
-      return player.highestchallengecompletions[12] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[12] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'infiniteAscent':
-      return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[14] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'calculator':
       return player.ascensionCount > 0 || player.highestSingularityCount > 0
     case 'calculator2':
-      return player.highestchallengecompletions[11] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[11] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'calculator3':
-      return player.highestchallengecompletions[13] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[13] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'calculator4':
       return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
     case 'calculator5':
       return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
     case 'calculator6':
       return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
+    case 'calculator7':
+      return Boolean(
+        player.singularityChallenges.limitedAscensions.rewards.shopUpgrade
+      )
     case 'constantEX':
-      return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[14] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'powderEX':
-      return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      return (
+        player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      )
     case 'chronometer2':
-      return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      return (
+        player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      )
     case 'chronometer3':
       return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
     case 'seasonPassY':
-      return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      return (
+        player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      )
     case 'seasonPassZ':
       return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
     case 'challengeTome2':
@@ -1452,7 +1715,9 @@ export const isShopUpgradeUnlocked = (upgrade: ShopUpgradeNames): boolean => {
     case 'autoWarp':
       return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
     case 'improveQuarkHept':
-      return player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      return (
+        player.challenge15Exponent >= 1e15 || player.highestSingularityCount > 0
+      )
     case 'improveQuarkHept2':
       return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
     case 'improveQuarkHept3':
@@ -1460,7 +1725,10 @@ export const isShopUpgradeUnlocked = (upgrade: ShopUpgradeNames): boolean => {
     case 'improveQuarkHept4':
       return Boolean(player.singularityUpgrades.wowPass3.getEffect().bonus)
     case 'shopImprovedDaily':
-      return player.highestchallengecompletions[14] > 0 || player.highestSingularityCount > 0
+      return (
+        player.highestchallengecompletions[14] > 0
+        || player.highestSingularityCount > 0
+      )
     case 'shopImprovedDaily2':
       return Boolean(player.singularityUpgrades.wowPass.getEffect().bonus)
     case 'shopImprovedDaily3':
@@ -1478,7 +1746,17 @@ export const isShopUpgradeUnlocked = (upgrade: ShopUpgradeNames): boolean => {
     case 'seasonPassInfinity':
       return Boolean(player.singularityUpgrades.wowPass4.getEffect().bonus)
     case 'shopSingularityPenaltyDebuff':
-      return Boolean(player.singularityChallenges.noSingularityUpgrades.rewards.shopUpgrade)
+      return Boolean(
+        player.singularityChallenges.noSingularityUpgrades.rewards.shopUpgrade
+      )
+    case 'shopAmbrosiaLuckMultiplier4':
+      return Boolean(
+        player.singularityChallenges.oneChallengeCap.rewards.shopUpgrade
+      )
+    case 'shopOcteractAmbrosiaLuck':
+      return Boolean(
+        player.singularityChallenges.noOcteracts.rewards.shopUpgrade
+      )
     case 'shopAmbrosiaGeneration1':
       return Boolean(player.singularityUpgrades.wowPass2.getEffect().bonus)
     case 'shopAmbrosiaGeneration2':

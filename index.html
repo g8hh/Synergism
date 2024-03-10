@@ -3114,7 +3114,8 @@
                 <p id="statOff29" class="statPortion singularity">Citadel 2 [GQ]: <span id="sOff29" class="statNumber">0</span></p>
                 <p id="statOff30" class="statPortion">Cube Upgrade Cx4: <span id="sOff30" class="statNumber">0</span></p>
                 <p id="statOff31" class="statPortion">Offering Electrolosis [OC]: <span id="sOff31" class="statNumber">0</span></p>
-                <p id="statOff32" class="statPortion">Event: <span id="sOff32" class="statNumber">0</span></p>
+                <p id="statOff32" class="statPortion">RNG-Based Offering Multiplier: <span id="sOff32" class="statNumber">0</span></p>
+                <p id="statOff33" class="statPortion">Event: <span id="sOff33" class="statNumber">0</span></p>
                 <p id="statOffT" class="statPortion statTotal" style="color: gold">TOTAL OFFERING MULTIPLIER: <span id="sOffT" class="statNumber statTotal">0</span></p>
             </div>
             <div id="globalSpeedMultiplierStats" class="statContainer" style="display: none;">
@@ -3245,6 +3246,7 @@
                 <p id="statGCM28" class="statPortion">-<span id="sGCM28" class="statNumber">-</span></p>
                 <p id="statGCM29" class="statPortion">-<span id="sGCM29" class="statNumber">-</span></p>
                 <p id="statGCM30" class="statPortion">-<span id="sGCM30" class="statNumber">-</span></p>
+                <p id="statGCM31" class="statPortion">-<span id="sGCM31" class="statNumber">-</span></p>
                 <p id="statGCMT" class="statPortion statTotal" style="color: orange">TOTAL GLOBAL CUBE MULTIPLIER: <span
                     id="sGCMT" class="statNumber statTotal">0</span></p>
             </div>
@@ -3429,8 +3431,9 @@
                 <p id="stat+cap3" class="statPortion singularity">PL-AT δ:<span id="s+cap3" class="statNumber">0</span></p>
                 <p id="stat+cap4" class="statPortion singularity">PL-AT Γ:<span id="s+cap4" class="statNumber">0</span></p>
                 <p id="stat+cap5" class="statPortion singularity">PL-AT _:<span id="s+cap5" class="statNumber">0</span></p>
+                <p id="stat+cap6" class="statPortion singularity">PL-AT _:<span id="s+cap6" class="statNumber">0</span></p>
                 <!--"It all adds up"-->
-                <p id="stat+cap6" class="statPortion singularity">Singularity factor:<span id="s+cap6" class="statNumber">0</span></p>
+                <p id="stat+cap7" class="statPortion singularity">Singularity factor:<span id="s+cap7" class="statNumber">0</span></p>
 
                 <p id="statAddSep3" class="statPortion">&nbsp;</p>
 
@@ -3451,6 +3454,9 @@
                 <p id="statALuckM7" class="statPortion">a<span id="sALuckM7" class="statNumber">0</span></p>
                 <p id="statALuckM8" class="statPortion">a<span id="sALuckM8" class="statNumber">0</span></p>
                 <p id="statALuckM9" class="statPortion">a<span id="sALuckM9" class="statNumber">0</span></p>
+                <p id="statALuckM10" class="statPortion">a<span id="sALuckM10" class="statNumber">0</span></p>
+                <p id="statALuckM11" class="statPortion">a<span id="sALuckM11" class="statNumber">0</span></p>
+                <p id="statALuckMult" class="statPortion">Multipliers (Additive)<span id="sALuckMult" class="statNumber">0</span></p>
                 <p id="statALuckMT" class="statPortion statTotal" style="color: orange">TOTAL AMBROSIA LUCK:
                     <span id="sALuckMT" class="statNumber statTotal">0</span></p>
             </div>
@@ -3849,6 +3855,21 @@
                             <img id="shopSingularityPenaltyDebuff" alt="Singularity Penalty Debuffer" src="Pictures/Default/ShopSingularityPenaltyDebuff.png" loading="lazy">
                             <p id="shopSingularityPenaltyDebuffLevel"></p>
                             <button class="permshopbutton" id="shopSingularityPenaltyDebuffButton" style="border: 2px solid pink"></button>
+                        </div>
+                        <div class="exalt2Unlock" id="shopAmbrosiaLuckMultiplier4Hide">
+                            <img id="shopAmbrosiaLuckMultiplier4" alt="Ambrosia Luck Multiplier 4" src="Pictures/Default/ShopAmbrosiaLuckMultiplier4.png" loading="lazy">
+                            <p id="shopAmbrosiaLuckMultiplier4Level"></p>
+                            <button class="permshopbutton" id="shopAmbrosiaLuckMultiplier4Button" style="border: 2px solid pink"></button>
+                        </div>
+                        <div class="exalt3Unlock" id="calculator7Hide">
+                            <img id="calculator7" alt="Calculator 7" src="Pictures/Default/ShopCalculator7.png" loading="lazy">
+                            <p id="calculator7Level"></p>
+                            <button class="permshopbutton" id="calculator7Button" style="border: 2px solid pink"></button>
+                        </div>
+                        <div class="exalt4Unlock" id="shopOcteractAmbrosiaLuckHide">
+                            <img id="shopOcteractAmbrosiaLuck" alt="Octeract-Based Ambrosia Luck" src="Pictures/Default/ShopOcteractAmbrosiaLuck.png" loading="lazy">
+                            <p id="shopOcteractAmbrosiaLuckLevel"></p>
+                            <button class="permshopbutton" id="shopOcteractAmbrosiaLuckButton" style="border: 2px solid pink"></button>
                         </div>
                         <div class="singularityShopUnlock2" id="shopAmbrosiaGeneration1Hide">
                             <img id="shopAmbrosiaGeneration1" alt="Ambrosia Generation Improvement 1" src="Pictures/Default/ShopAmbrosiaGeneration1.png" loading="lazy">
@@ -4345,6 +4366,15 @@
                         </div>
                         <div class="blueberryUpgrade">
                             <img id="ambrosiaPatreon" src="Pictures/Default/BlueberryPatreon.png">
+                        </div>
+                        <div class="blueberryUpgrade">
+                            <img id="ambrosiaObtainium1" src="Pictures/Default/BlueberryObtainium.png">
+                        </div>
+                        <div class="blueberryUpgrade">
+                            <img id="ambrosiaOffering1" src="Pictures/Default/BlueberryOffering.png">
+                        </div>
+                        <div class="blueberryUpgrade">
+                            <img id="ambrosiaHyperflux" src="Pictures/Default/BlueberryHyperflux.png">
                         </div>
                     </div>
                     <div class="blueberryUpgradeTier">

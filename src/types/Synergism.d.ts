@@ -1,14 +1,19 @@
 import type Decimal from 'break_infinity.js'
-import { BlueberryUpgrade } from '../BlueberryUpgrades'
+import type { BlueberryUpgrade } from '../BlueberryUpgrades'
 import type { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from '../CubeExperimental'
-import { HepteractCraft } from '../Hepteracts'
-import { Category, ResetHistoryEntryUnion } from '../History'
-import { OcteractUpgrade } from '../Octeracts'
-import { IPlatBaseCost } from '../Platonic'
+import type { HepteractCraft } from '../Hepteracts'
+import type { Category, ResetHistoryEntryUnion } from '../History'
+import type { OcteractUpgrade } from '../Octeracts'
+import type { IPlatBaseCost } from '../Platonic'
 import type { QuarkHandler } from '../Quark'
-import { SingularityUpgrade } from '../singularity'
-import { SingularityChallenge, singularityChallengeData } from '../SingularityChallenges'
-import { AmbrosiaGenerationCache, AmbrosiaLuckCache, BlueberryInventoryCache } from '../StatCache'
+import type { SingularityUpgrade } from '../singularity'
+import type { SingularityChallenge, singularityChallengeData } from '../SingularityChallenges'
+import type {
+  AmbrosiaGenerationCache,
+  AmbrosiaLuckAdditiveMultCache,
+  AmbrosiaLuckCache,
+  BlueberryInventoryCache
+} from '../StatCache'
 import type { Tabs } from '../Tabs'
 
 export interface Player {
@@ -350,6 +355,7 @@ export interface Player {
     calculator4: number
     calculator5: number
     calculator6: number
+    calculator7: number
     constantEX: number
     powderEX: number
     chronometer2: number
@@ -382,6 +388,8 @@ export interface Player {
     seasonPassInfinity: number
     chronometerInfinity: number
     shopSingularityPenaltyDebuff: number
+    shopAmbrosiaLuckMultiplier4: number
+    shopOcteractAmbrosiaLuck: number
     shopAmbrosiaGeneration1: number
     shopAmbrosiaGeneration2: number
     shopAmbrosiaGeneration3: number
@@ -607,7 +615,10 @@ export interface Player {
   octeractTimer: number
 
   insideSingularityChallenge: boolean
-  singularityChallenges: Record<keyof typeof singularityChallengeData, SingularityChallenge>
+  singularityChallenges: Record<
+    keyof typeof singularityChallengeData,
+    SingularityChallenge
+  >
 
   ambrosia: number
   lifetimeAmbrosia: number
@@ -615,11 +626,15 @@ export interface Player {
   ambrosiaRNG: number // DEPRECIATED, DO NOT USE
   visitedAmbrosiaSubtab: boolean
   spentBlueberries: number
-  blueberryUpgrades: Record<keyof typeof blueberryUpgradeData, BlueberryUpgrade>
+  blueberryUpgrades: Record<
+    keyof typeof blueberryUpgradeData,
+    BlueberryUpgrade
+  >
   blueberryLoadouts: Record<number, BlueberryOpt>
   blueberryLoadoutMode: BlueberryLoadoutMode
 
   caches: {
+    ambrosiaLuckAdditiveMult: AmbrosiaLuckAdditiveMultCache
     ambrosiaLuck: AmbrosiaLuckCache
     ambrosiaGeneration: AmbrosiaGenerationCache
     blueberryInventory: BlueberryInventoryCache
@@ -734,7 +749,17 @@ export interface GlobalVariables {
   researchfiller1: string
   researchfiller2: string
 
-  ordinals: readonly ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', ...string[]]
+  ordinals: readonly [
+    'first',
+    'second',
+    'third',
+    'fourth',
+    'fifth',
+    'sixth',
+    'seventh',
+    'eighth',
+    ...string[]
+  ]
   cardinals: string[]
 
   challengeBaseRequirements: number[]

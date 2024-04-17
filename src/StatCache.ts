@@ -3,6 +3,7 @@ import {
   calculateAmbrosiaGenerationSingularityUpgrade,
   calculateAmbrosiaLuckOcteractUpgrade,
   calculateAmbrosiaLuckSingularityUpgrade,
+  calculateCashGrabBlueberryBonus,
   calculateDilatedFiveLeafBonus,
   calculateEventBuff,
   calculateSingularityMilestoneBlueberries
@@ -130,17 +131,19 @@ abstract class MultiplicationCache<T extends string> implements StatCache<T> {
  */
 
 type AmbrosialLuck =
+  | 'Base'
   | 'SingPerks'
   | 'OcteractBerries'
   | 'ShopUpgrades'
   | 'BlueberryUpgrade1'
-  | 'Event'
   | 'BlueberryCubeLuck1'
   | 'BlueberryQuarkLuck1'
   | 'SingularityBerries'
   | 'BlueberryUpgrade2'
   | 'ShopOcteractAmbrosiaLuck'
   | 'TwoHundredSixtyNine'
+  | 'OneHundredThirtyOne'
+  | 'Exalt5'
 
 type AmbrosiaGeneration =
   | 'DefaultVal'
@@ -150,14 +153,19 @@ type AmbrosiaGeneration =
   | 'Event'
   | 'OcteractBerries'
   | 'BlueberryPatreon'
+  | 'Exalt2'
+  | 'CashGrabUltra'
+  | 'Exalt5'
 
-type BlueberryInventory = 'Exalt1' | 'SingularityUpgrade' | 'SingularityPerk'
+type BlueberryInventory = 'Exalt1' | 'SingularityUpgrade' | 'SingularityPerk' | 'Exalt5'
 
 type AmbrosiaLuckAdditiveMult =
   | 'Base'
   | 'Exalt1'
   | 'SingularityPerk'
   | 'ShopUpgrades'
+  | 'Exalt5'
+  | 'Event'
 
 export class AmbrosiaLuckAdditiveMultCache extends AdditionCache<AmbrosiaLuckAdditiveMult> {
   vals: Record<AmbrosiaLuckAdditiveMult, number>
@@ -169,7 +177,9 @@ export class AmbrosiaLuckAdditiveMultCache extends AdditionCache<AmbrosiaLuckAdd
       Base: 1,
       Exalt1: 0,
       SingularityPerk: 0,
-      ShopUpgrades: 0
+      ShopUpgrades: 0,
+      Exalt5: 0,
+      Event: 0,
     }
     this.totalVal = 1
   }
@@ -193,11 +203,20 @@ export class AmbrosiaLuckAdditiveMultCache extends AdditionCache<AmbrosiaLuckAdd
         this.vals[key] = player.shopUpgrades.shopAmbrosiaLuckMultiplier4 / 100
         break
       }
+      case 'Exalt5': {
+        this.vals[key] = +player.singularityChallenges.noAmbrosiaUpgrades.rewards.luckBonus
+        break
+      }
+      case 'Event': {
+        this.vals[key] = Globals.isEvent
+          ? calculateEventBuff(BuffType.AmbrosiaLuck)
+          : 0
+        break
+      }
     }
     const newVal = this.vals[key]
     this.updateTotal(oldVal, newVal, init)
-    console.log(this.totalVal)
-    player.caches.ambrosiaLuck.updateVal('Event') // Dependant cache, though maybe need a better system than calling Event
+    player.caches.ambrosiaLuck.updateVal('Base') // Dependant cache, though maybe need a better system than calling Base
   }
 }
 
@@ -209,6 +228,7 @@ export class AmbrosiaLuckCache extends AdditionCache<AmbrosialLuck> {
   constructor () {
     super()
     this.vals = {
+      Base: 100,
       SingPerks: 0,
       ShopUpgrades: 0,
       SingularityBerries: 0,
@@ -217,9 +237,10 @@ export class AmbrosiaLuckCache extends AdditionCache<AmbrosialLuck> {
       BlueberryUpgrade2: 0,
       BlueberryCubeLuck1: 0,
       BlueberryQuarkLuck1: 0,
+      OneHundredThirtyOne: 0,
       TwoHundredSixtyNine: 0,
       ShopOcteractAmbrosiaLuck: 0,
-      Event: 0
+      Exalt5: 0,
     }
     this.totalVal = 0
     this.usedTotal = 0
@@ -228,6 +249,10 @@ export class AmbrosiaLuckCache extends AdditionCache<AmbrosialLuck> {
   updateVal (key: AmbrosialLuck, init = false): void {
     const oldVal = this.vals[key]
     switch (key) {
+      case 'Base': {
+        this.vals[key] = 100
+        break
+      }
       case 'SingPerks': {
         this.vals[key] = calculateSingularityAmbrosiaLuckMilestoneBonus()
         break
@@ -260,6 +285,10 @@ export class AmbrosiaLuckCache extends AdditionCache<AmbrosialLuck> {
         this.vals[key] = +player.blueberryUpgrades.ambrosiaQuarkLuck1.bonus.ambrosiaLuck
         break
       }
+      case 'OneHundredThirtyOne': {
+        this.vals[key] = player.highestSingularityCount >= 131 ? 131 : 0
+        break
+      }
       case 'TwoHundredSixtyNine': {
         this.vals[key] = player.highestSingularityCount >= 269 ? 269 : 0
         break
@@ -269,10 +298,8 @@ export class AmbrosiaLuckCache extends AdditionCache<AmbrosialLuck> {
           * (1 + Math.floor(Math.log10(player.totalWowOcteracts + 1)))
         break
       }
-      case 'Event': {
-        this.vals[key] = Globals.isEvent
-          ? 100 * calculateEventBuff(BuffType.AmbrosiaLuck)
-          : 0
+      case 'Exalt5': {
+        this.vals[key] = +player.singularityChallenges.noAmbrosiaUpgrades.rewards.additiveLuck
         break
       }
     }
@@ -297,6 +324,9 @@ export class AmbrosiaGenerationCache extends MultiplicationCache<AmbrosiaGenerat
       SingularityBerries: 1,
       OcteractBerries: 1,
       BlueberryPatreon: 1,
+      Exalt2: 1,
+      Exalt5: 1,
+      CashGrabUltra: 1,
       Event: 1
     }
     this.totalVal = 0
@@ -329,10 +359,22 @@ export class AmbrosiaGenerationCache extends MultiplicationCache<AmbrosiaGenerat
         this.vals[key] = +player.blueberryUpgrades.ambrosiaPatreon.bonus.blueberryGeneration
         break
       }
+      case 'Exalt2': {
+        this.vals[key] = +player.singularityChallenges.oneChallengeCap.rewards.blueberrySpeedMult
+        break
+      }
+      case 'Exalt5': {
+        this.vals[key] = +player.singularityChallenges.noAmbrosiaUpgrades.rewards.blueberrySpeedMult
+        break
+      }
       case 'Event': {
         this.vals[key] = Globals.isEvent
           ? 1 + calculateEventBuff(BuffType.BlueberryTime)
           : 1
+        break
+      }
+      case 'CashGrabUltra': {
+        this.vals[key] = calculateCashGrabBlueberryBonus()
         break
       }
     }
@@ -350,7 +392,8 @@ export class BlueberryInventoryCache extends AdditionCache<BlueberryInventory> {
     this.vals = {
       Exalt1: 0,
       SingularityUpgrade: 0,
-      SingularityPerk: 0
+      SingularityPerk: 0,
+      Exalt5: 0,
     }
     this.totalVal = 0
   }
@@ -371,6 +414,9 @@ export class BlueberryInventoryCache extends AdditionCache<BlueberryInventory> {
       case 'SingularityPerk': {
         this.vals[key] = calculateSingularityMilestoneBlueberries()
         break
+      }
+      case 'Exalt5': {
+        this.vals[key] = +player.singularityChallenges.noAmbrosiaUpgrades.rewards.blueberries
       }
     }
     const newVal = this.vals[key]

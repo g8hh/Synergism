@@ -1101,7 +1101,7 @@ export const updateSingularityGlobalPerks = () => {
     'cashGrab'
   ] as const
   for (const key of shopItemPerk_20) {
-    shopData[key].refundable = perk_20 ? false : true
+    shopData[key].refundable = !perk_20
   }
 
   const perk_51 = player.highestSingularityCount >= 51
@@ -1114,7 +1114,7 @@ export const updateSingularityGlobalPerks = () => {
     'chronometer2'
   ] as const
   for (const key of shopItemPerk_51) {
-    shopData[key].refundable = perk_51 ? false : true
+    shopData[key].refundable = !perk_51
   }
 }
 
@@ -1307,6 +1307,8 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   hold.autoCubeUpgradesToggle = player.autoCubeUpgradesToggle
   hold.autoPlatonicUpgradesToggle = player.autoPlatonicUpgradesToggle
   hold.insideSingularityChallenge = player.insideSingularityChallenge
+  hold.ultimatePixels = player.ultimatePixels
+  hold.ultimateProgress = player.ultimateProgress
   hold.singularityChallenges = Object.fromEntries(
     Object.entries(player.singularityChallenges).map(([key, value]) => {
       return [key, {
@@ -1338,6 +1340,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   const saveCode44 = player.codes.get(44) ?? false
   const saveCode45 = player.codes.get(45) ?? false
   const saveCode46 = player.codes.get(46) ?? false
+  const saveCode47 = player.codes.get(47) ?? false
 
   // Import Game
 
@@ -1359,6 +1362,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   player.codes.set(44, saveCode44)
   player.codes.set(45, saveCode45)
   player.codes.set(46, saveCode46)
+  player.codes.set(47, saveCode47)
   updateSingularityMilestoneAwards()
 
   player.rngCode = Date.now()

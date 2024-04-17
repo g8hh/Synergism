@@ -790,6 +790,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     limitedAscensions: new SingularityChallenge(
       singularityChallengeData.limitedAscensions,
       'limitedAscensions'
+    ),
+    noAmbrosiaUpgrades: new SingularityChallenge(
+      singularityChallengeData.noAmbrosiaUpgrades,
+      'noAmbrosiaUpgrades'
     )
   }
 
@@ -1040,7 +1044,10 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
       shopAmbrosiaLuck1: 0,
       shopAmbrosiaLuck2: 0,
       shopAmbrosiaLuck3: 0,
-      shopAmbrosiaLuck4: 0
+      shopAmbrosiaLuck4: 0,
+      shopCashGrabUltra: 0,
+      shopAmbrosiaAccelerator: 0,
+      shopEXUltra: 0,
     }
 
     player.worlds.add(
@@ -1653,5 +1660,16 @@ export const checkVariablesOnLoad = (data: PlayerSave) => {
     player.shopUpgrades.calculator7 = 0
     player.shopUpgrades.shopAmbrosiaLuckMultiplier4 = 0
     player.shopUpgrades.shopOcteractAmbrosiaLuck = 0
+  }
+
+  if (player.ultimatePixels === undefined) {
+    player.ultimatePixels = 0
+    player.ultimateProgress = 0
+  }
+
+  if (player.shopUpgrades.shopAmbrosiaAccelerator === undefined) { 
+    player.shopUpgrades.shopCashGrabUltra = 0
+    player.shopUpgrades.shopAmbrosiaAccelerator = 0
+    player.shopUpgrades.shopEXUltra = 0
   }
 }

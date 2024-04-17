@@ -534,7 +534,7 @@ export const player: Player = {
   subtabNumber: 0,
 
   // create a Map with keys defaulting to false
-  codes: new Map(Array.from({ length: 46 }, (_, i) => [i + 1, false])),
+  codes: new Map(Array.from({ length: 47 }, (_, i) => [i + 1, false])),
 
   loaded1009: true,
   loaded1009hotfix1: true,
@@ -611,7 +611,10 @@ export const player: Player = {
     shopAmbrosiaLuck1: 0,
     shopAmbrosiaLuck2: 0,
     shopAmbrosiaLuck3: 0,
-    shopAmbrosiaLuck4: 0
+    shopAmbrosiaLuck4: 0,
+    shopCashGrabUltra: 0,
+    shopAmbrosiaAccelerator: 0,
+    shopEXUltra: 0,
   },
   shopBuyMaxToggle: false,
   shopHideToggle: false,
@@ -1384,6 +1387,10 @@ export const player: Player = {
     limitedAscensions: new SingularityChallenge(
       singularityChallengeData.limitedAscensions,
       'limitedAscensions'
+    ),
+    noAmbrosiaUpgrades: new SingularityChallenge(
+      singularityChallengeData.noAmbrosiaUpgrades,
+      'noAmbrosiaUpgrades'
     )
   },
 
@@ -1475,6 +1482,9 @@ export const player: Player = {
     8: {}
   },
   blueberryLoadoutMode: 'saveTree',
+
+  ultimateProgress: 0,
+  ultimatePixels: 0,
 
   caches: {
     ambrosiaLuckAdditiveMult: new AmbrosiaLuckAdditiveMultCache(),

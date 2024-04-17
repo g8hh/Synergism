@@ -283,15 +283,17 @@ export class BlueberryUpgrade extends DynamicUpgrade {
   }
 
   public get rewardDesc (): string {
+    const effectiveLevel = (player.singularityChallenges.noAmbrosiaUpgrades.enabled) ? 0: this.level
     if ('desc' in this.rewards(0)) {
-      return String(this.rewards(this.level).desc)
+      return String(this.rewards(effectiveLevel).desc)
     } else {
       return 'Contact Platonic or Khafra if you see this (should never occur!)'
     }
   }
 
   public get bonus () {
-    return this.rewards(this.level)
+    const effectiveLevel = (player.singularityChallenges.noAmbrosiaUpgrades.enabled) ? 0: this.level
+    return this.rewards(effectiveLevel)
   }
 }
 
@@ -669,11 +671,11 @@ export const blueberryUpgradeData: Record<
     ]
   },
   ambrosiaObtainium1: {
-    maxLevel: 1,
+    maxLevel: 2,
     costPerLevel: 50000,
     blueberryCost: 1,
     costFormula: (level: number, baseCost: number): number => {
-      return baseCost + 0 * level
+      return baseCost * Math.pow(25, level)
     },
     rewards: (n: number) => {
       const luck = player.caches.ambrosiaLuck.usedTotal
@@ -689,11 +691,11 @@ export const blueberryUpgradeData: Record<
     }
   },
   ambrosiaOffering1: {
-    maxLevel: 1,
+    maxLevel: 2,
     costPerLevel: 50000,
     blueberryCost: 1,
     costFormula: (level: number, baseCost: number): number => {
-      return baseCost + 0 * level
+      return baseCost * Math.pow(25, level)
     },
     rewards: (n: number) => {
       const luck = player.caches.ambrosiaLuck.usedTotal
@@ -709,11 +711,11 @@ export const blueberryUpgradeData: Record<
     }
   },
   ambrosiaHyperflux: {
-    maxLevel: 5,
+    maxLevel: 7,
     costPerLevel: 33333,
     blueberryCost: 3,
     costFormula: (level: number, baseCost: number): number => {
-      return baseCost + 33333 * level
+      return (baseCost + 33333 * Math.min(4, level)) * Math.max(1, Math.pow(3, level - 4))
     },
     rewards: (n: number) => {
       const fourByFourBase = n
@@ -743,6 +745,7 @@ export const resetBlueberryTree = async (giveAlert = true) => {
   for (const upgrade of Object.keys(player.blueberryUpgrades)) {
     const k = upgrade as keyof Player['blueberryUpgrades']
     player.blueberryUpgrades[k].refund()
+    player.blueberryUpgrades[k].updateCaches()
   }
   if (giveAlert) return Alert(i18next.t('ambrosia.refund'))
 }
@@ -871,6 +874,7 @@ export const createBlueberryTree = async (modules: BlueberryOpt) => {
       player.ambrosia -= tempCost
       player.blueberryUpgrades[k].ambrosiaInvested = tempCost
       player.blueberryUpgrades[k].level = val
+      player.blueberryUpgrades[k].updateCaches()
     }
   }
   void Alert(i18next.t('ambrosia.importTree.success'))

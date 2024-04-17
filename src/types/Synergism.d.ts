@@ -398,6 +398,9 @@ export interface Player {
     shopAmbrosiaLuck2: number
     shopAmbrosiaLuck3: number
     shopAmbrosiaLuck4: number
+    shopCashGrabUltra: number
+    shopAmbrosiaAccelerator: number
+    shopEXUltra: number
   }
   shopConfirmationToggle: boolean
   shopBuyMaxToggle: boolean | 'TEN' | 'ANY'
@@ -632,6 +635,9 @@ export interface Player {
   >
   blueberryLoadouts: Record<number, BlueberryOpt>
   blueberryLoadoutMode: BlueberryLoadoutMode
+
+  ultimateProgress: number
+  ultimatePixels: number
 
   caches: {
     ambrosiaLuckAdditiveMult: AmbrosiaLuckAdditiveMultCache

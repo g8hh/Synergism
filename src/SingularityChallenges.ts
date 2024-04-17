@@ -262,7 +262,8 @@ export const singularityChallengeData: Record<
         goldenQuarks: 1 + 0.12 * +(n > 0),
         blueberries: +(n > 0),
         shopUpgrade: n >= 20,
-        luckBonus: n >= 30 ? 0.04 : 0
+        luckBonus: n >= 30 ? 0.04 : 0,
+        shopUpgrade2: n >= 30
       }
     },
     cacheUpdates: [
@@ -281,6 +282,7 @@ export const singularityChallengeData: Record<
     effect: (n: number) => {
       return {
         corrScoreIncrease: 0.03 * n,
+        blueberrySpeedMult: (1 + n/100),
         capIncrease: 3 * +(n > 0),
         freeCorruptionLevel: n >= 20,
         shopUpgrade: n >= 20
@@ -314,9 +316,30 @@ export const singularityChallengeData: Record<
     },
     effect: (n: number) => {
       return {
+        ultimateProgressBarUnlock: (n > 0),
         ascensionSpeedMult: (0.1 * n) / 100,
         hepteractCap: n > 0,
         shopUpgrade: n >= 25
+      }
+    }
+  },
+  noAmbrosiaUpgrades: {
+    baseReq: 150,
+    maxCompletions: 20,
+    unlockSingularity: 166,
+    HTMLTag: 'noAmbrosiaUpgrades',
+    singularityRequirement: (baseReq: number, completions: number) => {
+      return baseReq + 6 * completions
+    },
+    effect: (n: number) => {
+      return {
+        bonusAmbrosia: +(n > 0),
+        blueberries: Math.floor(n/10) + +(n > 0),
+        luckBonus: n/200,
+        additiveLuck: 15 * n,
+        blueberrySpeedMult: (1 + n/50),
+        shopUpgrade: n >= 15,
+        shopUpgrade2: n >= 20
       }
     }
   }

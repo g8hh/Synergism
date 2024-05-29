@@ -1,4 +1,5 @@
 import i18next from 'i18next'
+import localforage from 'localforage'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { QuarkHandler } from './Quark'
 import { player } from './Synergism'
@@ -79,6 +80,10 @@ export async function handleLogin () {
     // TODO: better error, make link clickable, etc.
     subtabElement.textContent = 'Login is not available here, go to https://synergism.cc instead!'
   } else if (document.cookie.length) {
+    if (!member) {
+      console.log(response, globalBonus, member, personalBonus, document.cookie)
+    }
+
     currentBonus.textContent +=
       ` You also receive an extra ${personalBonus}% bonus for being a Patreon member and/or boosting the Discord server! Multiplicative with global bonus!`
 
@@ -119,25 +124,41 @@ export async function handleLogin () {
     `.trim()
 
     const logoutElement = document.createElement('button')
+    const cloudSaveElement = document.createElement('button')
+    const loadCloudSaveElement = document.createElement('button')
+
     logoutElement.addEventListener('click', logout, { once: true })
     logoutElement.style.cssText = 'border: 2px solid #5865F2; height: 25px; width: 150px;'
     logoutElement.textContent = 'Log Out'
 
+    if (personalBonus > 1) {
+      cloudSaveElement.addEventListener('click', saveToCloud)
+      cloudSaveElement.style.cssText = 'border: 2px solid #5865F2; height: 25px; width: 150px;'
+      cloudSaveElement.textContent = 'Save to Cloud ☁'
+    }
+
+    // loadCloudSaveElement.addEventListener('click', loadFromCloud)
+    loadCloudSaveElement.style.cssText = 'border: 2px solid #5865F2; height: 25px; width: 150px;'
+    loadCloudSaveElement.textContent = 'Load from Cloud ☽ [WIP]'
+
+    const cloudSaveParent = document.createElement('div')
+    cloudSaveParent.style.cssText = 'display: flex; flex-direction: row; justify-content: space-evenly; padding: 5px; width: 45%; margin: 0 auto;'
+
+    cloudSaveParent.appendChild(cloudSaveElement)
+    cloudSaveParent.appendChild(loadCloudSaveElement)
+
     subtabElement.appendChild(logoutElement)
+    subtabElement.appendChild(cloudSaveParent)
   } else {
     // User is not logged in
     subtabElement.innerHTML = `
-      <img id="discord-logo" alt="Discord Logo" src="Pictures/discord-mark-blue.png" loading="lazy">
-      <br>
-      <form action="https://discord.com/oauth2/authorize">
-        <input type="hidden" name="response_type" value="code" />
-        <input type="hidden" name="client_id" value="1124509674536972329" />
-        <input type="hidden" name="scope" value="guilds guilds.members.read identify" />
-        <input type="hidden" name="redirect_uri" value="https://synergism.cc/discord/oauth/" />
-        <input type="hidden" name="prompt" value="consent" />
-        <input type="submit" value="Login" style="border: 2px solid #5865F2; height: 20px; width: 250px;" />
-      </form>
+      <img id="discord-logo" alt="Discord Logo" src="Pictures/discord-mark-blue.png" loading="lazy" />
+      <button value="Login" style="border: 2px solid #5865F2; height: 20px; width: 250px;">Login with Discord</button>
     `
+
+    subtabElement.querySelector('button[value="Login"]')?.addEventListener('click', () => {
+      location.assign('https://discord.com/oauth2/authorize?response_type=code&client_id=1124509674536972329&scope=guilds+guilds.members.read+identify&redirect_uri=https%3A%2F%2Fsynergism.cc%2Fdiscord%2Foauth%2F&prompt=consent')
+    })
   }
 }
 
@@ -151,4 +172,28 @@ async function logout () {
   await Alert(i18next.t('account.logout'))
 
   location.reload()
+}
+
+async function saveToCloud () {
+  const save = (await localforage.getItem<Blob>('Synergysave2')
+    .then(b => b?.text())
+    .catch(() => null)) ?? localStorage.getItem('Synergysave2')
+
+  if (typeof save !== 'string') {
+    console.log('Yeah, no save here.')
+    return
+  }
+
+  const body = new FormData()
+  body.set('savefile', new File([save], 'file.txt'), 'file.txt')
+
+  const response = await fetch('https://synergism.cc/api/v1/saves/upload', {
+    method: 'POST',
+    body
+  })
+
+  if (!response.ok) {
+    await Alert(`Received an error: ${await response.text()}`)
+    return
+  }
 }

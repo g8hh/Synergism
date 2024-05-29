@@ -10,7 +10,7 @@ export const version = '3.0.0 pt 5.2: April 29: Progress Bar!!'
  */
 // eslint-disable-next-line
 export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2024, 1, 10, 16, 0, 6))
+export const lastUpdated = new Date(Date.UTC(2024, 4, 28, 16, 0, 6))
 /**
  * CHANGE THIS ONE INSTEAD
  */

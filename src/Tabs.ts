@@ -1,13 +1,14 @@
 import { DOMCacheGetOrSet } from './Cache/DOM'
+import { calculateAmbrosiaGenerationSpeed } from './Calculate'
 import { pressedKeys } from './Hotkeys'
 import { player } from './Synergism'
 import {
   setActiveSettingScreen,
   toggleBuildingScreen,
+  toggleChallengesScreen,
   toggleCorruptionLoadoutsStats,
   toggleCubeSubTab,
   toggleRuneScreen,
-  toggleChallengesScreen,
   toggleSingularityScreen
 } from './Toggles'
 import { changeTabColor, hideStuff, revealStuff } from './UpdateHTML'
@@ -145,7 +146,7 @@ const subtabInfo: Record<Tabs, SubTab> = {
       }
     ]
   },
-  [Tabs.Challenges]: { 
+  [Tabs.Challenges]: {
     tabSwitcher: () => toggleChallengesScreen,
     subTabList: [
       { subTabID: '1', unlocked: true, buttonID: 'toggleChallengesSubTab1' },
@@ -155,8 +156,8 @@ const subtabInfo: Record<Tabs, SubTab> = {
           return player.highestSingularityCount >= 25
         },
         buttonID: 'toggleChallengesSubTab2'
-      },
-    ] 
+      }
+    ]
   },
   [Tabs.Research]: { subTabList: [] },
   [Tabs.AntHill]: { subTabList: [] },
@@ -289,8 +290,6 @@ class TabRow extends HTMLDivElement {
       justify-content: center;
       gap: 0 5px;
     `
-
-    document.getElementsByClassName('navbar').item(0)?.appendChild(this)
   }
 
   getSubs () {
@@ -490,6 +489,7 @@ customElements.define('tab-row', TabRow, { extends: 'div' })
 customElements.define('sub-tab', $Tab, { extends: 'button' })
 
 export const tabRow = new TabRow()
+document.getElementsByClassName('navbar').item(0)?.appendChild(tabRow)
 
 tabRow.appendButton(
   new $Tab({ id: 'buildingstab', i18n: 'tabs.main.buildings' })
@@ -659,9 +659,9 @@ export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) =>
 
   if (subTabList.unlocked) {
     subTabs.tabSwitcher?.()(subTabList.subTabID)
-    if (tab.getType() === Tabs.Singularity && page === 4) {
+    if (tab.getType() === Tabs.Singularity && page === 3) {
       player.visitedAmbrosiaSubtab = true
-      player.caches.ambrosiaGeneration.updateVal('DefaultVal')
+      G.ambrosiaCurrStats.ambrosiaGenerationSpeed = calculateAmbrosiaGenerationSpeed().value
     }
   }
 }

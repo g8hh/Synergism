@@ -8,7 +8,7 @@ import { octeractGainPerSecond } from './Calculate'
 import { testing, version } from './Config'
 import { Synergism } from './Events'
 import { addTimers } from './Helper'
-import { quarkHandler } from './Quark'
+import { getQuarkBonus, quarkHandler } from './Quark'
 import { playerJsonSchema } from './saves/PlayerJsonSchema'
 import { shopData } from './Shop'
 import { singularityData } from './singularity'
@@ -240,7 +240,7 @@ export const exportSynergism = async (
     const quarkData = quarkHandler()
 
     let bonusGQMultiplier = 1
-    bonusGQMultiplier *= 1 + player.worlds.BONUS / 100
+    bonusGQMultiplier *= 1 + getQuarkBonus() / 100
     bonusGQMultiplier *= player.highestSingularityCount >= 100
       ? 1 + player.highestSingularityCount / 50
       : 1
@@ -620,13 +620,31 @@ export const promocodes = async (input: string | null, amount?: number) => {
       }
 
       if (player.highestSingularityCount >= 200 && player.highestSingularityCount < 205) {
-        const freeLevelOct1 = Math.max(player.octeractUpgrades.octeractGain.level / 100, Math.pow(player.octeractUpgrades.octeractGain.level * player.octeractUpgrades.octeractGain.freeLevels / 100, 0.5))
+        const freeLevelOct1 = Math.max(
+          player.octeractUpgrades.octeractGain.level / 100,
+          Math.pow(
+            player.octeractUpgrades.octeractGain.level * player.octeractUpgrades.octeractGain.freeLevels / 1000,
+            0.5
+          )
+        )
         player.octeractUpgrades.octeractGain.freeLevels += freeLevelOct1
         freeLevels.octeractGain = freeLevelOct1
-      }
-      else if (player.highestSingularityCount >= 205) {
-        const freeLevelOct1 = Math.max(player.octeractUpgrades.octeractGain.level / 100, Math.pow(player.octeractUpgrades.octeractGain.level * player.octeractUpgrades.octeractGain.freeLevels / 50, 0.5))
-        const freeLevelOct2 = Math.max(player.octeractUpgrades.octeractGain2.level / 100, Math.pow(Math.pow(player.octeractUpgrades.octeractGain2.level, 2) * player.octeractUpgrades.octeractGain2.freeLevels / 125, 0.333))
+      } else if (player.highestSingularityCount >= 205) {
+        const freeLevelOct1 = Math.max(
+          player.octeractUpgrades.octeractGain.level / 100,
+          Math.pow(
+            player.octeractUpgrades.octeractGain.level * player.octeractUpgrades.octeractGain.freeLevels / 640,
+            0.5
+          )
+        )
+        const freeLevelOct2 = Math.max(
+          player.octeractUpgrades.octeractGain2.level / 100,
+          Math.pow(
+            Math.pow(player.octeractUpgrades.octeractGain2.level, 2) * player.octeractUpgrades.octeractGain2.freeLevels
+              / 125000,
+            0.333
+          )
+        )
 
         player.octeractUpgrades.octeractGain.freeLevels += freeLevelOct1
         player.octeractUpgrades.octeractGain2.freeLevels += freeLevelOct2

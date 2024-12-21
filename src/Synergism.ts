@@ -614,7 +614,12 @@ export const player: Player = {
     shopAmbrosiaLuck4: 0,
     shopCashGrabUltra: 0,
     shopAmbrosiaAccelerator: 0,
-    shopEXUltra: 0
+    shopEXUltra: 0,
+    shopChronometerS: 0,
+    shopAmbrosiaUltra: 0,
+    shopSingularitySpeedup: 0,
+    shopSingularityPotency: 0,
+    shopSadisticRune: 0,
   },
   shopBuyMaxToggle: false,
   shopHideToggle: false,
@@ -1391,7 +1396,15 @@ export const player: Player = {
     noAmbrosiaUpgrades: new SingularityChallenge(
       singularityChallengeData.noAmbrosiaUpgrades,
       'noAmbrosiaUpgrades'
-    )
+    ),
+    limitedTime: new SingularityChallenge(
+      singularityChallengeData.limitedTime,
+      'limitedTime'
+    ),
+    sadisticPrequel: new SingularityChallenge(
+      singularityChallengeData.sadisticPrequel,
+      'sadisticPrequel'
+    ),
   },
 
   ambrosia: 0,
@@ -1612,6 +1625,18 @@ const loadSynergy = async () => {
       for (let i = player.codes.size + 1; i <= size; i++) {
         if (!player.codes.has(i)) {
           player.codes.set(i, false)
+        }
+      }
+    }
+
+    // TODO(@KhafraDev): remove G.currentSingChallenge
+    // fix current sing challenge blank
+    if (player.insideSingularityChallenge) {
+      const challenges = Object.keys(player.singularityChallenges)
+      for (let i = 0; i < challenges.length; i++) {
+        if (player.singularityChallenges[challenges[i]].enabled) {
+          G.currentSingChallenge = singularityChallengeData[challenges[i]].HTMLTag
+          break
         }
       }
     }
@@ -6215,7 +6240,9 @@ export const reloadShit = async (reset = false) => {
   if (!reset) {
     await calculateOffline()
   } else {
-    player.worlds.reset()
+    if (!player.singularityChallenges.limitedTime.rewards.preserveQuarks) {
+      player.worlds.reset()
+    }
     // saving is disabled during a singularity event to prevent bug
     // early return here if the save fails can keep game state from properly resetting after a singularity
     if (saveCheck.canSave) {

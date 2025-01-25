@@ -23,7 +23,7 @@ export interface ISingularityChallengeData {
   effect: (n: number) => Record<string, number | boolean>
   scalingrewardcount: number
   uniquerewardcount: number
-  resetTime ?: boolean
+  resetTime?: boolean
   completions?: number
   enabled?: boolean
   highestSingularityCompleted?: number
@@ -123,11 +123,10 @@ export class SingularityChallenge {
       G.currentSingChallenge = this.HTMLTag
       player.insideSingularityChallenge = true
       await singularity(setSingularity)
-      
+
       if (!this.resetTime) {
         player.singularityCounter = holdSingTimer
-      }
-      else {
+      } else {
         player.singularityCounter = 0
       }
       player.goldenQuarks = currentGQ + goldenQuarkGain
@@ -342,17 +341,21 @@ export const singularityChallengeData: Record<
   },
   noOcteracts: {
     baseReq: 75,
-    maxCompletions: 10,
+    maxCompletions: 15,
     unlockSingularity: 100,
     HTMLTag: 'noOcteracts',
     singularityRequirement: (baseReq: number, completions: number) => {
-      return baseReq + 13 * completions
+      if (completions < 10) {
+        return baseReq + 13 * completions
+      } else {
+        return baseReq + 13 * 9 + 10 * (completions - 9)
+      }
     },
     scalingrewardcount: 1,
     uniquerewardcount: 3,
     effect: (n: number) => {
       return {
-        octeractPow: 0.02 * n,
+        octeractPow: (n <= 10) ? 0.02 * n : 0.2 + (n - 10) / 100,
         offeringBonus: n > 0,
         obtainiumBonus: n >= 10,
         shopUpgrade: n >= 10
@@ -418,7 +421,7 @@ export const singularityChallengeData: Record<
         globalSpeed: 0.06 * n,
         ascensionSpeed: 0.06 * n,
         tier1Upgrade: n >= 15,
-        tier2Upgrade: n >= 25,
+        tier2Upgrade: n >= 25
       }
     }
   },

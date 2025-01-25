@@ -7,6 +7,7 @@ import { BuffType, calculateEventSourceBuff } from './Event'
 import { addTimers, automaticTools } from './Helper'
 import { hepteractEffective } from './Hepteracts'
 import { disableHotkeys, enableHotkeys } from './Hotkeys'
+import { PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getQuarkBonus, quarkHandler } from './Quark'
 import { reset } from './Reset'
 import { calculateSingularityDebuff } from './singularity'
@@ -342,10 +343,13 @@ export const calculateMaxRunes = (i: number) => {
 }
 
 export const calculateEffectiveIALevel = () => {
+  let bonus = PCoinUpgradeEffects.INSTANT_UNLOCK_2 ? 6 : 0
+  bonus += player.cubeUpgrades[73]
+  const totalRawLevel = player.runelevels[5] + bonus
   return (
-    player.runelevels[5]
-    + Math.max(0, player.runelevels[5] - 74)
-    + Math.max(0, player.runelevels[5] - 98)
+    totalRawLevel
+    + Math.max(0, totalRawLevel - 74)
+    + Math.max(0, totalRawLevel - 98)
   )
 }
 
@@ -497,6 +501,7 @@ export function calculateOfferings (
     1 + player.cubeUpgrades[54] / 100, // Cube upgrade 6x4 (Cx4)
     +player.octeractUpgrades.octeractOfferings1.getEffect().bonus, // Offering Electrolosis OC Upgrade
     1 + 0.001 * +player.blueberryUpgrades.ambrosiaOffering1.bonus.offeringMult, // Ambrosia!!
+    Math.pow(1.04, player.cubeUpgrades[72] * sumContents(player.talismanRarity)), // Cube upgrade 8x2 (Cx22)
     calculateEXALTBonusMult(), // 20 Ascensions X20 Bonus [EXALT ONLY]
     calculateEXUltraOfferingBonus(), // EX Ultra Shop Upgrade
     1 + calculateEventBuff(BuffType.Offering) // Event
@@ -688,6 +693,8 @@ export const calculateObtainium = () => {
     const time = player.singChallengeTimer
     G.obtainiumGain *= calculateExalt6Penalty(comps, time)
   }
+
+  G.obtainiumGain *= Math.pow(1.04, player.cubeUpgrades[71] * sumContents(player.talismanRarity))
 
   if (!isFinite(G.obtainiumGain)) {
     G.obtainiumGain = 1e300
@@ -1353,7 +1360,7 @@ export const timeWarp = async () => {
 
   DOMCacheGetOrSet('offlineContainer').style.display = 'flex'
   DOMCacheGetOrSet('offlineBlur').style.display = ''
-  await calculateOffline(timeUse)
+  calculateOffline(timeUse)
 }
 
 export const calculateOffline = async (forceTime = 0) => {
@@ -1362,9 +1369,11 @@ export const calculateOffline = async (forceTime = 0) => {
   G.timeWarp = true
 
   // Variable Declarations i guess
-  const maximumTimer = 86400 * 3
+  const maximumTimer = (86400 * 3
     + 7200 * 2 * player.researches[31]
-    + 7200 * 2 * player.researches[32]
+    + 7200 * 2 * player.researches[32])
+    * PCoinUpgradeEffects.OFFLINE_TIMER_CAP_BUFF
+
   const updatedTime = Date.now()
   const timeAdd = Math.min(
     maximumTimer,
@@ -1556,7 +1565,7 @@ export const calculateOffline = async (forceTime = 0) => {
     player.loadedNov13Vers = true
   }
 
-  await saveSynergy()
+  saveSynergy()
 
   updateTalismanInventory()
   calculateObtainium()
@@ -1705,6 +1714,8 @@ export const calculateAllCubeMultiplier = () => {
     exaltPenalty = calculateExalt6Penalty(comps, time)
   }
   const arr = [
+    // Pseudocoin Multiplier
+    PCoinUpgradeEffects.CUBE_BUFF,
     // Ascension Time Multiplier to cubes
     Math.pow(Math.min(1, player.ascensionCounter / 10), 2)
     * (1
@@ -1774,7 +1785,12 @@ export const calculateAllCubeMultiplier = () => {
     // Platonic DELTA
     1
     + +player.singularityUpgrades.platonicDelta.getEffect().bonus
-      * Math.min(9, (player.shopUpgrades.shopSingularitySpeedup > 0) ? player.singularityCounter * 20 / (3600 * 24) : player.singularityCounter / (3600 * 24)),
+      * Math.min(
+        9,
+        (player.shopUpgrades.shopSingularitySpeedup > 0)
+          ? player.singularityCounter * 50 / (3600 * 24)
+          : player.singularityCounter / (3600 * 24)
+      ),
     // Wow Pass INF
     Math.pow(1.02, player.shopUpgrades.seasonPassInfinity),
     // Ambrosia Mult
@@ -2079,6 +2095,7 @@ export const calculateHepteractMultiplier = (score = -1) => {
 export const getOcteractValueMultipliers = () => {
   const corruptionLevelSum = sumContents(player.usedCorruptions.slice(2, 10))
   return [
+    PCoinUpgradeEffects.CUBE_BUFF,
     1 + (1.5 * player.shopUpgrades.seasonPass3) / 100,
     1 + (0.75 * player.shopUpgrades.seasonPassY) / 100,
     1 + (player.shopUpgrades.seasonPassZ * player.singularityCount) / 100,
@@ -2118,7 +2135,12 @@ export const getOcteractValueMultipliers = () => {
     1 + calculateEventBuff(BuffType.Octeract),
     1
     + +player.singularityUpgrades.platonicDelta.getEffect().bonus
-      * Math.min(9, (player.shopUpgrades.shopSingularitySpeedup > 0) ? player.singularityCounter * 20 / (3600 * 24) : player.singularityCounter / (3600 * 24)),
+      * Math.min(
+        9,
+        (player.shopUpgrades.shopSingularitySpeedup > 0)
+          ? player.singularityCounter * 50 / (3600 * 24)
+          : player.singularityCounter / (3600 * 24)
+      ),
     // No Singulairty Upgrades
     +player.singularityChallenges.noSingularityUpgrades.rewards.cubes,
     // Wow Pass INF
@@ -2214,7 +2236,7 @@ export const calculateTimeAcceleration = () => {
     calculateSigmoid(2, player.antUpgrades[12 - 1]! + G.bonusant12, 69), // ant 12
     1 + 0.1 * (player.talismanRarity[2 - 1] - 1), // Chronos Talisman bonus
     G.challenge15Rewards.globalSpeed, // Challenge 15 reward
-    1 + 0.01 * player.cubeUpgrades[52], // cube upgrade 6x2 (Cx2)
+    1 + 0.01 * player.cubeUpgrades[52] // cube upgrade 6x2 (Cx2)
   ]
 
   // Global Speed softcap + Corruption / Corruption-like effects
@@ -2414,8 +2436,8 @@ export const calculateQuarkMultiplier = () => {
     // Challenge 15: Exceed 1e11 exponent reward
     multiplier += G.challenge15Rewards.quarks - 1
   }
-  if (player.shopUpgrades.infiniteAscent) {
-    // Purchased Infinite Ascent Rune
+  if (isIARuneUnlocked()) {
+    // Purchased Infinite Ascent Rune (or corresponding PCoin Upgrade)
     multiplier *= 1.1 + (0.15 / 75) * calculateEffectiveIALevel()
   }
   if (player.challenge15Exponent >= 1e15) {
@@ -2478,8 +2500,8 @@ export const calculateQuarkMultiplier = () => {
   multiplier *= +player.blueberryUpgrades.ambrosiaLuckQuark1.bonus.quarks
   multiplier *= +player.blueberryUpgrades.ambrosiaQuarks2.bonus.quarks
   multiplier *= calculateCashGrabQuarkBonus()
-  multiplier *= (1 + +player.singularityChallenges.limitedTime.rewards.quarkMult)
-  multiplier *= (1 + +player.singularityChallenges.sadisticPrequel.rewards.quarkMult)
+  multiplier *= 1 + +player.singularityChallenges.limitedTime.rewards.quarkMult
+  multiplier *= 1 + +player.singularityChallenges.sadisticPrequel.rewards.quarkMult
 
   if (player.highestSingularityCount === 0) {
     multiplier *= 1.25
@@ -2511,6 +2533,7 @@ export const calculateGoldenQuarkMultiplier = (computeMultiplier = false) => {
   }
 
   const arr = [
+    PCoinUpgradeEffects.GOLDEN_QUARK_BUFF, // Golden Quark Buff from PseudoCoins
     1 + Math.max(0, Math.log10(player.challenge15Exponent + 1) - 20) / 2, // Challenge 15 Exponent
     1 + getQuarkBonus() / 100, // Patreon Bonus
     +player.singularityUpgrades.goldenQuarks1.getEffect().bonus, // Golden Quarks I
@@ -2521,7 +2544,7 @@ export const calculateGoldenQuarkMultiplier = (computeMultiplier = false) => {
     player.highestSingularityCount >= 100
       ? 1 + Math.min(1, player.highestSingularityCount / 250)
       : 1, // Golden Revolution II
-    perkMultiplier, // Immaculate Alchemy
+    perkMultiplier // Immaculate Alchemy
   ]
 
   // Total Quarks Coefficient
@@ -2757,6 +2780,7 @@ export const calculateAscensionScore = () => {
     ? 1
     : 0
   bonusLevel += +player.singularityChallenges.oneChallengeCap.rewards.freeCorruptionLevel
+
   // Init Arrays with challenge values :)
   const challengeScoreArrays1 = [0, 8, 10, 12, 15, 20, 60, 80, 120, 180, 300]
   const challengeScoreArrays2 = [0, 10, 12, 15, 20, 30, 80, 120, 180, 300, 450]
@@ -2833,6 +2857,7 @@ export const calculateAscensionScore = () => {
     ? 0.33
     : 0
   bonusVal += +player.singularityChallenges.oneChallengeCap.rewards.corrScoreIncrease
+  bonusVal += 0.3 * player.cubeUpgrades[74]
   for (let i = 2; i < 10; i++) {
     const exponent = i === 2 && player.usedCorruptions[i] >= 10
       ? 1
@@ -3178,12 +3203,7 @@ export const calculateAmbrosiaLuckOcteractUpgrade = () => {
   return sumContents(vals)
 }
 
-export const calculateRequiredBlueberryTime = () => {
-  let val = G.TIME_PER_AMBROSIA // Currently 600
-  val += Math.floor(player.lifetimeAmbrosia / 30)
-
-  const baseVal = val
-
+export const calculateNumberOfThresholds = () => {
   const timeThresholds = [
     5000,
     25000,
@@ -3196,14 +3216,31 @@ export const calculateRequiredBlueberryTime = () => {
     1e7,
     2e7,
     4e7,
-    1e8
+    1e8,
+    2e8,
+    4e8,
+    1e9
   ]
+
+  const val = G.TIME_PER_AMBROSIA + Math.floor(player.lifetimeAmbrosia / 30)
+
+  let thresholds = 0
   for (const threshold of timeThresholds) {
-    if (baseVal >= threshold) {
-      val *= 2
+    if (val >= threshold) {
+      thresholds++
     }
   }
-  return val
+
+  return thresholds
+}
+
+export const calculateRequiredBlueberryTime = () => {
+  let val = G.TIME_PER_AMBROSIA // Currently 600
+  val += Math.floor(player.lifetimeAmbrosia / 30)
+
+  const thresholds = calculateNumberOfThresholds()
+  const thresholdBase = 2
+  return Math.pow(thresholdBase, thresholds) * val
 }
 
 export const calculateSingularityMilestoneBlueberries = () => {
@@ -3298,9 +3335,8 @@ export const calculateExalt6Penalty = (comps: number, time: number) => {
   const displacedTime = Math.max(0, time - 600 + 20 * comps)
   if (displacedTime === 0) {
     return 1
-  }
-  else {
-    return Math.pow(10 + comps, -displacedTime/60)
+  } else {
+    return Math.pow(10 + comps, -displacedTime / 60)
   }
 }
 
@@ -3324,6 +3360,7 @@ export const calculateAdditiveLuckMult = () => {
     calculateDilatedFiveLeafBonus(), // Dilated Five Leaf Clover Perk
     player.shopUpgrades.shopAmbrosiaLuckMultiplier4 / 100, // EXALT-unlocked shop upgrade
     +player.singularityChallenges.noAmbrosiaUpgrades.rewards.luckBonus, // No Ambrosia Challenge Reward
+    0.001 * player.cubeUpgrades[77], // Cookie 5 (Cx27)
     G.isEvent ? calculateEventBuff(BuffType.AmbrosiaLuck) : 0 // Event
   ]
 
@@ -3340,6 +3377,7 @@ export const calculateAdditiveLuckMult = () => {
 export const calculateAmbrosiaLuck = () => {
   const arr = [
     100, // Base
+    PCoinUpgradeEffects.AMBROSIA_LUCK_BUFF, // Platonic Coin Upgrade
     calculateSingularityAmbrosiaLuckMilestoneBonus(), // Ambrosia Luck Milestones
     calculateAmbrosiaLuckShopUpgrade(), // Ambrosia Luck from Shop Upgrades (I-IV)
     calculateAmbrosiaLuckSingularityUpgrade(), // Ambrosia Luck from Singularity Upgrades (I-IV)
@@ -3352,6 +3390,8 @@ export const calculateAmbrosiaLuck = () => {
     player.highestSingularityCount >= 269 ? 269 : 0, // Singularity Perk "Two Hundred Sixty Nine!"
     player.shopUpgrades.shopOcteractAmbrosiaLuck * (1 + Math.floor(Math.log10(player.totalWowOcteracts + 1))), // Octeract -> Ambrosia Shop Upgrade
     +player.singularityChallenges.noAmbrosiaUpgrades.rewards.additiveLuck, // No Ambrosia Challenge Reward
+    2 * player.cubeUpgrades[77], // Cookie 5 (Cx27)
+    Math.min(100, player.cubeUpgradeRedBarFilled / 50), // Filled Red Bars with (Cx29) purchased
     player.shopUpgrades.shopAmbrosiaUltra * sumOfExaltCompletions() // Ambrosia Ultra Shop Upgrade
   ]
 
@@ -3384,6 +3424,7 @@ export const calculateBlueberryInventory = () => {
 export const calculateAmbrosiaGenerationSpeed = () => {
   const arr = [
     +(player.visitedAmbrosiaSubtab),
+    PCoinUpgradeEffects.AMBROSIA_GENERATION_BUFF,
     calculateBlueberryInventory().value,
     calculateAmbrosiaGenerationShopUpgrade(),
     calculateAmbrosiaGenerationSingularityUpgrade(),
@@ -3391,6 +3432,7 @@ export const calculateAmbrosiaGenerationSpeed = () => {
     +player.blueberryUpgrades.ambrosiaPatreon.bonus.blueberryGeneration,
     +player.singularityChallenges.oneChallengeCap.rewards.blueberrySpeedMult,
     +player.singularityChallenges.noAmbrosiaUpgrades.rewards.blueberrySpeedMult,
+    1 + 0.01 * player.cubeUpgrades[76] * calculateNumberOfThresholds(),
     G.isEvent ? 1 + calculateEventBuff(BuffType.BlueberryTime) : 1,
     calculateCashGrabBlueberryBonus()
   ]
@@ -3489,11 +3531,18 @@ export const derpsmithCornucopiaBonus = () => {
   return 1 + (counter * player.highestSingularityCount) / 100
 }
 
+export const isIARuneUnlocked = () => {
+  return player.shopUpgrades.infiniteAscent > 0 || PCoinUpgradeEffects.INSTANT_UNLOCK_2
+}
+
+export const isShopTalismanUnlocked = () => {
+  return player.shopUpgrades.shopTalisman > 0 || PCoinUpgradeEffects.INSTANT_UNLOCK_1
+}
+
 export const sing6Mult = () => {
   if (player.singularityCount <= 200) {
     return 1
-  }
-  else {
+  } else {
     return Math.pow(1.01, player.singularityCount - 200)
   }
 }

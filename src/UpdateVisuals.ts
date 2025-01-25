@@ -11,6 +11,7 @@ import {
   calculateCorruptionPoints,
   calculateCubeQuarkMultiplier,
   calculateMaxRunes,
+  calculateNumberOfThresholds,
   calculateRecycleMultiplier,
   calculateRequiredBlueberryTime,
   calculateRuneExpToLevel,
@@ -29,6 +30,7 @@ import { version } from './Config'
 import type { IMultiBuy } from './Cubes'
 import type { hepteractTypes } from './Hepteracts'
 import { hepteractTypeList } from './Hepteracts'
+import { PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getQuarkBonus, quarkHandler } from './Quark'
 import { displayRuneInformation } from './Runes'
 import { getShopCosts, isShopUpgradeUnlocked, shopData, shopUpgradeTypes } from './Shop'
@@ -593,6 +595,10 @@ export const visualUpdateRunes = () => {
             )
           }
         )
+      } else if (i === 6) {
+        DOMCacheGetOrSet(`bonusrune${i}`).textContent = i18next.t('runes.bonusAmount', {
+          x: player.cubeUpgrades[73] + (PCoinUpgradeEffects.INSTANT_UNLOCK_2 ? 6 : 0)
+        })
       } else {
         DOMCacheGetOrSet(`bonusrune${i}`).textContent = i18next.t('runes.bonusNope')
       }
@@ -1576,7 +1582,7 @@ export const visualUpdateAmbrosia = () => {
   DOMCacheGetOrSet('pixelProgress').style.width = `${pixelBarWidth}%`
   DOMCacheGetOrSet('pixelProgressText').textContent = `${format(player.ultimateProgress, 0, true)} / ${
     format(1000000, 0, true)
-  } [+${format(progressTimePerSecond * 0.02, 2, true)}/s]`
+  } [+${format(progressTimePerSecond, 2, true)}/s]`
   const extraLuckHTML = luckBonusPercent > 0.01
     ? `[<span style='color: var(--amber-text-color)'>☘${
       format(
@@ -1626,6 +1632,32 @@ export const visualUpdateAmbrosia = () => {
       availableBlueberries
     }
   )
+
+  if (player.cubeUpgrades[76] > 0) {
+    DOMCacheGetOrSet('cubeUpgradeThresholds').style.display = 'block'
+    DOMCacheGetOrSet('cubeUpgradeThresholds').innerHTML = i18next.t(
+      'ambrosia.cubeUpgradeThresholds',
+      {
+        threshold: calculateNumberOfThresholds(),
+        percent: player.cubeUpgrades[76] * calculateNumberOfThresholds()
+      }
+    )
+  } else {
+    DOMCacheGetOrSet('cubeUpgradeThresholds').style.display = 'none'
+  }
+
+  if (player.cubeUpgradeRedBarFilled > 0) {
+    DOMCacheGetOrSet('cubeUpgradeRedBarFills').style.display = 'block'
+    DOMCacheGetOrSet('cubeUpgradeRedBarFills').innerHTML = i18next.t(
+      'ambrosia.cubeUpgradeRedBarFills',
+      {
+        amount: format(player.cubeUpgradeRedBarFilled, 0, true),
+        luck: format(Math.min(100, player.cubeUpgradeRedBarFilled / 50), 2, true)
+      }
+    )
+  } else {
+    DOMCacheGetOrSet('cubeUpgradeRedBarFills').style.display = 'none'
+  }
 }
 
 export const visualUpdateShop = () => {
@@ -1776,3 +1808,5 @@ export const visualUpdateShop = () => {
 }
 
 export const visualUpdateEvent = () => {}
+
+export const visualUpdatePurchase = () => {}

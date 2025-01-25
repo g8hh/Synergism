@@ -22,6 +22,8 @@
     "prereqNotMetAlert": "您未满足前提条件，无法购买该升级。",
     "notEnoughBlueberries": "您的蓝莓不足，无法激活该模块。",
     "availableBlueberries": "您有<<blue|{{availableBlueberries}}>>蓝莓未花费。您可以使用它解锁下面更高阶的模块！",
+    "cubeUpgradeThresholds": "基于神肴总数，您的蓝莓秒需求已经翻倍了<<cyan|{{threshold}}>>次，因此<<cyan|蓝莓秒的产生速度增加{{percent}}%>>！",
+    "cubeUpgradeRedBarFills": "购买饼干升级29以后，您的红色进度条填充了<<maroon|{{amount}}>>次，所以<<green|&#9752 神肴之运增加{{luck}}>>！",
     "ambrosiaBuyPrompt": "您想要花费多少神肴？您拥有{{amount}}神肴。如果想要购买最大数量，请输入-1！",
     "refund": "所有花费的蓝莓和神肴均已返还。",
     "refundWord": "返还",
@@ -1043,8 +1045,16 @@
       "68": "真惊奇！这是一盒非曲奇。",
       "69": "真惊奇！这是一盒绝世出尘的饼干。",
       "70": "真惊奇！这是一盒完美的饼干。",
-      "71": "真惊奇！这是一块潘多拉的恩惠饼干。",
-      "72": "真惊奇！这是一块腐化女神的恩惠饼干。"
+      "71": "真惊奇！这是一块潘多拉的恩惠奇异饼干。",
+      "72": "真惊奇！这是一块腐化女神的恩惠奇异饼干。",
+      "73": "真惊奇！这是一块巨人之阶的奇异饼干。",
+      "74": "真惊奇！这是一块利利普之阶的奇异饼干。",
+      "75": "真惊奇！这是一块不知道玩什么梗的奇异饼干。",
+      "76": "真惊奇！这是一块蓝色品种的奇异饼干。",
+      "77": "真惊奇！这是一块堤喀的恩惠奇异饼干。",
+      "78": "真惊奇！这是一块Derpsmith的恩惠奇异饼干。",
+      "79": "真惊奇！这是一块腐化之彼岸奇异饼干。",
+      "80": "真惊奇！这是一块宇宙尽头的奶奶奇异饼干。"
     },
     "upgradeDescriptions": {
       "1": "[1x1]好！每级增加16.666%飞升时惊奇方盒获取数量。",
@@ -1116,7 +1126,17 @@
       "67": "[Cx17]这里面都是什么玩意？？？不管了，总之玄学护身符的等级上限增加1337。",
       "68": "[Cx18]什么情况，这根本就不是饼干！每级使夸克获取数量增加0.01%，达到等级上限1000时可以使夸克获取数量再增加5%！",
       "69": "[Cx19]永远无法再回忆起来的饼干。使本次进入奇点的金夸克获取数量增加12%。",
-      "70": "[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果腐化等级总和(不考虑视为增加的等级)超过14×8，则使惊奇八阶方块产量增加0.01%。"
+      "70": "[Cx20]烘焙之理的具现化。其美味已臻于食物之巅。如果腐化等级总和(不考虑视为增加的等级)超过14×8，则使惊奇八阶方块产量增加0.01%。",
+      "71": "[Cx21]每升阶1次护身符，就使难得素获取数量变为原来的1.04倍",
+      "72": "[Cx22]每升阶1次护身符，就使祭品获取数量变为原来的1.04倍",
+      "73": "[Cx23]每级使无限晋升符文的额外等级增加1！",
+      "74": "[Cx24]使所有腐化的分数倍率增加0.30。",
+      "75": "[Cx25]每级使奇点升级的免费等级效果增加0.3%！(效果与其他加成叠加)",
+      "76": "[Cx26]蓝莓秒每次达到阈值，每级就使<<blue|蓝莓秒产生速度>>增加1%！",
+      "77": "[Cx27]每级使<<green|☘ 神肴之运>>增加2，然后再增加0.1%！",
+      "78": "[Cx28]每级使惊奇八阶方块升级的免费等级效果增加0.3%！",
+      "79": "[Cx29]购买该升级后，当红色进度条填充1次后，将永久获得<<green|0.02 ☘ 神肴之运>>！该效果的上限为5000次。",
+      "80": "[Cx30]您截获一条奇异的消息：<<gray|“有时间，多回来看看吧？”>>……"
     },
     "cubeMetadata": {
       "cost": "花费：{{value1}}惊奇方盒[可提升{{value2}}级]",
@@ -1433,8 +1453,8 @@
       "shopEXUltra": "拥有该额外升级后，每有1000神肴，就使<<orchid|难得素获取数量>>、<<orange|祭品获取数量>>和<<white|方盒获取数量>>增加0.1%！该效果的上限为125000×该升级等级！",
       "shopChronometerS": "200次进入奇点后，每有1次奇点次数，该升级就使飞升的速度和全局速度增加1%！",
       "shopAmbrosiaUltra": "拥有该额外升级(价格高到离谱)后，每完成1阶层拔擢，每级该升级就可以使☘ 神肴之运增加1。",
-      "shopSingularitySpeedup": "您知道那些由时间控制的奇点升级和惊奇八阶方块升级吧？它们增长的速度将变为原来的20倍！多亏了这个甚至能改变<<gray|奇点时长>>的奇怪时钟……",
-      "shopSingularityPotency": "您知道那些免费奇点升级吧？它们的效果将增加666%(换句话说，不计算软上限的话，每级都将是之前7.66级的效果)。原因？是这个有点奇怪的<<gray|奇点传输仪式装置>>！别多问了。",
+      "shopSingularitySpeedup": "您知道那些由时间控制的奇点升级和惊奇八阶方块升级吧？它们增长的速度将变为原来的50倍！多亏了这个甚至能改变<<gray|奇点时长>>的奇怪时钟……",
+      "shopSingularityPotency": "您知道那些免费奇点升级吧？它们的效果将增加266%(换句话说，不计算软上限的话，每级都将是之前3.66级的效果)。原因？是这个有点奇怪的<<gray|奇点传输仪式装置>>！别多问了。",
       "shopSadisticRune": "多奇怪的符文。店主(您永远也无法再见的那位)通过心灵感应说道，这是浸入某种<<gray|奇点物质>>的无限晋升符文。难道无限晋升符文不止一个？"
     },
     "maxed": "已满级！",
@@ -1555,35 +1575,47 @@
       "unlockedIn": "第{{sing}}次进入奇点后将解锁新特权",
       "header": "您的最高奇点次数为<span style=\"color: gold\">{{ord}}次奇点。</span><br/>以下是您在奇点中获得的特权",
       "description": "(鼠标停留在特权上可以查看效果。<span style=\"color: gold\">金色文本</span>的特权在本次奇点解锁或者加强)",
-      "welcometoSingularity": "欢迎进入奇点时代！您可以在解锁相应七阶立方后，自动进行七阶立方锻造，且只要资源充足，可以最大化购买PLATONIC方盒升级！",
-      "unlimitedGrowth": "每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了{{amount}}%)",
-      "goldenCoins": "根据未花费的金夸克增加金币产量。每次奇点的飞升前阶段效果最好(目前增加了{{amount}}%)",
+      "welcometoSingularity": {
+        "name": "欢迎来到奇点时代！",
+        "default": "欢迎进入奇点时代！您可以在解锁相应七阶立方后，自动进行七阶立方锻造，且只要资源充足，可以最大化购买PLATONIC方盒升级！"
+      },
+      "unlimitedGrowth": {
+        "name": "无限成长",
+        "default": "每进入1次奇点，夸克获取数量和飞升次数获取数量就增加10%(目前增加了{{amount}}%)"
+      },
+      "goldenCoins": {
+        "name": "金币之雨",
+        "default": "根据未花费的金夸克增加金币产量。每次奇点的飞升前阶段效果最好(目前增加了{{amount}}%)"
+      },
       "xyz": {
+        "name": "“每日”代码额外奖励",
         "hasLevel2": "输入“每日”代码后可以获得金夸克和随机奇点升级的免费等级，额外获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III，另外再使获得的免费等级数量翻倍！",
         "hasLevel1": "输入“每日”代码后可以获得金夸克和随机奇点升级的免费等级，还可以额外获得0.2级金夸克 I，0.2级金夸克 II和1级金夸克 III。",
         "default": "输入“每日”代码后可以获得金夸克和随机奇点升级的免费等级，且效果随着奇点次数而增长！"
       },
-      "hepteractAutocraft": "可以自动进行七阶立方锻造",
-      "generousOrbs": "超通量珠加成夸克获取数量的效果上限变为{{amount}}%",
-      "researchDummies": {
-        "hasLevel1": "您可以保留更好的自动研究，即方盒升级[1x9]",
-        "otherwise": "您可以使用鼠标停留购买升级研究"
+      "generousOrbs": {
+        "name": "慷慨之珠",
+        "default": "超通量珠加成夸克获取数量的效果上限变为{{amount}}%"
       },
-      "eternalAscensions": {
-        "hasLevel1": "使您的飞升次数获取数量根据奇点次数而增加，且可以根据现实时间自动飞升了！目前获取数量倍率：{{amount}}倍",
-        "default": "使您的飞升次数获取数量根据奇点次数而增加！目前获取数量倍率：{{amount}}倍"
+      "researchDummies": {
+        "name": "傻瓜式研究教学",
+        "hasLevel1": "您可以保留自动研究，可以使用鼠标停留购买升级研究！",
+        "default": "您可以使用鼠标停留购买升级研究"
       },
       "antGodsCornucopia": {
+        "name": "蚁神的聚宝盆",
         "hasLevel3": "蚂蚁速度变为不受腐化影响的4.44倍，且再乘以完全不受任何等级腐化影响的1e12倍！",
         "hasLevel2": "蚂蚁速度变为不受腐化影响的4.44倍，且再乘以完全不受任何等级腐化影响的1e6倍！",
         "hasLevel1": "蚂蚁速度变为不受腐化影响的4.44倍，且再乘以完全不受任何等级腐化影响的1000倍！",
         "default": "蚂蚁速度变为不受腐化影响的4.44倍。"
       },
       "sweepomatic": {
+        "name": "自动扫荡·改 2",
         "hasLevel1": "在飞升挑战中，自动扫荡挑战可以从挑战10开始运行；并且如果您拥有立即完成挑战 2，还可以自动扫荡飞升挑战，节省点击次数！",
-        "otherwise": "自动扫荡挑战可以从挑战10开始运行飞升挑战，节省点击次数！"
+        "default": "自动扫荡挑战可以从挑战10开始运行飞升挑战，节省点击次数！"
       },
       "superStart": {
+        "name": "超级初始",
         "hasLevel4": "飞升后初始获得1次超越，1次转世，1001神话，2.22e2222粒子和500难得素",
         "hasLevel3": "飞升后初始获得1次超越，1次转世，1001神话，1e100粒子和500难得素",
         "hasLevel2": "飞升后初始获得1次超越，1次转世，1001神话，1e16粒子和500难得素",
@@ -1591,6 +1623,7 @@
         "default": "飞升后初始获得1次超越和1001神话"
       },
       "notSoChallenging": {
+        "name": "这就是挑战？",
         "hasLevel4": "飞升后初始完成5次挑战8，1次挑战6、挑战7和挑战9",
         "hasLevel3": "飞升后初始完成5次挑战8，1次挑战6和挑战7",
         "hasLevel2": "升后初始完成1次挑战6、挑战7和挑战8",
@@ -1598,6 +1631,7 @@
         "default": "飞升后初始完成1次挑战6"
       },
       "automationUpgrades": {
+        "name": "永久保留自动升级",
         "hasLevel5": "您常时获得方盒升级1x4至1x8和方盒升级2x10。您常时自动加强和升阶护身符，常时自动购买死神蚁。您常时自动购买自动化升级！100次进入奇点后，您永远记住了巧克力曲奇饼干(方盒升级Cx1)的味道，并可以永久保留它的效果！",
         "hasLevel4": "您常时获得方盒升级1x4至1x8和方盒升级2x10。您常时自动加强和升阶护身符，常时自动购买死神蚁。您常时自动购买自动化升级！",
         "hasLevel3": "您常时获得方盒升级1x4至1x8和方盒升级2x10。您常时自动购买自动化升级！",
@@ -1606,67 +1640,132 @@
         "default": "您常时获得方盒升级1x7(粒子建筑自动购买)。"
       },
       "evenMoreQuarks": {
+        "name": "更多夸克",
         "bug": "发生了错误！如果您看到了这条消息，请联系Platonic。",
-        "m": "夸克获取数量额外{{stack}}次增加5%(相互叠乘)！总加成：{{inc}}%"
+        "default": "夸克获取数量额外<<cyan|{{stack}}>>次增加<<cyan|5%>>(相互叠乘)！总加成：<<cyan|{{inc}}%>>"
       },
       "shopSpecialOffer": {
+        "name": "商店特惠",
         "hasLevel2": "您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级，常时保留商店的季票1、季票2、季票3、季票Y、飞升的速度1%加成、飞升的速度0.5%加成",
         "hasLevel1": "您常时获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品至满级",
         "default": "进入奇点后您直接获得商店的EX额外祭品、AUTO自动献祭祭品、EX额外难得素、AUTO难得素自动研究、蚂蚁速度、昂贵物品各10级，可以重置这些升级获得夸克"
       },
-      "potionAutogenerator": "每180秒自动各使用一瓶难得素药剂和一瓶祭品药剂！每次奇点使时间间隔减少3%。",
-      "respecBeGone": "护身符的额外等级对所有符文均生效！",
+      "potionAutogenerator": {
+        "name": "自动使用药剂",
+        "default": "每180秒自动各使用一瓶难得素药剂和一瓶祭品药剂！每次奇点使时间间隔减少3%。"
+      },
+      "respecBeGone": {
+        "name": "别了，变配！",
+        "default": "护身符的额外等级对所有符文均生效！"
+      },
       "forTheLoveOfTheAntGod": {
+        "name": "看在(蚁)神的份上",
         "hasLevel2": "您可以保留所有蚂蚁自动购买，飞升后初始获得一只神使蚁",
         "hasLevel1": "您可以保留所有蚂蚁自动购买，飞升后初始获得一只蚁后",
         "default": "您可以保留所有蚂蚁自动购买，飞升后初始获得一只工蚁"
       },
-      "itAllAddsUp": "使用“增加”代码的奖励除以{{div}}，但恢复时间也除以{{div2}}，且使用次数上限乘以{{cap}}(向上取整)。",
+      "itAllAddsUp": {
+        "name": "集腋成裘",
+        "default": "使用“增加”代码的奖励和恢复时间均除以{{div}}，并且使用次数上限乘以相同数值！(四舍五入)"
+      },
       "automagicalRunes": {
+        "name": "自动魔法符文",
         "hasLevel3": "开启自动符文时您可以自动购买祝福、魂灵、护身符的所有碎片，并会将祭品分配给符文6 - 无限晋升和符文7 - 蚁神之古物",
         "hasLevel2": "开启自动符文时您可以自动购买祝福、魂灵、护身符的所有碎片，并会将祭品分配给符文6 - 无限晋升",
         "hasLevel1": "开启自动符文时您可以自动购买祝福和魂灵，并会将祭品分配给符文6 - 无限晋升",
         "default": "开启自动符文时您可以自动购买祝福和魂灵"
       },
-      "exaltedAchievements": "解锁新的，更加困难的成就！获取方式与其余的成就不同……(制作中)",
+      "eternalAscensions": {
+        "name": "永恒飞升",
+        "default": "您可以根据现实时间自动飞升了！"
+      },
+      "exaltedAchievements": {
+        "name": "拔擢保险库",
+        "default": "解锁新的，非常困难的挑战！只有在进入奇点次数足够高时才可以进行这些挑战！"
+      },
+      "derpSmithsCornucopia": {
+        "name": "Derpsmith的聚宝盆",
+        "default": "Derpsmith祝福了您，每次奇点可以多获得{{counter}}%惊奇八阶方块！"
+      },
       "coolQOLCubes": {
+        "name": "酷炫的开盒体验",
         "hasLevel1": "飞升时，研究6x13、7x3、7x18、8x8、8x23不再重置，并可以自动开启特定比例的方盒及立方！",
         "default": "飞升时，研究6x13、7x3、7x18、8x8、8x23不再重置"
       },
-      "irishAnt": "受到爱尔兰之运祝福的蚂蚁可以使神肴之运增加{{i}}！",
-      "irishAnt2": "受到爱尔兰之运更多祝福的蚂蚁可以使神肴之运再增加{{i}}！",
-      "overclocked": "特定奇点升级的等级上限增加{{i}}！",
+      "irishAnt": {
+        "name": "爱尔兰蚂蚁",
+        "default": "受到爱尔兰之运祝福的蚂蚁可以使<<limegreen|☘>> 神肴之运增加<<limegreen|{{i}}>>！"
+      },
+      "irishAnt2": {
+        "name": "爱尔兰蚂蚁 II：电子布加洛舞",
+        "default": "受到爱尔兰之运更多祝福的蚂蚁可以使☘ 神肴之运再增加<<limegreen|{{percent}}%>！每级特权使加成数值增加1%。"
+      },
+      "overclocked": {
+        "name": "超载",
+        "default": "特定奇点升级的等级上限增加{{i}}！"
+      },
       "wowCubeAutomatedShipping": {
+        "name": "惊奇方盒自动运输",
         "hasLevel1": "每次飞升自动购买方盒升级！",
         "default": "每次飞升自动购买方盒升级，只在奇点挑战中有效"
       },
-      "congealedblueberries": "半固态蓝莓跟普通蓝莓一样。您可以额外获得{{i}}蓝莓，用它们来购买更多升级！",
-      "goldenRevolution": "每次奇点使进入奇点的金夸克获取数量增加0.4%。目前增加了{{current}}%(最高增加100%)",
-      "goldenRevolutionII": "每次奇点使商店购买金夸克的花费减少0.2%。目前减少了{{current}}%(最高减少50%)",
-      "goldenRevolutionIII": "每次奇点使每小时导出存档的金夸克奖励增加2%。目前增加了{{current}}%(最高增加500%)",
+      "congealedblueberries": {
+        "name": "凝结蓝莓",
+        "default": "半固态蓝莓跟普通蓝莓一样。您可以额外获得{{i}}蓝莓，用它们来购买更多升级！"
+      },
+      "goldenRevolution": {
+        "name": "金之革命",
+        "default": "每次奇点使进入奇点的金夸克获取数量增加0.4%。目前增加了{{current}}%(最高增加100%)"
+      },
+      "goldenRevolutionII": {
+        "name": "金之革命 II",
+        "default": "每次奇点使商店购买金夸克的花费减少0.2%。目前减少了{{current}}%(最高减少50%)"
+      },
+      "goldenRevolutionIII": {
+        "name": "金之革命 III",
+        "default": "每次奇点使每小时导出存档的金夸克奖励增加2%。目前增加了{{current}}%(最高增加500%)"
+      },
       "platonicClones": {
+        "name": "PLATONIC桌面点击之克隆",
         "hasLevel1": "每次飞升自动购买PLATONIC升级，且不花费难得素和祭品！",
         "default": "每次飞升自动购买PLATONIC升级，且不花费难得素和祭品，只在奇点挑战中有效"
       },
-      "dilatedFiveLeaf": {
-        "desc": "使☘ 神肴之运基础值增加<<limegreen|{{percent}}%>>！每级特权使加成数值增加1%。"
+      "platSigma": {
+        "name": "PL-AT Σ",
+        "default": "对于每次奇点，每级特权使“增加”代码的使用次数加快{{counter}}%恢复。目前加快了{{current}}%(最高使恢复时间减少60%)"
       },
-      "platSigma": "对于每次奇点，每级特权使“增加”代码的使用次数加快{{counter}}%恢复。目前加快了{{current}}%(最高使恢复时间减少60%)",
-      "midasMilleniumAgedGold": "每次使用“增加”代码后还可以使金夸克 I的免费等级增加0.01，金夸克 III的免费等级增加0.05。",
-      "goldenRevolution4": "每个时刻获得惊奇八阶方块时，也自动获得金夸克，数量为奇点的金夸克获取数量的1/{{gq}}！",
+      "midasMilleniumAgedGold": {
+        "name": "米达斯的千年之金",
+        "default": "每次使用“增加”代码后还可以使金夸克 I的免费等级增加0.01，金夸克 III的免费等级增加0.05。"
+      },
+      "goldenRevolution4": {
+        "name": "金之革命 IV",
+        "default": "每个时刻获得惊奇八阶方块时，也自动获得金夸克，数量为奇点的金夸克获取数量的1/{{gq}}！"
+      },
       "octeractMetagenesis": {
-        "hasLevel1": "每次使用“每日”代码后可以使惊奇八阶方块同生和惊奇八阶方块三度起源的免费等级增加当前等级的1%！",
-        "default": "每次使用“每日”代码后可以使惊奇八阶方块同生的免费等级增加当前等级的1%！"
+        "name": "八阶方块世代交替",
+        "hasLevel1": "使惊奇八阶方块同生和惊奇八阶方块三度起源的免费等级基于当前免费等级和购买等级增加，数值分别为：(购买等级×免费等级/640)^0.5，(购买等级^2×免费等级/125000)^0.333！",
+        "default": "使惊奇八阶方块同生的免费等级基于当前免费等级和购买等级增加，数值为：(购买等级×免费等级/1000)^0.5"
       },
       "immaculateAlchemy": {
+        "name": "完美炼金术",
         "hasLevel2": "从第200次奇点开始，增加奇点次数的升级不再生效！但使您的金夸克获取数量变为8倍，并使购买金夸克的花费除以8。",
         "hasLevel1": "从第200次奇点开始，增加奇点次数的升级不再生效！但使您的金夸克获取数量变为5倍，并使购买金夸克的花费除以5。",
         "default": "从第200次奇点开始，增加奇点次数的升级不再生效！但使您的金夸克获取数量变为3倍，并使购买金夸克的花费除以3。"
       },
-      "skrauQ": "使夸克获取数量变为((奇点次数-179)/20)的平方倍。目前倍率为{{amt}}……是的，就是这么好。",
-      "derpSmithsCornucopia": "Derpsmith祝福了您，每次奇点可以多获得{{counter}}%惊奇八阶方块！",
-      "oneHundredThirtyOne": "使<<green|☘>> 神肴之运增加<<green|131>>！",
-      "twoHundredSixtyNine": "使<<green|☘>> 神肴之运增加<<green|269>>！"
+      "skrauQ": {
+        "name": "克夸",
+        "default": "使夸克获取数量变为((奇点次数-179)/20)的平方倍。目前倍率为{{amt}}……是的，就是这么好。"
+      },
+      "primalPower": {
+        "name": "质数之力！",
+        "hasLevel1": "通过达到质数次数的奇点获得惊人的力量！目前获得：<<limegreen|131>>☘ 神肴之运及<<limegreen|269>>☘ 神肴之运！",
+        "default": "通过达到质数次数的奇点获得惊人的力量！目前获得：<<limegreen|131>>☘ 神肴之运！"
+      },
+      "permanentBenefaction": {
+        "name": "永久恩惠",
+        "default": "使<<lightblue|潘多拉>>和<<orange|腐化女神>>常时给予您恩惠，相应的饼干升级常时生效！"
+      }
     },
     "toString": {
       "noMinimum": "无进入奇点次数要求",
@@ -1725,7 +1824,7 @@
         "effectHaveNot": "您未替饼干付费。"
       },
       "cookies5": {
-        "name": "饼干配方 V(制作中)",
+        "name": "饼干配方 V",
         "description": "袖手旁观是人类最大的原罪。",
         "effectHave": "您已见证大众的苦难。",
         "effectHaveNot": "您未见证大众的苦难。"
@@ -2064,49 +2163,6 @@
       "penaltyRough": "惩罚将在<<var(--red-text-color)|第{{num}}次进入奇点>>后大幅增加。",
       "antiquitiesBought": "<<var(--green-text-color)|蚁神之古物已购买。奇点相关惩罚已驱散！>>",
       "antiquitiesNotBought": "<<var(--red-text-color)|蚁神之古物未购买。奇点相关惩罚未驱散！>>"
-    },
-    "perkNames": {
-      "welcometoSingularity": "欢迎来到奇点时代！",
-      "unlimitedGrowth": "无限成长",
-      "goldenCoins": "金币之雨",
-      "xyz": "“每日”代码额外奖励",
-      "hepteractAutocraft": "七阶立方自动锻造",
-      "generousOrbs": "慷慨之珠",
-      "researchDummies": "傻瓜式研究教学",
-      "eternalAscensions": "永恒飞升",
-      "antGodsCornucopia": "蚁神的聚宝盆",
-      "sweepomatic": "自动扫荡·改 2",
-      "superStart": "超级初始",
-      "notSoChallenging": "这就是挑战？",
-      "automationUpgrades": "永久保留自动升级",
-      "evenMoreQuarks": "更多夸克",
-      "shopSpecialOffer": "商店特惠",
-      "potionAutogenerator": "自动使用药剂",
-      "respecBeGone": "别了，变配！",
-      "forTheLoveOfTheAntGod": "看在(蚁)神的份上",
-      "itAllAddsUp": "集腋成裘",
-      "automagicalRunes": "自动魔法符文",
-      "exaltedAchievements": "拔擢成就",
-      "derpSmithsCornucopia": "Derpsmith的聚宝盆",
-      "coolQOLCubes": "酷炫的开盒体验",
-      "irishAnt": "爱尔兰蚂蚁",
-      "dilatedFiveLeaf": "膨胀的五叶草！",
-      "irishAnt2": "爱尔兰蚂蚁 II：电子布加洛舞",
-      "overclocked": "超载",
-      "wowCubeAutomatedShipping": "惊奇方盒自动运输",
-      "congealedblueberries": "凝结蓝莓",
-      "goldenRevolution": "金之革命",
-      "goldenRevolutionII": "金之革命 II",
-      "goldenRevolutionIII": "金之革命 III",
-      "platonicClones": "PLATONIC桌面点击之克隆",
-      "platSigma": "PL-AT Σ",
-      "midasMilleniumAgedGold": "米达斯的千年之金",
-      "goldenRevolution4": "金之革命 IV",
-      "octeractMetagenesis": "八阶方块世代交替",
-      "immaculateAlchemy": "完美炼金术",
-      "skrauQ": "克夸",
-      "twoHundredSixtyNine": "贰佰陆拾玖！",
-      "oneHundredThirtyOne": "壹佰叁拾壹！"
     }
   },
   "general": {
@@ -2150,8 +2206,7 @@
       "v297hotfix1NoSing": "您载入了2.9.7热修复1补丁！",
       "v297hotfix1Sing": "您载入了2.9.7热修复1补丁！部分无上限的奇点升级进行了重置，对此表示抱歉。"
     },
-    "languageChange": "切换语言需要刷新页面，您现在就想要刷新页面吗？",
-    "exportYourGame": "您有一阵子没有导出存档了，切记，存档不规范，玩家两行泪。"
+    "languageChange": "切换语言需要刷新页面，您现在就想要刷新页面吗？"
   },
   "upgrades": {
     "descriptions": {
@@ -2436,7 +2491,8 @@
       "singularity": "奇点",
       "settings": "设置",
       "shop": "商店",
-      "unsmith": "UNSMITH"
+      "unsmith": "UNSMITH",
+      "purchase": "伪币"
     },
     "buildings": {
       "coin": "金币建筑",
@@ -2478,6 +2534,11 @@
       "singularityHistory": "历史奇点数据",
       "hotkeys": "快捷键",
       "account": "账户"
+    },
+    "pseudocoins": {
+      "buy": "购买伪币",
+      "upgrades": "购买升级",
+      "merch": "购买游戏周边"
     }
   },
   "offlineProgress": {
@@ -2724,7 +2785,7 @@
     "data": {
       "octeractStarter": {
         "name": "萌新的惊奇八阶方块",
-        "description": "Hello... I Am Derpsmith... The Ancestor Of Ant God... I Did Not Expect You To Get Here. Here Is 40% More Quarks, 20% More Octeracts, And 100,000x Ant Speed...",
+        "description": "您好……我是Derpsmith……蚁神的先祖……没想到您能走到这一步。该升级可以使您的夸克获取数量增加40%，惊奇八阶方块获取数量增加20%，蚂蚁速度变为100000倍……",
         "effect": "您{{n}}向Derpsmith致敬。"
       },
       "octeractGain": {
@@ -3108,7 +3169,7 @@
       "noOcteracts": {
         "name": "无八阶方块效果",
         "description": "您需要在惊奇八阶方块和相应升级没有效果的前提下通过目标奇点！另外，奇点相关惩罚也会根据当前阶层数量变得更高。",
-        "ScalingReward1": "使<<var(--lightseagreen-text-color)|惊奇八阶方块对惊奇方盒至惊奇七阶立方>>的加成指数增加0.02(基础值为2.00)",
+        "ScalingReward1": "使<<var(--lightseagreen-text-color)|惊奇八阶方块对惊奇方盒至惊奇七阶立方>>的加成指数增加0.02(基础值为2.00)[完成10阶层后，之后的加成减半]",
         "UniqueReward1": "第1次 - 根据<<var(--lightseagreen-text-color)|八阶方块>>数量，增加<<Gold|祭品>>获取数量！",
         "UniqueReward2": "第10次 - 根据<<var(--lightseagreen-text-color)|八阶方块>>数量，增加<<steelblue|难得素>>获取数量！",
         "UniqueReward3": "第10次 - 新的<<orchid|夸克商店>>升级！"
@@ -3547,5 +3608,41 @@
   },
   "account": {
     "logout": "该页面将进行刷新。您已注销！再见！！"
+  },
+  "pseudoCoins": {
+    "coinCount": "您拥有<<gold|{{amount}}伪币>>！",
+    "cost": "花费：<<gold|{{amount}}伪币>>",
+    "maxxed": "<<gold|已满级！>>",
+    "buyButton": "购买！<<gold|花费{{amount}}伪币>>",
+    "currEffect": "当前等级：",
+    "nextEffect": "下级：",
+    "upgradeNames": {
+      "INSTANT_UNLOCK_1": "护身符激活器",
+      "INSTANT_UNLOCK_2": "符文发现器",
+      "CUBE_BUFF": "嵌金方盒",
+      "AMBROSIA_LUCK_BUFF": "金叶四叶草",
+      "AMBROSIA_GENERATION_BUFF": "神肴炼金加速",
+      "GOLDEN_QUARK_BUFF": "金上加金的金夸克",
+      "FREE_UPGRADE_PROMOCODE_BUFF": "贿赂“每日”代码",
+      "CORRUPTION_LOADOUT_SLOT_QOL": "更多腐化预设槽位！",
+      "AMBROSIA_LOADOUT_SLOT_QOL": "更多神肴预设槽位！",
+      "AUTO_POTION_FREE_POTIONS_QOL": "药剂复制漏洞",
+      "OFFLINE_TIMER_CAP_BUFF": "镶金的舒适之床",
+      "ADD_CODE_CAP_BUFF": "限定版PLAT-P计算器"
+    },
+    "upgradeEffects": {
+      "INSTANT_UNLOCK_1": "使信卡护身符<<gold|{{descriptor}}>>常时解锁！<<orange|等级上限增加{{amount}}>>",
+      "INSTANT_UNLOCK_2": "使无限晋升符文<<gold|{{descriptor}}>>常时解锁！<<orange|额外等级增加{{amount}}>>",
+      "CUBE_BUFF": "使方盒获取数量增加<<gold|{{amount}}>>",
+      "AMBROSIA_LUCK_BUFF": "使神肴之运增加<<gold|{{amount}}>>",
+      "AMBROSIA_GENERATION_BUFF": "使蓝莓秒产生速度变为原来的<<gold|{{amount}}>>倍",
+      "GOLDEN_QUARK_BUFF": "使金夸克获取数量变为原来的<<gold|{{amount}}>>倍",
+      "FREE_UPGRADE_PROMOCODE_BUFF": "使“每日”代码获得的免费奇点升级变为原来的<<gold|{{amount}}倍>>！",
+      "CORRUPTION_LOADOUT_SLOT_QOL": "您额外获得<<gold|{{amount}}>>个腐化预设槽位！",
+      "AMBROSIA_LOADOUT_SLOT_QOL": "您额外获得<<gold|{{amount}}>>个神肴预设槽位！",
+      "AUTO_POTION_FREE_POTIONS_QOL": "自动使用药剂时并非<<gold|{{descriptor}}>>消耗药剂！",
+      "OFFLINE_TIMER_CAP_BUFF": "使离线时间上限变为原来的<<gold|{{amount}}>>倍",
+      "ADD_CODE_CAP_BUFF": "使“增加”代码的次数上限变为原来的<<gold|{{amount}}>>倍"
+    }
   }
 }

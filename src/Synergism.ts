@@ -55,7 +55,8 @@ import {
   calculateTotalAcceleratorBoost,
   calculateTotalCoinOwned,
   dailyResetCheck,
-  exitOffline
+  exitOffline,
+  isShopTalismanUnlocked
 } from './Calculate'
 import {
   corrChallengeMinimum,
@@ -65,7 +66,8 @@ import {
   corruptionLoadoutTableUpdate,
   corruptionStatsUpdate,
   maxCorruptionLevel,
-  updateCorruptionLoadoutNames
+  updateCorruptionLoadoutNames,
+  updateUndefinedLoadouts
 } from './Corruptions'
 import { updateCubeUpgradeBG } from './Cubes'
 import { generateEventHandlers } from './EventListeners'
@@ -135,8 +137,13 @@ import {
 // import { LegacyShopUpgrades } from './types/LegacySynergism';
 
 import i18next from 'i18next'
-import localforage from 'localforage'
-import { BlueberryUpgrade, blueberryUpgradeData, updateLoadoutHoverClasses } from './BlueberryUpgrades'
+import {
+  BlueberryUpgrade,
+  blueberryUpgradeData,
+  displayProperLoadoutCount,
+  updateBlueberryLoadoutCount,
+  updateLoadoutHoverClasses
+} from './BlueberryUpgrades'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { lastUpdated, prod, testing, version } from './Config'
 import { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from './CubeExperimental'
@@ -158,6 +165,7 @@ import { init as i18nInit } from './i18n'
 import { handleLogin } from './Login'
 import { octeractData, OcteractUpgrade } from './Octeracts'
 import { updatePlatonicUpgradeBG } from './Platonic'
+import { initializePCoinCache, PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getQuarkBonus, QuarkHandler } from './Quark'
 import { playerJsonSchema } from './saves/PlayerJsonSchema'
 import { playerSchema } from './saves/PlayerSchema'
@@ -173,7 +181,6 @@ import {
 import { changeSubTab, changeTab, Tabs } from './Tabs'
 import { settingAnnotation, toggleIconSet, toggleTheme } from './Themes'
 import { clearTimeout, clearTimers, setInterval, setTimeout } from './Timers'
-import type { PlayerSave } from './types/LegacySynergism'
 
 export const player: Player = {
   firstPlayed: new Date().toISOString(),
@@ -619,7 +626,7 @@ export const player: Player = {
     shopAmbrosiaUltra: 0,
     shopSingularitySpeedup: 0,
     shopSingularityPotency: 0,
-    shopSadisticRune: 0,
+    shopSadisticRune: 0
   },
   shopBuyMaxToggle: false,
   shopHideToggle: false,
@@ -747,6 +754,16 @@ export const player: Player = {
     0,
     0,
     0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   ],
   cubeUpgradesBuyMaxToggle: false,
   autoCubeUpgradesToggle: false,
@@ -860,7 +877,7 @@ export const player: Player = {
     3: false,
     4: false,
     5: false,
-    6: false,
+    6: false
   },
 
   prototypeCorruptions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -874,7 +891,15 @@ export const player: Player = {
     5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    10: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    12: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    13: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    14: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    15: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    16: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   },
   corruptionLoadoutNames: [
     'Loadout 1',
@@ -884,7 +909,15 @@ export const player: Player = {
     'Loadout 5',
     'Loadout 6',
     'Loadout 7',
-    'Loadout 8'
+    'Loadout 8',
+    'Loadout 9',
+    'Loadout 10',
+    'Loadout 11',
+    'Loadout 12',
+    'Loadout 13',
+    'Loadout 14',
+    'Loadout 15',
+    'Loadout 16'
   ],
   corruptionShowStats: true,
 
@@ -1404,7 +1437,7 @@ export const player: Player = {
     sadisticPrequel: new SingularityChallenge(
       singularityChallengeData.sadisticPrequel,
       'sadisticPrequel'
-    ),
+    )
   },
 
   ambrosia: 0,
@@ -1492,12 +1525,21 @@ export const player: Player = {
     5: {},
     6: {},
     7: {},
-    8: {}
+    8: {},
+    9: {},
+    10: {},
+    11: {},
+    12: {},
+    13: {},
+    14: {},
+    15: {},
+    16: {}
   },
   blueberryLoadoutMode: 'saveTree',
 
   ultimateProgress: 0,
   ultimatePixels: 0,
+  cubeUpgradeRedBarFilled: 0,
 
   singChallengeTimer: 0,
 
@@ -1508,20 +1550,16 @@ export const player: Player = {
     blueberryInventory: new BlueberryInventoryCache()
   },
 
-  lastExportedSave: 0
+  lastExportedSave: 0,
+
+  seed: Array.from({ length: 2 }, () => Date.now())
 }
 
 export const blankSave = Object.assign({}, player, {
   codes: new Map(Array.from({ length: 48 }, (_, i) => [i + 1, false]))
 })
 
-// The main cause of the double singularity bug was caused by a race condition
-// when the game was saving just as the user was entering a Singularity. To fix
-// this, hopefully, we disable saving the game when in the prompt or currently
-// entering a Singularity.
-export const saveCheck = { canSave: true }
-
-export const saveSynergy = async (button?: boolean): Promise<boolean> => {
+export const saveSynergy = (button?: boolean) => {
   player.offlinetick = Date.now()
   player.loaded1009 = true
   player.loaded1009hotfix1 = true
@@ -1530,17 +1568,9 @@ export const saveSynergy = async (button?: boolean): Promise<boolean> => {
   const save = btoa(JSON.stringify(p))
 
   if (save !== null) {
-    const saveBlob = new Blob([save], { type: 'text/plain' })
-
-    // Should prevent overwritting of localforage that is currently used
-    if (!saveCheck.canSave) {
-      return false
-    }
-
     localStorage.setItem('Synergysave2', save)
-    await localforage.setItem<Blob>('Synergysave2', saveBlob)
   } else {
-    await Alert(i18next.t('testing.errorSaving'))
+    void Alert(i18next.t('testing.errorSaving'))
     return false
   }
 
@@ -1553,14 +1583,9 @@ export const saveSynergy = async (button?: boolean): Promise<boolean> => {
   return true
 }
 
-const loadSynergy = async () => {
-  const save = (await localforage.getItem<Blob>('Synergysave2'))
-    ?? localStorage.getItem('Synergysave2')
-
-  const saveString = typeof save === 'string' ? save : await save?.text()
-  const data = saveString
-    ? (JSON.parse(atob(saveString)) as PlayerSave & Record<string, unknown>)
-    : null
+const loadSynergy = () => {
+  const saveString = localStorage.getItem('Synergysave2')
+  const data = saveString ? JSON.parse(atob(saveString)) : null
 
   if (testing || !prod) {
     Object.defineProperties(window, {
@@ -2253,12 +2278,19 @@ const loadSynergy = async () => {
     }
 
     corruptionStatsUpdate()
-    const corrs = Math.min(8, Object.keys(player.corruptionLoadouts).length) + 1
+    updateUndefinedLoadouts() // Monetization update added more corruption loadout slots
+    updateBlueberryLoadoutCount() // Monetization update also added more Blueberry loadout slots
+
+    const corrs = 1 + 8 + PCoinUpgradeEffects.CORRUPTION_LOADOUT_SLOT_QOL
+    // const corrs = Math.min(8, Object.keys(player.corruptionLoadouts).length) + 1
     for (let i = 0; i < corrs; i++) {
       corruptionLoadoutTableUpdate(i)
     }
     showCorruptionStatsLoadouts()
     updateCorruptionLoadoutNames()
+
+    // For blueberry upgrades!
+    displayProperLoadoutCount()
 
     DOMCacheGetOrSet('researchrunebonus').textContent = i18next.t(
       'runes.thanksResearches',
@@ -2788,6 +2820,12 @@ const loadSynergy = async () => {
     resetHistoryRenderAllTables()
     updateSingularityAchievements()
     updateSingularityGlobalPerks()
+
+    // Update the Sing requirements on reload for a challenge if applicable
+    if (G.currentSingChallenge !== undefined) {
+      const sing = player.singularityChallenges[G.currentSingChallenge].computeSingularityRquirement()
+      player.singularityCount = sing
+    }
   }
 
   updateAchievementBG()
@@ -5085,7 +5123,7 @@ export const resetCheck = async (
       return Alert(i18next.t('main.singularityCancelled'))
     } else {
       await singularity()
-      await saveSynergy()
+      saveSynergy()
       return Alert(
         i18next.t('main.welcomeToSingularity', {
           x: format(player.singularityCount)
@@ -5514,7 +5552,7 @@ export const updateAll = (): void => {
       player.achievements[140] > 0,
       player.achievements[147] > 0,
       player.antUpgrades[11]! > 0 || player.ascensionCount > 0,
-      player.shopUpgrades.shopTalisman > 0
+      isShopTalismanUnlocked()
     ]
     let upgradedTalisman = false
 
@@ -6192,7 +6230,7 @@ export const showExitOffline = () => {
  * Reloads shit.
  * @param reset if this param is passed, offline progression will not be calculated.
  */
-export const reloadShit = async (reset = false) => {
+export const reloadShit = (reset = false) => {
   clearTimers()
 
   // Shows a reset button when page loading seems to stop or cause an error
@@ -6203,16 +6241,7 @@ export const reloadShit = async (reset = false) => {
 
   disableHotkeys()
 
-  // Wait a tick to continue. This is a (likely futile) attempt to see if this solves save corrupting.
-  // This ensures all queued tasks are executed before continuing on.
-  await new Promise((res) => {
-    setTimeout(res, 0)
-  })
-
-  const save = (await localforage.getItem<Blob>('Synergysave2'))
-    ?? localStorage.getItem('Synergysave2')
-
-  const saveObject = typeof save === 'string' ? save : await save?.text()
+  const saveObject = localStorage.getItem('Synergysave2')
 
   if (saveObject) {
     const dec = LZString.decompressFromBase64(saveObject)
@@ -6230,28 +6259,22 @@ export const reloadShit = async (reset = false) => {
       }
 
       localStorage.clear()
-      const blob = new Blob([saveString], { type: 'text/plain' })
       localStorage.setItem('Synergysave2', saveString)
-      await localforage.setItem<Blob>('Synergysave2', blob)
-      await Alert(i18next.t('main.transferredFromLZ'))
+      Alert(i18next.t('main.transferredFromLZ'))
     }
 
-    await loadSynergy()
+    loadSynergy()
   }
 
   if (!reset) {
-    await calculateOffline()
+    calculateOffline()
   } else {
     if (!player.singularityChallenges.limitedTime.rewards.preserveQuarks) {
       player.worlds.reset()
     }
-    // saving is disabled during a singularity event to prevent bug
-    // early return here if the save fails can keep game state from properly resetting after a singularity
-    if (saveCheck.canSave) {
-      const saved = await saveSynergy()
-      if (!saved) {
-        return
-      }
+
+    if (!saveSynergy()) {
+      return
     }
   }
 
@@ -6263,13 +6286,7 @@ export const reloadShit = async (reset = false) => {
   createTimer()
 
   // Reset Displays
-  if (!playerNeedsReminderToExport()) {
-    changeTab(Tabs.Buildings)
-  } else {
-    changeTab(Tabs.Settings)
-
-    void Alert(i18next.t('general.exportYourGame'))
-  }
+  changeTab(Tabs.Buildings)
 
   changeSubTab(Tabs.Buildings, { page: 0 })
   changeSubTab(Tabs.Runes, { page: 0 }) // Set 'runes' subtab back to 'runes' tab
@@ -6293,7 +6310,7 @@ export const reloadShit = async (reset = false) => {
           eventCheck().catch((error: Error) => {
             console.error(error)
           }),
-        15_000
+        1000 * 60 * 5
       )
     })
   showExitOffline()
@@ -6312,31 +6329,34 @@ export const reloadShit = async (reset = false) => {
     typeof navigator.storage?.persist === 'function'
     && typeof navigator.storage?.persisted === 'function'
   ) {
-    const persistent = await navigator.storage.persisted()
-
-    if (!persistent) {
-      const isPersistentNow = await navigator.storage.persist()
-
-      if (isPersistentNow) {
-        void Alert(i18next.t('main.dataPersistent'))
-      }
-    } else {
-      console.log(`Storage is persistent! (persistent = ${persistent})`)
-    }
+    navigator.storage.persisted()
+      .then((persistent) => persistent ? Promise.resolve(false) : navigator.storage.persist())
+      .then((isPersistentNow) => {
+        if (isPersistentNow) {
+          void Alert(i18next.t('main.dataPersistent'))
+        }
+      })
   }
 
   const saveType = DOMCacheGetOrSet('saveType') as HTMLInputElement
   saveType.checked = localStorage.getItem('copyToClipboard') !== null
 }
 
-function playerNeedsReminderToExport () {
-  const day = 1000 * 60 * 60 * 24
-
-  return Date.now() - player.lastExportedSave > day * 3
-}
-
 window.addEventListener('load', async () => {
   await i18nInit()
+  handleLogin().catch(console.error)
+
+  try {
+    await initializePCoinCache()
+  } catch (e) {
+    console.error(e)
+    const response = await Confirm(
+      'PseudoCoin bonuses weren\'t fetched, if you have purchased upgrades they will not take effect. '
+        + 'Press OK to continue to the game without upgrades.'
+    )
+
+    if (!response) return
+  }
 
   const ver = DOMCacheGetOrSet('versionnumber')
   const addZero = (n: number) => `${n}`.padStart(2, '0')
@@ -6360,14 +6380,11 @@ window.addEventListener('load', async () => {
   document.title = `Synergism v${version}`
 
   generateEventHandlers()
-
-  void reloadShit()
+  reloadShit()
 
   corruptionButtonsAdd()
   corruptionLoadoutTableCreate()
-
-  handleLogin().catch(console.error)
-})
+}, { once: true })
 
 window.addEventListener('unload', () => {
   // This fixes a bug in Chrome (who would have guessed?) that

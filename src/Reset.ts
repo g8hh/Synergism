@@ -1058,6 +1058,11 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
     awardAutosCookieUpgrade()
   }
 
+  if (player.highestSingularityCount >= 244) {
+    player.cubeUpgrades[71] = 1
+    player.cubeUpgrades[72] = 1
+  }
+
   if (player.singularityUpgrades.platonicAlpha.getEffect().bonus && player.platonicUpgrades[5] === 0) {
     player.platonicUpgrades[5] = 1
     updatePlatonicUpgradeBG(5)
@@ -1119,6 +1124,7 @@ export const updateSingularityGlobalPerks = () => {
   }
 }
 
+// TODO(@KhafraDev): find way to make this sync
 export const singularity = async (setSingNumber = -1): Promise<void> => {
   if (player.runelevels[6] === 0 && setSingNumber === -1) {
     return Alert(
@@ -1199,8 +1205,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   if (!player.singularityChallenges.limitedTime.rewards.preserveQuarks) {
     player.worlds.reset()
     hold.worlds = Number(hold.worlds)
-  }
-  else {
+  } else {
     hold.worlds = Number(player.worlds)
   }
 
@@ -1319,6 +1324,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   hold.insideSingularityChallenge = player.insideSingularityChallenge
   hold.ultimatePixels = player.ultimatePixels
   hold.ultimateProgress = player.ultimateProgress
+  hold.cubeUpgradeRedBarFilled = player.cubeUpgradeRedBarFilled
   hold.singularityChallenges = Object.fromEntries(
     Object.entries(player.singularityChallenges).map(([key, value]) => {
       return [key, {
@@ -1357,7 +1363,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   const saveCode47 = player.codes.get(47) ?? false
   const saveCode48 = player.codes.get(48) ?? false
 
-  await importSynergism(btoa(JSON.stringify(hold)), true)
+  importSynergism(btoa(JSON.stringify(hold)), true)
   // Techically possible to import game during reset. But that will only "hurt" that imported save
 
   // TODO: Do not enable data that has never used an event code
@@ -1377,7 +1383,7 @@ export const singularity = async (setSingNumber = -1): Promise<void> => {
   player.promoCodeTiming.time = Date.now()
 
   // Save again at the end of singularity reset
-  void saveSynergy()
+  saveSynergy()
 }
 
 const resetUpgrades = (i: number) => {

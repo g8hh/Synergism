@@ -1,4 +1,6 @@
-export const version = '3.0.0 pt 6: December 21, 2024: Rise of the Singular Entities, pt 1.0.4'
+declare const PROD: boolean | undefined
+
+export const version = '3.1.1 January 15, 2025 pt 1.4: The Bakery Update'
 
 /**
  * PSEUDO DO NOT CHANGE THIS LINE
@@ -14,4 +16,4 @@ export const lastUpdated = new Date(Date.UTC(2024, 4, 28, 16, 0, 6))
 /**
  * CHANGE THIS ONE INSTEAD
  */
-export const prod: boolean = false
+export const prod = typeof PROD === 'undefined' ? false : PROD

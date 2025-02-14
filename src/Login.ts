@@ -1,11 +1,17 @@
 /// <reference types="@types/cloudflare-turnstile" />
 
 import i18next from 'i18next'
+import { z } from 'zod'
 import { DOMCacheGetOrSet } from './Cache/DOM'
+import { calculateOffline } from './Calculate'
+import { updateGlobalsIsEvent } from './Event'
 import { importSynergism } from './ImportExport'
 import { QuarkHandler, setQuarkBonus } from './Quark'
 import { format, player } from './Synergism'
-import { Alert } from './UpdateHTML'
+import { Alert, Notification } from './UpdateHTML'
+import { assert } from './Utility'
+
+export type PseudoCoinConsumableNames = 'HAPPY_HOUR_BELL'
 
 // Consts for Patreon Supporter Roles.
 const TRANSCENDED_BALLER = '756419583941804072'
@@ -26,8 +32,69 @@ const SMITH_GOD = '1045562390995009606'
 const GOLDEN_SMITH_GOD = '1178125584061173800'
 const DIAMOND_SMITH_MESSIAH = '1311165096378105906'
 
+let ws: WebSocket | undefined
 let loggedIn = false
+let tips = 0
+
 export const isLoggedIn = () => loggedIn
+export const getTips = () => tips
+export const setTips = (newTips: number) => tips = newTips
+
+export const activeConsumables: Record<PseudoCoinConsumableNames, number> = {
+  HAPPY_HOUR_BELL: 0
+}
+
+export const allConsumableTimes: Record<PseudoCoinConsumableNames, Array<number>> = {
+  HAPPY_HOUR_BELL: []
+}
+
+const messageSchema = z.preprocess(
+  (data, ctx) => {
+    if (typeof data === 'string') {
+      try {
+        return JSON.parse(data)
+      } catch {}
+    }
+
+    ctx.addIssue({ code: 'custom', message: 'Invalid message received.' })
+  },
+  z.union([
+    /** Received after the user connects to the websocket */
+    z.object({ type: z.literal('join') }),
+    z.object({ type: z.literal('error'), message: z.string() }),
+    /** Received after a consumable is redeemed (broadcasted to everyone) */
+    z.object({ type: z.literal('consumed'), consumable: z.string(), startedAt: z.number().int() }),
+    /** Received after a consumable ends (broadcasted to everyone) */
+    z.object({ type: z.literal('consumable-ended'), consumable: z.string(), endedAt: z.number().int() }),
+    /** Information about currently active consumables */
+    z.object({
+      type: z.literal('info'),
+      active: z.object({
+        name: z.string(),
+        internalName: z.string(),
+        amount: z.number().int(),
+        endsAt: z.number().int()
+      }).array(),
+      tips: z.number().int().nonnegative()
+    }),
+    z.object({
+      type: z.literal('info-all'),
+      active: z.object({
+        name: z.string(),
+        internalName: z.string(),
+        endsAt: z.number().int()
+      }).array(),
+      tips: z.number().int().nonnegative()
+    }),
+    /** Received after the *user* successfully redeems a consumable. */
+    z.object({ type: z.literal('thanks') }),
+    /** Received when a user is tipped */
+    z.object({ type: z.literal('tips'), tips: z.number().int() }),
+    /** Received when a user reconnects, if there are unclaimed tips */
+    z.object({ type: z.literal('tip-backlog'), tips: z.number().int() }),
+    z.object({ type: z.literal('applied-tip'), amount: z.number(), remaining: z.number() })
+  ])
+)
 
 /**
  * @see https://discord.com/developers/docs/resources/user#user-object
@@ -259,6 +326,130 @@ export async function handleLogin () {
       renderCaptcha()
     })
   }
+
+  if (loggedIn) {
+    handleWebSocket()
+  }
+}
+
+const queue: string[] = []
+
+/**
+ * Delays before attempting to re-establish the connection after the socket closes.
+ * The delay is reset after a successful connection.
+ */
+const exponentialBackoff = [5000, 15000, 30000, 60000]
+let tries = 0
+
+function resetConsumables () {
+  for (const key in activeConsumables) {
+    activeConsumables[key as PseudoCoinConsumableNames] = 0
+    allConsumableTimes[key as PseudoCoinConsumableNames].length = 0 // Specifically for info-all
+  }
+}
+
+function handleWebSocket () {
+  assert(!ws || ws.readyState === WebSocket.CLOSED, 'WebSocket has been set and is not closed')
+
+  ws = new WebSocket('wss://synergism.cc/consumables/connect')
+
+  ws.addEventListener('close', () => {
+    const delay = exponentialBackoff[++tries]
+
+    if (delay !== undefined) {
+      setTimeout(() => handleWebSocket(), delay)
+    } else {
+      Notification(
+        'Could not re-establish your connection. Consumables and events related to Consumables will not work.'
+      )
+      resetConsumables()
+    }
+  })
+
+  ws.addEventListener('open', () => {
+    tries = 0
+
+    for (const message of queue) {
+      ws?.send(message)
+    }
+
+    queue.length = 0
+    sendToWebsocket(JSON.stringify({ type: 'info-all' }))
+  })
+
+  ws.addEventListener('message', (ev) => {
+    const data = messageSchema.parse(ev.data)
+    console.log(data)
+
+    if (data.type === 'error') {
+      Notification(data.message, 5_000)
+      resetConsumables()
+    } else if (data.type === 'consumed') {
+      activeConsumables[data.consumable as PseudoCoinConsumableNames]++
+      allConsumableTimes[data.consumable as PseudoCoinConsumableNames].push(data.startedAt + 3600 * 1000)
+      Notification(`Someone redeemed a(n) ${data.consumable}!`)
+    } else if (data.type === 'consumable-ended') {
+      activeConsumables[data.consumable as PseudoCoinConsumableNames]--
+      // Because of the invariant that the timestamps are sorted, we can just remove the first element
+      allConsumableTimes[data.consumable as PseudoCoinConsumableNames].shift()
+      Notification(`A(n) ${data.consumable} ended!`)
+    } else if (data.type === 'join') {
+      Notification('Connection was established!')
+    } else if (data.type === 'info') {
+      if (data.active.length !== 0) {
+        let message = 'The following consumables are active:\n'
+        let ends = 0
+
+        for (const { amount, internalName, name, endsAt } of data.active) {
+          activeConsumables[internalName as PseudoCoinConsumableNames] = amount
+          message += `${name} (x${amount})`
+          ends = Math.max(ends, endsAt)
+        }
+
+        Notification(message)
+      }
+
+      tips = data.tips
+    } else if (data.type === 'info-all') { // new, needs to be checked
+      resetConsumables() // So that we can get an accurate count each time
+      if (data.active.length !== 0) {
+        let message = 'The following consumables are active:\n'
+
+        for (const { internalName, endsAt } of data.active) {
+          activeConsumables[internalName as PseudoCoinConsumableNames]++
+          allConsumableTimes[internalName as PseudoCoinConsumableNames].push(endsAt)
+        }
+        // Are these already in order? I assume so but just to be sure
+        allConsumableTimes.HAPPY_HOUR_BELL.sort((a, b) => a - b)
+        message += `Happy Hour Bell (x${activeConsumables.HAPPY_HOUR_BELL})`
+
+        Notification(message)
+      }
+
+      tips = data.tips
+    } else if (data.type === 'thanks') {
+      Alert(i18next.t('pseudoCoins.consumables.thanks'))
+    } else if (data.type === 'tip-backlog' || data.type === 'tips') {
+      tips += data.tips
+
+      Notification(i18next.t('pseudoCoins.consumables.tipReceived', { offlineTime: data.tips }))
+    } else if (data.type === 'applied-tip') {
+      tips = data.remaining
+      calculateOffline(data.amount * 60)
+      DOMCacheGetOrSet('exitOffline').style.visibility = 'unset'
+    }
+
+    updateGlobalsIsEvent()
+  })
+}
+
+export function sendToWebsocket (message: string) {
+  if (ws?.readyState !== WebSocket.OPEN) {
+    queue.push(message)
+    return
+  }
+
+  ws.send(message)
 }
 
 async function logout () {
@@ -294,7 +485,9 @@ async function getCloudSave () {
   const response = await fetch('https://synergism.cc/api/v1/saves/get')
   const save = await response.json() as CloudSave
 
-  importSynergism(save?.save ?? null)
+  if (save !== null) {
+    importSynergism(save.save)
+  }
 }
 
 const hasCaptcha = new WeakSet<HTMLElement>()

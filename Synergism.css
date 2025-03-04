@@ -28,7 +28,6 @@ img {
 .scrollbarX {
     overflow-y: auto;
     scrollbar-width: thin;
-    outline: none;
 }
 
 .scrollbarX {
@@ -161,7 +160,6 @@ body.loading {
 a {
     color: white;
     text-decoration: none;
-    outline: none;
 }
 
 a:hover {
@@ -208,11 +206,10 @@ button {
     transition: background-color var(--transition-extra), border-color var(--transition-extra);
     cursor: pointer;
     background-color: var(--button-color);
-    outline: none;
 }
 
-body button:hover:not(:disabled),
-body button:active:not(:disabled) {
+body button:hover:not(:disabled):not(.disable-hover-color),
+body button:active:not(:disabled):not(.disable-hover-color) {
     background-color: var(--hover-color);
 }
 
@@ -408,7 +405,6 @@ body button:active:not(:disabled) {
         "txt txt txt txt txt"
         ". btn . btn2 ."
         ". . . . .";
-    outline: none;
 }
 
 #alert {
@@ -420,7 +416,6 @@ body button:active:not(:disabled) {
         "txt txt txt"
         ". btn ."
         ". . .";
-    outline: none;
 }
 
 #prompt {
@@ -435,7 +430,6 @@ body button:active:not(:disabled) {
         ". . . . ."
         ". btn . btn2 ."
         ". . . . .";
-    outline: none;
 }
 
 .confirmBox {
@@ -756,29 +750,33 @@ p#buildinghotkeys2 {
     justify-content: space-around;
 }
 
-#upgradesFlex > div {
+#upgradesFlex > section {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#upgradesFlex > div > p {
+#upgradesFlex > section > p {
     margin: 5px 0;
     line-height: 1em;
 }
 
-#upgradesFlex > div > table {
+#upgradesFlex > section > table {
     font-size: 0;
     min-height: 182px;
     text-align: center;
+    border-collapse: collapse;
 }
 
-#upgradesFlex > div > table img {
-    background-color: var(--buttonimg-color);
+#upgradesFlex > section > table td {
+    padding-left: 3px;
+}
+
+#upgradesFlex > section > table img {
     cursor: pointer;
 }
 
-#upgradesFlex > div > button {
+#upgradesFlex > section > button {
     min-width: 80px;
 }
 
@@ -869,7 +867,6 @@ p#themesTitle {
     color: white;
     cursor: pointer;
     background-color: var(--button-color);
-    outline: none;
 }
 
 #savegame,
@@ -1060,6 +1057,8 @@ p#promocodeinfo {
 
 .autobuyerToggleButton {
     background-color: var(--button-color);
+    margin: 0 auto;
+    min-width: 80px;
 }
 
 .buttonRow > div > .stats {
@@ -1101,8 +1100,8 @@ p#promocodeinfo {
     border-collapse: collapse;
 }
 
-#achievementstable img {
-    background-color: var(--buttonimg-color);
+#achievementstable [id^="ach"] > img {
+    image-rendering: unset;
 }
 
 .NotificationToggle {
@@ -1863,37 +1862,37 @@ p#reincarnatehotkeys {
     min-height: 3em;
 }
 
-#researchtable img {
+#researchtable button > img {
     background-color: var(--buttonimg-color);
 }
 
-#researchtable .researchAvailable {
+#researchtable .researchAvailable > img {
     cursor: pointer;
     transition: background-color var(--transition-extra), border-color var(--transition-extra);
 }
 
-#researchtable .researchAvailable:hover {
+#researchtable .researchAvailable:hover > img {
     background-color: var(--hover-color);
 }
 
-#researchtable .researchPurchased {
+#researchtable .researchPurchased > img {
     background-color: purple;
 }
 
-#researchtable .researchPurchasedAvailable {
+#researchtable .researchPurchasedAvailable > img {
     cursor: pointer;
     transition: background-color var(--transition-extra), border-color var(--transition-extra);
 }
 
-#researchtable .researchPurchasedAvailable:hover {
+#researchtable .researchPurchasedAvailable:hover > img {
     background-color: #b300b2;
 }
 
-#researchtable .researchRoomba {
+#researchtable .researchRoomba > img {
     background-color: orange;
 }
 
-#researchtable .researchMaxed {
+#researchtable .researchMaxed > img {
     background-color: green;
 }
 
@@ -2201,7 +2200,7 @@ p#reincarnatehotkeys {
 }
 
 .antBtn {
-    background-color: var(--button-color);
+    height: 100%;
 }
 
 .antTierBtnAvailable,
@@ -4119,6 +4118,7 @@ form input:hover {
 
 .pseudoCoinButton {
     width: 75%;
+    height: 65px;
     padding: 10px;
     background-color: black;
     color: white;
@@ -4132,6 +4132,11 @@ form input:hover {
 .pseudoCoinButton:hover {
     background-color: white;
     color: black;
+}
+
+#checkout-paypal {
+    width: 75%;
+    margin: 0 auto;
 }
 
 #cart {
@@ -4458,4 +4463,42 @@ form input:hover {
 @keyframes fade {
     from { opacity: 0.4; }
     to { opacity: 1; }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.upgrade-button {
+    background: none;
+    cursor: pointer;
+}
+
+.upgrade-button:focus-visible {
+    outline: 2px solid #4a90e2;
+}
+
+.upgrade-button[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+h2,
+h3 {
+    margin: 2px;
+}
+
+.green-background img {
+    background-color: var(--green-text-color);
+}
+
+.purple-background img {
+    background-color: var(--purplebtn-color);
 }

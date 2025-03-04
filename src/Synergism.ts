@@ -505,7 +505,7 @@ export const player: Player = {
   prestigecounter: 0,
   transcendcounter: 0,
   reincarnationcounter: 0,
-  offlinetick: 0,
+  offlinetick: Date.now(),
 
   prestigeamount: 0,
   transcendamount: 0,
@@ -1001,7 +1001,7 @@ export const player: Player = {
   totalQuarksEver: 0,
   hotkeys: {},
   theme: 'Dark Mode',
-  iconSet: 0,
+  iconSet: 1,
   notation: 'Default',
 
   singularityUpgrades: {
@@ -2152,7 +2152,7 @@ const loadSynergy = () => {
     for (let j = 1; j < player.cubeUpgrades.length; j++) {
       updateCubeUpgradeBG(j)
     }
-    const platUpg = document.querySelectorAll('img[id^="platUpg"]')
+    const platUpg = document.querySelectorAll('button[id^="platUpg"]')
     for (let j = 1; j <= platUpg.length; j++) {
       updatePlatonicUpgradeBG(j)
     }
@@ -2784,9 +2784,7 @@ const loadSynergy = () => {
     }
 
     if (player.autoWarpCheck) {
-      DOMCacheGetOrSet('warpAuto').textContent = i18next.t(
-        'general.autoOnColon'
-      )
+      DOMCacheGetOrSet('warpAuto').textContent = i18next.t('general.autoOnColon')
       DOMCacheGetOrSet('warpAuto').style.border = '2px solid green'
     } else {
       DOMCacheGetOrSet('warpAuto').textContent = i18next.t(

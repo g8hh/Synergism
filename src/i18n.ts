@@ -104,16 +104,21 @@ function buildLanguageTab () {
 }
 
 function translateHTML () {
-  const i18n = document.querySelectorAll('*[i18n]')
-
-  for (const element of Array.from(i18n)) {
+  document.querySelectorAll('[i18n]').forEach((element) => {
     const key = element.getAttribute('i18n')!
     const value = i18next.t(key)
 
-    if (value.includes('<span')) {
+    if (element instanceof HTMLImageElement) {
+      element.setAttribute('alt', value)
+    } else if (value.includes('<span')) {
       element.innerHTML = value
     } else {
       element.textContent = value
     }
-  }
+  })
+
+  document.querySelectorAll('[i18n-aria-label]').forEach((element) => {
+    const key = element.getAttribute('i18n-aria-label')!
+    element.setAttribute('aria-label', i18next.t(key))
+  })
 }

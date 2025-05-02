@@ -1,19 +1,17 @@
 import type Decimal from 'break_infinity.js'
 import type { BlueberryUpgrade } from '../BlueberryUpgrades'
+import type { CampaignManager } from '../Campaign'
+import type { Challenge15RewardObject, Challenge15Rewards } from '../Challenges'
+import type { CorruptionLoadout, Corruptions, CorruptionSaves } from '../Corruptions'
 import type { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from '../CubeExperimental'
 import type { HepteractCraft } from '../Hepteracts'
 import type { Category, ResetHistoryEntryUnion } from '../History'
 import type { OcteractUpgrade } from '../Octeracts'
 import type { IPlatBaseCost } from '../Platonic'
 import type { QuarkHandler } from '../Quark'
+import type { RedAmbrosiaKeys } from '../RedAmbrosiaUpgrades'
 import type { SingularityUpgrade } from '../singularity'
 import type { SingularityChallenge, singularityChallengeData } from '../SingularityChallenges'
-import type {
-  AmbrosiaGenerationCache,
-  AmbrosiaLuckAdditiveMultCache,
-  AmbrosiaLuckCache,
-  BlueberryInventoryCache
-} from '../StatCache'
 import type { Tabs } from '../Tabs'
 
 type ArrayStartingWithNull<T> = [null, ...T[]]
@@ -318,8 +316,6 @@ export interface Player {
     generators: boolean
     reincarnate: boolean
   }
-  tabnumber: number
-  subtabNumber: number
 
   // create a Map with keys defaulting to boolean
   codes: Map<number, boolean>
@@ -408,7 +404,17 @@ export interface Player {
     shopSingularitySpeedup: number
     shopSingularityPotency: number
     shopSadisticRune: number
+    shopRedLuck1: number
+    shopRedLuck2: number
+    shopRedLuck3: number
+    shopInfiniteShopUpgrades: number
   }
+
+  shopPotionsConsumed: {
+    offering: number
+    obtainium: number
+  }
+
   shopConfirmationToggle: boolean
   shopBuyMaxToggle: boolean | 'TEN' | 'ANY'
   shopHideToggle: boolean
@@ -536,11 +542,14 @@ export interface Player {
   roombaResearchIndex: number
   ascStatToggles: Record<number, boolean>
 
-  prototypeCorruptions: number[]
-  usedCorruptions: number[]
-  corruptionLoadouts: Record<number, number[]>
-  corruptionLoadoutNames: string[]
-  corruptionShowStats: boolean
+  campaigns: CampaignManager
+
+  corruptions: {
+    next: CorruptionLoadout
+    used: CorruptionLoadout
+    saves: CorruptionSaves
+    showStats: boolean
+  }
 
   constantUpgrades: ArrayStartingWithNull<number>
   history: Record<Category, ResetHistoryEntryUnion[]>
@@ -632,9 +641,11 @@ export interface Player {
 
   ambrosia: number
   lifetimeAmbrosia: number
+
   blueberryTime: number
   ambrosiaRNG: number // DEPRECIATED, DO NOT USE
   visitedAmbrosiaSubtab: boolean
+  visitedAmbrosiaSubtabRed: boolean
   spentBlueberries: number
   blueberryUpgrades: Record<
     keyof typeof blueberryUpgradeData,
@@ -643,18 +654,12 @@ export interface Player {
   blueberryLoadouts: Record<number, BlueberryOpt>
   blueberryLoadoutMode: BlueberryLoadoutMode
 
-  ultimateProgress: number
-  ultimatePixels: number
-  cubeUpgradeRedBarFilled: number
+  redAmbrosia: number
+  lifetimeRedAmbrosia: number
+  redAmbrosiaTime: number
+  redAmbrosiaUpgrades: Record<RedAmbrosiaKeys, number>
 
   singChallengeTimer: number
-
-  caches: {
-    ambrosiaLuckAdditiveMult: AmbrosiaLuckAdditiveMultCache
-    ambrosiaLuck: AmbrosiaLuckCache
-    ambrosiaGeneration: AmbrosiaGenerationCache
-    blueberryInventory: BlueberryInventoryCache
-  }
 
   /**
    * When the player last exported the save.
@@ -858,7 +863,6 @@ export interface GlobalVariables {
   talisman6Power: number
   talisman7Quarks: number
 
-  runescreen: string
   settingscreen: string
 
   talismanResourceObtainiumCosts: number[]
@@ -923,13 +927,13 @@ export interface GlobalVariables {
   researchOrderByCost: number[]
 
   viscosityPower: number[]
-  lazinessMultiplier: number[]
-  hyperchallengedMultiplier: number[]
+  dilationMultiplier: number[]
+  hyperchallengeMultiplier: number[]
   illiteracyPower: number[]
   deflationMultiplier: number[]
   extinctionMultiplier: number[]
   droughtMultiplier: number[]
-  financialcollapsePower: number[]
+  recessionPower: number[]
 
   corruptionPointMultipliers: number[]
 
@@ -952,40 +956,10 @@ export interface GlobalVariables {
   autoTalismanTimer: number
 
   autoChallengeTimerIncrement: number
-  corruptionTrigger: number
+  corruptionTrigger: keyof Corruptions
 
-  challenge15Rewards: {
-    cube1: number
-    ascensions: number
-    coinExponent: number
-    taxes: number
-    obtainium: number
-    offering: number
-    accelerator: number
-    multiplier: number
-    runeExp: number
-    runeBonus: number
-    cube2: number
-    transcendChallengeReduction: number
-    reincarnationChallengeReduction: number
-    antSpeed: number
-    bonusAntLevel: number
-    cube3: number
-    talismanBonus: number
-    globalSpeed: number
-    blessingBonus: number
-    constantBonus: number
-    cube4: number
-    spiritBonus: number
-    score: number
-    quarks: number
-    hepteractUnlocked: number
-    cube5: number
-    powder: number
-    exponent: number
-    freeOrbs: number
-    ascensionSpeed: number
-  }
+  c15RewardFormulae: Record<Challenge15Rewards, (e: number) => number>
+  challenge15Rewards: Challenge15RewardObject
 
   autoResetTimers: {
     prestige: number
@@ -1003,14 +977,9 @@ export interface GlobalVariables {
   shopEnhanceVision: boolean
 
   ambrosiaTimer: number
+  redAmbrosiaTimer: number
   TIME_PER_AMBROSIA: number
-
-  ambrosiaCurrStats: {
-    ambrosiaAdditiveLuckMult: number
-    ambrosiaLuck: number
-    ambrosiaBlueberries: number
-    ambrosiaGenerationSpeed: number
-  }
+  TIME_PER_RED_AMBROSIA: number
 
   currentSingChallenge: keyof Player['singularityChallenges'] | undefined
 }

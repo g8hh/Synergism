@@ -1,7 +1,6 @@
 import { prod } from '../Config'
 import { isLoggedIn } from '../Login'
-import { player } from '../Synergism'
-import { changeSubTab, Tabs } from '../Tabs'
+import { changeSubTab, getActiveSubTab, Tabs } from '../Tabs'
 import { Alert } from '../UpdateHTML'
 import { createDeferredPromise, type DeferredPromise, memoize } from '../Utility'
 import { setEmptyProductMap } from './CartUtil'
@@ -12,18 +11,28 @@ import { clearProductPage, toggleProductPage } from './ProductSubtab'
 import { clearSubscriptionPage, toggleSubscriptionPage } from './SubscriptionsSubtab'
 import { clearUpgradeSubtab, toggleUpgradeSubtab, type UpgradesResponse } from './UpgradesSubtab'
 
-export type Product = {
+interface BaseProduct {
   name: string
   id: string
   price: number
   coins: number
-  subscription: boolean
   description: string
 }
 
+export interface SubscriptionProduct extends BaseProduct {
+  subscription: true
+  quarkBonus: number
+}
+
+export interface RegularProduct extends BaseProduct {
+  subscription: false
+}
+
+export type Product = SubscriptionProduct | RegularProduct
+
 export const products: Product[] = []
-export let coinProducts: Product[] = []
-export let subscriptionProducts: Product[] = []
+export let coinProducts: RegularProduct[] = []
+export let subscriptionProducts: SubscriptionProduct[] = []
 export let upgradeResponse: UpgradesResponse
 
 const cartSubTabs = {
@@ -68,8 +77,8 @@ export class CartTab {
       .then((productsList: Product[]) => {
         products.push(...productsList)
         setEmptyProductMap(productsList)
-        coinProducts = products.filter((product) => (!product.subscription))
-        subscriptionProducts = products.filter((product) => (product.subscription))
+        coinProducts = products.filter((product): product is RegularProduct => !product.subscription)
+        subscriptionProducts = products.filter((product): product is SubscriptionProduct => product.subscription)
 
         // The Subscriptions do not naturally sort themselves by price
         subscriptionProducts.sort((a, b) => a.price - b.price)
@@ -113,7 +122,7 @@ export class CartTab {
 
   #updateSubtabs () {
     for (const [index, element] of yieldQuerySelectorAll('.subtabSwitcher button')) {
-      if (player.subtabNumber === index) {
+      if (getActiveSubTab() === index) {
         element.classList.add('active-subtab')
       } else {
         element.classList.remove('active-subtab')
@@ -127,24 +136,24 @@ export class CartTab {
     clearMerchSubtab()
     clearConsumablesTab()
 
-    switch (player.subtabNumber) {
+    switch (getActiveSubTab()) {
       case cartSubTabs.Coins:
         CartTab.fetchProducts().then(() => {
-          if (player.subtabNumber === cartSubTabs.Coins) {
+          if (getActiveSubTab() === cartSubTabs.Coins) {
             toggleProductPage()
           }
         })
         break
       case cartSubTabs.Subscriptions:
         CartTab.fetchProducts().then(() => {
-          if (player.subtabNumber === cartSubTabs.Subscriptions) {
+          if (getActiveSubTab() === cartSubTabs.Subscriptions) {
             toggleSubscriptionPage()
           }
         })
         break
       case cartSubTabs.Upgrades:
         CartTab.fetchUpgrades().then(() => {
-          if (player.subtabNumber === cartSubTabs.Upgrades) {
+          if (getActiveSubTab() === cartSubTabs.Upgrades) {
             toggleUpgradeSubtab()
           }
         })
@@ -154,7 +163,7 @@ export class CartTab {
         break
       case cartSubTabs.Checkout:
         CartTab.fetchProducts().then(() => {
-          if (player.subtabNumber === cartSubTabs.Checkout) {
+          if (getActiveSubTab() === cartSubTabs.Checkout) {
             toggleCheckoutTab()
           }
         })

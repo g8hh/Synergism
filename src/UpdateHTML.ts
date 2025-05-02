@@ -4,8 +4,8 @@ import { achievementaward, totalachievementpoints } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
   CalcCorruptionStuff,
-  calculateAscensionAcceleration,
-  calculateTimeAcceleration,
+  calculateAscensionSpeedMult,
+  calculateGlobalSpeedMult,
   isIARuneUnlocked,
   isShopTalismanUnlocked
 } from './Calculate'
@@ -16,12 +16,13 @@ import { autoResearchEnabled } from './Research'
 import { displayRuneInformation } from './Runes'
 import { updateSingularityPenalties, updateSingularityPerks } from './singularity'
 import { format, formatTimeShort, /*formatTimeShort*/ player } from './Synergism'
-import { Tabs } from './Tabs'
+import { getActiveSubTab, Tabs } from './Tabs'
 import type { OneToFive, ZeroToFour, ZeroToSeven } from './types/Synergism'
 import {
   visualUpdateAchievements,
   visualUpdateAnts,
   visualUpdateBuildings,
+  visualUpdateCampaign,
   visualUpdateChallenges,
   visualUpdateCorruptions,
   visualUpdateCubes,
@@ -38,29 +39,10 @@ import { createDeferredPromise } from './Utility'
 import { Globals as G } from './Variables'
 
 export const revealStuff = () => {
-  const example = document.getElementsByClassName('coinunlock1') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example.length; i++) {
-    example[i].style.display = player.unlocks.coinone ? 'block' : 'none'
-    example[i].setAttribute('aria-disabled', `${!player.unlocks.coinone}`)
-  }
-
-  const example2 = document.getElementsByClassName('coinunlock2') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example2.length; i++) {
-    example2[i].style.display = player.unlocks.cointwo ? 'block' : 'none'
-    example2[i].setAttribute('aria-disabled', `${!player.unlocks.cointwo}`)
-  }
-
-  const example3 = document.getElementsByClassName('coinunlock3') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example3.length; i++) {
-    example3[i].style.display = player.unlocks.cointhree ? 'block' : 'none'
-    example3[i].setAttribute('aria-disabled', `${!player.unlocks.cointhree}`)
-  }
-
-  const example4 = document.getElementsByClassName('coinunlock4') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example4.length; i++) {
-    example4[i].style.display = player.unlocks.coinfour ? 'block' : 'none'
-    example4[i].setAttribute('aria-disabled', `${!player.unlocks.coinfour}`)
-  }
+  document.documentElement.dataset.coinOne = player.unlocks.coinone ? 'true' : 'false'
+  document.documentElement.dataset.coinTwo = player.unlocks.cointwo ? 'true' : 'false'
+  document.documentElement.dataset.coinThree = player.unlocks.cointhree ? 'true' : 'false'
+  document.documentElement.dataset.coinFour = player.unlocks.coinfour ? 'true' : 'false'
 
   const example5 = document.getElementsByClassName('prestigeunlock') as HTMLCollectionOf<HTMLElement>
   for (let i = 0; i < example5.length; i++) {
@@ -74,11 +56,7 @@ export const revealStuff = () => {
     }
   }
 
-  const example6 = document.getElementsByClassName('generationunlock') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example6.length; i++) {
-    example6[i].style.display = player.unlocks.generation ? 'block' : 'none'
-    example6[i].setAttribute('aria-disabled', `${!player.unlocks.generation}`)
-  }
+  document.documentElement.dataset.generationUnlock = player.unlocks.generation ? 'true' : 'false'
 
   const example7 = document.getElementsByClassName('transcendunlock') as HTMLCollectionOf<HTMLElement>
   for (let i = 0; i < example7.length; i++) {
@@ -110,47 +88,14 @@ export const revealStuff = () => {
     example9[i].setAttribute('aria-disabled', 'true')
   }
 
-  const example10 = document.getElementsByClassName('reinrow1') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example10.length; i++) {
-    example10[i].style.display = player.researches[47] === 1 ? 'block' : 'none'
-    example10[i].setAttribute('aria-disabled', `${player.researches[47] !== 1}`)
-  }
+  document.documentElement.dataset.reincarnationOne = player.researches[47] === 1 ? 'true' : 'false'
+  document.documentElement.dataset.reincarnationTwo = player.researches[48] === 1 ? 'true' : 'false'
+  document.documentElement.dataset.reincarnationThree = player.researches[49] === 1 ? 'true' : 'false'
+  document.documentElement.dataset.reincarnationFour = player.researches[50] === 1 ? 'true' : 'false'
 
-  const example11 = document.getElementsByClassName('reinrow2') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example11.length; i++) {
-    example11[i].style.display = player.researches[48] === 1 ? 'block' : 'none'
-    example11[i].setAttribute('aria-disabled', `${player.researches[48] !== 1}`)
-  }
-
-  const example12 = document.getElementsByClassName('reinrow3') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example12.length; i++) {
-    example12[i].style.display = player.researches[49] === 1 ? 'block' : 'none'
-    example12[i].setAttribute('aria-disabled', `${player.researches[49] !== 1}`)
-  }
-
-  const example13 = document.getElementsByClassName('reinrow4') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example13.length; i++) {
-    example13[i].style.display = player.researches[50] === 1 ? 'block' : 'none'
-    example13[i].setAttribute('aria-disabled', `${player.researches[50] !== 1}`)
-  }
-
-  const example14 = document.getElementsByClassName('chal6') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example14.length; i++) {
-    example14[i].style.display = player.achievements[113] === 1 ? 'block' : 'none'
-    example14[i].setAttribute('aria-disabled', `${player.achievements[113] !== 1}`)
-  }
-
-  const example15 = document.getElementsByClassName('chal7') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example15.length; i++) {
-    example15[i].style.display = player.achievements[120] === 1 ? 'block' : 'none'
-    example15[i].setAttribute('aria-disabled', `${player.achievements[120] !== 1}`)
-  }
-
-  const example16 = document.getElementsByClassName('chal7x10') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example16.length; i++) {
-    example16[i].style.display = player.achievements[124] === 1 ? 'block' : 'none'
-    example16[i].setAttribute('aria-disabled', `${player.achievements[124] !== 1}`)
-  }
+  document.documentElement.dataset.chal6 = player.achievements[113] === 1 ? 'true' : 'false'
+  document.documentElement.dataset.chal7 = player.achievements[120] === 1 ? 'true' : 'false'
+  document.documentElement.dataset.chal7x10 = player.achievements[124] === 1 ? 'true' : 'false'
 
   const example17 = document.getElementsByClassName('chal8') as HTMLCollectionOf<HTMLElement>
   for (let i = 0; i < example17.length; i++) {
@@ -164,23 +109,9 @@ export const revealStuff = () => {
     }
   }
 
-  const example18 = document.getElementsByClassName('chal9') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example18.length; i++) {
-    example18[i].style.display = player.achievements[134] === 1 ? 'block' : 'none'
-    example18[i].setAttribute('aria-disabled', `${player.achievements[134] !== 1}`)
-  }
-
-  const example19 = document.getElementsByClassName('chal9x1') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example19.length; i++) {
-    example19[i].style.display = player.highestchallengecompletions[9] > 0 ? 'block' : 'none'
-    example19[i].setAttribute('aria-disabled', `${player.highestchallengecompletions[9] <= 0}`)
-  }
-
-  const example20 = document.getElementsByClassName('chal10') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example20.length; i++) {
-    example20[i].style.display = player.achievements[141] === 1 ? 'block' : 'none'
-    example20[i].setAttribute('aria-disabled', `${player.achievements[141] !== 1}`)
-  }
+  document.documentElement.dataset.chal9 = player.achievements[134] === 1 ? 'true' : 'false'
+  document.documentElement.dataset.chal9x1 = player.highestchallengecompletions[9] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.chal10 = player.achievements[141] === 1 ? 'true' : 'false'
 
   const example21 = document.getElementsByClassName('ascendunlock') as HTMLCollectionOf<HTMLElement>
   for (let i = 0; i < example21.length; i++) {
@@ -194,122 +125,41 @@ export const revealStuff = () => {
     }
   }
 
-  const example22 = document.getElementsByClassName('chal11') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example22.length; i++) {
-    example22[i].style.display = player.challengecompletions[11] > 0 ? 'block' : 'none'
-    example22[i].setAttribute('aria-disabled', `${player.challengecompletions[11] <= 0}`)
-  }
+  document.documentElement.dataset.chal11 = player.highestchallengecompletions[11] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.chal12 = player.highestchallengecompletions[12] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.chal13 = player.highestchallengecompletions[13] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.chal14 = player.highestchallengecompletions[14] > 0 ? 'true' : 'false'
 
-  const example23 = document.getElementsByClassName('chal12') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example23.length; i++) {
-    example23[i].style.display = player.challengecompletions[12] > 0 ? 'block' : 'none'
-    example22[i].setAttribute('aria-disabled', `${player.challengecompletions[12] <= 0}`)
-  }
+  document.documentElement.dataset.ascendUnlock = player.ascensionCount > 0 ? 'true' : 'false'
+  document.documentElement.dataset.prestigeUnlock = player.unlocks.prestige ? 'true' : 'false'
 
-  const example24 = document.getElementsByClassName('chal13') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example24.length; i++) {
-    example24[i].style.display = player.challengecompletions[13] > 0 ? 'block' : 'none'
-    example22[i].setAttribute('aria-disabled', `${player.challengecompletions[13] <= 0}`)
-  }
+  document.documentElement.dataset.research150 = player.researches[150] > 0 ? 'true' : 'false'
 
-  const example25 = document.getElementsByClassName('chal14') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example25.length; i++) {
-    example25[i].style.display = player.challengecompletions[14] > 0 ? 'block' : 'none'
-    example25[i].setAttribute('aria-disabled', `${player.challengecompletions[14] <= 0}`)
-  }
+  document.documentElement.dataset.cubeUpgrade10 = player.cubeUpgrades[10] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.cubeUpgrade19 = player.cubeUpgrades[19] > 0 ? 'true' : 'false'
 
-  const example26 = document.getElementsByClassName('ascendunlockib') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example26.length; i++) {
-    example26[i].style.display = player.ascensionCount > 0 ? 'inline-block' : 'none'
-    example26[i].setAttribute('aria-disabled', `${player.ascensionCount <= 0}`)
-  }
+  document.documentElement.dataset.sacrificeAnts = player.achievements[173] === 1 ? 'true' : 'false'
 
-  const example27 = document.getElementsByClassName('prestigeunlockib') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example27.length; i++) {
-    example27[i].style.display = player.unlocks.prestige ? 'inline-block' : 'none'
-    example27[i].setAttribute('aria-disabled', `${!player.unlocks.prestige}`)
-  }
+  document.documentElement.dataset.hepteracts = // Ability to use and gain hepteracts
+    player.challenge15Exponent >= G.challenge15Rewards.hepteractsUnlocked.requirement ? 'true' : 'false'
 
-  const example28 = document.getElementsByClassName('research150') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example28.length; i++) {
-    example28[i].style.display = player.researches[150] > 0 ? 'block' : 'none'
-    example28[i].setAttribute('aria-disabled', `${player.researches[150] <= 0}`)
-  }
-
-  const example29 = document.getElementsByClassName('cubeUpgrade10') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example29.length; i++) {
-    example29[i].style.display = player.cubeUpgrades[10] > 0 ? 'flex' : 'none'
-    example29[i].setAttribute('aria-disabled', `${player.cubeUpgrades[10] <= 0}`)
-  }
-
-  const example30 = document.getElementsByClassName('cubeUpgrade19') as HTMLCollectionOf<HTMLElement>
-  for (let i = 0; i < example30.length; i++) {
-    example30[i].style.display = player.cubeUpgrades[19] > 0 ? 'block' : 'none'
-    example30[i].setAttribute('aria-disabled', `${player.cubeUpgrades[19] <= 0}`)
-  }
-
-  const example31 = document.getElementsByClassName('sacrificeAnts') as HTMLCollectionOf<HTMLElement>
-  for (const ex of Array.from(example31)) { // Galactic Crumb Achievement 5
-    ex.style.display = player.achievements[173] === 1 ? 'block' : 'none'
-    ex.setAttribute('aria-disabled', `${player.achievements[173] !== 1}`)
-  }
-
-  const example32 = document.getElementsByClassName('hepteracts') as HTMLCollectionOf<HTMLElement>
-  for (const ex of Array.from(example32)) { // Ability to use and gain hepteracts //
-    ex.style.display = player.challenge15Exponent >= 1e15 ? 'block' : 'none'
-    ex.setAttribute('aria-disabled', `${player.challenge15Exponent < 1e15}`)
-  }
-
-  const singularityHTMLs = document.getElementsByClassName('singularity') as HTMLCollectionOf<HTMLElement>
-  for (const HTML of Array.from(singularityHTMLs)) { // Ability to view singularity features.
-    const count = Number(HTML.getAttribute('count')) || 1
-    HTML.style.display = player.highestSingularityCount >= count ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${player.highestSingularityCount < count}`)
-  }
+  document.documentElement.dataset.singularity = // Ability to view singularity features
+    player.highestSingularityCount >= 1 ? 'true' : 'false'
 
   visualUpdateShop()
 
   const hepts = DOMCacheGetOrSet('corruptionHepteracts')
   hepts.style.display = (player.achievements[255] > 0) ? 'block' : 'none'
 
-  const cookies1 = document.getElementsByClassName('assortedCookies1') as HTMLCollectionOf<HTMLElement>
-  const cookies2 = document.getElementsByClassName('assortedCookies2') as HTMLCollectionOf<HTMLElement>
-  const cookies3 = document.getElementsByClassName('assortedCookies3') as HTMLCollectionOf<HTMLElement>
-  const cookies4 = document.getElementsByClassName('assortedCookies4') as HTMLCollectionOf<HTMLElement>
-  const cookies5 = document.getElementsByClassName('assortedCookies5') as HTMLCollectionOf<HTMLElement>
+  document.documentElement.dataset.cookies1 = player.singularityUpgrades.cookies.getEffect().bonus ? 'true' : 'false'
+  document.documentElement.dataset.cookies2 = player.singularityUpgrades.cookies2.getEffect().bonus ? 'true' : 'false'
+  document.documentElement.dataset.cookies3 = player.singularityUpgrades.cookies3.getEffect().bonus ? 'true' : 'false'
+  document.documentElement.dataset.cookies4 = player.singularityUpgrades.cookies4.getEffect().bonus ? 'true' : 'false'
+  document.documentElement.dataset.cookies5 = player.singularityUpgrades.cookies5.getEffect().bonus ? 'true' : 'false'
 
-  for (const HTML of Array.from(cookies1)) {
-    const bonus = player.singularityUpgrades.cookies.getEffect().bonus
-    HTML.style.display = bonus ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${!bonus}`)
-  }
-  for (const HTML of Array.from(cookies2)) {
-    const bonus = player.singularityUpgrades.cookies2.getEffect().bonus
-    HTML.style.display = bonus ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${!bonus}`)
-  }
-  for (const HTML of Array.from(cookies3)) {
-    const bonus = player.singularityUpgrades.cookies3.getEffect().bonus
-    HTML.style.display = bonus ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${!bonus}`)
-  }
-  for (const HTML of Array.from(cookies4)) {
-    const bonus = player.singularityUpgrades.cookies4.getEffect().bonus
-    HTML.style.display = bonus ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${!bonus}`)
-  }
-  for (const HTML of Array.from(cookies5)) {
-    const bonus = player.singularityUpgrades.cookies5.getEffect().bonus
-    HTML.style.display = bonus ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${!bonus}`)
-  }
+  document.documentElement.dataset.goldenQuark3Upg =
+    (player.singularityUpgrades.goldenQuarks3.getEffect().bonus as number) > 0 ? 'true' : 'false'
 
-  const goldenQuarks3 = document.getElementsByClassName('goldenQuark3Upg') as HTMLCollectionOf<HTMLElement>
-  for (const HTML of Array.from(goldenQuarks3)) {
-    const bonus = (player.singularityUpgrades.goldenQuarks3.getEffect().bonus as number) > 0
-    HTML.style.display = bonus ? 'block' : 'none'
-    HTML.setAttribute('aria-disabled', `${!bonus}`)
-  }
   if (player.upgrades[89] === 1) {
     DOMCacheGetOrSet('transcendautotoggle').style.display = 'block'
     DOMCacheGetOrSet('transcendamount').style.display = 'block'
@@ -528,7 +378,8 @@ export const revealStuff = () => {
     : (DOMCacheGetOrSet('settingpic6').style.display = 'none')
 
   // Hepteract Confirmations toggle
-  player.highestSingularityCount > 0 && player.challenge15Exponent >= 1e15
+  player.highestSingularityCount > 0
+    && player.challenge15Exponent >= G.challenge15Rewards.hepteractsUnlocked.requirement
     ? (DOMCacheGetOrSet('heptnotificationpic').style.display = 'block')
     : (DOMCacheGetOrSet('heptnotificationpic').style.display = 'none')
 
@@ -536,7 +387,14 @@ export const revealStuff = () => {
 
   const octeractUnlocks = document.getElementsByClassName('octeracts') as HTMLCollectionOf<HTMLElement>
   for (const item of Array.from(octeractUnlocks)) { // Stuff that you need octeracts to access
-    item.style.display = player.singularityUpgrades.octeractUnlock.getEffect().bonus ? 'block' : 'none'
+    const parent = item.parentElement!
+    if (parent.classList.contains('offlineStats')) {
+      item.style.display = player.singularityUpgrades.octeractUnlock.getEffect().bonus ? 'flex' : 'none'
+      item.setAttribute('aria-disabled', `${!player.singularityUpgrades.octeractUnlock.getEffect().bonus}`)
+    } else {
+      item.style.display = player.singularityUpgrades.octeractUnlock.getEffect().bonus ? 'block' : 'none'
+      item.setAttribute('aria-disabled', `${!player.singularityUpgrades.octeractUnlock.getEffect().bonus}`)
+    }
   }
 
   const singChallengeUnlocks = document.getElementsByClassName('singChallenges') as HTMLCollectionOf<HTMLElement>
@@ -544,10 +402,33 @@ export const revealStuff = () => {
     item.style.display = player.highestSingularityCount >= 25 ? 'block' : 'none'
   }
 
-  DOMCacheGetOrSet('toggleSingularitySubTab4').style.display =
-    player.singularityChallenges.noSingularityUpgrades.completions >= 1
-      ? 'block'
-      : 'none'
+  const exalt1x1Unlocks = document.getElementsByClassName('Exalt1x1') as HTMLCollectionOf<HTMLElement>
+  for (const item of Array.from(exalt1x1Unlocks)) {
+    const parent = item.parentElement!
+    if (parent.classList.contains('offlineStats')) {
+      item.style.display = player.singularityChallenges.noSingularityUpgrades.completions >= 1 ? 'flex' : 'none'
+      item.setAttribute('aria-disabled', `${player.singularityChallenges.noSingularityUpgrades.completions < 1}`)
+    } else {
+      item.style.visibility = player.singularityChallenges.noSingularityUpgrades.completions >= 1 ? 'visible' : 'hidden'
+      item.setAttribute('aria-disabled', `${player.singularityChallenges.noSingularityUpgrades.completions < 1}`)
+    }
+  }
+
+  const exalt5x1Unlocks = document.getElementsByClassName('Exalt5x1') as HTMLCollectionOf<HTMLElement>
+  for (const item of Array.from(exalt5x1Unlocks)) {
+    const parent = item.parentElement!
+    if (parent.classList.contains('offlineStats')) {
+      item.style.display = player.singularityChallenges.noAmbrosiaUpgrades.completions >= 1 ? 'flex' : 'none'
+      item.setAttribute('aria-disabled', `${player.singularityChallenges.noAmbrosiaUpgrades.completions < 1}`)
+    } else {
+      item.style.visibility = player.singularityChallenges.noAmbrosiaUpgrades.completions >= 1 ? 'visible' : 'hidden'
+      item.setAttribute('aria-disabled', `${player.singularityChallenges.noAmbrosiaUpgrades.completions < 1}`)
+    }
+  }
+
+  DOMCacheGetOrSet('toggleSingularitySubTab4').style.display = player.highestSingularityCount >= 25
+    ? 'block'
+    : 'none'
   // Hide Challenge Subtabs until Exalts are unlocked
   DOMCacheGetOrSet('challengesTabsToggle').style.display = player.highestSingularityCount >= 25
     ? 'flex'
@@ -557,9 +438,7 @@ export const revealStuff = () => {
     ? (DOMCacheGetOrSet('singularitybtn').style.display = 'block')
     : (DOMCacheGetOrSet('singularitybtn').style.display = 'none')
 
-  player.highestSingularityCount > 0 && player.ascensionCount >= 1
-    ? (DOMCacheGetOrSet('totalQuarkCountStatisticSing').style.display = 'block')
-    : (DOMCacheGetOrSet('totalQuarkCountStatisticSing').style.display = 'none')
+  DOMCacheGetOrSet('ascSingChallengeTimeTakenStats').style.display = player.insideSingularityChallenge ? '' : 'none'
 
   DOMCacheGetOrSet('ascensionStats').style.visibility =
     (player.achievements[197] > 0 || player.highestSingularityCount > 0) ? 'visible' : 'hidden'
@@ -612,7 +491,8 @@ export const revealStuff = () => {
     toggle32: player.achievements[173] > 0, // Settings - Confirmations - Ant Sacrifice
     toggle33: player.highestSingularityCount > 0 && player.ascensionCount > 0, // Settings - Confirmations - Singularity
     toggle34: player.unlocks.coinfour, // Achievements - Notifications
-    toggle35: player.challenge15Exponent >= 1e15 && player.highestSingularityCount > 0, // Hepteracts - Notifications
+    toggle35: player.challenge15Exponent >= G.challenge15Rewards.hepteractsUnlocked.requirement
+      && player.highestSingularityCount > 0, // Hepteracts - Notifications
     toggle36: player.highestSingularityCount >= 15, // Auto Blessings
     toggle37: player.highestSingularityCount >= 15, // Auto Spirits
     toggle38: player.highestSingularityCount > 0, // Researchs Hover to Buy
@@ -657,6 +537,8 @@ export const hideStuff = () => {
   DOMCacheGetOrSet('ants').style.display = 'none'
   DOMCacheGetOrSet('anttab').style.backgroundColor = ''
   DOMCacheGetOrSet('cubetab').style.backgroundColor = ''
+  DOMCacheGetOrSet('campaigntab').style.backgroundColor = ''
+  DOMCacheGetOrSet('campaigns').style.display = 'none'
   DOMCacheGetOrSet('traitstab').style.backgroundColor = ''
   DOMCacheGetOrSet('cubes').style.display = 'none'
   DOMCacheGetOrSet('traits').style.display = 'none'
@@ -695,6 +577,9 @@ export const hideStuff = () => {
       y: format(totalachievementpoints),
       z: (100 * player.achievementPoints / totalachievementpoints).toPrecision(4)
     })
+    DOMCacheGetOrSet('achievementQuarkBonus').innerHTML = i18next.t('achievements.quarkBonus', {
+      multiplier: format(1 + player.achievementPoints / 50000, 3, true)
+    })
   } else if (G.currentTab === Tabs.Runes) {
     DOMCacheGetOrSet('runes').style.display = 'block'
     DOMCacheGetOrSet('runestab').style.backgroundColor = 'blue'
@@ -729,6 +614,10 @@ export const hideStuff = () => {
   if (G.currentTab === Tabs.WowCubes) {
     DOMCacheGetOrSet('cubes').style.display = 'flex'
     DOMCacheGetOrSet('cubetab').style.backgroundColor = 'white'
+  }
+  if (G.currentTab === Tabs.Campaign) {
+    DOMCacheGetOrSet('campaigns').style.display = 'block'
+    DOMCacheGetOrSet('campaigntab').style.backgroundColor = 'red'
   }
   if (G.currentTab === Tabs.Corruption) {
     DOMCacheGetOrSet('traits').style.display = 'flex'
@@ -766,6 +655,7 @@ const visualTab: Record<Tabs, () => void> = {
   [Tabs.Shop]: visualUpdateShop,
   [Tabs.AntHill]: visualUpdateAnts,
   [Tabs.WowCubes]: visualUpdateCubes,
+  [Tabs.Campaign]: visualUpdateCampaign,
   [Tabs.Corruption]: visualUpdateCorruptions,
   [Tabs.Singularity]: visualUpdateSingularity,
   [Tabs.Event]: visualUpdateEvent,
@@ -989,14 +879,14 @@ export const buttoncolorchange = () => {
   }
 
   if (G.currentTab === Tabs.Runes) {
-    if (G.runescreen === 'runes') {
+    if (getActiveSubTab() === 0) {
       for (let i = 1; i <= 7; i++) {
         player.runeshards > 0.5
           ? DOMCacheGetOrSet(`activaterune${i}`).classList.add('runeButtonAvailable')
           : DOMCacheGetOrSet(`activaterune${i}`).classList.remove('runeButtonAvailable')
       }
     }
-    if (G.runescreen === 'talismans') {
+    if (getActiveSubTab() === 1) {
       const a = DOMCacheGetOrSet('buyTalismanItem1')
       const b = DOMCacheGetOrSet('buyTalismanItem2')
       const c = DOMCacheGetOrSet('buyTalismanItem3')
@@ -1079,7 +969,7 @@ export const buttoncolorchange = () => {
       player.antPoints.gte(
           Decimal.pow(
             G.antUpgradeCostIncreases[i - 1],
-            player.antUpgrades[i - 1]! * G.extinctionMultiplier[player.usedCorruptions[10]]
+            player.antUpgrades[i - 1]! * player.corruptions.used.corruptionEffects('extinction')
           ).times(G.antUpgradeBaseCost[i - 1])
         )
         ? DOMCacheGetOrSet(`antUpgrade${i}`).classList.add('antUpgradeBtnAvailable')
@@ -1149,7 +1039,7 @@ export const showCorruptionStatsLoadouts = () => {
   const statsButton = DOMCacheGetOrSet('corrStatsBtn')
   const corrLoadoutsButton = DOMCacheGetOrSet('corrLoadoutsBtn')
 
-  if (player.corruptionShowStats) {
+  if (player.corruptions.showStats) {
     DOMCacheGetOrSet('corruptionStats').style.display = 'flex'
     DOMCacheGetOrSet('corruptionLoadouts').style.display = 'none'
     statsButton.classList.add('subtab-active')
@@ -1178,8 +1068,8 @@ const updateAscensionStats = () => {
     ascPlatonic: format(platonic * (player.ascStatToggles[4] ? 1 : 1 / t), 5),
     ascHepteract: format(hepteract * (player.ascStatToggles[5] ? 1 : 1 / t), 3),
     ascC10: `${format(player.challengecompletions[10])}`,
-    ascTimeAccel: `${format(calculateTimeAcceleration().mult, 3)}x`,
-    ascAscensionTimeAccel: `${format(calculateAscensionAcceleration(), 3)}x${addedAsterisk ? '*' : ''}`,
+    ascTimeAccel: `${format(calculateGlobalSpeedMult(), 3)}x`,
+    ascAscensionTimeAccel: `${format(calculateAscensionSpeedMult(), 3)}x${addedAsterisk ? '*' : ''}`,
     ascSingularityCount: format(player.singularityCount),
     ascSingLen: formatTimeShort(player.singularityCounter),
     ascSingChallengeLen: formatTimeShort(player.singChallengeTimer)
@@ -1327,7 +1217,7 @@ export const Alert = (text: string): Promise<void> =>
     conf.style.display = 'block'
     alertWrap.style.display = 'block'
     overlay.style.display = 'block'
-    popup.querySelector('p')!.textContent = text
+    popup.querySelector('p')!.innerHTML = text
     popup.focus()
 
     const p = createDeferredPromise<void>()
@@ -1409,8 +1299,8 @@ export const Prompt = (text: string, defaultValue?: string): Promise<string | nu
     return p.promise
   })
 
-let closeNotification: ReturnType<typeof setTimeout>
-let closedNotification: ReturnType<typeof setTimeout>
+let closeNotification: number
+let closedNotification: number
 
 export const Notification = (text: string, time = 30000): Promise<void> => {
   const notification = DOMCacheGetOrSet('notification')
@@ -1436,7 +1326,7 @@ export const Notification = (text: string, time = 30000): Promise<void> => {
 
     closeNotification = 0
     x.removeEventListener('click', close)
-    closedNotification = setTimeout(closed, 1000)
+    closedNotification = +setTimeout(closed, 1000)
     p.resolve()
   }
 
@@ -1447,7 +1337,7 @@ export const Notification = (text: string, time = 30000): Promise<void> => {
   clearTimeout(closedNotification)
 
   // automatically close out after <time> ms
-  closeNotification = setTimeout(close, time)
+  closeNotification = +setTimeout(close, time)
 
   return p.promise
 }

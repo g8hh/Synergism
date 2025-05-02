@@ -1,5 +1,5 @@
 import '@ungap/custom-elements'
-import Decimal from 'break_infinity.js'
+import Decimal, { type DecimalSource } from 'break_infinity.js'
 import LZString from 'lz-string'
 
 import {
@@ -43,15 +43,14 @@ import {
 import {
   calculateAcceleratorMultiplier,
   calculateAnts,
-  calculateCorruptionPoints,
   calculateCubeBlessings,
-  calculateGoldenQuarkGain,
+  calculateGlobalSpeedMult,
+  calculateGoldenQuarks,
   calculateObtainium,
   calculateOfferings,
   calculateOffline,
   calculateRuneLevels,
   calculateSigmoidExponential,
-  calculateTimeAcceleration,
   calculateTotalAcceleratorBoost,
   calculateTotalCoinOwned,
   dailyResetCheck,
@@ -59,13 +58,14 @@ import {
   isShopTalismanUnlocked
 } from './Calculate'
 import {
-  corrChallengeMinimum,
   corruptionButtonsAdd,
-  corruptionLoadoutSaveLoad,
+  corruptionLoadLoadout,
+  CorruptionLoadout,
   corruptionLoadoutTableCreate,
   corruptionLoadoutTableUpdate,
+  CorruptionSaves,
+  corruptionsSchema,
   corruptionStatsUpdate,
-  maxCorruptionLevel,
   updateCorruptionLoadoutNames,
   updateUndefinedLoadouts
 } from './Corruptions'
@@ -137,15 +137,21 @@ import {
 // import { LegacyShopUpgrades } from './types/LegacySynergism';
 
 import i18next from 'i18next'
+import rfdc from 'rfdc'
 import {
   BlueberryUpgrade,
   blueberryUpgradeData,
   displayProperLoadoutCount,
-  updateBlueberryLoadoutCount,
-  updateLoadoutHoverClasses
+  updateBlueberryLoadoutCount
 } from './BlueberryUpgrades'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { lastUpdated, prod, testing, version } from './Config'
+import {
+  campaignIconHTMLUpdates,
+  CampaignManager,
+  campaignTokenRewardHTMLUpdate,
+  createCampaignIconHTMLS
+} from './Campaign'
+import { dev, lastUpdated, prod, testing, version } from './Config'
 import { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from './CubeExperimental'
 import { eventCheck } from './Event'
 import {
@@ -154,6 +160,7 @@ import {
   AcceleratorHepteract,
   ChallengeHepteract,
   ChronosHepteract,
+  HepteractCraft,
   hepteractEffective,
   HyperrealismHepteract,
   MultiplierHepteract,
@@ -167,18 +174,12 @@ import { octeractData, OcteractUpgrade } from './Octeracts'
 import { updatePlatonicUpgradeBG } from './Platonic'
 import { initializePCoinCache, PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getQuarkBonus, QuarkHandler } from './Quark'
+import { initRedAmbrosiaUpgrades } from './RedAmbrosiaUpgrades'
 import { playerJsonSchema } from './saves/PlayerJsonSchema'
-import { playerSchema } from './saves/PlayerSchema'
+import { playerUpdateVarSchema } from './saves/PlayerUpdateVarSchema'
 import { getFastForwardTotalMultiplier, singularityData, SingularityUpgrade } from './singularity'
 import { SingularityChallenge, singularityChallengeData } from './SingularityChallenges'
-import {
-  AmbrosiaGenerationCache,
-  AmbrosiaLuckAdditiveMultCache,
-  AmbrosiaLuckCache,
-  BlueberryInventoryCache,
-  cacheReinitialize
-} from './StatCache'
-import { changeSubTab, changeTab, Tabs } from './Tabs'
+import { changeSubTab, changeTab, getActiveSubTab, Tabs } from './Tabs'
 import { settingAnnotation, toggleIconSet, toggleTheme } from './Themes'
 import { clearTimeout, clearTimers, setInterval, setTimeout } from './Timers'
 
@@ -537,8 +538,6 @@ export const player: Player = {
     generators: true,
     reincarnate: true
   },
-  tabnumber: 1,
-  subtabNumber: 0,
 
   // create a Map with keys defaulting to false
   codes: new Map(Array.from({ length: 48 }, (_, i) => [i + 1, false])),
@@ -626,8 +625,18 @@ export const player: Player = {
     shopAmbrosiaUltra: 0,
     shopSingularitySpeedup: 0,
     shopSingularityPotency: 0,
-    shopSadisticRune: 0
+    shopSadisticRune: 0,
+    shopRedLuck1: 0,
+    shopRedLuck2: 0,
+    shopRedLuck3: 0,
+    shopInfiniteShopUpgrades: 0
   },
+
+  shopPotionsConsumed: {
+    offering: 0,
+    obtainium: 0
+  },
+
   shopBuyMaxToggle: false,
   shopHideToggle: false,
   shopConfirmationToggle: true,
@@ -650,8 +659,8 @@ export const player: Player = {
   antPoints: new Decimal('1'),
   antUpgrades: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   antSacrificePoints: 0,
-  antSacrificeTimer: 900,
-  antSacrificeTimerReal: 900,
+  antSacrificeTimer: 0,
+  antSacrificeTimerReal: 0,
 
   talismanLevels: [0, 0, 0, 0, 0, 0, 0],
   talismanRarity: [1, 1, 1, 1, 1, 1, 1],
@@ -880,47 +889,31 @@ export const player: Player = {
     6: false
   },
 
-  prototypeCorruptions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  usedCorruptions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  corruptionLoadouts: {
-    // If you add loadouts don't forget to add loadout names!
-    1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    10: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    12: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    13: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    14: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    15: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    16: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  corruptions: {
+    next: new CorruptionLoadout(corruptionsSchema.parse({})),
+    used: new CorruptionLoadout(corruptionsSchema.parse({})),
+    saves: new CorruptionSaves({
+      'Loadout 1': corruptionsSchema.parse({}),
+      'Loadout 2': corruptionsSchema.parse({}),
+      'Loadout 3': corruptionsSchema.parse({}),
+      'Loadout 4': corruptionsSchema.parse({}),
+      'Loadout 5': corruptionsSchema.parse({}),
+      'Loadout 6': corruptionsSchema.parse({}),
+      'Loadout 7': corruptionsSchema.parse({}),
+      'Loadout 8': corruptionsSchema.parse({}),
+      'Loadout 9': corruptionsSchema.parse({}),
+      'Loadout 10': corruptionsSchema.parse({}),
+      'Loadout 11': corruptionsSchema.parse({}),
+      'Loadout 12': corruptionsSchema.parse({}),
+      'Loadout 13': corruptionsSchema.parse({}),
+      'Loadout 14': corruptionsSchema.parse({}),
+      'Loadout 15': corruptionsSchema.parse({}),
+      'Loadout 16': corruptionsSchema.parse({})
+    }),
+    showStats: true
   },
-  corruptionLoadoutNames: [
-    'Loadout 1',
-    'Loadout 2',
-    'Loadout 3',
-    'Loadout 4',
-    'Loadout 5',
-    'Loadout 6',
-    'Loadout 7',
-    'Loadout 8',
-    'Loadout 9',
-    'Loadout 10',
-    'Loadout 11',
-    'Loadout 12',
-    'Loadout 13',
-    'Loadout 14',
-    'Loadout 15',
-    'Loadout 16'
-  ],
-  corruptionShowStats: true,
 
+  campaigns: new CampaignManager(),
   constantUpgrades: [null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   history: { ants: [], ascend: [], reset: [], singularity: [] },
   historyShowPerSecond: false,
@@ -1075,6 +1068,22 @@ export const player: Player = {
       singularityData.singCubes3,
       'singCubes3'
     ),
+    singBonusTokens1: new SingularityUpgrade(
+      singularityData.singBonusTokens1,
+      'singBonusTokens1'
+    ),
+    singBonusTokens2: new SingularityUpgrade(
+      singularityData.singBonusTokens2,
+      'singBonusTokens2'
+    ),
+    singBonusTokens3: new SingularityUpgrade(
+      singularityData.singBonusTokens3,
+      'singBonusTokens3'
+    ),
+    singBonusTokens4: new SingularityUpgrade(
+      singularityData.singBonusTokens4,
+      'singBonusTokens4'
+    ),
     singCitadel: new SingularityUpgrade(
       singularityData.singCitadel,
       'singCitadel'
@@ -1209,6 +1218,7 @@ export const player: Player = {
       singularityData.singAscensionSpeed2,
       'singAscensionSpeed2'
     ),
+    halfMind: new SingularityUpgrade(singularityData.halfMind, 'halfMind'),
     oneMind: new SingularityUpgrade(singularityData.oneMind, 'oneMind'),
     wowPass4: new SingularityUpgrade(singularityData.wowPass4, 'wowPass4'),
     offeringAutomatic: new SingularityUpgrade(
@@ -1250,6 +1260,10 @@ export const player: Player = {
     singAmbrosiaGeneration4: new SingularityUpgrade(
       singularityData.singAmbrosiaGeneration4,
       'singAmbrosiaGeneration4'
+    ),
+    singInfiniteShopUpgrades: new SingularityUpgrade(
+      singularityData.singInfiniteShopUpgrades,
+      'singInfiniteShopUpgrades'
     )
   },
 
@@ -1401,6 +1415,30 @@ export const player: Player = {
     octeractAmbrosiaGeneration4: new OcteractUpgrade(
       octeractData.octeractAmbrosiaGeneration4,
       'octeractAmbrosiaGeneration4'
+    ),
+    octeractBonusTokens1: new OcteractUpgrade(
+      octeractData.octeractBonusTokens1,
+      'octeractBonusTokens1'
+    ),
+    octeractBonusTokens2: new OcteractUpgrade(
+      octeractData.octeractBonusTokens2,
+      'octeractBonusTokens2'
+    ),
+    octeractBonusTokens3: new OcteractUpgrade(
+      octeractData.octeractBonusTokens3,
+      'octeractBonusTokens3'
+    ),
+    octeractBonusTokens4: new OcteractUpgrade(
+      octeractData.octeractBonusTokens4,
+      'octeractBonusTokens4'
+    ),
+    octeractBlueberries: new OcteractUpgrade(
+      octeractData.octeractBlueberries,
+      'octeractBlueberries'
+    ),
+    octeractInfiniteShopUpgrades: new OcteractUpgrade(
+      octeractData.octeractInfiniteShopUpgrades,
+      'octeractInfiniteShopUpgrades'
     )
   },
 
@@ -1445,6 +1483,7 @@ export const player: Player = {
   ambrosiaRNG: 0,
   blueberryTime: 0,
   visitedAmbrosiaSubtab: false,
+  visitedAmbrosiaSubtabRed: false,
   spentBlueberries: 0,
   blueberryUpgrades: {
     ambrosiaTutorial: new BlueberryUpgrade(
@@ -1499,6 +1538,18 @@ export const player: Player = {
       blueberryUpgradeData.ambrosiaLuck2,
       'ambrosiaLuck2'
     ),
+    ambrosiaQuarks3: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaQuarks3,
+      'ambrosiaQuarks3'
+    ),
+    ambrosiaCubes3: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaCubes3,
+      'ambrosiaQuarks3'
+    ),
+    ambrosiaLuck3: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaLuck3,
+      'ambrosiaLuck3'
+    ),
     ambrosiaPatreon: new BlueberryUpgrade(
       blueberryUpgradeData.ambrosiaPatreon,
       'ambrosiaPatreon'
@@ -1514,6 +1565,38 @@ export const player: Player = {
     ambrosiaHyperflux: new BlueberryUpgrade(
       blueberryUpgradeData.ambrosiaHyperflux,
       'ambrosiaHyperflux'
+    ),
+    ambrosiaBaseObtainium1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaBaseObtainium1,
+      'ambrosiaBaseObtainium1'
+    ),
+    ambrosiaBaseOffering1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaBaseOffering1,
+      'ambrosiaBaseOffering1'
+    ),
+    ambrosiaBaseObtainium2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaBaseObtainium2,
+      'ambrosiaBaseObtainium2'
+    ),
+    ambrosiaBaseOffering2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaBaseOffering2,
+      'ambrosiaBaseOffering2'
+    ),
+    ambrosiaSingReduction1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaSingReduction1,
+      'ambrosiaSingReduction1'
+    ),
+    ambrosiaInfiniteShopUpgrades1: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaInfiniteShopUpgrades1,
+      'ambrosiaInfiniteShopUpgrades'
+    ),
+    ambrosiaInfiniteShopUpgrades2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaInfiniteShopUpgrades2,
+      'ambrosiaInfiniteShopUpgrades2'
+    ),
+    ambrosiaSingReduction2: new BlueberryUpgrade(
+      blueberryUpgradeData.ambrosiaSingReduction2,
+      'ambrosiaSingReduction2'
     )
   },
 
@@ -1537,27 +1620,66 @@ export const player: Player = {
   },
   blueberryLoadoutMode: 'saveTree',
 
-  ultimateProgress: 0,
-  ultimatePixels: 0,
-  cubeUpgradeRedBarFilled: 0,
+  redAmbrosia: 0,
+  lifetimeRedAmbrosia: 0,
+  redAmbrosiaTime: 0,
+  // NOTE: This only keeps track of the total number of Red Ambrosia
+  // Invested, because I realized that keeping classes on the player is generally a bad idea
+  redAmbrosiaUpgrades: {
+    'tutorial': 0,
+    'conversionImprovement1': 0,
+    'conversionImprovement2': 0,
+    'conversionImprovement3': 0,
+    'freeTutorialLevels': 0,
+    'freeLevelsRow2': 0,
+    'freeLevelsRow3': 0,
+    'freeLevelsRow4': 0,
+    'freeLevelsRow5': 0,
+    'blueberryGenerationSpeed': 0,
+    'blueberryGenerationSpeed2': 0,
+    'regularLuck': 0,
+    'regularLuck2': 0,
+    'redGenerationSpeed': 0,
+    'redLuck': 0,
+    'redAmbrosiaCube': 0,
+    'redAmbrosiaObtainium': 0,
+    'redAmbrosiaOffering': 0,
+    'redAmbrosiaCubeImprover': 0,
+    'viscount': 0,
+    'infiniteShopUpgrades': 0,
+    'redAmbrosiaAccelerator': 0
+  },
 
   singChallengeTimer: 0,
 
-  caches: {
-    ambrosiaLuckAdditiveMult: new AmbrosiaLuckAdditiveMultCache(),
-    ambrosiaLuck: new AmbrosiaLuckCache(),
-    ambrosiaGeneration: new AmbrosiaGenerationCache(),
-    blueberryInventory: new BlueberryInventoryCache()
-  },
-
   lastExportedSave: 0,
 
-  seed: Array.from({ length: 2 }, () => Date.now())
+  seed: Array.from({ length: 3 }, () => Date.now())
 }
 
-export const blankSave = Object.assign({}, player, {
-  codes: new Map(Array.from({ length: 48 }, (_, i) => [i + 1, false]))
-})
+export const deepClone = () =>
+  rfdc({
+    proto: false,
+    circles: false,
+    constructorHandlers: [
+      [Decimal, (o: DecimalSource) => new Decimal(o)],
+      [QuarkHandler, (o: QuarkHandler) => new QuarkHandler(o.valueOf())],
+      [WowCubes, (o: WowCubes) => new WowCubes(o.valueOf())],
+      [WowTesseracts, (o: WowTesseracts) => new WowTesseracts(o.valueOf())],
+      [WowHypercubes, (o: WowHypercubes) => new WowHypercubes(o.valueOf())],
+      [WowPlatonicCubes, (o: WowPlatonicCubes) => new WowPlatonicCubes(o.valueOf())],
+      [HepteractCraft, (o: HepteractCraft) => new HepteractCraft(o.valueOf())],
+      [CorruptionLoadout, (o: CorruptionLoadout) => new CorruptionLoadout(o.loadout)],
+      [CorruptionSaves, (o: CorruptionSaves) => new CorruptionSaves(o.corrSaveData)],
+      [CampaignManager, (o: CampaignManager) => new CampaignManager(o.campaignManagerData)],
+      [SingularityUpgrade, (o: SingularityUpgrade) => new SingularityUpgrade(o.valueOf(), o.key())],
+      [OcteractUpgrade, (o: OcteractUpgrade) => new OcteractUpgrade(o.valueOf(), o.key())],
+      [SingularityChallenge, (o: SingularityChallenge) => new SingularityChallenge(o.valueOf(), o.key())],
+      [BlueberryUpgrade, (o: BlueberryUpgrade) => new BlueberryUpgrade(o.valueOf(), o.key())]
+    ]
+  })
+
+export const blankSave = deepClone()(player)
 
 export const saveSynergy = (button?: boolean) => {
   player.offlinetick = Date.now()
@@ -1566,7 +1688,6 @@ export const saveSynergy = (button?: boolean) => {
 
   const p = playerJsonSchema.parse(player)
   const save = btoa(JSON.stringify(p))
-
   if (save !== null) {
     localStorage.setItem('Synergysave2', save)
   } else {
@@ -1619,7 +1740,7 @@ const loadSynergy = () => {
       })
     }
 
-    const validatedPlayer = playerSchema.safeParse(data)
+    const validatedPlayer = playerUpdateVarSchema.safeParse(data)
 
     if (validatedPlayer.success) {
       Object.assign(player, validatedPlayer.data)
@@ -1629,8 +1750,6 @@ const loadSynergy = () => {
       clearTimers()
       return
     }
-
-    updateLoadoutHoverClasses()
 
     player.lastExportedSave = data.lastExportedSave ?? 0
 
@@ -2099,21 +2218,9 @@ const loadSynergy = () => {
       player.dayCheck.getDate()
     )
 
-    const maxLevel = maxCorruptionLevel()
-    player.usedCorruptions = player.usedCorruptions.map(
-      (curr: number, index: number) => {
-        if (index >= 2 && index <= 9) {
-          return Math.min(
-            maxLevel
-              * (player.challengecompletions[corrChallengeMinimum(index)] > 0
-                ? 1
-                : 0),
-            curr
-          )
-        }
-        return curr
-      }
-    )
+    player.corruptions.used = new CorruptionLoadout(player.corruptions.used.loadout)
+    // This is needed to fix saves that had issues with not resetting corruption at the singularity
+    player.corruptions.used.setCorruptionLevelsWithChallengeRequirement(player.corruptions.used.loadout)
 
     for (let i = 1; i <= 5; i++) {
       const ascendBuildingI = `ascendBuilding${i as OneToFive}` as const
@@ -2284,8 +2391,10 @@ const loadSynergy = () => {
     const corrs = 1 + 8 + PCoinUpgradeEffects.CORRUPTION_LOADOUT_SLOT_QOL
     // const corrs = Math.min(8, Object.keys(player.corruptionLoadouts).length) + 1
     for (let i = 0; i < corrs; i++) {
-      corruptionLoadoutTableUpdate(i)
+      corruptionLoadoutTableUpdate(true, i)
+      corruptionLoadoutTableUpdate(false, i)
     }
+
     showCorruptionStatsLoadouts()
     updateCorruptionLoadoutNames()
 
@@ -3145,9 +3254,9 @@ export const format = (
       }K`
     }
     return `${format(mantissa, accuracy, long)} / ${Math.pow(10, -power)}`
-  } else if (power < 6 || (long && power < 7)) {
-    // If the power is less than 6 or format long and less than 7 use standard formatting (1,234,567)
-    // Gets the standard representation of the number, safe as power is guaranteed to be > -12 and < 7
+  } else if (power < 6 || (long && power < 12)) {
+    // If the power is less than 6 or format long and less than 12 use standard formatting (1,234,567)
+    // Gets the standard representation of the number, safe as power is guaranteed to be > -12 and < 12
     let standard = mantissa * Math.pow(10, power)
     let standardString: string
     // Rounds up if the number experiences a rounding error
@@ -3339,18 +3448,18 @@ export const updateAllTick = (): void => {
     Math.min(
       1,
       (1 + player.platonicUpgrades[6] / 30)
-        * G.viscosityPower[player.usedCorruptions[2]]
+        * G.viscosityPower[player.corruptions.used.viscosity]
     )
   )
   a += 2000 * hepteractEffective('accelerator')
-  a *= G.challenge15Rewards.accelerator
+  a *= G.challenge15Rewards.accelerator.value
   a *= 1 + (3 / 10000) * hepteractEffective('accelerator')
   a = Math.floor(Math.min(1e100, a))
 
-  if (player.usedCorruptions[2] >= 15) {
+  if (player.corruptions.used.viscosity >= 15) {
     a = Math.pow(a, 0.2)
   }
-  if (player.usedCorruptions[2] >= 16) {
+  if (player.corruptions.used.viscosity >= 16) {
     a = 1
   }
 
@@ -3586,18 +3695,18 @@ export const updateAllMultiplier = (): void => {
     Math.min(
       1,
       (1 + player.platonicUpgrades[6] / 30)
-        * G.viscosityPower[player.usedCorruptions[2]]
+        * G.viscosityPower[player.corruptions.used.viscosity]
     )
   )
   a += 1000 * hepteractEffective('multiplier')
-  a *= G.challenge15Rewards.multiplier
+  a *= G.challenge15Rewards.multiplier.value
   a *= 1 + (3 / 10000) * hepteractEffective('multiplier')
   a = Math.floor(Math.min(1e100, a))
 
-  if (player.usedCorruptions[2] >= 15) {
+  if (player.corruptions.used.viscosity >= 15) {
     a = Math.pow(a, 0.2)
   }
-  if (player.usedCorruptions[2] >= 16) {
+  if (player.corruptions.used.viscosity >= 16) {
     a = 1
   }
 
@@ -3664,8 +3773,8 @@ export const multipliers = (): void => {
     10
       + (0.05 * player.researches[129] * Math.log(player.commonFragments + 1))
         / Math.log(4)
-      + ((20 * calculateCorruptionPoints()) / 400)
-        * G.effectiveRuneSpiritPower[3],
+      + ((20 * player.corruptions.used.totalCorruptionDifficultyMultiplier)
+        * G.effectiveRuneSpiritPower[3]),
     0.05 * player.crystalUpgrades[3]
   )
   crystalExponent += 0.04 * CalcECC('transcend', player.challengecompletions[3])
@@ -3779,7 +3888,7 @@ export const multipliers = (): void => {
       lol,
       1
         + ((1 / 20)
-            * player.usedCorruptions[9]
+            * player.corruptions.used.recession
             * Decimal.log(player.coins.add(1), 10))
           / (1e7 + Decimal.log(player.coins.add(1), 10))
     )
@@ -3790,11 +3899,11 @@ export const multipliers = (): void => {
   ) {
     lol = Decimal.pow(lol, 1.1)
   }
-  lol = Decimal.pow(lol, G.challenge15Rewards.coinExponent)
+  lol = Decimal.pow(lol, G.challenge15Rewards.coinExponent.value)
   G.globalCoinMultiplier = lol
   G.globalCoinMultiplier = Decimal.pow(
     G.globalCoinMultiplier,
-    G.financialcollapsePower[player.usedCorruptions[9]]
+    G.recessionPower[player.corruptions.used.recession]
   )
 
   G.coinOneMulti = new Decimal(1)
@@ -4055,7 +4164,7 @@ export const multipliers = (): void => {
             100
               + 10 * player.achievements[270]
               + 10 * player.shopUpgrades.constantEX
-              + 1000 * (G.challenge15Rewards.exponent - 1)
+              + 1000 * (G.challenge15Rewards.exponent.value - 1)
               + 3 * player.platonicUpgrades[18],
             player.constantUpgrades[2]
           ),
@@ -4078,7 +4187,7 @@ export const multipliers = (): void => {
     1 + (10 / 100) * player.researches[199]
   )
   G.globalConstantMult = G.globalConstantMult.times(
-    G.challenge15Rewards.constantBonus
+    G.challenge15Rewards.constantBonus.value
   )
   if (player.platonicUpgrades[5] > 0) {
     G.globalConstantMult = G.globalConstantMult.times(2)
@@ -4494,9 +4603,8 @@ export const updateAntMultipliers = (): void => {
               + (player.researches[84] / 200)
                 * (1
                   + (1
-                      * G.effectiveRuneSpiritPower[5]
-                      * calculateCorruptionPoints())
-                    / 400)),
+                    * G.effectiveRuneSpiritPower[5]
+                    * player.corruptions.used.totalCorruptionDifficultyMultiplier))),
           2
         )
   )
@@ -4600,7 +4708,7 @@ export const updateAntMultipliers = (): void => {
   if (player.currentChallenge.ascension !== 15) {
     G.globalAntMult = Decimal.pow(
       G.globalAntMult,
-      1 - (0.9 / 90) * Math.min(99, sumContents(player.usedCorruptions))
+      1 - (0.9 / 90) * Math.min(99, player.corruptions.used.totalLevels)
     )
   } else {
     // C15 used to have 9 corruptions set to 11, which above would provide a power of 0.01. Now it's hardcoded this way.
@@ -4609,9 +4717,9 @@ export const updateAntMultipliers = (): void => {
 
   G.globalAntMult = Decimal.pow(
     G.globalAntMult,
-    G.extinctionMultiplier[player.usedCorruptions[7]]
+    G.extinctionMultiplier[player.corruptions.used.extinction]
   )
-  G.globalAntMult = G.globalAntMult.times(G.challenge15Rewards.antSpeed)
+  G.globalAntMult = G.globalAntMult.times(G.challenge15Rewards.antSpeed.value)
   // V2.5.0: Moved ant shop upgrade as 'uncorruptable'
   G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(1.2, player.shopUpgrades.antSpeed)
@@ -4635,13 +4743,13 @@ export const updateAntMultipliers = (): void => {
     G.globalAntMult = G.globalAntMult.times(4.44)
   }
 
-  if (player.usedCorruptions[7] >= 14) {
+  if (player.corruptions.used.extinction >= 14) {
     G.globalAntMult = Decimal.pow(G.globalAntMult, 0.02)
   }
-  if (player.usedCorruptions[7] >= 15) {
+  if (player.corruptions.used.extinction >= 15) {
     G.globalAntMult = Decimal.pow(G.globalAntMult, 0.02)
   }
-  if (player.usedCorruptions[7] >= 16) {
+  if (player.corruptions.used.extinction >= 16) {
     G.globalAntMult = Decimal.pow(G.globalAntMult, 0.02)
   }
 
@@ -4734,7 +4842,7 @@ export const resetCurrency = (): void => {
     prestigePow = 1e-4 / (1 + player.challengecompletions[10])
     transcendPow = 0.001
   }
-  prestigePow *= G.deflationMultiplier[player.usedCorruptions[6]]
+  prestigePow *= G.deflationMultiplier[player.corruptions.used.deflation]
   // Prestige Point Formulae
   G.prestigePointGain = Decimal.floor(
     Decimal.pow(player.coinsThisPrestige.dividedBy(1e12), prestigePow)
@@ -4749,7 +4857,7 @@ export const resetCurrency = (): void => {
         Decimal.pow(10, 1e33),
         Decimal.pow(
           G.acceleratorEffect,
-          (1 / 3) * G.deflationMultiplier[player.usedCorruptions[6]]
+          (1 / 3) * G.deflationMultiplier[player.corruptions.used.deflation]
         )
       )
     )
@@ -5023,8 +5131,7 @@ export const resetCheck = async (
         challengeDisplay(a, false)
       }
       if (
-        (manual || leaving || player.shopUpgrades.challenge15Auto > 0)
-        && player.usedCorruptions.slice(2, 10).every((a) => a === 11)
+        (manual || leaving || player.shopUpgrades.challenge15Auto > 0) // removed a check that ensures always all lv11.. did not seem necessary
       ) {
         if (
           player.coins.gte(Decimal.pow(10, player.challenge15Exponent / c15SM))
@@ -5088,7 +5195,7 @@ export const resetCheck = async (
       confirmed = await Confirm(
         i18next.t('main.singularityConfirm0', {
           x: format(nextSingularityNumber),
-          y: format(calculateGoldenQuarkGain(), 2, true)
+          y: format(calculateGoldenQuarks(), 2, true)
         })
       )
     } else {
@@ -5102,7 +5209,7 @@ export const resetCheck = async (
       await Alert(
         i18next.t('main.singularityMessage4', {
           x: format(nextSingularityNumber),
-          y: format(calculateGoldenQuarkGain(), 2, true),
+          y: format(calculateGoldenQuarks(), 2, true),
           z: format(getQuarkBonus())
         })
       )
@@ -5120,7 +5227,7 @@ export const resetCheck = async (
     if (!confirmed) {
       return Alert(i18next.t('main.singularityCancelled'))
     } else {
-      await singularity()
+      singularity()
       saveSynergy()
       return Alert(
         i18next.t('main.welcomeToSingularity', {
@@ -5193,7 +5300,7 @@ export const updateEffectiveLevelMult = (): void => {
   G.effectiveLevelMult *= 1
     + ((0.01 * Math.log(player.talismanShards + 1)) / Math.log(4))
       * Math.min(1, player.constantUpgrades[9])
-  G.effectiveLevelMult *= G.challenge15Rewards.runeBonus
+  G.effectiveLevelMult *= G.challenge15Rewards.runeBonus.value
 }
 
 export const updateAll = (): void => {
@@ -5848,12 +5955,12 @@ export const updateAll = (): void => {
   if (
     player.shopUpgrades.challenge15Auto > 0
     && player.currentChallenge.ascension === 15
-    && player.usedCorruptions.slice(2, 10).every((a) => a === 11)
   ) {
     const c15SM = challenge15ScoreMultiplier()
     if (player.coins.gte(Decimal.pow(10, player.challenge15Exponent / c15SM))) {
       player.challenge15Exponent = Decimal.log(player.coins.add(1), 10) * c15SM
       c15RewardUpdate()
+      updateChallengeLevel(15)
     }
   }
 }
@@ -5872,6 +5979,7 @@ export const constantIntervals = (): void => {
   setInterval(saveSynergy, 5000)
   setInterval(slowUpdates, 200)
   setInterval(fastUpdates, 50)
+  setInterval(campaignIconHTMLUpdates, 15000)
 
   if (!G.timeWarp) {
     exitOffline()
@@ -5923,7 +6031,7 @@ const tick = () => {
 const tack = (dt: number) => {
   if (!G.timeWarp) {
     // Adds Resources (coins, ants, etc)
-    const timeMult = calculateTimeAcceleration().mult
+    const timeMult = calculateGlobalSpeedMult()
     resourceGain(dt * timeMult)
     // Adds time (in milliseconds) to all reset functions, and quarks timer.
     addTimers('prestige', dt)
@@ -5936,6 +6044,7 @@ const tack = (dt: number) => {
     addTimers('singularity', dt)
     addTimers('autoPotion', dt)
     addTimers('ambrosia', dt)
+    addTimers('redAmbrosia', dt)
 
     // Triggers automatic rune sacrifice (adds milliseconds to payload timer)
     if (player.shopUpgrades.offeringAuto > 0 && player.autoSacrificeToggle) {
@@ -6083,7 +6192,7 @@ const tack = (dt: number) => {
       }
     }
   }
-  calculateOfferings('reincarnation')
+  calculateOfferings()
 }
 
 export const synergismHotkeys = (event: KeyboardEvent, key: string): void => {
@@ -6107,22 +6216,22 @@ export const synergismHotkeys = (event: KeyboardEvent, key: string): void => {
       num = -1
     }
     if (player.challengecompletions[11] > 0 && !isNaN(num)) {
-      if (num >= 0 && num < player.corruptionLoadoutNames.length) {
+      if (num >= 0 && num < 8 + PCoinUpgradeEffects.CORRUPTION_LOADOUT_SLOT_QOL) {
         if (player.toggles[41]) {
           void Notification(
             i18next.t('main.corruptionLoadoutApplied', {
               x: num + 1,
-              y: player.corruptionLoadoutNames[num]
+              y: player.corruptions.saves.saves[num].name
             }),
             5000
           )
         }
-        corruptionLoadoutSaveLoad(false, num + 1)
+        corruptionLoadLoadout(num)
       } else {
         if (player.toggles[41]) {
           void Notification(i18next.t('main.allCorruptionsZero'), 5000)
         }
-        corruptionLoadoutSaveLoad(false, 0)
+        player.corruptions.next.resetCorruptions()
       }
       event.preventDefault()
     }
@@ -6150,13 +6259,11 @@ export const synergismHotkeys = (event: KeyboardEvent, key: string): void => {
         categoryUpgrades(num, false)
       }
       if (G.currentTab === Tabs.Runes) {
-        if (G.runescreen === 'runes') {
+        if (getActiveSubTab() === 0) {
           redeemShards(num)
-        }
-        if (G.runescreen === 'blessings') {
+        } else if (getActiveSubTab() === 2) {
           buyRuneBonusLevels('Blessings', num)
-        }
-        if (G.runescreen === 'spirits') {
+        } else if (getActiveSubTab() === 3) {
           buyRuneBonusLevels('Spirits', num)
         }
       }
@@ -6264,6 +6371,8 @@ export const reloadShit = (reset = false) => {
     loadSynergy()
   }
 
+  initRedAmbrosiaUpgrades(player.redAmbrosiaUpgrades)
+
   if (!reset) {
     calculateOffline()
   } else {
@@ -6312,9 +6421,9 @@ export const reloadShit = (reset = false) => {
       )
     })
   showExitOffline()
+  campaignIconHTMLUpdates()
+  campaignTokenRewardHTMLUpdate()
   clearTimeout(preloadDeleteGame)
-
-  setInterval(cacheReinitialize, 15000)
 
   if (localStorage.getItem('pleaseStar') === null) {
     void Alert(i18next.t('main.starRepo'))
@@ -6341,6 +6450,15 @@ export const reloadShit = (reset = false) => {
 }
 
 window.addEventListener('load', async () => {
+  if (dev) {
+    const { worker } = await import('./mock/browser')
+    await worker.start({
+      serviceWorker: {
+        url: './mockServiceWorker.js'
+      }
+    })
+  }
+
   await i18nInit()
   handleLogin().catch(console.error)
 
@@ -6378,10 +6496,11 @@ window.addEventListener('load', async () => {
   document.title = `Synergism v${version}`
 
   generateEventHandlers()
-  reloadShit()
-
   corruptionButtonsAdd()
   corruptionLoadoutTableCreate()
+  createCampaignIconHTMLS()
+  initRedAmbrosiaUpgrades(player.redAmbrosiaUpgrades)
+  reloadShit()
 }, { once: true })
 
 window.addEventListener('unload', () => {

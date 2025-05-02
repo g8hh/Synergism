@@ -1,19 +1,13 @@
 declare const PROD: boolean | undefined
+declare const DEV: boolean | undefined
 
-export const version = '3.1.2 February 1 2025: The Events Update'
+export const version = '3.3.0 April 30, 2025: The Statistics and Ambrosia Update'
 
 /**
- * PSEUDO DO NOT CHANGE THIS LINE
- * PSEUDO DO NOT CHANGE THIS LINE
- * PSEUDO DO NOT CHANGE THIS LINE
- * PSEUDO DO NOT CHANGE THIS LINE
- * PSEUDO DO NOT CHANGE THIS LINE
- * PSEUDO DO NOT CHANGE THIS LINE
+ * If true, the version is marked as a testing version.
  */
-// eslint-disable-next-line
-export const testing: boolean = false;
-export const lastUpdated = new Date(Date.UTC(2024, 4, 28, 16, 0, 6))
-/**
- * CHANGE THIS ONE INSTEAD
- */
+export const testing = false
+export const lastUpdated = new Date('##LAST_UPDATED##')
+
 export const prod = typeof PROD === 'undefined' ? false : PROD
+export const dev = typeof DEV === 'undefined' ? false : DEV

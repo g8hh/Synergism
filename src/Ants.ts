@@ -66,11 +66,11 @@ const antUpgradeTexts = [
   () => format(calculateSigmoid(2, player.antUpgrades[12 - 1]! + G.bonusant12, 69), 4)
 ]
 
-let repeatAnt: ReturnType<typeof setTimeout>
+let repeatAnt: number
 
 export const antRepeat = (i: number) => {
   clearInterval(repeatAnt)
-  repeatAnt = setInterval(() => updateAntDescription(i), 50)
+  repeatAnt = +setInterval(() => updateAntDescription(i), 50)
 }
 
 export const updateAntDescription = (i: number) => {
@@ -281,7 +281,10 @@ export const antUpgradeDescription = (i: number) => {
     x: format(
       Decimal.pow(
         G.antUpgradeCostIncreases[i - 1],
-        player.antUpgrades[i - 1]! * G.extinctionMultiplier[player.usedCorruptions[10]]
+        // NOTE: This seems to have always been broken, in the worst way
+        // This corruption was previously never used, so it was never noticed
+        // But now it will be used and thus have major balancing issues
+        player.antUpgrades[i - 1]! * G.extinctionMultiplier[player.corruptions.used.extinction]
       ).times(G.antUpgradeBaseCost[i - 1])
     )
   })

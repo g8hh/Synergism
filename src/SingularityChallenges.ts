@@ -1,12 +1,6 @@
 import i18next from 'i18next'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import {
-  calculateAdditiveLuckMult,
-  calculateAmbrosiaGenerationSpeed,
-  calculateAmbrosiaLuck,
-  calculateBlueberryInventory,
-  calculateGoldenQuarkGain
-} from './Calculate'
+import { calculateGoldenQuarks } from './Calculate'
 import { singularity } from './Reset'
 import { player } from './Synergism'
 import type { Player } from './types/Synergism'
@@ -46,6 +40,7 @@ export class SingularityChallenge {
   public scalingrewardcount
   public uniquerewardcount
   readonly cacheUpdates: (() => void)[] | undefined
+  #key: string
 
   public constructor (data: ISingularityChallengeData, key: string) {
     const name = i18next.t(`singularityChallenge.data.${key}.name`)
@@ -70,6 +65,7 @@ export class SingularityChallenge {
     this.updateIconHTML()
     this.updateChallengeCompletions()
     this.cacheUpdates = data.cacheUpdates ?? undefined
+    this.#key = key
   }
 
   public computeSingularityRquirement () {
@@ -117,12 +113,12 @@ export class SingularityChallenge {
       const holdSingTimer = player.singularityCounter
       const holdQuarkExport = player.quarkstimer
       const holdGoldenQuarkExport = player.goldenQuarksTimer
-      const goldenQuarkGain = calculateGoldenQuarkGain()
+      const goldenQuarkGain = calculateGoldenQuarks()
       const currentGQ = player.goldenQuarks
       this.enabled = true
       G.currentSingChallenge = this.HTMLTag
       player.insideSingularityChallenge = true
-      await singularity(setSingularity)
+      singularity(setSingularity)
 
       if (!this.resetTime) {
         player.singularityCounter = holdSingTimer
@@ -176,7 +172,7 @@ export class SingularityChallenge {
     if (success) {
       this.highestSingularityCompleted = player.singularityCount
       this.updateChallengeCompletions()
-      await singularity(highestSingularityHold)
+      singularity(highestSingularityHold)
       player.singularityCounter = holdSingTimer
       this.updateCaches()
       return Alert(
@@ -186,7 +182,7 @@ export class SingularityChallenge {
         })
       )
     } else {
-      await singularity(highestSingularityHold)
+      singularity(highestSingularityHold)
       player.singularityCounter = holdSingTimer
       player.quarkstimer = holdQuarkExport
       player.goldenQuarksTimer = holdGoldenQuarkExport
@@ -280,6 +276,28 @@ export class SingularityChallenge {
   public get rewards () {
     return this.effect(this.completions)
   }
+
+  valueOf (): ISingularityChallengeData {
+    return {
+      baseReq: this.baseReq,
+      effect: this.effect,
+      HTMLTag: this.HTMLTag,
+      maxCompletions: this.maxCompletions,
+      scalingrewardcount: this.scalingrewardcount,
+      singularityRequirement: this.singularityRequirement,
+      uniquerewardcount: this.uniquerewardcount,
+      unlockSingularity: this.unlockSingularity,
+      cacheUpdates: this.cacheUpdates,
+      completions: this.completions,
+      enabled: this.enabled,
+      highestSingularityCompleted: this.highestSingularityCompleted,
+      resetTime: this.resetTime
+    }
+  }
+
+  key () {
+    return this.#key
+  }
 }
 
 export const singularityChallengeData: Record<
@@ -302,20 +320,10 @@ export const singularityChallengeData: Record<
         goldenQuarks: 1 + 0.12 * +(n > 0),
         blueberries: +(n > 0),
         shopUpgrade: n >= 20,
-        luckBonus: n >= 30 ? 0.04 : 0,
+        luckBonus: n >= 30 ? 0.05 : 0,
         shopUpgrade2: n >= 30
       }
-    },
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats = {
-          ambrosiaAdditiveLuckMult: calculateAdditiveLuckMult().value,
-          ambrosiaLuck: calculateAmbrosiaLuck().value,
-          ambrosiaBlueberries: calculateBlueberryInventory().value,
-          ambrosiaGenerationSpeed: calculateAmbrosiaGenerationSpeed().value
-        }
-      }
-    ]
+    }
   },
   oneChallengeCap: {
     baseReq: 10,
@@ -371,13 +379,12 @@ export const singularityChallengeData: Record<
       return baseReq + 10 * completions
     },
     scalingrewardcount: 1,
-    uniquerewardcount: 4,
+    uniquerewardcount: 3,
     effect: (n: number) => {
       return {
-        ultimateProgressBarUnlock: (n > 0),
         ascensionSpeedMult: (0.1 * n) / 100,
         hepteractCap: n > 0,
-        exaltBonus: n >= 20,
+        shopUpgrade0: n >= 20,
         shopUpgrade: n >= 25
       }
     }
@@ -390,15 +397,17 @@ export const singularityChallengeData: Record<
     singularityRequirement: (baseReq: number, completions: number) => {
       return baseReq + 6 * completions
     },
-    scalingrewardcount: 2,
-    uniquerewardcount: 6,
+    scalingrewardcount: 4,
+    uniquerewardcount: 7,
     effect: (n: number) => {
       return {
         bonusAmbrosia: +(n > 0),
         blueberries: Math.floor(n / 10) + +(n > 0),
         luckBonus: n / 200,
         additiveLuck: 15 * n,
+        redLuck: 4 * n,
         blueberrySpeedMult: (1 + n / 50),
+        redSpeedMult: 1 + n / 100,
         shopUpgrade: n >= 15,
         shopUpgrade2: n >= 20
       }
@@ -412,33 +421,34 @@ export const singularityChallengeData: Record<
     singularityRequirement: (baseReq: number, completions: number) => {
       return baseReq + 3 * completions
     },
-    scalingrewardcount: 3,
+    scalingrewardcount: 4,
     uniquerewardcount: 3,
     effect: (n: number) => {
       return {
         preserveQuarks: +(n > 0),
-        quarkMult: 0.01 * n,
+        quarkMult: 1 + 0.01 * n,
         globalSpeed: 0.06 * n,
         ascensionSpeed: 0.06 * n,
+        barRequirementMultiplier: 1 - 0.01 * n,
         tier1Upgrade: n >= 15,
         tier2Upgrade: n >= 25
       }
     }
   },
   sadisticPrequel: {
-    baseReq: 135,
+    baseReq: 120,
     maxCompletions: 30,
-    unlockSingularity: 273,
+    unlockSingularity: 256,
     HTMLTag: 'sadisticPrequel',
     singularityRequirement: (baseReq: number, completions: number) => {
-      return baseReq + 3 * completions
+      return baseReq + 4 * completions
     },
     scalingrewardcount: 2,
     uniquerewardcount: 4,
     effect: (n: number) => {
       return {
         extraFree: 50 * +(n > 0),
-        quarkMult: 0.03 * n,
+        quarkMult: 1 + 0.03 * n,
         freeUpgradeMult: 0.03 * n,
         shopUpgrade: n >= 10,
         shopUpgrade2: n >= 20,

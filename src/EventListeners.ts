@@ -9,11 +9,17 @@ import {
   updateAntDescription
 } from './Ants'
 import {
+  type blueberryUpgradeNames,
   createLoadoutDescription,
+  displayLevelsBlueberry,
+  displayOnlyLoadout,
   exportBlueberryTree,
+  highlightPrerequisites,
   importBlueberryTree,
   loadoutHandler,
-  resetBlueberryTree
+  resetBlueberryTree,
+  resetHighlights,
+  resetLoadoutOnlyDisplay
 } from './BlueberryUpgrades'
 import {
   boostAccelerator,
@@ -54,8 +60,9 @@ import {
   resetGame,
   updateSaveString
 } from './ImportExport'
-import { getTips, sendToWebsocket, setTips } from './Login'
+import { exitFastForward, getTips, sendToWebsocket, setTips } from './Login'
 import { buyPlatonicUpgrades, createPlatonicDescription } from './Platonic'
+import { displayRedAmbrosiaLevels, getRedAmbrosiaUpgrade, resetRedAmbrosiaDisplay } from './RedAmbrosiaUpgrades'
 import { buyResearch, researchDescriptions } from './Research'
 import { resetrepeat, updateAutoCubesOpens, updateAutoReset, updateTesseractAutoBuyAmount } from './Reset'
 import { displayRuneInformation, redeemShards } from './Runes'
@@ -104,7 +111,6 @@ import {
   toggleBuyAmount,
   toggleBuyMaxShop,
   toggleChallenges,
-  toggleCorruptionLevel,
   toggleHepteractAutoPercentage,
   toggleHideShop,
   toggleMaxBuyCube,
@@ -181,6 +187,11 @@ export const generateEventHandlers = () => {
   // Offline Button
   DOMCacheGetOrSet('exitOffline').addEventListener('click', () => exitOffline())
   DOMCacheGetOrSet('offlineContainer').addEventListener('dblclick', () => exitOffline())
+
+  // Fast forward button
+  DOMCacheGetOrSet('exitFastForward').addEventListener('click', () => exitFastForward())
+  DOMCacheGetOrSet('fastForwardContainer').addEventListener('dblclick', () => exitFastForward())
+
   // UPPER UI ELEMENTS
   // Prelude: Cube/Tesseract/Hypercube/Platonic display UIs (Onclicks)
   DOMCacheGetOrSet('ascCubeStats').addEventListener('click', () => toggleAscStatPerSecond(1))
@@ -457,7 +468,7 @@ export const generateEventHandlers = () => {
 
   for (let index = 0; index < 7; index++) {
     DOMCacheGetOrSet(`talisman${index + 1}`).addEventListener('click', () => showTalismanEffect(index))
-    
+
     const levelTalisman = DOMCacheGetOrSet(`leveluptalisman${index + 1}`)
     levelTalisman.addEventListener('mouseover', () => showTalismanPrices(index))
     levelTalisman.addEventListener('focus', () => showTalismanPrices(index))
@@ -588,8 +599,7 @@ export const generateEventHandlers = () => {
     antTier.addEventListener('mouseover', onFocusMouseover)
     antTier.addEventListener('focus', onFocusMouseover)
 
-    antTier.addEventListener('click', () =>
-      buyAntProducers(ordinals[index - 1], antProducerCostVals[index], index))
+    antTier.addEventListener('click', () => buyAntProducers(ordinals[index - 1], antProducerCostVals[index], index))
   }
   // Part 2: Ant Upgrades (1-12)
   const antUpgradeCostVals = [
@@ -833,9 +843,12 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('corrLoadoutsBtn').addEventListener('click', () => changeSubTab(Tabs.Corruption, { page: 1 }))
 
   // Part 1: Displays
-  DOMCacheGetOrSet('corruptionDisplays').addEventListener('click', () => corruptionDisplay(10))
+  DOMCacheGetOrSet('corruptionDisplays').addEventListener('click', () => corruptionDisplay('exit'))
   DOMCacheGetOrSet('corruptionCleanse').addEventListener('click', () => corruptionCleanseConfirm())
-  DOMCacheGetOrSet('corruptionCleanseConfirm').addEventListener('click', () => toggleCorruptionLevel(10, 999))
+  DOMCacheGetOrSet('corruptionCleanseConfirm').addEventListener('click', () => {
+    player.corruptions.used.resetCorruptions()
+    player.corruptions.next.resetCorruptions()
+  })
 
   // Extra toggle
   DOMCacheGetOrSet('ascensionAutoEnable').addEventListener('click', () => toggleAutoAscend(0))
@@ -1050,9 +1063,19 @@ TODO: Fix this entire tab it's utter shit
     player.blueberryUpgrades
   ) as (keyof Player['blueberryUpgrades'])[]
   for (const key of blueberryUpgrades) {
+    const k = key as blueberryUpgradeNames
     DOMCacheGetOrSet(`${String(key)}`).addEventListener(
       'mouseover',
-      () => player.blueberryUpgrades[`${String(key)}`].updateUpgradeHTML()
+      () => {
+        player.blueberryUpgrades[`${String(key)}`].updateUpgradeHTML()
+        highlightPrerequisites(k)
+      }
+    )
+    DOMCacheGetOrSet(`${String(key)}`).addEventListener(
+      'mouseout',
+      () => {
+        resetHighlights()
+      }
     )
     DOMCacheGetOrSet(`${String(key)}`).addEventListener(
       'click',
@@ -1064,6 +1087,7 @@ TODO: Fix this entire tab it's utter shit
   const blueberryLoadouts = Array.from(
     document.querySelectorAll('[id^="blueberryLoadout"]')
   )
+
   const loadoutContainer = DOMCacheGetOrSet('blueberryUpgradeContainer')
 
   for (let i = 0; i < blueberryLoadouts.length; i++) {
@@ -1075,9 +1099,11 @@ TODO: Fix this entire tab it's utter shit
         player.blueberryLoadouts[shiftedKey] ?? { ambrosiaTutorial: 0 }
       )
       loadoutContainer.classList.add(`hoveredBlueberryLoadout${shiftedKey}`)
+      displayOnlyLoadout(player.blueberryLoadouts[shiftedKey])
     })
     el.addEventListener('mouseout', () => {
       loadoutContainer.classList.remove(`hoveredBlueberryLoadout${shiftedKey}`)
+      resetLoadoutOnlyDisplay()
     })
     el.addEventListener('click', () =>
       loadoutHandler(
@@ -1092,6 +1118,35 @@ TODO: Fix this entire tab it's utter shit
   DOMCacheGetOrSet('refundBlueberries').addEventListener('click', () => resetBlueberryTree())
   // Import blueberries
   DOMCacheGetOrSet('importBlueberries').addEventListener('change', (e) => importData(e, importBlueberryTree))
+
+  DOMCacheGetOrSet('importBlueberriesButton').addEventListener('click', () => {
+    DOMCacheGetOrSet('importBlueberries').click()
+  })
+
+  DOMCacheGetOrSet('showCurrAmbrosiaUpgrades').addEventListener('mouseover', () => {
+    displayLevelsBlueberry()
+    displayRedAmbrosiaLevels()
+  })
+  DOMCacheGetOrSet('showCurrAmbrosiaUpgrades').addEventListener('mouseout', () => {
+    resetLoadoutOnlyDisplay()
+    resetRedAmbrosiaDisplay()
+  })
+
+  // RED AMBROSIA
+  const redAmbrosiaUpgrades = Object.keys(
+    player.redAmbrosiaUpgrades
+  ) as (keyof Player['redAmbrosiaUpgrades'])[]
+  for (const key of redAmbrosiaUpgrades) {
+    const capitalizedName = key.charAt(0).toUpperCase() + key.slice(1)
+    DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
+      'mouseover',
+      () => getRedAmbrosiaUpgrade(key).updateUpgradeHTML()
+    )
+    DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
+      'click',
+      (event) => getRedAmbrosiaUpgrade(key).buyLevel(event)
+    )
+  }
 
   // Toggle subtabs of Singularity tab
   for (let index = 0; index < 4; index++) {

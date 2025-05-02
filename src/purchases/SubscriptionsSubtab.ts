@@ -1,8 +1,9 @@
 import { loadScript } from '@paypal/paypal-js'
+import i18next from 'i18next'
 import { prod } from '../Config'
 import { Alert, Confirm, Notification } from '../UpdateHTML'
 import { memoize } from '../Utility'
-import { type Product, subscriptionProducts, upgradeResponse } from './CartTab'
+import { type SubscriptionProduct, subscriptionProducts, upgradeResponse } from './CartTab'
 import { addToCart, getQuantity } from './CartUtil'
 
 const subscriptionsContainer = document.querySelector<HTMLElement>('#pseudoCoins > #subscriptionsContainer')!
@@ -78,17 +79,21 @@ function clickHandler (this: HTMLButtonElement, e: HTMLElementEventMap['click'])
   Notification(`Added ${productName} to the cart!`)
 }
 
-const constructDescriptions = (description: string) => {
+const constructDescriptions = ({ description, quarkBonus }: SubscriptionProduct) => {
   const [firstLine, secondLine] = description.split(' and ')
   // capitalize the first letter of the second line
   const secondLineCap = secondLine.charAt(0).toUpperCase() + secondLine.slice(1)
 
-  return `<span style="color: gold">${firstLine}</span>
-            <br>
-            <span style="color: cyan">${secondLineCap}</span>`
+  return `
+    <span style="color: gold">${firstLine}</span>
+    <br>
+    <span style="color: cyan">${secondLineCap}</span>
+    <br>
+    <span style="color: magenta">${i18next.t('pseudoCoins.globalQuarkBonus', { percent: quarkBonus })}</span>
+  `
 }
 
-export const createIndividualSubscriptionHTML = (product: Product, existingCosts: number) => {
+export const createIndividualSubscriptionHTML = (product: SubscriptionProduct, existingCosts: number) => {
   if (product.price < existingCosts) {
     return `
       <section class="subscriptionContainer" key="${product.id}">
@@ -98,12 +103,12 @@ export const createIndividualSubscriptionHTML = (product: Product, existingCosts
           ${product.name.split(' - ').join('<br>')}
           </p>
           <p class="pseudoSubscriptionText">
-          ${constructDescriptions(product.description)}
+          ${constructDescriptions(product)}
           </p>
           <button data-id="${product.id}" data-name="${product.name}" data-downgrade class="pseudoCoinButton" style="background-color: maroon">
             Downgrade!
           </button>
-          <div id="checkout-paypal" data-id="${product.id}"></div>
+          <div class="checkout-paypal" data-id="${product.id}"></div>
       </div>
       </section>
     `
@@ -116,12 +121,12 @@ export const createIndividualSubscriptionHTML = (product: Product, existingCosts
           ${product.name.split(' - ').join('<br>')}
           </p>
           <p class="pseudoSubscriptionText">
-          ${constructDescriptions(product.description)}
+          ${constructDescriptions(product)}
           </p>
           <button data-id="${product.id}" data-name="${product.name}" class="pseudoCoinButton" style="background-color: #b59410">
             You are here!
           </button>
-          <div id="checkout-paypal" data-id="${product.id}"></div>
+          <div class="checkout-paypal" data-id="${product.id}"></div>
       </div>
       </section>
     `
@@ -134,12 +139,12 @@ export const createIndividualSubscriptionHTML = (product: Product, existingCosts
           ${product.name.split(' - ').join('<br>')}
           </p>
           <p class="pseudoSubscriptionText">
-          ${constructDescriptions(product.description)}
+          ${constructDescriptions(product)}
           </p>
           <button data-id="${product.id}" data-name="${product.name}" data-upgrade class="pseudoCoinButton">
             Upgrade for ${formatter.format((product.price - existingCosts) / 100)} USD / mo
           </button>
-          <div id="checkout-paypal" data-id="${product.id}"></div>
+          <div class="checkout-paypal" data-id="${product.id}"></div>
       </div>
       </section>
     `
@@ -179,8 +184,7 @@ export const initializeSubscriptionPage = memoize(() => {
   ;(async () => {
     const paypal = await loadScript({
       clientId: 'AS1HYTVcH3Kqt7IVgx7DkjgG8lPMZ5kyPWamSBNEowJ-AJPpANNTJKkB_mF0C4NmQxFuWQ9azGbqH2Gr',
-      enableFunding: ['venmo'],
-      disableFunding: ['paylater', 'credit', 'card'],
+      disableFunding: ['venmo', 'paylater', 'credit', 'card'],
       vault: true,
       intent: 'subscription'
     })

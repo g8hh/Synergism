@@ -1,13 +1,12 @@
 import i18next from 'i18next'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateAmbrosiaGenerationSpeed, calculateAmbrosiaLuck, calculateBlueberryInventory } from './Calculate'
+import { campaignTokenRewardHTMLUpdate } from './Campaign'
 import type { IUpgradeData } from './DynamicUpgrade'
 import { DynamicUpgrade } from './DynamicUpgrade'
 import { format, player } from './Synergism'
 import type { Player } from './types/Synergism'
 import { Alert, Prompt, revealStuff } from './UpdateHTML'
-import { toOrdinal } from './Utility'
-import { Globals as G } from './Variables'
+import { sumContents, toOrdinal } from './Utility'
 
 export const updateSingularityPenalties = (): void => {
   const singularityCount = player.singularityCount
@@ -151,6 +150,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
   public specialCostForm: SingularitySpecialCostFormulae
   public qualityOfLife: boolean
   readonly cacheUpdates: (() => void)[] | undefined
+  #key: string
 
   public constructor (data: ISingularityData, key: string) {
     const name = i18next.t(`singularity.data.${key}.name`)
@@ -163,6 +163,7 @@ export class SingularityUpgrade extends DynamicUpgrade {
     this.specialCostForm = data.specialCostForm ?? 'Default'
     this.qualityOfLife = data.qualityOfLife ?? false
     this.cacheUpdates = data.cacheUpdates ?? undefined
+    this.#key = key
   }
 
   /**
@@ -233,6 +234,11 @@ export class SingularityUpgrade extends DynamicUpgrade {
    */
   getCostTNL (): number {
     let costMultiplier = 1
+    if (this.computeMaxLevel() === this.level) {
+      return 0
+    }
+
+    // Overcap
     if (this.computeMaxLevel() > this.maxLevel && this.level >= this.maxLevel) {
       costMultiplier *= Math.pow(4, this.level - this.maxLevel + 1)
     }
@@ -433,6 +439,27 @@ export class SingularityUpgrade extends DynamicUpgrade {
     player.goldenQuarks += this.goldenQuarksInvested
     this.level = 0
     this.goldenQuarksInvested = 0
+  }
+
+  valueOf (): ISingularityData {
+    return {
+      costPerLevel: this.costPerLevel,
+      maxLevel: this.maxLevel,
+      cacheUpdates: this.cacheUpdates,
+      canExceedCap: this.canExceedCap,
+      effect: this.effect,
+      freeLevels: this.freeLevels,
+      goldenQuarksInvested: this.goldenQuarksInvested,
+      level: this.level,
+      minimumSingularity: this.minimumSingularity,
+      qualityOfLife: this.qualityOfLife,
+      specialCostForm: this.specialCostForm,
+      toggleBuy: this.toggleBuy
+    }
+  }
+
+  key () {
+    return this.#key
   }
 }
 
@@ -738,10 +765,10 @@ export const singularityData: Record<
     costPerLevel: 1,
     effect: (n: number) => {
       return {
-        bonus: 1 + 0.01 * n,
+        bonus: 1 + 0.006 * n,
         get desc () {
           return i18next.t('singularity.data.singCubes1.effect', {
-            n: format(1 * n, 0, true)
+            n: format(0.6 * n, 1, true)
           })
         }
       }
@@ -787,7 +814,9 @@ export const singularityData: Record<
         get desc () {
           return i18next.t('singularity.data.singCubes2.effect', {
             n: format(
-              100 * ((1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100) - 1)
+              100 * ((1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100) - 1),
+              2,
+              true
             )
           })
         }
@@ -805,7 +834,9 @@ export const singularityData: Record<
         get desc () {
           return i18next.t('singularity.data.singCubes3.effect', {
             n: format(
-              100 * ((1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100) - 1)
+              100 * ((1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100) - 1),
+              2,
+              true
             )
           })
         }
@@ -1067,7 +1098,7 @@ export const singularityData: Record<
     specialCostForm: 'Exponential2',
     effect: (n: number) => {
       return {
-        bonus: n / 200,
+        bonus: 1 + n / 200,
         get desc () {
           return i18next.t('singularity.data.singQuarkImprover1.effect', {
             n: format(n / 2, 2, true)
@@ -1305,7 +1336,7 @@ export const singularityData: Record<
     minimumSingularity: 128,
     effect: (n: number) => {
       return {
-        bonus: n,
+        bonus: n > 0,
         get desc () {
           return i18next.t('singularity.data.singAscensionSpeed.effect', {
             n: format(1 + 0.03 * n, 2, true),
@@ -1316,27 +1347,17 @@ export const singularityData: Record<
     }
   },
   singAscensionSpeed2: {
-    maxLevel: 1,
+    maxLevel: 30,
     costPerLevel: 1e12,
+    specialCostForm: 'Exponential2',
     minimumSingularity: 147,
     effect: (n: number) => {
       return {
-        bonus: n,
+        bonus: 0.001 * n,
         get desc () {
-          return i18next.t('singularity.data.singAscensionSpeed2.effect')
-        }
-      }
-    }
-  },
-  WIP: {
-    maxLevel: 100,
-    costPerLevel: 1e300,
-    minimumSingularity: 251,
-    effect: (n: number) => {
-      return {
-        bonus: n,
-        get desc () {
-          return i18next.t('singularity.data.WIP.effect')
+          return i18next.t('singularity.data.singAscensionSpeed2.effect', {
+            n: format(0.001 * n, 3, true)
+          })
         }
       }
     }
@@ -1358,6 +1379,22 @@ export const singularityData: Record<
         }
       }
     }
+  },
+  halfMind: {
+    maxLevel: 1,
+    costPerLevel: 1.66e12,
+    minimumSingularity: 150,
+    effect: (n: number) => {
+      return {
+        bonus: n > 0,
+        get desc () {
+          return i18next.t(
+            `singularity.data.halfMind.effect${n ? 'Have' : 'HaveNot'}`
+          )
+        }
+      }
+    },
+    qualityOfLife: true
   },
   oneMind: {
     maxLevel: 1,
@@ -1404,15 +1441,7 @@ export const singularityData: Record<
       }
     },
     specialCostForm: 'Exponential2',
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaBlueberries = calculateBlueberryInventory().value
-      },
-      () => {
-        G.ambrosiaCurrStats.ambrosiaGenerationSpeed = calculateAmbrosiaGenerationSpeed().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaLuck: {
     maxLevel: -1,
@@ -1429,12 +1458,7 @@ export const singularityData: Record<
       }
     },
     specialCostForm: 'Exponential2',
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaLuck = calculateAmbrosiaLuck().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaLuck2: {
     maxLevel: 30,
@@ -1450,12 +1474,7 @@ export const singularityData: Record<
         }
       }
     },
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaLuck = calculateAmbrosiaLuck().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaLuck3: {
     maxLevel: 30,
@@ -1471,12 +1490,7 @@ export const singularityData: Record<
         }
       }
     },
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaLuck = calculateAmbrosiaLuck().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaLuck4: {
     maxLevel: 50,
@@ -1492,12 +1506,7 @@ export const singularityData: Record<
         }
       }
     },
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaLuck = calculateAmbrosiaLuck().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaGeneration: {
     maxLevel: -1,
@@ -1514,12 +1523,7 @@ export const singularityData: Record<
       }
     },
     specialCostForm: 'Exponential2',
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaGenerationSpeed = calculateAmbrosiaGenerationSpeed().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaGeneration2: {
     maxLevel: 20,
@@ -1535,12 +1539,7 @@ export const singularityData: Record<
         }
       }
     },
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaGenerationSpeed = calculateAmbrosiaGenerationSpeed().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaGeneration3: {
     maxLevel: 35,
@@ -1556,12 +1555,7 @@ export const singularityData: Record<
         }
       }
     },
-    qualityOfLife: true,
-    cacheUpdates: [
-      () => {
-        G.ambrosiaCurrStats.ambrosiaGenerationSpeed = calculateAmbrosiaGenerationSpeed().value
-      }
-    ]
+    qualityOfLife: true
   },
   singAmbrosiaGeneration4: {
     maxLevel: 50,
@@ -1577,12 +1571,110 @@ export const singularityData: Record<
         }
       }
     },
-    qualityOfLife: true,
+    qualityOfLife: true
+  },
+  singBonusTokens1: {
+    maxLevel: 5,
+    costPerLevel: 25,
+    minimumSingularity: 1,
+    specialCostForm: 'Exponential2',
+    effect: (n: number) => {
+      return {
+        bonus: n,
+        get desc () {
+          return i18next.t('singularity.data.singBonusTokens1.effect', {
+            n: format(n)
+          })
+        }
+      }
+    },
     cacheUpdates: [
       () => {
-        G.ambrosiaCurrStats.ambrosiaGenerationSpeed = calculateAmbrosiaGenerationSpeed().value
+        player.campaigns.updateCurrentTokens()
+        campaignTokenRewardHTMLUpdate()
       }
     ]
+  },
+  singBonusTokens2: {
+    maxLevel: 5,
+    costPerLevel: 10000,
+    minimumSingularity: 25,
+    specialCostForm: 'Exponential2',
+    effect: (n: number) => {
+      return {
+        bonus: 1 + n / 100,
+        get desc () {
+          return i18next.t('singularity.data.singBonusTokens2.effect', {
+            n: format(n)
+          })
+        }
+      }
+    },
+    cacheUpdates: [
+      () => {
+        player.campaigns.updateCurrentTokens()
+        campaignTokenRewardHTMLUpdate()
+      }
+    ]
+  },
+  singBonusTokens3: {
+    maxLevel: 5,
+    costPerLevel: 1e8,
+    minimumSingularity: 100,
+    specialCostForm: 'Exponential2',
+    effect: (n: number) => {
+      return {
+        bonus: 2 * n,
+        get desc () {
+          return i18next.t('singularity.data.singBonusTokens3.effect', {
+            n: format(2 * n)
+          })
+        }
+      }
+    },
+    cacheUpdates: [
+      () => {
+        player.campaigns.updateCurrentTokens()
+        campaignTokenRewardHTMLUpdate()
+      }
+    ]
+  },
+  singBonusTokens4: {
+    maxLevel: 30,
+    costPerLevel: 1e13,
+    minimumSingularity: 166,
+    specialCostForm: 'Exponential2',
+    effect: (n: number) => {
+      return {
+        bonus: 5 * n,
+        get desc () {
+          return i18next.t('singularity.data.singBonusTokens4.effect', {
+            n: format(5 * n)
+          })
+        }
+      }
+    },
+    cacheUpdates: [
+      () => {
+        player.campaigns.updateCurrentTokens()
+        campaignTokenRewardHTMLUpdate()
+      }
+    ]
+  },
+  singInfiniteShopUpgrades: {
+    maxLevel: 80,
+    costPerLevel: 1e18,
+    minimumSingularity: 233,
+    effect: (n: number) => {
+      return {
+        bonus: n,
+        get desc () {
+          return i18next.t('singularity.data.singInfiniteShopUpgrades.effect', {
+            n: format(n)
+          })
+        }
+      }
+    }
   }
 }
 
@@ -1723,6 +1815,25 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
+      return i18next.t('singularity.perks.tokenInheritance.name')
+    },
+    levels: [2, 5, 10, 17, 26, 37, 50, 65, 82, 101, 220, 240, 260, 270, 277],
+    description: (n: number, levels: number[]) => {
+      const tokens = [1, 10, 25, 40, 75, 100, 150, 200, 250, 300, 350, 400, 500, 600, 750]
+
+      for (let i = 15; i > 0; i--) {
+        if (n >= levels[i]) {
+          return i18next.t('singularity.perks.tokenInheritance.default', {
+            amount: tokens[i]
+          })
+        }
+      }
+      return i18next.t('singularity.perks.tokenInheritance.default', { amount: 0 })
+    },
+    ID: 'tokenInheritance'
+  },
+  {
+    name: () => {
       return i18next.t('singularity.perks.sweepomatic.name')
     },
     levels: [2, 101],
@@ -1774,6 +1885,16 @@ export const singularityPerks: SingularityPerk[] = [
       }
     },
     ID: 'notSoChallenging'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.autoCampaigns.name')
+    },
+    levels: [4],
+    description: () => {
+      return i18next.t('singularity.perks.autoCampaigns.default')
+    },
+    ID: 'autoCampaigns'
   },
   {
     name: () => {
@@ -1927,6 +2048,16 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
+      return i18next.t('singularity.perks.firstClearTokens.name')
+    },
+    levels: [16],
+    description: () => {
+      return i18next.t('singularity.perks.firstClearTokens.default')
+    },
+    ID: 'firstClearTokens'
+  },
+  {
+    name: () => {
       return i18next.t('singularity.perks.derpSmithsCornucopia.name')
     },
     levels: [
@@ -2016,6 +2147,23 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
+      return i18next.t('singularity.perks.bonusTokens.name')
+    },
+    levels: [41, 58, 113, 163, 229],
+    description: (n: number, levels: number[]) => {
+      for (let i = levels.length - 1; i >= 0; i--) {
+        if (n >= levels[i]) {
+          return i18next.t('singularity.perks.bonusTokens.default', {
+            amount: format(2 * (i + 1))
+          })
+        }
+      }
+      return i18next.t('singularity.perks.evenMoreQuarks.bug')
+    },
+    ID: 'bonusTokens'
+  },
+  {
+    name: () => {
       return i18next.t('singularity.perks.overclocked.name')
     },
     levels: [50, 60, 75, 100, 125, 150, 175, 200, 225, 250],
@@ -2062,6 +2210,16 @@ export const singularityPerks: SingularityPerk[] = [
       return i18next.t('singularity.perks.evenMoreQuarks.bug')
     },
     ID: 'congealedblueberries'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.lastClearTokens.name')
+    },
+    levels: [69],
+    description: () => {
+      return i18next.t('singularity.perks.lastClearTokens.default')
+    },
+    ID: 'lastClearTokens'
   },
   {
     name: () => {
@@ -2245,6 +2403,26 @@ export const singularityPerks: SingularityPerk[] = [
       return i18next.t('singularity.perks.permanentBenefaction.default')
     },
     ID: 'permanentBenefaction'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.infiniteShopUpgrades.name')
+    },
+    levels: [250, 280],
+    description: () => {
+      if (player.highestSingularityCount < 280) {
+        const effect = Math.floor(0.5 * (player.highestSingularityCount - 200))
+        return i18next.t('singularity.perks.infiniteShopUpgrades.default', {
+          amt: format(effect, 0, true)
+        })
+      } else {
+        const effect = Math.floor(0.8 * (player.highestSingularityCount - 200))
+        return i18next.t('singularity.perks.infiniteShopUpgrades.level2', {
+          amt: format(effect, 0, true)
+        })
+      }
+    },
+    ID: 'infiniteShopUpgrades'
   }
 ]
 
@@ -2506,6 +2684,17 @@ export type SingularityDebuffs =
   | 'Platonic Costs'
   | 'Hepteract Costs'
 
+export const calculateSingularityReductions = () => {
+  const arr = [
+    player.shopUpgrades.shopSingularityPenaltyDebuff,
+    (player.insideSingularityChallenge)
+      ? +player.blueberryUpgrades.ambrosiaSingReduction2.bonus.singularityReduction
+      : +player.blueberryUpgrades.ambrosiaSingReduction1.bonus.singularityReduction
+  ]
+
+  return sumContents(arr)
+}
+
 export const calculateEffectiveSingularities = (
   singularityCount: number = player.singularityCount
 ): number => {
@@ -2580,8 +2769,7 @@ export const calculateNextSpike = (
   singularityCount: number = player.singularityCount
 ): number => {
   const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 216, 230, 270]
-  let penaltyDebuff = 0
-  penaltyDebuff += player.shopUpgrades.shopSingularityPenaltyDebuff
+  const penaltyDebuff = calculateSingularityReductions()
 
   for (const sing of singularityPenaltyThreshold) {
     if (sing + penaltyDebuff > singularityCount) {
@@ -2601,8 +2789,7 @@ export const calculateSingularityDebuff = (
     return 1
   }
 
-  let constitutiveSingularityCount = singularityCount
-  constitutiveSingularityCount -= player.shopUpgrades.shopSingularityPenaltyDebuff
+  const constitutiveSingularityCount = singularityCount - calculateSingularityReductions()
   if (constitutiveSingularityCount < 1) {
     return 1
   }
@@ -2612,15 +2799,15 @@ export const calculateSingularityDebuff = (
   )
 
   if (debuff === 'Offering') {
-    return Math.sqrt(
-      Math.min(effectiveSingularities, calculateEffectiveSingularities(150)) + 1
-    )
+    return constitutiveSingularityCount < 150
+      ? Math.sqrt(effectiveSingularities) + 1
+      : Math.pow(effectiveSingularities, 2 / 3) / 400
   } else if (debuff === 'Global Speed') {
     return 1 + Math.sqrt(effectiveSingularities) / 4
   } else if (debuff === 'Obtainium') {
-    return Math.sqrt(
-      Math.min(effectiveSingularities, calculateEffectiveSingularities(150)) + 1
-    )
+    return constitutiveSingularityCount < 150
+      ? Math.sqrt(effectiveSingularities) + 1
+      : Math.pow(effectiveSingularities, 2 / 3) / 400
   } else if (debuff === 'Researches') {
     return 1 + Math.sqrt(effectiveSingularities) / 2
   } else if (debuff === 'Ascension Speed') {

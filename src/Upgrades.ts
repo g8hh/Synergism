@@ -3,7 +3,7 @@ import i18next from 'i18next'
 import { buyAutobuyers, buyGenerator } from './Automation'
 import { buyUpgrades } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateAnts, calculateCorruptionPoints, calculateRuneLevels } from './Calculate'
+import { calculateAnts, calculateRuneLevels } from './Calculate'
 import { format, player } from './Synergism'
 import { revealStuff } from './UpdateHTML'
 import { sumContents } from './Utility'
@@ -22,7 +22,7 @@ const crystalupgdesc: Record<number, () => Record<string, string>> = {
     max: format(
       10 + 0.05 * player.researches[129] * Math.log(player.commonFragments + 1)
           / Math.log(4)
-        + 20 * calculateCorruptionPoints() / 400 * G.effectiveRuneSpiritPower[3]
+        + 20 * player.corruptions.used.totalCorruptionDifficultyMultiplier * G.effectiveRuneSpiritPower[3]
     )
   })
 }
@@ -32,7 +32,7 @@ const constantUpgDesc: Record<number, () => Record<string, string>> = {
   2: () => ({
     max: format(
       10 + player.achievements[270] + player.shopUpgrades.constantEX + 100
-          * (G.challenge15Rewards.exponent - 1)
+          * (G.challenge15Rewards.exponent.value - 1)
         + 0.3 * player.platonicUpgrades[18],
       2,
       true
@@ -150,7 +150,7 @@ const upgradetexts = [
   () => null,
   () => null,
   () => null,
-  () => Math.floor(1 / 5 * (sumContents(player.challengecompletions))),
+  () => Math.floor(1 / 50 * (sumContents(player.challengecompletions))),
   () => format(Decimal.min('1e6000', Decimal.pow(player.reincarnationPoints.add(1), 6))),
   () => format(Decimal.pow(player.reincarnationPoints.add(1), 2)),
   () => null,
@@ -384,7 +384,7 @@ const crystalupgeffect: Record<number, () => Record<string, string>> = {
     x: format(
       Math.min(
         10 + 0.05 * player.researches[129] * Math.log(player.commonFragments + 1) / Math.log(4)
-          + 20 * calculateCorruptionPoints() / 400 * G.effectiveRuneSpiritPower[3],
+          + 20 * player.corruptions.used.totalCorruptionDifficultyMultiplier * G.effectiveRuneSpiritPower[3],
         0.05 * player.crystalUpgrades[3]
       ),
       2,
@@ -483,7 +483,7 @@ const constUpgEffect: Record<number, () => Record<string, string>> = {
           + 0.001
             * Math.min(
               100 + 10 * player.achievements[270] + 10 * player.shopUpgrades.constantEX
-                + 3 * player.platonicUpgrades[18] + 1000 * (G.challenge15Rewards.exponent - 1),
+                + 3 * player.platonicUpgrades[18] + 1000 * (G.challenge15Rewards.exponent.value - 1),
               player.constantUpgrades[2]
             ),
         ascendBuildingDR()

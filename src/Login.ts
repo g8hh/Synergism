@@ -7,12 +7,13 @@ import { DOMCacheGetOrSet } from './Cache/DOM'
 import { calculateAmbrosiaGenerationSpeed, calculateOffline, calculateRedAmbrosiaGenerationSpeed } from './Calculate'
 import { updateGlobalsIsEvent } from './Event'
 import { addTimers, automaticTools } from './Helper'
-import { importSynergism } from './ImportExport'
+import { exportData, importSynergism, saveFilename } from './ImportExport'
 import { updatePseudoCoins } from './purchases/UpgradesSubtab'
-import { QuarkHandler, setQuarkBonus } from './Quark'
+import { QuarkHandler, refreshQuarkBonus, setQuarkBonus } from './Quark'
+import { updatePrestigeCount, updateReincarnationCount, updateTranscensionCount } from './Reset'
 import { format, player, saveSynergy } from './Synergism'
 import { Alert, Notification } from './UpdateHTML'
-import { assert } from './Utility'
+import { assert, btoa } from './Utility'
 
 export type PseudoCoinConsumableNames = 'HAPPY_HOUR_BELL'
 
@@ -32,6 +33,13 @@ interface Consumable {
   ends: number[]
   amount: number
   displayName: string
+}
+
+interface Save {
+  id: number
+  name: string
+  uploadedAt: string
+  save: string
 }
 
 // Consts for Patreon Supporter Roles.
@@ -56,6 +64,8 @@ const DIAMOND_SMITH_MESSIAH = '1311165096378105906'
 let ws: WebSocket | undefined
 let loggedIn = false
 let tips = 0
+
+const cloudSaves: Save[] = []
 
 export const isLoggedIn = () => loggedIn
 export const getTips = () => tips
@@ -84,7 +94,12 @@ const messageSchema = z.preprocess(
     z.object({ type: z.literal('join') }),
     z.object({ type: z.literal('error'), message: z.string() }),
     /** Received after a consumable is redeemed (broadcasted to everyone) */
-    z.object({ type: z.literal('consumed'), consumable: z.string(), startedAt: z.number().int() }),
+    z.object({
+      type: z.literal('consumed'),
+      consumable: z.string(),
+      displayName: z.string(),
+      startedAt: z.number().int()
+    }),
     /** Received after a consumable ends (broadcasted to everyone) */
     z.object({ type: z.literal('consumable-ended'), consumable: z.string(), endedAt: z.number().int() }),
     /** Information about all currently active consumables, received when the connection opens. */
@@ -106,7 +121,12 @@ const messageSchema = z.preprocess(
     z.object({ type: z.literal('applied-tip'), amount: z.number(), remaining: z.number() }),
 
     /** Received when a timeSkip is used */
-    z.object({ type: z.literal('time-skip'), consumableName: z.string(), amount: z.number().int() }),
+    z.object({
+      type: z.literal('time-skip'),
+      consumableName: z.string(),
+      id: z.string().uuid(),
+      amount: z.number().int()
+    }),
 
     /** A warning - should *NOT* disconnect from the WebSocket */
     z.object({ type: z.literal('warn'), message: z.string() })
@@ -151,50 +171,52 @@ interface RawMember {
   communication_disabled_until?: string | null
 }
 
-interface SynergismUserAPIResponse {
+interface PatreonUser {
+  data: {
+    attributes: {
+      email: string
+      full_name?: string | null | undefined
+    }
+    id: string
+  }
+}
+
+interface AccountMetadata {
+  discord: RawMember
+  patreon: PatreonUser
+  email: { email: string; verified: boolean }
+  none: null
+}
+
+interface BonusTypes {
+  quarks: number
+}
+
+interface SynergismUserAPIResponse<T extends keyof AccountMetadata> {
   personalBonus: number
   globalBonus: number
-  accountType: string
+  member: AccountMetadata[T]
+  accountType: T
+  bonus: BonusTypes
   subscriptionTier: number
-  bonus: {
-    quarkBonus: number
-  }
+  error?: unknown
 }
 
-interface SynergismDiscordUserAPIResponse extends SynergismUserAPIResponse {
-  member: RawMember | null
-  accountType: 'discord'
-}
-
-interface SynergismPatreonUserAPIResponse extends SynergismUserAPIResponse {
-  member: {
-    user: {
-      username: string | null
-    }
-    roles: string[]
-  }
-  accountType: 'patreon'
-}
-
-interface SynergismEmailUserAPIResponse extends SynergismUserAPIResponse {
-  member: {
-    user: {
-      username: string
-    }
-    roles: string[] & { length: 0 }
-  }
-  accountType: 'email'
-}
-
-interface SynergismNotLoggedInResponse extends SynergismUserAPIResponse {
-  member: null
-  accountType: 'none'
-}
-
-type CloudSave = null | { save: string }
+const isDiscordAccount = (
+  account: SynergismUserAPIResponse<keyof AccountMetadata>
+): account is SynergismUserAPIResponse<'discord'> => account.accountType === 'discord'
+const isPatreonAccount = (
+  account: SynergismUserAPIResponse<keyof AccountMetadata>
+): account is SynergismUserAPIResponse<'patreon'> => account.accountType === 'patreon'
+const isEmailAccount = (
+  account: SynergismUserAPIResponse<keyof AccountMetadata>
+): account is SynergismUserAPIResponse<'email'> => account.accountType === 'email'
+const hasAccount = (
+  account: SynergismUserAPIResponse<keyof AccountMetadata>
+): account is SynergismUserAPIResponse<'discord' | 'patreon' | 'email'> => account.accountType !== 'none'
 
 export async function handleLogin () {
-  const subtabElement = document.querySelector('#accountSubTab > div.scrollbarX')!
+  const subtabElement = document.querySelector('#accountSubTab div#left.scrollbarX')!
   const currentBonus = DOMCacheGetOrSet('currentBonus')
 
   const logoutElement = document.getElementById('logoutButton')
@@ -212,70 +234,73 @@ export async function handleLogin () {
             globalBonus: 0,
             personalBonus: 0,
             accountType: 'none',
-            bonus: { quarkBonus: 0 },
+            bonus: { quarks: 0 },
             subscriptionTier: 0
-          } satisfies SynergismNotLoggedInResponse
+          } satisfies SynergismUserAPIResponse<'none'>
         ),
         { status: 401 }
       )
   )
 
-  if (!response.ok) {
-    currentBonus.textContent =
-      `Oh no! I couldn't fetch the bonus... Please send this to Khafra in the Discord: ${await response.text()}.`
-    return
-  }
+  const account = await response.json() as SynergismUserAPIResponse<keyof AccountMetadata>
+  const { globalBonus, personalBonus, subscriptionTier } = account
 
-  const { globalBonus, member, personalBonus, accountType, subscriptionTier } = await response.json() as
-    | SynergismDiscordUserAPIResponse
-    | SynergismPatreonUserAPIResponse
-    | SynergismEmailUserAPIResponse
-    | SynergismNotLoggedInResponse
-
-  setQuarkBonus(100 * (1 + globalBonus / 100) * (1 + personalBonus / 100) - 100)
+  setQuarkBonus(personalBonus, globalBonus)
+  setInterval(() => refreshQuarkBonus(), 1000 * 60 * 15)
   player.worlds = new QuarkHandler(Number(player.worlds))
-  loggedIn = accountType !== 'none' && response.ok
+  loggedIn = hasAccount(account)
 
   currentBonus.textContent = i18next.t('settings.quarkBonusSimple', { globalBonus })
 
-  if (location.hostname !== 'synergism.cc') {
-    // TODO: better error, make link clickable, etc.
-    subtabElement.textContent = 'Login is not available here, go to https://synergism.cc instead!'
-  } else if (accountType === 'discord' || accountType === 'patreon' || accountType === 'email') {
-    if (member === null) {
-      subtabElement.innerHTML = `You are logged in, but your profile couldn't be retrieved from Discord or Patreon.`
-      return
-    }
+  // biome-ignore lint/suspicious/noConfusingLabels: it's not confusing or suspicious
+  generateSubtab: {
+    if (location.hostname !== 'synergism.cc') {
+      // TODO: better error, make link clickable, etc.
+      subtabElement.textContent = 'Login is not available here, go to https://synergism.cc instead!'
+    } else if (hasAccount(account)) {
+      if (Object.keys(account.member).length === 0) {
+        subtabElement.innerHTML = `You are logged in, but your profile couldn't be retrieved from Discord or Patreon.`
+        break generateSubtab
+      }
 
-    currentBonus.textContent = i18next.t('settings.quarkBonusExtended', { globalBonus, personalBonus })
+      if (account.error) {
+        subtabElement.innerHTML =
+          `You are logged in, but retrieving your profile yielded the following error: ${account.error}`
+        break generateSubtab
+      }
 
-    let user: string | null
+      currentBonus.textContent = i18next.t('settings.quarkBonusExtended', { globalBonus, personalBonus })
 
-    if (accountType === 'discord') {
-      user = member.nick ?? member.user?.username ?? member.user?.global_name ?? null
-    } else {
-      user = member.user.username
-    }
+      let user: string | null = null
+      const discord = isDiscordAccount(account)
 
-    if (user !== null) {
-      user = DOMPurify.sanitize(user)
-    }
+      if (discord) {
+        user = account.member.nick ?? account.member.user?.username ?? account.member.user?.global_name ?? null
+      } else if (isEmailAccount(account)) {
+        user = account.member.email
+      } else if (isPatreonAccount(account)) {
+        user = account.member?.data?.attributes?.email ?? null
+      }
 
-    const boosted = accountType === 'discord' && (Boolean(member?.premium_since) || member?.roles.includes(BOOSTER))
-    // It is possible for someone to have the roles through the Patreon integration with Discord, yet not have their
-    // patreon linked to their Synergism (Discord/email) account.
-    const hasTier1 = subscriptionTier === 1 || member.roles.includes(TRANSCENDED_BALLER)
-    const hasTier2 = subscriptionTier === 2 || member.roles.includes(REINCARNATED_BALLER)
-    const hasTier3 = subscriptionTier === 3 || member.roles.includes(ASCENDED_BALLER)
-    const hasTier4 = subscriptionTier === 4 || member.roles.includes(OMEGA_BALLER)
+      if (user !== null) {
+        user = DOMPurify.sanitize(user)
+      }
 
-    const checkMark = (n: number) => {
-      return `<span style="color: lime">[✔] {+${n}%}</span>`
-    }
+      const boosted = discord && (Boolean(account.member?.premium_since) || account.member?.roles.includes(BOOSTER))
+      // It is possible for someone to have the roles through the Patreon integration with Discord, yet not have their
+      // patreon linked to their Synergism (Discord/email) account.
+      const hasTier1 = subscriptionTier === 1 || (discord && account.member.roles?.includes(TRANSCENDED_BALLER))
+      const hasTier2 = subscriptionTier === 2 || (discord && account.member.roles?.includes(REINCARNATED_BALLER))
+      const hasTier3 = subscriptionTier === 3 || (discord && account.member.roles?.includes(ASCENDED_BALLER))
+      const hasTier4 = subscriptionTier === 4 || (discord && account.member.roles?.includes(OMEGA_BALLER))
 
-    const exMark = '<span style="color: crimson">[✖] {+0%}</span>'
+      const checkMark = (n: number) => {
+        return `<span style="color: lime">[✔] {+${n}%}</span>`
+      }
 
-    subtabElement.innerHTML = `
+      const exMark = '<span style="color: crimson">[✖] {+0%}</span>'
+
+      subtabElement.innerHTML = `
       ${user ? `Hello, ${user}` : 'Hello'}!\n
       Your personal Quark bonus is ${format(personalBonus, 2, true)}%, computed by the following:
       Donator Bonuses (Multiplicative with other bonuses):
@@ -287,40 +312,40 @@ export async function handleLogin () {
 
       Event Bonuses:
       <span style="color: #ffcc00">Thanksgiving 2023</span> [+0.2%] - ${
-      member.roles.includes(THANKSGIVING_2023) ? checkMark(0.2) : exMark
-    }
+        discord && account.member.roles?.includes(THANKSGIVING_2023) ? checkMark(0.2) : exMark
+      }
       <span style="color: #ffcc00">Thanksgiving 2024</span> [+0.3%] - ${
-      member.roles.includes(THANKSGIVING_2024) ? checkMark(0.3) : exMark
-    }
+        discord && account.member.roles?.includes(THANKSGIVING_2024) ? checkMark(0.3) : exMark
+      }
       <span style="color: #ffcc00">Conductor 2023</span> [+0.3%] - ${
-      member.roles.includes(CONDUCTOR_2023) ? checkMark(0.3) : exMark
-    }
+        discord && account.member.roles?.includes(CONDUCTOR_2023) ? checkMark(0.3) : exMark
+      }
       <span style="color: #ffcc00">Conductor 2024</span> [+0.4%] - ${
-      member.roles.includes(CONDUCTOR_2024) ? checkMark(0.4) : exMark
-    }
+        discord && account.member.roles?.includes(CONDUCTOR_2024) ? checkMark(0.4) : exMark
+      }
       <span style="color: #ffcc00">Eight Leaf</span> [+0.3%] - ${
-      member.roles.includes(EIGHT_LEAF) ? checkMark(0.3) : exMark
-    }
+        discord && account.member.roles?.includes(EIGHT_LEAF) ? checkMark(0.3) : exMark
+      }
       <span style="color: #ffcc00">Ten Leaf</span> [+0.4%] - ${
-      member.roles.includes(TEN_LEAF) ? checkMark(0.4) : exMark
-    }
+        discord && account.member.roles?.includes(TEN_LEAF) ? checkMark(0.4) : exMark
+      }
       <span style="color: #ffcc00">Smith Incarnate</span> [+0.6%] - ${
-      member.roles.includes(SMITH_INCARNATE) ? checkMark(0.6) : exMark
-    }
+        discord && account.member.roles?.includes(SMITH_INCARNATE) ? checkMark(0.6) : exMark
+      }
       <span style="color: #ffcc00">Smith God</span> [+0.7%] - ${
-      member.roles.includes(SMITH_GOD) ? checkMark(0.7) : exMark
-    }
+        discord && account.member.roles?.includes(SMITH_GOD) ? checkMark(0.7) : exMark
+      }
       <span style="color: #ffcc00">Golden Smith God</span> [+0.8%] - ${
-      member.roles.includes(GOLDEN_SMITH_GOD) ? checkMark(0.8) : exMark
-    }
+        discord && account.member.roles?.includes(GOLDEN_SMITH_GOD) ? checkMark(0.8) : exMark
+      }
       <span style="color: #ffcc00">Diamond Smith Messiah</span> [+1%] - ${
-      member.roles.includes(DIAMOND_SMITH_MESSIAH) ? checkMark(1.2) : exMark
-    }
+        discord && account.member.roles?.includes(DIAMOND_SMITH_MESSIAH) ? checkMark(1.2) : exMark
+      }
 
       And Finally...
       <span style="color: lime"> Being <span style="color: lightgoldenrodyellow"> YOURSELF! </span></span> [+1%] - ${
-      checkMark(1)
-    }
+        checkMark(1)
+      }
 
       The current maximum is 16%, by being a Discord server booster and an OMEGA Baller on Patreon!
 
@@ -331,56 +356,36 @@ export async function handleLogin () {
       <span style="color: lightgoldenrodyellow">--> PATREON <--</span>
       </a>
     `.trim()
+    } else if (!hasAccount(account)) {
+      // User is not logged in
+      subtabElement.querySelector('#open-register')?.addEventListener('click', () => {
+        subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'flex')
+        subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'none')
+        subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'none')
+        renderCaptcha()
+      })
 
-    const cloudSaveElement = document.createElement('button')
-    const loadCloudSaveElement = document.createElement('button')
+      subtabElement.querySelector('#open-signin')?.addEventListener('click', () => {
+        subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'none')
+        subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'flex')
+        subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'none')
+        renderCaptcha()
+      })
 
-    if (personalBonus > 1) {
-      cloudSaveElement.addEventListener('click', saveToCloud)
-      cloudSaveElement.style.cssText = 'border: 2px solid #5865F2; height: 25px; width: 150px;'
-      cloudSaveElement.textContent = 'Save to Cloud ☁'
-
-      loadCloudSaveElement.addEventListener('click', getCloudSave)
-      loadCloudSaveElement.style.cssText = 'border: 2px solid #5865F2; height: 25px; width: 150px;'
-      loadCloudSaveElement.textContent = 'Load from Cloud ☽'
+      subtabElement.querySelector('#open-forgotpassword')?.addEventListener('click', () => {
+        subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'none')
+        subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'none')
+        subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'flex')
+        renderCaptcha()
+      })
+    } else {
+      assert(false, `unknown account type ${account.accountType}`)
     }
-
-    const cloudSaveParent = document.createElement('div')
-    cloudSaveParent.style.cssText =
-      'display: flex; flex-direction: row; justify-content: space-evenly; padding: 5px; width: 45%; margin: 0 auto;'
-
-    cloudSaveParent.appendChild(cloudSaveElement)
-    cloudSaveParent.appendChild(loadCloudSaveElement)
-
-    subtabElement.appendChild(cloudSaveParent)
-  } else if (accountType === 'none') {
-    // User is not logged in
-    subtabElement.querySelector('#open-register')?.addEventListener('click', () => {
-      subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'flex')
-      subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'none')
-      subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'none')
-      renderCaptcha()
-    })
-
-    subtabElement.querySelector('#open-signin')?.addEventListener('click', () => {
-      subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'none')
-      subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'flex')
-      subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'none')
-      renderCaptcha()
-    })
-
-    subtabElement.querySelector('#open-forgotpassword')?.addEventListener('click', () => {
-      subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'none')
-      subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'none')
-      subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'flex')
-      renderCaptcha()
-    })
-  } else {
-    assert(false, `unknown account type ${accountType}`)
   }
 
   if (loggedIn) {
     handleWebSocket()
+    handleCloudSaves()
   }
 }
 
@@ -444,7 +449,8 @@ function handleWebSocket () {
       consumable.ends.push(data.startedAt + 3600 * 1000)
       consumable.amount++
 
-      Notification(`Someone redeemed a(n) ${data.consumable}!`)
+      const article = /^[AEIOU]/i.test(data.displayName) ? 'an' : 'a'
+      Notification(`Someone redeemed ${article} ${data.displayName}!`)
     } else if (data.type === 'consumable-ended') {
       // Because of the invariant that the timestamps are sorted, we can just remove the first element
       const consumable = allDurableConsumables[data.consumable as PseudoCoinConsumableNames]
@@ -497,6 +503,12 @@ function handleWebSocket () {
       activateTimeSkip(timeSkipName, minutes)
       saveSynergy()
 
+      sendToWebsocket(JSON.stringify({
+        type: 'confirm',
+        id: data.id,
+        consumableId: data.consumableName
+      }))
+
       setTimeout(() => updatePseudoCoins(), 4000)
     }
 
@@ -520,37 +532,6 @@ async function logout () {
   location.reload()
 }
 
-async function saveToCloud () {
-  const save = localStorage.getItem('Synergysave2')
-
-  if (typeof save !== 'string') {
-    console.log('Yeah, no save here.')
-    return
-  }
-
-  const body = new FormData()
-  body.set('savefile', new File([save], 'file.txt'), 'file.txt')
-
-  const response = await fetch('https://synergism.cc/api/v1/saves/upload', {
-    method: 'POST',
-    body
-  })
-
-  if (!response.ok) {
-    await Alert(`Received an error: ${await response.text()}`)
-    return
-  }
-}
-
-async function getCloudSave () {
-  const response = await fetch('https://synergism.cc/api/v1/saves/get')
-  const save = await response.json() as CloudSave
-
-  if (save !== null) {
-    importSynergism(save.save)
-  }
-}
-
 const hasCaptcha = new WeakSet<HTMLElement>()
 
 export function renderCaptcha () {
@@ -558,6 +539,7 @@ export function renderCaptcha () {
   const visible = captchaElements.find((el) => el.offsetParent !== null)
 
   if (visible && !hasCaptcha.has(visible)) {
+    // biome-ignore lint/correctness/noUndeclaredVariables: declared in types as a global
     turnstile.render(visible, {
       sitekey: visible.getAttribute('data-sitekey')!,
       'error-callback' () {},
@@ -600,9 +582,9 @@ const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
     addTimers('transcension', seconds)
     addTimers('reincarnation', seconds)
     automaticTools('antSacrifice', seconds)
-    player.prestigeCount += seconds / Math.max(0.01, player.fastestprestige)
-    player.transcendCount += seconds / Math.max(0.01, player.fastesttranscend)
-    player.reincarnationCount += seconds / Math.max(0.01, player.fastestreincarnate)
+    updatePrestigeCount(seconds / Math.max(0.25, player.fastestprestige))
+    updateTranscensionCount(seconds / Math.max(0.25, player.fastesttranscend))
+    updateReincarnationCount(seconds / Math.max(0.25, player.fastestreincarnate))
 
     // Add Obt/Off, why not?
     automaticTools('addObtainium', seconds)
@@ -739,4 +721,243 @@ const activateTimeSkip = (name: PseudoCoinTimeskipNames, minutes: number) => {
       Notification('You have activated a JUMBO ambrosia timeskip! Enjoy!')
       break
   }
+}
+
+function handleCloudSaves () {
+  const subtabElement = document.querySelector('#accountSubTab div#right.scrollbarX')!
+  const table = subtabElement.querySelector('#table > #dataGrid')!
+
+  const uploadButton = subtabElement.querySelector<HTMLButtonElement>('button#upload')
+  const transferButton = subtabElement.querySelector<HTMLButtonElement>('button#transfer')
+
+  function populateTable () {
+    fetch('/saves/retrieve/all')
+      .then((response) => response.json())
+      .then(($saves: Save[]) => {
+        cloudSaves.length = 0
+        cloudSaves.push(...$saves)
+
+        const existingRows = table.querySelectorAll('.grid-row')
+        existingRows.forEach((row) => row.remove())
+
+        const content = table.querySelector('.details-content')
+        content?.remove()
+
+        if (cloudSaves.length === 0) {
+          const emptyDiv = document.createElement('div')
+          emptyDiv.className = 'grid-row empty-state'
+          emptyDiv.style.gridColumn = '1 / -1'
+          emptyDiv.textContent = i18next.t('account.noSaves')
+          table.appendChild(emptyDiv)
+          return
+        }
+
+        cloudSaves.forEach(({ id, name, uploadedAt }, index) => {
+          const rowDiv = document.createElement('div')
+          rowDiv.className = 'grid-row'
+          rowDiv.style.display = 'contents'
+
+          const idCell = document.createElement('div')
+          idCell.className = 'grid-cell id-cell'
+          idCell.textContent = `#${id}`
+
+          const nameCell = document.createElement('div')
+          nameCell.className = 'grid-cell name-cell'
+          nameCell.textContent = name.length > 60 ? `${name.slice(0, 60)}...` : name
+
+          const dateCell = document.createElement('div')
+          dateCell.className = 'grid-cell date-cell'
+          dateCell.textContent = new Date(uploadedAt).toLocaleString()
+
+          rowDiv.appendChild(idCell)
+          rowDiv.appendChild(nameCell)
+          rowDiv.appendChild(dateCell)
+
+          if (index % 2 === 0) {
+            idCell.classList.add('alt-row')
+            nameCell.classList.add('alt-row')
+            dateCell.classList.add('alt-row')
+          }
+
+          // Create the expandable details row
+          const detailsRow = document.createElement('div')
+          detailsRow.className = 'grid-details-row'
+          detailsRow.style.display = 'none'
+          detailsRow.style.gridColumn = '1 / -1'
+
+          const detailsContent = document.createElement('div')
+          detailsContent.className = 'details-content'
+          detailsContent.innerHTML = `
+            <div class="details-actions">
+              <button class="btn-download" data-id="${id}">${i18next.t('account.download')}</button>
+              <button class="btn-load" data-id="${id}">${i18next.t('account.loadSave')}</button>
+              <button class="btn-delete" data-id="${id}">${i18next.t('account.delete')}</button>
+            </div>
+          `
+
+          detailsRow.appendChild(detailsContent)
+
+          rowDiv.addEventListener('click', () => {
+            const isVisible = detailsRow.style.display !== 'none'
+
+            const allDetailsRows = table.querySelectorAll<HTMLElement>('.grid-details-row')
+            allDetailsRows.forEach((row) => {
+              if (row !== detailsRow) {
+                row.style.display = 'none'
+              }
+            })
+
+            detailsRow.style.display = isVisible ? 'none' : 'block'
+          })
+
+          detailsContent.addEventListener('click', (e) => {
+            e.stopPropagation()
+
+            const target = e.target as HTMLElement
+            const saveId = Number(target.getAttribute('data-id'))
+
+            if (target.classList.contains('btn-download')) {
+              handleDownload(saveId)
+            } else if (target.classList.contains('btn-load')) {
+              handleLoadSave(saveId)
+            } else if (target.classList.contains('btn-delete')) {
+              handleDeleteSave(saveId)
+            }
+          })
+
+          table.appendChild(rowDiv)
+          table.appendChild(detailsRow)
+        })
+
+        async function decodeSave (save: string) {
+          const decoded = atob(save)
+          const bytes = new Uint8Array(decoded.length)
+          for (let i = 0; i < decoded.length; i++) {
+            bytes[i] = decoded.charCodeAt(i)
+          }
+
+          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
+          const textBody = await new Response(stream).text()
+          const encoder = new TextEncoder()
+          const jsonBytes = encoder.encode(textBody)
+          const final = btoa(String.fromCharCode(...jsonBytes))
+
+          return final
+        }
+
+        async function handleDownload (saveId: number) {
+          const save = cloudSaves.find((save) => saveId === save.id)
+
+          if (!save) {
+            Alert(i18next.t('account.noSaveFound'))
+            return
+          }
+
+          const decoded = await decodeSave(save.save)
+
+          if (decoded === null) {
+            Alert('Please send this to Khafra')
+            return
+          }
+
+          await exportData(decoded, save.name)
+          Alert(i18next.t('account.downloadComplete'))
+        }
+
+        async function handleLoadSave (saveId: number) {
+          const save = cloudSaves.find((save) => saveId === save.id)
+
+          if (!save) {
+            Alert(i18next.t('account.noSaveFound'))
+            return
+          }
+
+          const decoded = await decodeSave(save.save)
+          await importSynergism(decoded)
+        }
+
+        async function handleDeleteSave (saveId: number) {
+          const save = cloudSaves.find((save) => saveId === save.id)
+
+          if (!save) {
+            Alert(i18next.t('account.noSaveFound'))
+            return
+          }
+
+          const response = await fetch('/saves/delete', {
+            method: 'DELETE',
+            body: JSON.stringify({ name: save.name })
+          })
+
+          if (response.ok) {
+            Alert(i18next.t('account.deletedSave', { name: save.name }))
+          } else {
+            console.log(response)
+            Alert(i18next.t('account.notDeleted'))
+          }
+
+          populateTable()
+        }
+      })
+  }
+
+  populateTable()
+
+  // Handle uploading savefiles
+  uploadButton?.addEventListener('click', () => {
+    uploadButton.disabled = true
+    const originalText = uploadButton.textContent
+    uploadButton.innerHTML = '<span class="spinner"></span> Uploading...'
+
+    const name = saveFilename()
+    const save = localStorage.getItem('Synergysave2')
+    assert(save !== null, 'no save')
+
+    const fd = new FormData()
+    fd.set('file', new File([save], name))
+    fd.set('name', name)
+
+    fetch('/saves/upload', {
+      method: 'POST',
+      body: fd
+    }).then((response) => {
+      if (!response.ok) {
+        throw new TypeError(`Received status ${response.status}`)
+      }
+
+      uploadButton.textContent = i18next.t('settings.cloud.uploadSuccess')
+      populateTable()
+    }).catch((e) => {
+      console.error(e)
+      uploadButton.textContent = i18next.t('settings.cloud.uploadFailed')
+    }).finally(() => {
+      setTimeout(() => {
+        uploadButton.disabled = false
+        uploadButton.textContent = originalText
+      }, 5000)
+    })
+  })
+
+  transferButton?.addEventListener('click', () => {
+    transferButton.disabled = true
+    const originalText = transferButton.textContent
+    transferButton.innerHTML = '<span class="spinner"></span> Transferring...'
+
+    fetch('/saves/transfer').then((response) => {
+      if (!response.ok) {
+        throw new TypeError(`Received status ${response.status}`)
+      }
+
+      transferButton.textContent = i18next.t('settings.cloud.transferSuccess')
+      populateTable()
+    }).catch((e) => {
+      console.error(e)
+      transferButton.textContent = i18next.t('settings.cloud.transferFailed')
+    }).finally(() => {
+      setTimeout(() => {
+        transferButton.disabled = false
+        transferButton.textContent = originalText
+      }, 5000)
+    })
+  })
 }

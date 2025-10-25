@@ -35,7 +35,7 @@ import {
   updateAllUngroupedAchievementProgress,
   updateProgressiveCache
 } from './Achievements'
-import { antSacrificePointsToMultiplier, autoBuyAnts, calculateCrumbToCoinExp } from './Ants'
+import { autoBuyAnts, calculateCrumbToCoinExp } from './Ants'
 import { autoUpgrades } from './Automation'
 import type { TesseractBuildings } from './Buy'
 import {
@@ -76,12 +76,7 @@ import {
   updateCorruptionLoadoutNames,
   updateUndefinedLoadouts
 } from './Corruptions'
-import {
-  calculateAcceleratorCubeBlessing,
-  calculateAntSpeedCubeBlessing,
-  calculateMultiplierCubeBlessing,
-  updateCubeUpgradeBG
-} from './Cubes'
+import { calculateAcceleratorCubeBlessing, calculateMultiplierCubeBlessing, updateCubeUpgradeBG } from './Cubes'
 import { generateEventHandlers } from './EventListeners'
 import { addTimers, automaticTools } from './Helper'
 import { resetHistoryRenderAllTables } from './History'
@@ -115,7 +110,7 @@ import {
   sumOfRuneLevels,
   updateAllRuneLevelsFromEXP
 } from './Runes'
-import { c15RewardUpdate } from './Statistics'
+import { antSpeedStats, c15RewardUpdate, statLineDecimalMultiplication } from './Statistics'
 import {
   buyTalismanLevelToRarityIncrease,
   generateTalismansHTML,
@@ -208,6 +203,7 @@ import {
   octeractUpgrades
 } from './Octeracts'
 import { updatePlatonicUpgradeBG } from './Platonic'
+import { enableStatSymbols } from './Plugins/StatSymbols'
 import { initializePCoinCache, PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getQuarkBonus, QuarkHandler } from './Quark'
 import {
@@ -236,7 +232,7 @@ import { playerJsonSchema } from './saves/PlayerJsonSchema'
 import { playerUpdateVarSchema } from './saves/PlayerUpdateVarSchema'
 import {
   blankGQLevelObject,
-  getFastForwardTotalMultiplier,
+  calculateMaxSingularityLookahead,
   goldenQuarkUpgrades,
   type SingularityDataKeys
 } from './singularity'
@@ -246,8 +242,9 @@ import {
   type SingularityChallengeDataKeys
 } from './SingularityChallenges'
 import { changeSubTab, changeTab, getActiveSubTab, Tabs } from './Tabs'
-import { settingAnnotation, toggleIconSet, toggleTheme } from './Themes'
+import { settingAnnotation, settingSymbols, toggleIconSet, toggleTheme } from './Themes'
 import { clearTimeout, clearTimers, setInterval, setTimeout } from './Timers'
+import { updateShopLevels } from './Shop'
 
 export const player: Player = {
   firstPlayed: new Date().toISOString(),
@@ -1116,6 +1113,10 @@ export const player: Player = {
   singularityCount: 0,
   highestSingularityCount: 0,
   singularityCounter: 0,
+  singularityElevatorTarget: 1,
+  singularityElevatorSlowClimb: true,
+  singularityElevatorLocked: false,
+  singularityMatter: 0,
   goldenQuarks: 0,
   quarksThisSingularity: 0,
   totalQuarksEver: 0,
@@ -3636,69 +3637,69 @@ export const resourceGain = (dt: number): void => {
 }
 
 export const updateAntMultipliers = (): void => {
-  G.globalAntMult = new Decimal(1)
-  G.globalAntMult = G.globalAntMult.times(getRuneEffects('superiorIntellect').antSpeed)
+  G.globalAntMult = statLineDecimalMultiplication(antSpeedStats)
+  /*G.globalAntMult = G.globalAntMult.times(getRuneEffects('superiorIntellect').antSpeed)
   if (player.upgrades[76] === 1) {
     G.globalAntMult = G.globalAntMult.times(5)
-  }
-  G.globalAntMult = G.globalAntMult.times(
+  } */
+  /*G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(
-      1
-        + player.upgrades[77] / 250
-        + player.researches[96] / 5000
-        + player.cubeUpgrades[65] / 250,
+      // 1
+      //  + player.upgrades[77] / 250
+      // + player.researches[96] / 5000
+      //  + player.cubeUpgrades[65] / 250,
       player.firstOwnedAnts
         + player.secondOwnedAnts
         + player.thirdOwnedAnts
         + player.fourthOwnedAnts
         + player.fifthOwnedAnts
         + player.sixthOwnedAnts
-        + player.seventhOwnedAnts
+        + player.sevennthOwnedAnts
         + player.eighthOwnedAnts
     )
-  )
-  G.globalAntMult = G.globalAntMult.times(
+  )*/
+  /*G.globalAntMult = G.globalAntMult.times(
     1
       + player.upgrades[78]
         * 0.005
         * Math.pow(Decimal.log10(player.maxOfferings.add(1)), 2)
-  )
-  G.globalAntMult = G.globalAntMult.times(
+  )*/
+  /*G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(
       1.11 + player.researches[101] / 1000 + player.researches[162] / 10000,
       player.antUpgrades[0]! + G.bonusant1
     )
-  )
-  G.globalAntMult = G.globalAntMult.times(
+  )*/
+  /*G.globalAntMult = G.globalAntMult.times(
     antSacrificePointsToMultiplier(player.antSacrificePoints)
-  )
-  G.globalAntMult = G.globalAntMult.times(
+  )*/
+  /*G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(
       Decimal.max(1, player.obtainium),
       getRuneBlessingEffect('superiorIntellect').obtToAntExponent
     )
-  )
+  ) */
 
-  G.globalAntMult = G.globalAntMult.times(
+  /*G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(1.1, CalcECC('reincarnation', player.challengecompletions[9]))
-  )
-  G.globalAntMult = G.globalAntMult.times(calculateAntSpeedCubeBlessing())
-  G.globalAntMult = G.globalAntMult.times(
+  )*/
+  // G.globalAntMult = G.globalAntMult.times(calculateAntSpeedCubeBlessing())
+  /*G.globalAntMult = G.globalAntMult.times(
     +getAchievementReward('antSpeed')
-  )
-  if (player.upgrades[39] === 1) {
+  )*/
+  /*if (player.upgrades[39] === 1) {
     G.globalAntMult = G.globalAntMult.times(1.6)
-  }
-  G.globalAntMult = G.globalAntMult.times(
+  }*/
+  /*G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(
       1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10),
       player.constantUpgrades[5]
     )
-  )
-  G.globalAntMult = G.globalAntMult.times(
+  )*/
+  /*G.globalAntMult = G.globalAntMult.times(
     Decimal.pow(1e5, CalcECC('ascension', player.challengecompletions[11]))
-  )
-  if (player.researches[147] > 0) {
+  )*/
+  /*if (player.researches[147] > 0) {
     G.globalAntMult = G.globalAntMult.times(
       Decimal.log(player.antPoints.add(10), 10)
     )
@@ -3710,7 +3711,7 @@ export const updateAntMultipliers = (): void => {
         player.researches[177]
       )
     )
-  }
+  }*/
 
   if (player.currentChallenge.ascension === 12) {
     G.globalAntMult = Decimal.pow(G.globalAntMult, 0.5)
@@ -4140,18 +4141,6 @@ export const resetCheck = async (
         challengeDisplay(a, false)
       }
       challengeAchievementCheck(a)
-      if (player.highestchallengecompletions[11] > 0) {
-        player.unlocks.tesseracts = true
-      }
-      if (player.highestchallengecompletions[12] > 0) {
-        player.unlocks.spirits = true
-      }
-      if (player.highestchallengecompletions[13] > 0) {
-        player.unlocks.hypercubes = true
-      }
-      if (player.highestchallengecompletions[14] > 0) {
-        player.unlocks.platonics = true
-      }
     }
     if (a === 15) {
       const c15SM = challenge15ScoreMultiplier()
@@ -4188,6 +4177,19 @@ export const resetCheck = async (
       if (player.highestchallengecompletions[a] >= maxCompletions) {
         leaving = true
       }
+    }
+
+    if (player.highestchallengecompletions[11] > 0) {
+      player.unlocks.tesseracts = true
+    }
+    if (player.highestchallengecompletions[12] > 0) {
+      player.unlocks.spirits = true
+    }
+    if (player.highestchallengecompletions[13] > 0) {
+      player.unlocks.hypercubes = true
+    }
+    if (player.highestchallengecompletions[14] > 0) {
+      player.unlocks.platonics = true
     }
 
     if (!player.retrychallenges || manual || leaving) {
@@ -4227,7 +4229,18 @@ export const resetCheck = async (
     }
 
     let confirmed = false
-    const nextSingularityNumber = player.singularityCount + 1 + getFastForwardTotalMultiplier()
+
+    let nextSingularityNumber = 0
+    const lookahead = calculateMaxSingularityLookahead(true)
+    if (player.singularityElevatorLocked) {
+      nextSingularityNumber = player.singularityCount
+    } else {
+      if (player.singularityElevatorSlowClimb) {
+        nextSingularityNumber = player.singularityCount + 1
+      } else {
+        nextSingularityNumber = Math.max(player.singularityCount + lookahead, player.highestSingularityCount)
+      }
+    }
 
     if (!player.toggles[33] && player.singularityCount > 0) {
       confirmed = await Confirm(
@@ -4324,6 +4337,13 @@ export const resetConfirmation = async (i: string): Promise<void> => {
 }
 
 export const updateAll = (): void => {
+  if (runes.antiquities.level > 0) {
+    player.highestSingularityCount = Math.max(
+      player.highestSingularityCount,
+      player.singularityCount
+    )
+  }
+
   G.uFourteenMulti = new Decimal(1)
   G.uFifteenMulti = new Decimal(1)
 
@@ -5415,6 +5435,7 @@ export const reloadShit = (reset = false) => {
   setAmbrosiaUpgradeLevels()
   setRedAmbrosiaUpgradeLevels()
   refundOvercapResearches()
+  updateShopLevels()
 
   if (!reset) {
     calculateOffline()
@@ -5432,6 +5453,7 @@ export const reloadShit = (reset = false) => {
   toggleShops()
   setAutomaticHepteractTexts()
   settingAnnotation()
+  settingSymbols()
   toggleIconSet()
   toggleauto()
   htmlInserts()
@@ -5474,11 +5496,6 @@ export const reloadShit = (reset = false) => {
   updateChallengeDisplay()
   clearTimeout(preloadDeleteGame)
 
-  if (localStorage.getItem('pleaseStar') === null) {
-    void Alert(i18next.t('main.starRepo'))
-    localStorage.setItem('pleaseStar', '')
-  }
-
   // All versions of Chrome and Firefox supported by the game have this API,
   // but not all versions of Edge and Safari do.
   if (
@@ -5487,11 +5504,6 @@ export const reloadShit = (reset = false) => {
   ) {
     navigator.storage.persisted()
       .then((persistent) => persistent ? Promise.resolve(false) : navigator.storage.persist())
-      .then((isPersistentNow) => {
-        if (isPersistentNow) {
-          void Alert(i18next.t('main.dataPersistent'))
-        }
-      })
   }
 
   const saveType = DOMCacheGetOrSet('saveType') as HTMLInputElement
@@ -5506,6 +5518,14 @@ window.addEventListener('load', async () => {
         url: './mockServiceWorker.js'
       }
     })
+  }
+
+  const symbolsEnabled = localStorage.getItem('statSymbols')
+  if (!symbolsEnabled) {
+    localStorage.setItem('statSymbols', 'true')
+    enableStatSymbols()
+  } else if (symbolsEnabled === 'true') {
+    enableStatSymbols()
   }
 
   isMobileDevice()

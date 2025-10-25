@@ -46,9 +46,11 @@ import {
   allTesseractStats,
   allWowCubeStats,
   antSacrificeRewardStats,
+  antSpeedStats,
   negativeSalvageStats,
   offeringObtainiumTimeModifiers,
-  positiveSalvageStats
+  positiveSalvageStats,
+  statLineDecimalMultiplication
 } from './Statistics'
 import { format, getTimePinnedToLoadDate, player, resourceGain, saveSynergy, updateAll } from './Synergism'
 import { getTalismanEffects, toggleTalismanBuy, updateTalismanInventory } from './Talismans'
@@ -168,26 +170,14 @@ export const calculateObtainium = (timeMultUsed = true) => {
       .reduce((a, b) => a * b.stat(), 1)
     : 1
 
-  // Do some voodoo by converting all multipliers to a log10 value
-  // If the multiplier is 0, we will want to cancel everything out, so subtract
-  // Some large value (say, -99999). We're doing this to preserve multipliers past 1e300
-  // For purposes of corruption (It is okay to apply illiteracy to 1e600 if DR is 0.2, since you are left with 1e120)
-
   const baseMults = calculateObtainiumDecimal()
-
-  // Thanks to the logMult, we can treat the corruption effect as a multplier instead of an exponent.
-  // The simplest formula for the effect on obtainium for is (Immaculate)^(1 - DR) * Mult^DR so logarithmic
-  // is log10(Immaculate) + DR * log10(Mult)
-  // Hardcap this value at 300, to preserve 1e300 max
 
   // Why is this a thing? If DR = 0 (which is possible), then the calculation below will not catch chal 14 enabled.
   if (player.currentChallenge.ascension === 14) {
     return new Decimal('0')
   }
 
-  const total = new Decimal(immaculate).times(Decimal.pow(baseMults, DR)).times(timeMultiplier).times(
-    calculateObtainiumCubeBlessing()
-  )
+  const total = new Decimal(immaculate).times(Decimal.pow(baseMults, DR)).times(timeMultiplier)
 
   if (
     player.singularityChallenges.taxmanLastStand.enabled
@@ -290,14 +280,22 @@ export const calculateAntSacrificeObtainiumMultiplier = () => {
   const base = 1 / 750
   const antSacMult = calculateAntSacrificeMultiplier()
   const effectiveELO = calculateEffectiveAntELO()
-  return new Decimal(base).times(antSacMult).times(effectiveELO)
+  const timeMultiplier = offeringObtainiumTimeModifiers(player.antSacrificeTimer, true).reduce(
+    (a, b) => a * b.stat(),
+    1
+  )
+  return new Decimal(base).times(antSacMult).times(effectiveELO).times(timeMultiplier)
 }
 
 export const calculateAntSacrificeOfferingMultiplier = () => {
   const base = 1 / 1200
   const antSacMult = calculateAntSacrificeMultiplier()
   const effectiveELO = calculateEffectiveAntELO()
-  return new Decimal(base).times(antSacMult).times(effectiveELO)
+  const timeMultiplier = offeringObtainiumTimeModifiers(player.antSacrificeTimer, true).reduce(
+    (a, b) => a * b.stat(),
+    1
+  )
+  return new Decimal(base).times(antSacMult).times(effectiveELO).times(timeMultiplier)
 }
 
 export const calculateAntSacrificeObtainium = () => {
@@ -307,10 +305,10 @@ export const calculateAntSacrificeObtainium = () => {
   ) {
     return Decimal.min(
       player.obtainium.times(100).plus(1),
-      calculateObtainium().times(calculateAntSacrificeObtainiumMultiplier())
+      calculateObtainium(false).times(calculateAntSacrificeObtainiumMultiplier())
     )
   } else {
-    return calculateObtainium().times(calculateAntSacrificeObtainiumMultiplier())
+    return calculateObtainium(false).times(calculateAntSacrificeObtainiumMultiplier())
   }
 }
 
@@ -321,10 +319,10 @@ export const calculateAntSacrificeOffering = () => {
   ) {
     return Decimal.min(
       player.offerings.times(100).plus(1),
-      calculateOfferings().times(calculateAntSacrificeOfferingMultiplier())
+      calculateOfferings(false).times(calculateAntSacrificeOfferingMultiplier())
     )
   } else {
-    return calculateOfferings().times(calculateAntSacrificeOfferingMultiplier())
+    return calculateOfferings(false).times(calculateAntSacrificeOfferingMultiplier())
   }
 }
 
@@ -576,6 +574,10 @@ export const calculateSalvageRuneEXPMultiplier = (salvageVal: number | undefined
   }
 
   return Decimal.pow(10, salvage / 30)
+}
+
+export const calculateAntSpeedMult = () => {
+  return statLineDecimalMultiplication(antSpeedStats)
 }
 
 export const calculateAnts = () => {
@@ -1142,11 +1144,12 @@ export const calculateSingularityQuarkMilestoneMultiplier = () => {
   // dprint-ignore
   const singThresholds = [
     5, 7, 10, 20, 35, 50, 65, 80, 90, 100, 121, 144, 150, 160, 166, 169, 170,
-    175, 180, 190, 196, 200, 201, 202, 203, 204, 205, 210, 212, 214, 216, 218,
-    220, 225, 250, 255, 260, 261, 262,
+    175, 180, 190, 196, 200, 201, 202, 203, 204, 205, 210, 213, 216, 219, 225,
+    228, 231, 234, 237, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280,
+    284, 288, 290
   ];
   for (const sing of singThresholds) {
-    if (player.highestSingularityCount >= sing) {
+    if (player.singularityCount >= sing) {
       multiplier *= 1.05
     }
   }
@@ -1642,6 +1645,14 @@ export const calculateQuarkMultFromPowder = () => {
     : 1 + (1 / 100000) * player.overfluxPowder
 }
 
+export const calculateBaseGoldenQuarks = (singularity: number) => {
+  const minimumValue = 100 * Math.pow(1.04, singularity)
+  const contributionFromQuarks = player.quarksThisSingularity / 1e5
+  const firstTenBonus = 10 * Math.min(player.highestSingularityCount, 10)
+  return Math.floor(minimumValue + contributionFromQuarks + firstTenBonus)
+}
+
+
 export const calculateSingularityAmbrosiaLuckMilestoneBonus = () => {
   let bonus = 0
   const singThresholds1 = [35, 42, 49, 56, 63, 70, 77]
@@ -1946,6 +1957,17 @@ export const derpsmithCornucopiaBonus = () => {
   }
 
   return 1 + (counter * player.highestSingularityCount) / 100
+}
+
+export const calculateImmaculateAlchemyBonus = () => {
+  let bonus = 1
+  const thresholds = [50, 90, 130, 170, 200, 217, 235, 253, 271, 289]
+  for (let i = 0; i < thresholds.length; i++) {
+    if (player.singularityCount >= thresholds[i]) {
+      bonus += 0.4
+    }
+  }
+  return bonus
 }
 
 export const isIARuneUnlocked = () => {

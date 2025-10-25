@@ -98,11 +98,14 @@ import {
 import {
   buyGoldenQuarks,
   buyGQUpgradeLevel,
+  calculateMaxSingularityLookahead,
   getLastUpgradeInfo,
   goldenQuarkUpgrades,
   type SingularityDataKeys,
   singularityPerks,
+  teleportToSingularity,
   updateMobileGQHTML,
+  updateSingularityElevator,
   upgradeGQToString
 } from './singularity'
 import type { SingularityChallengeDataKeys } from './SingularityChallenges'
@@ -155,6 +158,7 @@ import {
   toggleSettings,
   toggleShopConfirmation,
   toggleShops,
+  toggleStatSymbol,
   updateAutoChallenge,
   updateRuneBlessingBuyAmount
 } from './Toggles'
@@ -474,7 +478,7 @@ export const generateEventHandlers = () => {
     const rune = DOMCacheGetOrSet(`${key}RuneContainer`)
     rune.addEventListener(
       'mousemove',
-      (e: MouseEvent) => {
+      (e) => {
         Modal(focusedRuneHTML(key), e.clientX, e.clientY, { borderColor: runes[key].runeHTMLStyle.borderColor })
       }
     )
@@ -485,7 +489,7 @@ export const generateEventHandlers = () => {
         borderColor: runes[key].runeHTMLStyle.borderColor
       })
     })
-    rune.addEventListener('mouseout', () => CloseModal())
+    rune.addEventListener('mouseout', CloseModal)
 
     const runeIcon = DOMCacheGetOrSet(`${key}Rune`)
     runeIcon.addEventListener('click', () => toggleAutoSacrifice(runeToIndex[key]))
@@ -499,7 +503,7 @@ export const generateEventHandlers = () => {
     const lockedRune = DOMCacheGetOrSet(`${key}RuneLocked`)
     lockedRune.addEventListener(
       'mousemove',
-      (e: MouseEvent) => {
+      (e) => {
         Modal(focusedRuneLockedHTML(key), e.clientX, e.clientY, { borderColor: 'gray' })
       }
     )
@@ -510,7 +514,7 @@ export const generateEventHandlers = () => {
         borderColor: 'gray'
       })
     })
-    lockedRune.addEventListener('mouseout', () => CloseModal())
+    lockedRune.addEventListener('mouseout', CloseModal)
   }
 
   // Part 2: Talismans Subtab
@@ -611,7 +615,7 @@ export const generateEventHandlers = () => {
     const runeBlessing = DOMCacheGetOrSet(`${key}RuneBlessingContainer`)
     runeBlessing.addEventListener(
       'mousemove',
-      (e: MouseEvent) => {
+      (e) => {
         Modal(focusedRuneBlessingHTML(key), e.clientX, e.clientY, { borderColor: runes[key].runeHTMLStyle.borderColor })
       }
     )
@@ -622,7 +626,7 @@ export const generateEventHandlers = () => {
         borderColor: runes[key].runeHTMLStyle.borderColor
       })
     })
-    runeBlessing.addEventListener('mouseout', () => CloseModal())
+    runeBlessing.addEventListener('mouseout', CloseModal)
 
     DOMCacheGetOrSet(`${key}RuneBlessingPurchase`).addEventListener(
       'click',
@@ -634,7 +638,7 @@ export const generateEventHandlers = () => {
     const runeSpirit = DOMCacheGetOrSet(`${key}RuneSpiritContainer`)
     runeSpirit.addEventListener(
       'mousemove',
-      (e: MouseEvent) => {
+      (e) => {
         Modal(focusedRuneSpiritHTML(key), e.clientX, e.clientY, { borderColor: runes[key].runeHTMLStyle.borderColor })
       }
     )
@@ -646,7 +650,7 @@ export const generateEventHandlers = () => {
       })
     })
 
-    runeSpirit.addEventListener('mouseout', () => CloseModal())
+    runeSpirit.addEventListener('mouseout', CloseModal)
 
     DOMCacheGetOrSet(`${key}RuneSpiritPurchase`).addEventListener(
       'click',
@@ -950,8 +954,10 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('summaryGeneration').addEventListener('click', () => generateExportSummary())
 
   // Various functions
+  const saveStringInput = DOMCacheGetOrSet('saveStringInput')
+
   DOMCacheGetOrSet('exportgame').addEventListener('click', () => exportSynergism())
-  DOMCacheGetOrSet('saveStringInput').addEventListener('blur', (e) => updateSaveString(e.target as HTMLInputElement))
+  saveStringInput.addEventListener('blur', (e) => updateSaveString(e.target as HTMLInputElement))
   DOMCacheGetOrSet('savegame').addEventListener('click', () => saveSynergy(true))
   DOMCacheGetOrSet('deleteGame').addEventListener('click', () => resetGame(false))
   DOMCacheGetOrSet('preloadDeleteGame').addEventListener('click', () => reloadDeleteGame())
@@ -971,6 +977,30 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('resetHotkeys').addEventListener('click', () => resetHotkeys())
   DOMCacheGetOrSet('notation').addEventListener('click', () => toggleAnnotation())
   DOMCacheGetOrSet('iconSet').addEventListener('click', () => toggleIconSet(player.iconSet + 1))
+  DOMCacheGetOrSet('statSymbols').addEventListener('click', () => toggleStatSymbol())
+
+  const html = () =>
+    [
+      i18next.t('settings.saveString.version'),
+      i18next.t('settings.saveString.time'),
+      i18next.t('settings.saveString.year'),
+      i18next.t('settings.saveString.day'),
+      i18next.t('settings.saveString.min'),
+      i18next.t('settings.saveString.period'),
+      i18next.t('settings.saveString.date'),
+      i18next.t('settings.saveString.times'),
+      i18next.t('settings.saveString.sing'),
+      i18next.t('settings.saveString.quarks'),
+      i18next.t('settings.saveString.gq'),
+      i18next.t('settings.saveString.stage')
+    ].join('<br>')
+
+  saveStringInput.addEventListener('mousemove', (e) => Modal(html(), e.clientX, e.clientY))
+  saveStringInput.addEventListener('focus', () => {
+    const elmRect = saveStringInput.getBoundingClientRect()
+    Modal(html(), elmRect.x, elmRect.y + elmRect.height / 2)
+  })
+  saveStringInput.addEventListener('mouseout', CloseModal)
 
   document.querySelector('#thirdParty > #discord > button')?.addEventListener(
     'click',
@@ -1044,6 +1074,61 @@ TODO: Fix this entire tab it's utter shit
   }
   DOMCacheGetOrSet('buySingularityQuarksButton').addEventListener('click', () => buyGoldenQuarks())
   // SINGULARITY TAB
+
+  // ELEVATOR
+  const elevatorInput = DOMCacheGetOrSet('elevatorTargetInput')
+  const teleportButton = DOMCacheGetOrSet('elevatorTeleportButton')
+  const lockToggle = DOMCacheGetOrSet('elevatorLockToggle')
+  const slowClimbToggle = DOMCacheGetOrSet('elevatorSlowClimbToggle')
+
+  elevatorInput.addEventListener('input', () => {
+    const value = Number.parseInt((elevatorInput as HTMLInputElement).value) || 1
+
+    const canLookahead = runes.antiquities.level > 0
+    let singLook = 0
+    if (canLookahead) {
+      const lookahead = calculateMaxSingularityLookahead(true)
+      singLook = player.singularityCount + lookahead
+    }
+
+    const maxTarget = Math.max(1, player.highestSingularityCount, singLook)
+    const validValue = Math.max(1, Math.min(value, maxTarget))
+    player.singularityElevatorTarget = validValue
+    updateSingularityElevator()
+  })
+
+  // Do the cool scrolling thing
+  elevatorInput.addEventListener('wheel', (e) => {
+    if (e.deltaY < 0) {
+      // Scroll up: Means we can *increase* singularity
+      if (player.singularityElevatorTarget < player.highestSingularityCount) {
+        player.singularityElevatorTarget++
+        updateSingularityElevator()
+      }
+    } else if (e.deltaY > 0) {
+      // Scroll down: Means we can *decrease* singularity
+      if (player.singularityElevatorTarget > 1) {
+        player.singularityElevatorTarget--
+        updateSingularityElevator()
+      }
+    }
+  })
+
+  teleportButton.addEventListener('click', () => {
+    teleportToSingularity()
+    updateSingularityElevator()
+  })
+
+  lockToggle.addEventListener('change', () => {
+    player.singularityElevatorLocked = !player.singularityElevatorLocked
+    updateSingularityElevator()
+  })
+
+  slowClimbToggle.addEventListener('change', () => {
+    player.singularityElevatorSlowClimb = !player.singularityElevatorSlowClimb
+    updateSingularityElevator()
+  })
+
   const GQUpgrades = Object.keys(goldenQuarkUpgrades) as SingularityDataKeys[]
   for (const key of GQUpgrades) {
     if (!isMobile) {
@@ -1052,7 +1137,7 @@ TODO: Fix this entire tab it's utter shit
       }
       DOMCacheGetOrSet(key).addEventListener(
         'mousemove',
-        (e: MouseEvent) => Modal(upgradeGQToString(key), e.clientX, e.clientY, { borderColor: 'gold' })
+        (e) => Modal(upgradeGQToString(key), e.clientX, e.clientY, { borderColor: 'gold' })
       )
       DOMCacheGetOrSet(key).addEventListener(
         'focus',
@@ -1065,11 +1150,11 @@ TODO: Fix this entire tab it's utter shit
 
       DOMCacheGetOrSet(key).addEventListener(
         'mouseout',
-        () => CloseModal()
+        CloseModal
       )
       DOMCacheGetOrSet(key).addEventListener(
         'blur',
-        () => CloseModal()
+        CloseModal
       )
 
       DOMCacheGetOrSet(key).addEventListener(
@@ -1131,7 +1216,7 @@ TODO: Fix this entire tab it's utter shit
     if (!isMobile) {
       DOMCacheGetOrSet(key).addEventListener(
         'mousemove',
-        (e: MouseEvent) => Modal(upgradeOcteractToString(key), e.clientX, e.clientY, { borderColor: 'lightseagreen' })
+        (e) => Modal(upgradeOcteractToString(key), e.clientX, e.clientY, { borderColor: 'lightseagreen' })
       )
       DOMCacheGetOrSet(key).addEventListener(
         'focus',
@@ -1145,11 +1230,11 @@ TODO: Fix this entire tab it's utter shit
       )
       DOMCacheGetOrSet(key).addEventListener(
         'mouseout',
-        () => CloseModal()
+        CloseModal
       )
       DOMCacheGetOrSet(key).addEventListener(
         'blur',
-        () => CloseModal()
+        CloseModal
       )
       DOMCacheGetOrSet(key).addEventListener(
         'click',
@@ -1196,7 +1281,7 @@ TODO: Fix this entire tab it's utter shit
     if (!isMobile) {
       DOMCacheGetOrSet(key).addEventListener(
         'mousemove',
-        (e: MouseEvent) => {
+        (e) => {
           Modal(ambrosiaUpgradeToString(key), e.clientX, e.clientY, { borderColor: 'blue' })
           highlightPrerequisites(key)
         }
@@ -1300,11 +1385,11 @@ TODO: Fix this entire tab it's utter shit
     if (!isMobile) {
       DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
         'mousemove',
-        (e: MouseEvent) => Modal(redAmbrosiaUpgradeToString(key), e.clientX, e.clientY, { borderColor: 'red' })
+        (e) => Modal(redAmbrosiaUpgradeToString(key), e.clientX, e.clientY, { borderColor: 'red' })
       )
       DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
         'mouseout',
-        () => CloseModal()
+        CloseModal
       )
       DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
         'focus',
@@ -1316,7 +1401,7 @@ TODO: Fix this entire tab it's utter shit
       )
       DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
         'blur',
-        () => CloseModal()
+        CloseModal
       )
       DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
         'click',
@@ -1334,7 +1419,7 @@ TODO: Fix this entire tab it's utter shit
   }
 
   // Toggle subtabs of Singularity tab
-  for (let index = 0; index < 4; index++) {
+  for (let index = 0; index < 5; index++) {
     DOMCacheGetOrSet(`toggleSingularitySubTab${index + 1}`).addEventListener(
       'click',
       () => changeSubTab(Tabs.Singularity, { page: index })

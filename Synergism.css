@@ -136,6 +136,28 @@ body.loading {
 .amberText { color: var(--amber-text-color); }
 .lightyellowText { color: var(--lightgoldenrodyellow-text-color); }
 
+html[data-legacyicons="false"] {
+    --wowcube-color: #fd0;
+    --tesseract-color: orange;
+    --hypercube-color: #ff004c;
+    --platonic-color: orchid;
+    --hepteract-color: mediumpurple;
+}
+
+html[data-legacyicons="true"] {
+    --wowcube-color: #fff200;
+    --tesseract-color: #a349a4;
+    --hypercube-color: #ed1c24;
+    --platonic-color: lightgoldenrodyellow;
+    --hepteract-color: #ffc1d6;
+}
+
+.wowcubeText { color: var(--wowcube-color); }
+.wowtesseractText { color: var(--tesseract-color); }
+.wowhypercubeText { color: var(--hypercube-color); }
+.wowplatonicText { color: var(--platonic-color); }
+.wowhepteractText { color: var(--hepteract-color); }
+
 .active-subtab {
     background-color: crimson;
 }
@@ -459,6 +481,12 @@ body button:active:not(:disabled):not(.disable-hover-color) {
     align-items: center;
 }
 
+.mediumHorizontalLine {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+}
+
 #preloadDeleteGame {
     position: fixed;
     bottom: 1em;
@@ -547,8 +575,8 @@ body button:active:not(:disabled):not(.disable-hover-color) {
 
 #exitOffline,
 #exitFastForward,
-#closeCart,
-#checkout {
+#checkout,
+#checkout-nowpayments {
     width: 18em;
     min-height: auto;
     min-width: 220px;
@@ -561,9 +589,12 @@ body button:active:not(:disabled):not(.disable-hover-color) {
 }
 
 #exitOffline:hover,
-#closeCart:hover,
 #checkout:not(:disabled):hover {
     background-color: var(--purplehover-color);
+}
+
+#checkout-buttons > #checkout-nowpayments:not(:disabled):hover {
+    background-color: var(--blessings-hover-color);
 }
 
 .resetInformationContainer {
@@ -712,8 +743,8 @@ button.isEvent:hover {
 }
 
 #cubetab {
-    border-color: orange;
-    color: red;
+    border-color: var(--wowcube-color);
+    color: var(--hypercube-color);
 }
 
 #campaigntab {
@@ -909,6 +940,7 @@ p#themesTitle {
 #savegame,
 #deleteGame,
 #importFileButton,
+#saveStringInput,
 #exportButtons > label {
     width: 12em;
     min-width: 180px;
@@ -2506,7 +2538,7 @@ p#reincarnatehotkeys {
 .cubeBtn {
     min-width: 100px;
     background-color: var(--blackbtn-color);
-    border: 1px solid gold;
+    border: 1px solid var(--wowcube-color);
 }
 
 .autoOpensBtn {
@@ -2535,17 +2567,6 @@ p[id$="BlessingsTotal"] {
     padding: 15px;
     margin-left: 22.5%;
     margin-right: auto;
-}
-
-#cubeBlessingsTotal { color: orange; }
-
-#tesseractBlessingsTotal { color: var(--orchid-text-color); }
-
-#hypercubeBlessingsTotal { color: rgb(255 0 76); }
-
-#platonicBlessingsTotal {
-    color: orange;
-    margin: 0;
 }
 
 #platonicFooter,
@@ -2806,7 +2827,7 @@ button.language-select span.lang-name {
 
 #tesseractAmount {
     color: white;
-    border: 1px solid orange;
+    border: 1px solid var(--tesseract-color);
     background-color: var(--blackbtn-color);
 }
 
@@ -3636,27 +3657,6 @@ header #obtainiumDisplay { color: pink; }
     color: limegreen;
 }
 
-#ascCubes {
-    color: yellow;
-}
-
-#ascTess {
-    /* color: var(--orchid-text-color); */
-    color: orange;
-}
-
-#ascHyper {
-    color: var(--crimson-text-color);
-}
-
-#ascPlatonic {
-    color: orchid;
-}
-
-#ascHepteract {
-    color: mediumpurple;
-}
-
 #ascTimeAccel {
     color: royalblue;
 }
@@ -3960,6 +3960,144 @@ header #obtainiumDisplay { color: pink; }
     align-items: center;
 }
 
+/* Singularity Elevator Styles */
+.singularityElevatorContainer {
+    border: 2px solid gold;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.lookaheadInfo {
+    margin: 20px;
+}
+
+.lookaheadInfo > p {
+    margin: 0;
+}
+
+.elevatorControls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.elevatorTargetSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.elevatorTargetSection label {
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.elevatorInput:focus {
+    outline: none;
+    border-color: orange;
+}
+
+.elevatorButton {
+    --glow-color: gold;
+
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+    border: 2px solid gold;
+    border-radius: 6px;
+    padding: 12px 24px;
+    color: var(--text-color);
+    min-width: 140px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.elevatorInput {
+    background-color: var(--input-color);
+    border: 2px solid gold;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: var(--text-color);
+    font-size: 1.1em;
+    width: 100px;
+    text-align: center;
+    box-sizing: border-box;
+    appearance: textfield;
+}
+
+.elevatorInput::-webkit-outer-spin-button,
+.elevatorInput::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+.elevatorButton:hover {
+    background-color: white !important;
+    border: 2px solid lightgoldenrodyellow;
+    color: black;
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 15px var(--glow-color),
+        0 0 30px var(--glow-color),
+        0 0 45px var(--glow-color);
+}
+
+.elevatorLockSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.elevatorLockSection p {
+    margin: 0;
+}
+
+#elevatorSettings {
+    border: 2px solid white;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.elevatorToggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    justify-content: flex-start;
+    width: 75%;
+    height: 32px;
+}
+
+#elevatorLockToggle,
+#elevatorSlowClimbToggle {
+    transform: scale(2);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.elevatorToggleLabel {
+    color: var(--text-color);
+    font-weight: bold;
+    flex: 1;
+    text-align: left;
+}
+
+.elevatorLockStatus {
+    margin: 5px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
 #actualSingularityUpgradeContainer,
 #octeractUpgradeContainer,
 #blueberryUpgradeContainer {
@@ -4078,6 +4216,29 @@ header #obtainiumDisplay { color: pink; }
     100% {
         background-position: 100% 50%;
     }
+}
+
+.gradientText {
+    color: transparent;
+    background-image: linear-gradient(90deg, var(--gradient-start), var(--gradient-end), var(--gradient-start));
+    background-clip: text;
+    background-size: 700%;
+    animation: gradient-animation 5s linear infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.singularityGradient {
+    --gradient-start: gold;
+    --gradient-end: lightgoldenrodyellow;
 }
 
 .singularityUpgrade > img,
@@ -4804,6 +4965,16 @@ form input:hover {
     margin-top: 8px;
 }
 
+#pseudoCoins > #supportContainer {
+    text-align: center;
+    padding-top: 10px;
+}
+
+#pseudoCoins > #supportContainer > a {
+    border: 1px solid gold;
+    padding: 4px 8px;
+}
+
 #pseudoCoins img {
     image-rendering: unset;
 }
@@ -4867,9 +5038,19 @@ form input:hover {
     margin: 0 auto;
 }
 
-#closeCart,
-#checkout {
+#checkout-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+#checkout-buttons > button[id^="checkout"] {
     margin: 2px auto 4px;
+}
+
+#checkout-buttons > #checkout-nowpayments {
+    background-color: cadetblue;
 }
 
 .cartListElementContainer > * {

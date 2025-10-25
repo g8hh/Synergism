@@ -1,12 +1,13 @@
 import i18next from 'i18next'
 import { getAmbrosiaUpgradeEffects } from './BlueberryUpgrades'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateGoldenQuarkCost } from './Calculate'
+import { calculateGoldenQuarkCost, calculateImmaculateAlchemyBonus } from './Calculate'
 import { updateMaxTokens, updateTokens } from './Campaign'
 import { getOcteractUpgradeEffect } from './Octeracts'
+import { singularity } from './Reset'
 import { getRuneEffectiveLevel, runes } from './Runes'
 import { format, formatAsPercentIncrease, player } from './Synergism'
-import { Alert, Prompt, revealStuff } from './UpdateHTML'
+import { Alert, Confirm, Prompt, revealStuff } from './UpdateHTML'
 import { isMobile, toOrdinal } from './Utility'
 
 export type SingularityDataKeys =
@@ -1123,13 +1124,13 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     qualityOfLife: true,
     costPerLevel: 14999,
     minimumSingularity: 5,
-    specialCostForm: 'Exponential2',
+    specialCostForm: 'Quadratic',
     effect: (n: number) => {
-      return n / 50
+      return n / 100
     },
     effectDescription: (n: number) =>
       i18next.t('singularity.data.singQuarkHepteract.effect', {
-        n: format(n / 50, 2, true)
+        n: format(n / 100, 2, true)
       }),
     name: () => i18next.t('singularity.data.singQuarkHepteract.name'),
     description: () => i18next.t('singularity.data.singQuarkHepteract.description')
@@ -1143,13 +1144,13 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     qualityOfLife: true,
     costPerLevel: 449999,
     minimumSingularity: 30,
-    specialCostForm: 'Exponential2',
+    specialCostForm: 'Cubic',
     effect: (n: number) => {
-      return n / 50
+      return n / 100
     },
     effectDescription: (n: number) =>
       i18next.t('singularity.data.singQuarkHepteract2.effect', {
-        n: format(n / 50, 2, true)
+        n: format(n / 100, 2, true)
       }),
     name: () => i18next.t('singularity.data.singQuarkHepteract2.name'),
     description: () => i18next.t('singularity.data.singQuarkHepteract2.description')
@@ -1165,11 +1166,11 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 61,
     specialCostForm: 'Exponential2',
     effect: (n: number) => {
-      return n / 100
+      return n / 200
     },
     effectDescription: (n: number) =>
       i18next.t('singularity.data.singQuarkHepteract3.effect', {
-        n: format(n / 100, 2, true)
+        n: format(n / 200, 3, true)
       }),
     name: () => i18next.t('singularity.data.singQuarkHepteract3.name'),
     description: () => i18next.t('singularity.data.singQuarkHepteract3.description')
@@ -2514,8 +2515,9 @@ export const singularityPerks: SingularityPerk[] = [
     // dprint-ignore
     levels: [
       5, 7, 10, 20, 35, 50, 65, 80, 90, 100, 121, 144, 150, 160, 166, 169, 170,
-      175, 180, 190, 196, 200, 201, 202, 203, 204, 205, 210, 212, 214, 216, 218,
-      220, 225, 250, 255, 260, 261, 262,
+      175, 180, 190, 196, 200, 201, 202, 203, 204, 205, 210, 213, 216, 219, 225,
+      228, 231, 234, 237, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280,
+      284, 288, 290
     ],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2771,6 +2773,19 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
+      return i18next.t('singularity.perks.immaculateAlchemy.name')
+    },
+    levels: [50],
+    description: (_n: number, _levels: number[]) => {
+      const multiplier = calculateImmaculateAlchemyBonus()
+      return i18next.t('singularity.perks.immaculateAlchemy.default', {
+        multiplier: format(multiplier, 2, true)
+      })
+    },
+    ID: 'immaculateAlchemy'
+  },
+  {
+    name: () => {
       return i18next.t('singularity.perks.overclocked.name')
     },
     levels: [50, 60, 75, 100, 125, 150, 175, 200, 225, 250],
@@ -2994,27 +3009,13 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
-      return i18next.t('singularity.perks.immaculateAlchemy.name')
-    },
-    levels: [200, 208, 221],
-    description: (n: number, levels: number[]) => {
-      if (n >= levels[2]) {
-        return i18next.t('singularity.perks.immaculateAlchemy.hasLevel2')
-      } else if (n >= levels[1]) {
-        return i18next.t('singularity.perks.immaculateAlchemy.hasLevel1')
-      } else {
-        return i18next.t('singularity.perks.immaculateAlchemy.default')
-      }
-    },
-    ID: 'immaculateAlchemy'
-  },
-  {
-    name: () => {
       return i18next.t('singularity.perks.skrauQ.name')
     },
     levels: [200],
     description: () => {
-      const amt = format(Math.pow((player.singularityCount - 179) / 20, 2), 4)
+      const amt = (player.singularityCount >= 200)
+        ? format(Math.pow(1 + (player.singularityCount - 199) / 25, 2), 4)
+        : format(1, 4)
       return i18next.t('singularity.perks.skrauQ.default', { amt })
     },
     ID: 'skrauQ'
@@ -3173,7 +3174,7 @@ const handlePerks = (singularityCount: number) => {
   })
 
   for (const availablePerk of availablePerks) {
-    const singTolerance = getFastForwardTotalMultiplier()
+    const singTolerance = calculateMaxSingularityLookahead(true) - 1
     const perkId = DOMCacheGetOrSet(availablePerk.htmlID)
     perkId.style.display = ''
     DOMCacheGetOrSet('singularityPerksGrid').append(perkId)
@@ -3200,39 +3201,17 @@ const handlePerks = (singularityCount: number) => {
     countNext.style.display = 'none'
   }
 }
-// Indicates the number of extra Singularity count gained on Singularity reset
-export const getFastForwardTotalMultiplier = (): number => {
-  let fastForward = 0
-  fastForward += getGQUpgradeEffect('singFastForward')
-  fastForward += getGQUpgradeEffect('singFastForward2')
-  fastForward += getOcteractUpgradeEffect('octeractFastForward')
 
-  // Stop at sing 200 even if you include fast forward
-  fastForward = Math.max(
-    0,
-    Math.min(fastForward, 200 - player.singularityCount - 1)
-  )
-
-  // Please for the love of god don't allow FF during a challenge
-  if (player.insideSingularityChallenge) {
+export const calculateMaxSingularityLookahead = (nonZero: boolean): number => {
+  if (!nonZero) {
     return 0
+  } else {
+    let maxLookahead = 1
+    maxLookahead += getGQUpgradeEffect('singFastForward')
+    maxLookahead += getGQUpgradeEffect('singFastForward2')
+    maxLookahead += getOcteractUpgradeEffect('octeractFastForward')
+    return maxLookahead
   }
-
-  // If the next singularityCount is greater than the highestSingularityCount, fast forward to be equal to the highestSingularityCount
-  if (
-    player.highestSingularityCount !== player.singularityCount
-    && player.singularityCount + fastForward + 1 >= player.highestSingularityCount
-  ) {
-    return Math.max(
-      0,
-      Math.min(
-        fastForward,
-        player.highestSingularityCount - player.singularityCount - 1
-      )
-    )
-  }
-
-  return fastForward
 }
 
 export const getGoldenQuarkCost = (): {
@@ -3398,7 +3377,7 @@ export const calculateEffectiveSingularities = (
     && player.singularityChallenges.taxmanLastStand.completions >= 8
     && player.platonicUpgrades[15] === 0
   ) {
-    effectiveSingularities = Math.pow(effectiveSingularities, 5 / 3)
+    effectiveSingularities = Math.pow(effectiveSingularities, 3 / 2)
   }
 
   return effectiveSingularities
@@ -3439,21 +3418,21 @@ export const calculateSingularityDebuff = (
     - Math.min(300, player.shopUpgrades.shopHorseShoe * getRuneEffectiveLevel('horseShoe')) / 1000
 
   if (debuff === 'Offering') {
-    const extraMult = 10 * Math.pow(1.02, constitutiveSingularityCount)
+    const extraMult = Math.pow(1.02, constitutiveSingularityCount)
     return extraMult * baseDebuffMultiplier * (constitutiveSingularityCount < 150
       ? 3 * (Math.sqrt(effectiveSingularities) + 1)
       : Math.pow(effectiveSingularities, 2 / 3) / 400)
   } else if (debuff === 'Salvage') {
-    return -(5 * constitutiveSingularityCount
-      + 5 * Math.max(0, constitutiveSingularityCount - 100)
-      + 5 * Math.max(0, constitutiveSingularityCount - 200)
-      + 5 * Math.max(0, constitutiveSingularityCount - 250)
-      + 5 * Math.max(0, constitutiveSingularityCount - 270)
-      + 5 * Math.max(0, constitutiveSingularityCount - 280))
+    return -(4 * constitutiveSingularityCount
+      + 4 * Math.max(0, constitutiveSingularityCount - 100)
+      + 4 * Math.max(0, constitutiveSingularityCount - 200)
+      + 3 * Math.max(0, constitutiveSingularityCount - 250)
+      + 3 * Math.max(0, constitutiveSingularityCount - 270)
+      + 2 * Math.max(0, constitutiveSingularityCount - 280))
   } else if (debuff === 'Global Speed') {
     return baseDebuffMultiplier * (1 + Math.sqrt(effectiveSingularities) / 4)
   } else if (debuff === 'Obtainium') {
-    const extraMult = 10 * Math.pow(1.02, constitutiveSingularityCount)
+    const extraMult = Math.pow(1.02, constitutiveSingularityCount)
     return extraMult * baseDebuffMultiplier * (constitutiveSingularityCount < 150
       ? 3 * (Math.sqrt(effectiveSingularities) + 1)
       : Math.pow(effectiveSingularities, 2 / 3) / 400)
@@ -3465,8 +3444,8 @@ export const calculateSingularityDebuff = (
       : 1 + Math.pow(effectiveSingularities, 0.75) / 10000)
   } else if (debuff === 'Cubes') {
     const extraMult = constitutiveSingularityCount > 100
-      ? (10 + constitutiveSingularityCount / 10) * Math.pow(1.02, constitutiveSingularityCount - 100)
-      : 10
+      ? 2 * Math.pow(1.03, constitutiveSingularityCount - 100)
+      : 2
     return baseDebuffMultiplier * (constitutiveSingularityCount < 150
       ? 3 * (1 + (Math.sqrt(effectiveSingularities) * extraMult) / 4)
       : 1 + (Math.pow(effectiveSingularities, 0.75) * extraMult) / 1000)
@@ -3481,5 +3460,151 @@ export const calculateSingularityDebuff = (
   } else {
     // Cube upgrades
     return baseDebuffMultiplier * Math.cbrt(effectiveSingularities + 1)
+  }
+}
+
+export const updateSingularityElevatorVisibility = (): void => {
+  if (player.highestSingularityCount < 10) {
+    DOMCacheGetOrSet('singularityElevator').style.display = 'none'
+    DOMCacheGetOrSet('lockedSingularityElevator').style.display = ''
+  } else {
+    DOMCacheGetOrSet('singularityElevator').style.display = ''
+    DOMCacheGetOrSet('lockedSingularityElevator').style.display = 'none'
+  }
+}
+
+export const updateSingularityElevator = (): void => {
+  const input = DOMCacheGetOrSet('elevatorTargetInput') as HTMLInputElement
+  const description = DOMCacheGetOrSet('elevatorDescription')
+  const teleportButton = DOMCacheGetOrSet('elevatorTeleportButton')
+  const lock = DOMCacheGetOrSet('elevatorLockToggle') as HTMLInputElement
+  const slowClimb = DOMCacheGetOrSet('elevatorSlowClimbToggle') as HTMLInputElement
+  const slowClimbLabel = DOMCacheGetOrSet('elevatorSlowClimbLabel')
+  const lockStatus = DOMCacheGetOrSet('elevatorLockStatus')
+
+  const highestSingularity = DOMCacheGetOrSet('highestSingularity')
+  const lookahead = DOMCacheGetOrSet('lookahead')
+  const maxLookahead = DOMCacheGetOrSet('maxLookahead')
+  const extraLookahead = DOMCacheGetOrSet('extraLookahead')
+
+  highestSingularity.innerHTML = i18next.t('singularity.elevator.highestSingularity', {
+    num: player.highestSingularityCount
+  })
+
+  const canLookahead = runes.antiquities.level > 0
+  let singLook = 0
+  if (canLookahead) {
+    const lookahead = calculateMaxSingularityLookahead(true)
+    singLook = player.singularityCount + lookahead
+  }
+
+  const maxTarget = Math.max(1, player.highestSingularityCount, singLook)
+
+  const theoreticalLookahead = calculateMaxSingularityLookahead(true)
+
+  lookahead.innerHTML = i18next.t('singularity.elevator.lookahead')
+  maxLookahead.innerHTML = i18next.t('singularity.elevator.maxLookahead', { num: theoreticalLookahead })
+  extraLookahead.innerHTML = i18next.t('singularity.elevator.lookaheadExtra')
+
+  if (input) {
+    input.max = maxTarget.toString()
+    input.value = player.singularityElevatorTarget.toString()
+  }
+
+  description.innerHTML = i18next.t('singularity.elevator.description', { limit: maxTarget })
+
+  if (player.singularityElevatorTarget > player.singularityCount) {
+    teleportButton.textContent = i18next.t('singularity.elevator.teleportButtonHigher')
+  } else if (player.singularityElevatorTarget < player.singularityCount) {
+    teleportButton.textContent = i18next.t('singularity.elevator.teleportButtonLower')
+  } else {
+    teleportButton.textContent = i18next.t('singularity.elevator.teleportButtonStay')
+  }
+
+  lock.checked = player.singularityElevatorLocked
+  slowClimb.checked = player.singularityElevatorSlowClimb
+
+  slowClimbLabel.style.display = player.singularityElevatorLocked ? 'none' : 'flex'
+
+  if (player.singularityElevatorLocked) {
+    lockStatus.innerHTML = i18next.t('singularity.elevator.lockEnabled', { target: player.singularityCount })
+  } else {
+    const introText = i18next.t('singularity.elevator.lockDisabledIntro')
+    if (player.singularityElevatorSlowClimb) {
+      lockStatus.innerHTML = `${introText}<br>${
+        i18next.t('singularity.elevator.lockDisabledSing', { target: player.singularityCount + 1 })
+      }`
+    } else {
+      const maxTarget = Math.max(player.singularityCount + theoreticalLookahead, player.highestSingularityCount)
+      lockStatus.innerHTML = `${introText}<br>${
+        i18next.t('singularity.elevator.lockDisabledSing', { target: maxTarget })
+      }`
+    }
+  }
+}
+
+export const teleportToSingularity = async (): Promise<void> => {
+  const target = player.singularityElevatorTarget
+
+  const canLookahead = runes.antiquities.level > 0
+  let singLook = 0
+  if (canLookahead) {
+    const lookahead = calculateMaxSingularityLookahead(true)
+    singLook = player.singularityCount + lookahead
+  }
+
+  const maxTarget = Math.max(1, player.highestSingularityCount, singLook)
+
+  // Just to prevent some bugs ahead of time. These should probably not be needed...
+
+  if (target < 1 || target > maxTarget) {
+    Alert(i18next.t('singularity.elevator.invalidTarget', { max: maxTarget }))
+    return
+  }
+  if (!target) {
+    Alert(i18next.t('singularity.elevator.noTarget'))
+    return
+  }
+  if (player.insideSingularityChallenge) {
+    Alert(i18next.t('singularity.elevator.inEXALTError'))
+    return
+  }
+
+  const confirmed = await Confirm(i18next.t('singularity.elevator.confirmTeleport', { target }))
+  if (confirmed) {
+    if (player.singularityCount <= target) {
+      const extraConfirm = await Confirm(i18next.t('singularity.elevator.confirmTeleportHigher'))
+      if (extraConfirm) {
+        const heldSingTime = player.singularityCounter
+        const antiquitiesLevel = runes.antiquities.level
+        // Reset
+        singularity()
+        if (antiquitiesLevel === 0) {
+          player.singularityCounter = heldSingTime
+        }
+      } else {
+        return
+      }
+    } else {
+      player.singularityCount = target
+    }
+
+    // Update display
+    updateSingularityElevator()
+    Alert(i18next.t('singularity.elevator.teleportSuccess', { target }))
+  }
+}
+
+export const calculateSingularityMatterCap = (sing: number) => {
+  return Math.pow(100 + sing, 2)
+}
+
+export const calculateEarnableSingularityMatter = (sing: number) => {
+  const currentMatter = player.singularityMatter
+  const cap = calculateSingularityMatterCap(sing)
+  if (currentMatter >= cap) {
+    return 0
+  } else {
+    return Math.ceil(0.01 * (cap - currentMatter))
   }
 }

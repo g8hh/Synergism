@@ -24,7 +24,12 @@ import { hasUnreadMessages } from './Messages'
 import { initializeCart } from './purchases/CartTab'
 import { isResearchUnlocked, roombaResearchEnabled } from './Research'
 import { getRuneEffects, type RuneKeys, runes, updateRuneHTML } from './Runes'
-import { getGQUpgradeEffect, updateSingularityPenalties, updateSingularityPerks } from './singularity'
+import {
+  getGQUpgradeEffect,
+  updateSingularityElevator,
+  updateSingularityPenalties,
+  updateSingularityPerks
+} from './singularity'
 import { format, formatTimeShort, /*formatTimeShort*/ player } from './Synergism'
 import { getActiveSubTab, Tabs } from './Tabs'
 import { type TalismanKeys, talismans } from './Talismans'
@@ -164,6 +169,9 @@ export const revealStuff = () => {
 
   document.documentElement.dataset.singularity = // Ability to view singularity features
     player.highestSingularityCount >= 1 ? 'true' : 'false'
+
+  // switch color pallete to match legacy wowcubes
+  document.documentElement.dataset.legacyicons = player.iconSet === 0 ? 'true' : 'false'
 
   visualUpdateShop()
 
@@ -412,7 +420,7 @@ export const revealStuff = () => {
     }
   }
 
-  DOMCacheGetOrSet('toggleSingularitySubTab4').style.display = player.highestSingularityCount >= 25
+  DOMCacheGetOrSet('toggleSingularitySubTab5').style.display = player.highestSingularityCount >= 25
     ? 'block'
     : 'none'
   // Hide Challenge Subtabs until Exalts are unlocked
@@ -618,6 +626,7 @@ export const hideStuff = () => {
     DOMCacheGetOrSet('singularitytab').style.backgroundColor = 'lightgoldenrodyellow'
     updateSingularityPenalties()
     updateSingularityPerks()
+    updateSingularityElevator()
   }
 
   if (G.currentTab === Tabs.Event) {

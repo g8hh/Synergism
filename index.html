@@ -178,23 +178,23 @@
         <div id="ascensionStats">
             <span id="ascCubeStats">
                 <img src="Pictures/Default/TinyWow3.png" class="corruptionImg" alt="3D Cube" title="Cube Information" loading="lazy">
-                <span id="ascCubes">x</span> C<span id="unit1">/s</span>
+                <span id="ascCubes" class="wowcubeText">x</span> C<span id="unit1">/s</span>
             </span>
             <span id="ascTessStats">
                 <img src="Pictures/Default/TinyWow4.png" class="corruptionImg" alt="4D Cube" title="Tesseract Information" loading="lazy">
-                <span id="ascTess">x</span> T<span id="unit2">/s</span>
+                <span id="ascTess" class="wowtesseractText">x</span> T<span id="unit2">/s</span>
             </span>
             <span id="ascHyperStats">
                 <img src="Pictures/Default/TinyWow5.png" class="corruptionImg" title="Hypercube Information" loading="lazy">
-                <span id="ascHyper">x</span> Hy<span id="unit3">/s</span>
+                <span id="ascHyper" class="wowhypercubeText">x</span> Hy<span id="unit3">/s</span>
             </span>
             <span id="ascPlatonicStats">
                 <img src="Pictures/Default/TinyWow6.png" class="corruptionImg" title="Platonic Information" loading="lazy">
-                <span id="ascPlatonic">x</span> P<span id="unit4">/s</span>
+                <span id="ascPlatonic" class="wowplatonicText">x</span> P<span id="unit4">/s</span>
             </span>
             <span id="ascHepteractStats">
                 <img src="Pictures/Default/TinyWow7.png" class="corruptionImg" title="Hepteract Information" loading="lazy">
-                <span id="ascHepteract">x</span> He<span id="unit5">/s</span>
+                <span id="ascHepteract" class="wowhepteractText">x</span> He<span id="unit5">/s</span>
             </span>
             <span id="ascTimeTakenStats">
                 <img src="Pictures/Default/TinyA.png" class="corruptionImg" title="Ascension Timer" loading="lazy">
@@ -1730,8 +1730,6 @@
                     <span id="immortalELOAntSpeed"></span>
                     <br><br>
                     <p id="antSacrificeTitle" class="crimsonText" i18n="ants.resetAnthill"></p>
-                    <span id="antSacrficeAlert" i18n="ants.resetAlert"></span>
-                    <br>
                     <span id="immortalELOGain"></span>
                     <br>
                     <span id="SacrificeMultiplier"></span>
@@ -1788,13 +1786,13 @@
         <div id="cubesWrapper">
             <div id="wowCubeSidebar">
                 <div id="wowCubeSidebarButtons">
-                    <button id="switchCubeSubTab1" class="cubeSwitchTabBtn active-subtab" style="border: 2px solid gold;" i18n="tabs.cubes.cubeTributes"></button>
-                    <button id="switchCubeSubTab2" class="cubeSwitchTabBtn chal11" style="border: 2px solid orange;" i18n="tabs.cubes.tesseract"></button>
-                    <button id="switchCubeSubTab3" class="cubeSwitchTabBtn chal13" style="border: 2px solid red;" i18n="tabs.cubes.hypercube"></button>
-                    <button id="switchCubeSubTab4" class="cubeSwitchTabBtn chal14" style="border: 2px solid orchid;" i18n="tabs.cubes.platonic"></button>
+                    <button id="switchCubeSubTab1" class="cubeSwitchTabBtn active-subtab" style="border: 2px solid var(--wowcube-color);" i18n="tabs.cubes.cubeTributes"></button>
+                    <button id="switchCubeSubTab2" class="cubeSwitchTabBtn chal11" style="border: 2px solid var(--tesseract-color);" i18n="tabs.cubes.tesseract"></button>
+                    <button id="switchCubeSubTab3" class="cubeSwitchTabBtn chal13" style="border: 2px solid var(--hypercube-color);" i18n="tabs.cubes.hypercube"></button>
+                    <button id="switchCubeSubTab4" class="cubeSwitchTabBtn chal14" style="border: 2px solid var(--platonic-color);" i18n="tabs.cubes.platonic"></button>
                     <button id="switchCubeSubTab5" class="cubeSwitchTabBtn" style="border: 2px solid white;" i18n="tabs.cubes.cubeUpgrades"></button>
                     <button id="switchCubeSubTab6" class="cubeSwitchTabBtn chal14" style="border: 2px solid orchid;" i18n="tabs.cubes.challenge15"></button>
-                    <button id="switchCubeSubTab7" class="cubeSwitchTabBtn hepteracts" style="border: 2px solid mediumpurple" i18n="tabs.cubes.hepteract"></button>
+                    <button id="switchCubeSubTab7" class="cubeSwitchTabBtn hepteracts" style="border: 2px solid var(--hepteract-color)" i18n="tabs.cubes.hepteract"></button>
                 </div>
                 <div class="cubesToQuark">
                     <div class="cubeToQuark">
@@ -1824,14 +1822,14 @@
                 </div>
             </div>
             <div id="cubeTab1" class="cubeTab" style="display: flex">
-                <span id="cubeWelcome" class="cubePlacement1" style="color: orange" i18n="wowCubes.cubes.intro"></span>
+                <span id="cubeWelcome" class="cubePlacement1 wowcubeText" i18n="wowCubes.cubes.intro"></span>
                 <span id="cubeExpository1" class="cubePlacement2" style="color: white" i18n="wowCubes.cubes.instructions"></span>
                 <span id="cubeExpository2" class="cubePlacement3" style="color: limegreen" i18n="wowCubes.greenText"></span>
 
                 <div class="openGrid">
                     <img class="openImage" src="Pictures/Default/WowCube.png" loading="lazy">
                     <div class="openButtons">
-                        <span class="inventory" style="color: white" id="cubeQuantity"></span>
+                        <span class="inventory wowcubeText" id="cubeQuantity"></span>
                         <div class="openBtn">
                             <button class="cubeBtn" id="open1Cube" i18n="wowCubes.open1"></button>
                             <button class="cubeBtn" id="open20Cube" i18n="wowCubes.open10%"></button>
@@ -1911,19 +1909,19 @@
                     </table>
                 </div>
                 <div id="cubeFooter">
-                    <p id="cubeBlessingsTotal"></p>
+                    <p id="cubeBlessingsTotal" class="wowcubeText"></p>
                     <p id="cubeFull"></p>
                 </div>
             </div>
             <div id="cubeTab2" class="cubeTab" style="display: none">
-                <span id="tesseractWelcome" class="cubePlacement1 orchidText" i18n="wowCubes.tesseracts.intro"></span>
+                <span id="tesseractWelcome" class="cubePlacement1 wowtesseractText" i18n="wowCubes.tesseracts.intro"></span>
                 <span id="tesseractExpository1" class="cubePlacement2" style="color: white" i18n="wowCubes.tesseracts.instructions"></span>
                 <span id="tesseractExpository2" class="cubePlacement3" style="color: limegreen" i18n="wowCubes.greenText"></span>
 
                 <div class="openGrid">
                     <img class="openImage" src="Pictures/Default/WowTessaract.png" loading="lazy">
                     <div class="openButtons">
-                        <span id="tesseractQuantity" class="inventory orangeText"></span>
+                        <span id="tesseractQuantity" class="inventory wowtesseractText"></span>
                         <div class="openBtn">
                             <button id="open1Tesseract" class="cubeBtn" i18n="wowCubes.open1"></button>
                             <button id="open20Tesseract" class="cubeBtn" i18n="wowCubes.open10%"></button>
@@ -2002,17 +2000,17 @@
                         </tr>
                     </table>
                 </div>
-                <p id="tesseractBlessingsTotal"></p>
+                <p id="tesseractBlessingsTotal"  class="wowtesseractText"></p>
             </div>
             <div id="cubeTab3" class="cubeTab" style="display: none">
-                <span id="hypercubeWelcome" class="cubePlacement1" style="color: rgb(255, 0, 76)" i18n="wowCubes.hypercubes.intro"></span>
+                <span id="hypercubeWelcome" class="cubePlacement1 wowhypercubeText" i18n="wowCubes.hypercubes.intro"></span>
                 <span id="hypercubeExpository1" class="cubePlacement2" style="color: white" i18n="wowCubes.hypercubes.instructions"></span>
                 <span id="hypercubeExpository2" class="cubePlacement3" style="color: limegreen" i18n="wowCubes.greenText"></span>
 
                 <div class="openGrid">
                     <img class="openImage" src="Pictures/Default/WowHypercube.png" loading="lazy">
                     <div class="openButtons">
-                        <span id="hypercubeQuantity" class="inventory" style="color: rgb(255, 0, 76)"></span>
+                        <span id="hypercubeQuantity" class="inventory wowhypercubeText"></span>
                         <div class="openBtn">
                             <button id="open1Hypercube" class="cubeBtn" i18n="wowCubes.open1"></button>
                             <button id="open20Hypercube" class="cubeBtn" i18n="wowCubes.open10%"></button>
@@ -2091,17 +2089,17 @@
                         </tr>
                     </table>
                 </div>
-                <p id="hypercubeBlessingsTotal"></p>
+                <p id="hypercubeBlessingsTotal" class="wowhypercubeText"></p>
             </div>
             <div id="cubeTab4" class="cubeTab" style="display: none">
-                <span id="platonicCubeWelcome" class="cubePlacement1 orangeredText" i18n="wowCubes.platonics.intro"></span>
+                <span id="platonicCubeWelcome" class="cubePlacement1 wowplatonicText" i18n="wowCubes.platonics.intro"></span>
                 <span id="platonicCubeExpository1" class="cubePlacement2" style="color: white" i18n="wowCubes.platonics.instructions"></span>
                 <span id="platonicCubeExpository2" class="cubePlacement3" style="color: limegreen" i18n="wowCubes.greenText"></span>
 
                 <div class="openGrid">
                     <img class="openImage" src="Pictures/Default/PlatonicCube.png" loading="lazy">
                     <div class="openButtons">
-                        <span id="platonicQuantity" class="inventory" style="color:orchid"></span>
+                        <span id="platonicQuantity" class="inventory wowplatonicText"></span>
                         <div class="openBtn">
                             <button id="open1PlatonicCube" class="cubeBtn" i18n="wowCubes.open1"></button>
                             <button id="open40kPlatonicCube" class="cubeBtn" i18n="wowCubes.open10%"></button>
@@ -2169,7 +2167,7 @@
                     </table>
                 </div>
                 <div id="platonicFooter">
-                    <p id="platonicBlessingsTotal"></p>
+                    <p id="platonicBlessingsTotal" class="wowplatonicText"></p>
                     <p id="platonicAsterisk" i18n="wowCubes.platonics.asterisk"></p>
                 </div>
             </div>
@@ -2348,13 +2346,13 @@
                 </div>
             </div>
             <div id="cubeTab7" class="cubeTab" style="display: none">
-                <span id="hepteractWelcome" class="cubePlacement1" style="color: pink" i18n="wowCubes.hepteractForge.howDidIGetHere"></span>
+                <span id="hepteractWelcome" class="cubePlacement1 wowhepteractText" i18n="wowCubes.hepteractForge.howDidIGetHere"></span>
                 <span id="hepteractExpository1" class="cubePlacement2" style="color: white" i18n="wowCubes.hepteractForge.noTimeToWaste"></span>
                 <span id="hepteractExpository2" class="cubePlacement3 redText" i18n="wowCubes.hepteractForge.noPassiveBonus"></span>
                 <div class="openGrid">
                     <img class="openImage" src="Pictures/Default/Hepteract.png" loading="lazy">
                     <div class="NotificationToggle">
-                        <span id="hepteractQuantity" style="color: mediumpurple"></span>
+                        <span id="hepteractQuantity" class="wowhepteractText"></span>
                         <img class="heptNotification" id="heptnotificationpic" alt="Notification" src="Pictures/Default/Notifications.png" title="Notifications" loading="lazy">
                         <button class="auto nonSquare" id="toggle35" toggleid="35" format="[$]" style="border: 2px solid green">[ON]</button>
                     </div>
@@ -2700,6 +2698,8 @@
                     <button id="iconSet" class="promocodeButton" style="border: 2px solid white"></button>
                     <p id="notationTitle" style="color: pink" i18n="settings.currentNotation"></p>
                     <button id="notation" class="promocodeButton" style="border: 2px solid white"></button>
+                    <p id="statSymbolTitle" style="color: pink" i18n="settings.statSymbol"></p>
+                    <button id="statSymbols" class="promocodeButton" style="border: 2px solid white"></button>
                 </div>
                 <div id="exportButtons">
                     <p id="quarktimerdisplay" class="tightText" style="color: gold"></p>
@@ -2712,32 +2712,8 @@
                     </div>
                     <button id="exportgame" style="border:2px solid green" i18n="settings.exportHere"></button>
                     <p id="exportinfo" class="tightText"></p>
-                    <label title="Use $VERSION$ for full version, $VER$ for version number,
-    $TIME$ for 24h time, $TIME12$ for 12h,
-    $YEAR$ or $Y$ for year, $MONTH$ or $M$ for month,
-    $DAY$ or $D$ for day, $HOUR$ or $H$ for hour,
-    $MINUTE$ or $MI$ for minute, $SECOND$ or $S$ for second,
-    $PERIOD$ or $P$ for period, $WEEKDAY$ or $W$ for weekday,
-    $DATE$ for date, $DATES$ for date seconds,
-    $TIMES$ for 24h time short,
-    $SING$ for singularity, $SINGS$ for singularity number,
-    $QUARK$ for quarks, $QUARKS$ for format quarks,
-    $GQ$ for golden quarks, $GQS$ for format golden quarks,
-    $STAGE$ for synergism stage">
-                        <input id="saveStringInput">
-                    </label>
-                    <p id="saveString" class="tightText" title="Use $VERSION$ for full version, $VER$ for version number,
-    $TIME$ for 24h time, $TIME12$ for 12h,
-    $YEAR$ or $Y$ for year, $MONTH$ or $M$ for month,
-    $DAY$ or $D$ for day, $HOUR$ or $H$ for hour,
-    $MINUTE$ or $MI$ for minute, $SECOND$ or $S$ for second,
-    $PERIOD$ or $P$ for period, $WEEKDAY$ or $W$ for weekday,
-    $DATE$ for date, $DATES$ for date seconds,
-    $TIMES$ for 24h time short,
-    $SING$ for singularity, $SINGS$ for singularity number,
-    $QUARK$ for quarks, $QUARKS$ for format quarks,
-    $GQ$ for golden quarks, $GQS$ for format golden quarks,
-    $STAGE$ for synergism stage"></p>
+                    <input id="saveStringInput">
+                    <p id="saveString" class="tightText"></p>
                     <p id="importgame" class="tightText" style="color: limegreen" i18n="settings.loadGameBelow"></p>
                     <label id="importFileButton" for="importfile" style="font-size: 0.9em; line-height: 1.4em;" i18n="settings.loadFromFile"></label>
                     <input type="file" id="importfile" style="display: none">
@@ -2801,6 +2777,7 @@
                 <button class="statsNerds reincarnationunlock" id="kQuarkMult" style="border: 2px solid white" i18n="statistics.subtabs.quarkMult"></button>
                 <button class="statsNerds reincarnationunlock" id="kGSpeedMultIgnoreDR" style="border: 2px solid blue" i18n="statistics.subtabs.gSpeedMultIgnoreDR"></button>
                 <button class="statsNerds prestigeunlock" id="kGSpeedMult" style="border: 2px solid blue" i18n="statistics.subtabs.gSpeedMult"></button>
+                <button class="statsNerds chal8" id="kAntSpeedMult" style="border: 2px solid crimson" i18n="statistics.subtabs.antSpeedMult"></button>
                 <button class="statsNerds chal8" id="kAntSacrificeMult" style="border: 2px solid burlywood" i18n="statistics.subtabs.antSacrificeMult"></button>
                 <button class="statsNerds chal9" id="kTalismanRuneBonusMult" style="border: 2px solid green" i18n="statistics.subtabs.talismanRuneBonusMult"></button>
                 <button class="statsNerds ascendunlock" id="kASCMult" style="border: 2px solid orange" i18n="statistics.subtabs.ascMult"></button>
@@ -2871,6 +2848,10 @@
 
             <div id="obtainiumMultiplierStats" class="statContainer" style="display: none;" aria-live="polite">
                 <p id="obtainiumStatTitle" class="statPortion" style="font-size: 1.2em; color:pink" i18n="statistics.obtainiumMultiplierStats.title"></p>
+            </div>
+
+            <div id="antSpeedMultStats" class="statContainer" style="display: none;" aria-live="polite">
+                <p id="antSpeedMultStatTitle" class="statPortion" style="font-size: 1.2em; color:crimson" i18n="statistics.antSpeedMultStats.title"></p>
             </div>
 
             <div id="antSacrificeMultStats" class="statContainer" style="display: none;" aria-live="polite">
@@ -3583,13 +3564,60 @@
 
     <div id="singularity">
         <div id="singularityTabsToggle">
-            <button id="toggleSingularitySubTab1" class="active-subtab" style="border: 2px solid silver; color: white;" i18n="tabs.main.shop"></button>
-            <button id="toggleSingularitySubTab2" style="border: 2px solid orange; color: white" i18n="tabs.singularity.perks-penalties"></button>
-            <button id="toggleSingularitySubTab3" class="octeracts" style="border: 2px solid blue; color: white" i18n="tabs.singularity.octeracts"></button>
-            <button id="toggleSingularitySubTab4" class="singChallenges" style="border: 2px solid #ffbf00; color: gold" i18n="tabs.singularity.ambrosia"></button>
+            <button id="toggleSingularitySubTab1" class="active-subtab" style="border: 2px solid silver; color: white;" i18n="tabs.singularity.info"></button>
+            <button id="toggleSingularitySubTab2" style="border: 2px solid gold; color: white;" i18n="tabs.singularity.goldenQuarks"></button>
+            <button id="toggleSingularitySubTab3" style="border: 2px solid orange; color: white" i18n="tabs.singularity.perks-penalties"></button>
+            <button id="toggleSingularitySubTab4" class="octeracts" style="border: 2px solid blue; color: white" i18n="tabs.singularity.octeracts"></button>
+            <button id="toggleSingularitySubTab5" class="singChallenges" style="border: 2px solid #ffbf00; color: gold" i18n="tabs.singularity.ambrosia"></button>
         </div>
 
         <div id="singularityContainer1">
+            <div id="lockedSingularityElevator" class="singularityElevatorContainer" style="border: 2px solid gray">
+                <p i18n="singularity.elevator.lockedTitle"></p>
+                <p id="lockedElevatorDescription" i18n="singularity.elevator.lockedDescription"></p>
+            </div>
+
+            <div id="singularityElevator" class="singularityElevatorContainer">
+                <h3 class="singularityGradient gradientText" i18n="singularity.elevator.title"></h3>
+                <p id="elevatorDescription" i18n="singularity.elevator.description" i18n-options="target:0"></p>
+
+                <div class="lookaheadInfo">
+                    <p id="highestSingularity" i18n="singularity.elevator.highestSingularity"></p>
+                    <p id="maxLookahead" i18n="singularity.elevator.maxLookahead"></p>
+                    <p id="lookahead" i18n="singularity.elevator.lookahead"></p>
+                    <p id="extraLookahead" i18n="singularity.elevator.lookaheadExtra"></p>
+                </div>
+
+                <div class="elevatorControls">
+                    <div class="elevatorTargetSection">
+                        <label for="elevatorTargetInput" i18n="singularity.elevator.selectTarget"></label>
+                        <input type="number" id="elevatorTargetInput" min="1" max="1" value="1" class="elevatorInput">
+                    </div>
+
+                    <div class="elevatorButtonSection">
+                        <button id="elevatorTeleportButton" class="elevatorButton" i18n="singularity.elevator.teleportButton" i18n-options="target:1"></button>
+                    </div>
+
+                    <div class="elevatorLockSection">
+                        <h3 id="nextSingularityInfo" class="elevatorLockStatus singularityGradient gradientText" i18n="singularity.elevator.nextSingInfo"></h3>
+                        <hr class="mediumHorizontalLine">
+                        <p id="elevatorLockStatus" class="elevatorLockStatus"></p>
+                        <div id="elevatorSettings">
+                            <label class="elevatorToggle">
+                                <input type="checkbox" id="elevatorLockToggle">
+                                <p i18n="singularity.elevator.lockToggle"></p>
+                            </label>
+                            <label class="elevatorToggle" id="elevatorSlowClimbLabel">
+                                <input type="checkbox" id="elevatorSlowClimbToggle">
+                                <p i18n="singularity.elevator.slowClimbToggle"></p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="singularityContainer2">
             <div id="singularityUpgradeContainer">
                 <div id="goldenQuarksDisplay">
                     <img src="Pictures/Default/GoldenQuark.png" width="32" height="32" loading="lazy">
@@ -3840,7 +3868,7 @@
             </div>
         </div>
 
-        <div id="singularityContainer2" style="display: none;">
+        <div id="singularityContainer3" style="display: none;">
             <div id="singularityInfo" class="singularityContainer">
                 <p id="singularityPenaltiesMultiline"></p>
                 <div id="singularityPerkContainer">
@@ -3859,7 +3887,7 @@
             </div>
         </div>
 
-        <div id="singularityContainer3" style="display: none;">
+        <div id="singularityContainer4" style="display: none;">
             <div id="singularityOcteracts" class="singularityContainer">
                 <div id="octeractsDisplay">
                     <img src="Pictures/Default/Octeract.png" loading="lazy">
@@ -4027,7 +4055,7 @@
             </div>
         </div>
 
-        <div id="singularityContainer4" style="display: none;">
+        <div id="singularityContainer5" style="display: none;">
             <div id="singularityAmbrosia" class="singularityContainer">
                 <div id="ambrosiaDisplay" class="Exalt1x1">
                     <img src="Pictures/Default/Ambrosia.png" loading="lazy">
@@ -4517,14 +4545,22 @@
             </label>
           </section>
 
-          <button id="checkout" type="submit">Checkout</button>
-          <div id="checkout-paypal"></div>
-          <button id="closeCart" type="button">Close</button>
+          <div id="checkout-buttons">
+            <button id="checkout" type="submit" i18n="tabs.pseudocoins.checkoutStripe"></button>
+            <button id="checkout-nowpayments" type="submit" i18n="tabs.pseudocoins.checkoutNowPayments"></button>
+            <div id="checkout-paypal"></div>
+          </div>
         </div>
       </div>
       <div id="merchContainer">
         <a href="https://merch.synergism.cc">Go to Merch Site</a>
         <div id="slideshows"></div>
+      </div>
+      <div id="supportContainer">
+        <span i18n="tabs.pseudocoins.support"></span>
+        <a href="mailto:support@synergism.cc">E-Mail support@synergism.cc</a>
+        <a href="https://discord.com/users/267774648622645249" target="_blank" rel="noopener noreferrer" i18n="tabs.pseudocoins.khafraDiscord"></a>
+        <a href="https://discord.com/users/462036739075342336" target="_blank" rel="noopener noreferrer" i18n="tabs.pseudocoins.platonicDiscord"></a>
       </div>
     </div>
 </body>

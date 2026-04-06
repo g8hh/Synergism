@@ -1,9 +1,19 @@
-import { loadScript } from '@paypal/paypal-js'
-import { prod } from '../Config'
-import { Alert, Confirm, Notification } from '../UpdateHTML'
-import { memoize } from '../Utility'
+import { type FUNDING_SOURCE, loadScript } from '@paypal/paypal-js'
+import i18next from 'i18next'
+import { isSynergismCC, platform, prod } from '../Config'
+import { Alert, Notification } from '../UpdateHTML'
+import { assert, memoize } from '../Utility'
 import { products, subscriptionProducts } from './CartTab'
-import { addToCart, clearCart, getPrice, getProductsInCart, getQuantity, removeFromCart } from './CartUtil'
+import {
+  addToCart,
+  calculateGrossPrice,
+  clearCart,
+  getPrice,
+  getProductsInCart,
+  getQuantity,
+  removeFromCart
+} from './CartUtil'
+import { initializePayPal_Subscription } from './SubscriptionsSubtab'
 import { updatePseudoCoins } from './UpgradesSubtab'
 
 const tab = document.querySelector<HTMLElement>('#pseudoCoins > #cartContainer')!
@@ -11,6 +21,7 @@ const form = tab.querySelector('div.cartList')!
 
 const checkoutStripe = form.querySelector<HTMLElement>('button#checkout')
 const checkoutNowPayments = form.querySelector<HTMLElement>('button#checkout-nowpayments')
+const tosSection = form.querySelector('section#tosSection')!
 const radioTOSAgree = form.querySelector<HTMLInputElement>('section > input[type="radio"]')!
 const totalCost = form.querySelector('p#totalCost')
 const itemList = form.querySelector('#itemList')!
@@ -20,7 +31,7 @@ const formatter = Intl.NumberFormat('en-US', {
   currency: 'USD'
 })
 
-export const initializeCheckoutTab = memoize(() => {
+const initializeCheckoutTab = memoize(() => {
   itemList.insertAdjacentHTML(
     'afterend',
     products.map((product) => (`
@@ -66,15 +77,6 @@ export const initializeCheckoutTab = memoize(() => {
         : 'https://synergism.cc/stripe/create-checkout-session'
     } else if (e.target === checkoutNowPayments) {
       url = 'https://synergism.cc/now-payments/checkout'
-
-      const confirmed = await Confirm(
-        'NowPayments is experimental and may have issues. The minimum amount depends on the crypto you choose to pay with. Do you want to continue?'
-      )
-
-      if (!confirmed) {
-        reset()
-        return
-      }
     } else {
       Notification('You clicked on something that I don\'t know.')
       reset()
@@ -92,13 +94,67 @@ export const initializeCheckoutTab = memoize(() => {
           Notification(json.error)
         }
       })
+      .catch((err: Error) => {
+        console.error(`Error checking out (${url})`, err)
+
+        if (isSynergismCC) {
+          Alert(i18next.t('pseudoCoins.error.checkoutGeneric', { error: err.message }))
+        } else {
+          Alert(i18next.t('pseudoCoins.error.checkoutNotSynergismCC'))
+        }
+      })
       .finally(reset)
   }
 
-  checkoutStripe?.addEventListener('click', submitCheckout)
-  checkoutNowPayments?.addEventListener('click', submitCheckout)
+  async function submitCheckoutSteam (_e: MouseEvent) {
+    const { submitSteamMicroTxn } = await import('../steam/microtxn')
 
-  initializePayPal('#checkout-paypal')
+    const fd = new FormData()
+
+    for (const product of getProductsInCart()) {
+      fd.set(product.id, `${product.quantity}`)
+    }
+
+    fd.set('tosAgree', radioTOSAgree.checked ? 'on' : 'off')
+
+    const success = await submitSteamMicroTxn(fd)
+
+    if (success) {
+      Notification('Transaction completed successfully!')
+      clearCart()
+      updateItemList()
+      updateTotalPriceInCart()
+      exponentialPseudoCoinBalanceCheck()
+    }
+  }
+
+  // Remove rainbow border highlight when TOS is clicked
+  radioTOSAgree.addEventListener('change', () => {
+    tosSection.classList.remove('rainbow-border-highlight')
+  })
+
+  if (platform !== 'steam') {
+    checkoutStripe?.addEventListener('click', submitCheckout)
+    checkoutNowPayments?.addEventListener('click', submitCheckout)
+
+    initializePayPal_OneTime('#checkout-paypal')
+  } else {
+    const checkoutButtonsContainer = tab.querySelector('#checkout-buttons')!
+
+    // Hide Stripe/PayPal/NowPayments checkout buttons
+    checkoutButtonsContainer.querySelectorAll('*').forEach((el) => el.classList.add('none'))
+
+    // Add Steam checkout button
+    const checkoutSteam = document.createElement('button')
+    checkoutSteam.id = 'checkout-steam'
+    checkoutSteam.type = 'submit'
+    checkoutSteam.textContent = 'Checkout with Steam'
+    checkoutSteam.addEventListener('click', (ev) => {
+      checkoutSteam.disabled = true
+      submitCheckoutSteam(ev).finally(() => checkoutSteam.disabled = false)
+    })
+    checkoutButtonsContainer.appendChild(checkoutSteam)
+  }
 })
 
 function addItem (e: MouseEvent) {
@@ -174,58 +230,65 @@ export const clearCheckoutTab = () => {
 }
 
 const updateTotalPriceInCart = () => {
-  totalCost!.textContent = `${formatter.format(getPrice() / 100)} USD`
+  totalCost!.textContent = `${formatter.format(calculateGrossPrice(getPrice() / 100))} USD`
 }
 
-async function initializePayPal (selector: string | HTMLElement) {
-  try {
-    const paypal = await loadScript({
-      clientId: 'AS1HYTVcH3Kqt7IVgx7DkjgG8lPMZ5kyPWamSBNEowJ-AJPpANNTJKkB_mF0C4NmQxFuWQ9azGbqH2Gr',
-      disableFunding: ['paylater', 'credit', 'card', 'venmo']
-    })
+/**
+ * https://stackoverflow.com/a/69024269
+ */
+async function initializePayPal_OneTime (selector: string | HTMLElement) {
+  assert(platform !== 'steam', 'Cannot use PayPal on steam')
 
-    paypal?.Buttons?.({
-      style: {
-        shape: 'rect',
-        layout: 'vertical',
-        color: 'gold',
-        label: 'paypal'
-      },
+  const paypal = await loadScript({
+    clientId: 'AS1HYTVcH3Kqt7IVgx7DkjgG8lPMZ5kyPWamSBNEowJ-AJPpANNTJKkB_mF0C4NmQxFuWQ9azGbqH2Gr',
+    disableFunding: ['paylater', 'credit', 'card'] satisfies FUNDING_SOURCE[],
+    enableFunding: ['venmo'] satisfies FUNDING_SOURCE[],
+    dataNamespace: 'paypal_one_time'
+  })
 
-      async createOrder () {
-        const fd = new FormData()
+  paypal?.Buttons?.({
+    style: {
+      shape: 'rect',
+      layout: 'vertical',
+      color: 'gold',
+      label: 'paypal'
+    },
 
-        for (const product of getProductsInCart()) {
-          if (product.quantity > 0 && product.subscription) {
-            throw new TypeError('skipping')
-          }
+    async createOrder () {
+      const fd = new FormData()
 
-          fd.set(product.id, `${product.quantity}`)
+      for (const product of getProductsInCart()) {
+        if (product.quantity > 0 && product.subscription) {
+          throw new TypeError('skipping')
         }
 
-        fd.set('tosAgree', radioTOSAgree.checked ? 'on' : 'off')
-        const url = 'https://synergism.cc/paypal/orders/create'
+        fd.set(product.id, `${product.quantity}`)
+      }
 
-        const response = await fetch(url, {
-          method: 'POST',
-          body: fd
-        })
+      fd.set('tosAgree', radioTOSAgree.checked ? 'on' : 'off')
+      const url = 'https://synergism.cc/paypal/orders/create'
 
-        const orderData = await response.json()
+      const response = await fetch(url, {
+        method: 'POST',
+        body: fd
+      })
 
-        if (orderData.id) {
-          return orderData.id
-        }
+      const orderData = await response.json()
 
-        const errorDetail = orderData?.details?.[0]
-        const errorMessage = errorDetail
-          ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-          : JSON.stringify(orderData)
+      if (orderData.id) {
+        return orderData.id
+      }
 
-        throw new Error(errorMessage)
-      },
+      const errorDetail = orderData?.details?.[0]
+      const errorMessage = errorDetail
+        ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
+        : JSON.stringify(orderData)
 
-      async onApprove (data, actions) {
+      throw new Error(errorMessage)
+    },
+
+    async onApprove (data, actions) {
+      try {
         const url = `https://synergism.cc/paypal/orders/${data.orderID}/capture`
 
         const response = await fetch(url, { method: 'POST' })
@@ -240,9 +303,7 @@ async function initializePayPal (selector: string | HTMLElement) {
           return actions.restart()
         } else if (errorDetail) {
           // (2) Other non-recoverable errors -> Show a failure message
-          throw new Error(
-            `${errorDetail.description} (${orderData.debug_id})`
-          )
+          throw new Error(`${errorDetail.description} (${orderData.debug_id})`)
         } else if (!orderData.purchase_units) {
           throw new Error(JSON.stringify(orderData))
         } else {
@@ -263,30 +324,62 @@ async function initializePayPal (selector: string | HTMLElement) {
 
           exponentialPseudoCoinBalanceCheck()
         }
-      },
-
-      onError (error) {
-        Notification('An error with PayPal happened. More info in console.')
-        console.log(error)
+      } finally {
+        initializePayPal_Subscription()
       }
-    }).render(selector)
-  } catch (e) {
-    console.error(e)
-  }
+    },
+
+    onError (error) {
+      if (error instanceof Error) {
+        try {
+          const message = JSON.parse(error.message)
+
+          if (message.error) {
+            if (!radioTOSAgree.checked) {
+              tosSection.classList.add('rainbow-border-highlight')
+            }
+
+            Notification(`An error with PayPal happened. ${message.error}`)
+            return
+          }
+        } catch {
+        }
+      }
+
+      const message = []
+
+      for (const [key, value] of Object.entries(error)) {
+        message.push(`${key}: ${value}`)
+      }
+
+      if (isSynergismCC) {
+        Notification(i18next.t('pseudoCoins.error.paypalGeneric', { error: message.join(', ') }))
+      } else {
+        Notification(i18next.t('pseudoCoins.error.paypalNotSynergismCC'))
+      }
+
+      console.log({ error })
+    },
+
+    onCancel () {
+      initializePayPal_Subscription()
+    }
+  }).render(selector)
 }
 
 const sleep = (delay: number) => new Promise((r) => setTimeout(r, delay))
 
 async function exponentialPseudoCoinBalanceCheck () {
-  const delays = [0, 30_000, 60_000, 120_000, 180_000, 240_000, 300_000]
-  const lastCoinAmount = 0
+  const delays = [15_000, 30_000, 60_000, 120_000, 180_000, 240_000, 300_000]
+  const lastCoinAmount = await updatePseudoCoins()
 
+  /* eslint-disable no-await-in-loop */
   for (const delay of delays) {
     await sleep(delay)
-    const coins = await updatePseudoCoins()
 
-    if (lastCoinAmount !== coins) {
+    if (lastCoinAmount !== await updatePseudoCoins()) {
       break
     }
   }
+  /* eslint-enable no-await-in-loop */
 }

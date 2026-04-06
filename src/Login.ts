@@ -5,15 +5,17 @@ import i18next from 'i18next'
 import { z } from 'zod'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { calculateAmbrosiaGenerationSpeed, calculateOffline, calculateRedAmbrosiaGenerationSpeed } from './Calculate'
+import { isSynergismCC, platform } from './Config'
 import { updateGlobalsIsEvent } from './Event'
 import { addTimers, automaticTools } from './Helper'
 import { exportData, importSynergism, saveFilename } from './ImportExport'
+import { updateLotusDisplay } from './purchases/ConsumablesTab'
 import { updatePseudoCoins } from './purchases/UpgradesSubtab'
-import { QuarkHandler, refreshQuarkBonus, setQuarkBonus } from './Quark'
+import { QuarkHandler, setPersonalQuarkBonus } from './Quark'
 import { updatePrestigeCount, updateReincarnationCount, updateTranscensionCount } from './Reset'
 import { format, player, saveSynergy } from './Synergism'
-import { Alert, Notification } from './UpdateHTML'
-import { assert, btoa } from './Utility'
+import { Alert, Confirm, Notification } from './UpdateHTML'
+import { assert, btoa, displayHTMLError, isomorphicDecode, memoize } from './Utility'
 
 export type PseudoCoinConsumableNames = 'HAPPY_HOUR_BELL'
 
@@ -57,24 +59,42 @@ const BOOSTER = '677272036820910098'
 // Const for Event Roles.
 const THANKSGIVING_2023 = '1177364773986386021'
 const THANKSGIVING_2024 = '1311161342987603979'
+const THANKSGIVING_2025 = '1443340983012954332'
 const CONDUCTOR_2023 = '1178131525049520138'
 const CONDUCTOR_2024 = '1311164406209450064'
+const CONDUCTOR_2025 = '1444405599600115875'
 const EIGHT_LEAF = '983484264865730560'
 const TEN_LEAF = '1045560188574380042'
 const SMITH_INCARNATE = '1045560846169935922'
 const SMITH_GOD = '1045562390995009606'
 const GOLDEN_SMITH_GOD = '1178125584061173800'
 const DIAMOND_SMITH_MESSIAH = '1311165096378105906'
+const MYTHOS_SMITH = '1443012119455994046'
 
 let ws: WebSocket | undefined
 let loggedIn = false
 let tips = 0
+let ownedLotus = 0
+let usedLotus = 0
+let subscription: SubscriptionMetadata = null
+let lotusTimeExpiresAt: number | undefined = undefined
 
 const cloudSaves: Save[] = []
 
-export const isLoggedIn = () => loggedIn
+const isLoggedIn = () => loggedIn
+
 export const getTips = () => tips
 export const setTips = (newTips: number) => tips = newTips
+
+export const getOwnedLotus = () => ownedLotus
+export const getUsedLotus = () => usedLotus
+export const getLotusTimeExpiresAt = () => lotusTimeExpiresAt
+
+export const getSubMetadata = () => subscription
+// For testing purposes only
+export const setSubMetadata = (newSub: SubscriptionMetadata) => {
+  subscription = newSub
+}
 
 export const allDurableConsumables: Record<PseudoCoinConsumableNames, Consumable> = {
   HAPPY_HOUR_BELL: {
@@ -109,8 +129,7 @@ const messageSchema = z.preprocess(
     z.object({
       type: z.literal('consumable-ended'),
       consumable: z.string(),
-      name: z.string(),
-      endedAt: z.number().int()
+      name: z.string()
     }),
     /** Information about all currently active consumables, received when the connection opens. */
     z.object({
@@ -120,7 +139,12 @@ const messageSchema = z.preprocess(
         internalName: z.string(),
         endsAt: z.number().int()
       }).array(),
-      tips: z.number().int().nonnegative()
+      tips: z.number().int().nonnegative(),
+      inventory: z.object({
+        type: z.literal('LOTUS'),
+        amount: z.number().int().gte(0),
+        used: z.number().int().gte(0)
+      }).array()
     }),
     /** Received after the *user* successfully redeems a consumable. */
     z.object({ type: z.literal('thanks') }),
@@ -136,6 +160,27 @@ const messageSchema = z.preprocess(
       consumableName: z.string(),
       id: z.string().uuid(),
       amount: z.number().int()
+    }),
+
+    /** Received when a player *buys* a Lotus Package */
+    z.object({
+      type: z.literal('lotus'),
+      consumableName: z.string(),
+      amount: z.number().int()
+    }),
+
+    /** Received when a player *consumes* a Lotus */
+    z.object({
+      type: z.literal('applied-lotus'),
+      remaining: z.number(),
+      lifetimePurchased: z.number()
+    }),
+
+    z.object({ type: z.literal('lotus-ended') }),
+
+    z.object({
+      type: z.literal('lotus-active'),
+      remainingMs: z.number()
     }),
 
     /** A warning - should *NOT* disconnect from the WebSocket */
@@ -195,21 +240,29 @@ interface AccountMetadata {
   discord: RawMember
   patreon: PatreonUser
   email: { email: string; verified: boolean }
+  steam: { avatar: string; profileURL: string; username: string }
   none: null
 }
 
 interface BonusTypes {
-  quarks: number
+  quark: number
 }
 
+export type SubscriptionProvider = 'paypal' | 'stripe' | 'patreon' | 'steam'
+
+export type SubscriptionMetadata = {
+  provider: SubscriptionProvider
+  tier: number
+  endDate: string
+} | null
+
 interface SynergismUserAPIResponse<T extends keyof AccountMetadata> {
-  personalBonus: number
-  globalBonus: number
   member: AccountMetadata[T]
   accountType: T
   bonus: BonusTypes
-  subscriptionTier: number
   error?: unknown
+  subscription: SubscriptionMetadata
+  linkedAccounts: string[]
 }
 
 const isDiscordAccount = (
@@ -218,68 +271,66 @@ const isDiscordAccount = (
 const isPatreonAccount = (
   account: SynergismUserAPIResponse<keyof AccountMetadata>
 ): account is SynergismUserAPIResponse<'patreon'> => account.accountType === 'patreon'
+const isSteamAccount = (
+  account: SynergismUserAPIResponse<keyof AccountMetadata>
+): account is SynergismUserAPIResponse<'steam'> => account.accountType === 'steam'
 const isEmailAccount = (
   account: SynergismUserAPIResponse<keyof AccountMetadata>
 ): account is SynergismUserAPIResponse<'email'> => account.accountType === 'email'
 const hasAccount = (
   account: SynergismUserAPIResponse<keyof AccountMetadata>
-): account is SynergismUserAPIResponse<'discord' | 'patreon' | 'email'> => account.accountType !== 'none'
+): account is SynergismUserAPIResponse<Exclude<keyof AccountMetadata, 'none'>> => account.accountType !== 'none'
 
-export async function handleLogin () {
-  const subtabElement = document.querySelector('#accountSubTab div#left.scrollbarX')!
-  const currentBonus = DOMCacheGetOrSet('currentBonus')
-
-  const logoutElement = document.getElementById('logoutButton')
-  if (logoutElement !== null) {
-    logoutElement.addEventListener('click', logout, { once: true })
-    document.getElementById('accountSubTab')?.appendChild(logoutElement)
-  }
-
-  const response = await fetch('https://synergism.cc/api/v1/users/me', { credentials: 'include' }).catch(
-    () =>
-      new Response(
-        JSON.stringify(
-          {
-            member: null,
-            globalBonus: 0,
-            personalBonus: 0,
-            accountType: 'none',
-            bonus: { quarks: 0 },
-            subscriptionTier: 0
-          } satisfies SynergismUserAPIResponse<'none'>
-        ),
-        { status: 401 }
-      )
+async function fetchMeRoute () {
+  const fallback = new Response(
+    JSON.stringify(
+      {
+        member: null,
+        accountType: 'none',
+        bonus: { quark: 0 },
+        subscription: null,
+        linkedAccounts: []
+      } satisfies SynergismUserAPIResponse<'none'>
+    ),
+    { status: 401 }
   )
 
-  const account = await response.json() as SynergismUserAPIResponse<keyof AccountMetadata>
-  const { globalBonus, personalBonus, subscriptionTier } = account
+  return await fetch('https://synergism.cc/api/v1/users/me', { credentials: 'same-origin' }).catch(() => fallback)
+}
 
-  setQuarkBonus(personalBonus, globalBonus)
-  setInterval(() => refreshQuarkBonus(), 1000 * 60 * 15)
-  player.worlds = new QuarkHandler(Number(player.worlds))
-  loggedIn = hasAccount(account)
+export async function handleLogin () {
+  generateSubtabBrowser: {
+    const subtabElement = document.querySelector('#accountSubTab div#left.scrollbarX')!
 
-  currentBonus.textContent = i18next.t('settings.quarkBonusSimple', { globalBonus })
+    const logoutElement = document.getElementById('logoutButton')
+    if (logoutElement !== null) {
+      logoutElement.addEventListener('click', logout, { once: true })
+      document.getElementById('accountSubTab')?.appendChild(logoutElement)
+    }
 
-  // biome-ignore lint/suspicious/noConfusingLabels: it's not confusing or suspicious
-  generateSubtab: {
-    if (location.hostname !== 'synergism.cc') {
-      // TODO: better error, make link clickable, etc.
-      subtabElement.textContent = 'Login is not available here, go to https://synergism.cc instead!'
+    const response = await fetchMeRoute()
+
+    const account = await response.json() as SynergismUserAPIResponse<keyof AccountMetadata>
+    const { bonus, subscription: sub, linkedAccounts } = account
+
+    setPersonalQuarkBonus(bonus.quark)
+    player.worlds = new QuarkHandler(Number(player.worlds))
+
+    loggedIn = hasAccount(account)
+    subscription = sub
+
+    if (!isSynergismCC && platform === 'browser') {
+      subtabElement.innerHTML = i18next.t('account.loginNotAvailable')
     } else if (hasAccount(account)) {
-      if (Object.keys(account.member).length === 0) {
-        subtabElement.innerHTML = `You are logged in, but your profile couldn't be retrieved from Discord or Patreon.`
-        break generateSubtab
+      if (account.member == null || Object.keys(account.member).length === 0) {
+        subtabElement.innerHTML = i18next.t('account.loggedInBut')
+        break generateSubtabBrowser
       }
 
       if (account.error) {
-        subtabElement.innerHTML =
-          `You are logged in, but retrieving your profile yielded the following error: ${account.error}`
-        break generateSubtab
+        subtabElement.innerHTML = i18next.t('account.loggedInButError', { error: account.error })
+        break generateSubtabBrowser
       }
-
-      currentBonus.textContent = i18next.t('settings.quarkBonusExtended', { globalBonus, personalBonus })
 
       let user: string | null = null
       const discord = isDiscordAccount(account)
@@ -290,6 +341,8 @@ export async function handleLogin () {
         user = account.member.email
       } else if (isPatreonAccount(account)) {
         user = account.member?.data?.attributes?.email ?? null
+      } else if (isSteamAccount(account)) {
+        user = account.member.username
       }
 
       if (user !== null) {
@@ -299,73 +352,210 @@ export async function handleLogin () {
       const boosted = discord && (Boolean(account.member?.premium_since) || account.member?.roles.includes(BOOSTER))
       // It is possible for someone to have the roles through the Patreon integration with Discord, yet not have their
       // patreon linked to their Synergism (Discord/email) account.
-      const hasTier1 = subscriptionTier === 1 || (discord && account.member.roles?.includes(TRANSCENDED_BALLER))
-      const hasTier2 = subscriptionTier === 2 || (discord && account.member.roles?.includes(REINCARNATED_BALLER))
-      const hasTier3 = subscriptionTier === 3 || (discord && account.member.roles?.includes(ASCENDED_BALLER))
-      const hasTier4 = subscriptionTier === 4 || (discord && account.member.roles?.includes(OMEGA_BALLER))
+      const hasTier1 = (sub?.tier ?? 0) >= 1 || (discord && account.member.roles?.includes(TRANSCENDED_BALLER))
+      const hasTier2 = (sub?.tier ?? 0) >= 2 || (discord && account.member.roles?.includes(REINCARNATED_BALLER))
+      const hasTier3 = (sub?.tier ?? 0) >= 3 || (discord && account.member.roles?.includes(ASCENDED_BALLER))
+      const hasTier4 = (sub?.tier ?? 0) >= 4 || (discord && account.member.roles?.includes(OMEGA_BALLER))
 
-      const checkMark = (n: number) => {
-        return `<span style="color: lime">[✔] {+${n}%}</span>`
+      const checkMark = '<span style="color: lime">[✔]</span>'
+      const exMark = '<span style="color: crimson">[✖]</span>'
+
+      const createLineHTML = (i18nKey: string, value: number, statusCheck: boolean, nameClasses: string[]) => {
+        const classesForName = ['bonus-line-name', ...nameClasses].join(' ')
+        const style = nameClasses.length > 0 ? '' : 'color: gold'
+        return `<div class="personal-bonus-line">
+          <span class="${classesForName}" style="${style}">${i18next.t(`account.bonuses.${i18nKey}`)}</span>
+          <span class="bonus-line-right">
+            <span class="bonus-line-value">+${value}%</span>
+            <span class="bonus-line-status">${statusCheck ? checkMark : exMark}</span>
+          </span>
+        </div>`
       }
-
-      const exMark = '<span style="color: crimson">[✖] {+0%}</span>'
 
       subtabElement.innerHTML = `
-      ${user ? `Hello, ${user}` : 'Hello'}!\n
-      Your personal Quark bonus is ${format(personalBonus, 2, true)}%, computed by the following:
-      Donator Bonuses (Multiplicative with other bonuses):
-      <span style="color: orchid">Transcended Baller</span> [+2%] - ${hasTier1 ? checkMark(2) : exMark}
-      <span style="color: green">Reincarnated Baller</span> [+3%] - ${hasTier2 ? checkMark(3) : exMark}
-      <span style="color: orange">ASCENDED Baller</span> [+4%] - ${hasTier3 ? checkMark(4) : exMark}
-      <span style="color: lightgoldenrodyellow">OMEGA Baller</span> [+5%] - ${hasTier4 ? checkMark(5) : exMark}
-      <span style="color: #f47fff">Discord Server Booster</span> [+1%] - ${boosted ? checkMark(1) : exMark}
+      ${user ? i18next.t('account.helloUser', { username: user }) : i18next.t('account.helloNoUser')}
+      ${i18next.t('account.personalQuarkBonus', { percent: format(bonus.quark, 2, true) })}
 
-      Event Bonuses:
-      <span style="color: #ffcc00">Thanksgiving 2023</span> [+0.2%] - ${
-        discord && account.member.roles?.includes(THANKSGIVING_2023) ? checkMark(0.2) : exMark
-      }
-      <span style="color: #ffcc00">Thanksgiving 2024</span> [+0.3%] - ${
-        discord && account.member.roles?.includes(THANKSGIVING_2024) ? checkMark(0.3) : exMark
-      }
-      <span style="color: #ffcc00">Conductor 2023</span> [+0.3%] - ${
-        discord && account.member.roles?.includes(CONDUCTOR_2023) ? checkMark(0.3) : exMark
-      }
-      <span style="color: #ffcc00">Conductor 2024</span> [+0.4%] - ${
-        discord && account.member.roles?.includes(CONDUCTOR_2024) ? checkMark(0.4) : exMark
-      }
-      <span style="color: #ffcc00">Eight Leaf</span> [+0.3%] - ${
-        discord && account.member.roles?.includes(EIGHT_LEAF) ? checkMark(0.3) : exMark
-      }
-      <span style="color: #ffcc00">Ten Leaf</span> [+0.4%] - ${
-        discord && account.member.roles?.includes(TEN_LEAF) ? checkMark(0.4) : exMark
-      }
-      <span style="color: #ffcc00">Smith Incarnate</span> [+0.6%] - ${
-        discord && account.member.roles?.includes(SMITH_INCARNATE) ? checkMark(0.6) : exMark
-      }
-      <span style="color: #ffcc00">Smith God</span> [+0.7%] - ${
-        discord && account.member.roles?.includes(SMITH_GOD) ? checkMark(0.7) : exMark
-      }
-      <span style="color: #ffcc00">Golden Smith God</span> [+0.8%] - ${
-        discord && account.member.roles?.includes(GOLDEN_SMITH_GOD) ? checkMark(0.8) : exMark
-      }
-      <span style="color: #ffcc00">Diamond Smith Messiah</span> [+1%] - ${
-        discord && account.member.roles?.includes(DIAMOND_SMITH_MESSIAH) ? checkMark(1.2) : exMark
+      ${i18next.t('account.subscriptionBonuses')}
+      ${
+        createLineHTML('transcendedBaller', 2, hasTier1, ['gradientText', 'transcendedBallerGradient'])
+        + createLineHTML('reincarnatedBaller', 3, hasTier2, ['gradientText', 'reincarnatedBallerGradient'])
+        + createLineHTML('ascendedBaller', 4, hasTier3, ['gradientText', 'ascendedBallerGradient'])
+        + createLineHTML('omegaBaller', 5, hasTier4, ['rainbowText'])
+        + createLineHTML('serverBooster', 1, boosted, ['gradientText', 'lotusGradient'])
+      }`
+
+      if (linkedAccounts.includes('discord')) {
+        subtabElement.innerHTML += `
+          <div class="event-bonuses-header" id="eventBonusesHeader">
+            <span class="chevron" id="eventBonusesChevron">▼</span>
+            <span>${i18next.t('account.eventBonuses')}:</span>
+          </div>
+          <div class="event-bonuses-content" id="eventBonusesContent">
+          ${i18next.t('account.eventBonusMulti')}     
+          ${
+          createLineHTML('thanksgiving2023', 0.2, discord && account.member.roles?.includes(THANKSGIVING_2023), [])
+          + createLineHTML('thanksgiving2024', 0.3, discord && account.member.roles?.includes(THANKSGIVING_2024), [])
+          + createLineHTML('thanksgiving2025', 0.4, discord && account.member.roles?.includes(THANKSGIVING_2025), [])
+          + createLineHTML('conductor2023', 0.3, discord && account.member.roles?.includes(CONDUCTOR_2023), [])
+          + createLineHTML('conductor2024', 0.4, discord && account.member.roles?.includes(CONDUCTOR_2024), [])
+          + createLineHTML('conductor2025', 0.5, discord && account.member.roles?.includes(CONDUCTOR_2025), [])
+          + createLineHTML('eightLeaf', 0.3, discord && account.member.roles?.includes(EIGHT_LEAF), [])
+          + createLineHTML('tenLeaf', 0.4, discord && account.member.roles?.includes(TEN_LEAF), [])
+          + createLineHTML('smithIncarnate', 0.6, discord && account.member.roles?.includes(SMITH_INCARNATE), [])
+          + createLineHTML('smithGod', 0.7, discord && account.member.roles?.includes(SMITH_GOD), [])
+          + createLineHTML('goldenSmithGod', 0.8, discord && account.member.roles?.includes(GOLDEN_SMITH_GOD), [])
+          + createLineHTML(
+            'diamondSmithMessiah',
+            1,
+            discord && account.member.roles?.includes(DIAMOND_SMITH_MESSIAH),
+            []
+          )
+          + createLineHTML('mythosSmith', 1.1, discord && account.member.roles?.includes(MYTHOS_SMITH), [])
+        }
+          </div>
+          ${i18next.t('account.lastButNotLeast')}
+          ${createLineHTML('yourself', 1, true, ['rainbowText'])}
+        `.trim()
+
+        // Add event listener for event bonuses dropdown toggle
+        const eventBonusesHeader = DOMCacheGetOrSet('eventBonusesHeader')
+        const eventBonusesContent = DOMCacheGetOrSet('eventBonusesContent')
+        const eventBonusesChevron = DOMCacheGetOrSet('eventBonusesChevron')
+
+        eventBonusesContent.style.display = 'none'
+        eventBonusesChevron.style.transform = 'rotate(-90deg)'
+
+        eventBonusesHeader.style.cursor = 'pointer'
+        eventBonusesHeader.addEventListener('click', () => {
+          const isCollapsed = eventBonusesContent.style.display === 'none'
+          eventBonusesContent.style.display = isCollapsed ? 'block' : 'none'
+          eventBonusesChevron.style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(-90deg)'
+        })
+      } else {
+        subtabElement.innerHTML += `
+          <div class="event-bonuses-content" id="eventBonusesContent">
+            <br>${i18next.t('account.eventBonusLink')}
+          </div>
+        `
       }
 
-      And Finally...
-      <span style="color: lime"> Being <span style="color: lightgoldenrodyellow"> YOURSELF! </span></span> [+1%] - ${
-        checkMark(1)
+      const allPlatforms = [
+        { name: 'discord', direct: false },
+        { name: 'patreon', direct: false },
+        { name: 'steam', direct: true }
+      ]
+
+      const unlinkedPlatforms = platform === 'steam'
+        ? allPlatforms.filter((p) => p.direct && !linkedAccounts.includes(p.name))
+        : allPlatforms.filter((p) => !linkedAccounts.includes(p.name))
+
+      if (unlinkedPlatforms.length > 0) {
+        const linkAccountsSection = document.createElement('div')
+
+        const buttonContainer = document.createElement('div')
+        buttonContainer.style.display = 'flex'
+        buttonContainer.style.flexWrap = 'wrap'
+        buttonContainer.style.gap = '10px'
+        buttonContainer.style.marginTop = '10px'
+        buttonContainer.style.justifyContent = 'center'
+
+        const platformConfig = {
+          discord: {
+            color: '#5865F2',
+            logo:
+              `<svg width="20" height="20" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="white"/>
+              </svg>`
+          },
+          patreon: {
+            color: '#FF424D',
+            logo:
+              `<svg width="20" height="20" viewBox="0 0 436 476" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                <path d="M436 143.371C436 64.203 373.797 2 294.629 2C215.461 2 153.258 64.203 153.258 143.371C153.258 222.539 215.461 284.742 294.629 284.742C373.797 284.742 436 222.539 436 143.371ZM0 474H74.8139V2H0V474Z" fill="white"/>
+              </svg>`
+          },
+          steam: {
+            color: '#1b2838',
+            logo:
+              `<svg width="20" height="20" viewBox="0 0 256 259" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                <path d="M127.779 0C60.42 0 5.24 52.412 0 119.014l68.724 28.674c5.937-4.073 13.095-6.467 20.803-6.467.682 0 1.356.021 2.023.054l31.18-45.58v-.639c0-25.366 20.47-46.011 45.634-46.011 25.164 0 45.634 20.645 45.634 46.05 0 25.405-20.47 46.05-45.634 46.05h-1.062l-44.633 32.143c0 .554.033 1.108.033 1.678 0 19.017-15.33 34.49-34.162 34.49-16.594 0-30.475-12.022-33.486-27.94L4.168 159.19C22.806 214.768 74.686 254.469 127.779 254.469c70.682 0 128.004-57.546 128.004-128.467C255.783 55.082 198.461 0 127.779 0" fill="white"/>
+                <path d="M81.281 197.267l-15.614-6.512c2.77 5.812 7.348 10.772 13.299 13.687 12.867 6.302 28.248.948 34.396-11.962 2.972-6.246 3.131-13.143.448-19.425-2.684-6.283-7.69-11.2-14.104-13.862-6.373-2.639-13.14-2.487-18.997-.206l16.136 6.723c9.484 3.976 13.987 14.971 10.058 24.564-3.93 9.593-14.809 14.123-24.293 10.147l-.329-.154zM213.083 95.686c0-16.908-13.639-30.644-30.408-30.644-16.77 0-30.408 13.736-30.408 30.644 0 16.907 13.638 30.643 30.408 30.643 16.77 0 30.408-13.736 30.408-30.643zm-53.457.04c0-12.803 10.263-23.173 22.93-23.173 12.666 0 22.93 10.37 22.93 23.173s-10.264 23.173-22.93 23.173c-12.667 0-22.93-10.37-22.93-23.173z" fill="white"/>
+              </svg>`
+          }
+        }
+
+        for (const unlinked of unlinkedPlatforms) {
+          const config = platformConfig[unlinked.name as keyof typeof platformConfig]
+          const button = document.createElement('button')
+          button.innerHTML = `${config.logo}${i18next.t(`account.link.${unlinked.name}`)}`
+          button.style.padding = '10px 20px'
+          button.style.cursor = 'pointer'
+          button.style.backgroundColor = config.color
+          button.style.color = 'white'
+          button.style.border = 'none'
+          button.style.borderRadius = '5px'
+          button.style.fontSize = '14px'
+          button.style.fontWeight = 'bold'
+          button.style.display = 'flex'
+          button.style.alignItems = 'center'
+          button.style.transition = 'opacity 0.2s'
+          button.addEventListener('mouseenter', () => {
+            button.style.opacity = '0.85'
+          })
+          button.addEventListener('mouseleave', () => {
+            button.style.opacity = '1'
+          })
+          button.addEventListener('click', async () => {
+            if (unlinked.direct) {
+              if (button.dataset.loading) return
+              button.dataset.loading = 'true'
+
+              if (platform === 'steam') {
+                const { getSessionTicket } = await import('./steam/steam')
+                const sessionTicket = await getSessionTicket()
+
+                if (!sessionTicket) {
+                  await Alert(i18next.t('account.steam.failedToVerify'))
+                  return
+                }
+
+                const directLoginResponse = await fetch(`https://synergism.cc/login/link-direct/${unlinked.name}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  credentials: 'include',
+                  body: JSON.stringify({ sessionTicket })
+                }).finally(() => {
+                  button.dataset.loading = ''
+                })
+
+                if (directLoginResponse.redirected || directLoginResponse.ok) {
+                  location.reload()
+                } else {
+                  await displayHTMLError(directLoginResponse)
+                }
+              }
+            } else {
+              if (platform === 'steam') {
+                const res = await fetch('https://synergism.cc/login/link-token', { credentials: 'include' })
+                const { token } = await res.json()
+                window.open(
+                  `https://synergism.cc/login?with=${unlinked.name}&link=true&platform=steam&link_token=${token}`,
+                  '_blank'
+                )
+              } else {
+                window.open(`https://synergism.cc/login?with=${unlinked.name}&link=true`, '_blank')
+              }
+            }
+          })
+          buttonContainer.appendChild(button)
+        }
+
+        linkAccountsSection.appendChild(buttonContainer)
+        subtabElement.appendChild(linkAccountsSection)
       }
-
-      The current maximum is 16%, by being a Discord server booster and an OMEGA Baller on Patreon!
-
-      More will be incorporated both for general accounts and supporters of the game shortly.
-      Become a supporter of development via the link below, and get special bonuses,
-      while also improving the Global Bonus for all to enjoy!
-      <a href="https://www.patreon.com/synergism" target="_blank" rel="noopener noreferrer nofollow">
-      <span style="color: lightgoldenrodyellow">--> PATREON <--</span>
-      </a>
-    `.trim()
     } else if (!hasAccount(account)) {
       // User is not logged in
       subtabElement.querySelector('#open-register')?.addEventListener('click', () => {
@@ -388,6 +578,14 @@ export async function handleLogin () {
         subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'flex')
         renderCaptcha()
       })
+
+      if (platform === 'steam') {
+        for (const link of subtabElement.querySelectorAll<HTMLAnchorElement>('a[href*="synergism.cc/login?with="]')) {
+          const url = new URL(link.href)
+          url.searchParams.set('platform', 'steam')
+          link.href = url.toString()
+        }
+      }
     } else {
       assert(false, `unknown account type ${account.accountType}`)
     }
@@ -396,6 +594,11 @@ export async function handleLogin () {
   if (loggedIn) {
     handleWebSocket()
     handleCloudSaves()
+  }
+
+  // Steam cloud saves work without login
+  if (platform === 'steam') {
+    handleSteamCloudSave()
   }
 }
 
@@ -408,7 +611,7 @@ const queue: string[] = []
 const exponentialBackoff = [5000, 15000, 30000, 60000]
 let tries = 0
 
-function resetConsumables () {
+function resetWebSocket () {
   for (const key of Object.keys(allDurableConsumables)) {
     allDurableConsumables[key as PseudoCoinConsumableNames] = {
       amount: 0,
@@ -416,6 +619,9 @@ function resetConsumables () {
       displayName: ''
     }
   }
+
+  lotusTimeExpiresAt = undefined
+  setFavicon('./favicon.ico')
 }
 
 function handleWebSocket () {
@@ -427,12 +633,10 @@ function handleWebSocket () {
     const delay = exponentialBackoff[++tries]
 
     if (delay !== undefined) {
-      setTimeout(() => handleWebSocket(), delay)
+      setTimeout(handleWebSocket, delay)
     } else {
-      Notification(
-        'Could not re-establish your connection. Consumables and events related to Consumables will not work.'
-      )
-      resetConsumables()
+      Notification(i18next.t('account.consumables.connectionFailed'))
+      resetWebSocket()
     }
   })
 
@@ -453,28 +657,31 @@ function handleWebSocket () {
       Notification(data.message, 5_000)
     } else if (data.type === 'error') {
       Notification(data.message, 5_000)
-      resetConsumables()
+      resetWebSocket()
     } else if (data.type === 'consumed') {
       const consumable = allDurableConsumables[data.consumable as PseudoCoinConsumableNames]
       consumable.ends.push(data.startedAt + 3600 * 1000)
       consumable.amount++
 
-      const article = /^[AEIOU]/i.test(data.displayName) ? 'an' : 'a'
-      Notification(`Someone redeemed ${article} ${data.displayName}!`)
+      Notification(i18next.t('account.consumables.redeemed', { consumable: data.displayName }))
+      setFavicon('./Pictures/favicon-notification.ico')
     } else if (data.type === 'consumable-ended') {
       // Because of the invariant that the timestamps are sorted, we can just remove the first element
       const consumable = allDurableConsumables[data.consumable as PseudoCoinConsumableNames]
       consumable.ends.shift()
       consumable.amount--
 
-      const article = /^[AEIOU]/i.test(data.name) ? 'An' : 'A'
-      Notification(`${article} ${data.name} ended!`)
+      Notification(i18next.t('account.consumables.ended', { consumable: data.name }))
+
+      if (consumable.amount === 0) {
+        setFavicon('./favicon.ico')
+      }
     } else if (data.type === 'join') {
-      Notification('Connection was established!')
+      Notification(i18next.t('account.consumables.connectionEstablished'))
     } else if (data.type === 'info-all') {
-      resetConsumables() // So that we can get an accurate count each time
+      resetWebSocket() // So that we can get an accurate count each time
       if (data.active.length !== 0) {
-        let message = 'The following consumables are active:\n'
+        let message = `${i18next.t('account.consumables.joined')}\n`
 
         for (const { internalName, endsAt, name } of data.active) {
           const consumable = allDurableConsumables[internalName as PseudoCoinConsumableNames]
@@ -492,9 +699,23 @@ function handleWebSocket () {
         }
 
         Notification(message)
+
+        setFavicon('./Pictures/favicon-notification.ico')
       }
 
       tips = data.tips
+
+      const lotusInventory = data.inventory.find((item) => item.type === 'LOTUS')
+
+      if (lotusInventory) {
+        ownedLotus = lotusInventory.amount
+        usedLotus = lotusInventory.used
+        try {
+          updateLotusDisplay()
+        } catch {
+          // This can throw if /consumables/list has not returned a response by the time this runs
+        }
+      }
     } else if (data.type === 'thanks') {
       Alert(i18next.t('pseudoCoins.consumables.thanks'))
       updatePseudoCoins()
@@ -520,7 +741,35 @@ function handleWebSocket () {
         consumableId: data.consumableName
       }))
 
-      setTimeout(() => updatePseudoCoins(), 4000)
+      setTimeout(updatePseudoCoins, 4000)
+    } else if (data.type === 'lotus') {
+      buyLotusNotification(data.amount)
+      ownedLotus += data.amount
+      updateLotusDisplay()
+
+      setTimeout(updatePseudoCoins, 4000)
+    } else if (data.type === 'applied-lotus') {
+      ownedLotus -= 1
+      usedLotus = data.lifetimePurchased
+      lotusTimeExpiresAt = Date.now() + data.remaining
+
+      updateLotusDisplay()
+    } else if (data.type === 'lotus-ended') {
+      lotusTimeExpiresAt = undefined
+
+      updateLotusDisplay()
+    } else if (data.type === 'lotus-active') {
+      lotusTimeExpiresAt = Date.now() + data.remainingMs
+      updateLotusDisplay()
+
+      Notification(i18next.t('pseudoCoins.lotus.lotusActive'))
+    } else {
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const assertNever = (_x: never) => {
+        throw new Error()
+      }
+
+      assertNever(data)
     }
 
     updateGlobalsIsEvent()
@@ -528,6 +777,8 @@ function handleWebSocket () {
 }
 
 export function sendToWebsocket (message: string) {
+  if (!isLoggedIn()) return
+
   if (ws?.readyState !== WebSocket.OPEN) {
     queue.push(message)
     return
@@ -538,28 +789,76 @@ export function sendToWebsocket (message: string) {
 
 async function logout () {
   await fetch('https://synergism.cc/api/v1/users/logout')
-  await Alert(i18next.t('account.logout'))
 
+  await Alert(i18next.t('account.logout'))
   location.reload()
 }
 
 const hasCaptcha = new WeakSet<HTMLElement>()
 
-export function renderCaptcha () {
-  const captchaElements = Array.from<HTMLElement>(document.querySelectorAll('.turnstile'))
-  const visible = captchaElements.find((el) => el.offsetParent !== null)
+export const renderCaptcha = platform === 'steam'
+  ? memoize(() => {
+    const captchaElements = document.querySelectorAll('.turnstile')
 
-  if (visible && !hasCaptcha.has(visible)) {
-    // biome-ignore lint/correctness/noUndeclaredVariables: declared in types as a global
-    turnstile.render(visible, {
-      sitekey: visible.getAttribute('data-sitekey')!,
-      'error-callback' () {},
-      retry: 'never'
-    })
+    for (const element of captchaElements) {
+      if (element.parentElement instanceof HTMLFormElement) {
+        const form = element.parentElement
+        form.addEventListener('submit', async (ev) => {
+          ev.preventDefault()
 
-    hasCaptcha.add(visible)
+          if (form.dataset.submitting) return
+          form.dataset.submitting = 'true'
+
+          try {
+            const { getSessionTicket } = await import('./steam/steam')
+
+            const sessionTicket = await getSessionTicket()
+
+            if (!sessionTicket) {
+              Alert('Failed to validate with Steam. Is Steam open?')
+              return
+            }
+
+            const dataAction = form.getAttribute('data-steam-action') ?? form.action
+
+            const fd = new FormData(form)
+            const body = new URLSearchParams()
+
+            fd.forEach((value, key) => body.set(key, `${value}`))
+            body.set('sessionTicket', sessionTicket)
+
+            const response = await fetch(dataAction, {
+              method: form.method.toUpperCase(),
+              body,
+              credentials: 'include'
+            })
+
+            if (response.redirected || response.ok) {
+              location.reload()
+            } else {
+              await displayHTMLError(response)
+            }
+          } finally {
+            form.dataset.submitting = undefined
+          }
+        })
+      }
+    }
+  })
+  : () => {
+    const captchaElements = Array.from<HTMLElement>(document.querySelectorAll('.turnstile'))
+    const visible = captchaElements.find((el) => el.offsetParent !== null)
+
+    if (visible && !hasCaptcha.has(visible)) {
+      turnstile.render(visible, {
+        sitekey: visible.getAttribute('data-sitekey')!,
+        'error-callback' () {},
+        retry: 'never'
+      })
+
+      hasCaptcha.add(visible)
+    }
   }
-}
 
 const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
   const seconds = minutes * 60
@@ -734,6 +1033,14 @@ const activateTimeSkip = (name: PseudoCoinTimeskipNames, minutes: number) => {
   }
 }
 
+const buyLotusNotification = (amount: number) => {
+  if (amount === 1) {
+    Notification('You have successfully purchased a lotus. Enjoy!')
+  } else {
+    Notification(`You have successfully purchased ${amount} loti. Enjoy!`)
+  }
+}
+
 function handleCloudSaves () {
   const subtabElement = document.querySelector('#accountSubTab div#right.scrollbarX')!
   const table = subtabElement.querySelector('#table > #dataGrid')!
@@ -748,11 +1055,11 @@ function handleCloudSaves () {
         cloudSaves.length = 0
         cloudSaves.push(...$saves)
 
-        const existingRows = table.querySelectorAll('.grid-row')
+        const existingRows = table.querySelectorAll('.grid-row:not(.steam-save-row)')
         existingRows.forEach((row) => row.remove())
 
-        const content = table.querySelector('.details-content')
-        content?.remove()
+        const detailsRows = table.querySelectorAll('.grid-details-row:not(.steam-details-row)')
+        detailsRows.forEach((row) => row.remove())
 
         if (cloudSaves.length === 0) {
           const emptyDiv = document.createElement('div')
@@ -873,13 +1180,13 @@ function handleCloudSaves () {
           const textBody = await new Response(stream).text()
           const encoder = new TextEncoder()
           const jsonBytes = encoder.encode(textBody)
-          const final = btoa(String.fromCharCode(...jsonBytes))
+          const final = btoa(isomorphicDecode(jsonBytes))
 
           return final
         }
 
         async function handleDownload (saveId: number) {
-          const save = cloudSaves.find((save) => saveId === save.id)
+          const save = cloudSaves.find((s) => saveId === s.id)
 
           if (!save) {
             Alert(i18next.t('account.noSaveFound'))
@@ -898,7 +1205,7 @@ function handleCloudSaves () {
         }
 
         async function handleLoadSave (saveId: number) {
-          const save = cloudSaves.find((save) => saveId === save.id)
+          const save = cloudSaves.find((s) => saveId === s.id)
 
           if (!save) {
             Alert(i18next.t('account.noSaveFound'))
@@ -910,7 +1217,7 @@ function handleCloudSaves () {
         }
 
         async function handleDeleteSave (saveId: number) {
-          const save = cloudSaves.find((save) => saveId === save.id)
+          const save = cloudSaves.find((s) => saveId === s.id)
 
           if (!save) {
             Alert(i18next.t('account.noSaveFound'))
@@ -970,6 +1277,8 @@ function handleCloudSaves () {
       body: fd
     }).then((response) => {
       if (!response.ok) {
+        response.text().then((error) => Notification(error || i18next.t('settings.cloud.uploadFailed')))
+
         throw new TypeError(`Received status ${response.status}`)
       }
 
@@ -979,10 +1288,14 @@ function handleCloudSaves () {
       console.error(e)
       uploadButton.textContent = i18next.t('settings.cloud.uploadFailed')
     }).finally(() => {
-      setTimeout(() => {
-        uploadButton.disabled = false
-        uploadButton.textContent = originalText
-      }, 5000)
+      setTimeout(
+        (uploadButton_) => {
+          uploadButton_.disabled = false
+          uploadButton_.textContent = originalText
+        },
+        5000,
+        uploadButton
+      )
     })
   })
 
@@ -1002,10 +1315,194 @@ function handleCloudSaves () {
       console.error(e)
       transferButton.textContent = i18next.t('settings.cloud.transferFailed')
     }).finally(() => {
-      setTimeout(() => {
-        transferButton.disabled = false
-        transferButton.textContent = originalText
-      }, 5000)
+      setTimeout(
+        (transferButton_) => {
+          transferButton_.disabled = false
+          transferButton_.textContent = originalText
+        },
+        5000,
+        transferButton
+      )
     })
   })
+}
+
+async function handleSteamCloudSave () {
+  const { cloudFileExists, cloudReadFile, cloudWriteFile, getSteamId } = await import('./steam/steam')
+
+  const steamId = await getSteamId()
+  if (!steamId) return
+
+  const saveFileName = `synergism_${steamId}.txt`
+  const table = document.querySelector('#accountSubTab div#right.scrollbarX #table > #dataGrid')!
+
+  // Remove any existing Steam save row
+  table.querySelectorAll('.steam-save-row, .steam-details-row').forEach((row) => row.remove())
+
+  const steamSaveExists = await cloudFileExists(saveFileName)
+
+  // Create the Steam save row
+  const rowDiv = document.createElement('div')
+  rowDiv.className = 'grid-row steam-save-row'
+  rowDiv.style.display = 'contents'
+
+  const idCell = document.createElement('div')
+  idCell.className = 'grid-cell id-cell'
+  idCell.textContent = '☁️'
+  idCell.title = i18next.t('account.steamCloud.title')
+
+  const nameCell = document.createElement('div')
+  nameCell.className = 'grid-cell name-cell'
+  nameCell.textContent = i18next.t('account.steamCloud.name')
+
+  const dateCell = document.createElement('div')
+  dateCell.className = 'grid-cell date-cell'
+  dateCell.textContent = steamSaveExists
+    ? i18next.t('account.steamCloud.exists')
+    : i18next.t('account.steamCloud.noSave')
+
+  rowDiv.appendChild(idCell)
+  rowDiv.appendChild(nameCell)
+  rowDiv.appendChild(dateCell)
+
+  // Alternate row styling (Steam is always first)
+  idCell.classList.add('alt-row')
+  nameCell.classList.add('alt-row')
+  dateCell.classList.add('alt-row')
+
+  // Create the expandable details row
+  const detailsRow = document.createElement('div')
+  detailsRow.className = 'grid-details-row steam-details-row'
+  detailsRow.style.display = 'none'
+  detailsRow.style.gridColumn = '1 / -1'
+
+  const detailsContent = document.createElement('div')
+  detailsContent.className = 'details-content'
+
+  const actionsDiv = document.createElement('div')
+  actionsDiv.className = 'details-actions'
+
+  // Upload button (to Steam Cloud)
+  const uploadBtn = document.createElement('button')
+  uploadBtn.className = 'btn-upload'
+  uploadBtn.textContent = i18next.t('account.steamCloud.upload')
+
+  // Download button (export Steam Cloud save to file)
+  const downloadBtn = document.createElement('button')
+  downloadBtn.className = 'btn-download'
+  downloadBtn.textContent = i18next.t('account.download')
+  downloadBtn.disabled = !steamSaveExists
+
+  // Load button (load Steam Cloud save into game)
+  const loadBtn = document.createElement('button')
+  loadBtn.className = 'btn-load'
+  loadBtn.textContent = i18next.t('account.loadSave')
+  loadBtn.disabled = !steamSaveExists
+
+  actionsDiv.appendChild(uploadBtn)
+  actionsDiv.appendChild(downloadBtn)
+  actionsDiv.appendChild(loadBtn)
+  detailsContent.appendChild(actionsDiv)
+  detailsRow.appendChild(detailsContent)
+
+  rowDiv.addEventListener('click', () => {
+    const isVisible = detailsRow.style.display !== 'none'
+
+    // Close all other detail rows
+    const allDetailsRows = table.querySelectorAll<HTMLElement>('.grid-details-row')
+    allDetailsRows.forEach((row) => {
+      if (row !== detailsRow) {
+        row.style.display = 'none'
+      }
+    })
+
+    detailsRow.style.display = isVisible ? 'none' : 'block'
+  })
+
+  // Handle upload to Steam Cloud
+  uploadBtn.addEventListener('click', async (e) => {
+    e.stopPropagation()
+
+    const saveExists = await cloudFileExists(saveFileName)
+    if (saveExists) {
+      const confirmed = await Confirm(i18next.t('account.steamCloud.confirmOverwrite'))
+      if (!confirmed) return
+    }
+
+    uploadBtn.disabled = true
+    uploadBtn.textContent = i18next.t('account.steamCloud.uploading')
+
+    const localSave = localStorage.getItem('Synergysave2')
+    if (!localSave) {
+      Alert(i18next.t('account.steamCloud.noLocalSave'))
+      uploadBtn.disabled = false
+      uploadBtn.textContent = i18next.t('account.steamCloud.upload')
+      return
+    }
+
+    const success = await cloudWriteFile(saveFileName, localSave)
+    if (success) {
+      Notification(i18next.t('account.steamCloud.uploadSuccess'))
+      // Refresh the Steam save row
+      handleSteamCloudSave()
+    } else {
+      Alert(i18next.t('account.steamCloud.uploadFailed'))
+      uploadBtn.disabled = false
+      uploadBtn.textContent = i18next.t('account.steamCloud.upload')
+    }
+  })
+
+  // Handle download (export to file)
+  downloadBtn.addEventListener('click', async (e) => {
+    e.stopPropagation()
+
+    downloadBtn.disabled = true
+    const steamSave = await cloudReadFile(saveFileName)
+
+    if (!steamSave) {
+      Alert(i18next.t('account.steamCloud.readFailed'))
+      downloadBtn.disabled = false
+      return
+    }
+
+    await exportData(steamSave, `synergism_steam_cloud_${steamId}.txt`)
+    Alert(i18next.t('account.downloadComplete'))
+    downloadBtn.disabled = false
+  })
+
+  // Handle load (import into game)
+  loadBtn.addEventListener('click', async (e) => {
+    e.stopPropagation()
+
+    loadBtn.disabled = true
+    const steamSave = await cloudReadFile(saveFileName)
+
+    if (!steamSave) {
+      Alert(i18next.t('account.steamCloud.readFailed'))
+      loadBtn.disabled = false
+      return
+    }
+
+    importSynergism(steamSave)
+  })
+
+  // Insert Steam row at the beginning (after headers)
+  const firstRow = table.querySelector('.grid-row')
+  const emptyState = table.querySelector('.empty-state')
+
+  // Remove empty state if exists
+  emptyState?.remove()
+
+  if (firstRow) {
+    table.insertBefore(rowDiv, firstRow)
+    table.insertBefore(detailsRow, firstRow)
+  } else {
+    table.appendChild(rowDiv)
+    table.appendChild(detailsRow)
+  }
+}
+
+function setFavicon (path: string) {
+  const favicon = document.querySelector<HTMLLinkElement>('link[rel~=icon]')
+  favicon?.setAttribute('href', path)
 }

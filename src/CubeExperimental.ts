@@ -9,6 +9,7 @@ Thank you! */
 import i18next from 'i18next'
 import { awardUngroupedAchievement, getAchievementReward } from './Achievements'
 import { quarkHandler } from './Quark'
+import { getShopUpgradeEffects } from './Shop'
 import { format, player } from './Synergism'
 import type { Player } from './types/Synergism'
 import { Alert, Prompt } from './UpdateHTML'
@@ -45,6 +46,9 @@ const platonicBlessings: Record<
   scoreBonus: { weight: 1, pdf: (x: number) => 99.995 < x && x <= 99.9975 },
   globalSpeed: { weight: 1, pdf: (x: number) => 99.9975 < x && x <= 100 }
 }
+
+const platonicRNGesus = ['hypercubeBonus', 'taxes', 'scoreBonus', 'globalSpeed']
+const platonicCommonDrops = ['cubes', 'tesseracts', 'hypercubes', 'platonics'] as const
 
 /**
  * @description Generic class for handling cube subsets.
@@ -182,11 +186,11 @@ export class WowCubes extends Cube {
     }
     player.cubeOpenedDaily += toSpend
 
-    const quarkMult = (player.shopUpgrades.cubeToQuark) ? 1.5 : 1
+    const quarkMult = getShopUpgradeEffects('cubeToQuark', 'cubeQuarkMult')
     const gainQuarks = Number(this.checkQuarkGain(5, quarkMult, player.cubeOpenedDaily))
     const actualQuarksGain = Math.max(0, gainQuarks - player.cubeQuarkDaily)
     player.cubeQuarkDaily += actualQuarksGain
-    player.worlds.add(actualQuarksGain, false)
+    player.worlds.add(actualQuarksGain, false, true)
 
     const sumOfTributes = sumContents(Object.values(player.cubeBlessings))
     // if >= 1e300 totalTribute, do not award tributes
@@ -257,11 +261,11 @@ export class WowTesseracts extends Cube {
     }
     player.tesseractOpenedDaily += toSpend
 
-    const quarkMult = (player.shopUpgrades.tesseractToQuark) ? 1.5 : 1
+    const quarkMult = getShopUpgradeEffects('tesseractToQuark', 'tesseractQuarkMult')
     const gainQuarks = Number(this.checkQuarkGain(7, quarkMult, player.tesseractOpenedDaily))
     const actualQuarksGain = Math.max(0, gainQuarks - player.tesseractQuarkDaily)
     player.tesseractQuarkDaily += actualQuarksGain
-    player.worlds.add(actualQuarksGain, false)
+    player.worlds.add(actualQuarksGain, false, true)
 
     const toSpendModulo = toSpend % 20
     const toSpendDiv20 = Math.floor(toSpend / 20)
@@ -298,11 +302,11 @@ export class WowHypercubes extends Cube {
     }
     player.hypercubeOpenedDaily += toSpend
 
-    const quarkMult = (player.shopUpgrades.hypercubeToQuark) ? 1.5 : 1
+    const quarkMult = getShopUpgradeEffects('hypercubeToQuark', 'hypercubeQuarkMult')
     const gainQuarks = this.checkQuarkGain(10, quarkMult, player.hypercubeOpenedDaily)
     const actualQuarksGain = Math.max(0, gainQuarks - player.hypercubeQuarkDaily)
     player.hypercubeQuarkDaily += actualQuarksGain
-    player.worlds.add(actualQuarksGain, false)
+    player.worlds.add(actualQuarksGain, false, true)
 
     const toSpendModulo = toSpend % 20
     const toSpendDiv20 = Math.floor(toSpend / 20)
@@ -343,7 +347,7 @@ export class WowPlatonicCubes extends Cube {
     const gainQuarks = this.checkQuarkGain(15, quarkMult, player.platonicCubeOpenedDaily)
     const actualQuarksGain = Math.max(0, gainQuarks - player.platonicCubeQuarkDaily)
     player.platonicCubeQuarkDaily += actualQuarksGain
-    player.worlds.add(actualQuarksGain, false)
+    player.worlds.add(actualQuarksGain, false, true)
 
     let toSpendModulo = toSpend % 40000
     const toSpendDiv40000 = Math.floor(toSpend / 40000)
@@ -357,11 +361,10 @@ export class WowPlatonicCubes extends Cube {
       }
     }
     // Then, the remaining hypercube will be opened, simulating the probability [RNG Element]
-    const RNGesus = ['hypercubeBonus', 'taxes', 'scoreBonus', 'globalSpeed']
-    for (let i = 0; i < RNGesus.length; i++) {
+    for (let i = 0; i < platonicRNGesus.length; i++) {
       const num = Math.random()
       if (toSpendModulo / 40000 >= num && toSpendModulo !== 0) {
-        player.platonicBlessings[RNGesus[i] as keyof Player['platonicBlessings']] += 1
+        player.platonicBlessings[platonicRNGesus[i] as keyof Player['platonicBlessings']] += 1
         toSpendModulo -= 1
       }
     }
@@ -371,9 +374,8 @@ export class WowPlatonicCubes extends Cube {
       Math.floor(33 * toSpendModulo / 100),
       Math.floor(396 * toSpendModulo / 40000)
     ]
-    const commonDrops = ['cubes', 'tesseracts', 'hypercubes', 'platonics'] as const
-    for (let i = 0; i < commonDrops.length; i++) {
-      player.platonicBlessings[commonDrops[i]] += gainValues[i]
+    for (let i = 0; i < platonicCommonDrops.length; i++) {
+      player.platonicBlessings[platonicCommonDrops[i]] += gainValues[i]
       toSpendModulo -= gainValues[i]
     }
 

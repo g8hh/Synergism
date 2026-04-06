@@ -1,7 +1,7 @@
 import i18next from 'i18next'
-import { sacrificeAnts } from './Ants'
 import { boostAccelerator, buyAccelerator, buyMultiplier } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
+import { confirmAntSacrifice } from './Features/Ants/AntSacrifice/sacrifice'
 import { promocodes } from './ImportExport'
 import { useConsumablePrompt } from './Shop'
 import { player, resetCheck, synergismHotkeys } from './Synergism'
@@ -10,10 +10,10 @@ import { confirmReply, toggleAutoChallengeRun } from './Toggles'
 import { Alert, Confirm, Prompt } from './UpdateHTML'
 import { Globals as G } from './Variables'
 
-export const defaultHotkeys = new Map<string, [string, () => unknown, /* hide during notification */ boolean]>([
+const defaultHotkeys = new Map<string, [string, () => unknown, /* hide during notification */ boolean]>([
   ['A', ['hotkeys.names.buyAccelerators', () => buyAccelerator(), false]],
   ['B', ['hotkeys.names.boostAccelerator', () => boostAccelerator(), false]],
-  ['C', ['autoChallenge', () => {
+  ['C', ['hotkeys.names.autoChallenge', () => {
     toggleChallengeSweep()
   }, false]],
   ['E', ['hotkeys.names.exitTRChallenge', () => {
@@ -27,7 +27,7 @@ export const defaultHotkeys = new Map<string, [string, () => unknown, /* hide du
   ['N', ['hotkeys.names.noCancel', () => confirmReply(false), true]],
   ['P', ['hotkeys.names.resetPrestige', () => resetCheck('prestige'), false]],
   ['R', ['hotkeys.names.resetReincarnate', () => resetCheck('reincarnation'), false]],
-  ['S', ['hotkeys.names.sacrificeAnts', () => sacrificeAnts(), false]],
+  ['S', ['hotkeys.names.sacrificeAnts', () => confirmAntSacrifice(), false]],
   ['T', ['hotkeys.names.resetTranscend', () => resetCheck('transcension'), false]],
   ['Y', ['hotkeys.names.yesOK', () => confirmReply(true), true]],
   ['ARROWLEFT', ['hotkeys.names.backTab', () => kbTabChange(-1), false]],
@@ -47,9 +47,9 @@ export const defaultHotkeys = new Map<string, [string, () => unknown, /* hide du
   ['CTRL+B', ['hotkeys.names.unhideTabs', () => tabRow.reappend(), false]]
 ])
 
-export let hotkeysEnabled = false
+let hotkeysEnabled = false
 
-export let hotkeys = new Map<string, [string, () => unknown, boolean]>(defaultHotkeys)
+let hotkeys = new Map<string, [string, () => unknown, boolean]>(defaultHotkeys)
 
 const toggleChallengeSweep = (): void => {
   if (player.researches[150] > 0) {
@@ -135,7 +135,7 @@ const makeSlot = (key: string, descr: string) => {
   button.textContent = key
   button.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement
-    const oldKey = target.textContent!.toUpperCase()
+    const oldKey = target.textContent.toUpperCase()
     const name = hotkeys.get(oldKey)?.[0]
       ?? target.nextSibling?.textContent
 
@@ -199,11 +199,11 @@ export const enableHotkeys = () => {
 
   const hotkey = document.querySelector('.hotkeys')!
 
-  for (const child of Array.from(hotkey.children)) {
+  for (const child of hotkey.children) {
     hotkey.removeChild(child)
   }
 
-  for (const [key, [descr]] of [...hotkeys.entries()]) {
+  for (const [key, [descr]] of hotkeys.entries()) {
     const div = makeSlot(key, i18next.t(descr))
 
     hotkey.appendChild(div)
@@ -212,7 +212,7 @@ export const enableHotkeys = () => {
   hotkeysEnabled = true
 }
 
-export const changeHotkeys = () => {
+const changeHotkeys = () => {
   hotkeys = new Map(defaultHotkeys)
 
   for (const key in player.hotkeys) {

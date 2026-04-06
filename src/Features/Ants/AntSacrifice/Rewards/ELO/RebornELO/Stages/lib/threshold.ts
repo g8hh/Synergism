@@ -1,0 +1,95 @@
+import { player } from '../../../../../../../../Synergism'
+import { assert } from '../../../../../../../../Utility'
+
+export const thresholdTranches = [
+  { stages: 100, perStage: 100, quarkPerStage: 1 },
+  { stages: 100, perStage: 1000, quarkPerStage: 2 },
+  { stages: 100, perStage: 3000, quarkPerStage: 3 },
+  { stages: 700, perStage: 20000, quarkPerStage: 4 },
+  { stages: Number.POSITIVE_INFINITY, perStage: 100000, quarkPerStage: 7 }
+]
+
+export const quarkMultiplierPerThreshold = 1.002
+
+const perThresholdModifiers = {
+  rebornSpeedMult: 0.98,
+  antSacrificeObtainiumMult: 1.05,
+  antSacrificeOfferingMult: 1.05,
+  antSacrificeTalismanFragmentMult: 1.2
+}
+
+const rebornSpeedPerkLevels = [1, 9, 25, 49, 81, 121, 169, 196, 225, 256, 289]
+
+const singularityPerkRebornSpeedMultModifier = () => {
+  const singCount = player.singularityCount
+  for (let i = rebornSpeedPerkLevels.length - 1; i >= 0; i--) {
+    if (singCount >= rebornSpeedPerkLevels[i]) {
+      return 0.0001 + 0.00009 * i
+    }
+  }
+  return 0
+}
+
+export const calculateStageRebornSpeedMult = () => {
+  const base = perThresholdModifiers.rebornSpeedMult
+  const increase = singularityPerkRebornSpeedMultModifier()
+  return Math.min(1, base + increase)
+}
+
+export const calculateRebornELOThresholds = (elo?: number) => {
+  let rebornELOBudget = elo ?? player.ants.rebornELO
+  let thresholds = 0
+
+  for (const tranche of thresholdTranches) {
+    const stagesAdded = Math.min(tranche.stages, Math.floor(rebornELOBudget / tranche.perStage))
+    thresholds += stagesAdded
+    rebornELOBudget -= stagesAdded * tranche.perStage
+    if (stagesAdded < tranche.stages) {
+      break
+    }
+  }
+  return thresholds
+}
+
+export const calculateToNextELOThreshold = (rebornELO: number, stage?: number) => {
+  const thresholds = stage ?? calculateRebornELOThresholds(rebornELO)
+  let stagesChecked = 0
+  let tempELO = rebornELO
+  for (const tranche of thresholdTranches) {
+    if (thresholds < stagesChecked + tranche.stages) {
+      const reqELOThisThreshold = tranche.perStage
+      // When tempELO is a multiple of reqELOThisThreshold it returns `reqELOThisThreshold`, and
+      // increasing tempELO by 1 will reduce the returned value by 1, so this equation is correct.
+      // Yes, this did take pen and paper to solve
+      return (1 + Math.floor(tempELO / reqELOThisThreshold)) * reqELOThisThreshold - tempELO
+    }
+    stagesChecked += tranche.stages
+    tempELO -= tranche.stages * tranche.perStage
+  }
+  assert(false, 'Unreachable code in calculateToNextELOThreshold')
+}
+
+export const calculateLeftoverELO = (rebornELO: number, stage?: number) => {
+  const thresholds = stage ?? calculateRebornELOThresholds(rebornELO)
+  let usedELO = 0
+  let stagesChecked = 0
+  for (const tranche of thresholdTranches) {
+    const stagesInThisTranche = Math.min(tranche.stages, thresholds - stagesChecked)
+    usedELO += stagesInThisTranche * tranche.perStage
+    stagesChecked += stagesInThisTranche
+    if (stagesChecked >= thresholds) {
+      break
+    }
+  }
+  return rebornELO - usedELO
+}
+
+export const thresholdModifiers = () => {
+  const thresholds = calculateRebornELOThresholds()
+  return {
+    rebornSpeedMult: Math.pow(calculateStageRebornSpeedMult(), thresholds),
+    antSacrificeObtainiumMult: Math.pow(perThresholdModifiers.antSacrificeObtainiumMult, thresholds),
+    antSacrificeOfferingMult: Math.pow(perThresholdModifiers.antSacrificeOfferingMult, thresholds),
+    antSacrificeTalismanFragmentMult: Math.pow(perThresholdModifiers.antSacrificeTalismanFragmentMult, thresholds)
+  }
+}

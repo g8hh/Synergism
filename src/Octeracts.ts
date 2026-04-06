@@ -55,7 +55,7 @@ export type OcteractDataKeys =
   | 'octeractTalismanLevelCap3'
   | 'octeractTalismanLevelCap4'
 
-export interface OcteractUpgrade {
+interface OcteractUpgrade {
   level: number
   freeLevel: number
   octeractsInvested: number
@@ -68,6 +68,8 @@ export interface OcteractUpgrade {
   name(): string
   description(): string
 }
+
+const octeractBlueberryCostArr = [1, 1e3, 1e9, 1e27, 1e81, 1e111]
 
 export const octeractUpgrades: Record<OcteractDataKeys, OcteractUpgrade> = {
   octeractStarter: {
@@ -347,7 +349,7 @@ export const octeractUpgrades: Record<OcteractDataKeys, OcteractUpgrade> = {
       return n / 2000
     },
     effectDescription: (n: number) =>
-      i18next.t('octeract.data.octeractImprovedAscensionSpeed2.effect', { n: format(n / 50, 2, true) }),
+      i18next.t('octeract.data.octeractImprovedAscensionSpeed2.effect', { n: format(n / 20, 2, true) }),
     name: () => i18next.t('octeract.data.octeractImprovedAscensionSpeed2.name'),
     description: () => i18next.t('octeract.data.octeractImprovedAscensionSpeed2.description'),
     qualityOfLife: false
@@ -841,12 +843,11 @@ export const octeractUpgrades: Record<OcteractDataKeys, OcteractUpgrade> = {
     octeractsInvested: 0,
     maxLevel: 6,
     costPerLevel: 1,
-    costFormula: (level: number, baseCost: number) => {
-      const costArr = [1, 1e3, 1e9, 1e27, 1e81, 1e111]
+    costFormula: (level: number) => {
       if (level === 6) {
         return 0
       } else {
-        return costArr[level] + 0 * baseCost // Base cost is not used here.
+        return octeractBlueberryCostArr[level] // Base cost is not used here.
       }
     },
     effect: (n: number) => {
@@ -1055,7 +1056,7 @@ export const upgradeOcteractToString = (upgradeKey: OcteractDataKeys): string =>
     const octPerSecond = calculateOcteractMultiplier()
     affordTime = octPerSecond > 0
       ? formatTimeShort((costNextLevel - player.wowOcteracts) / octPerSecond)
-      : `${i18next.t('general.infinity')}`
+      : i18next.t('general.infinity')
   }
 
   const affordableInfo = isMaxLevel
@@ -1134,7 +1135,7 @@ export const buyOcteractUpgradeLevel = async (
   if (event.shiftKey || buyMax) {
     maxPurchasable = 100000000
     const buy = Number(
-      await Prompt(`${i18next.t('octeract.buyLevel.buyPrompt', { n: format(player.wowOcteracts, 0, true) })}`)
+      await Prompt(i18next.t('octeract.buyLevel.buyPrompt', { n: format(player.wowOcteracts, 0, true) }))
     )
 
     if (isNaN(buy) || !isFinite(buy) || !Number.isInteger(buy)) {
@@ -1178,7 +1179,7 @@ export const buyOcteractUpgradeLevel = async (
   }
 
   if (purchased > 1) {
-    Alert(`${i18next.t('octeract.buyLevel.multiBuy', { n: format(purchased) })}`)
+    Alert(i18next.t('octeract.buyLevel.multiBuy', { n: format(purchased) }))
   }
 
   updateTokens()

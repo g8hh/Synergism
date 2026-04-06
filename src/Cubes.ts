@@ -48,20 +48,20 @@ const cubeBaseCost = [
   200, 200, 200, 500, 500, 500, 500, 500, 2000, 40000,
   5000, 1000, 10000, 20000, 40000, 10000, 4000, 1e4, 50000, 12500,
   5e4, 3e4, 3e4, 4e4, 2e5, 4e5, 1e5, 177777, 1e5, 1e6,
-  5e5, 3e5, 2e6, 4e6, 2e6, 4e6, 1e6, 2e7, 5e7, 1e7,
-  5e6, 1e7, 1e8, 4e7, 2e7, 4e7, 5e7, 1e8, 5e8, 1e8,
+  5e5, 3e5, 2e6, 4e7, 4e7, 1e8, 1e8, 1e9, 2e9, 2e8,
+  2e8, 5e8, 1e9, 2e9, 2e9, 5e8, 9876543210, 1e10, 42934819467, 1e8,
   1, 1e4, 1e8, 1e12, 1e16, 10, 1e5, 1e9, 1e13, 1e17,
   1e2, 1e6, 1e10, 1e14, 1e18, 1e20, 1e30, 1e40, 1e50, 1e60,
   1, 1, 1e8, 1e16, 1e30, 1e100, 1e100, 1e200, 1e250, 1e300, 
 ]
 
 // dprint-ignore
-export const cubeMaxLevel = [
+const cubeMaxLevel = [
   3, 10, 5, 1, 1, 1, 1, 1, 1, 1,
   3, 10, 1, 10, 10, 10, 5, 1, 1, 1,
   5, 10, 1, 10, 10, 10, 1, 1, 5, 1,
   5, 1, 1, 10, 10, 10, 10, 1, 1, 10,
-  5, 10, 10, 10, 10, 20, 20, 1, 1, 100000,
+  5, 10, 10, 10, 10, 20, 1, 1, 1, 100000,
   1, 900, 100, 900, 900, 20, 1, 1, 400, 10000,
   100, 1, 1, 1, 1, 1, 1, 1000, 1, 100000,
   1, 1, 5, 1, 30, 2, 25, 30, 1, 1
@@ -225,27 +225,26 @@ export const buyCubeUpgrades = (i: number, buyMax = player.cubeUpgradesBuyMaxTog
 export const autoBuyCubeUpgrades = () => {
   if (
     player.autoCubeUpgradesToggle
-    && ((player.highestSingularityCount >= 50 && player.insideSingularityChallenge)
-      || player.highestSingularityCount >= 150)
+    && player.highestSingularityCount >= 50
   ) {
-    const cheapet = []
+    const cheapest = []
 
     for (let i = 1; i < player.cubeUpgrades.length; i++) {
       const maxLevel = getCubeMax(i)
       if (player.cubeUpgrades[i]! < maxLevel) {
         const metaData = getCubeCost(i, true)
-        cheapet.push([i, metaData.cost, metaData.levelCanBuy])
+        cheapest.push([i, metaData.cost, metaData.levelCanBuy])
       }
     }
 
-    if (cheapet.length > 0) {
+    if (cheapest.length > 0) {
       let update = false
 
-      cheapet.sort((a, b) => {
+      cheapest.sort((a, b) => {
         return a[1] - b[1]
       })
 
-      for (const value of cheapet) {
+      for (const value of cheapest) {
         const maxLevel = getCubeMax(value[0])
         const metaData = getCubeCost(value[0], true)
         if (
@@ -345,10 +344,11 @@ export const calculateObtainiumCubeBlessing = () => {
 }
 
 export const calculateAntSpeedCubeBlessing = () => {
-  const effectPerBlessing = 1 / 10000
+  const effectPerBlessing = 1 / 1000
   const exponentIncrease = player.cubeUpgrades[22] / 40
+  const firstBonus = 0.1 * Math.min(player.cubeBlessings.antSpeed, 1)
 
-  return Decimal.pow(1 + effectPerBlessing * player.cubeBlessings.antSpeed, 2 + exponentIncrease)
+  return Decimal.pow(1 + effectPerBlessing * player.cubeBlessings.antSpeed + firstBonus, 2 + exponentIncrease)
     .times(calculateAntSpeedTesseractBlessing())
 }
 
@@ -371,7 +371,7 @@ export const calculateAntELOCubeBlessing = () => {
   const effectExponent = 1 + player.cubeUpgrades[25] / 100
 
   return Math.pow(
-    1 + Math.log10(1 + player.cubeBlessings.antELO) / 100 * calculateAntELOTesseractBlessing(),
+    1 + 0.1 * Math.log10(1 + player.cubeBlessings.antELO) * calculateAntELOTesseractBlessing(),
     effectExponent
   )
 }

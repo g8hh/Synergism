@@ -1,11 +1,18 @@
 import i18next from 'i18next'
 import { getAmbrosiaUpgradeEffects } from './BlueberryUpgrades'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateGoldenQuarkCost, calculateImmaculateAlchemyBonus } from './Calculate'
+import {
+  calculateExalt4EffectiveSingularityMultiplier,
+  calculateGoldenQuarkCost,
+  calculateImmaculateAlchemyBonus
+} from './Calculate'
 import { updateMaxTokens, updateTokens } from './Campaign'
-import { getOcteractUpgradeEffect } from './Octeracts'
+import { getOcteractUpgradeEffect, octeractUpgrades } from './Octeracts'
+import { getGlobalBonus, getPersonalBonus, getQuarkBonus } from './Quark'
+import { redAmbrosiaUpgrades } from './RedAmbrosiaUpgrades'
 import { singularity } from './Reset'
-import { getRuneEffectiveLevel, runes } from './Runes'
+import { runes } from './Runes'
+import { getShopUpgradeEffects } from './Shop'
 import { format, formatAsPercentIncrease, player } from './Synergism'
 import { Alert, Confirm, Prompt, revealStuff } from './UpdateHTML'
 import { isMobile, toOrdinal } from './Utility'
@@ -90,6 +97,11 @@ export type SingularityDataKeys =
   | 'singTalismanBonusRunes2'
   | 'singTalismanBonusRunes3'
   | 'singTalismanBonusRunes4'
+  | 'favoriteUpgrade'
+
+const overclockPerks = [50, 60, 75, 100, 125, 150, 175, 200, 225, 250]
+const tokenInheritanceTokens = [1, 10, 25, 40, 75, 100, 150, 200, 250, 300, 350, 400, 500, 600, 750]
+const singularityPenaltyThresholds = [11, 26, 37, 51, 101, 151, 201, 216, 230, 270]
 
 export const updateSingularityPenalties = (): void => {
   const singularityCount = player.singularityCount
@@ -160,6 +172,15 @@ export const updateSingularityPenalties = (): void => {
     })
   }
         ${
+    i18next.t('singularity.penalties.antELOGain', {
+      amount: format(
+        -calculateSingularityDebuff('Ant ELO', singularityCount),
+        3,
+        true
+      )
+    })
+  }
+        ${
     i18next.t('singularity.penalties.cubeGain', {
       divisor: format(
         calculateSingularityDebuff('Cubes', singularityCount),
@@ -220,7 +241,7 @@ type SingularitySpecialCostFormulae =
   | 'Cubic'
   | 'Exponential2'
 
-export interface GoldenQuarkUpgrade {
+interface GoldenQuarkUpgrade {
   level: number
   freeLevel: number
   goldenQuarksInvested: number
@@ -792,9 +813,11 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n
     },
-    effectDescription: (n: number) =>
+    effectDescription: (_n: number) =>
       i18next.t('singularity.data.singOcteractPatreonBonus.effect', {
-        n
+        n: format(1 + getQuarkBonus() / 100, 3, true),
+        x: format(1 + getGlobalBonus() / 100, 3, true),
+        y: format(1 + getPersonalBonus() / 100, 3, true)
       }),
     name: () => i18next.t('singularity.data.singOcteractPatreonBonus.name'),
     description: () => i18next.t('singularity.data.singOcteractPatreonBonus.description')
@@ -1887,6 +1910,82 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
       }),
     name: () => i18next.t('singularity.data.singTalismanBonusRunes4.name'),
     description: () => i18next.t('singularity.data.singTalismanBonusRunes4.description')
+  },
+  favoriteUpgrade: {
+    level: 0,
+    freeLevel: 0,
+    goldenQuarksInvested: 0,
+    maxLevel: 100,
+    canExceedCap: false,
+    qualityOfLife: true,
+    costPerLevel: 1,
+    specialCostForm: 'Exponential2',
+    minimumSingularity: 2,
+    effect: (n: number) => {
+      const upgrade1 = +(goldenQuarkUpgrades.goldenQuarks1.level >= goldenQuarkUpgrades.goldenQuarks1.maxLevel)
+      const upgrade2 = +(goldenQuarkUpgrades.platonicDelta.level >= goldenQuarkUpgrades.platonicDelta.maxLevel)
+      const upgrade3 = +(goldenQuarkUpgrades.oneMind.level >= goldenQuarkUpgrades.oneMind.maxLevel)
+      const upgrade4 = +(octeractUpgrades.octeractImprovedFree.level >= octeractUpgrades.octeractImprovedFree.maxLevel)
+      const upgrade5 = +(octeractUpgrades.octeractCorruption.level >= octeractUpgrades.octeractCorruption.maxLevel)
+      const upgrade6 = +(octeractUpgrades.octeractBlueberries.level >= octeractUpgrades.octeractBlueberries.maxLevel)
+      const upgrade7 = +(redAmbrosiaUpgrades.tutorial.level >= redAmbrosiaUpgrades.tutorial.maxLevel)
+      const upgrade8 =
+        +(redAmbrosiaUpgrades.infiniteShopUpgrades.level >= redAmbrosiaUpgrades.infiniteShopUpgrades.maxLevel)
+      const upgrade9 =
+        +(redAmbrosiaUpgrades.blueberryGenerationSpeed2.level >= redAmbrosiaUpgrades.blueberryGenerationSpeed2.maxLevel)
+      const sumOfUpgrades = upgrade1 + upgrade2 + upgrade3 + upgrade4 + upgrade5 + upgrade6 + upgrade7 + upgrade8
+        + upgrade9
+      return 1 + n / 5000 * (sumOfUpgrades + 6)
+    },
+    name: () => i18next.t('singularity.data.favoriteUpgrade.name'),
+    description: () => {
+      const titleText = i18next.t('singularity.data.favoriteUpgrade.description')
+      const upgrade1 = i18next.t('singularity.data.favoriteUpgrade.upgrade1', {
+        checkMark: goldenQuarkUpgrades.goldenQuarks1.level >= goldenQuarkUpgrades.goldenQuarks1.maxLevel ? '✔️' : '❌'
+      })
+      const upgrade2 = i18next.t('singularity.data.favoriteUpgrade.upgrade2', {
+        checkMark: goldenQuarkUpgrades.platonicDelta.level >= goldenQuarkUpgrades.platonicDelta.maxLevel ? '✔️' : '❌'
+      })
+      const upgrade3 = i18next.t('singularity.data.favoriteUpgrade.upgrade3', {
+        checkMark: goldenQuarkUpgrades.oneMind.level >= goldenQuarkUpgrades.oneMind.maxLevel ? '✔️' : '❌'
+      })
+      const upgrade4 = i18next.t('singularity.data.favoriteUpgrade.upgrade4', {
+        checkMark: octeractUpgrades.octeractImprovedFree.level >= octeractUpgrades.octeractImprovedFree.maxLevel
+          ? '✔️'
+          : '❌'
+      })
+      const upgrade5 = i18next.t('singularity.data.favoriteUpgrade.upgrade5', {
+        checkMark: octeractUpgrades.octeractCorruption.level >= octeractUpgrades.octeractCorruption.maxLevel
+          ? '✔️'
+          : '❌'
+      })
+      const upgrade6 = i18next.t('singularity.data.favoriteUpgrade.upgrade6', {
+        checkMark: octeractUpgrades.octeractBlueberries.level >= octeractUpgrades.octeractBlueberries.maxLevel
+          ? '✔️'
+          : '❌'
+      })
+      const upgrade7 = i18next.t('singularity.data.favoriteUpgrade.upgrade7', {
+        checkMark: redAmbrosiaUpgrades.tutorial.level >= redAmbrosiaUpgrades.tutorial.maxLevel ? '✔️' : '❌'
+      })
+      const upgrade8 = i18next.t('singularity.data.favoriteUpgrade.upgrade8', {
+        checkMark: redAmbrosiaUpgrades.infiniteShopUpgrades.level >= redAmbrosiaUpgrades.infiniteShopUpgrades.maxLevel
+          ? '✔️'
+          : '❌'
+      })
+      const upgrade9 = i18next.t('singularity.data.favoriteUpgrade.upgrade9', {
+        checkMark:
+          redAmbrosiaUpgrades.blueberryGenerationSpeed2.level >= redAmbrosiaUpgrades.blueberryGenerationSpeed2.maxLevel
+            ? '✔️'
+            : '❌'
+      })
+      return `${titleText}<br>${upgrade1}<br>${upgrade2}<br>${upgrade3}<br>${upgrade4}<br>${upgrade5}<br>${upgrade6}<br>${upgrade7}<br>${upgrade8}<br>${upgrade9}`
+    },
+    effectDescription: (_n: number) => {
+      const bonus = getGQUpgradeEffect('favoriteUpgrade')
+      return i18next.t('singularity.data.favoriteUpgrade.effect', {
+        n: formatAsPercentIncrease(bonus, 2)
+      })
+    }
   }
 }
 
@@ -2168,8 +2267,8 @@ export async function buyGQUpgradeLevel (
   revealStuff()
 }
 
-export function computeFreeLevelMultiplier (): number {
-  return (player.shopUpgrades.shopSingularityPotency > 0 ? 3.66 : 1) + 0.3 / 100 * player.cubeUpgrades[75]
+function computeFreeLevelMultiplier (): number {
+  return getShopUpgradeEffects('shopSingularityPotency', 'freeUpgradeMult') + 0.3 / 100 * player.cubeUpgrades[75]
 }
 
 export function computeGQUpgradeFreeLevelSoftcap (upgradeKey: SingularityDataKeys): number {
@@ -2188,7 +2287,6 @@ export function computeGQUpgradeMaxLevel (upgradeKey: SingularityDataKeys): numb
     return upgrade.maxLevel
   } else {
     let cap = upgrade.maxLevel
-    const overclockPerks = [50, 60, 75, 100, 125, 150, 175, 200, 225, 250]
     for (const perk of overclockPerks) {
       if (player.highestSingularityCount >= perk) {
         cap += 1
@@ -2244,33 +2342,23 @@ export function getGQUpgradeEffect (upgradeKey: SingularityDataKeys): number {
   return upgrade.effect(totalLevels)
 }
 
-export function getGQUpgradeDescription (upgradeKey: SingularityDataKeys): string {
+function getGQUpgradeDescription (upgradeKey: SingularityDataKeys): string {
   const upgrade = goldenQuarkUpgrades[upgradeKey]
   const totalLevels = actualGQUpgradeTotalLevels(upgradeKey)
   return upgrade.effectDescription(totalLevels)
 }
 
-export function resetGQUpgrade (upgradeKey: SingularityDataKeys): void {
-  const upgrade = goldenQuarkUpgrades[upgradeKey]
-  upgrade.level = 0
-}
+const currentSingularityText = () => i18next.t('singularity.perks.usesCurrentSing')
 
 /**
  * Singularity Perks are automatically obtained and upgraded, based on player.singularityCount
  * They can have one or several levels with a description for each level
  */
-export class SingularityPerk {
-  public readonly name: () => string
-  public readonly levels: number[]
-  public readonly description: (n: number, levels: number[]) => string
-  public readonly ID: string
-
-  public constructor (perk: SingularityPerk) {
-    this.name = perk.name
-    this.levels = perk.levels
-    this.description = perk.description
-    this.ID = perk.ID
-  }
+interface SingularityPerk {
+  readonly name: () => string
+  readonly levels: number[]
+  readonly description: (n: number, levels: number[]) => string
+  readonly ID: string
 }
 
 // List of Singularity Perks based on player.highestSingularityCount
@@ -2405,16 +2493,32 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
+      return i18next.t('singularity.perks.bringToLife.name')
+    },
+    levels: [1, 9, 25, 49, 81, 121, 169, 196, 225, 256, 289],
+    description: (n: number, levels: number[]) => {
+      for (let i = levels.length - 1; i > 0; i--) {
+        if (n >= levels[i]) {
+          const effectText = i18next.t('singularity.perks.bringToLife.default', {
+            amount: format(2 - 0.01 - i * 0.009, 3, true)
+          })
+          return `${effectText}<br><b>${currentSingularityText()}</b>`
+        }
+      }
+      return i18next.t('singularity.perks.bringToLife.default', { amount: 2 })
+    },
+    ID: 'bringToLife'
+  },
+  {
+    name: () => {
       return i18next.t('singularity.perks.tokenInheritance.name')
     },
     levels: [2, 5, 10, 17, 26, 37, 50, 65, 82, 101, 220, 240, 260, 270, 277],
     description: (n: number, levels: number[]) => {
-      const tokens = [1, 10, 25, 40, 75, 100, 150, 200, 250, 300, 350, 400, 500, 600, 750]
-
       for (let i = 15; i > 0; i--) {
         if (n >= levels[i]) {
           return i18next.t('singularity.perks.tokenInheritance.default', {
-            amount: tokens[i]
+            amount: tokenInheritanceTokens[i]
           })
         }
       }
@@ -2455,6 +2559,46 @@ export const singularityPerks: SingularityPerk[] = [
       }
     },
     ID: 'superStart'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.invigoratedSpirits.name')
+    },
+    levels: [2, 10, 26, 50, 82, 122, 170, 197, 226, 257, 290],
+    description: (n: number, levels: number[]) => {
+      for (let i = levels.length - 1; i >= 0; i--) {
+        if (n >= levels[i]) {
+          const intro = i18next.t('singularity.perks.invigoratedSpirits.default')
+          const line2 = i18next.t('singularity.perks.invigoratedSpirits.line2', {
+            x: format(2 + 1.8 * i, 1, true)
+          })
+          const line3 = i18next.t('singularity.perks.invigoratedSpirits.line3', {
+            x: format(0.1 + 0.09 * i, 2, true)
+          })
+          return `${intro}<br>${line2}<br>${line3}<br><b>${currentSingularityText()}</b>`
+        }
+      }
+      return i18next.t('singularity.perks.invigoratedSpirits.default', { amount: 0 })
+    },
+    ID: 'invigoratedSpirits'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.eloBonus.name')
+    },
+    levels: [3, 11, 27, 51, 83, 123, 171, 198, 227, 258, 291],
+    description: (n: number, levels: number[]) => {
+      for (let i = levels.length - 1; i >= 0; i--) {
+        if (n >= levels[i]) {
+          const effectText = i18next.t('singularity.perks.eloBonus.default', {
+            amount: format(0.1 + 0.09 * i, 2, true)
+          })
+          return `${effectText}<br><b>${currentSingularityText()}</b>`
+        }
+      }
+      return i18next.t('singularity.perks.eloBonus.default', { amount: 0 })
+    },
+    ID: 'eloBonus'
   },
   {
     name: () => {
@@ -2535,22 +2679,6 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
-      return i18next.t('singularity.perks.shopSpecialOffer.name')
-    },
-    levels: [5, 20, 51],
-    description: (n: number, levels: number[]) => {
-      if (n >= levels[2]) {
-        return i18next.t('singularity.perks.shopSpecialOffer.hasLevel2')
-      } else if (n >= levels[1]) {
-        return i18next.t('singularity.perks.shopSpecialOffer.hasLevel1')
-      } else {
-        return i18next.t('singularity.perks.shopSpecialOffer.default')
-      }
-    },
-    ID: 'shopSpecialOffer'
-  },
-  {
-    name: () => {
       return i18next.t('singularity.perks.potionAutogenerator.name')
     },
     levels: [6],
@@ -2561,19 +2689,35 @@ export const singularityPerks: SingularityPerk[] = [
   },
   {
     name: () => {
-      return i18next.t('singularity.perks.respecBeGone.name')
+      return i18next.t('singularity.perks.persistentGlobalResets.name')
     },
-    levels: [7],
+    levels: [8],
     description: () => {
-      return i18next.t('singularity.perks.respecBeGone.default')
+      return i18next.t('singularity.perks.persistentGlobalResets.default')
     },
-    ID: 'respecBeGone'
+    ID: 'persistentGlobalResets'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.shopSpecialOffer.name')
+    },
+    levels: [10, 50],
+    description: (n: number, levels: number[]) => {
+      if (n >= levels[1]) {
+        return i18next.t('singularity.perks.shopSpecialOffer.hasLevel2')
+      } else if (n >= levels[0]) {
+        return i18next.t('singularity.perks.shopSpecialOffer.hasLevel1')
+      } else {
+        return i18next.t('singularity.perks.shopSpecialOffer.default')
+      }
+    },
+    ID: 'shopSpecialOffer'
   },
   {
     name: () => {
       return i18next.t('singularity.perks.forTheLoveOfTheAntGod.name')
     },
-    levels: [10, 15, 25],
+    levels: [10, 15, 20],
     description: (n: number, levels: number[]) => {
       if (n >= levels[2]) {
         return i18next.t('singularity.perks.forTheLoveOfTheAntGod.hasLevel2')
@@ -2804,17 +2948,23 @@ export const singularityPerks: SingularityPerk[] = [
     name: () => {
       return i18next.t('singularity.perks.wowCubeAutomatedShipping.name')
     },
-    levels: [50, 150],
-    description: (n: number, levels: number[]) => {
-      if (n >= levels[1]) {
-        return i18next.t(
-          'singularity.perks.wowCubeAutomatedShipping.hasLevel1'
-        )
-      } else {
-        return i18next.t('singularity.perks.wowCubeAutomatedShipping.default')
-      }
+    levels: [50],
+    description: () => {
+      return i18next.t(
+        'singularity.perks.wowCubeAutomatedShipping.default'
+      )
     },
     ID: 'wowCubeAutomatedShipping'
+  },
+  {
+    name: () => {
+      return i18next.t('singularity.perks.platonicClones.name')
+    },
+    levels: [50],
+    description: () => {
+      return i18next.t('singularity.perks.platonicClones.default')
+    },
+    ID: 'platonicClones'
   },
   {
     name: () => {
@@ -2896,20 +3046,6 @@ export const singularityPerks: SingularityPerk[] = [
       })
     },
     ID: 'goldenRevolution3'
-  },
-  {
-    name: () => {
-      return i18next.t('singularity.perks.platonicClones.name')
-    },
-    levels: [100, 200],
-    description: (n: number, levels: number[]) => {
-      if (n >= levels[1]) {
-        return i18next.t('singularity.perks.platonicClones.hasLevel1')
-      } else {
-        return i18next.t('singularity.perks.platonicClones.default')
-      }
-    },
-    ID: 'platonicClones'
   },
   {
     name: () => {
@@ -3014,7 +3150,7 @@ export const singularityPerks: SingularityPerk[] = [
     levels: [200],
     description: () => {
       const amt = (player.singularityCount >= 200)
-        ? format(Math.pow(1 + (player.singularityCount - 199) / 25, 2), 4)
+        ? format(Math.pow(1 + (player.singularityCount - 199) / 20, 2), 4)
         : format(1, 4)
       return i18next.t('singularity.perks.skrauQ.default', { amt })
     },
@@ -3104,7 +3240,7 @@ export const updateSingularityPerks = (): void => {
   handlePerks(singularityCount)
 }
 
-export interface ISingularityPerkDisplayInfo {
+interface ISingularityPerkDisplayInfo {
   name: string
   lastUpgraded: number
   acquired: number
@@ -3178,9 +3314,11 @@ const handlePerks = (singularityCount: number) => {
     const perkId = DOMCacheGetOrSet(availablePerk.htmlID)
     perkId.style.display = ''
     DOMCacheGetOrSet('singularityPerksGrid').append(perkId)
-    singularityCount - availablePerk.lastUpgraded <= singTolerance // Is new?
-      ? perkId.classList.replace('oldPerk', 'newPerk')
-      : perkId.classList.replace('newPerk', 'oldPerk')
+    if (singularityCount - availablePerk.lastUpgraded <= singTolerance) { // Is new?
+      perkId.classList.replace('oldPerk', 'newPerk')
+    } else {
+      perkId.classList.replace('newPerk', 'oldPerk')
+    }
   }
   const nextUnlockedId = DOMCacheGetOrSet('singualrityUnlockNext')
   if (singularityCountForNextPerk) {
@@ -3267,6 +3405,7 @@ export async function buyGoldenQuarks (): Promise<void> {
   let cost: number
 
   if (buyAmount === -1) {
+    buyAmount = maxBuy
     cost = maxBuy * goldenQuarkCost.cost
     player.worlds.sub(cost)
     player.goldenQuarks += maxBuy
@@ -3278,27 +3417,28 @@ export async function buyGoldenQuarks (): Promise<void> {
 
   return Alert(
     i18next.t('singularity.goldenQuarks.transaction', {
-      spent: format(maxBuy, 0, true),
+      spent: format(buyAmount, 0, true),
       cost: format(cost, 0, true)
     })
   )
 }
 
-export type SingularityDebuffs =
+type SingularityDebuffs =
   | 'Offering'
   | 'Obtainium'
   | 'Salvage'
   | 'Global Speed'
   | 'Researches'
+  | 'Ant ELO'
   | 'Ascension Speed'
   | 'Cubes'
   | 'Cube Upgrades'
   | 'Platonic Costs'
   | 'Hepteract Costs'
 
-export const calculateSingularityReductions = () => {
+const calculateSingularityReductions = () => {
   return (
-    player.shopUpgrades.shopSingularityPenaltyDebuff
+    getShopUpgradeEffects('shopSingularityPenaltyDebuff', 'singularityPenaltyReducers')
     + (player.insideSingularityChallenge
       ? getAmbrosiaUpgradeEffects('ambrosiaSingReduction2').singularityReduction
       : getAmbrosiaUpgradeEffects('ambrosiaSingReduction1').singularityReduction)
@@ -3311,14 +3451,10 @@ export const calculateEffectiveSingularities = (
   let effectiveSingularities = singularityCount
   effectiveSingularities *= Math.min(4.75, (0.75 * singularityCount) / 10 + 1)
 
-  if (player.insideSingularityChallenge) {
-    if (player.singularityChallenges.noOcteracts.enabled) {
-      effectiveSingularities *= Math.pow(
-        player.singularityChallenges.noOcteracts.completions + 1,
-        3
-      )
-    }
-  }
+  effectiveSingularities *= calculateExalt4EffectiveSingularityMultiplier(
+    player.singularityChallenges.noOcteracts.completions,
+    false
+  )
 
   if (singularityCount > 10) {
     effectiveSingularities *= 1.5
@@ -3383,13 +3519,12 @@ export const calculateEffectiveSingularities = (
   return effectiveSingularities
 }
 
-export const calculateNextSpike = (
+const calculateNextSpike = (
   singularityCount: number = player.singularityCount
 ): number => {
-  const singularityPenaltyThreshold = [11, 26, 37, 51, 101, 151, 201, 216, 230, 270]
   const penaltyDebuff = calculateSingularityReductions()
 
-  for (const sing of singularityPenaltyThreshold) {
+  for (const sing of singularityPenaltyThresholds) {
     if (sing + penaltyDebuff > singularityCount) {
       return sing + penaltyDebuff
     }
@@ -3401,7 +3536,7 @@ export const calculateSingularityDebuff = (
   singularityCount: number = player.singularityCount
 ) => {
   if (singularityCount === 0 || runes.antiquities.level > 0) {
-    return (debuff === 'Salvage') ? 0 : 1
+    return (debuff === 'Salvage' || debuff === 'Ant ELO') ? 0 : 1
   }
 
   const constitutiveSingularityCount = singularityCount - calculateSingularityReductions()
@@ -3414,8 +3549,7 @@ export const calculateSingularityDebuff = (
   )
 
   let baseDebuffMultiplier = 1
-  baseDebuffMultiplier *= 1
-    - Math.min(300, player.shopUpgrades.shopHorseShoe * getRuneEffectiveLevel('horseShoe')) / 1000
+  baseDebuffMultiplier *= getShopUpgradeEffects('shopHorseShoe', 'singularityPenaltyMult')
 
   if (debuff === 'Offering') {
     const extraMult = Math.pow(1.02, constitutiveSingularityCount)
@@ -3429,6 +3563,8 @@ export const calculateSingularityDebuff = (
       + 3 * Math.max(0, constitutiveSingularityCount - 250)
       + 3 * Math.max(0, constitutiveSingularityCount - 270)
       + 2 * Math.max(0, constitutiveSingularityCount - 280))
+  } else if (debuff === 'Ant ELO') {
+    return -Math.min(1, 0.001 * constitutiveSingularityCount)
   } else if (debuff === 'Global Speed') {
     return baseDebuffMultiplier * (1 + Math.sqrt(effectiveSingularities) / 4)
   } else if (debuff === 'Obtainium') {
@@ -3483,7 +3619,7 @@ export const updateSingularityElevator = (): void => {
   const lockStatus = DOMCacheGetOrSet('elevatorLockStatus')
 
   const highestSingularity = DOMCacheGetOrSet('highestSingularity')
-  const lookahead = DOMCacheGetOrSet('lookahead')
+  const lookaheadDisplay = DOMCacheGetOrSet('lookahead')
   const maxLookahead = DOMCacheGetOrSet('maxLookahead')
   const extraLookahead = DOMCacheGetOrSet('extraLookahead')
 
@@ -3498,11 +3634,11 @@ export const updateSingularityElevator = (): void => {
     singLook = player.singularityCount + lookahead
   }
 
-  const maxTarget = Math.max(1, player.highestSingularityCount, singLook)
+  const maxTarget = Math.max(1, player.highestSingularityCount, singLook, player.singularityCount - 1)
 
   const theoreticalLookahead = calculateMaxSingularityLookahead(true)
 
-  lookahead.innerHTML = i18next.t('singularity.elevator.lookahead')
+  lookaheadDisplay.innerHTML = i18next.t('singularity.elevator.lookahead')
   maxLookahead.innerHTML = i18next.t('singularity.elevator.maxLookahead', { num: theoreticalLookahead })
   extraLookahead.innerHTML = i18next.t('singularity.elevator.lookaheadExtra')
 
@@ -3535,9 +3671,9 @@ export const updateSingularityElevator = (): void => {
         i18next.t('singularity.elevator.lockDisabledSing', { target: player.singularityCount + 1 })
       }`
     } else {
-      const maxTarget = Math.max(player.singularityCount + theoreticalLookahead, player.highestSingularityCount)
+      const maxTarget2 = Math.max(player.singularityCount + theoreticalLookahead, player.highestSingularityCount)
       lockStatus.innerHTML = `${introText}<br>${
-        i18next.t('singularity.elevator.lockDisabledSing', { target: maxTarget })
+        i18next.t('singularity.elevator.lockDisabledSing', { target: maxTarget2 })
       }`
     }
   }
@@ -3578,7 +3714,7 @@ export const teleportToSingularity = async (): Promise<void> => {
         const heldSingTime = player.singularityCounter
         const antiquitiesLevel = runes.antiquities.level
         // Reset
-        singularity()
+        singularity(target)
         if (antiquitiesLevel === 0) {
           player.singularityCounter = heldSingTime
         }
@@ -3592,19 +3728,5 @@ export const teleportToSingularity = async (): Promise<void> => {
     // Update display
     updateSingularityElevator()
     Alert(i18next.t('singularity.elevator.teleportSuccess', { target }))
-  }
-}
-
-export const calculateSingularityMatterCap = (sing: number) => {
-  return Math.pow(100 + sing, 2)
-}
-
-export const calculateEarnableSingularityMatter = (sing: number) => {
-  const currentMatter = player.singularityMatter
-  const cap = calculateSingularityMatterCap(sing)
-  if (currentMatter >= cap) {
-    return 0
-  } else {
-    return Math.ceil(0.01 * (cap - currentMatter))
   }
 }

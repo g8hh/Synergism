@@ -4,7 +4,6 @@ node_modules/
 dist
 !.eslintrc.js
 .idea
-package-lock.json
 
 .project
 .settings/*
@@ -13,3 +12,5 @@ Pictures/Splash/Thumbs.db
 Pictures/TransparentPics/Thumbs.db
 
 **/.DS_Store
+release
+!electron/**/*.js

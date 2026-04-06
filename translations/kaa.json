@@ -486,58 +486,8 @@
         }
     },
     "ants": {
-        "upgrades": {
-            "1": "Promotes romance and unity within the colony. [+12% Ant Speed / level]",
-            "2": "Sweetens crumbs to increase their value [Each level increases Crumb --> Coin Conversion efficiency, up to ^50,000,000]",
-            "3": "Swarms the Taxman into submission [Up to -99.5% taxes!]",
-            "4": "Scares you into running faster [up to x20]",
-            "5": "Imitates your body through magic shape-shifting powers [up to x40]",
-            "6": "Tries to please Ant God... but fails [Additional Offerings!]",
-            "7": "Helps you build a few things here and there [+3% Building Cost Delay / level, Cap 9,999,999%]",
-            "8": "Knows how to salt and pepper food [Up to 1,000x Rune EXP!]",
-            "9": "Can make your message to Ant God a little more clear [+1 all Rune Levels / level, Cap 10 Million]",
-            "10": "Has big brain energy [Additional Obtainium!]",
-            "11": "A valuable offering to the Ant God [Gain up to 3x Sacrifice Rewards!]",
-            "12": "Betray Ant God increasing the fragility of your dimension [Unlocks ant talisman, Up to 2x faster timers on most things]"
-        },
-        "descriptions": {
-            "1": "Gain a Worker Ant for your everyday life. Gathers Galactic Crumbs. Essential!",
-            "2": "Gain a Breeder Ant that produces Worker Ants automatically!",
-            "3": "Gain a Meta-breeder Ant that produces Breeder Ants automatically!",
-            "4": "Gain a Mega-breeder Ant that produces Meta-breeder Ants automatically!",
-            "5": "Gain a Queen Ant that produces Mega-breeder Ants automatically!",
-            "6": "Gain a Lord Royal Ant that produces Queen Ants automatically!",
-            "7": "Gain an ALMIGHTY ANT that produces Lord Royal Ants automatically!",
-            "8": "Gain a DISCIPLE OF ANT GOD that produces ALMIGHTY ANTS automatically!"
-        },
-        "generates": {
-            "1": "Generates {{x}} Crumbs/sec",
-            "2": "Generates {{x}} Workers/sec",
-            "3": "Generates {{x}} Breeders/sec",
-            "4": "Generates {{x}} MetaBreeders/sec",
-            "5": "Generates {{x}} MegaBreeders/sec",
-            "6": "Generates {{x}} Queens/sec",
-            "7": "Generates {{x}} Royals/sec",
-            "8": "Generates {{x}} ALMIGHTIES/sec"
-        },
-        "rewards": {
-            "1": "CURRENT EFFECT: ALL Ants work at {{x}}x speed.",
-            "2": "CURRENT EFFECT: Crumb --> Coin exponent is ^{{x}}",
-            "3": "CURRENT EFFECT: Tax growth is multiplied by {{x}}",
-            "4": "CURRENT EFFECT: Accelerator Boosts +{{x}}%",
-            "5": "CURRENT EFFECT: Multipliers +{{x}}%",
-            "6": "CURRENT EFFECT: Offerings x{{x}}",
-            "7": "CURRENT EFFECT: Building Costs scale {{x}}% slower!",
-            "8": "CURRENT EFFECT: Rune EXP is multiplied by {{x}}!",
-            "9": "CURRENT EFFECT: Each rune has +{{x}} effective levels.",
-            "10": "CURRENT EFFECT: Obtainium x{{x}}",
-            "11": "CURRENT EFFECT: Sacrificing is {{x}}x as effective",
-            "12": "CURRENT EFFECT: Global timer is sped up by a factor of {{x}}"
-        },
         "header": "The ants welcome you to their home.",
         "hover": "Hover over the icons for description. Click icons to buy!",
-        "youHaveGalacticCrumbs": "You have {{x}} Galactic Crumbs [{{y}}/s], providing a {{z}} Coin Multiplier",
-        "owned": "Owned: {{x}} [+{{y}}]",
         "costGalacticCrumbs": "Cost: {{x}} Galactic Crumbs",
         "costParticles": "Cost: {{x}} Particles",
         "autoSacrificeOn": "Auto Sacrifice: ON",
@@ -548,10 +498,8 @@
         "yourAntELO": "<<plum|Your Ant ELO is>> <<gold|{{x}}>> [{{y}} effective]",
         "upgradeMultiplier": "Upgrade Multiplier: <<gold|{{x}}x>>",
         "timeMultiplier": "Time Multiplier: <<var(--lightseagreen-text-color);|{{x}}x>>",
-        "resetAnthill": "Reset Anthill features for:",
         "antSacMultiplier": "Ant Sacrifice Multiplier: {{y}}x --> <<limegreen|x{{x}}>>",
-        "autoReset": "This resets your Crumbs, Ants and Ant Upgrades in exchange for some multiplier and resources. Continue?",
-        "elo": "+{{x}} [>{{y}} ELO]"
+        "autoReset": "This resets your Crumbs, Ants and Ant Upgrades in exchange for some multiplier and resources. Continue?"
     },
     "challenges": {
         "1": {
@@ -1970,15 +1918,6 @@
         "buyMaxOff": "Buy Max: OFF",
         "on": "ON",
         "off": "OFF",
-        "updateAlerts": {
-            "june282021": "June 28, 2021: V2.5.3. You have been refunded quarks from calculators if you purchased them. They are no longer refundable so be wary!",
-            "july22021": "July 2, 2021: V2.5.5. You have been refunded quarks from Powder EX upgrade, if you purchased levels. Your T1 ants were also reset and base cost set to 1e700 particles. Powder EX is no longer refundable, though, so be careful!",
-            "sing230Balancing": "Due to balancing changes, you were sent back to Singularity 230 to prevent softlocking your savefile!",
-            "december22xxxx": "You have loaded into the December 22 patch v1.",
-            "january42023": "You have loaded into the January 4, 2023 Patch v1.",
-            "v297hotfix1NoSing": "You have loaded into the version 2.9.7 hotfix 1!",
-            "v297hotfix1Sing": "You have loaded into the version 2.9.7 hotfix 1! Your uncapped resource singularity upgrades have been refunded! Sorry for the inconvenience."
-        },
         "languageChange": "Changing the language requires a reload! Would you like to reload now?"
     },
     "upgrades": {
@@ -2405,7 +2344,6 @@
         "confirm": "Confirm",
         "intro": "The most rewarding ventures are those few would dare to embark.",
         "traitInfo": "Select the trait levels you wish to run with. Choose wisely! <<var(--red-text-color)|Don't bite off more than you can chew...>>",
-        "antExponent": "This Ascension's climate raises Ant production to the power of <<var(--darkorchid-text-color)|{{exponent}}>>.",
         "spiritBonus": "However, it also multiplies Rune Spirit Effects by <<wheat|{{multiplier}}>>.",
         "corruptionBank": "You have <<var(--crimson-text-color)|{{number}}>> Wow! Cubes in the Ascension bank. Gain more by finishing Challenges! Ascend to redeem them.",
         "corruptionScore": "Your Ascension Score is <<goldenrod|{{ascScore}}>></span> (base) * <<var(--crimson-text-color)|{{corrMult}}>> (Corruption mult) * <<var(--orchid-text-color)|{{bonusMult}}>> (Bonus mult) = <<var(--darkorchid-text-color)|{{totalScore}}>>",
@@ -3198,15 +3136,6 @@
                 "subbed": "Thanks for using the \"sub\" code! I've taken away {{x}} Quarks! :)",
                 "gave": "I gave you {{x}} Quarks so I could take {{y}} away."
             },
-            "gamble": {
-                "wait": "Wait a little bit. We'll get back to you when you're ready to lose again.",
-                "prompt": "Are you sure? The house always wins!",
-                "cancelled": "Scared? You should be!",
-                "betPrompt": "How many Quarks are you putting up?",
-                "cheaters": "Due to cheaters, you can only bet 10k max.",
-                "won": "You won. The Syncasino offers you a grand total of 25% of the pot! [+{{x}} Quarks]",
-                "lost": "Try again... you can do it! [-{{x}} quarks]"
-            },
             "time": {
                 "wait": "If you imported a save, you cannot use this code for 15 minutes to prevent cheaters.\n\nRegardless, you must wait at least 15 minutes between each use.",
                 "confirm": "Click the button within the next 15 seconds to test your luck! If you click within {{x}} ms of a randomly generated time, you will win a prize! This particular instance has a {{y}}x multiplier due to elapsed time between uses.",
@@ -3228,8 +3157,6 @@
         "autoUpgradeOff": "Auto Upgrades: [OFF]",
         "upgradeMaxIfPossible": "Upgrade: MAX [if possible wow]",
         "upgradeOneLevelWow": "Upgrade: 1 Level wow",
-        "saveOfferingsOn": "Save Offerings [ON]",
-        "saveOfferingsOff": "Save Offerings [OFF]",
         "modeTime": "Mode: TIME",
         "modeAmount": "Mode: AMOUNT",
         "modePercentage": "Mode: PERCENTAGE"

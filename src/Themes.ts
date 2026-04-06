@@ -1,5 +1,6 @@
 import i18next from 'i18next'
 import { DOMCacheGetOrSet } from './Cache/DOM'
+import { updateIconsFromSprites } from './SpriteSheets'
 import { player } from './Synergism'
 
 export const toggleTheme = (initial = false, themeNumber = 1, change = false) => {
@@ -82,8 +83,6 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('ascTimeAccel').style.color = 'royalblue'
     DOMCacheGetOrSet('buildinghotkeys').style.color = 'lightgray'
     DOMCacheGetOrSet('buildinghotkeys2').style.color = 'lightgray'
-    DOMCacheGetOrSet('antspecies').style.color = 'royalblue' // HTML colors
-    DOMCacheGetOrSet('corruptionTesseracts').style.color = 'darkviolet'
     DOMCacheGetOrSet('antwelcome').style.color = 'lightslategrey'
     DOMCacheGetOrSet('confirmationToggleTitle').style.color = 'pink'
     DOMCacheGetOrSet('specialActionsTitle').style.color = 'pink'
@@ -196,13 +195,11 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     body.style.setProperty('--orangered-text-color', '#f74')
     body.style.setProperty('--gray-text-color', '#a5a5a5')
     DOMCacheGetOrSet('corruptionDescription').style.color = '#d272ff'
-    DOMCacheGetOrSet('corruptionTesseracts').style.color = '#d272ff'
     DOMCacheGetOrSet('antwelcome').style.color = '#b1b1b1'
     DOMCacheGetOrSet('versionnumber').style.color = '#ff5aff'
     DOMCacheGetOrSet('singularitytab').style.color = '#ff5252'
     DOMCacheGetOrSet('traitstab').style.color = '#ff5252'
     DOMCacheGetOrSet('cubetab').style.color = '#ff5252'
-    DOMCacheGetOrSet('antspecies').style.color = '#8da9ff'
     DOMCacheGetOrSet('ascTimeAccel').style.color = '#97b0ff'
     DOMCacheGetOrSet('hypercubeWelcome').style.color = '#f58'
     DOMCacheGetOrSet('hypercubeQuantity').style.color = '#f58'
@@ -260,14 +257,12 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('heptGrid').style.borderColor = '#9b7306'
     DOMCacheGetOrSet('corruptionDescription').style.color = '#c205ff'
     DOMCacheGetOrSet('corruptionTesseracts').style.color = '#c205ff'
-    DOMCacheGetOrSet('antwelcome').style.color = 'darkgrey'
     DOMCacheGetOrSet('confirmationToggleTitle').style.color = '#eb0000'
     DOMCacheGetOrSet('specialActionsTitle').style.color = '#eb0000'
     DOMCacheGetOrSet('themesTitle').style.color = '#eb0000'
     DOMCacheGetOrSet('notationTitle').style.color = '#eb0000'
     DOMCacheGetOrSet('hepteractWelcome').style.color = '#ac47ff'
     DOMCacheGetOrSet('confirmationdisclaimer').style.color = '#bb68ff'
-    DOMCacheGetOrSet('antspecies').style.color = '#184ff3'
     DOMCacheGetOrSet('buildinghotkeys').style.color = '#838383'
     DOMCacheGetOrSet('buildinghotkeys2').style.color = '#838383'
 
@@ -281,7 +276,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
   }
 }
 
-export enum Notations {
+enum Notations {
   PURE_SCIENTIFIC = 'Pure Scientific',
   PURE_ENGINEERING = 'Pure Engineering',
   DEFAULT = 'Default'
@@ -290,7 +285,7 @@ export enum Notations {
 export const toggleAnnotation = (setting = true) => {
   const notationButton = DOMCacheGetOrSet('notation')
   const current = player.notation
-  let newNotation: string
+  let newNotation: Notations
 
   switch (current) {
     case Notations.PURE_SCIENTIFIC:
@@ -321,6 +316,7 @@ export const settingAnnotation = () => {
     case Notations.PURE_ENGINEERING:
       notationButton.textContent = i18next.t('settings.notation.pureEngineering')
       break
+    case Notations.DEFAULT:
     default:
       notationButton.textContent = i18next.t('settings.notation.default')
   }
@@ -344,19 +340,18 @@ export const IconSets: [string, number][] = [
   ['Simplified', 1],
   ['Monotonous', 1]
 ]
-export const IconSetsRegex = /Default|Simplified|Monotonous|Legacy/
+const IconSetsRegex = /Default|Simplified|Monotonous|Legacy/
 
 export const toggleIconSet = (changeTo = player.iconSet) => {
   if ((changeTo > (IconSets.length - 1)) || (changeTo < 0)) {
     changeTo = 0
   }
   player.iconSet = changeTo
-  Array.from(document.getElementsByTagName('img')).forEach(
-    (img) => {
-      img.src = img.src.replace(IconSetsRegex, IconSets[player.iconSet][0])
-    }
-  )
+  for (const img of document.getElementsByTagName('img')) {
+    img.src = img.src.replace(IconSetsRegex, IconSets[player.iconSet][0])
+  }
   DOMCacheGetOrSet('iconSet').textContent = i18next.t(`settings.iconSets.${IconSets[player.iconSet][0].toLowerCase()}`)
+  updateIconsFromSprites(IconSets[player.iconSet][0])
 }
 
 // If no image is found falls back to designated fallback, then Legacy, then MISSINGIMAGE.png

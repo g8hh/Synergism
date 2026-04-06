@@ -4,11 +4,12 @@ import { DOMCacheGetOrSet } from './Cache/DOM'
 import { resetTimeThreshold } from './Calculate'
 import { format, formatAsPercentIncrease, player } from './Synergism'
 
-export type SynergismLevelReward =
+type SynergismLevelReward =
   | 'quarks'
   | 'salvage'
   | 'obtainium'
   | 'offerings'
+  | 'ants'
   | 'wowCubes'
   | 'wowTesseracts'
   | 'wowHyperCubes'
@@ -18,7 +19,7 @@ export type SynergismLevelReward =
   | 'ambrosiaLuck'
   | 'redAmbrosiaLuck'
 
-export interface SynergismLevelRewardData {
+interface SynergismLevelRewardData {
   name: () => string
   description: () => string
   effect: (lv: number) => number
@@ -95,6 +96,25 @@ export const synergismLevelRewards: Record<SynergismLevelReward, SynergismLevelR
     minLevel: 15,
     defaultValue: 1,
     nameColor: 'pink'
+  },
+  ants: {
+    name: () => i18next.t('achievements.levelRewards.ants.name'),
+    description: () => i18next.t('achievements.levelRewards.ants.description'),
+    effect: (lv: number) => {
+      const first100Levels = Math.min(71, lv - 59) * 25
+      const next100Levels = Math.max(0, Math.min(100, lv - 100)) * 50
+      const remainingLevels = Math.max(0, lv - 200) * 100
+      return first100Levels + next100Levels + remainingLevels
+    },
+    effectDescription: () => {
+      const elo = getLevelReward('ants')
+      return i18next.t('achievements.levelRewards.ants.effect', {
+        elo: format(elo, 0, true)
+      })
+    },
+    minLevel: 60,
+    defaultValue: 1,
+    nameColor: 'burlywood'
   },
   wowCubes: {
     name: () => i18next.t('achievements.levelRewards.wowCubes.name'),
@@ -210,7 +230,7 @@ export const synergismLevelRewards: Record<SynergismLevelReward, SynergismLevelR
   }
 }
 
-export const synergismLevelReward = Object.keys(synergismLevelRewards) as SynergismLevelReward[]
+const synergismLevelReward = Object.keys(synergismLevelRewards) as SynergismLevelReward[]
 
 export const getLevelReward = (reward: SynergismLevelReward): number => {
   if (achievementLevel >= synergismLevelRewards[reward].minLevel) {
@@ -220,7 +240,7 @@ export const getLevelReward = (reward: SynergismLevelReward): number => {
   }
 }
 
-export const getLevelRewardDescription = (reward: SynergismLevelReward) => {
+const getLevelRewardDescription = (reward: SynergismLevelReward) => {
   const name = synergismLevelRewards[reward].name()
   const description = synergismLevelRewards[reward].description()
   const effectDesc = synergismLevelRewards[reward].effectDescription()
@@ -258,21 +278,17 @@ export const generateLevelRewardHTMLs = () => {
     img.alt = synergismLevelRewards[reward].name()
     img.style.cursor = 'pointer'
 
-    img.onclick = () => {
-      getLevelRewardDescription(reward)
-    }
-    img.onmouseover = () => {
-      getLevelRewardDescription(reward)
-    }
-    img.focus = () => {
-      getLevelRewardDescription(reward)
-    }
+    const boundGetLevelRewardDescription = getLevelRewardDescription.bind(null, reward)
+
+    img.addEventListener('click', boundGetLevelRewardDescription)
+    img.addEventListener('mouseover', boundGetLevelRewardDescription)
+    img.addEventListener('focus', boundGetLevelRewardDescription)
     div.appendChild(img)
     rewardTable.appendChild(div)
   }
 }
 
-export type SynergismLevelMilestones =
+type SynergismLevelMilestones =
   | 'offeringTimerScaling'
   | 'speedRune'
   | 'duplicationRune'
@@ -289,6 +305,10 @@ export type SynergismLevelMilestones =
   | 'runeAutobuyImprover'
   | 'achievementTalismanEnhancement'
   | 'salvageChallengeBuff'
+  | 'antSpeed2Autobuyer'
+  | 'wowCubesAutobuyer'
+  | 'ascensionScoreAutobuyer'
+  | 'mortuus2Autobuyer'
 
 interface SynergismLevelMilestoneData {
   name: () => string
@@ -300,7 +320,7 @@ interface SynergismLevelMilestoneData {
   displayOrder: number
 }
 
-export const synergismLevelMilestones: Record<SynergismLevelMilestones, SynergismLevelMilestoneData> = {
+const synergismLevelMilestones: Record<SynergismLevelMilestones, SynergismLevelMilestoneData> = {
   offeringTimerScaling: {
     name: () => i18next.t('achievements.levelMilestones.offeringTimerScaling.name'),
     description: () => i18next.t('achievements.levelMilestones.offeringTimerScaling.description'),
@@ -330,7 +350,7 @@ export const synergismLevelMilestones: Record<SynergismLevelMilestones, Synergis
           : i18next.t('achievements.rewardTypes.locked')
       })
     },
-    levelReq: 10,
+    levelReq: 7,
     displayOrder: 2
   },
   speedRune: {
@@ -502,12 +522,12 @@ export const synergismLevelMilestones: Record<SynergismLevelMilestones, Synergis
   runeAutobuyImprover: {
     name: () => i18next.t('achievements.levelMilestones.runeAutobuyImprover.name'),
     description: () => i18next.t('achievements.levelMilestones.runeAutobuyImprover.description'),
-    effect: () => 2 + (achievementLevel - 130) / 10,
+    effect: () => 1.1 + 0.01 * (achievementLevel - 130),
     defaultValue: 1,
     effectDescription: () => {
       const mult = getLevelMilestone('runeAutobuyImprover')
       return i18next.t('achievements.levelMilestones.runeAutobuyImprover.effect', {
-        mult: format(mult, 1, true)
+        mult: formatAsPercentIncrease(mult, 0)
       })
     },
     levelReq: 130,
@@ -556,10 +576,74 @@ export const synergismLevelMilestones: Record<SynergismLevelMilestones, Synergis
     },
     levelReq: 180,
     displayOrder: 15
+  },
+  antSpeed2Autobuyer: {
+    name: () => i18next.t('achievements.levelMilestones.antSpeed2Autobuyer.name'),
+    description: () => i18next.t('achievements.levelMilestones.antSpeed2Autobuyer.description'),
+    effect: () => 1,
+    defaultValue: 0,
+    effectDescription: () => {
+      const unlocked = getLevelMilestone('antSpeed2Autobuyer') === 1
+      return i18next.t('achievements.levelMilestones.antSpeed2Autobuyer.effect', {
+        unlocked: unlocked
+          ? i18next.t('achievements.rewardTypes.unlocked')
+          : i18next.t('achievements.rewardTypes.locked')
+      })
+    },
+    levelReq: 65,
+    displayOrder: 16
+  },
+  wowCubesAutobuyer: {
+    name: () => i18next.t('achievements.levelMilestones.wowCubesAutobuyer.name'),
+    description: () => i18next.t('achievements.levelMilestones.wowCubesAutobuyer.description'),
+    effect: () => 1,
+    defaultValue: 0,
+    effectDescription: () => {
+      const unlocked = getLevelMilestone('wowCubesAutobuyer') === 1
+      return i18next.t('achievements.levelMilestones.wowCubesAutobuyer.effect', {
+        unlocked: unlocked
+          ? i18next.t('achievements.rewardTypes.unlocked')
+          : i18next.t('achievements.rewardTypes.locked')
+      })
+    },
+    levelReq: 80,
+    displayOrder: 17
+  },
+  ascensionScoreAutobuyer: {
+    name: () => i18next.t('achievements.levelMilestones.ascensionScoreAutobuyer.name'),
+    description: () => i18next.t('achievements.levelMilestones.ascensionScoreAutobuyer.description'),
+    effect: () => 1,
+    defaultValue: 0,
+    effectDescription: () => {
+      const unlocked = getLevelMilestone('ascensionScoreAutobuyer') === 1
+      return i18next.t('achievements.levelMilestones.ascensionScoreAutobuyer.effect', {
+        unlocked: unlocked
+          ? i18next.t('achievements.rewardTypes.unlocked')
+          : i18next.t('achievements.rewardTypes.locked')
+      })
+    },
+    levelReq: 80,
+    displayOrder: 18
+  },
+  mortuus2Autobuyer: {
+    name: () => i18next.t('achievements.levelMilestones.mortuus2Autobuyer.name'),
+    description: () => i18next.t('achievements.levelMilestones.mortuus2Autobuyer.description'),
+    effect: () => 1,
+    defaultValue: 0,
+    effectDescription: () => {
+      const unlocked = getLevelMilestone('mortuus2Autobuyer') === 1
+      return i18next.t('achievements.levelMilestones.mortuus2Autobuyer.effect', {
+        unlocked: unlocked
+          ? i18next.t('achievements.rewardTypes.unlocked')
+          : i18next.t('achievements.rewardTypes.locked')
+      })
+    },
+    levelReq: 225,
+    displayOrder: 19
   }
 }
 
-export const synergismLevelMilestone = Object.keys(synergismLevelMilestones) as SynergismLevelMilestones[]
+const synergismLevelMilestone = Object.keys(synergismLevelMilestones) as SynergismLevelMilestones[]
 
 export const getLevelMilestone = (milestone: SynergismLevelMilestones): number => {
   if (achievementLevel >= synergismLevelMilestones[milestone].levelReq) {
@@ -569,7 +653,7 @@ export const getLevelMilestone = (milestone: SynergismLevelMilestones): number =
   }
 }
 
-export const getLevelMilestoneDescription = (milestone: SynergismLevelMilestones) => {
+const getLevelMilestoneDescription = (milestone: SynergismLevelMilestones) => {
   const name = synergismLevelMilestones[milestone].name()
   const description = synergismLevelMilestones[milestone].description()
   const effectDesc = synergismLevelMilestones[milestone].effectDescription()
@@ -603,15 +687,11 @@ export const generateLevelMilestoneHTMLS = () => {
     img.alt = synergismLevelMilestones[milestone].name()
     img.style.cursor = 'pointer'
 
-    img.onclick = () => {
-      getLevelMilestoneDescription(milestone)
-    }
-    img.onmouseover = () => {
-      getLevelMilestoneDescription(milestone)
-    }
-    img.focus = () => {
-      getLevelMilestoneDescription(milestone)
-    }
+    const boundGetLevelMilestoneDescription = getLevelMilestoneDescription.bind(null, milestone)
+
+    img.addEventListener('click', boundGetLevelMilestoneDescription)
+    img.addEventListener('mouseover', boundGetLevelMilestoneDescription)
+    img.addEventListener('focus', boundGetLevelMilestoneDescription)
     div.appendChild(img)
     rewardTable.appendChild(div)
   }

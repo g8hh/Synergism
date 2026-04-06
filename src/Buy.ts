@@ -2,12 +2,14 @@ import type { DecimalSource } from 'break_infinity.js'
 import Decimal from 'break_infinity.js'
 import { awardAchievementGroup } from './Achievements'
 import { CalcECC } from './Challenges'
+import { getAntUpgradeEffect } from './Features/Ants/AntUpgrades/lib/upgrade-effects'
+import { AntUpgrades } from './Features/Ants/AntUpgrades/structs/structs'
 import { reset } from './Reset'
 import { getRuneBlessingEffect } from './RuneBlessings'
 import { getRuneEffects } from './Runes'
 import { player, updateAllMultiplier, updateAllTick } from './Synergism'
 import type { FirstToFifth, OneToFive, ZeroToFour } from './types/Synergism'
-import { crystalupgradedescriptions, upgradeupdate } from './Upgrades'
+import { crystalupgradedescriptions, upgradeRequirements, upgradeupdate } from './Upgrades'
 import { smallestInc } from './Utility'
 import { Globals as G, Upgrade } from './Variables'
 
@@ -17,7 +19,7 @@ export const getReductionValue = () => {
   reduction += (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59]
     + player.researches[60]) / 200
   reduction += CalcECC('transcend', player.challengecompletions[4]) / 200
-  reduction += Math.min(99999.9, (3 * (player.antUpgrades[7 - 1]! + G.bonusant7)) / 100)
+  reduction += getAntUpgradeEffect(AntUpgrades.BuildingCostScale).buildingCostScale
   return reduction
 }
 
@@ -572,7 +574,7 @@ export const buyProducer = (
   r += (player.researches[56] + player.researches[57] + player.researches[58] + player.researches[59]
     + player.researches[60]) / 200
   r += CalcECC('transcend', player.challengecompletions[4]) / 200
-  r += (3 * (G.bonusant7 + player.antUpgrades[7 - 1]!)) / 100
+  r += getAntUpgradeEffect(AntUpgrades.BuildingCostScale).buildingCostScale
 
   const posCostType = `${pos}Cost${type}` as const
   const posOwnedType = `${pos}Owned${type}` as const
@@ -624,6 +626,10 @@ export const buyProducer = (
 }
 
 export const buyUpgrades = (type: Upgrade, pos: number, state?: boolean) => {
+  if (!upgradeRequirements[pos]) {
+    return
+  }
+
   const currency = type
   if (player[currency].gte(Decimal.pow(10, G.upgradeCosts[pos])) && player.upgrades[pos] === 0) {
     player[currency] = player[currency].sub(Decimal.pow(10, G.upgradeCosts[pos]))
@@ -652,7 +658,7 @@ export const buyUpgrades = (type: Upgrade, pos: number, state?: boolean) => {
   }
 }
 
-export const calculateCrystalBuy = (i: number) => {
+const calculateCrystalBuy = (i: number) => {
   const u = i - 1
   const exponent = Decimal.log(player.prestigeShards.add(1), 10)
   const exponentCostReduction = getRuneEffects('prism').costDivisorLog10
@@ -683,7 +689,10 @@ export const buyCrystalUpgrades = (i: number, auto = false) => {
 
   if (toBuy + c > player.crystalUpgrades[u]) {
     player.crystalUpgrades[u] = 100 / 100 * (toBuy + c)
-    if (toBuy > 0) {
+    /* Automation no longer spends Crystals. Late game players experience weird 'zeroing' of Crystals
+       When they can afford Crystal Upgrades, due to precision issues. It is easier to just
+       Not spend crystals before this becomes a significant issue. */
+    if (toBuy > 0 && !auto) {
       player.prestigeShards = player.prestigeShards.sub(
         Decimal.pow(
           10,
@@ -807,14 +816,16 @@ export const boostAccelerator = (automated?: boolean) => {
   awardAchievementGroup('acceleratorBoosts')
 }
 
+const linSum = (n: number) => n * (n + 1) / 2
+const sqrSum = (n: number) => n * (n + 1) * (2 * n + 1) / 6
+
 const getAcceleratorBoostCost = (level = 1): Decimal => {
   // formula starts at 0 but buying starts at 1
   level--
   const buymax = Math.pow(10, 15)
   const base = new Decimal(1e3)
   const eff = getRuneBlessingEffect('thrift').accelBoostCostDelay
-  const linSum = (n: number) => n * (n + 1) / 2
-  const sqrSum = (n: number) => n * (n + 1) * (2 * n + 1) / 6
+
   let cost = base
   if (level > 1000 * eff) {
     cost = base.times(Decimal.pow(
@@ -943,7 +954,7 @@ export const buyParticleBuilding = (
   }
 }
 
-export const tesseractBuildingCosts = [1, 10, 100, 1000, 10000] as const
+const tesseractBuildingCosts = [1, 10, 100, 1000, 10000] as const
 
 // The nth tesseract building of tier i costs
 //   tesseractBuildingCosts[i-1] * n^3.
@@ -1135,7 +1146,7 @@ export const calculateTessBuildingsInBudget = (
  * @param checkCanAfford Whether to limit the purchase amount to the number of buildings the player can afford.
  * @returns A pair of [number of buildings after purchase, cost of purchase].
  */
-export const getTesseractCost = (
+const getTesseractCost = (
   index: OneToFive,
   amount?: number,
   checkCanAfford = true,

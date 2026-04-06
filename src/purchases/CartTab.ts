@@ -1,8 +1,6 @@
 import { prod } from '../Config'
-import { isLoggedIn } from '../Login'
 import { changeSubTab, getActiveSubTab, Tabs } from '../Tabs'
-import { Alert } from '../UpdateHTML'
-import { createDeferredPromise, type DeferredPromise, memoize } from '../Utility'
+import { assert, createDeferredPromise, type DeferredPromise, memoize, retry } from '../Utility'
 import { setEmptyProductMap } from './CartUtil'
 import { clearCheckoutTab, toggleCheckoutTab } from './CheckoutTab'
 import { clearConsumablesTab, toggleConsumablesTab } from './ConsumablesTab'
@@ -17,11 +15,13 @@ interface BaseProduct {
   price: number
   coins: number
   description: string
+  features: string[]
 }
 
 export interface SubscriptionProduct extends BaseProduct {
   subscription: true
   quarkBonus: number
+  tier: number
 }
 
 export interface RegularProduct extends BaseProduct {
@@ -83,7 +83,8 @@ export class CartTab {
         // The Subscriptions do not naturally sort themselves by price
         subscriptionProducts.sort((a, b) => a.price - b.price)
         CartTab.#productsFetch?.resolve(undefined)
-      }, CartTab.#productsFetch.reject)
+      })
+      .catch((e) => CartTab.#productsFetch!.reject(e))
 
     return CartTab.#productsFetch.promise
   }
@@ -95,28 +96,27 @@ export class CartTab {
 
     CartTab.#upgradesFetch = createDeferredPromise()
 
-    const url = !prod ? 'https://synergism.cc/stripe/test/upgrades' : 'https://synergism.cc/stripe/upgrades'
+    const url = 'https://synergism.cc/stripe/upgrades'
 
     // TODO: move this fetch to the products page.
-    fetch(url)
+    retry(5, async () => {
+      const response = await fetch(url)
+      assert(response.ok, `received status ${response.status}`) // internal server error
+      return response
+    }, { backoff: 'exponential', maxDelay: 30_000 })
       .then((response) => response.json())
       .then((upgrades: UpgradesResponse) => {
-        CartTab.#upgradesFetch!.resolve(upgrades)
+        CartTab.#upgradesFetch?.resolve(upgrades)
         upgradeResponse = upgrades
-      }, CartTab.#upgradesFetch.reject)
+      })
+      .catch((err: Error) => CartTab.#upgradesFetch?.reject(err))
 
     return CartTab.#upgradesFetch.promise
   }
 
   static applySubtabListeners () {
-    for (const [index, element] of yieldQuerySelectorAll('.subtabSwitcher button')) {
-      element.addEventListener('click', () => {
-        if (isLoggedIn() || !prod || element.classList.contains('without-login')) {
-          changeSubTab(Tabs.Purchase, { page: index })
-        } else {
-          Alert('Note: you must be logged in to view this tab!')
-        }
-      })
+    for (const [page, element] of yieldQuerySelectorAll('.subtabSwitcher button')) {
+      element.addEventListener('click', changeSubTab.bind(null, Tabs.Purchase, { page }))
     }
   }
 
@@ -179,14 +179,13 @@ const onInit = memoize(() => {
   CartTab.fetchProducts()
   CartTab.applySubtabListeners()
 
-  // Switch to the upgrades tab if not logged in
-  if (!isLoggedIn() || !prod) {
-    changeSubTab(Tabs.Purchase, { step: 1 })
-  }
+  changeSubTab(Tabs.Purchase, { page: 0 })
 })
 
 export const initializeCart = () => {
   onInit()
 
+  // TODO(@KhafraDev):
+  // eslint-disable-next-line no-new:
   new CartTab()
 }

@@ -14,7 +14,7 @@ import { Alert, Notification, Prompt } from './UpdateHTML'
 import { getElementById, productContents, sumContents, validateNonnegativeInteger } from './Utility'
 import { Globals as G } from './Variables'
 
-export enum CorruptionIndices {
+enum CorruptionIndices {
   'viscosity' = 0,
   'dilation' = 1,
   'hyperchallenge' = 2,
@@ -136,10 +136,7 @@ export class CorruptionLoadout {
     bonusVal += +player.singularityChallenges.oneChallengeCap.rewards.corrScoreIncrease
     bonusVal += 0.3 * player.cubeUpgrades[74]
 
-    let bonusMult = 1
-    if (this.#levels[corr] >= 14 && getGQUpgradeEffect('masterPack')) {
-      bonusMult *= 1.1
-    }
+    const bonusMult = 1
 
     // player.platonicUpgrades[17] is the 17th platonic upgrade, known usually as P4x2, makes
     // Exponent 3 + 0.04 * level if the corr is viscosity and it is set at least level 10.
@@ -186,7 +183,7 @@ export class CorruptionLoadout {
   }
 
   #extinctionEffect () {
-    return G.extinctionMultiplier[this.#levels.extinction]
+    return G.extinctionDivisor[this.#levels.extinction]
   }
 
   #illiteracyEffect () {
@@ -295,8 +292,8 @@ export class CorruptionLoadout {
     this.updateCorruptionScoreMult()
   }
 
-  resetCorruptions () {
-    if (player.currentChallenge.ascension !== 15 && player.campaigns.currentCampaign === undefined) {
+  resetCorruptions (nextLoadout = false) {
+    if (player.currentChallenge.ascension !== 15 && player.campaigns.currentCampaign === undefined || nextLoadout) {
       for (const corr in this.#levels) {
         const corrKey = corr as keyof Corruptions
         this.setLevel(corrKey, 0)
@@ -520,8 +517,8 @@ export const corruptionButtonsAdd = () => {
     const row = rows[i]
     const key = keys[i] as keyof Corruptions
     // Delete rows that already exist
-    for (let i = row.children.length - 1; i >= 1; i--) {
-      row.children[i].remove()
+    for (let j = row.children.length - 1; j >= 1; j--) {
+      row.children[j].remove()
     }
 
     const icon = document.createElement('img')
@@ -529,7 +526,7 @@ export const corruptionButtonsAdd = () => {
     icon.src = `Pictures/${IconSets[player.iconSet][0]}${corrIcons[key]}`
     icon.addEventListener('click', () => corruptionDisplay(key))
     icon.loading = 'lazy'
-    icon.title = `${i18next.t(`corruptions.names.${key}`)}`
+    icon.title = i18next.t(`corruptions.names.${key}`)
     row.appendChild(icon)
 
     const p = document.createElement('p')
@@ -594,7 +591,7 @@ export const corruptionLoadoutTableCreate = () => {
 
   // Use the default name 'next'
   const nextCell = nextRow.insertCell()
-  nextCell.className = `test${'Title'}`
+  nextCell.className = `testTitle`
   nextCell.textContent = i18next.t('corruptions.loadoutTable.next')
   nextCell.addEventListener('click', () => void corruptionLoadoutGetExport())
   nextCell.classList.add('corrLoadoutName')
@@ -622,7 +619,7 @@ export const corruptionLoadoutTableCreate = () => {
   const zeroBtn = document.createElement('button')
   zeroBtn.className = 'corrLoad'
   zeroBtn.textContent = i18next.t('corruptions.loadoutTable.zero')
-  zeroBtn.addEventListener('click', () => player.corruptions.next.resetCorruptions())
+  zeroBtn.addEventListener('click', () => player.corruptions.next.resetCorruptions(true))
   zeroCell.appendChild(zeroBtn)
   zeroCell.title = i18next.t('corruptions.loadoutTable.zeroTitle')
 
@@ -635,7 +632,7 @@ export const corruptionLoadoutTableCreate = () => {
     const row = table.insertRow()
     // Title Cell
     const titleCell = row.insertCell()
-    titleCell.className = `test${'Title'}`
+    titleCell.className = `testTitle`
     titleCell.title = i18next.t('corruptions.loadoutTable.otherRowTitle', { value: i + 1 })
     for (const corr in corrLoadout) {
       const corrKey = corr as keyof Corruptions
@@ -682,7 +679,7 @@ export const corruptionLoadoutTableUpdate = (updateNext = false, updateRow = 0) 
   }
 }
 
-export const corruptionSaveLoadout = (loadoutNum: number) => {
+const corruptionSaveLoadout = (loadoutNum: number) => {
   const buildToSave = player.corruptions.next.loadout
   player.corruptions.saves.saves[loadoutNum].loadout.setCorruptionLevelsWithChallengeRequirement(buildToSave)
   corruptionLoadoutTableUpdate(false, loadoutNum + 1)
@@ -728,7 +725,7 @@ async function importCorruptionsPrompt () {
 
 async function corruptionLoadoutGetNewName (loadout = 0) {
   const maxChars = 9
-  // biome-ignore lint/suspicious/noControlCharactersInRegex: I use control characters in my regex for fun!
+  // eslint-disable-next-line no-control-regex
   const regex = /^[\x00-\xFF]*$/
   const renamePrompt = await Prompt(
     i18next.t('corruptions.corruptionLoadoutName.loadoutPrompt', { loadNum: loadout + 1, maxChars })
@@ -756,7 +753,7 @@ export const updateCorruptionLoadoutNames = () => {
   const totalSlots = 8 + PCoinUpgradeEffects.CORRUPTION_LOADOUT_SLOT_QOL
   for (let i = 0; i < totalSlots; i++) {
     const cells = rows[i + 2].cells // start changes on 2nd row
-    if (cells[0].textContent!.length === 0) { // first time setup
+    if (cells[0].textContent.length === 0) { // first time setup
       cells[0].addEventListener('click', () => void corruptionLoadoutGetNewName(i)) // get name function handles -1 for array
       cells[0].classList.add('corrLoadoutName')
     }
@@ -813,7 +810,7 @@ export const revealCorruptions = () => {
   }
 }
 
-export function corrChallengeMinimum (corr: keyof Corruptions): number {
+function corrChallengeMinimum (corr: keyof Corruptions): number {
   switch (corr) {
     case 'viscosity':
       return 11

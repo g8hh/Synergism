@@ -25,7 +25,7 @@ export const cloudSaveHandlers: HttpHandler[] = [
     await delay(500)
 
     return HttpResponse.json(saves.map((s) => {
-      const { save, ...rest } = s
+      const { save: _, ...rest } = s
       return rest
     }))
   }),
@@ -70,7 +70,7 @@ export const cloudSaveHandlers: HttpHandler[] = [
     await delay(1000)
 
     const { name } = await request.json() as { name: string }
-    const save = saves.find((save) => save.name === name)
+    const save = saves.find((s) => s.name === name)
 
     if (save) {
       saves.splice(saves.indexOf(save), 1)

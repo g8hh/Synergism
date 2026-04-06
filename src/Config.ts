@@ -1,7 +1,10 @@
 declare const PROD: boolean | undefined
 declare const DEV: boolean | undefined
+declare const PLATFORM: 'steam' | undefined
 
-export const version = '4.0.4 October 21, 2025: The Greater Reimagining'
+export const version = '4.2.0 March 31, 2026: Steam!!!'
+
+export const isSynergismCC = location.hostname === 'synergism.cc'
 
 /**
  * If true, the version is marked as a testing version.
@@ -11,3 +14,7 @@ export const lastUpdated = new Date('##LAST_UPDATED##')
 
 export const prod = typeof PROD === 'undefined' ? false : PROD
 export const dev = typeof DEV === 'undefined' ? false : DEV
+
+export const platform = typeof PLATFORM === 'undefined' ? 'browser' : PLATFORM
+
+export const ticksPerSecond = 200

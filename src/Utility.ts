@@ -1,4 +1,5 @@
 import Decimal, { type DecimalSource } from 'break_infinity.js'
+import DOMPurify from 'dompurify'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { format } from './Synergism'
 
@@ -85,15 +86,9 @@ export const productContents = (array: number[]) => {
   return total
 }
 
-export const sortWithIndices = (toSort: number[]) => {
-  return Array
-    .from([...toSort.keys()])
-    .sort((a, b) => toSort[a] < toSort[b] ? -1 : +(toSort[b] < toSort[a]))
-}
-
 export const sortDecimalWithIndices = (toSort: DecimalSource[]) => {
   return Array
-    .from([...toSort.keys()])
+    .from(toSort.keys())
     .sort((a, b) =>
       new Decimal(toSort[a]).lt(new Decimal(toSort[b])) ? -1 : +(new Decimal(toSort[b]).lt(new Decimal(toSort[a])))
     )
@@ -104,17 +99,6 @@ export const sortDecimalWithIndices = (toSort: DecimalSource[]) => {
  * @param id {string}
  */
 export const getElementById = <T extends HTMLElement>(id: string) => DOMCacheGetOrSet(id) as T
-
-/**
- * Remove leading indents at the beginning of new lines in a template literal.
- */
-export const stripIndents = (raw: TemplateStringsArray, ...args: unknown[]): string => {
-  const r = String.raw({ raw }, ...args)
-
-  return r
-    .replace(/^[^\S\r\n]+/gm, '')
-    .trim()
-}
 
 /**
  * Pads an array (a) with param (b) (c) times
@@ -173,7 +157,7 @@ export const toOrdinal = (int: number): string => {
   return format(int, 0, true) + suffix
 }
 
-export const formatMS = (ms: number) =>
+const formatMS = (ms: number) =>
   Object.entries({
     d: Math.floor(ms / 86400000),
     h: Math.floor(ms / 3600000) % 24,
@@ -188,11 +172,11 @@ export const formatS = (s: number) => {
   return formatMS(1000 * s)
 }
 
-export const addLeadingZero = (n: number): string => {
+const addLeadingZero = (n: number): string => {
   return n < 10 ? `0${n}` : String(n)
 }
 
-export const timeReminingHours = (targetDate: Date): string => {
+export const timeRemainingHours = (targetDate: Date): string => {
   const now = new Date()
   const timeDifference = targetDate.getTime() - now.getTime()
 
@@ -205,6 +189,24 @@ export const timeReminingHours = (targetDate: Date): string => {
   const seconds = addLeadingZero(Math.floor((timeDifference % (1000 * 60)) / 1000))
 
   return `${hours}:${minutes}:${seconds}`
+}
+export const timeRemainingMinutes = (targetDate: number | Date | undefined): string => {
+  if (targetDate === undefined) {
+    return '--:--'
+  }
+
+  const now = Date.now()
+  const targetTime = targetDate instanceof Date ? targetDate.getTime() : targetDate
+  const timeDifference = targetTime - now
+
+  if (timeDifference < 0) {
+    return '--:--'
+  }
+
+  const minutes = addLeadingZero(Math.floor(timeDifference / (1000 * 60)))
+  const seconds = addLeadingZero(Math.floor((timeDifference % (1000 * 60)) / 1000))
+
+  return `${minutes}:${seconds}`
 }
 
 export const cleanString = (s: string): string => {
@@ -301,9 +303,107 @@ export const findInsertionIndex = (target: number, array: number[]): number => {
   return low + 1
 }
 
-export let isMobile = true
+/**
+ * @license {MIT}
+ * https://github.com/nodejs/undici/blob/6301265a20868d077faae6d51f5f6cf57ac2ebfe/lib/web/infra/index.js#L121
+ *
+ * I'm stealing my own code, fuck off
+ */
+export function isomorphicDecode (input: Uint8Array) {
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  function fromCharCode (arr: Iterable<number>) {
+    // https://tc39.es/ecma262/#sec-string.fromcharcode
+    return String.fromCharCode.apply(null, arr as number[])
+  }
 
-export function isMobileDevice () {
-  isMobile = window.matchMedia('(pointer: coarse)').matches
+  const length = input.length
+
+  if ((2 << 15) - 1 > length) {
+    return fromCharCode(input)
+  }
+
+  let result = ''
+  let i = 0
+  let addition = (2 << 15) - 1
+
+  while (i < length) {
+    if (i + addition > length) {
+      addition = length - i
+    }
+    result += fromCharCode(input.subarray(i, i += addition))
+  }
+
+  return result
+}
+
+export const isMobile = (function isMobileDevice() {
+  return window.matchMedia('(pointer: coarse)').matches
     || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+})()
+
+interface RetryOptions {
+  backoff: 'exponential' | 'linear'
+  initialDelay?: number // default: 1000ms
+  maxDelay?: number // default: 30000ms
+  multiplier?: number // default: 2
+}
+
+const sleep = (delay: number) => new Promise((r) => setTimeout(r, delay))
+
+/**
+ * Retry a promise {@param times} times
+ */
+export async function retry<T> (
+  times: number,
+  operation: () => Promise<T>,
+  retryOptions?: RetryOptions
+) {
+  const reject: unknown[] = []
+
+  /* eslint-disable no-await-in-loop */
+  for (let i = 0; i < times; i++) {
+    try {
+      return await operation()
+    } catch (e) {
+      reject.push(e)
+
+      if (retryOptions?.backoff === 'exponential') {
+        const { initialDelay = 1000, multiplier = 2, maxDelay = 30_000 } = retryOptions
+        const delay = Math.min(initialDelay * multiplier ** i, maxDelay)
+
+        await sleep(delay)
+      } else if (retryOptions?.backoff === 'linear') {
+        const { initialDelay = 1000 } = retryOptions
+
+        await sleep(initialDelay)
+      }
+    }
+  }
+  /* eslint-enable no-await-in-loop */
+
+  throw new AggregateError(reject, `Failed after ${times} retries`)
+}
+
+export const geometricSeries = (startIndex: number, endIndex: number, ratio: number): number => {
+  if (ratio === 1) {
+    return endIndex - startIndex + 1
+  } else {
+    return (ratio ** (endIndex + 1) - ratio ** startIndex) / (ratio - 1)
+  }
+}
+
+export const displayHTMLError = async (response: Response) => {
+  const html = await response.text()
+  const overlay = document.createElement('div')
+  overlay.style.cssText =
+    'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:99999'
+  const modal = document.createElement('div')
+  modal.style.cssText =
+    'background:var(--alert-color);color:var(--text-color);padding:20px;border:1px solid var(--boxmain-bordercolor);border-radius:8px;max-width:500px;max-height:80vh;overflow:auto'
+  modal.innerHTML = DOMPurify.sanitize(html)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove()
+  }, { once: true })
+  overlay.appendChild(modal)
+  document.body.appendChild(overlay)
 }

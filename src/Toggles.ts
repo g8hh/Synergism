@@ -1,20 +1,25 @@
 import i18next from 'i18next'
 import { awardUngroupedAchievement } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { getChallengeConditions } from './Challenges'
+import { type AutoChallengeStates, getChallengeConditions, resetChallengeSweep } from './Challenges'
 import { corruptionDisplay, corruptionLoadoutTableUpdate, type Corruptions } from './Corruptions'
 import { renderCaptcha } from './Login'
 import { initializeMessages } from './Messages'
 import { researchOrderByCost, roombaResearchEnabled } from './Research'
 import { reset, resetrepeat } from './Reset'
 import { indexToRune } from './Runes'
+import { getShopUpgradeEffects } from './Shop'
 import { updateSingularityElevator, updateSingularityElevatorVisibility } from './singularity'
 import { format, player, resetCheck } from './Synergism'
 import { getActiveSubTab, subTabsInMainTab, Tabs } from './Tabs'
 import type { BuildingSubtab, BuyAmount, Player } from './types/Synergism'
 import { Alert, Confirm, Prompt, showCorruptionStatsLoadouts, updateChallengeDisplay } from './UpdateHTML'
-import { visualUpdateAmbrosia, visualUpdateCubes, visualUpdateOcteracts } from './UpdateVisuals'
+import { visualUpdateAmbrosia, visualUpdateAnts, visualUpdateCubes, visualUpdateOcteracts } from './UpdateVisuals'
 import { Globals as G } from './Variables'
+
+type ToggleBuy = 'coin' | 'crystal' | 'mythos' | 'particle' | 'offering' | 'tesseract'
+
+const buyAmountNames = ['one', 'ten', 'hundred', 'thousand', '10k', '100k']
 
 export const toggleSettings = (toggle: HTMLElement) => {
   const toggleId = toggle.getAttribute('toggleId') ?? 1
@@ -23,6 +28,8 @@ export const toggleSettings = (toggle: HTMLElement) => {
   } else {
     player.toggles[+toggleId] = true
   }
+
+  // eslint-disable-next-line no-shadow
   const format = toggle.getAttribute('format')
 
   if (format === '$' || format === '[$]') {
@@ -53,26 +60,21 @@ export const toggleSettings = (toggle: HTMLElement) => {
 
 export const toggleChallenges = (i: number, auto = false) => {
   if (i >= 0 && i <= 5) {
-    if (player.currentChallenge.ascension !== 15 || player.ascensionCounter >= 2) {
-      player.currentChallenge.transcension = i
-      reset('transcensionChallenge', false, 'enterChallenge')
-      player.transcendCount -= 1
-    }
+    player.currentChallenge.transcension = i
+    reset('transcensionChallenge', false, 'enterChallenge')
     if (!player.currentChallenge.reincarnation && !document.querySelector('.resetbtn.hover')) {
       resetrepeat('transcensionChallenge')
     }
   }
   if (i >= 6 && i <= 10) {
-    if (player.currentChallenge.ascension !== 15 || player.ascensionCounter >= 2) {
-      player.currentChallenge.reincarnation = i
-      reset('reincarnationChallenge', false, 'enterChallenge')
-      player.reincarnationCount -= 1
-    }
+    player.currentChallenge.reincarnation = i
+    reset('reincarnationChallenge', false, 'enterChallenge')
     if (!document.querySelector('.resetbtn.hover')) {
       resetrepeat('reincarnationChallenge')
     }
   }
   if (
+    // To be honest I don't want to touch this shit in fear of breaking everything
     (i >= 11 && i <= 15)
     && (i === 11
       ? player.unlocks.ascensions
@@ -84,8 +86,22 @@ export const toggleChallenges = (i: number, auto = false) => {
     if (player.currentChallenge.ascension === 15) {
       void resetCheck('ascensionChallenge', false, true)
     }
-    player.currentChallenge.ascension = i
-    reset('ascensionChallenge', false, 'enterChallenge')
+
+    /* player.toggles[31] is the toggle for whether you want Ascensions to ask Confirmation
+       We have to do the confirmation in this place because some players may want to avoid accidentally entering an Ascension Challenge
+       even if they have a Challenge 10 completion, to avoid accidentally losing progress.
+    */
+    if (!auto && player.toggles[31]) {
+      Confirm(i18next.t('main.ascendPrompt')).then((r) => {
+        if (r) {
+          return toggleChallenges(i, true)
+        }
+      })
+      return
+    } else {
+      player.currentChallenge.ascension = i
+      reset('ascensionChallenge', false, 'enterChallenge')
+    }
   }
   updateChallengeDisplay()
   getChallengeConditions(i)
@@ -102,11 +118,9 @@ export const toggleChallenges = (i: number, auto = false) => {
   }
 }
 
-type ToggleBuy = 'coin' | 'crystal' | 'mythos' | 'particle' | 'offering' | 'tesseract'
-
 export const toggleBuyAmount = (quantity: BuyAmount, type: ToggleBuy) => {
   player[`${type}buyamount` as const] = quantity
-  const a = ['one', 'ten', 'hundred', 'thousand', '10k', '100k'][quantity.toString().length - 1]
+  const a = buyAmountNames[quantity.toString().length - 1]
 
   DOMCacheGetOrSet(`${type}${a}`).style.backgroundColor = 'Green'
   if (quantity !== 1) {
@@ -162,57 +176,75 @@ export const toggleShops = (toggle?: upgradeAutos) => {
   }
 }
 
-export const toggleautoreset = (i: number) => {
-  if (i === 1) {
-    if (player.resettoggle1 === 1 || player.resettoggle1 === 0) {
-      player.resettoggle1 = 2
-      DOMCacheGetOrSet('prestigeautotoggle').textContent = i18next.t('toggles.modeTime')
-    } else {
-      player.resettoggle1 = 1
-      DOMCacheGetOrSet('prestigeautotoggle').textContent = i18next.t('toggles.modeAmount')
-    }
-  } else if (i === 2) {
-    if (player.resettoggle2 === 1 || player.resettoggle2 === 0) {
-      player.resettoggle2 = 2
-      DOMCacheGetOrSet('transcendautotoggle').textContent = i18next.t('toggles.modeTime')
-    } else {
-      player.resettoggle2 = 1
-      DOMCacheGetOrSet('transcendautotoggle').textContent = i18next.t('toggles.modeAmount')
-    }
-  } else if (i === 3) {
-    if (player.resettoggle3 === 1 || player.resettoggle3 === 0) {
-      player.resettoggle3 = 2
-      DOMCacheGetOrSet('reincarnateautotoggle').textContent = i18next.t('toggles.modeTime')
-    } else {
-      player.resettoggle3 = 1
-      DOMCacheGetOrSet('reincarnateautotoggle').textContent = i18next.t('toggles.modeAmount')
-    }
-  } else if (i === 4) {
-    if (player.resettoggle4 === 1 || player.resettoggle4 === 0) {
-      player.resettoggle4 = 2
-      DOMCacheGetOrSet('tesseractautobuymode').textContent = i18next.t('toggles.modePercentage')
-    } else {
-      player.resettoggle4 = 1
-      DOMCacheGetOrSet('tesseractautobuymode').textContent = i18next.t('toggles.modeAmount')
-    }
-  }
+export enum AutoResetModes {
+  amount = 0,
+  time = 1
+}
+
+export enum AutoAscensionModes {
+  amount = 0,
+  percentage = 1
+}
+
+const autoResetTogglei18n: Record<AutoResetModes, () => string> = {
+  [AutoResetModes.amount]: () => i18next.t('toggles.modeAmount'),
+  [AutoResetModes.time]: () => i18next.t('toggles.modeTime')
+}
+
+const autoAscensionTogglei18n: Record<AutoAscensionModes, () => string> = {
+  [AutoAscensionModes.amount]: () => i18next.t('toggles.modeAmount'),
+  [AutoAscensionModes.percentage]: () => i18next.t('toggles.modePercentage')
+}
+
+const NUM_TOGGLE_MODES = 2
+
+export const setAutoResetModeTexts = () => {
+  DOMCacheGetOrSet('prestigeautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.prestige]()
+  DOMCacheGetOrSet('transcendautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.transcend]()
+  DOMCacheGetOrSet('reincarnateautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.reincarnation]()
+  DOMCacheGetOrSet('tesseractautobuymode').textContent = autoAscensionTogglei18n[player.resetToggleModes.ascension]()
+}
+
+export const toggleAutoPrestigeMode = () => {
+  const nextEnum = (player.resetToggleModes.prestige + 1) % NUM_TOGGLE_MODES
+  player.resetToggleModes.prestige = nextEnum as AutoResetModes
+  DOMCacheGetOrSet('prestigeautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.prestige]()
+}
+
+export const toggleAutoTranscendMode = () => {
+  const nextEnum = (player.resetToggleModes.transcend + 1) % NUM_TOGGLE_MODES
+  player.resetToggleModes.transcend = nextEnum as AutoResetModes
+  DOMCacheGetOrSet('transcendautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.transcend]()
+}
+
+export const toggleAutoReincarnateMode = () => {
+  const nextEnum = (player.resetToggleModes.reincarnation + 1) % NUM_TOGGLE_MODES
+  player.resetToggleModes.reincarnation = nextEnum as AutoResetModes
+  DOMCacheGetOrSet('reincarnateautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.reincarnation]()
+}
+
+export const toggleAutoAscensionMode = () => {
+  const nextEnum = (player.resetToggleModes.ascension + 1) % NUM_TOGGLE_MODES
+  player.resetToggleModes.ascension = nextEnum as AutoAscensionModes
+  DOMCacheGetOrSet('tesseractautobuymode').textContent = autoAscensionTogglei18n[player.resetToggleModes.ascension]()
 }
 
 export const toggleautobuytesseract = () => {
-  if (player.tesseractAutoBuyerToggle === 1 || player.tesseractAutoBuyerToggle === 0) {
-    player.tesseractAutoBuyerToggle = 2
-    DOMCacheGetOrSet('tesseractautobuytoggle').textContent = i18next.t('runes.talismans.autoBuyOff')
-    DOMCacheGetOrSet('tesseractautobuytoggle').style.border = '2px solid red'
-  } else {
-    player.tesseractAutoBuyerToggle = 1
+  player.tesseractAutoBuyerToggle = !player.tesseractAutoBuyerToggle
+
+  if (player.tesseractAutoBuyerToggle) {
     DOMCacheGetOrSet('tesseractautobuytoggle').textContent = i18next.t('runes.talismans.autoBuyOn')
     DOMCacheGetOrSet('tesseractautobuytoggle').style.border = '2px solid green'
+  } else {
+    DOMCacheGetOrSet('tesseractautobuytoggle').textContent = i18next.t('runes.talismans.autoBuyOff')
+    DOMCacheGetOrSet('tesseractautobuytoggle').style.border = '2px solid red'
   }
 }
 
 export const toggleauto = () => {
-  const toggles = Array.from<HTMLElement>(document.querySelectorAll('.auto[toggleid]'))
+  const toggles = document.querySelectorAll<HTMLElement>('.auto[toggleid]')
   for (const toggle of toggles) {
+    // eslint-disable-next-line no-shadow
     const format = toggle.getAttribute('format')
     const toggleId = toggle.getAttribute('toggleId') ?? 1
 
@@ -242,7 +274,7 @@ export const toggleauto = () => {
     toggle.style.border = `2px solid ${player.toggles[+toggleId] ? 'green' : 'red'}`
   }
 
-  const tesseractAutos = Array.from<HTMLElement>(document.querySelectorAll('*[id^="tesseractAutoToggle"]'))
+  const tesseractAutos = document.querySelectorAll<HTMLElement>('*[id^="tesseractAutoToggle"]')
 
   for (let j = 0; j < tesseractAutos.length; j++) {
     const auto = tesseractAutos[j]
@@ -269,7 +301,7 @@ export const toggleResearchBuy = () => {
 
 export const toggleAutoResearch = () => {
   const el = DOMCacheGetOrSet('toggleautoresearch')
-  if (player.autoResearchToggle || player.shopUpgrades.obtainiumAuto < 1) {
+  if (player.autoResearchToggle || !getShopUpgradeEffects('obtainiumAuto', 'autoResearch')) {
     player.autoResearchToggle = false
     el.textContent = i18next.t('researches.automaticOff')
     DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
@@ -300,7 +332,7 @@ export const toggleAutoResearchMode = () => {
   }
 }
 
-export const toggleAutoSacrifice = (index: number) => {
+export const toggleAutoSacrifice = (index: string) => {
   const el = DOMCacheGetOrSet('toggleautosacrifice')
   const numIndex = Number(index)
   if (numIndex === 0) {
@@ -311,13 +343,10 @@ export const toggleAutoSacrifice = (index: number) => {
       player.autoSacrifice = 0
     } else {
       player.autoSacrificeToggle = true
-      player.saveOfferingToggle = false
       el.textContent = i18next.t('runes.blessings.autoRuneOn')
       el.style.border = '2px solid green'
-      DOMCacheGetOrSet('saveOffToggle').textContent = i18next.t('toggles.saveOfferingsOff')
-      DOMCacheGetOrSet('saveOffToggle').style.color = 'white'
     }
-  } else if (player.autoSacrificeToggle && player.shopUpgrades.offeringAuto > 0.5) {
+  } else if (player.autoSacrificeToggle && getShopUpgradeEffects('offeringAuto', 'autoRune')) {
     if (player.autoSacrifice === numIndex) {
       player.autoSacrifice = 0
     } else {
@@ -447,37 +476,17 @@ export const toggleautofortify = () => {
   player.autoFortifyToggle = !player.autoFortifyToggle
 }
 
-export const toggleautoenhance = () => {
-  const el = DOMCacheGetOrSet('toggleautoenhance')
-  if (player.autoEnhanceToggle) {
-    el.textContent = i18next.t('runes.autoEnhanceOff')
-    el.style.border = '2px solid red'
-  } else {
-    el.textContent = i18next.t('runes.autoEnhanceOn')
-    el.style.border = '2px solid green'
-  }
-
-  player.autoEnhanceToggle = !player.autoEnhanceToggle
-}
-
-export const toggleSaveOff = () => {
-  const el = DOMCacheGetOrSet('saveOffToggle')
-  const et = DOMCacheGetOrSet('toggleautosacrifice')
-  if (player.saveOfferingToggle) {
-    player.autoSacrificeToggle = true
-    el.textContent = i18next.t('toggles.saveOfferingsOff')
+export const toggleMaxPlat = () => {
+  const el = DOMCacheGetOrSet('maxPlatToggle')
+  if (player.maxPlatToggle) {
+    el.textContent = i18next.t('toggles.maxPlatOff')
     el.style.color = 'white'
-    et.textContent = 'Auto Runes: ON'
-    et.style.border = '2px solid green'
   } else {
-    player.autoSacrificeToggle = false
-    el.textContent = i18next.t('toggles.saveOfferingsOn')
+    el.textContent = i18next.t('toggles.maxPlatOn')
     el.style.color = 'yellow'
-    et.textContent = 'Auto Runes: OFF'
-    et.style.border = '2px solid red'
   }
 
-  player.saveOfferingToggle = !player.saveOfferingToggle
+  player.maxPlatToggle = !player.maxPlatToggle
 }
 
 export const toggleSingularityScreen = (indexStr: string) => {
@@ -503,25 +512,11 @@ export const toggleSingularityScreen = (indexStr: string) => {
 }
 
 interface ChadContributor {
-  login: string
-  id: number
-  node_id: string
-  avatar_url: string
-  gravatar_id: string
-  url: string
-  html_url: string
-  followers_url: string
-  following_url: string
-  gists_url: string
-  starred_url: string
-  subscriptions_url: string
-  organizations_url: string
-  repos_url: string
-  events_url: string
-  received_events_url: string
-  type: string
-  site_admin: boolean
-  contributions: number
+  contributors: {
+    login: string /* username */
+    avatar_url: string
+  }[]
+  artists: string[]
 }
 
 export const setActiveSettingScreen = async (subtab: string) => {
@@ -531,7 +526,7 @@ export const setActiveSettingScreen = async (subtab: string) => {
   }
 
   // subtabActive class displays the element; it is invisible by default
-  subtabEl.parentNode!.querySelectorAll('.subtabActive').forEach((subtab) => subtab.classList.remove('subtabActive'))
+  subtabEl.parentNode!.querySelectorAll('.subtabActive').forEach((s) => s.classList.remove('subtabActive'))
   subtabEl.classList.add('subtabActive')
 
   if (subtab === 'creditssubtab') {
@@ -540,19 +535,13 @@ export const setActiveSettingScreen = async (subtab: string) => {
 
     if (credits.childElementCount > 0 || artists.childElementCount > 0) {
       return
-    } else if (!navigator.onLine || document.hidden) {
-      return
     }
 
     try {
-      const r = await fetch('https://api.github.com/repos/pseudo-corp/SynergismOfficial/contributors', {
-        headers: {
-          Accept: 'application/vnd.github.v3+json'
-        }
-      })
-      const j = await r.json() as ChadContributor[]
+      const r = await fetch('https://synergism.cc/contributors')
+      const j = await r.json() as ChadContributor
 
-      for (const contributor of j) {
+      for (const contributor of j.contributors) {
         const div = document.createElement('div')
         div.classList.add('credit')
 
@@ -571,23 +560,10 @@ export const setActiveSettingScreen = async (subtab: string) => {
 
         credits.appendChild(div)
       }
-    } catch (e) {
-      const err = e as Error
-      credits.appendChild(document.createTextNode(err.toString()))
-    }
 
-    try {
-      const r = await fetch('https://api.github.com/gists/01917ff476d25a141c5bad38340cd756', {
-        headers: {
-          Accept: 'application/vnd.github.v3+json'
-        }
-      })
-
-      const j = await r.json() as { files: Record<string, { content: string }> }
-      const f = JSON.parse(j.files['synergism_artists.json'].content) as string[]
-
-      for (const user of f) {
+      for (const user of j.artists) {
         const p = document.createElement('p')
+        p.classList.add('rainbowText')
         p.textContent = user
 
         artists.appendChild(p)
@@ -642,37 +618,6 @@ export const toggleHideShop = () => {
     : i18next.t('shop.hideMaxedOn')
 
   player.shopHideToggle = !player.shopHideToggle
-}
-
-export const toggleAntMaxBuy = () => {
-  const el = DOMCacheGetOrSet('toggleAntMax')
-  el.textContent = player.antMax
-    ? i18next.t('general.buyMaxOff')
-    : i18next.t('general.buyMaxOn')
-
-  player.antMax = !player.antMax
-}
-
-export const toggleAntAutoSacrifice = (mode = 0) => {
-  if (mode === 0) {
-    const el = DOMCacheGetOrSet('toggleAutoSacrificeAnt')
-    if (player.autoAntSacrifice) {
-      player.autoAntSacrifice = false
-      el.textContent = i18next.t('ants.autoSacrificeOff')
-    } else {
-      player.autoAntSacrifice = true
-      el.textContent = i18next.t('ants.autoSacrificeOn')
-    }
-  } else if (mode === 1) {
-    const el = DOMCacheGetOrSet('autoSacrificeAntMode')
-    if (player.autoAntSacrificeMode === 1 || player.autoAntSacrificeMode === 0) {
-      player.autoAntSacrificeMode = 2
-      el.textContent = i18next.t('ants.modeRealTime')
-    } else {
-      player.autoAntSacrificeMode = 1
-      el.textContent = i18next.t('ants.modeInGameTime')
-    }
-  }
 }
 
 export const toggleMaxBuyCube = () => {
@@ -736,7 +681,7 @@ export const updateAutoChallenge = (i: number) => {
   switch (i) {
     case 1: {
       const t = Number.parseFloat((DOMCacheGetOrSet('startAutoChallengeTimerInput') as HTMLInputElement).value) || 0
-      player.autoChallengeTimer.start = Math.max(t, 0)
+      player.autoChallengeTimer.start = Math.max(t, 0.1)
       DOMCacheGetOrSet('startTimerValue').innerHTML = i18next.t('challenges.timeStartSweep', {
         time: format(player.autoChallengeTimer.start, 2, true)
       })
@@ -744,7 +689,7 @@ export const updateAutoChallenge = (i: number) => {
     }
     case 2: {
       const u = Number.parseFloat((DOMCacheGetOrSet('exitAutoChallengeTimerInput') as HTMLInputElement).value) || 0
-      player.autoChallengeTimer.exit = Math.max(u, 0)
+      player.autoChallengeTimer.exit = Math.max(u, 0.1)
 
       DOMCacheGetOrSet('exitTimerValue').innerHTML = i18next.t('challenges.timeExitChallenge', {
         time: format(player.autoChallengeTimer.exit, 2, true)
@@ -754,7 +699,7 @@ export const updateAutoChallenge = (i: number) => {
     }
     case 3: {
       const v = Number.parseFloat((DOMCacheGetOrSet('enterAutoChallengeTimerInput') as HTMLInputElement).value) || 0
-      player.autoChallengeTimer.enter = Math.max(v, 0)
+      player.autoChallengeTimer.enter = Math.max(v, 0.1)
 
       DOMCacheGetOrSet('enterTimerValue').innerHTML = i18next.t('challenges.timeEnterChallenge', {
         time: format(player.autoChallengeTimer.enter, 2, true)
@@ -786,6 +731,17 @@ export const toggleAutoChallengesIgnore = (i: number) => {
       }
     }
   }
+  // We can be stuck in the 'finished!' state if we don't reset it here
+  resetChallengeSweep()
+}
+
+const autoChallengeStateTexts: Record<AutoChallengeStates, () => string> = {
+  OFF: () => i18next.t('challenges.modeOff'),
+  START: () => i18next.t('challenges.modeStart'),
+  CHALLENGE: () => i18next.t('challenges.modeChallenge'),
+  ENTER: () => i18next.t('challenges.modeEnter'),
+  WAIT: () => i18next.t('challenges.modeWait'),
+  COMPLETE: () => i18next.t('challenges.modeComplete')
 }
 
 export const toggleAutoChallengeRun = () => {
@@ -793,45 +749,52 @@ export const toggleAutoChallengeRun = () => {
   if (player.autoChallengeRunning) {
     el.style.border = '2px solid red'
     el.textContent = i18next.t('challenges.autoChallengeSweepOff')
-    G.autoChallengeTimerIncrement = 0
-    toggleAutoChallengeModeText('OFF')
   } else {
     el.style.border = '2px solid gold'
     el.textContent = i18next.t('challenges.autoChallengeSweepOn')
-    toggleAutoChallengeModeText('START')
-    G.autoChallengeTimerIncrement = 0
   }
 
   player.autoChallengeRunning = !player.autoChallengeRunning
 }
 
-export const toggleAutoChallengeModeText = (i: string) => {
-  const a = DOMCacheGetOrSet('autoChallengeType')
-
-  a.textContent = i18next.t(`challenges.mode${i[0] + i.slice(1).toLowerCase()}`)
+export const toggleAutoChallengeModeText = (mode: AutoChallengeStates) => {
+  DOMCacheGetOrSet('autoChallengeType').textContent = autoChallengeStateTexts[mode]()
 }
 
-export const toggleAutoAscend = (mode = 0) => {
-  if (mode === 0) {
-    const a = DOMCacheGetOrSet('ascensionAutoEnable')
-    if (player.autoAscend) {
-      a.style.border = '2px solid red'
-      a.textContent = i18next.t('corruptions.autoAscend.off')
-    } else {
-      a.style.border = '2px solid green'
-      a.textContent = i18next.t('corruptions.autoAscend.on')
-    }
+export enum AutoAscensionResetModes {
+  c10Completions = 0,
+  realAscensionTime = 1
+}
 
-    player.autoAscend = !player.autoAscend
-  } else if (mode === 1 && player.highestSingularityCount >= 25) {
-    const a = DOMCacheGetOrSet('ascensionAutoToggle')
-    if (player.autoAscendMode === 'c10Completions') {
-      player.autoAscendMode = 'realAscensionTime'
-      a.textContent = i18next.t('corruptions.autoAscend.modeRealTime')
-    } else {
-      player.autoAscendMode = 'c10Completions'
-      a.textContent = i18next.t('corruptions.autoAscend.modeCompletions')
-    }
+const autoAscensionResetTogglei18n: Record<AutoAscensionResetModes, () => string> = {
+  [AutoAscensionResetModes.c10Completions]: () => i18next.t('corruptions.autoAscend.modeCompletions'),
+  [AutoAscensionResetModes.realAscensionTime]: () => i18next.t('corruptions.autoAscend.modeRealTime')
+}
+
+const NUM_ASCENSION_RESET_MODES = 2
+
+export const setAutoAscendResetActiveText = () => {
+  const a = DOMCacheGetOrSet('ascensionAutoEnable')
+  a.style.border = `2px solid ${player.autoAscend ? 'green' : 'red'}`
+  a.textContent = player.autoAscend
+    ? i18next.t('corruptions.autoAscend.on')
+    : i18next.t('corruptions.autoAscend.off')
+}
+
+export const toggleAutoAscendResetActive = () => {
+  player.autoAscend = !player.autoAscend
+  setAutoAscendResetActiveText()
+}
+
+export const setAutoAscendResetModeText = () => {
+  DOMCacheGetOrSet('ascensionAutoToggle').textContent = autoAscensionResetTogglei18n[player.autoAscendMode]()
+}
+
+export const toggleAutoAscendResetMode = () => {
+  if (player.highestSingularityCount >= 25) {
+    const nextEnum = (player.autoAscendMode + 1) % NUM_ASCENSION_RESET_MODES
+    player.autoAscendMode = nextEnum as AutoAscensionResetModes
+    setAutoAscendResetModeText()
   }
 }
 
@@ -1028,4 +991,20 @@ export const toggleStatSymbol = async () => {
     }
   }
   location.reload()
+}
+
+export const toggleAntsSubtab = (indexStr: string) => {
+  const i = Number(indexStr)
+  const numSubTabs = subTabsInMainTab(Tabs.AntHill)
+
+  for (let j = 1; j <= numSubTabs; j++) {
+    const antTab = DOMCacheGetOrSet(`antSubtab${j}`)
+    antTab.classList.add('none')
+  }
+
+  const antTab = DOMCacheGetOrSet(`antSubtab${i}`)
+  antTab.classList.add('flex')
+  antTab.classList.remove('none')
+
+  visualUpdateAnts()
 }

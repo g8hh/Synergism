@@ -8,9 +8,11 @@ import {
   calculateQuarkMultFromPowder,
   forcedDailyReset
 } from './Calculate'
+import { testing } from './Config'
 import { Cube } from './CubeExperimental'
 import { getOcteractUpgradeEffect } from './Octeracts'
 import { resetTiers } from './Reset'
+import { getShopUpgradeEffects } from './Shop'
 import { calculateSingularityDebuff, getGQUpgradeEffect } from './singularity'
 import { format, formatAsPercentIncrease, player } from './Synergism'
 import type { Player } from './types/Synergism'
@@ -37,7 +39,7 @@ export interface HepteractValues {
   AUTO: boolean
 }
 
-export interface HepteractData<K extends HepteractKeys> extends HepteractValues {
+interface HepteractData<K extends HepteractKeys> extends HepteractValues {
   BASE_CAP: number
   HEPTERACT_CONVERSION: number
   OTHER_CONVERSIONS: Record<string, number>
@@ -65,7 +67,10 @@ export const hepteracts: { [K in HepteractKeys]: HepteractData<K> } = {
     BASE_CAP: 1000,
     HEPTERACT_CONVERSION: 1e4,
     OTHER_CONVERSIONS: { obtainium: 1e115 },
-    UNLOCKED: () => true,
+    UNLOCKED: () => {
+      const condition = Globals.challenge15Rewards.hepteractsUnlocked.value
+      return Boolean(condition)
+    },
     EFFECTS: (hept) => {
       return {
         ascensionSpeed: 1 + 6 * hept / 10000
@@ -90,7 +95,10 @@ export const hepteracts: { [K in HepteractKeys]: HepteractData<K> } = {
     BASE_CAP: 1000,
     HEPTERACT_CONVERSION: 1e4,
     OTHER_CONVERSIONS: { offerings: 1e80 },
-    UNLOCKED: () => true,
+    UNLOCKED: () => {
+      const condition = Globals.challenge15Rewards.hepteractsUnlocked.value
+      return Boolean(condition)
+    },
     EFFECTS: (hept) => {
       return {
         hypercubeMultiplier: 1 + 6 * hept / 10000
@@ -115,7 +123,10 @@ export const hepteracts: { [K in HepteractKeys]: HepteractData<K> } = {
     BASE_CAP: 1000,
     HEPTERACT_CONVERSION: 1e4,
     OTHER_CONVERSIONS: { worlds: 100 },
-    UNLOCKED: () => true,
+    UNLOCKED: () => {
+      const condition = Globals.challenge15Rewards.hepteractsUnlocked.value
+      return Boolean(condition)
+    },
     EFFECTS: (hept) => {
       const exponent = hepteracts.quark.DR + hepteracts.quark.DR_INCREASE()
       return {
@@ -144,11 +155,11 @@ export const hepteracts: { [K in HepteractKeys]: HepteractData<K> } = {
         + getGQUpgradeEffect('singQuarkHepteract2')
         + getGQUpgradeEffect('singQuarkHepteract3')
         + getOcteractUpgradeEffect('octeractImprovedQuarkHept')
-        + player.shopUpgrades.improveQuarkHept / 100
-        + player.shopUpgrades.improveQuarkHept2 / 100
-        + player.shopUpgrades.improveQuarkHept3 / 100
-        + player.shopUpgrades.improveQuarkHept4 / 100
-        + player.shopUpgrades.improveQuarkHept5 / 100
+        + getShopUpgradeEffects('improveQuarkHept', 'quarkHeptExponent')
+        + getShopUpgradeEffects('improveQuarkHept2', 'quarkHeptExponent')
+        + getShopUpgradeEffects('improveQuarkHept3', 'quarkHeptExponent')
+        + getShopUpgradeEffects('improveQuarkHept4', 'quarkHeptExponent')
+        + getShopUpgradeEffects('improveQuarkHept5', 'quarkHeptExponent')
     }
   },
   challenge: {
@@ -256,7 +267,7 @@ export const hepteracts: { [K in HepteractKeys]: HepteractData<K> } = {
     EFFECTSDESCRIPTION: (hept) => {
       const effects = hepteracts.acceleratorBoost.EFFECTS(hept)
       return i18next.t('wowCubes.hepteractForge.descriptions.acceleratorBoost.currentEffect', {
-        x: format(effects.acceleratorBoostMultiplier, 2, true)
+        x: formatAsPercentIncrease(effects.acceleratorBoostMultiplier, 2)
       })
     },
     DESCRIPTION: () => i18next.t('wowCubes.hepteractForge.descriptions.acceleratorBoost.effect'),
@@ -304,7 +315,7 @@ export const getHepteractEffects = <K extends HepteractKeys>(hept: K): Hepteract
   return hepteracts[hept].EFFECTS(heptAmount)
 }
 
-export const getHepteractCap = (hept: HepteractKeys): number => {
+const getHepteractCap = (hept: HepteractKeys): number => {
   return Math.pow(2, hepteracts[hept].TIMES_CAP_EXTENDED) * hepteracts[hept].BASE_CAP
 }
 
@@ -313,26 +324,8 @@ export const getFinalHepteractCap = (hept: HepteractKeys): number => {
   return getHepteractCap(hept) * specialMultiplier
 }
 
-export const craftHepteracts = async (hept: HepteractKeys, max = false) => {
-  let craftAmount = null
-  const heptCap = getFinalHepteractCap(hept)
+const getCraftableHepteractAmount = (hept: HepteractKeys) => {
   const craftCostMulti = calculateSingularityDebuff('Hepteract Costs')
-  // If craft is unlocked, we return object
-  if (!hepteracts[hept].UNLOCKED()) {
-    return Alert(i18next.t('hepteracts.notUnlocked'))
-  }
-
-  if (heptCap - hepteracts[hept].BAL <= 0) {
-    if (player.toggles[35]) {
-      return Alert(i18next.t('hepteracts.reachedCapacity', { x: format(heptCap, 0, true) }))
-    }
-  }
-
-  if (isNaN(player.wowAbyssals) || !isFinite(player.wowAbyssals) || player.wowAbyssals < 0) {
-    player.wowAbyssals = 0
-  }
-
-  // Calculate the largest craft amount possible, with an upper limit being craftAmount
   const hepteractLimit = Math.floor(
     player.wowAbyssals / (hepteracts[hept].HEPTERACT_CONVERSION * craftCostMulti)
   )
@@ -350,7 +343,7 @@ export const craftHepteracts = async (hept: HepteractKeys, max = false) => {
       itemLimits.push(
         Decimal.min(
           Decimal.floor(
-            (player[indexableItem] as Decimal).div(craftCostMulti * hepteracts[hept].OTHER_CONVERSIONS[indexableItem]!)
+            (player[indexableItem] as Decimal).div(craftCostMulti * hepteracts[hept].OTHER_CONVERSIONS[indexableItem])
           ),
           1e300
         ).toNumber()
@@ -364,19 +357,39 @@ export const craftHepteracts = async (hept: HepteractKeys, max = false) => {
 
   // Get the smallest of the array we created
   const smallestItemLimit = Math.min(...itemLimits)
+  return Math.min(smallestItemLimit, hepteractLimit, getFinalHepteractCap(hept) - hepteracts[hept].BAL)
+}
 
-  let amountToCraft = Math.min(smallestItemLimit, hepteractLimit, heptCap, heptCap - hepteracts[hept].BAL)
+export const craftHepteracts = async (hept: HepteractKeys, max = false) => {
+  // If craft is unlocked, we return object
+  if (!hepteracts[hept].UNLOCKED()) {
+    return Alert(i18next.t('hepteracts.notUnlocked'))
+  }
+
+  const heptCap = getFinalHepteractCap(hept)
+  if (heptCap - hepteracts[hept].BAL <= 0) {
+    if (player.toggles[35]) {
+      return Alert(i18next.t('hepteracts.reachedCapacity', { x: format(heptCap, 0, true) }))
+    }
+  }
+
+  if (isNaN(player.wowAbyssals) || !isFinite(player.wowAbyssals) || player.wowAbyssals < 0) {
+    player.wowAbyssals = 0
+  }
+
+  const displayCraftableAmount = getCraftableHepteractAmount(hept)
+  let requestedCraftAmount = null
 
   // Return if the material is not a calculable number
-  if (isNaN(amountToCraft) || !isFinite(amountToCraft)) {
+  if (isNaN(displayCraftableAmount) || !isFinite(displayCraftableAmount)) {
     return Alert(i18next.t('hepteracts.executionFailed'))
   }
 
   // Prompt used here. Thank you Khafra for the already made code! -Platonic
   if (!max) {
     const craftingPrompt = await Prompt(i18next.t('hepteracts.craft', {
-      x: format(amountToCraft, 0, true),
-      y: Math.floor(amountToCraft / heptCap * 10000) / 100
+      x: format(displayCraftableAmount, 0, true),
+      y: format(100 * displayCraftableAmount / heptCap, 2, true)
     }))
 
     if (craftingPrompt === null) { // Number(null) is 0. Yeah..
@@ -386,31 +399,41 @@ export const craftHepteracts = async (hept: HepteractKeys, max = false) => {
         return // If no return, then it will just give another message
       }
     }
-    craftAmount = Number(craftingPrompt)
+    requestedCraftAmount = Number(craftingPrompt)
   } else {
-    craftAmount = heptCap
+    requestedCraftAmount = displayCraftableAmount
   }
 
   // Check these lol
-  if (isNaN(craftAmount) || !isFinite(craftAmount) || !Number.isInteger(craftAmount)) { // nan + Infinity checks
+  if (isNaN(requestedCraftAmount) || !isFinite(requestedCraftAmount) || !Number.isInteger(requestedCraftAmount)) { // nan + Infinity checks
     return Alert(i18next.t('general.validation.finite'))
-  } else if (craftAmount <= 0) { // 0 or less selected
+  } else if (requestedCraftAmount <= 0) { // 0 or less selected
     return Alert(i18next.t('general.validation.zeroOrLess'))
   }
 
-  // Get the smallest of hepteract limit, limit found above and specified input
-  amountToCraft = Math.min(smallestItemLimit, hepteractLimit, craftAmount, heptCap - hepteracts[hept].BAL)
+  // Calculate for display in max confirmation dialog
+  const preConfirmCraftableAmount = getCraftableHepteractAmount(hept)
+  const preConfirmAmountToCraft = Math.min(preConfirmCraftableAmount, requestedCraftAmount)
 
   if (max && player.toggles[35]) {
     const craftYesPlz = await Confirm(i18next.t('hepteracts.craftMax', {
-      x: format(amountToCraft, 0, true),
-      y: Math.floor(amountToCraft / heptCap * 10000) / 100
+      x: format(preConfirmAmountToCraft, 0, true),
+      y: Math.floor(preConfirmAmountToCraft / heptCap * 10000) / 100
     }))
 
     if (!craftYesPlz) {
       return Alert(i18next.t('hepteracts.cancelled'))
     }
   }
+
+  /* Fix (February 27): We should recompute this value for use in crafting,
+     because the async nature of this function means offerings or other items
+     can be spent while entering in an amount of Hepteracts you want to craft.
+     This effectively fixes the issue of negative resources after crafting a hepteract.
+  */
+  const craftCostMulti = calculateSingularityDebuff('Hepteract Costs')
+  const actualCraftableAmount = getCraftableHepteractAmount(hept)
+  const amountToCraft = Math.min(actualCraftableAmount, requestedCraftAmount)
 
   hepteracts[hept].BAL = Math.min(heptCap, hepteracts[hept].BAL + amountToCraft)
 
@@ -423,31 +446,41 @@ export const craftHepteracts = async (hept: HepteractKeys, max = false) => {
 
   for (const item of (Object.keys(hepteracts[hept].OTHER_CONVERSIONS) as (keyof Player)[])) {
     if (typeof player[item] === 'number') {
+      // eslint-disable-next-line typescript/no-unnecessary-type-assertion: false positive
       ;(player[item] as number) -= amountToCraft * craftCostMulti
-        * hepteracts[hept].OTHER_CONVERSIONS[item]!
+        * hepteracts[hept].OTHER_CONVERSIONS[item]
     }
 
     if ((player[item] as number) < 0) {
       ;(player[item] as number) = 0
     } else if (player[item] instanceof Cube) {
       ;(player[item] as Cube).sub(
-        amountToCraft * craftCostMulti * hepteracts[hept].OTHER_CONVERSIONS[item]!
+        amountToCraft * craftCostMulti * hepteracts[hept].OTHER_CONVERSIONS[item]
       )
     } else if (item === 'worlds') {
-      player.worlds.sub(amountToCraft * hepteracts[hept].OTHER_CONVERSIONS[item]!)
+      player.worlds.sub(amountToCraft * hepteracts[hept].OTHER_CONVERSIONS[item])
     } else if (player[item] instanceof Decimal) {
       ;(player[item] as Decimal) = (player[item] as Decimal).sub(
-        new Decimal(amountToCraft).times(craftCostMulti).times(hepteracts[hept].OTHER_CONVERSIONS[item]!)
+        new Decimal(amountToCraft).times(craftCostMulti).times(hepteracts[hept].OTHER_CONVERSIONS[item])
       )
     }
   }
 
   if (player.toggles[35]) {
-    if (!max) {
-      return Alert(i18next.t('hepteracts.craftedHepteracts', { x: format(amountToCraft, 0, true) }))
+    const craftText = i18next.t('hepteracts.craftedHepteracts', { x: format(amountToCraft, 0, true) })
+
+    // I added a multiplier of 0.9999 for tolerance on floating point fuckery
+    const lessText = (actualCraftableAmount < 0.9999 * requestedCraftAmount)
+      ? i18next.t('hepteracts.craftedHepteractLower')
+      : ''
+
+    if (testing) {
+      console.log(
+        `Crafted ${amountToCraft} Hepteracts. Actual craftable amount was ${actualCraftableAmount}, and requested craft amount was ${requestedCraftAmount}.`
+      )
     }
 
-    return Alert(i18next.t('hepteracts.craftedHepteractsMax', { x: format(amountToCraft, 0, true) }))
+    return Alert(`${craftText} ${lessText}`)
   }
 }
 
@@ -753,7 +786,8 @@ export const tradeHepteractToOverfluxOrb = async (buyMax?: boolean) => {
     player.wowAbyssals = 0
   }
 
-  const powderGain = player.shopUpgrades.powderAuto * calculatePowderConversion() * buyAmount / 100
+  const powderGain = getShopUpgradeEffects('powderAuto', 'automaticPowderFraction') * calculatePowderConversion()
+    * buyAmount
   player.overfluxPowder += powderGain
 
   const powderText = (powderGain > 0) ? i18next.t('hepteracts.gainedPowder', { x: format(powderGain, 2, true) }) : ''
@@ -784,22 +818,20 @@ export const toggleAutoBuyOrbs = (newValue?: boolean, firstLoad = false) => {
 export const overfluxPowderDescription = () => {
   let powderEffectText: string
   if (player.platonicUpgrades[16] > 0) {
-    powderEffectText = i18next.t('hepteracts.allCubeGainExtended', {
+    powderEffectText = i18next.t('hepteracts.powderEffectExtended', {
       x: format(100 * (calculateCubeMultFromPowder() - 1), 2, true),
       y: format(100 * (calculateQuarkMultFromPowder() - 1), 3, true),
       z: format(2 * player.platonicUpgrades[16] * Math.min(1, player.overfluxPowder / 1e5), 2, true),
       a: format(Decimal.pow(player.overfluxPowder + 1, 10 * player.platonicUpgrades[16]))
     })
   } else {
-    powderEffectText = i18next.t('hepteracts.allCubeGain', {
+    powderEffectText = i18next.t('hepteracts.powderEffect', {
       x: format(100 * (calculateCubeMultFromPowder() - 1), 2, true),
       y: format(100 * (calculateQuarkMultFromPowder() - 1), 3, true)
     })
   }
   DOMCacheGetOrSet('hepteractUnlockedText').style.display = 'none'
-  DOMCacheGetOrSet('hepteractCurrentEffectText').textContent = i18next.t('hepteracts.powderEffect', {
-    x: powderEffectText
-  })
+  DOMCacheGetOrSet('hepteractCurrentEffectText').textContent = powderEffectText
   DOMCacheGetOrSet('hepteractBalanceText').textContent = i18next.t('hepteracts.powderLumps', {
     x: format(player.overfluxPowder, 2, true)
   })

@@ -235,6 +235,10 @@ body button:active:not(:disabled):not(.disable-hover-color) {
     background-color: var(--hover-color);
 }
 
+.none {
+    display: none !important;
+}
+
 .flex {
     display: flex;
 }
@@ -341,6 +345,15 @@ body button:active:not(:disabled):not(.disable-hover-color) {
 .slide-out {
     animation: slide-out 1000ms;
     animation-fill-mode: forwards;
+}
+
+.iconAndNameContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
 }
 
 #notification > p {
@@ -485,6 +498,10 @@ body button:active:not(:disabled):not(.disable-hover-color) {
     width: 50%;
     margin: 0;
     padding: 0;
+}
+
+.titleTextFont {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
 }
 
 #preloadDeleteGame {
@@ -890,6 +907,7 @@ p#buildinghotkeys2 {
 .settingSubTabUpper {
     display: flex;
     justify-content: center;
+    width: 75%;
 }
 
 #confirmationToggleBox,
@@ -898,9 +916,7 @@ p#buildinghotkeys2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    min-width: 300px;
-    max-width: 500px;
+    width: 33%;
     padding: 5px;
 }
 
@@ -1553,7 +1569,6 @@ p#prestigehotkeys {
 }
 
 .runeType:hover {
-    transform: translateY(-2px);
     box-shadow:
         0 0 15px var(--glow-color),
         0 0 30px var(--glow-color),
@@ -1602,6 +1617,15 @@ img.runeTypeElement:hover {
 
 .runeImageLocked {
     filter: grayscale(50%);
+}
+
+.antSacrificeRewardLocked {
+    opacity: 0.5;
+    border-color: gray !important;
+}
+
+.antSacrificeRewardImageLocked {
+    filter: grayscale(80%);
 }
 
 #runeContainer2 {
@@ -1746,7 +1770,7 @@ img.runeTypeElement:hover {
     cursor: pointer;
 }
 
-.talismanIcon > img {
+.talismanIcon img {
     position: relative;
     width: calc(100% - 6px);
     height: calc(100% - 6px);
@@ -2332,25 +2356,62 @@ p#reincarnatehotkeys {
     margin: 0 auto;
 }
 
-#antsWrapper {
+#antSubtabs {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    gap: 10px 15px;
+}
+
+#antSubtabs > button {
+    min-width: 100px;
+    text-align: center;
+}
+
+.antUpgrade:hover,
+.antBtn:hover {
+    box-shadow:
+        0 0 3px var(--glow-color),
+        0 0 6px var(--glow-color),
+        0 0 9px var(--glow-color);
+    background-color: var(--glow-color);
+}
+
+#antSubtab1,
+#antSubtab2,
+#antSubtab3 {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    margin-right: min(10em, 100px);
 }
 
-#antsWelcomeTexts { margin-top: 40px; }
-#antsWelcomeTexts > p { margin: 0; }
-#antwelcome { font-size: 1.3em; }
+.introTextContainer > p {
+    margin: 0;
+}
 
-#antrow1 {
+.introText {
+    font-size: 1.3em;
+}
+
+#antProducersContainer {
     display: flex;
-    gap: 0 4px;
+    flex-direction: column;
     margin-top: 12px;
-    color: red;
-    z-index: 1;
+}
+
+#antProducers {
+    display: flex;
+    flex-direction: row;
+}
+
+.antProducerColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #antrow2 {
@@ -2365,12 +2426,17 @@ p#reincarnatehotkeys {
     min-height: 7em;
 }
 
-#antrow4 {
+#antUpgradesContainer {
     display: flex;
-    gap: 0 4px;
-    margin-top: 10px;
-    color: red;
-    z-index: 1;
+    flex-direction: column;
+    margin-top: 12px;
+}
+
+.antUpgradeRow {
+    display: flex;
+    flex-direction: row;
+    gap: 4px 4px;
+    justify-content: center;
 }
 
 #antrow2 > p,
@@ -2380,11 +2446,38 @@ p#reincarnatehotkeys {
 
 #crumbcount {
     font-size: 1.2em;
-    min-height: 2.8em;
+}
+
+.enabledAntToggle {
+    border-color: green;
+}
+
+.disabledAntToggle {
+    border-color: crimson;
+}
+
+.singlePurchaseAnt {
+    border-color: white;
+}
+
+.maxPurchaseAnt {
+    border-color: gold;
+}
+
+.buyAllAntBtn {
+    border-width: 2px;
+    border-color: gold;
+}
+
+.antToggleBtn {
+    min-width: 150px;
+    cursor: pointer;
+    border-width: 1px;
 }
 
 #antToggleFeatures {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     gap: 10px;
     margin: 5px 0;
@@ -2404,7 +2497,6 @@ p#reincarnatehotkeys {
 
 #toggleAutoSacrificeAnt {
     min-width: 150px;
-    border: 1px solid crimson;
 }
 
 #autoSacrificeAntMode,
@@ -2415,25 +2507,81 @@ p#reincarnatehotkeys {
     border: 1px solid green;
 }
 
-#sacrificeAnts {
-    position: absolute;
-    padding: 0;
-    width: 200px;
-    margin: 0 0 0 -340px;
-    text-align: center;
-    left: calc(80% - 5em);
-    white-space: nowrap;
-    z-index: 1;
+#additionalAutoSacOptions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-.sacrificeStatus {
+.antSacToggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    justify-content: flex-start;
+    height: 32px;
+}
+
+.antSacToggle p {
+    margin: 0;
+}
+
+#sacrificeUnlockTexts > p {
+    margin: 0;
+    font-size: 1.3em;
+}
+
+#sacrificeAnts {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.sacrificeAntsContainer {
+    width: 33.33%;
+}
+
+#altar {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+#altar p {
+    margin: 0;
+}
+
+#autoSacrifice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 #antSacrificeTimer {
     padding: 2px 0.5em;
+    font-size: 1.2em;
+    color: gold;
+}
+
+.canAntSacrifice {
+    box-shadow:
+        0 0 15px crimson,
+        0 0 30px crimson,
+        0 0 45px crimson;
+    background-color: crimson;
+    border-radius: 50%;
+}
+
+.canAntSacrifice:hover {
+    box-shadow:
+        0 0 20px lightgoldenrodyellow,
+        0 0 40px gold,
+        0 0 60px goldenrod;
+    background-color: white !important;
+    border-radius: 50%;
 }
 
 .antSacrificeSettingsContainer {
@@ -2441,18 +2589,60 @@ p#reincarnatehotkeys {
     flex-direction: column;
 }
 
-#antSacrificeSummary {
-    position: absolute;
-    padding: 0;
-    width: 300px;
-    top: 30px;
-    left: calc(80% - 5em);
-    text-align: left;
-    white-space: nowrap;
+.antSacrificeRewardColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+    min-width: 100px;
 }
 
-#antSacrificeSummary p {
+.antSacrificeRewardColumn > p {
     margin: 0;
+}
+
+#immortalELOInfo,
+#immortalELOOverview {
+    flex-direction: column;
+}
+
+#immortalELOInfo > p,
+#immortalELOOverview > p {
+    margin: 0;
+}
+
+#lotusCorner {
+    border: 2px solid pink;
+    width: 66%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#lotusCorner p {
+    margin: 0;
+}
+
+#lotusButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#use-lotus {
+    border: 2px solid pink;
+    width: 50%;
+    height: 30px;
+}
+
+#antSacrificeObtainiumOfferings,
+#antSacrificeShardsRow1,
+#antSacrificeShardsRow2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .antSacrificeHeader {
@@ -2461,22 +2651,91 @@ p#reincarnatehotkeys {
     white-space: initial;
 }
 
-#antSacrificeTable {
-    margin: 15px 0 0 70px;
-    border-spacing: 0;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
+#antSacrificeCompendium {
+    width: 50%;
 }
 
-#antSacrificeTable p {
-    margin-left: 5px;
+/* Ant Leaderboard Styles */
+#antLeaderboardContainer {
+    margin-top: 10px;
+}
+
+.antLeaderboardToggleBtn {
+    padding: 8px 16px;
+    color: white;
+    border: 2px solid #666;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+    width: 33%;
+}
+
+.antLeaderboardToggleBtn:hover {
+    background-color: #5a5a5a;
+    border-color: #888;
+}
+
+.antLeaderboardToggleBtn[data-mode="daily"] {
+    border-color: #3a9;
+}
+
+.antLeaderboardToggleBtn[data-mode="allTime"] {
+    border-color: #f90;
+}
+
+.antLeaderboardToggleBtn[data-mode="overview"] {
+    border-color: #0df;
+}
+
+.antLeaderboardToggleBtn[data-mode="info"] {
+    border-color: #8a2be2;
+}
+
+#antLeaderboardTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#antLeaderboardTable th,
+#antLeaderboardTable td {
+    padding: 6px;
+    text-align: center;
+    border: 1px solid #555;
+}
+
+#antLeaderboardTable th {
+    background-color: #3a3a3a;
+    font-weight: bold;
+    color: #fff;
+}
+
+#antLeaderboardTable tr {
+    background-color: #2a2a2a;
+    transition: background-color 0.2s;
+}
+
+.antLeaderboardCurrentSacrifice {
+    background-color: #2a4a2a !important;
+    border: 2px solid #4a8a4a !important;
 }
 
 .antBtn {
     height: 100%;
 }
 
-.antTierBtnAvailable,
+.antTierBtnAvailable {
+    cursor: pointer;
+    background-color: burlywood;
+}
+
+.antMasteryBtnAvailable {
+    cursor: pointer;
+    background-color: lightgreen;
+}
+
 .antUpgradeBtnAvailable {
     cursor: pointer;
     background-color: silver;
@@ -2761,6 +3020,7 @@ button.language-select span.lang-name {
 
 #creditssubtab {
     margin-top: 20px;
+    flex-direction: column;
 }
 
 #creditssubtab > * {
@@ -4039,7 +4299,6 @@ header #obtainiumDisplay { color: pink; }
     background-color: white !important;
     border: 2px solid lightgoldenrodyellow;
     color: black;
-    transform: translateY(-2px);
     box-shadow:
         0 0 15px var(--glow-color),
         0 0 30px var(--glow-color),
@@ -4236,9 +4495,34 @@ header #obtainiumDisplay { color: pink; }
     }
 }
 
+.transcendedBallerGradient {
+    --gradient-start: orchid;
+    --gradient-end: #a741a7;
+}
+
+.reincarnatedBallerGradient {
+    --gradient-start: green;
+    --gradient-end: greenyellow;
+}
+
+.ascendedBallerGradient {
+    --gradient-start: orange;
+    --gradient-end: yellow;
+}
+
 .singularityGradient {
     --gradient-start: gold;
     --gradient-end: lightgoldenrodyellow;
+}
+
+.bellGradient {
+    --gradient-start: gold;
+    --gradient-end: darkgoldenrod;
+}
+
+.lotusGradient {
+    --gradient-start: purple;
+    --gradient-end: pink;
 }
 
 .singularityUpgrade > img,
@@ -4446,15 +4730,14 @@ img#singularityPerksIcon {
     color: #ffd700;
 }
 
-.event-bonus,
+#event-bonus,
+#event-timer,
 .event-timer {
     margin: 5px 0;
 }
 
 #globalEventBonus,
-#consumableEventBonus,
-#globalEventTimer,
-#consumableEventTimer {
+#globalEventTimer {
     color: #8f8;
 }
 
@@ -4913,6 +5196,56 @@ form input:hover {
     margin-top: 5px;
 }
 
+/* Event Bonuses Dropdown Styles */
+.event-bonuses-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    user-select: none;
+    vertical-align: middle;
+}
+
+.event-bonuses-header:hover {
+    opacity: 0.8;
+}
+
+.event-bonuses-header .chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    font-size: 12px;
+    line-height: 1;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+}
+
+.event-bonuses-content {
+    display: block;
+    margin-left: 24px;
+}
+
+.personal-bonus-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bonus-line-name {
+    flex: 1;
+    text-align: left;
+}
+
+.bonus-line-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .pseudoUpgradeContainer {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -4928,23 +5261,75 @@ form input:hover {
     align-items: center;
 }
 
-.pseudoSubscriptionContainer > form {
+#manage-subscription-holder {
+    display: flex;
+    flex: row;
+}
+
+#manage-subscription-holder > form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 10px;
+    margin: 5px;
 }
 
-.pseudoSubscriptionContainer > form > input[type="submit"] {
+#manage-subscription-holder > form > input[type="submit"] {
     border: 2px solid gold;
+    background-color: var(--box-color);
     width: 200px;
     height: 40px;
 }
 
+#manage-subscription-holder > form > input[type="submit"]:hover {
+    background-color: var(--hover-color);
+    cursor: pointer;
+}
+
+.subscriptionManager:focus-within > div { display: flex; }
+
+.subscriptionManager > button {
+    border: 2px solid gold;
+    width: 200px;
+    height: 40px;
+    margin: 5px;
+}
+
+.subscriptionManager > div {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    border: 2px solid white;
+    margin-top: 50px;
+    background-color: var(--box-color);
+}
+
+.subscriptionManager > div > button {
+    width: 200px;
+    height: 40px;
+    margin: 2px;
+}
+
 .pseudoSubscriptionContainer > #sub-section-holder {
+    font-family: Inconsolata, monospace;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    width: 70%;
+    width: 75%;
+}
+
+.subscriptionWebsite {
+    border: 1px solid gold;
+    background-color: darkgoldenrod;
+    color: var(--text-color);
+    margin: 2px;
+    cursor: pointer;
+}
+
+.subscriptionCancel {
+    border: 1px solid red;
+    background-color: maroon;
+    color: var(--text-color);
+    margin: 2px;
+    cursor: pointer;
 }
 
 .pseudoCoinContainer {
@@ -4955,10 +5340,45 @@ form input:hover {
 }
 
 .subscriptionContainer {
-    margin: 10px 10px 0 0;
+    margin: 0;
     border: 1px solid lightgoldenrodyellow;
     border: 2px solid gold;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.subscriptionContainer > div:first-child {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.subscriptionContainer > div:first-child > ul {
+    flex: 1;
+    margin-bottom: auto;
+}
+
+.subscriptionContainer > .pseudoCoinButton,
+.subscriptionContainer > div:not(:first-child) {
+    margin-top: auto;
+}
+
+.subscriptionContainer > div.checkout-paypal {
+    width: 76%;
+    margin: 0 auto;
+}
+
+.subscriptionContainer > .pseudoCoinButton {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 12px;
+}
+
+.subscriptionContainer > div > .pseudoCoinSubImage {
+    margin: 12px auto 4px;
 }
 
 #pseudoCoins > #productContainer > section > * > .pseudoCoinImage {
@@ -4980,13 +5400,13 @@ form input:hover {
 }
 
 .pseudoCoinSubImage {
+    margin-top: 7px;
     height: 48px;
     width: 48px;
 }
 
 .pseudoCoinText {
     width: 90%;
-    height: 80px;
     padding: 10px;
     box-sizing: border-box;
     text-align: center;
@@ -5001,7 +5421,7 @@ form input:hover {
     box-sizing: border-box;
     text-align: center;
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
-    margin: 5px auto;
+    margin: 5px auto 0;
 }
 
 .pseudoCoinButton {
@@ -5015,6 +5435,7 @@ form input:hover {
     font-size: 1.2em;
     word-wrap: break-word;
     margin-bottom: 5px;
+    font-family: Inconsolata, monospace;
 }
 
 .pseudoCoinButton:hover {
@@ -5111,10 +5532,11 @@ form input:hover {
     border: 2px solid var(--amber-text-color);
     padding: 5px;
     box-sizing: border-box;
+    width: 50%;
+    display: flex;
 }
 
 .consumablePurchaseBtn {
-    display: flex;
     align-items: center;
     white-space: pre;
     padding: 0 5px;
@@ -5128,7 +5550,7 @@ form input:hover {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    width: 100%;
 }
 
 .timeSkipContainer {
@@ -5136,8 +5558,7 @@ form input:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    width: 33%;
+    width: 33.333%;
     height: 30%;
 }
 
@@ -5150,13 +5571,27 @@ form input:hover {
     padding: 0;
 }
 
+#topRowConsumables {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.lotusHeaderText {
+    text-align: center;
+}
+
+.lotusHeaderText p {
+    margin: 0;
+}
+
+.lotusContainer {
+    border: 2px solid pink !important;
+}
+
 /* Cost text */
 #consumablesGrid > div > button > :nth-child(2) {
     color: var(--amber-text-color);
-}
-
-#consumablesGrid > div > * {
-    margin: 0;
 }
 
 #upgradeGrid {
@@ -5211,7 +5646,6 @@ form input:hover {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 10px;
 }
 
 #pseudoCoinAmounts > img,
@@ -5549,6 +5983,14 @@ html[data-chal9x1="false"] .chal9x1 {
     display: none;
 }
 
+html[data-sacrifice-unlock="true"] .sacrificeUnlock {
+    display: inline-block;
+}
+
+html[data-sacrifice-unlock="false"] .sacrificeUnlock {
+    display: none;
+}
+
 html[data-chal10="true"] .chal10 {
     display: block;
 }
@@ -5605,6 +6047,62 @@ html[data-prestige-unlock="false"] .prestigeunlockib {
     display: none;
 }
 
+html[data-prestige-unlock="true"] .prestigeunlock {
+    display: block;
+}
+
+html[data-prestige-unlock="true"] .offlineStats > .prestigeunlock {
+    display: flex;
+}
+
+html[data-transcend-unlock="true"] .transcendunlock {
+    display: block;
+}
+
+html[data-transcend-unlock="true"] .offlineStats > .transcendunlock {
+    display: flex;
+}
+
+html[data-reincarnate-unlock="true"] .reincarnationunlock {
+    display: block;
+}
+
+html[data-reincarnate-unlock="true"] .offlineStats > .reincarnationunlock {
+    display: flex;
+}
+
+html[data-prestige-unlock="false"] .prestigeunlock {
+    display: none;
+}
+
+html[data-prestige-unlock="false"] .offlineStats > .prestigeunlock {
+    display: none;
+}
+
+html[data-transcend-unlock="false"] .transcendunlock {
+    display: none;
+}
+
+html[data-transcend-unlock="false"] .offlineStats > .transcendunlock {
+    display: none;
+}
+
+html[data-reincarnate-unlock="false"] .reincarnationunlock {
+    display: none;
+}
+
+html[data-reincarnate-unlock="false"] .offlineStats > .reincarnationunlock {
+    display: none;
+}
+
+html[data-particle-upgrade-research="true"] .particleUpgradeResearch {
+    display: block;
+}
+
+html[data-particle-upgrade-research="false"] .particleUpgradeResearch {
+    display: none !important;
+}
+
 html[data-research150="true"] .research150 {
     display: block;
 }
@@ -5630,7 +6128,7 @@ html[data-cube-upgrade19="false"] .cubeUpgrade19 {
 }
 
 html[data-sacrifice-ants="true"] .sacrificeAnts {
-    display: block;
+    display: flex;
 }
 
 html[data-sacrifice-ants="false"] .sacrificeAnts {
@@ -5701,6 +6199,32 @@ html[data-golden-quark3-upg="false"] .goldenQuark3Upg {
     display: none;
 }
 
+html[data-instant-unlock1="true"] .shopTalismanShopUpgrade {
+    opacity: 0.5;
+}
+
+html[data-instant-unlock1="true"] .shopTalismanShopUpgrade button {
+    display: none;
+}
+
+html[data-instant-unlock1="false"] .shopTalismanShopUpgrade {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+html[data-instant-unlock2="true"] .infiniteAscentShopUpgrade {
+    opacity: 0.5;
+}
+
+html[data-instant-unlock2="true"] .infiniteAscentShopUpgrade button {
+    display: none;
+}
+
+html[data-instant-unlock2="false"] .infiniteAscentShopUpgrade {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .modalBtnBuy {
     width: 60px;
     height: 30px;
@@ -5714,7 +6238,7 @@ html[data-golden-quark3-upg="false"] .goldenQuark3Upg {
     cursor: pointer;
 }
 
-#changelogWrapper {
+#iframeOverlayWrapper {
     width: 50%;
     height: 100%;
     z-index: 10000;
@@ -5727,7 +6251,7 @@ html[data-golden-quark3-upg="false"] .goldenQuark3Upg {
     display: none;
 }
 
-#changelogBlur {
+#iframeOverlayBlur {
     position: fixed;
     top: 0;
     left: 0;
@@ -5738,4 +6262,1137 @@ html[data-golden-quark3-upg="false"] .goldenQuark3Upg {
     background-color: rgb(0 0 0 / 30%);
     pointer-events: all;
     display: none;
+}
+
+@keyframes rainbow-border {
+    0% { border-color: #f00; }
+    16.67% { border-color: #ff7f00; }
+    33.33% { border-color: #ff0; }
+    50% { border-color: #0f0; }
+    66.67% { border-color: #00f; }
+    83.33% { border-color: #8b00ff; }
+    100% { border-color: #f00; }
+}
+
+.rainbow-border-highlight {
+    border: 3px solid #f00;
+    border-radius: 5px;
+    padding: 5px;
+    animation: rainbow-border 2s linear infinite;
+}
+
+.mobile-menu-toggle {
+    display: none;
+}
+
+.hamburger-line {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background-color: white;
+    margin: 2px 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border-radius: 1px;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+@media (max-width: 1024px) {
+    html {
+        min-width: unset;
+        width: 100%;
+    }
+
+    body {
+        overflow-x: auto;
+    }
+
+    /* Ascension stats - horizontally scrollable on mobile */
+    #ascensionStats {
+        min-width: unset;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        scrollbar-width: thin;
+    }
+
+    #ascensionStats > span {
+        flex-shrink: 0;
+    }
+
+    /* Navigation tabs - make scrollable */
+    #tabrow {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 0 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    nav button {
+        min-width: 80px;
+        flex-shrink: 0;
+        font-size: 0.85em;
+    }
+
+    .subHeader {
+        flex-direction: column;
+        min-width: unset;
+        max-width: unset;
+    }
+
+    /* Sub tab wrappers */
+    .subTabWrapper {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        width: 95%;
+        gap: 8px 10px;
+    }
+
+    .subTabWrapper > button {
+        min-width: unset;
+        width: 100%;
+        font-size: 0.85em;
+    }
+
+    /* Building rows */
+    .buttonRow {
+        margin-left: 2%;
+        margin-right: 2%;
+        font-size: 0.9em;
+        margin-top: unset;
+    }
+
+    .buttonRow > div {
+        gap: 5px;
+    }
+
+    .buttonRow > div > .desc {
+        width: 100%;
+        order: -1;
+    }
+
+    .buttonRow > div > .stats {
+        width: 100%;
+        font-size: 0.9em;
+    }
+
+    /* Auto-buy quantity */
+    #buyamountcoin,
+    #buyamountcrystal,
+    #buyamountmythos,
+    #buyamountparticle,
+    #buyAmountTesseract {
+        position: unset;
+        left: unset;
+    }
+
+    /* Building text */
+    #buildingtext {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    /* Coin buildings */
+    #coinBuildings {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    #coinInformation {
+        font-size: 1em;
+        padding: 5px;
+    }
+
+    /* Upgrades flex container */
+    #upgradesFlex {
+        display: grid;
+        grid-template-columns: repeat(3, 33%);
+        margin: 2% auto;
+        width: unset;
+    }
+
+    #upgradesFlex button:has(img) {
+        min-height: unset;
+    }
+
+    #upgradesFlex > section {
+        margin-top: 10px;
+    }
+
+    .shop-section.mobile-flex {
+        display: flex;
+    }
+
+    /* Prestige/Transcension containers */
+    #prestige,
+    #transcension {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    #crystalupgrades {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    p#prestigehotkeys,
+    p#buildinghotkeys {
+        width: 95%;
+        font-size: 0.85em;
+    }
+
+    /* Rune containers */
+    #runeDetails,
+    #runeBlessings,
+    #runeSpirits {
+        width: 90%;
+    }
+
+    .runeType {
+        width: 140px;
+    }
+
+    #runeContainer2 {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .talismansCenter {
+        order: 1;
+    }
+
+    .talismanShardSection {
+        order: 2;
+        align-items: center;
+        margin-left: 0;
+    }
+
+    .talismanToggles {
+        order: 3;
+        align-items: center;
+    }
+
+    #challengeTimers {
+        margin-right: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    #oneChallengeDetails {
+        width: 95%;
+    }
+
+    #startChallenge {
+        min-width: 200px;
+        width: 80%;
+    }
+
+    /* Research section - convert table to wrapping grid */
+    .researchContainer {
+        overflow-x: visible;
+    }
+
+    .researchContainer > .scrollbarX {
+        overflow-x: visible;
+    }
+
+    #researchtable,
+    #researchtable > tbody,
+    #researchtable > tbody > tr {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #researchtable > tbody > tr > td {
+        display: block;
+    }
+
+    #researchtable button > img {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Ants */
+    #sacrificeAnts > *:nth-child(odd) {
+        background-color: #ffffff08;
+    }
+
+    #antSacrificeRewards > div {
+        flex-wrap: wrap;
+    }
+
+    .antSacToggle {
+        height: unset;
+    }
+
+    .antUpgradeRow {
+        display: grid;
+        grid-template-columns: repeat(4, 25%);
+    }
+
+    #antSacrificeCompendium {
+        width: unset;
+    }
+
+    /* WowCubes */
+    #cubesWrapper {
+        width: unset;
+        flex-direction: column;
+    }
+
+    #wowCubeSidebar {
+        width: unset;
+        flex-direction: row;
+    }
+
+    .cubeTab {
+        width: 100vw;
+        margin-left: unset;
+    }
+
+    .cubeBonus {
+        white-space: unset;
+        margin-top: 25px; /* fix overlapping with custom open input */
+    }
+
+    p[id$="BlessingsTotal"] {
+        margin-left: unset;
+        margin-right: unset;
+    }
+
+    #cubeTab6 {
+        flex-direction: row;
+        align-items: unset;
+    }
+
+    .challengePortion {
+        width: unset;
+    }
+
+    .platonicUpgradesContainer {
+        margin-left: unset;
+    }
+
+    .platonicContainer {
+        width: unset;
+    }
+
+    .hepteractGrid {
+        grid-template-columns: repeat(3, 1fr);
+        align-self: center;
+        width: unset;
+    }
+
+    .openGrid {
+        align-self: unset;
+    }
+
+    #heptGrid button:not(#hepteractAutoPercentageButton) {
+        min-height: 100%;
+    }
+
+    #cubeUpgradeTable button {
+        min-height: unset;
+    }
+
+    /* Campaigns */
+    #campaignsIcons {
+        width: unset;
+    }
+
+    #campaignIconGrid {
+        grid-template-columns: repeat(5, 48px);
+        grid-column-gap: unset;
+        grid-row-gap: unset;
+    }
+
+    #campaignsTokensInfo {
+        width: unset;
+    }
+
+    #traits {
+        flex-direction: column;
+    }
+
+    #corruptionStatsLoadouts {
+        min-width: 100%;
+        margin: unset;
+    }
+
+    .corrDesc {
+        min-width: unset;
+    }
+
+    .corruptionStatRow > button {
+        min-width: 44px;
+    }
+
+    #corruptionMain {
+        min-width: unset;
+    }
+
+    #elevatorLockToggle,
+    #elevatorSlowClimbToggle {
+        transform: unset;
+    }
+
+    #actualSingularityUpgradeContainer,
+    #octeractUpgradeContainer,
+    #blueberryUpgradeContainer {
+        width: unset;
+    }
+
+    #singularityInfo {
+        grid-template-columns: unset;
+    }
+
+    #singularityPerksGrid {
+        grid-template-columns: repeat(2, 50%);
+        grid-gap: unset;
+    }
+
+    #singularityPerksDesc {
+        height: unset;
+        min-width: unset;
+    }
+
+    #ambrosiaTexts {
+        line-height: unset;
+    }
+
+    #bbLoadoutContainer {
+        flex-wrap: wrap;
+    }
+
+    .blueberryUpgradeTier {
+        gap: unset;
+    }
+
+    .blueberryUpgradeTier button {
+        min-height: unset !important;
+    }
+
+    /* Achievement grids */
+    #tieredAchievementsTable {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #ungroupedAchievementsTable {
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #progressiveAchievementsTable {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #synergismLevelRewardsTable {
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #synergismLevelRewardsTable > div {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+
+    /* Settings */
+    .settingSubTabUpper {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #confirmationToggleBox,
+    #exportButtons,
+    #thirdParty {
+        max-width: 95%;
+    }
+
+    /* Modals and dialogs */
+    #confirmationBox,
+    #captchaHolder {
+        width: 90vw;
+        min-width: unset;
+        max-width: 95vw;
+    }
+
+    #modal {
+        width: 90%;
+        max-width: 95vw;
+    }
+
+    #notification {
+        width: 80%;
+        min-width: unset;
+    }
+
+    #offlineContainer,
+    #fastForwardContainer {
+        width: 90vw;
+        max-width: 95vw;
+        font-size: 0.9em;
+    }
+
+    #iframeOverlayWrapper {
+        width: 90%;
+    }
+
+    .resetsContainer {
+        margin-top: 10px;
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+
+    .resetInformationContainer {
+        width: unset;
+    }
+
+    .resetsButtons {
+        margin: 0 auto;
+    }
+
+    #resetinfo {
+        text-align: center;
+        height: unset;
+    }
+
+    /* Cube upgrades */
+    .pseudoUpgradeContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Hepteract bars */
+    #pixelProgressBar,
+    #ambrosiaProgressBar {
+        width: 80%;
+    }
+
+    /* Toggle buttons */
+    #runesToggle,
+    #achievementsToggle,
+    #challengesTabsToggle,
+    #challengesAutoToggles {
+        gap: 8px 10px;
+    }
+
+    #runesToggle > button,
+    #achievementsToggle > button,
+    #challengesTabsToggle > button {
+        min-width: 80px;
+        font-size: 0.85em;
+    }
+
+    /* Reset Subtabs */
+    #historyResetTable,
+    #historyAntsTable {
+        min-width: unset;
+    }
+
+    #historyReset,
+    #historyAnts {
+        margin-left: unset;
+    }
+
+    .subtabContent.subtabActive.historySubTab.subtabDisplayFlex > div {
+        flex-direction: column;
+    }
+
+    html[data-sacrifice-ants="true"] .sacrificeAnts {
+        flex-direction: column;
+    }
+
+    #achievements {
+        flex-wrap: wrap;
+    }
+
+    /* Display values on a new line */
+    .statNumber {
+        float: none;
+        display: block;
+    }
+
+    #statisticsSubTab > * {
+        word-break: break-word;
+    }
+
+    .statContainer {
+        min-width: unset;
+        max-width: 50%;
+        width: unset;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .statPortion {
+        min-width: unset;
+    }
+
+    /* PseudoCoins / Subscriptions */
+    .subscriptionContainer > div.checkout-paypal {
+        width: unset;
+    }
+
+    #pseudoCoins > #supportContainer {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pseudoSubscriptionContainer > #sub-section-holder {
+        width: unset;
+    }
+
+    #upgradeGrid {
+        grid-template-rows: repeat(3, 33%);
+        row-gap: 5px;
+        width: unset;
+        max-height: unset;
+        padding-bottom: 15px;
+    }
+
+    .timeSkipSet {
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    .timeSkipContainer {
+        height: auto;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        overflow: hidden; /* TODO */
+    }
+
+    .lotusOptions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    *[data-lotus="true"] *:not(span) {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .consumablePurchaseBtn {
+        white-space: unset;
+        width: 80%;
+    }
+
+    #topRowConsumables > .purchaseConsumableContainer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #event {
+        padding: unset;
+        padding-top: 20px;
+    }
+
+    #themeArea > div {
+        position: unset;
+    }
+
+    #themeArea.open > div {
+        display: inline-grid;
+    }
+
+    #ascendConstantUpgrades {
+        width: unset;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Extra small screens */
+    html {
+        font-size: 14px;
+    }
+
+    /* Prevent mobile browsers from zooming in on input focus
+       https://css-tricks.com/16px-or-larger-text-prevents-ios-form-zoom/ */
+    input:not(#manage-patreon-sub-button),
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    /* Mobile menu toggle button - use high specificity to override nav button */
+    nav.navbar > button.mobile-menu-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+        border: 1px solid #555;
+        border-radius: 4px;
+        padding: 4px 8px;
+        cursor: pointer;
+        margin: 3px auto;
+        min-height: unset;
+        min-width: unset;
+        width: auto;
+        font-size: 1em;
+    }
+
+    nav.navbar > button.mobile-menu-toggle:hover,
+    nav.navbar > button.mobile-menu-toggle:focus {
+        background: linear-gradient(135deg, #444 0%, #2a2a2a 100%);
+        border-color: #777;
+    }
+
+    nav.navbar > button.mobile-menu-toggle:active {
+        transform: scale(0.95);
+    }
+
+    /* Hamburger animation when menu is open */
+    .mobile-menu-toggle.menu-open .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(3px, 3px);
+    }
+
+    .mobile-menu-toggle.menu-open .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-toggle.menu-open .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(3px, -3px);
+    }
+
+    /* Tab row - collapsed by default on mobile */
+    nav.navbar #tabrow {
+        display: none !important;
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px;
+        background: #000c;
+        border-radius: 8px;
+        margin: 5px 10px;
+        overflow-y: auto;
+        flex-wrap: nowrap;
+    }
+
+    /* Show tab row when menu is open */
+    nav.navbar.menu-open #tabrow {
+        display: flex !important;
+    }
+
+    /* Tab buttons in mobile menu */
+    nav.navbar #tabrow > button {
+        width: 100%;
+        min-width: unset;
+        padding: 12px 15px;
+        font-size: 1em;
+        text-align: center;
+        border-radius: 6px;
+    }
+
+    nav button {
+        min-width: 70px;
+        font-size: 0.75em;
+        padding: 2px;
+    }
+
+    .subTabWrapper {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    .buttonRow {
+        margin-left: 5px;
+        margin-right: 5px;
+        font-size: 0.85em;
+    }
+
+    .buttonRow > div > .image {
+        height: 24px;
+        width: 24px;
+    }
+
+    .buildingPurchaseBtn {
+        width: 100%;
+        font-size: 0.85em;
+    }
+
+    .buttonRow > div > .auto {
+        width: 5em;
+        min-width: 60px;
+    }
+
+    /* Upgrades */
+    #upgradesFlex {
+        grid-template-columns: repeat(2, 50%);
+    }
+
+    /* Runes */
+    .runeType {
+        width: 100px;
+    }
+
+    #runeDetails,
+    #runeBlessings,
+    #runeSpirits {
+        width: 100%;
+    }
+
+    #buyRuneBlessingToggle,
+    #buyRuneSpiritToggleValue {
+        text-align: center;
+    }
+
+    /* Achievements */
+    #tieredAchievementsTable {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+
+    .tieredAchievementType > img,
+    .progressiveAchievementType > img,
+    .synergismLevelRewardType > img {
+        width: 100%;
+        height: 100%;
+    }
+
+    #ungroupedAchievementsTable {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #progressiveAchievementsTable {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #synergismLevelRewardsTable {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #synergismLevelRewardsTable > div {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+
+    #synergismLevelMilestonesTable {
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: auto;
+    }
+
+    #synergismLevelMilestonesTable > div {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+
+    /* Challenge icons */
+    #challengeIcons img {
+        width: 48px;
+        height: 48px;
+    }
+
+    #oneChallengeDetails {
+        font-size: 0.9em;
+    }
+
+    #startChallenge {
+        min-width: 150px;
+        min-height: 60px;
+        font-size: 1em;
+    }
+
+    .singularityChallenges {
+        flex-wrap: wrap;
+    }
+
+    #singularityChallengeAllRewards {
+        grid-template-columns: repeat(2, 50%);
+    }
+
+    #researchToggles {
+        flex-wrap: wrap;
+    }
+
+    /* Cubes */
+    #cubeTab6 {
+        flex-direction: column;
+    }
+
+    /* Campaigns */
+    #campaignsMain {
+        display: unset;
+    }
+
+    #campaignsDescriptions {
+        width: unset;
+    }
+
+    /* Dialogs */
+    #confirmationBox,
+    #captchaHolder {
+        min-height: unset;
+        padding: 10px;
+    }
+
+    #confirm,
+    #alert,
+    #prompt {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    #confirm {
+        grid-template-areas:
+            "txt"
+            "btn"
+            "btn2";
+        gap: 10px;
+    }
+
+    #alert {
+        grid-template-areas:
+            "txt"
+            "btn";
+        gap: 10px;
+    }
+
+    #prompt {
+        grid-template-areas:
+            "txt"
+            "lbl"
+            "btn"
+            "btn2";
+        gap: 10px;
+    }
+
+    #prompt_text {
+        margin: 0;
+    }
+
+    /* Settings */
+    #savegame,
+    #deleteGame,
+    #importFileButton,
+    #saveStringInput,
+    #exportButtons > label {
+        width: 100%;
+        min-width: unset;
+    }
+
+    #exportgame {
+        width: 100%;
+        min-width: unset;
+    }
+
+    /* Reset row */
+    #resetrow {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    #resetrow img {
+        height: 24px;
+        width: 24px;
+    }
+
+    #upgradeGrid {
+        width: 100%;
+        grid-template-columns: repeat(5, 15%);
+        grid-template-rows: unset;
+        justify-content: center;
+        column-gap: 4px;
+        row-gap: 4px;
+        max-height: none;
+        height: auto;
+        padding: 0;
+    }
+
+    #upgradeGrid > div {
+        place-self: unset;
+        margin: unset !important;
+    }
+
+    #upgradeInfo {
+        width: unset;
+    }
+
+    /* PseudoCoins / Subscriptions */
+    #productContainer {
+        width: unset;
+    }
+
+    #consumablesSection {
+        width: 95%;
+    }
+
+    #topRowConsumables {
+        flex-wrap: wrap;
+    }
+
+    .purchaseConsumableContainer {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    #manage-subscription-holder {
+        flex-direction: column;
+    }
+
+    .pseudoSubscriptionContainer > #sub-section-holder {
+        grid-template-columns: repeat(2, 50%);
+        width: unset;
+    }
+
+    #cartContainer {
+        width: unset;
+    }
+
+    /* Settings subtabs */
+
+    #languagesubtab {
+        flex-direction: column;
+    }
+
+    .languageContribution {
+        min-width: unset;
+    }
+
+    .languagesMenu {
+        min-width: unset;
+    }
+
+    #creditList {
+        grid-template-columns: repeat(2, 50%);
+    }
+
+    #artistList {
+        grid-template-columns: repeat(2, 50%);
+    }
+
+    .splitContainer {
+        flex-direction: column;
+    }
+
+    .splitContainer > div {
+        width: unset !important;
+    }
+
+    .grid-row > .name-cell {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hotkeys {
+        grid-template-columns: repeat(2, 50%);
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    /* Shops tab */
+    #actualWrapper {
+        flex-direction: column;
+    }
+
+    #actualConsumables {
+        width: unset;
+    }
+
+    #actualShop {
+        width: unset;
+        justify-content: center;
+    }
+
+    #actualShop > div {
+        width: 30%;
+    }
+
+    #shopHovers {
+        width: unset;
+    }
+
+    #sacrificeAnts {
+        display: grid;
+        grid-template-columns: repeat(1, 100%);
+    }
+
+    .sacrificeAntsContainer {
+        width: unset;
+    }
+
+    #antSacrificeShardsRow1,
+    #antSacrificeShardsRow2 {
+        flex-wrap: wrap;
+    }
+
+    /* Stats for nerds */
+    #statsForNerds {
+        min-width: unset;
+        max-width: 50%;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    #summaryGeneration {
+        width: unset !important;
+    }
+
+    #statsForNerds > button {
+        width: 100%;
+    }
+
+    #wowCubeSidebar {
+        flex-direction: column;
+    }
+
+    .hepteractGrid {
+        grid-template-columns: repeat(2, 50%);
+    }
+}
+
+/* Ensure touch-friendly tap targets */
+@media (pointer: coarse) {
+    button:not(.mobile-menu-toggle),
+    .buildingPurchaseBtn,
+    nav button:not(.mobile-menu-toggle),
+    .subTabWrapper > button {
+        min-height: 44px;
+    }
+
+    .antProducerColumn > button {
+        min-height: unset;
+    }
+
+    #platonicUpgradePics button {
+        min-height: unset;
+    }
+
+    input[type="checkbox"] {
+        min-width: 24px;
+        min-height: 24px;
+    }
+
+    .confirmationToggle {
+        gap: 10px;
+    }
+
+    #runesToggle > button,
+    #achievementsToggle > button,
+    #challengesTabsToggle > button,
+    #challengesAutoToggles > button {
+        min-height: 44px;
+        padding: 8px 12px;
+    }
 }

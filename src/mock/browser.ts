@@ -1,11 +1,15 @@
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { setupWorker } from 'msw/browser'
 import { cloudSaveHandlers } from './handlers/CloudSaveHandlers'
 import { messageHandlers } from './handlers/MessageHandlers'
+import { paymentHandlers } from './handlers/PaymentHandlers'
+import { subscriptionHandlers } from './handlers/SubscriptionHandlers'
 import { consumeHandlers } from './websocket'
 
 const GETHandlers = [
-  http.get('https://synergism.cc/api/v1/quark-bonus', () => {
+  http.get('https://synergism.cc/api/v1/quark-bonus', async () => {
+    await delay(Math.random() * (2000 - 100) + 100)
+
     return HttpResponse.json({
       bonus: 105.3
     })
@@ -87,6 +91,28 @@ const GETHandlers = [
         internalName: 'JUMBO_AMBROSIA_TIMESKIP',
         cost: 400,
         length: '1440'
+      },
+      {
+        name: 'Lotus of Rejuvenation',
+        description:
+          'Grants +1 Lotus, which you can use in the Anthill to instantly gain Reborn ELO for the next five Ant Sacrifices.',
+        internalName: 'LOTUS_SINGLE',
+        cost: 20,
+        length: '1'
+      },
+      {
+        name: 'dozen Loti of Rejuvenation',
+        description: 'Grants +12 Lotuses, for the price of 11.',
+        internalName: 'LOTUS_DOZEN',
+        cost: 220,
+        length: '12'
+      },
+      {
+        name: 'Loti of Rejuvenation bouquet (50)',
+        description: 'Grants +50 Lotuses, for the price of 40. What a steal!',
+        internalName: 'LOTUS_BUNDLE',
+        cost: 800,
+        length: '50'
       }
     ])
   }),
@@ -525,6 +551,186 @@ const GETHandlers = [
           internalName: 'ADD_CODE_CAP_BUFF',
           level: 2,
           cost: 600
+        },
+        {
+          upgradeId: 16,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +6 Base Offerings per level, affected by all multipliers!',
+          internalName: 'BASE_OFFERING_BUFF',
+          level: 1,
+          cost: 100
+        },
+        {
+          upgradeId: 16,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +6 Base Offerings per level, affected by all multipliers!',
+          internalName: 'BASE_OFFERING_BUFF',
+          level: 2,
+          cost: 150
+        },
+        {
+          upgradeId: 16,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +6 Base Offerings per level, affected by all multipliers!',
+          internalName: 'BASE_OFFERING_BUFF',
+          level: 3,
+          cost: 200
+        },
+        {
+          upgradeId: 16,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +6 Base Offerings per level, affected by all multipliers!',
+          internalName: 'BASE_OFFERING_BUFF',
+          level: 4,
+          cost: 250
+        },
+        {
+          upgradeId: 16,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +6 Base Offerings per level, affected by all multipliers!',
+          internalName: 'BASE_OFFERING_BUFF',
+          level: 5,
+          cost: 300
+        },
+        {
+          upgradeId: 17,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +3 Base Obtainium per level, affected by all multipliers!',
+          internalName: 'BASE_OBTAINIUM_BUFF',
+          level: 1,
+          cost: 100
+        },
+        {
+          upgradeId: 17,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +3 Base Obtainium per level, affected by all multipliers!',
+          internalName: 'BASE_OBTAINIUM_BUFF',
+          level: 2,
+          cost: 150
+        },
+        {
+          upgradeId: 17,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +3 Base Obtainium per level, affected by all multipliers!',
+          internalName: 'BASE_OBTAINIUM_BUFF',
+          level: 3,
+          cost: 200
+        },
+        {
+          upgradeId: 17,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +3 Base Obtainium per level, affected by all multipliers!',
+          internalName: 'BASE_OBTAINIUM_BUFF',
+          level: 4,
+          cost: 250
+        },
+        {
+          upgradeId: 17,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +3 Base Obtainium per level, affected by all multipliers!',
+          internalName: 'BASE_OBTAINIUM_BUFF',
+          level: 5,
+          cost: 300
+        },
+        {
+          upgradeId: 18,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +20 Red Ambrosia Luck per level',
+          internalName: 'RED_LUCK_BUFF',
+          level: 1,
+          cost: 100
+        },
+        {
+          upgradeId: 18,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +20 Red Ambrosia Luck per level',
+          internalName: 'RED_LUCK_BUFF',
+          level: 2,
+          cost: 150
+        },
+        {
+          upgradeId: 18,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +20 Red Ambrosia Luck per level',
+          internalName: 'RED_LUCK_BUFF',
+          level: 3,
+          cost: 200
+        },
+        {
+          upgradeId: 18,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +20 Red Ambrosia Luck per level',
+          internalName: 'RED_LUCK_BUFF',
+          level: 4,
+          cost: 250
+        },
+        {
+          upgradeId: 18,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +20 Red Ambrosia Luck per level',
+          internalName: 'RED_LUCK_BUFF',
+          level: 5,
+          cost: 300
+        },
+        {
+          upgradeId: 19,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +5% more Red Ambrosia Bar Points per level',
+          internalName: 'RED_GENERATION_BUFF',
+          level: 5,
+          cost: 300
+        },
+        {
+          upgradeId: 19,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +5% more Red Ambrosia Bar Points per level',
+          internalName: 'RED_GENERATION_BUFF',
+          level: 4,
+          cost: 250
+        },
+        {
+          upgradeId: 19,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +5% more Red Ambrosia Bar Points per level',
+          internalName: 'RED_GENERATION_BUFF',
+          level: 3,
+          cost: 200
+        },
+        {
+          upgradeId: 19,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +5% more Red Ambrosia Bar Points per level',
+          internalName: 'RED_GENERATION_BUFF',
+          level: 2,
+          cost: 150
+        },
+        {
+          upgradeId: 19,
+          maxLevel: 5,
+          name: 'Multi-Level',
+          description: 'Receive +5% more Red Ambrosia Bar Points per level',
+          internalName: 'RED_GENERATION_BUFF',
+          level: 1,
+          cost: 100
         }
       ],
       playerUpgrades: [],
@@ -647,7 +853,7 @@ const GETHandlers = [
           upgradeId: 5,
           maxLevel: 5,
           name: 'Multi-Level',
-          description: 'Rceeive +5% Ambrosia Generation Speed per level',
+          description: 'Receive +5% Ambrosia Generation Speed per level',
           internalName: 'AMBROSIA_GENERATION_BUFF',
           level: 1,
           cost: 100
@@ -1169,8 +1375,7 @@ const PUTHandlers = [
 export const worker = setupWorker(
   http.get('https://synergism.cc/api/v1/users/me', () => {
     return HttpResponse.json({
-      personalBonus: 0,
-      globalBonus: 100,
+      globalBonus: 50,
       member: {
         user: {
           id: '267774648622645249',
@@ -1206,14 +1411,17 @@ export const worker = setupWorker(
       },
       accountType: 'discord',
       bonus: {
-        quarkBonus: 0
+        quark: 0
       },
-      subscriptionTier: 0
+      subscription: null,
+      linkedAccounts: ['email']
     })
   }),
   ...GETHandlers,
   ...PUTHandlers,
   ...consumeHandlers,
   ...cloudSaveHandlers,
-  ...messageHandlers
+  ...messageHandlers,
+  ...paymentHandlers,
+  ...subscriptionHandlers
 )

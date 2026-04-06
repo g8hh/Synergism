@@ -1,8 +1,8 @@
+import i18next from 'i18next'
 import { awardUngroupedAchievement } from './Achievements'
 import { DOMCacheGetOrSet, DOMCacheHas } from './Cache/DOM'
-import { prod } from './Config'
+import { platform } from './Config'
 import { pressedKeys } from './Hotkeys'
-import { isLoggedIn } from './Login'
 import { hasUnreadMessages } from './Messages'
 import { initializeCart } from './purchases/CartTab'
 import { getGQUpgradeEffect } from './singularity'
@@ -10,6 +10,7 @@ import { player } from './Synergism'
 import {
   setActiveSettingScreen,
   toggleAchievementScreen,
+  toggleAntsSubtab,
   toggleBuildingScreen,
   toggleChallengesScreen,
   toggleCorruptionLoadoutsStats,
@@ -17,7 +18,7 @@ import {
   toggleRuneScreen,
   toggleSingularityScreen
 } from './Toggles'
-import { changeTabColor, hideStuff, revealStuff } from './UpdateHTML'
+import { changeTabColor, CloseModal, hideStuff, revealStuff } from './UpdateHTML'
 import { assert, limitRange } from './Utility'
 import { Globals as G } from './Variables'
 
@@ -50,8 +51,8 @@ interface SubTab {
   subtabIndex: number
   subTabList: {
     subTabID: string
-    unlocked: boolean
-    buttonID?: string
+    unlocked: () => boolean
+    buttonID: string
   }[]
 }
 
@@ -60,38 +61,30 @@ const subtabInfo: Record<Tabs, SubTab> = {
     tabSwitcher: () => setActiveSettingScreen,
     subtabIndex: 0,
     subTabList: [
-      { subTabID: 'settingsubtab', unlocked: true, buttonID: 'switchSettingSubTab1' },
-      { subTabID: 'languagesubtab', unlocked: true, buttonID: 'switchSettingSubTab2' },
-      { subTabID: 'creditssubtab', unlocked: true, buttonID: 'switchSettingSubTab3' },
-      { subTabID: 'statisticsSubTab', unlocked: true, buttonID: 'switchSettingSubTab4' },
+      { subTabID: 'settingsubtab', unlocked: () => true, buttonID: 'switchSettingSubTab1' },
+      { subTabID: 'languagesubtab', unlocked: () => true, buttonID: 'switchSettingSubTab2' },
+      { subTabID: 'creditssubtab', unlocked: () => true, buttonID: 'switchSettingSubTab3' },
+      { subTabID: 'statisticsSubTab', unlocked: () => true, buttonID: 'switchSettingSubTab4' },
       {
         subTabID: 'resetHistorySubTab',
-        get unlocked () {
-          return player.unlocks.prestige
-        },
+        unlocked: () => player.unlocks.prestige,
         buttonID: 'switchSettingSubTab5'
       },
       {
         subTabID: 'ascendHistorySubTab',
-        get unlocked () {
-          return player.ascensionCount > 0
-        },
+        unlocked: () => player.ascensionCount > 0,
         buttonID: 'switchSettingSubTab6'
       },
       {
         subTabID: 'singularityHistorySubTab',
-        get unlocked () {
-          return player.highestSingularityCount > 0
-        },
+        unlocked: () => player.highestSingularityCount > 0,
         buttonID: 'switchSettingSubTab7'
       },
-      { subTabID: 'hotkeys', unlocked: true, buttonID: 'switchSettingSubTab8' },
-      { subTabID: 'accountSubTab', unlocked: true, buttonID: 'switchSettingSubTab9' },
+      { subTabID: 'hotkeys', unlocked: () => true, buttonID: 'switchSettingSubTab8' },
+      { subTabID: 'accountSubTab', unlocked: () => true, buttonID: 'switchSettingSubTab9' },
       {
         subTabID: 'messagesSubTab',
-        get unlocked () {
-          return hasUnreadMessages()
-        },
+        unlocked: hasUnreadMessages,
         buttonID: 'switchSettingSubTab10'
       }
     ]
@@ -104,33 +97,25 @@ const subtabInfo: Record<Tabs, SubTab> = {
     tabSwitcher: () => toggleBuildingScreen,
     subtabIndex: 0,
     subTabList: [
-      { subTabID: 'coin', unlocked: true, buttonID: 'switchToCoinBuilding' },
+      { subTabID: 'coin', unlocked: () => true, buttonID: 'switchToCoinBuilding' },
       {
         subTabID: 'diamond',
-        get unlocked () {
-          return player.unlocks.prestige
-        },
+        unlocked: () => player.unlocks.prestige,
         buttonID: 'switchToDiamondBuilding'
       },
       {
         subTabID: 'mythos',
-        get unlocked () {
-          return player.unlocks.transcend
-        },
+        unlocked: () => player.unlocks.transcend,
         buttonID: 'switchToMythosBuilding'
       },
       {
         subTabID: 'particle',
-        get unlocked () {
-          return player.unlocks.reincarnate
-        },
+        unlocked: () => player.unlocks.reincarnate,
         buttonID: 'switchToParticleBuilding'
       },
       {
         subTabID: 'tesseract',
-        get unlocked () {
-          return player.ascensionCount > 0
-        },
+        unlocked: () => player.ascensionCount > 0,
         buttonID: 'switchToTesseractBuilding'
       }
     ]
@@ -145,16 +130,12 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subTabList: [
       {
         subTabID: '1',
-        get unlocked () {
-          return true
-        },
+        unlocked: () => true,
         buttonID: 'toggleAchievementSubTab1'
       },
       {
         subTabID: '2',
-        get unlocked () {
-          return true
-        },
+        unlocked: () => true,
         buttonID: 'toggleAchievementSubTab2'
       }
     ]
@@ -165,30 +146,22 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subTabList: [
       {
         subTabID: '1',
-        get unlocked () {
-          return player.unlocks.prestige
-        },
+        unlocked: () => player.unlocks.prestige,
         buttonID: 'toggleRuneSubTab1'
       },
       {
         subTabID: '2',
-        get unlocked () {
-          return player.unlocks.talismans
-        },
+        unlocked: () => player.unlocks.talismans,
         buttonID: 'toggleRuneSubTab2'
       },
       {
         subTabID: '3',
-        get unlocked () {
-          return player.unlocks.blessings
-        },
+        unlocked: () => player.unlocks.blessings,
         buttonID: 'toggleRuneSubTab3'
       },
       {
         subTabID: '4',
-        get unlocked () {
-          return player.unlocks.spirits
-        },
+        unlocked: () => player.unlocks.spirits,
         buttonID: 'toggleRuneSubTab4'
       }
     ]
@@ -197,12 +170,10 @@ const subtabInfo: Record<Tabs, SubTab> = {
     tabSwitcher: () => toggleChallengesScreen,
     subtabIndex: 0,
     subTabList: [
-      { subTabID: '1', unlocked: true, buttonID: 'toggleChallengesSubTab1' },
+      { subTabID: '1', unlocked: () => true, buttonID: 'toggleChallengesSubTab1' },
       {
         subTabID: '2',
-        get unlocked () {
-          return player.highestSingularityCount >= 25
-        },
+        unlocked: () => player.highestSingularityCount >= 25,
         buttonID: 'toggleChallengesSubTab2'
       }
     ]
@@ -212,8 +183,25 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subtabIndex: 0
   },
   [Tabs.AntHill]: {
-    subTabList: [],
-    subtabIndex: 0
+    tabSwitcher: () => toggleAntsSubtab,
+    subtabIndex: 0,
+    subTabList: [
+      {
+        subTabID: '1',
+        unlocked: () => true,
+        buttonID: 'toggleAntSubtab1'
+      },
+      {
+        subTabID: '2',
+        unlocked: () => true,
+        buttonID: 'toggleAntSubtab2'
+      },
+      {
+        subTabID: '3',
+        unlocked: () => player.ants.antSacrificeCount > 0,
+        buttonID: 'toggleAntSubtab3'
+      }
+    ]
   },
   [Tabs.WowCubes]: {
     tabSwitcher: () => toggleCubeSubTab,
@@ -221,51 +209,37 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subTabList: [
       {
         subTabID: '1',
-        get unlocked () {
-          return player.unlocks.ascensions
-        },
+        unlocked: () => player.unlocks.ascensions,
         buttonID: 'switchCubeSubTab1'
       },
       {
         subTabID: '2',
-        get unlocked () {
-          return player.unlocks.tesseracts
-        },
+        unlocked: () => player.unlocks.tesseracts,
         buttonID: 'switchCubeSubTab2'
       },
       {
         subTabID: '3',
-        get unlocked () {
-          return player.unlocks.hypercubes
-        },
+        unlocked: () => player.unlocks.hypercubes,
         buttonID: 'switchCubeSubTab3'
       },
       {
         subTabID: '4',
-        get unlocked () {
-          return player.unlocks.platonics
-        },
+        unlocked: () => player.unlocks.platonics,
         buttonID: 'switchCubeSubTab4'
       },
       {
         subTabID: '5',
-        get unlocked () {
-          return player.unlocks.ascensions
-        },
+        unlocked: () => player.unlocks.ascensions,
         buttonID: 'switchCubeSubTab5'
       },
       {
         subTabID: '6',
-        get unlocked () {
-          return player.unlocks.platonics
-        },
+        unlocked: () => player.unlocks.platonics,
         buttonID: 'switchCubeSubTab6'
       },
       {
         subTabID: '7',
-        get unlocked () {
-          return player.unlocks.hepteracts
-        },
+        unlocked: () => player.unlocks.hepteracts,
         buttonID: 'switchCubeSubTab7'
       }
     ]
@@ -280,12 +254,12 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subTabList: [
       {
         subTabID: 'true',
-        unlocked: true,
+        unlocked: () => true,
         buttonID: 'corrStatsBtn'
       },
       {
         subTabID: 'false',
-        unlocked: true,
+        unlocked: () => true,
         buttonID: 'corrLoadoutsBtn'
       }
     ]
@@ -296,37 +270,27 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subTabList: [
       {
         subTabID: '1',
-        get unlocked () {
-          return player.highestSingularityCount > 0
-        },
+        unlocked: () => player.highestSingularityCount > 0,
         buttonID: 'toggleSingularitySubTab1'
       },
       {
         subTabID: '2',
-        get unlocked () {
-          return player.highestSingularityCount > 0
-        },
+        unlocked: () => player.highestSingularityCount > 0,
         buttonID: 'toggleSingularitySubTab2'
       },
       {
         subTabID: '3',
-        get unlocked () {
-          return player.highestSingularityCount > 0
-        },
+        unlocked: () => player.highestSingularityCount > 0,
         buttonID: 'toggleSingularitySubTab3'
       },
       {
         subTabID: '4',
-        get unlocked () {
-          return Boolean(getGQUpgradeEffect('octeractUnlock'))
-        },
+        unlocked: () => Boolean(getGQUpgradeEffect('octeractUnlock')),
         buttonID: 'toggleSingularitySubTab4'
       },
       {
         subTabID: '5',
-        get unlocked () {
-          return player.highestSingularityCount >= 25
-        },
+        unlocked: () => player.highestSingularityCount >= 25,
         buttonID: 'toggleSingularitySubTab5'
       }
     ]
@@ -341,43 +305,39 @@ const subtabInfo: Record<Tabs, SubTab> = {
     subTabList: [
       {
         subTabID: 'productContainer',
-        get unlocked () {
-          return isLoggedIn() || !prod
-        },
+        unlocked: () => true,
         buttonID: 'cartSubTab1'
       },
       {
         subTabID: 'subscriptionContainer',
-        get unlocked () {
-          return isLoggedIn() || !prod
-        },
+        unlocked: () => true,
         buttonID: 'cartSubTab2'
       },
       {
         subTabID: 'upgradesContainer',
-        unlocked: true,
+        unlocked: () => true,
         buttonID: 'cartSubTab3'
       },
       {
         subTabID: 'consumablesSection',
-        unlocked: true,
+        unlocked: () => true,
         buttonID: 'cartSubTab4'
       },
       {
         subTabID: 'cartContainer',
-        get unlocked () {
-          return isLoggedIn() || !prod
-        },
+        unlocked: () => true,
         buttonID: 'cartSubTab5'
       },
       {
         subTabID: 'merchContainer',
-        unlocked: true,
+        unlocked: () => platform === 'browser', // Steam disallows purchases outside of the Steam ecosystem
         buttonID: 'cartSubTab6'
       }
     ]
   }
 }
+
+const TAB_ORDER_KEY = 'synergism-tab-order'
 
 class TabRow extends HTMLDivElement {
   #list: $Tab[] = []
@@ -412,6 +372,7 @@ class TabRow extends HTMLDivElement {
       this.appendChild(element)
     }
 
+    this.#restoreOrder()
     this.#currentTab = this.#list[0]
     this.#createDrag()
   }
@@ -458,6 +419,39 @@ class TabRow extends HTMLDivElement {
     this.#list.forEach((el) => el.resetHidden())
   }
 
+  #saveOrder () {
+    localStorage.setItem(TAB_ORDER_KEY, JSON.stringify(this.#list.map((tab) => tab.id)))
+  }
+
+  #restoreOrder () {
+    const saved = localStorage.getItem(TAB_ORDER_KEY)
+    if (!saved) return
+
+    try {
+      const order: string[] = JSON.parse(saved)
+      const tabMap = new Map(this.#list.map((tab) => [tab.id, tab]))
+
+      const sorted: $Tab[] = []
+      for (const id of order) {
+        const tab = tabMap.get(id)
+        if (tab) {
+          sorted.push(tab)
+          tabMap.delete(id)
+        }
+      }
+
+      // Append any new tabs not in saved order
+      for (const tab of tabMap.values()) {
+        sorted.push(tab)
+      }
+
+      this.#list = sorted
+      this.replaceChildren(...this.#list)
+    } catch {
+      // Corrupted data — ignore
+    }
+  }
+
   #createDrag () {
     let dragSrcEl: HTMLElement | null = null
 
@@ -471,6 +465,7 @@ class TabRow extends HTMLDivElement {
       e.dataTransfer!.effectAllowed = 'move'
     }
 
+    /* eslint-disable unicorn/consistent-function-scoping */
     const handleDragEnter = (e: DragEvent) => {
       if (e.target instanceof HTMLElement) {
         e.target.classList.add('over')
@@ -482,6 +477,7 @@ class TabRow extends HTMLDivElement {
         e.target.classList.remove('over')
       }
     }
+    /* eslint-enable unicorn/consistent-function-scoping */
 
     const handleDrop = (e: DragEvent) => {
       e.stopPropagation()
@@ -494,6 +490,8 @@ class TabRow extends HTMLDivElement {
 
         this.#list.splice(targetIndex, 0, this.#list[dragIndex])
         this.#list.splice(this.#list.indexOf(dragSrcEl as $Tab, dragIndex), 1)
+
+        this.#saveOrder()
       }
 
       return false
@@ -522,7 +520,7 @@ class TabRow extends HTMLDivElement {
 interface kSubTabOptionsBag {
   id: string
   class?: string
-  i18n?: string
+  i18n: string
   borderColor?: string
 }
 
@@ -539,9 +537,9 @@ class $Tab extends HTMLButtonElement {
     if (options.class) {
       this.classList.add(options.class)
     }
-    if (options.i18n) {
-      this.setAttribute('i18n', options.i18n)
-    }
+
+    this.setAttribute('i18n', options.i18n)
+
     if (options.borderColor) {
       this.style.borderColor = options.borderColor
     }
@@ -575,7 +573,7 @@ class $Tab extends HTMLButtonElement {
   }
 
   getType () {
-    return this.#type!
+    return this.#type
   }
 
   getSubTabs () {
@@ -674,20 +672,41 @@ tabRow.appendButton(
     .makeDraggable()
 )
 
+// Mobile menu toggle functionality
+const mobileMenuToggle = DOMCacheGetOrSet('mobileMenuToggle')
+const navbar = document.querySelector('.navbar')
+
+const toggleMobileMenu = () => {
+  const isOpen = navbar?.classList.toggle('menu-open')
+  mobileMenuToggle.classList.toggle('menu-open', isOpen)
+  mobileMenuToggle.setAttribute('aria-expanded', String(isOpen))
+}
+
+mobileMenuToggle.addEventListener('click', toggleMobileMenu)
+
+// Close mobile menu when a tab is clicked
+tabRow.addEventListener('click', (e) => {
+  const target = e.target as HTMLElement
+  if (target.tagName === 'BUTTON' && navbar?.classList.contains('menu-open')) {
+    toggleMobileMenu()
+  }
+})
+
 /**
  * @param step 1 to go forward; -1 to go back
  * @param changeSubtab true to change the subtab, false to change the main tabs
  */
 export const keyboardTabChange = (step: 1 | -1 = 1, changeSubtab = false) => {
-  let tab = step === 1 ? tabRow.getNextTab() : tabRow.getPreviousTab()
-
-  while (!tab?.isUnlocked()) {
-    tab = step === 1 ? tabRow.getNextTab(tab) : tabRow.getPreviousTab(tab)
-  }
-
   if (changeSubtab) {
-    changeSubTab(tab.getType(), { step })
+    // When changing subtabs, use the current tab instead of calculating next/previous
+    changeSubTab(tabRow.getCurrentTab().getType(), { step })
   } else {
+    let tab = step === 1 ? tabRow.getNextTab() : tabRow.getPreviousTab()
+
+    while (!tab?.isUnlocked()) {
+      tab = step === 1 ? tabRow.getNextTab(tab) : tabRow.getPreviousTab(tab)
+    }
+
     changeTab(tab.getType(), step)
     changeTabColor()
   }
@@ -713,7 +732,6 @@ export const changeTab = (tabs: Tabs, step?: number) => {
   }
 
   G.currentTab = tabRow.getCurrentTab().getType()
-  subtabInfo[tabRow.getCurrentTab().getType()].subtabIndex
 
   if (G.currentTab === Tabs.Achievements) {
     awardUngroupedAchievement('participationTrophy')
@@ -721,19 +739,36 @@ export const changeTab = (tabs: Tabs, step?: number) => {
 
   revealStuff()
   hideStuff()
+  CloseModal()
   ;(document.activeElement as HTMLElement | null)?.blur()
 
   const subTabList = subtabInfo[G.currentTab].subTabList
   for (let i = 0; i < subTabList.length; i++) {
     const id = subTabList[i].buttonID
-    if (id && DOMCacheHas(id)) {
+    if (DOMCacheHas(id)) {
       const button = DOMCacheGetOrSet(id)
+
+      if (!subTabList[i].unlocked()) {
+        button.classList.add('none')
+      } else {
+        button.classList.remove('none')
+      }
 
       if (button.classList.contains('active-subtab')) {
         subtabInfo[tabRow.getCurrentTab().getType()].subtabIndex = i
-        break
       }
     }
+  }
+
+  if (platform === 'steam') {
+    import('./steam/discord').then(({ setRichPresenceDiscord }) => {
+      const i18n = tabRow.getCurrentTab().getAttribute('i18n')
+      setRichPresenceDiscord({
+        details: 'Playing Synergism',
+        state: `Looking at ${i18next.t(i18n!)}...`,
+        startTimestamp: new Date()
+      })
+    })
   }
 }
 
@@ -741,7 +776,7 @@ export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) =>
   let tab = tabRow.getCurrentTab()
 
   if (tab.getType() !== tabs) {
-    changeTab(tab.getType())
+    changeTab(tabs)
     tab = tabRow.getCurrentTab()
   }
 
@@ -763,7 +798,7 @@ export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) =>
 
   let subTabList = subTabs.subTabList[subtabInfo[tab.getType()].subtabIndex]
 
-  while (!subTabList.unlocked) {
+  while (!subTabList.unlocked()) {
     subtabInfo[tab.getType()].subtabIndex = limitRange(
       subtabInfo[tab.getType()].subtabIndex + (step ?? 1),
       0,
@@ -772,10 +807,8 @@ export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) =>
     subTabList = subTabs.subTabList[subtabInfo[tab.getType()].subtabIndex]
   }
 
-  if (subTabList.unlocked) {
+  if (subTabList.unlocked()) {
     for (const subtab of subTabs.subTabList) {
-      if (!subtab.buttonID) continue
-
       const element = DOMCacheGetOrSet(subtab.buttonID)
 
       if (subtab === subTabList) {
@@ -786,16 +819,9 @@ export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) =>
     }
 
     subTabs.tabSwitcher?.()(subTabList.subTabID)
-    if (tab.getType() === Tabs.Singularity && page === 4) {
-      if (player.singularityChallenges.noSingularityUpgrades.completions > 0) {
-        player.visitedAmbrosiaSubtab = true
-      }
-
-      if (player.singularityChallenges.noAmbrosiaUpgrades.completions > 0) {
-        player.visitedAmbrosiaSubtabRed = true
-      }
-    }
   }
+
+  CloseModal()
 }
 
 export function subTabsInMainTab (name: Tabs) {
@@ -810,8 +836,4 @@ export function subTabsInMainTab (name: Tabs) {
 
 export function getActiveSubTab () {
   return subtabInfo[tabRow.getCurrentTab().getType()].subtabIndex
-}
-
-export function getActiveTab () {
-  return tabRow.getCurrentTab().getType()
 }

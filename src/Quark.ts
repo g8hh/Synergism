@@ -1,6 +1,10 @@
+import i18next from 'i18next'
+import { DOMCacheGetOrSet } from './Cache/DOM'
 import { calculateCubeQuarkMultiplier, calculateQuarkMultiplier } from './Calculate'
 import { getOcteractUpgradeEffect } from './Octeracts'
 import { format, player } from './Synergism'
+
+const quarkResearches = [99, 100, 125, 180, 195]
 
 export const quarkHandler = () => {
   let maxTime = 90000 // In Seconds
@@ -11,7 +15,6 @@ export const quarkHandler = () => {
   // Part 2: Calculate quark gain per hour
   let baseQuarkPerHour = 5
 
-  const quarkResearches = [99, 100, 125, 180, 195]
   for (const el of quarkResearches) {
     baseQuarkPerHour += player.researches[el]
   }
@@ -40,12 +43,43 @@ export const quarkHandler = () => {
 
 let bonus = 0
 let personalQuarkBonus = 0
+let globalQuarkBonus = 0
 
-export const setQuarkBonus = (personalBonus: number, globalBonus: number) => {
-  bonus = 100 * (1 + globalBonus / 100) * (1 + personalBonus / 100) - 100
-  personalQuarkBonus = personalBonus
+const recalculateBonus = () => {
+  bonus = 100 * (1 + globalQuarkBonus / 100) * (1 + personalQuarkBonus / 100) - 100
 }
+
+const updateQuarkUI = (personalBonus: number, globalBonus: number) => {
+  const currentBonus = DOMCacheGetOrSet('currentBonus')
+  if (personalBonus > 0) {
+    currentBonus.innerHTML = i18next.t('settings.quarkBonusExtended', {
+      globalBonus,
+      personalBonusMult: format(1 + personalBonus / 100, 3, true),
+      totalBonus: format(bonus, 2, true)
+    })
+  } else {
+    currentBonus.innerHTML = i18next.t('settings.quarkBonusSimple', { globalBonus })
+  }
+}
+
 export const getQuarkBonus = () => bonus
+
+export const getGlobalBonus = () => globalQuarkBonus
+export const getPersonalBonus = () => personalQuarkBonus
+
+export const setPersonalQuarkBonus = (personalBonus: number) => {
+  personalQuarkBonus = personalBonus
+  recalculateBonus()
+
+  updateQuarkUI(personalBonus, globalQuarkBonus)
+}
+
+const setGlobalQuarkBonus = (globalBonus: number) => {
+  globalQuarkBonus = globalBonus
+  recalculateBonus()
+
+  updateQuarkUI(personalQuarkBonus, globalBonus)
+}
 
 export class QuarkHandler {
   /** Quark amount */
@@ -61,9 +95,11 @@ export class QuarkHandler {
   }
 
   /** Subtracts quarks, as the name suggests. */
-  add (amount: number, useBonus = true) {
+  add (amount: number, useBonus: boolean, addToQuarksThisSingularity: boolean) {
     this.QUARKS += useBonus ? this.applyBonus(amount) : amount
-    player.quarksThisSingularity += useBonus ? this.applyBonus(amount) : amount
+    if (addToQuarksThisSingularity) {
+      player.quarksThisSingularity += useBonus ? this.applyBonus(amount) : amount
+    }
     return this
   }
 
@@ -97,7 +133,8 @@ export class QuarkHandler {
 
 export const refreshQuarkBonus = async () => {
   const response = await fetch('https://synergism.cc/api/v1/quark-bonus')
+  // eslint-disable-next-line no-shadow
   const { bonus } = await response.json() as { bonus: number }
 
-  setQuarkBonus(personalQuarkBonus, bonus)
+  setGlobalQuarkBonus(bonus)
 }

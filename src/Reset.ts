@@ -1,14 +1,17 @@
 import Decimal from 'break_infinity.js'
 import i18next from 'i18next'
-import { awardAchievementGroup, challengeAchievementCheck, getAchievementReward } from './Achievements'
-import type { BlueberryLoadoutMode } from './BlueberryUpgrades'
+import {
+  awardAchievementGroup,
+  awardUngroupedAchievement,
+  challengeAchievementCheck,
+  getAchievementReward
+} from './Achievements'
 import { buyTesseractBuilding, calculateTessBuildingsInBudget } from './Buy'
 import type { TesseractBuildings } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
-  calcAscensionCount,
   CalcCorruptionStuff,
-  calculateAnts,
+  calculateAscensionCount,
   calculateGoldenQuarks,
   calculateObtainium,
   calculateOfferings,
@@ -24,10 +27,13 @@ import {
   updateMaxTokens,
   updateTokens
 } from './Campaign'
-import { CalcECC, challengeRequirement } from './Challenges'
+import { CalcECC, challengeRequirement, resetChallengeSweep } from './Challenges'
 import { c15Corruptions, CorruptionLoadout, corruptionStatsUpdate, type SavedCorruption } from './Corruptions'
 import { WowCubes } from './CubeExperimental'
 import { autoBuyCubeUpgrades, awardAutosCookieUpgrade, updateCubeUpgradeBG } from './Cubes'
+import { resetAnts } from './Features/Ants/player/reset'
+import { AntProducers, LAST_ANT_PRODUCER } from './Features/Ants/structs/structs'
+import { toggleAutoAntSacrificeThreshold } from './Features/Ants/toggles/auto-sacrifice'
 import { autoCraftHepteracts, hepteractKeys, hepteracts, resetHepteracts } from './Hepteracts'
 import {
   resetHistoryAdd,
@@ -45,7 +51,7 @@ import { resetRuneBlessings } from './RuneBlessings'
 import { resetOfferings, resetRunes, runes } from './Runes'
 import { resetRuneSpirits } from './RuneSpirits'
 import { playerJsonSchema } from './saves/PlayerJsonSchema'
-import { forceResetShopUpgrades, shopData } from './Shop'
+import { getShopUpgradeEffects, resetShopUpgradesOnSingularity } from './Shop'
 import {
   calculateMaxSingularityLookahead,
   calculateSingularityDebuff,
@@ -57,7 +63,7 @@ import { changeSubTab, changeTab, Tabs } from './Tabs'
 import { resetTalismanData, updateTalismanInventory } from './Talismans'
 import { IconSets } from './Themes'
 import { clearInterval, setInterval } from './Timers'
-import { toggleAutoChallengeModeText } from './Toggles'
+import { AutoAscensionModes } from './Toggles'
 import type { OneToFive, Player, resetNames } from './types/Synergism'
 import { Alert, revealStuff, updateChallengeDisplay } from './UpdateHTML'
 import { upgradeupdate } from './Upgrades'
@@ -68,6 +74,15 @@ import { Globals as G } from './Variables'
 
 let repeatreset: number
 
+const resetTypes = new Set([
+  'transcension',
+  'transcensionChallenge',
+  'reincarnation',
+  'reincarnationChallenge',
+  'ascension',
+  'ascensionChallenge'
+])
+
 export enum resetTiers {
   prestige = 1,
   transcension = 2,
@@ -77,12 +92,19 @@ export enum resetTiers {
   never = 6
 }
 
+export enum AntSacrificeTiers {
+  sacrifice = 0,
+  ascension = 1,
+  singularity = 2,
+  never = 3
+}
+
 export const resetrepeat = (input: resetNames) => {
   clearInterval(repeatreset)
   repeatreset = +setInterval(() => resetdetails(input), 50)
 }
 
-export const resetdetails = (input: resetNames) => {
+const resetdetails = (input: resetNames) => {
   DOMCacheGetOrSet('resetofferings1').style.display = 'block'
 
   const transcensionChallenge = player.currentChallenge.transcension
@@ -104,9 +126,11 @@ export const resetdetails = (input: resetNames) => {
     resetObtainiumText.textContent = ''
   }
 
-  ;(input === 'ascensionChallenge' || input === 'ascension' || input === 'singularity')
-    ? offeringImage.style.display = offeringText.style.display = 'none'
-    : offeringImage.style.display = offeringText.style.display = 'block'
+  if (input === 'ascensionChallenge' || input === 'ascension' || input === 'singularity') {
+    offeringImage.style.display = offeringText.style.display = 'none'
+  } else {
+    offeringImage.style.display = offeringText.style.display = 'block'
+  }
 
   switch (input) {
     case 'prestige':
@@ -208,10 +232,11 @@ export const resetdetails = (input: resetNames) => {
       resetInfo.style.color = 'gold'
       break
     case 'ascension':
+      const ascensionRewards = CalcCorruptionStuff()
       currencyImage1.style.display = 'none'
       resetCurrencyGain.textContent = ''
       resetInfo.textContent = i18next.t('reset.details.ascension', {
-        cubeAmount: format(CalcCorruptionStuff()[4], 0, true),
+        cubeAmount: format(ascensionRewards.wowCubes, 0, true),
         timeSpent: format(player.ascensionCounter, 0, false),
         realTimeSpent: format(player.ascensionCounterRealReal, 0, false)
       })
@@ -245,7 +270,7 @@ export const updateAutoReset = (i: number) => {
     player.autoAscendThreshold = Math.max(value, 1)
   } else if (i === 5) {
     value = Number.parseFloat((DOMCacheGetOrSet('autoAntSacrificeAmount') as HTMLInputElement).value) || 0
-    player.autoAntSacTimer = Math.max(value, 0)
+    toggleAutoAntSacrificeThreshold(value)
   }
 }
 
@@ -287,21 +312,21 @@ const resetAddHistoryEntry = (input: resetNames, from = 'unknown') => {
 
     resetHistoryAdd('reset', historyEntry)
   } else if (input === 'transcension' || input === 'transcensionChallenge') {
-    // Heuristics: transcend entries are not added when entering or leaving a challenge,
-    // unless a meaningful gain in particles was made. This prevents spam when using the challenge automator.
-    const historyEntry: ResetHistoryEntryTranscend = {
-      seconds: player.transcendcounter,
-      date: Date.now(),
-      offerings: offeringsGiven,
-      kind: 'transcend',
-      mythos: G.transcendPointGain.toString()
-    }
+    // Challenges should not be included in the reset history data, because we say it's not added.
+    if (!isChallenge) {
+      const historyEntry: ResetHistoryEntryTranscend = {
+        seconds: player.transcendcounter,
+        date: Date.now(),
+        offerings: offeringsGiven,
+        kind: 'transcend',
+        mythos: G.transcendPointGain.toString()
+      }
 
-    resetHistoryAdd('reset', historyEntry)
+      resetHistoryAdd('reset', historyEntry)
+    }
   } else if (input === 'reincarnation' || input === 'reincarnationChallenge') {
-    // Heuristics: reincarnate entries are not added when entering or leaving a challenge,
-    // unless a meaningful gain in particles was made. This prevents spam when using the challenge automator.
-    if (!isChallenge || G.reincarnationPointGain.gte(player.reincarnationPoints.div(10))) {
+    // Challenges should not be included in the reset history data.
+    if (!isChallenge) {
       const historyEntry: ResetHistoryEntryReincarnate = {
         seconds: player.reincarnationcounter,
         date: Date.now(),
@@ -322,12 +347,12 @@ const resetAddHistoryEntry = (input: resetNames, from = 'unknown') => {
         date: Date.now(),
         c10Completions: player.challengecompletions[10],
         usedCorruptions: player.corruptions.used.loadout,
-        corruptionScore: corruptionMetaData[3],
-        wowCubes: corruptionMetaData[4],
-        wowTesseracts: corruptionMetaData[5],
-        wowHypercubes: corruptionMetaData[6],
-        wowPlatonicCubes: corruptionMetaData[7],
-        wowHepteracts: corruptionMetaData[8],
+        corruptionScore: corruptionMetaData.effectiveScore,
+        wowCubes: corruptionMetaData.wowCubes,
+        wowTesseracts: corruptionMetaData.wowTesseracts,
+        wowHypercubes: corruptionMetaData.wowHypercubes,
+        wowPlatonicCubes: corruptionMetaData.wowPlatonicCubes,
+        wowHepteracts: corruptionMetaData.wowHepteracts,
         kind: 'ascend'
       }
 
@@ -387,7 +412,11 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
   // Handle adding history entries before actually resetting data, to ensure optimal accuracy.
   resetAddHistoryEntry(input, from)
 
+  const transcensionCheck = player.coinsThisTranscension.gte(1e100)
+  const reincarnationCheck = player.transcendShards.gte(1e300)
   const obtainiumToGain = calculateObtainium()
+  const ascensionRewards = CalcCorruptionStuff()
+  const ascensionCountToBeGained = calculateAscensionCount()
 
   resetOfferings()
   resetUpgrades(1)
@@ -455,15 +484,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
 
   G.generatorPower = new Decimal(1)
 
-  const types = [
-    'transcension',
-    'transcensionChallenge',
-    'reincarnation',
-    'reincarnationChallenge',
-    'ascension',
-    'ascensionChallenge'
-  ]
-  if (types.includes(input)) {
+  if (resetTypes.has(input)) {
     resetUpgrades(2)
     player.coinsThisTranscension = new Decimal('100')
     player.firstOwnedDiamonds = 0
@@ -484,7 +505,10 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
     player.acceleratorBoostBought = 0
     player.acceleratorBoostCost = new Decimal('1e3')
 
-    updateTranscensionCount(1)
+    if (transcensionCheck) {
+      updateTranscensionCount(1)
+    }
+
     awardAchievementGroup('transcensionCount')
 
     player.prestigePoints = new Decimal('0')
@@ -534,8 +558,16 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
     // Fail safe if for some reason ascension achievement isn't awarded. hacky solution but am too tired to fix right now
 
     awardAchievementGroup('ascensionCount')
+    awardUngroupedAchievement('ascended')
 
-    player.obtainium = player.obtainium.add(obtainiumToGain)
+    /* When entering a Reincarnation Challenge, we "force" a Reincarnation. This is to ensure that
+       we only credit Obtainium and Reincarnation Count from a Reincarnation when the threshold
+       to Reincarnate normally is reached (1e300 Transcension Shards).
+    */
+    if (reincarnationCheck) {
+      player.obtainium = player.obtainium.add(obtainiumToGain)
+      updateReincarnationCount(1)
+    }
 
     player.currentChallenge.transcension = 0
     resetUpgrades(3)
@@ -556,7 +588,6 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
     player.fourthGeneratedParticles = new Decimal('0')
     player.fifthGeneratedParticles = new Decimal('0')
 
-    updateReincarnationCount(1)
     awardAchievementGroup('reincarnationCount')
 
     player.transcendPoints = new Decimal('0')
@@ -570,7 +601,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
 
     G.reincarnationPointGain = new Decimal('0')
 
-    if (player.shopUpgrades.instantChallenge > 0 && player.currentChallenge.reincarnation === 0) {
+    if (getShopUpgradeEffects('instantChallenge', 'unlocked') && player.currentChallenge.reincarnation === 0) {
       player.challengecompletions[1] = player.highestchallengecompletions[1]
       player.challengecompletions[2] = player.highestchallengecompletions[2]
       player.challengecompletions[3] = player.highestchallengecompletions[3]
@@ -591,18 +622,17 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
 
     player.reincarnationcounter = 0
     G.autoResetTimers.reincarnation = 0
-
-    calculateAnts()
   }
 
   if (input === 'ascension' || input === 'ascensionChallenge' || input === 'singularity') {
-    const metaData = CalcCorruptionStuff()
     if (player.challengecompletions[10] > 0) {
       awardAchievementGroup('ascensionScore')
     }
     // reset auto challenges
     player.currentChallenge.transcension = 0
     player.currentChallenge.reincarnation = 0
+    // reset challenge sweep state machine
+    resetChallengeSweep()
 
     // The start of the auto challenge to improve QoL starts with C10
     if (
@@ -613,20 +643,14 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
     } else {
       player.autoChallengeIndex = 1
     }
-    toggleAutoChallengeModeText('START')
 
-    G.autoChallengeTimerIncrement = 0
     // reset rest
     resetResearches()
-    resetAnts()
+    resetAnts(AntSacrificeTiers.ascension)
     resetTalismanData('ascension')
     player.reincarnationPoints = new Decimal('0')
     player.reincarnationShards = new Decimal('0')
-    player.antSacrificePoints = 0
-    player.antSacrificeTimer = 0
-    player.antSacrificeTimerReal = 0
 
-    player.antUpgrades[12 - 1] = 0
     for (let j = 61; j <= 80; j++) {
       player.upgrades[j] = 0
     }
@@ -658,21 +682,14 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
 
     const c10Completions = player.challengecompletions[10]
 
-    // If challenge 10 is incomplete, you won't get a cube no matter what
-    if (player.challengecompletions[10] > 0 && player.ascensionCounter > 0) {
-      player.ascensionCount += calcAscensionCount()
-      // Metadata is defined up in the top of the (i > 3.5) case
-      // Protect the cube from developer mistakes
-      if (
-        isFinite(metaData[4]) && isFinite(metaData[5]) && isFinite(metaData[6]) && isFinite(metaData[7])
-        && isFinite(metaData[8])
-      ) {
-        player.wowCubes.add(metaData[4])
-        player.wowTesseracts.add(metaData[5])
-        player.wowHypercubes.add(metaData[6])
-        player.wowPlatonicCubes.add(metaData[7])
-        player.wowAbyssals = Math.min(1e300, player.wowAbyssals + metaData[8])
-      }
+    // Only reward Ascension-level rewards if we have a Challenge 10 completion (the requirement for Ascension)
+    if (player.challengecompletions[10] > 0) {
+      player.ascensionCount += ascensionCountToBeGained
+      player.wowCubes.add(ascensionRewards.wowCubes)
+      player.wowTesseracts.add(ascensionRewards.wowTesseracts)
+      player.wowHypercubes.add(ascensionRewards.wowHypercubes)
+      player.wowPlatonicCubes.add(ascensionRewards.wowPlatonicCubes)
+      player.wowAbyssals = Math.min(1e300, player.wowAbyssals + ascensionRewards.wowHepteracts)
     }
 
     for (let j = 1; j <= 10; j++) {
@@ -680,17 +697,13 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
       player.highestchallengecompletions[j] = 0
     }
 
-    player.challengecompletions[6] = player.highestchallengecompletions[6] = player.cubeUpgrades[49]
-    player.challengecompletions[7] = player.highestchallengecompletions[7] = player.cubeUpgrades[49]
-    player.challengecompletions[8] = player.highestchallengecompletions[8] = player.cubeUpgrades[49]
-
     DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
     player.roombaResearchIndex = 0
     player.autoResearch = 1
 
     for (let j = 1; j <= (200); j++) {
       const id = `res${j}`
-      if (player.researches[j] > 0 && isResearchMaxed(j)) {
+      if (player.researches[j] > 0 && !isResearchMaxed(j)) {
         updateClassList(id, ['researchPurchased'], [
           'researchAvailable',
           'researchMaxed',
@@ -712,9 +725,9 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
       }
     }
 
-    calculateAnts()
     calculateObtainium()
     awardAchievementGroup('ascensionCount')
+    awardUngroupedAchievement('ascended')
 
     player.ascensionCounter = 0
     player.ascensionCounterReal = 0
@@ -799,7 +812,8 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
         const orbsAmount = Math.floor(heptAutoSpend / 250000)
         if (player.wowAbyssals - (250000 * orbsAmount) >= 0) {
           player.overfluxOrbs += orbsAmount
-          player.overfluxPowder += player.shopUpgrades.powderAuto * calculatePowderConversion() * orbsAmount / 100
+          player.overfluxPowder += getShopUpgradeEffects('powderAuto', 'automaticPowderFraction')
+            * calculatePowderConversion() * orbsAmount
           player.wowAbyssals -= 250000 * orbsAmount
         }
         if (player.wowAbyssals < 0) {
@@ -809,7 +823,10 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
     }
 
     // Autobuy tesseract buildings (Mode: PERCENTAGE)
-    if (player.researches[190] > 0 && player.tesseractAutoBuyerToggle === 1 && player.resettoggle4 === 2) {
+    if (
+      player.researches[190] > 0 && player.tesseractAutoBuyerToggle
+      && player.resetToggleModes.ascension === AutoAscensionModes.percentage
+    ) {
       const ownedBuildings: TesseractBuildings = [null, null, null, null, null]
       for (let i = 1; i <= 5; i++) {
         if (player.autoTesseracts[i]) {
@@ -842,7 +859,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
         player.wowCubes.open(Math.floor(Number(player.wowCubes) * player.openCubes / 100), false)
       }
       if (player.autoOpenTesseracts && player.openTesseracts !== 0 && player.challengecompletions[11] > 0) {
-        if (player.tesseractAutoBuyerToggle !== 1 || player.resettoggle4 === 2) {
+        if (!player.tesseractAutoBuyerToggle || player.resetToggleModes.ascension === AutoAscensionModes.percentage) {
           player.wowTesseracts.open(Math.floor(Number(player.wowTesseracts) * player.openTesseracts / 100), false)
         }
       }
@@ -921,6 +938,7 @@ export const reset = (input: resetNames, fast = false, from = 'unknown') => {
     updateChallengeDisplay()
   }
 
+  // Is there a reason for this?
   updateAll()
 }
 
@@ -931,13 +949,8 @@ export const updateSingularityAchievements = (): void => {
   awardAchievementGroup('singularityCount')
 }
 
-export const updateSingularityMilestoneAwards = (singularityReset = true): void => {
-  // 1 transcension, 1001 mythos
+const updateSingularityMilestoneAwards = (singularityReset = true): void => {
   if (player.highestSingularityCount >= 2) { // Singularity 2
-    if (singularityReset) {
-      player.prestigeCount = 1
-      player.transcendCount = 1
-    }
     player.transcendPoints = new Decimal('1001')
     player.firstOwnedCoin = 1
     player.unlocks.coinone = true
@@ -950,9 +963,6 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
   }
   if (player.highestSingularityCount >= 3) { // Singularity 3
     if (player.currentChallenge.ascension !== 12) {
-      if (singularityReset) {
-        player.reincarnationCount = 1
-      }
       player.reincarnationPoints = new Decimal('10')
     }
     player.unlocks.reincarnate = true
@@ -971,12 +981,8 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
     player.challengecompletions[6] = 1
     player.highestchallengecompletions[6] = 1
   }
-  const shopItemPerk_5 = ['offeringAuto', 'offeringEX', 'obtainiumAuto', 'obtainiumEX', 'antSpeed', 'cashGrab'] as const
   const perk_5 = player.highestSingularityCount >= 5
   if (perk_5 && singularityReset) { // Singularity 5
-    for (const key of shopItemPerk_5) {
-      player.shopUpgrades[key] = 10
-    }
     player.cubeUpgrades[7] = 1
   }
   if (player.highestSingularityCount >= 7) { // Singularity 7
@@ -994,7 +1000,6 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
     player.cubeUpgrades[5] = 1 // so they wont reset
     player.cubeUpgrades[6] = 1 // on first Ascension
     player.unlocks.anthill = true
-    player.firstOwnedAnts = 1
   }
   if (player.highestSingularityCount > 10) { // Must be the same as autoResearchEnabled()
     player.cubeUpgrades[9] = 1
@@ -1005,31 +1010,15 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
     if (player.currentChallenge.ascension !== 12) {
       player.reincarnationPoints = new Decimal('2.22e2222')
     }
-    player.fifthOwnedAnts = 1
     player.cubeUpgrades[20] = 1
   }
   const perk_20 = player.highestSingularityCount >= 20
   if (perk_20) {
-    const shopItemPerk_20 = [
-      'offeringAuto',
-      'offeringEX',
-      'obtainiumAuto',
-      'obtainiumEX',
-      'antSpeed',
-      'cashGrab'
-    ] as const
     player.challengecompletions[9] = 1
     player.highestchallengecompletions[9] = 1
     player.unlocks.talismans = true
     player.unlocks.blessings = true
-    player.antPoints = new Decimal('1e100')
-    player.antUpgrades[11] = 1
-    for (const key of shopItemPerk_20) {
-      player.shopUpgrades[key] = shopData[key].maxLevel
-    }
-  }
-  if (player.highestSingularityCount >= 25) {
-    player.eighthOwnedAnts = 1
+    player.ants.crumbs = new Decimal('1e100')
   }
   if (player.highestSingularityCount >= 30) {
     player.researches[130] = 1
@@ -1067,44 +1056,7 @@ export const updateSingularityMilestoneAwards = (singularityReset = true): void 
       updateResearchBG(j)
     }
   }
-  updateSingularityGlobalPerks()
   revealStuff()
-}
-
-// updates singularity perks that do not get saved to player object
-// so that we can call on save load to fix game state
-export const updateSingularityGlobalPerks = () => {
-  const perk_5 = player.highestSingularityCount >= 5
-  const shopItemPerk_5 = ['offeringAuto', 'offeringEX', 'obtainiumAuto', 'obtainiumEX', 'antSpeed', 'cashGrab'] as const
-  for (const key of shopItemPerk_5) {
-    shopData[key].refundMinimumLevel = perk_5 ? 10 : key.endsWith('Auto') ? 1 : 0
-  }
-
-  const perk_20 = player.highestSingularityCount >= 20
-  const shopItemPerk_20 = [
-    'offeringAuto',
-    'offeringEX',
-    'obtainiumAuto',
-    'obtainiumEX',
-    'antSpeed',
-    'cashGrab'
-  ] as const
-  for (const key of shopItemPerk_20) {
-    shopData[key].refundable = !perk_20
-  }
-
-  const perk_51 = player.highestSingularityCount >= 51
-  const shopItemPerk_51 = [
-    'seasonPass',
-    'seasonPass2',
-    'seasonPass3',
-    'seasonPassY',
-    'chronometer',
-    'chronometer2'
-  ] as const
-  for (const key of shopItemPerk_51) {
-    shopData[key].refundable = !perk_51
-  }
 }
 
 export const singularity = (setSingNumber = -1) => {
@@ -1147,6 +1099,7 @@ export const singularity = (setSingNumber = -1) => {
   resetRuneBlessings('singularity')
   resetRuneSpirits('singularity')
   resetTalismanData('singularity')
+  resetAnts(AntSacrificeTiers.singularity)
 
   player.goldenQuarks += calculateGoldenQuarks()
 
@@ -1187,7 +1140,7 @@ export const singularity = (setSingNumber = -1) => {
   }
 
   player.totalQuarksEver += player.quarksThisSingularity
-  forceResetShopUpgrades()
+  resetShopUpgradesOnSingularity()
 
   const hold = playerJsonSchema.parse(deepClone()(blankSave))
 
@@ -1216,9 +1169,22 @@ export const singularity = (setSingNumber = -1) => {
   hold.shopUpgrades = player.shopUpgrades
   hold.shopPotionsConsumed = player.shopPotionsConsumed
 
+  if (player.highestSingularityCount >= 8) {
+    hold.prestigeCount = player.prestigeCount
+    hold.transcendCount = player.transcendCount
+    hold.reincarnationCount = player.reincarnationCount
+  }
+
   hold.runes = { ...player.runes }
   hold.talismans = { ...player.talismans }
   hold.cubeUpgrades[80] = player.cubeUpgrades[80]
+
+  hold.ants = deepClone()(player.ants)
+
+  hold.ants.highestRebornELOEver = player.ants.highestRebornELOEver
+  for (let ant = AntProducers.Workers; ant <= LAST_ANT_PRODUCER; ant++) {
+    hold.ants.masteries[ant].highestMastery = player.ants.masteries[ant].highestMastery
+  }
 
   if (!player.singularityChallenges.limitedTime.rewards.preserveQuarks) {
     player.worlds.reset()
@@ -1243,10 +1209,7 @@ export const singularity = (setSingNumber = -1) => {
   hold.corruptions.showStats = player.corruptions.showStats
   hold.toggles = player.toggles
   hold.retrychallenges = player.retrychallenges
-  hold.resettoggle1 = player.resettoggle1
-  hold.resettoggle2 = player.resettoggle2
-  hold.resettoggle3 = player.resettoggle3
-  hold.resettoggle4 = player.resettoggle4
+  hold.resetToggleModes = player.resetToggleModes
   hold.coinbuyamount = player.coinbuyamount
   hold.crystalbuyamount = player.crystalbuyamount
   hold.mythosbuyamount = player.mythosbuyamount
@@ -1267,10 +1230,6 @@ export const singularity = (setSingNumber = -1) => {
   hold.transcendamount = player.transcendamount
   hold.reincarnationamount = player.reincarnationamount
   hold.buyTalismanShardPercent = player.buyTalismanShardPercent
-  hold.antMax = player.antMax
-  hold.autoAntSacrifice = player.autoAntSacrifice
-  hold.autoAntSacrificeMode = player.autoAntSacrificeMode
-  hold.autoAntSacTimer = player.autoAntSacTimer
   hold.autoAscend = player.autoAscend
   hold.autoAscendMode = player.autoAscendMode
   hold.autoAscendThreshold = player.autoAscendThreshold
@@ -1306,13 +1265,13 @@ export const singularity = (setSingNumber = -1) => {
   hold.notation = player.notation
   hold.firstPlayed = player.firstPlayed
   hold.autoCubeUpgradesToggle = player.autoCubeUpgradesToggle
+  hold.maxPlatToggle = player.maxPlatToggle
   hold.autoPlatonicUpgradesToggle = player.autoPlatonicUpgradesToggle
   hold.insideSingularityChallenge = player.insideSingularityChallenge
   hold.redAmbrosia = player.redAmbrosia
   hold.lifetimeRedAmbrosia = player.lifetimeRedAmbrosia
   hold.redAmbrosiaTime = player.redAmbrosiaTime
   hold.redAmbrosiaUpgrades = player.redAmbrosiaUpgrades
-  hold.visitedAmbrosiaSubtabRed = player.visitedAmbrosiaSubtabRed
   hold.singularityChallenges = Object.fromEntries(
     Object.entries(player.singularityChallenges).map(([key, value]) => {
       return [key, {
@@ -1330,10 +1289,11 @@ export const singularity = (setSingNumber = -1) => {
 
   hold.ambrosia = player.ambrosia
   hold.lifetimeAmbrosia = player.lifetimeAmbrosia
-  hold.visitedAmbrosiaSubtab = player.visitedAmbrosiaSubtab
   hold.blueberryTime = player.blueberryTime
   hold.blueberryLoadouts = player.blueberryLoadouts
-  hold.blueberryLoadoutMode = player.blueberryLoadoutMode as BlueberryLoadoutMode
+  hold.blueberryLoadoutMode = player.blueberryLoadoutMode
+
+  hold.stats = player.stats
 
   const saveCode42 = player.codes.get(42) ?? false
   const saveCode43 = player.codes.get(43) ?? false
@@ -1373,9 +1333,9 @@ export const singularity = (setSingNumber = -1) => {
 
 const resetUpgrades = (i: number) => {
   if (i > 2.5) {
-    for (let i = 41; i < 61; i++) {
-      if (i !== 46) {
-        player.upgrades[i] = 0
+    for (let j = 41; j < 61; j++) {
+      if (j !== 46) {
+        player.upgrades[j] = 0
       }
     }
 
@@ -1450,50 +1410,6 @@ const resetUpgrades = (i: number) => {
   for (let x = 1; x <= 125; x++) {
     upgradeupdate(x, true)
   }
-}
-
-export const resetAnts = () => {
-  player.firstOwnedAnts = 0
-  player.secondOwnedAnts = 0
-  player.thirdOwnedAnts = 0
-  player.fourthOwnedAnts = 0
-  player.fifthOwnedAnts = 0
-  player.sixthOwnedAnts = 0
-  player.seventhOwnedAnts = 0
-  player.eighthOwnedAnts = 0
-
-  player.firstGeneratedAnts = new Decimal('0')
-  player.secondGeneratedAnts = new Decimal('0')
-  player.thirdGeneratedAnts = new Decimal('0')
-  player.fourthGeneratedAnts = new Decimal('0')
-  player.fifthGeneratedAnts = new Decimal('0')
-  player.sixthGeneratedAnts = new Decimal('0')
-  player.seventhGeneratedAnts = new Decimal('0')
-  player.eighthGeneratedAnts = new Decimal('0')
-
-  player.firstCostAnts = new Decimal('1e700')
-  player.secondCostAnts = new Decimal('3')
-  player.thirdCostAnts = new Decimal('100')
-  player.fourthCostAnts = new Decimal('1e4')
-  player.fifthCostAnts = new Decimal('1e12')
-  player.sixthCostAnts = new Decimal('1e36')
-  player.seventhCostAnts = new Decimal('1e100')
-  player.eighthCostAnts = new Decimal('1e300')
-
-  if (player.cubeUpgrades[48] > 0) {
-    player.firstOwnedAnts = 1
-    player.firstCostAnts = new Decimal('1e741')
-  }
-
-  const ant12 = player.antUpgrades[12 - 1]
-  player.antUpgrades = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ant12]
-  player.antPoints = new Decimal('1')
-
-  if (player.currentChallenge.ascension === 12) {
-    player.antPoints = new Decimal('7')
-  }
-
-  calculateAnts()
 }
 
 export const getResetResearches = () => {

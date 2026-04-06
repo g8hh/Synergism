@@ -25,7 +25,7 @@ import {
 } from './Octeracts'
 import { redAmbrosiaUpgrades } from './RedAmbrosiaUpgrades'
 import { type RuneKeys, runes } from './Runes'
-import { friendlyShopName, isShopUpgradeUnlocked, shopData, shopUpgradeTypes } from './Shop'
+import { type ShopUpgradeNames, shopUpgrades, shopUpgradeTypes } from './Shop'
 import {
   actualGQUpgradeTotalLevels,
   calculateEffectiveSingularities,
@@ -288,7 +288,7 @@ export const generateExportSummary = async (): Promise<void> => {
   if (player.reincarnationCount > 0 || player.highestSingularityCount > 0) {
     shopUpgradeStats =
       '===== SHOP UPGRADES =====\n - [★]: Upgrade is MAXED - \n - [✔]: Upgrade is unlocked - \n - [✖]: Upgrade is locked - \n'
-    const shopUpgrade = Object.keys(player.shopUpgrades) as (keyof Player['shopUpgrades'])[]
+    const shopUpgrade = Object.keys(player.shopUpgrades) as ShopUpgradeNames[]
     let totalShopUpgradeCount = 0
     let totalShopUpgradeUnlocked = 0
     let totalShopUpgradeMax = 0
@@ -298,28 +298,28 @@ export const generateExportSummary = async (): Promise<void> => {
       const shopUpg = player.shopUpgrades[key]
       let upgradeText = ''
 
-      if (shopData[key].type !== shopUpgradeTypes.CONSUMABLE) {
+      if (shopUpgrades[key].type !== shopUpgradeTypes.CONSUMABLE) {
         totalShopUpgradeCount += 1
-        if (isShopUpgradeUnlocked(key)) {
+        if (shopUpgrades[key].isUnlocked()) {
           totalShopUpgradeUnlocked += 1
         }
-        if (shopUpg === shopData[key].maxLevel) {
+        if (shopUpg === shopUpgrades[key].maxLevel) {
           totalShopUpgradeMax += 1
         }
       }
 
-      totalQuarksSpent += shopData[key].price * shopUpg
-        + shopData[key].priceIncrease * shopUpg * (shopUpg - 1) / 2
+      totalQuarksSpent += shopUpgrades[key].price * shopUpg
+        + shopUpgrades[key].priceIncrease * shopUpg * (shopUpg - 1) / 2
 
-      upgradeText = upgradeText + (isShopUpgradeUnlocked(key)
-        ? (shopUpg === shopData[key].maxLevel ? '[★]' : '[✔]')
+      upgradeText = upgradeText + (shopUpgrades[key].isUnlocked()
+        ? (shopUpg === shopUpgrades[key].maxLevel ? '[★]' : '[✔]')
         : '[✖]')
 
-      upgradeText = `${upgradeText} ${friendlyShopName(key)}:`
+      upgradeText = `${upgradeText} ${shopUpgrades[key].name()}:`
       upgradeText = `${upgradeText} ${
-        (shopData[key].type !== shopUpgradeTypes.CONSUMABLE)
-          ? `Level ${shopUpg}/${shopData[key].maxLevel}`
-          : `${shopUpg}/${shopData[key].maxLevel}`
+        (shopUpgrades[key].type !== shopUpgradeTypes.CONSUMABLE)
+          ? `Level ${shopUpg}/${shopUpgrades[key].maxLevel}`
+          : `${shopUpg}/${shopUpgrades[key].maxLevel}`
       }`
 
       upgradeText = `${upgradeText}\n`
@@ -482,7 +482,7 @@ export const generateExportSummary = async (): Promise<void> => {
 
   // Create Octeract Stuff
   let ambrosiaUpgradeStats = '\n'
-  if (player.visitedAmbrosiaSubtab) {
+  if (player.singularityChallenges.noSingularityUpgrades.completions > 0) {
     ambrosiaUpgradeStats =
       '===== AMBROSIA UPGRADES =====\n - [★]: Upgrade is MAXED - \n - [𖥔]: Upgrade is ACTIVE - \n - [ ]: Upgrade INACTIVE - \n'
     const ambUpgrade = Object.keys(ambrosiaUpgrades) as AmbrosiaUpgradeNames[]
@@ -532,7 +532,7 @@ export const generateExportSummary = async (): Promise<void> => {
   // Create Red Ambrosia Stuff
 
   let redAmbrosiaUpgradeStats = '\n'
-  if (player.visitedAmbrosiaSubtabRed) {
+  if (player.singularityChallenges.noAmbrosiaUpgrades.completions > 0) {
     redAmbrosiaUpgradeStats =
       '===== RED AMBROSIA UPGRADES =====\n - [★]: Upgrade is MAXED - \n - [ ]: Upgrade is NOT MAXED - \n'
     const redAmbUpgrade = Object.keys(player.redAmbrosiaUpgrades) as (keyof Player['redAmbrosiaUpgrades'])[]
@@ -569,7 +569,7 @@ export const generateExportSummary = async (): Promise<void> => {
 
   try {
     await navigator.clipboard.writeText(returnString)
-  } catch (err) {
+  } catch {
     // So we fallback to the deprecated way of doing it,
     // which isn't limited by any browser other than Safari
     // because Apple is ran by a monkey in a human skin suit.

@@ -1,5 +1,4 @@
 import Decimal from 'break_infinity.js'
-import { sacrificeAnts } from './Ants'
 import {
   calculateAmbrosiaGenerationSpeed,
   calculateAmbrosiaLuck,
@@ -13,6 +12,9 @@ import {
   calculateRequiredRedAmbrosiaTime,
   calculateResearchAutomaticObtainium
 } from './Calculate'
+import { sacrificeAnts } from './Features/Ants/AntSacrifice/sacrifice'
+import { canAutoSacrifice } from './Features/Ants/Automation/sacrifice'
+import { getLevelMilestone } from './Levels'
 import { getOcteractUpgradeEffect } from './Octeracts'
 import { quarkHandler } from './Quark'
 import { getRedAmbrosiaUpgradeEffects } from './RedAmbrosiaUpgrades'
@@ -20,7 +22,7 @@ import { Seed, seededRandom } from './RNG'
 import { buyAllBlessingLevels } from './RuneBlessings'
 import { getNumberUnlockedRunes, indexToRune, type RuneKeys, runes, sacrificeOfferings } from './Runes'
 import { buyAllSpiritLevels } from './RuneSpirits'
-import { useConsumable } from './Shop'
+import { getShopUpgradeEffects, useConsumable } from './Shop'
 import { getGQUpgradeEffect } from './singularity'
 import { player } from './Synergism'
 import { Tabs } from './Tabs'
@@ -40,6 +42,8 @@ type TimerInput =
   | 'autoPotion'
   | 'ambrosia'
   | 'redAmbrosia'
+
+const octeractGiveawayLevels = [160, 173, 185, 194, 204, 210, 219, 229, 240, 249]
 
 /**
  * addTimers will add (in milliseconds) time to the reset counters, and quark export timer
@@ -131,10 +135,9 @@ export const addTimers = (input: TimerInput, time = 0) => {
         player.totalWowOcteracts += amountOfGiveaways * perSecond
 
         if (player.highestSingularityCount >= 160) {
-          const levels = [160, 173, 185, 194, 204, 210, 219, 229, 240, 249]
           const frac = 1e-6
           let actualLevel = 0
-          for (const sing of levels) {
+          for (const sing of octeractGiveawayLevels) {
             if (player.highestSingularityCount >= sing) {
               actualLevel += 1
             }
@@ -202,45 +205,45 @@ export const addTimers = (input: TimerInput, time = 0) => {
       break
     }
     case 'ambrosia': {
-      const compute = calculateAmbrosiaGenerationSpeed()
-      if (compute === 0) {
-        break
+      if (player.singularityChallenges.noSingularityUpgrades.completions > 0) {
+        const compute = calculateAmbrosiaGenerationSpeed()
+        if (compute === 0) {
+          break
+        }
+
+        G.ambrosiaTimer += time * timeMultiplier
+
+        if (G.ambrosiaTimer < 0.125) {
+          break
+        }
+
+        const ambrosiaLuck = calculateAmbrosiaLuck()
+        const baseBlueberryTime = calculateAmbrosiaGenerationSpeed()
+        player.blueberryTime += Math.floor(8 * G.ambrosiaTimer) / 8 * baseBlueberryTime
+        G.ambrosiaTimer %= 0.125
+
+        let timeToAmbrosia = calculateRequiredBlueberryTime()
+
+        while (player.blueberryTime >= timeToAmbrosia) {
+          const RNG = seededRandom(Seed.Ambrosia)
+          const ambrosiaMult = Math.floor(ambrosiaLuck / 100)
+          const luckMult = RNG < ambrosiaLuck / 100 - Math.floor(ambrosiaLuck / 100) ? 1 : 0
+          const bonusAmbrosia = (player.singularityChallenges.noAmbrosiaUpgrades.rewards.bonusAmbrosia) ? 1 : 0
+          const ambrosiaToGain = (ambrosiaMult + luckMult) + bonusAmbrosia
+
+          player.ambrosia += ambrosiaToGain
+          player.lifetimeAmbrosia += ambrosiaToGain
+          player.blueberryTime -= timeToAmbrosia
+
+          timeToAmbrosia = calculateRequiredBlueberryTime()
+        }
+
+        visualUpdateAmbrosia()
       }
-
-      G.ambrosiaTimer += time * timeMultiplier
-
-      if (G.ambrosiaTimer < 0.125) {
-        break
-      }
-
-      const ambrosiaLuck = calculateAmbrosiaLuck()
-      const baseBlueberryTime = calculateAmbrosiaGenerationSpeed()
-      player.blueberryTime += Math.floor(8 * G.ambrosiaTimer) / 8 * baseBlueberryTime
-      G.ambrosiaTimer %= 0.125
-
-      let timeToAmbrosia = calculateRequiredBlueberryTime()
-
-      while (player.blueberryTime >= timeToAmbrosia) {
-        const RNG = seededRandom(Seed.Ambrosia)
-        const ambrosiaMult = Math.floor(ambrosiaLuck / 100)
-        const luckMult = RNG < ambrosiaLuck / 100 - Math.floor(ambrosiaLuck / 100) ? 1 : 0
-        const bonusAmbrosia = (player.singularityChallenges.noAmbrosiaUpgrades.rewards.bonusAmbrosia) ? 1 : 0
-        const ambrosiaToGain = (ambrosiaMult + luckMult) + bonusAmbrosia
-
-        player.ambrosia += ambrosiaToGain
-        player.lifetimeAmbrosia += ambrosiaToGain
-        player.blueberryTime -= timeToAmbrosia
-
-        timeToAmbrosia = calculateRequiredBlueberryTime()
-      }
-
-      visualUpdateAmbrosia()
       break
     }
     case 'redAmbrosia': {
-      if (!player.visitedAmbrosiaSubtabRed) {
-        break
-      } else {
+      if (player.singularityChallenges.noAmbrosiaUpgrades.completions > 0) {
         const speed = calculateRedAmbrosiaGenerationSpeed()
         G.redAmbrosiaTimer += time * timeMultiplier
         if (G.redAmbrosiaTimer < 0.125) {
@@ -283,6 +286,17 @@ type AutoToolInput =
   | 'addOfferings'
   | 'runeSacrifice'
   | 'antSacrifice'
+
+const calculateAutoSacrificeInterval = () => {
+  let interval = 1
+  interval /= getShopUpgradeEffects('offeringAuto', 'autoRuneSpeedMult')
+  if (player.cubeUpgrades[20] > 0) {
+    interval /= 2
+  }
+  interval /= getLevelMilestone('runeAutobuyImprover')
+  return interval
+}
+let autoSacrificeInterval = 1
 
 /**
  * Assortment of tools which are used when actions are automated.
@@ -328,7 +342,7 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       // Every real life second this will trigger
       player.sacrificeTimer += time
       if (
-        player.sacrificeTimer >= 1
+        player.sacrificeTimer >= autoSacrificeInterval
         && player.offerings.gt(0)
       ) {
         // Automatic purchase of Blessings
@@ -375,8 +389,8 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
             sacrificeOfferings(indexToRune[rune], player.offerings, true)
           }
         }
-        // Modulo used in event of a large delta time (this could happen for a number of reasons)
-        player.sacrificeTimer %= 1
+        autoSacrificeInterval = calculateAutoSacrificeInterval()
+        player.sacrificeTimer = 0
       }
       break
     case 'antSacrifice': {
@@ -385,19 +399,13 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       player.antSacrificeTimer += time * globalDelta
       player.antSacrificeTimerReal += time
 
-      // Equal to real time iff "Real Time" option selected in ants tab.
-      const antSacrificeTimer = player.autoAntSacrificeMode === 2
-        ? player.antSacrificeTimerReal
-        : player.antSacrificeTimer
-
+      const timeElapsed = player.antSacrificeTimerReal
+      const crumbs = player.ants.crumbsThisSacrifice
+      const mode = player.ants.toggles.autoSacrificeMode
       if (
-        antSacrificeTimer >= player.autoAntSacTimer
-        && player.antSacrificeTimerReal > 0.1
-        && player.researches[124] === 1
-        && player.autoAntSacrifice
-        && player.antPoints.gte('1e40')
+        canAutoSacrifice(crumbs, mode, timeElapsed)
       ) {
-        void sacrificeAnts(true)
+        sacrificeAnts()
       }
       break
     }

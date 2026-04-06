@@ -1,7 +1,6 @@
 import Decimal, { type DecimalSource } from 'break_infinity.js'
 import i18next from 'i18next'
-import { getAchievementReward } from './Achievements'
-import { antSacrificePointsToMultiplier } from './Ants'
+import { achievementLevel, getAchievementReward } from './Achievements'
 import { getAmbrosiaUpgradeEffects } from './BlueberryUpgrades'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
@@ -9,18 +8,16 @@ import {
   calculateAmbrosiaAdditiveLuckMult,
   calculateAmbrosiaCubeMult,
   calculateAmbrosiaGenerationOcteractUpgrade,
-  calculateAmbrosiaGenerationShopUpgrade,
   calculateAmbrosiaGenerationSingularityUpgrade,
   calculateAmbrosiaGenerationSpeed,
   calculateAmbrosiaGenerationSpeedRaw,
   calculateAmbrosiaLuck,
   calculateAmbrosiaLuckOcteractUpgrade,
   calculateAmbrosiaLuckRaw,
-  calculateAmbrosiaLuckShopUpgrade,
   calculateAmbrosiaLuckSingularityUpgrade,
   calculateAmbrosiaQuarkMult,
   calculateAntSacrificeMultiplier,
-  calculateAntSpeedMult,
+  calculateAscensionCount,
   calculateAscensionScore,
   calculateAscensionSpeedExponentSpread,
   calculateAscensionSpeedMult,
@@ -28,18 +25,14 @@ import {
   calculateBaseObtainium,
   calculateBaseOfferings,
   calculateBlueberryInventory,
-  calculateCashGrabBlueberryBonus,
-  calculateCashGrabCubeBonus,
-  calculateCashGrabQuarkBonus,
   calculateCookieUpgrade29Luck,
   calculateCubeMultFromPowder,
   calculateCubeMultiplier,
+  calculateCubeMultiplierWithTau,
   calculateDilatedFiveLeafBonus,
   calculateEventBuff,
+  calculateExalt3Penalty,
   calculateExalt6Penalty,
-  calculateEXUltraCubeBonus,
-  calculateEXUltraObtainiumBonus,
-  calculateEXUltraOfferingBonus,
   calculateFreeShopInfinityUpgrades,
   calculateGlobalSpeedDREnabledMult,
   calculateGlobalSpeedDRIgnoreMult,
@@ -49,7 +42,6 @@ import {
   calculateHepteractMultiplier,
   calculateHypercubeMultiplier,
   calculateImmaculateAlchemyBonus,
-  calculateLimitedAscensionsDebuff,
   calculateLuckConversion,
   calculateNegativeSalvage,
   calculateNegativeSalvageMultiplier,
@@ -68,6 +60,7 @@ import {
   calculatePowderConversion,
   calculateQuarkMultFromPowder,
   calculateQuarkMultiplier,
+  calculateRawAntSpeedMult,
   calculateRawAscensionSpeedMult,
   calculateRawNegativeSalvage,
   calculateRawPositiveSalvage,
@@ -76,7 +69,6 @@ import {
   calculateRedAmbrosiaLuck,
   calculateRedAmbrosiaObtainium,
   calculateRedAmbrosiaOffering,
-  calculateSigmoid,
   calculateSingularityAmbrosiaLuckMilestoneBonus,
   calculateSingularityMilestoneBlueberries,
   calculateSingularityQuarkMilestoneMultiplier,
@@ -87,12 +79,12 @@ import {
   calculateTotalOcteractQuarkBonus,
   calculateTotalSalvage,
   derpsmithCornucopiaBonus,
-  isIARuneUnlocked,
-  resetTimeThreshold,
-  sumOfExaltCompletions
+  resetTimeThreshold
 } from './Calculate'
 import { CalcECC, type Challenge15Rewards, challenge15ScoreMultiplier } from './Challenges'
+import { prod } from './Config'
 import {
+  calculateAntELOCubeBlessing,
   calculateAntSpeedCubeBlessing,
   calculateGlobalSpeedCubeBlessing,
   calculateObtainiumCubeBlessing,
@@ -101,6 +93,23 @@ import {
   calculateSalvageCubeBlessing
 } from './Cubes'
 import { BuffType } from './Event'
+import { canGenerateAntCrumbs } from './Features/Ants/AntProducers/lib/generate-ant-producers'
+import {
+  calculateBaseAntELO,
+  calculateEffectiveAntELO,
+  calculateELOMult
+} from './Features/Ants/AntSacrifice/Rewards/ELO/AntELO/lib/calculate'
+import {
+  calculateSingularityPerkELO,
+  singularityELOBonusMult
+} from './Features/Ants/AntSacrifice/Rewards/ELO/AntELO/lib/singularity-perk'
+import { calculateAntSpeedMultFromELO } from './Features/Ants/AntSacrifice/Rewards/ELO/RebornELO/lib/ant-speed'
+import { rebornELOCreationSpeedMult } from './Features/Ants/AntSacrifice/Rewards/ELO/RebornELO/lib/calculate'
+import { thresholdModifiers } from './Features/Ants/AntSacrifice/Rewards/ELO/RebornELO/Stages/lib/threshold'
+import { calculateTrueAntLevel } from './Features/Ants/AntUpgrades/lib/total-levels'
+import { getAntUpgradeEffect } from './Features/Ants/AntUpgrades/lib/upgrade-effects'
+import { AntUpgrades } from './Features/Ants/AntUpgrades/structs/structs'
+import { AntProducers } from './Features/Ants/structs/structs'
 import { getHepteractEffects, hepteracts } from './Hepteracts'
 import {
   addCodeBonuses,
@@ -110,7 +119,7 @@ import {
   addCodeSingularityPerkBonus,
   addCodeTimeToNextUse
 } from './ImportExport'
-import { getLevelMilestone, getLevelReward } from './Levels'
+import { getLevelMilestone, getLevelReward, synergismLevelRewards } from './Levels'
 import { getOcteractUpgradeEffect, octeractUpgrades } from './Octeracts'
 import {
   calculateCubeMultiplierPlatonicBlessing,
@@ -120,7 +129,7 @@ import {
   calculateTesseractMultiplierPlatonicBlessing
 } from './PlatonicCubes'
 import { PCoinUpgradeEffects } from './PseudoCoinUpgrades'
-import { getQuarkBonus } from './Quark'
+import { getGlobalBonus, getPersonalBonus, getQuarkBonus } from './Quark'
 import { getRedAmbrosiaUpgradeEffects } from './RedAmbrosiaUpgrades'
 import { isResearchUnlocked } from './Research'
 import { getRuneBlessingEffect } from './RuneBlessings'
@@ -132,7 +141,7 @@ import {
   sumOfRuneLevels
 } from './Runes'
 import { getRuneSpiritEffect } from './RuneSpirits'
-import { shopData } from './Shop'
+import { getShopUpgradeEffects } from './Shop'
 import {
   calculateMaxSingularityLookahead,
   calculateSingularityDebuff,
@@ -145,7 +154,7 @@ import type { GlobalVariables } from './types/Synergism'
 import { sumContents } from './Utility'
 import { Globals as G } from './Variables'
 
-export interface StatLine<T = number | Exclude<DecimalSource, string>> {
+interface StatLine<T = number | Exclude<DecimalSource, string>> {
   i18n: string
   stat: () => T
   color?: string
@@ -153,22 +162,9 @@ export interface StatLine<T = number | Exclude<DecimalSource, string>> {
   displayCriterion?: () => boolean
 }
 
-export type NumberStatLine = StatLine<number>
-export type DecimalSourceLine = StatLine<Exclude<DecimalSource, string>>
+type NumberStatLine = StatLine<number>
 
-export const statLineNumberAddition = (lines: NumberStatLine[]): number => {
-  return lines.reduce((acc, line) => acc + line.stat(), 0)
-}
-
-export const statLineDecimalAddition = (lines: DecimalSourceLine[]): Decimal => {
-  return lines.reduce((acc, line) => acc.add(line.stat()), new Decimal(0))
-}
-
-export const statLineNumberMultiplication = (lines: NumberStatLine[]): number => {
-  return lines.reduce((acc, line) => acc * line.stat(), 1)
-}
-
-export const statLineDecimalMultiplication = (lines: DecimalSourceLine[]): Decimal => {
+export const statLineDecimalMultiplication = (lines: StatLine[]): Decimal => {
   return lines.reduce((acc, line) => acc.times(line.stat()), new Decimal(1))
 }
 
@@ -237,29 +233,34 @@ export const allCubeStats: NumberStatLine[] = [
   {
     i18n: 'SingDebuff',
     stat: () => 1 / calculateSingularityDebuff('Cubes'),
-    displayCriterion: () => player.highestSingularityCount > 0
+    displayCriterion: () => player.highestSingularityCount > 0,
+    color: 'red'
+  },
+  {
+    i18n: 'Jack',
+    stat: () => getShopUpgradeEffects('shopPanthema', 'cubeMult')
   },
   {
     i18n: 'PassY',
-    stat: () => 1 + (0.75 * player.shopUpgrades.seasonPassY) / 100,
-    displayCriterion: () => player.highestSingularityCount > 0
+    stat: () => getShopUpgradeEffects('seasonPassY', 'globalCubeMult'),
+    displayCriterion: () => G.challenge15Rewards.hepteractsUnlocked.value > 0 || player.highestSingularityCount > 0
   },
   {
     i18n: 'PassZ',
-    stat: () => 1 + (player.shopUpgrades.seasonPassZ * player.singularityCount) / 100,
-    displayCriterion: () => Boolean(getGQUpgradeEffect('wowPass2'))
+    stat: () => getShopUpgradeEffects('seasonPassZ', 'globalCubeMult'),
+    displayCriterion: () => Boolean(getGQUpgradeEffect('wowPass'))
   },
   {
     i18n: 'PassINF',
-    stat: () => Math.pow(1.012, player.shopUpgrades.seasonPassInfinity + calculateFreeShopInfinityUpgrades())
+    stat: () => getShopUpgradeEffects('seasonPassInfinity', 'globalCubeMult')
   },
   {
     i18n: 'CashGrabUltra',
-    stat: () => +calculateCashGrabCubeBonus()
+    stat: () => getShopUpgradeEffects('shopCashGrabUltra', 'cubesMult')
   },
   {
     i18n: 'EXUltra',
-    stat: () => +calculateEXUltraCubeBonus()
+    stat: () => getShopUpgradeEffects('shopEXUltra', 'cubeMult')
   },
   {
     i18n: 'StarterPack',
@@ -291,9 +292,8 @@ export const allCubeStats: NumberStatLine[] = [
       1 + getGQUpgradeEffect('platonicDelta')
         * Math.min(
           9,
-          (player.shopUpgrades.shopSingularitySpeedup > 0)
-            ? player.singularityCounter * 50 / (3600 * 24)
-            : player.singularityCounter / (3600 * 24)
+          player.singularityCounter * getShopUpgradeEffects('shopSingularitySpeedup', 'singularityUpgradeSpeedMult')
+            / (3600 * 24)
         )
   },
   {
@@ -362,7 +362,17 @@ export const allCubeStats: NumberStatLine[] = [
         exaltPenalty = calculateExalt6Penalty(comps, time)
       }
       return exaltPenalty
-    }
+    },
+    color: 'red'
+  },
+  {
+    i18n: 'OneMind',
+    stat: () => {
+      return getGQUpgradeEffect('oneMind')
+        ? calculateAscensionSpeedMult() / 10
+        : 1
+    },
+    color: 'magenta'
   },
   {
     i18n: 'Event',
@@ -372,6 +382,21 @@ export const allCubeStats: NumberStatLine[] = [
 ]
 
 export const allWowCubeStats: NumberStatLine[] = [
+  {
+    i18n: 'CubeBank',
+    stat: () => {
+      let cubeBank = 0
+      // Award Cubes for Challenges
+      for (let i = 1; i <= 10; i++) {
+        // Reward more for Reincarnation Challenges (c6-10)
+        const valuePerChallenge = i >= 6 ? 2 : 1
+        cubeBank += valuePerChallenge * player.challengecompletions[i]
+      }
+      // Award Cubes for Ant Upgrade
+      cubeBank += getAntUpgradeEffect(AntUpgrades.AscensionScore).cubesBanked
+      return cubeBank
+    }
+  },
   {
     i18n: 'AscensionScore',
     stat: () => Math.pow(calculateAscensionScore().effectiveScore / 3000, 1 / 4.1)
@@ -391,7 +416,7 @@ export const allWowCubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'SeasonPass1',
-    stat: () => 1 + (2.25 * player.shopUpgrades.seasonPass) / 100
+    stat: () => getShopUpgradeEffects('seasonPass', 'wowCubeMult')
   },
   {
     i18n: 'WowSquare',
@@ -400,19 +425,23 @@ export const allWowCubeStats: NumberStatLine[] = [
   {
     i18n: 'Researches',
     stat: () =>
-      (1 + player.researches[119] / 400) // 5x19
-      * (1 + player.researches[120] / 400) // 5x20
+      (1 + player.researches[119] / 1000) // 5x19
+      * (1 + player.researches[120] / 200) // 5x20
       * (1 + player.researches[137] / 100) // 6x12
       * (1 + (0.9 * player.researches[152]) / 100) // 7x2
       * (1 + (0.8 * player.researches[167]) / 100) // 7x17
       * (1 + (0.7 * player.researches[182]) / 100) // 8x7
       * (1
-        + (0.03 / 100) * player.researches[192] * player.antUpgrades[12 - 1]!) // 8x17
+        + (1 / 500) * player.researches[192] * calculateTrueAntLevel(AntUpgrades.Mortuus)) // 8x17
       * (1 + (0.6 * player.researches[197]) / 100) // 8x22
   },
   {
     i18n: 'Research8x25',
     stat: () => 1 + (0.004 / 100) * player.researches[200]
+  },
+  {
+    i18n: 'AntUpgrade',
+    stat: () => getAntUpgradeEffect(AntUpgrades.WowCubes).wowCubes
   },
   {
     i18n: 'CubeUpgrades',
@@ -446,10 +475,21 @@ export const allWowCubeStats: NumberStatLine[] = [
         * player.platonicUpgrades[1]
   },
   {
+    i18n: 'Antiquities',
+    stat: () => getRuneEffects('antiquities').cubeBonus
+  },
+  {
     i18n: 'CookieUpgrade13',
     stat: () =>
       1 + Math.pow(1.03, Math.log10(Math.max(1, player.wowAbyssals))) * player.cubeUpgrades[63]
       - player.cubeUpgrades[63]
+  }
+]
+
+const allWowCubePowerStats: NumberStatLine[] = [
+  {
+    i18n: 'Tau',
+    stat: () => getGQUpgradeEffect('platonicTau') ? 1.01 : 1
   }
 ]
 
@@ -473,7 +513,7 @@ export const allTesseractStats: NumberStatLine[] = [
   },
   {
     i18n: 'SeasonPass1',
-    stat: () => 1 + (2.25 * player.shopUpgrades.seasonPass) / 100
+    stat: () => getShopUpgradeEffects('seasonPass', 'wowTesseractMult')
   },
   {
     i18n: 'WowSquare',
@@ -521,7 +561,7 @@ export const allHypercubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'SeasonPass2',
-    stat: () => 1 + (1.5 * player.shopUpgrades.seasonPass2) / 100
+    stat: () => getShopUpgradeEffects('seasonPass2', 'wowHypercubeMult')
   },
   {
     i18n: 'WowSquare',
@@ -561,7 +601,7 @@ export const allPlatonicCubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'SeasonPass2',
-    stat: () => 1 + (1.5 * player.shopUpgrades.seasonPass2) / 100
+    stat: () => getShopUpgradeEffects('seasonPass2', 'wowPlatonicMult')
   },
   {
     i18n: 'WowSquare',
@@ -597,7 +637,7 @@ export const allHepteractCubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'SeasonPass3',
-    stat: () => 1 + (1.5 * player.shopUpgrades.seasonPass3) / 100
+    stat: () => getShopUpgradeEffects('seasonPass3', 'wowHepteractMult')
   },
   {
     i18n: 'WowSquare',
@@ -634,19 +674,19 @@ export const allOcteractCubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'SeasonPass3',
-    stat: () => 1 + (1.5 * player.shopUpgrades.seasonPass3) / 100
+    stat: () => getShopUpgradeEffects('seasonPass3', 'wowOcteractMult')
   },
   {
     i18n: 'SeasonPassY',
-    stat: () => 1 + (0.75 * player.shopUpgrades.seasonPassY) / 100
+    stat: () => getShopUpgradeEffects('seasonPassY', 'wowOcteractMult')
   },
   {
     i18n: 'SeasonPassZ',
-    stat: () => 1 + (player.shopUpgrades.seasonPassZ * player.singularityCount) / 100
+    stat: () => getShopUpgradeEffects('seasonPassZ', 'wowOcteractMult')
   },
   {
     i18n: 'SeasonPassLost',
-    stat: () => 1 + player.shopUpgrades.seasonPassLost / 1000
+    stat: () => getShopUpgradeEffects('seasonPassLost', 'wowOcteractMult')
   },
   {
     i18n: 'WowSquare',
@@ -730,9 +770,8 @@ export const allOcteractCubeStats: NumberStatLine[] = [
       1 + getGQUpgradeEffect('platonicDelta')
         * Math.min(
           9,
-          (player.shopUpgrades.shopSingularitySpeedup > 0)
-            ? player.singularityCounter * 50 / (3600 * 24)
-            : player.singularityCounter / (3600 * 24)
+          player.singularityCounter * getShopUpgradeEffects('shopSingularitySpeedup', 'singularityUpgradeSpeedMult')
+            / (3600 * 24)
         )
   },
   {
@@ -741,7 +780,7 @@ export const allOcteractCubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'PassINF',
-    stat: () => Math.pow(1.012, (player.shopUpgrades.seasonPassInfinity + calculateFreeShopInfinityUpgrades()) * 1.25)
+    stat: () => getShopUpgradeEffects('seasonPassInfinity', 'wowOcteractMult')
   },
   {
     i18n: 'Ambrosia',
@@ -781,11 +820,11 @@ export const allOcteractCubeStats: NumberStatLine[] = [
   },
   {
     i18n: 'CashGrabUltra',
-    stat: () => +calculateCashGrabCubeBonus()
+    stat: () => getShopUpgradeEffects('shopCashGrabUltra', 'cubesMult')
   },
   {
     i18n: 'EXUltra',
-    stat: () => +calculateEXUltraCubeBonus()
+    stat: () => getShopUpgradeEffects('shopEXUltra', 'cubeMult')
   },
   {
     i18n: 'AscensionSpeed',
@@ -857,11 +896,11 @@ export const allBaseOfferingStats: NumberStatLine[] = [
   },
   {
     i18n: 'OfferingEX3',
-    stat: () => Math.floor((player.shopUpgrades.offeringEX3 + calculateFreeShopInfinityUpgrades()) / 25) // Offering EX 3
+    stat: () => getShopUpgradeEffects('offeringEX3', 'baseOfferings') // Offering EX3 Shop Upgrade
   }
 ]
 
-export const allOfferingStats: DecimalSourceLine[] = [
+export const allOfferingStats: StatLine[] = [
   {
     i18n: 'Base',
     stat: () => calculateBaseOfferings()
@@ -891,7 +930,7 @@ export const allOfferingStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'DiamondUpgrade4x3',
-    stat: () => 1 + (20 * player.upgrades[38]) / 100 // Diamond Upgrade 4x3
+    stat: () => 1 + 0.2 * player.upgrades[38] // Diamond Upgrade 4x3
   },
   {
     i18n: 'ParticleUpgrade3x5',
@@ -901,16 +940,17 @@ export const allOfferingStats: DecimalSourceLine[] = [
         * Math.min(1, Math.pow(Decimal.min(player.maxObtainium, 1e10).toNumber() / 30000000, 0.5)) // Particle Upgrade 3x5
   },
   {
-    i18n: 'AutoOfferingShop',
-    stat: () => 1 + (1 / 50) * player.shopUpgrades.offeringAuto // Auto Offering Shop
+    i18n: 'Research5x19',
+    stat: () => 1 + player.researches[119] / 200, // Research 5x19
+    displayCriterion: () => isResearchUnlocked(119)
   },
   {
     i18n: 'OfferingEXShop',
-    stat: () => 1 + (1 / 25) * player.shopUpgrades.offeringEX // Offering EX Shop
+    stat: () => getShopUpgradeEffects('offeringEX', 'offeringMult') // Offering EX Shop
   },
   {
     i18n: 'CashGrab',
-    stat: () => 1 + (1 / 100) * player.shopUpgrades.cashGrab // Cash Grab
+    stat: () => getShopUpgradeEffects('cashGrab', 'offeringMult') // Cash Grab
   },
   {
     i18n: 'Research4x10',
@@ -918,7 +958,7 @@ export const allOfferingStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'AntUpgrade',
-    stat: () => 1 + Math.pow(player.antUpgrades[6 - 1]! + G.bonusant6, 0.66) // Ant Upgrade
+    stat: () => getAntUpgradeEffect(AntUpgrades.Offerings).offeringMult // Ant Upgrade
   },
   {
     i18n: 'Brutus',
@@ -983,6 +1023,10 @@ export const allOfferingStats: DecimalSourceLine[] = [
     stat: () => Math.pow(10, getRuneEffects('antiquities').offeringLog10) // Antiquities Rune
   },
   {
+    i18n: 'Jack',
+    stat: () => getShopUpgradeEffects('shopPanthema', 'offeringMult')
+  },
+  {
     i18n: 'SingularityDebuff',
     stat: () => 1 / calculateSingularityDebuff('Offering'), // Singularity Debuff
     color: 'red'
@@ -1045,19 +1089,19 @@ export const allOfferingStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'CashGrab2',
-    stat: () => 1 + (1 / 200) * player.shopUpgrades.cashGrab2 // Cash Grab 2
+    stat: () => getShopUpgradeEffects('cashGrab2', 'offeringMult') // Cash Grab 2
   },
   {
     i18n: 'OfferingEX2',
-    stat: () => 1 + (1 / 100) * player.shopUpgrades.offeringEX2 * player.singularityCount // Offering EX 2
+    stat: () => getShopUpgradeEffects('offeringEX2', 'offeringMult') // Offering EX 2
   },
   {
     i18n: 'OfferingINF',
-    stat: () => Math.pow(1.012, player.shopUpgrades.offeringEX3 + calculateFreeShopInfinityUpgrades()) // Offering INF
+    stat: () => getShopUpgradeEffects('offeringEX3', 'offeringMult') // Offering INF
   },
   {
     i18n: 'EXUltra',
-    stat: () => calculateEXUltraOfferingBonus() // EX Ultra Shop Upgrade
+    stat: () => getShopUpgradeEffects('shopEXUltra', 'offeringMult') // EX Ultra Shop Upgrade
   },
   {
     i18n: 'Exalt6Penalty',
@@ -1227,6 +1271,10 @@ export const allQuarkStats: NumberStatLine[] = [
     stat: () => player.platonicUpgrades[15] > 0 ? 1.15 : 1
   },
   {
+    i18n: 'Jack',
+    stat: () => getShopUpgradeEffects('shopPanthema', 'quarkMult')
+  },
+  {
     i18n: 'Challenge15',
     stat: () =>
       player.challenge15Exponent >= G.challenge15Rewards.quarks.requirement ? G.challenge15Rewards.quarks.value : 1
@@ -1237,7 +1285,7 @@ export const allQuarkStats: NumberStatLine[] = [
   },
   {
     i18n: 'InfiniteAscent',
-    stat: () => isIARuneUnlocked() ? getRuneEffects('infiniteAscent').quarkMult : 1
+    stat: () => getShopUpgradeEffects('infiniteAscent', 'runeUnlocked') ? getRuneEffects('infiniteAscent').quarkMult : 1
   },
   {
     i18n: 'QuarkHepteract',
@@ -1253,6 +1301,10 @@ export const allQuarkStats: NumberStatLine[] = [
   {
     i18n: 'SingularityCount',
     stat: () => 1 + player.singularityCount / 10
+  },
+  {
+    i18n: 'FavoriteUpgrade',
+    stat: () => getGQUpgradeEffect('favoriteUpgrade')
   },
   {
     i18n: 'CookieUpgrade3',
@@ -1301,7 +1353,7 @@ export const allQuarkStats: NumberStatLine[] = [
     stat: () =>
       1 + 0.02 * getGQUpgradeEffect('intermediatePack')
       + 0.04 * getGQUpgradeEffect('advancedPack') + 0.06 * getGQUpgradeEffect('expertPack')
-      + 0.08 * getGQUpgradeEffect('expertPack') + 0.1 * goldenQuarkUpgrades.divinePack.level
+      + 0.08 * getGQUpgradeEffect('masterPack') + 0.1 * goldenQuarkUpgrades.divinePack.level
   },
   {
     i18n: 'SingQuarkImprover1',
@@ -1342,7 +1394,7 @@ export const allQuarkStats: NumberStatLine[] = [
   },
   {
     i18n: 'CashGrabQuarkBonus',
-    stat: () => calculateCashGrabQuarkBonus()
+    stat: () => getShopUpgradeEffects('shopCashGrabUltra', 'quarkMult')
   },
   {
     i18n: 'LimitedTimeChallenge',
@@ -1363,8 +1415,14 @@ export const allQuarkStats: NumberStatLine[] = [
     color: 'lime'
   },
   {
-    i18n: 'PatreonBonus',
-    stat: () => 1 + getQuarkBonus() / 100,
+    i18n: 'GlobalSubscriber',
+    stat: () => 1 + getGlobalBonus() / 100,
+    acc: 3,
+    color: 'gold'
+  },
+  {
+    i18n: 'AccountBonus',
+    stat: () => 1 + getPersonalBonus() / 100,
     acc: 3,
     color: 'gold'
   }
@@ -1478,8 +1536,7 @@ export const allObtainiumIgnoreDRStats: NumberStatLine[] = [
   },
   {
     i18n: 'ObtainiumEX3',
-    stat: () =>
-      Math.pow(1.06, Math.floor((player.shopUpgrades.obtainiumEX3 + calculateFreeShopInfinityUpgrades()) / 25)) // Obtainium EX 3
+    stat: () => getShopUpgradeEffects('obtainiumEX3', 'immaculateObtainiuMult') // Obtainium EX 3
   },
   {
     i18n: 'Exalt6Penalty',
@@ -1496,7 +1553,7 @@ export const allObtainiumIgnoreDRStats: NumberStatLine[] = [
   }
 ]
 
-export const allObtainiumStats: DecimalSourceLine[] = [
+export const allObtainiumStats: StatLine[] = [
   {
     i18n: 'TranscendShards',
     stat: () => Math.max(1, Math.pow(Decimal.log(player.transcendShards.add(1), 10) / 300, 2)) // Transcend Shards
@@ -1541,16 +1598,17 @@ export const allObtainiumStats: DecimalSourceLine[] = [
     stat: () => 1 + player.researches[81] / 10 // Research 4x6
   },
   {
-    i18n: 'ShopObtainiumAuto',
-    stat: () => 1 + player.shopUpgrades.obtainiumAuto / 50 // Shop Upgrade Auto Obtainium
+    i18n: 'Research5x19',
+    stat: () => 1 + player.researches[119] / 200,
+    displayCriterion: () => isResearchUnlocked(119)
   },
   {
     i18n: 'ShopCashGrab',
-    stat: () => 1 + player.shopUpgrades.cashGrab / 100 // Shop Upgrade Cash Grab
+    stat: () => getShopUpgradeEffects('cashGrab', 'obtainiumMult') // Shop Upgrade Cash Grab
   },
   {
     i18n: 'ShopObtainiumEX',
-    stat: () => 1 + player.shopUpgrades.obtainiumEX / 25 // Shop Upgrade Obtainium EX
+    stat: () => getShopUpgradeEffects('obtainiumEX', 'obtainiumMult') // Shop Upgrade Obtainium EX
   },
   {
     i18n: 'Rune5',
@@ -1558,7 +1616,7 @@ export const allObtainiumStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'Ant10',
-    stat: () => 1 + 2 * Math.pow((player.antUpgrades[10 - 1]! + G.bonusant10) / 50, 2 / 3) // Ant 10
+    stat: () => getAntUpgradeEffect(AntUpgrades.Obtainium).obtainiumMult // Ant 10
   },
   {
     i18n: 'CubeBonus',
@@ -1571,10 +1629,6 @@ export const allObtainiumStats: DecimalSourceLine[] = [
   {
     i18n: 'CubeUpgrade1x3',
     stat: () => 1 + 0.1 * player.cubeUpgrades[3] // Cube Upgrade 1x3
-  },
-  {
-    i18n: 'CubeUpgrade4x7',
-    stat: () => 1 + 0.1 * player.cubeUpgrades[47] // Cube Upgrade 4x7
   },
   {
     i18n: 'Challenge12',
@@ -1591,6 +1645,10 @@ export const allObtainiumStats: DecimalSourceLine[] = [
   {
     i18n: 'CubeUpgrade5x10',
     stat: () => 1 + 0.0002 * player.cubeUpgrades[50] // Cube Upgrade 5x10
+  },
+  {
+    i18n: 'Jack',
+    stat: () => getShopUpgradeEffects('shopPanthema', 'obtainiumMult') // Jack
   },
   {
     i18n: 'StarterPack',
@@ -1618,15 +1676,15 @@ export const allObtainiumStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'ShopCashGrab2',
-    stat: () => 1 + (1 / 200) * player.shopUpgrades.cashGrab2 // Cash Grab 2 Shop Upgrade
+    stat: () => getShopUpgradeEffects('cashGrab2', 'obtainiumMult') // Cash Grab 2 Shop Upgrade
   },
   {
     i18n: 'ShopObtainiumEX2',
-    stat: () => 1 + (1 / 100) * player.shopUpgrades.obtainiumEX2 * player.singularityCount // Obtainium EX 2 Shop Upgrade
+    stat: () => getShopUpgradeEffects('obtainiumEX2', 'obtainiumMult') // Obtainium EX 2 Shop Upgrade
   },
   {
     i18n: 'ShopObtainiumEX3',
-    stat: () => Math.pow(1.012, player.shopUpgrades.obtainiumEX3 + calculateFreeShopInfinityUpgrades()) // Obtainium EX 3 Shop Upgrade
+    stat: () => getShopUpgradeEffects('obtainiumEX3', 'obtainiumMult') // Obtainium EX 3 Shop Upgrade
   },
   {
     i18n: 'OcteractBonus',
@@ -1642,7 +1700,7 @@ export const allObtainiumStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'EXUltraObtainium',
-    stat: () => calculateEXUltraObtainiumBonus() // EX Ultra Obtainium Bonus
+    stat: () => getShopUpgradeEffects('shopEXUltra', 'obtainiumMult') // EX Ultra Obtainium Bonus
   },
   {
     i18n: 'Challenge14',
@@ -1668,7 +1726,7 @@ export const allObtainiumStats: DecimalSourceLine[] = [
 ]
 
 // For use in displaying the second half of Obtainium Multiplier Stats
-export const obtainiumDR: NumberStatLine[] = [
+const obtainiumDR: NumberStatLine[] = [
   {
     i18n: 'ObtainiumDR',
     stat: () => player.corruptions.used.corruptionEffects('illiteracy'),
@@ -1699,14 +1757,14 @@ export const offeringObtainiumTimeModifiers = (time: number, timeMultCheck: bool
   ]
 }
 
-export const antSacrificeRewardStats: DecimalSourceLine[] = [
+export const antSacrificeRewardStats: StatLine[] = [
   {
     i18n: 'AchievementBonus',
     stat: () => +getAchievementReward('sacrificeMult')
   },
   {
     i18n: 'AntUpgrade11',
-    stat: () => 1 + 2 * (1 - Math.pow(2, -(player.antUpgrades[11 - 1]! + G.bonusant11) / 125))
+    stat: () => getAntUpgradeEffect(AntUpgrades.AntSacrifice).antSacrificeMultiplier
   },
   {
     i18n: 'Research103',
@@ -1741,10 +1799,6 @@ export const antSacrificeRewardStats: DecimalSourceLine[] = [
     stat: () => 1 + (1 / 100) * player.researches[193]
   },
   {
-    i18n: 'ParticleUpgrade4x4',
-    stat: () => 1 + (1 / 10) * player.upgrades[79]
-  },
-  {
     i18n: 'AcceleratorBoostUpgrade',
     stat: () => 1 + (1 / 4) * player.upgrades[40]
   },
@@ -1754,24 +1808,6 @@ export const antSacrificeRewardStats: DecimalSourceLine[] = [
     color: 'lime'
   }
 ]
-
-export const antSacrificeTimeStats = (time: number, timeMultCheck: boolean): NumberStatLine[] => {
-  return [
-    {
-      i18n: 'ThresholdPenalty',
-      stat: () => Math.min(1, Math.pow(time / resetTimeThreshold(), 2)),
-      color: 'red'
-    },
-    {
-      i18n: 'TimeMultiplier',
-      stat: () => timeMultCheck ? Math.max(1, time / resetTimeThreshold()) : 1
-    },
-    {
-      i18n: 'HalfMind',
-      stat: () => getGQUpgradeEffect('halfMind') ? calculateGlobalSpeedMult() / 10 : 1
-    }
-  ]
-}
 
 // Add a stat to this if you do not want the multiplier to be affected by >100 or <1 Diminishing Returns
 export const allGlobalSpeedIgnoreDRStats: NumberStatLine[] = [
@@ -1798,7 +1834,7 @@ export const allGlobalSpeedIgnoreDRStats: NumberStatLine[] = [
   },
   {
     i18n: 'ChronometerShop',
-    stat: () => Math.max(Math.pow(1.01, (player.singularityCount - 200) * player.shopUpgrades.shopChronometerS), 1) // Limited Time Upg Accels
+    stat: () => getShopUpgradeEffects('shopChronometerS', 'globalSpeedMult') // Limited Time Upg Accels
   },
   {
     i18n: 'Event',
@@ -1859,7 +1895,7 @@ export const allGlobalSpeedStats: NumberStatLine[] = [
   },
   {
     i18n: 'Ant12',
-    stat: () => calculateSigmoid(2, player.antUpgrades[12 - 1]! + G.bonusant12, 69) // ant 12
+    stat: () => getAntUpgradeEffect(AntUpgrades.Mortuus).globalSpeed // ant 12
   },
   {
     i18n: 'ChronosTalisman',
@@ -1881,7 +1917,7 @@ export const allGlobalSpeedStats: NumberStatLine[] = [
 ]
 
 // Use in the second part of the Stats for Nerds for Global Speed
-export const allGlobalSpeedDRStats: NumberStatLine[] = [
+const allGlobalSpeedDRStats: NumberStatLine[] = [
   {
     i18n: 'FastSpeedDR',
     stat: () => 0.5
@@ -1898,20 +1934,24 @@ export const allGlobalSpeedDRStats: NumberStatLine[] = [
 
 export const allAscensionSpeedStats: NumberStatLine[] = [
   {
+    i18n: 'AntUpgrade',
+    stat: () => getAntUpgradeEffect(AntUpgrades.Mortuus2).ascensionSpeed // Ant Upgrade Mortuus 2
+  },
+  {
     i18n: 'PolymathTalisman',
     stat: () => getTalismanEffects('polymath').ascensionSpeedBonus // Polymath Talisman
   },
   {
     i18n: 'Chronometer',
-    stat: () => 1 + (1.2 / 100) * player.shopUpgrades.chronometer // Chronometer
+    stat: () => getShopUpgradeEffects('chronometer', 'ascensionSpeedMult') // Chronometer
   },
   {
     i18n: 'Chronometer2',
-    stat: () => 1 + (0.6 / 100) * player.shopUpgrades.chronometer2 // Chronometer 2
+    stat: () => getShopUpgradeEffects('chronometer2', 'ascensionSpeedMult') // Chronometer 2
   },
   {
     i18n: 'Chronometer3',
-    stat: () => 1 + (1.5 / 100) * player.shopUpgrades.chronometer3 // Chronometer 3
+    stat: () => getShopUpgradeEffects('chronometer3', 'ascensionSpeedMult') // Chronometer 3
   },
   {
     i18n: 'ChronosHepteract',
@@ -1935,7 +1975,7 @@ export const allAscensionSpeedStats: NumberStatLine[] = [
   },
   {
     i18n: 'ChronometerZ',
-    stat: () => 1 + (1 / 1000) * player.singularityCount * player.shopUpgrades.chronometerZ // Chronometer Z
+    stat: () => getShopUpgradeEffects('chronometerZ', 'ascensionSpeedMult') // Chronometer Z
   },
   {
     i18n: 'AbstractPhotokinetics',
@@ -1947,7 +1987,7 @@ export const allAscensionSpeedStats: NumberStatLine[] = [
   },
   {
     i18n: 'ChronometerINF',
-    stat: () => Math.pow(1.006, player.shopUpgrades.chronometerInfinity + calculateFreeShopInfinityUpgrades()) // Chronometer INF
+    stat: () => getShopUpgradeEffects('chronometerInfinity', 'ascensionSpeedMult') // Chronometer INF
   },
   {
     i18n: 'LimitedAscensionsBuff',
@@ -1958,16 +1998,20 @@ export const allAscensionSpeedStats: NumberStatLine[] = [
       ) // EXALT Buff
   },
   {
+    i18n: 'Jack',
+    stat: () => getShopUpgradeEffects('shopPanthema', 'ascensionSpeedMult') // Jack
+  },
+  {
     i18n: 'LimitedTimeChallenge',
     stat: () => 1 + +player.singularityChallenges.limitedTime.rewards.ascensionSpeed // Limited Time Challenge
   },
   {
     i18n: 'ChronometerS',
-    stat: () => Math.max(Math.pow(1.01, (player.singularityCount - 200) * player.shopUpgrades.shopChronometerS), 1) // Limited Time Upg Accels
+    stat: () => getShopUpgradeEffects('shopChronometerS', 'ascensionSpeedMult') // Limited Time Upg Accels
   },
   {
     i18n: 'LimitedAscensionsDebuff',
-    stat: () => 1 / calculateLimitedAscensionsDebuff(), // EXALT Debuff
+    stat: () => 1 / calculateExalt3Penalty(), // EXALT Debuff
     color: 'red'
   },
   {
@@ -1982,7 +2026,7 @@ export const allAscensionSpeedStats: NumberStatLine[] = [
   }
 ]
 
-export const allAscensionSpeedPowerStats: NumberStatLine[] = [
+const allAscensionSpeedPowerStats: NumberStatLine[] = [
   {
     i18n: 'ExponentialScalingSlow',
     stat: () => 1 - calculateAscensionSpeedExponentSpread(),
@@ -2010,7 +2054,7 @@ export const allAdditiveLuckMultStats: NumberStatLine[] = [
   },
   {
     i18n: 'ShopUpgrade',
-    stat: () => player.shopUpgrades.shopAmbrosiaLuckMultiplier4 / 100 // EXALT-unlocked shop upgrade
+    stat: () => getShopUpgradeEffects('shopAmbrosiaLuckMultiplier4', 'additiveAmbrosiaLuckMult') // EXALT-unlocked shop upgrade
   },
   {
     i18n: 'NoAmbrosiaUpgrades',
@@ -2060,8 +2104,20 @@ export const allAmbrosiaLuckStats: NumberStatLine[] = [
     stat: () => calculateSingularityAmbrosiaLuckMilestoneBonus() // Ambrosia Luck Milestones
   },
   {
-    i18n: 'ShopUpgrades',
-    stat: () => calculateAmbrosiaLuckShopUpgrade() // Ambrosia Luck from Shop Upgrades (I-IV)
+    i18n: 'ShopUpgrade1',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaLuck1', 'ambrosiaLuck')
+  },
+  {
+    i18n: 'ShopUpgrade2',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaLuck2', 'ambrosiaLuck')
+  },
+  {
+    i18n: 'ShopUpgrade3',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaLuck3', 'ambrosiaLuck')
+  },
+  {
+    i18n: 'ShopUpgrade4',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaLuck4', 'ambrosiaLuck')
   },
   {
     i18n: 'SingularityUpgrades',
@@ -2101,8 +2157,7 @@ export const allAmbrosiaLuckStats: NumberStatLine[] = [
   },
   {
     i18n: 'OcteractShop',
-    stat: () =>
-      player.shopUpgrades.shopOcteractAmbrosiaLuck * (1 + Math.floor(Math.log10(player.totalWowOcteracts + 1))) // Octeract -> Ambrosia Shop Upgrade
+    stat: () => getShopUpgradeEffects('shopOcteractAmbrosiaLuck', 'ambrosiaLuck') // Octeract -> Ambrosia Shop Upgrade
   },
   {
     i18n: 'NoAmbrosiaUpgrades',
@@ -2131,7 +2186,7 @@ export const allAmbrosiaLuckStats: NumberStatLine[] = [
   },
   {
     i18n: 'AmbrosiaUltra',
-    stat: () => player.shopUpgrades.shopAmbrosiaUltra * sumOfExaltCompletions() // Ambrosia Ultra Shop Upgrade
+    stat: () => getShopUpgradeEffects('shopAmbrosiaUltra', 'ambrosiaLuck') // Ambrosia Ultra Shop Upgrade
   },
   {
     i18n: 'HorseShoeRune',
@@ -2140,7 +2195,7 @@ export const allAmbrosiaLuckStats: NumberStatLine[] = [
 ]
 
 // Attach to the end of allAmbrosiaLuckStats when displaying.
-export const ambrosiaLuckModifiers: NumberStatLine[] = [
+const ambrosiaLuckModifiers: NumberStatLine[] = [
   {
     i18n: 'AdditiveLuckMult',
     stat: () => calculateAmbrosiaAdditiveLuckMult() // Ambrosia Additive Luck Multiplier
@@ -2161,6 +2216,10 @@ export const allAmbrosiaBlueberryStats: NumberStatLine[] = [
     stat: () => getOcteractUpgradeEffect('octeractBlueberries') // Octeract Blueberry Upgrade
   },
   {
+    i18n: 'RedAmbrosiaBlueberries',
+    stat: () => getRedAmbrosiaUpgradeEffects('blueberries').blueberries // Red Ambrosia Blueberry Upgrade
+  },
+  {
     i18n: 'ConglomerateBerries',
     stat: () => calculateSingularityMilestoneBlueberries() // Singularity Milestones (Congealed Blueberries)
   },
@@ -2172,8 +2231,8 @@ export const allAmbrosiaBlueberryStats: NumberStatLine[] = [
 
 export const allAmbrosiaGenerationSpeedStats: NumberStatLine[] = [
   {
-    i18n: 'VisitedTab',
-    stat: () => +(player.visitedAmbrosiaSubtab) // Visited Ambrosia Tab
+    i18n: 'Default',
+    stat: () => player.singularityChallenges.noSingularityUpgrades.completions > 0 ? 1 : 0
   },
   {
     i18n: 'PseudoCoins',
@@ -2185,8 +2244,20 @@ export const allAmbrosiaGenerationSpeedStats: NumberStatLine[] = [
     stat: () => player.campaigns.blueberrySpeedBonus // Campaign Bonus
   },
   {
-    i18n: 'ShopUpgrades',
-    stat: () => calculateAmbrosiaGenerationShopUpgrade() // Shop Upgrades (I-IV)
+    i18n: 'ShopUpgrade1',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaGeneration1', 'ambrosiaGenerationMult')
+  },
+  {
+    i18n: 'ShopUpgrade2',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaGeneration2', 'ambrosiaGenerationMult')
+  },
+  {
+    i18n: 'ShopUpgrade3',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaGeneration3', 'ambrosiaGenerationMult')
+  },
+  {
+    i18n: 'ShopUpgrade4',
+    stat: () => getShopUpgradeEffects('shopAmbrosiaGeneration4', 'ambrosiaGenerationMult')
   },
   {
     i18n: 'SingularityUpgrades',
@@ -2222,7 +2293,7 @@ export const allAmbrosiaGenerationSpeedStats: NumberStatLine[] = [
   },
   {
     i18n: 'CashGrabUltra',
-    stat: () => calculateCashGrabBlueberryBonus() // Cash Grab ULTRA Blueberry Bonus
+    stat: () => getShopUpgradeEffects('shopCashGrabUltra', 'ambrosiaGenerationMult') // Cash Grab ULTRA Blueberry Bonus
   },
   {
     i18n: 'Event',
@@ -2231,7 +2302,7 @@ export const allAmbrosiaGenerationSpeedStats: NumberStatLine[] = [
   }
 ]
 
-export const ambrosiaGenerationSpeedModifiers: NumberStatLine[] = [
+const ambrosiaGenerationSpeedModifiers: NumberStatLine[] = [
   {
     i18n: 'BlueberryCount',
     stat: () => calculateBlueberryInventory()
@@ -2253,7 +2324,7 @@ export const allPowderMultiplierStats: NumberStatLine[] = [
   },
   {
     i18n: 'ShopPowderEX',
-    stat: () => 1 + player.shopUpgrades.powderEX / 50 // powderEX shop upgrade (2% per level, max 20%)
+    stat: () => getShopUpgradeEffects('powderEX', 'orbToPowderConversionMult') // powderEX shop upgrade (2% per level, max 20%)
   },
   {
     i18n: 'PlatonicUpgrade4x1',
@@ -2269,8 +2340,7 @@ export const allPowderMultiplierStats: NumberStatLine[] = [
 export const allGoldenQuarkMultiplierStats: NumberStatLine[] = [
   {
     i18n: 'Base',
-    stat: () =>
-      calculateBaseGoldenQuarks(player.singularityCount) // Base Golden Quarks based on Quarks and Sing Count
+    stat: () => calculateBaseGoldenQuarks(player.singularityCount) // Base Golden Quarks based on Quarks and Sing Count
   },
   {
     i18n: 'PseudoCoins',
@@ -2313,8 +2383,15 @@ export const allGoldenQuarkMultiplierStats: NumberStatLine[] = [
     stat: () => calculateImmaculateAlchemyBonus() // Immaculate Alchemy
   },
   {
-    i18n: 'PatreonBonus',
-    stat: () => 1 + getQuarkBonus() / 100, // Patreon Bonus
+    i18n: 'GlobalSubscriber',
+    stat: () => 1 + getGlobalBonus() / 100,
+    acc: 3,
+    color: 'gold'
+  },
+  {
+    i18n: 'AccountBonus',
+    stat: () => 1 + getPersonalBonus() / 100,
+    acc: 3,
     color: 'gold'
   },
   {
@@ -2332,11 +2409,6 @@ export const allGoldenQuarkPurchaseCostStats: NumberStatLine[] = [
   {
     i18n: 'PseudoCoins',
     stat: () => 1 / PCoinUpgradeEffects.GOLDEN_QUARK_BUFF, // Golden Quark Buff from PseudoCoins
-    color: 'gold'
-  },
-  {
-    i18n: 'Patreon',
-    stat: () => 1 / (1 + getQuarkBonus() / 100),
     color: 'gold'
   },
   {
@@ -2360,13 +2432,19 @@ export const allGoldenQuarkPurchaseCostStats: NumberStatLine[] = [
   },
   {
     i18n: 'ImmaculateAlchemy',
-    stat: () => {
-      let perkDivisor = 1
-      if (player.highestSingularityCount >= 200) perkDivisor = 3
-      if (player.highestSingularityCount >= 208) perkDivisor = 5
-      if (player.highestSingularityCount >= 221) perkDivisor = 8
-      return 1 / perkDivisor
-    }
+    stat: () => 1 / calculateImmaculateAlchemyBonus() // Immaculate Alchemy
+  },
+  {
+    i18n: 'GlobalSubscriber',
+    stat: () => 1 / (1 + getGlobalBonus() / 100),
+    acc: 3,
+    color: 'gold'
+  },
+  {
+    i18n: 'AccountBonus',
+    stat: () => 1 / (1 + getPersonalBonus() / 100),
+    acc: 3,
+    color: 'gold'
   },
   {
     i18n: 'Event',
@@ -2375,7 +2453,7 @@ export const allGoldenQuarkPurchaseCostStats: NumberStatLine[] = [
   }
 ]
 
-export const allAddCodeEffectStats: NumberStatLine[] = [
+const allAddCodeEffectStats: NumberStatLine[] = [
   {
     i18n: 'Quarks',
     stat: () => {
@@ -2429,7 +2507,7 @@ export const allAddCodeTimerStats: NumberStatLine[] = [
   },
   {
     i18n: 'Calculator4',
-    stat: () => 1 - 0.04 * player.shopUpgrades.calculator4, // PL-AT δ discount (4% per level)
+    stat: () => getShopUpgradeEffects('calculator4', 'addCodeIntervalMult'), // PL-AT δ discount (4% per level)
     color: 'lime'
   },
   {
@@ -2461,33 +2539,27 @@ export const allAddCodeCapacityStats: NumberStatLine[] = [
   },
   {
     i18n: 'Calculator2',
-    stat: () => 2 * player.shopUpgrades.calculator2, // PL-AT X (2 codes per level)
+    stat: () => getShopUpgradeEffects('calculator2', 'addCodeCapacity'), // PL-AT X (2 codes per level)
     color: 'lime'
   },
   {
     i18n: 'Calculator4Max',
-    stat: () => player.shopUpgrades.calculator4 === shopData.calculator4.maxLevel ? 32 : 0, // PL-AT δ Maxed (32 codes)
+    stat: () => getShopUpgradeEffects('calculator4', 'addCodeCapacity'), // PL-AT δ Maxed (32 codes)
     color: 'lime'
   },
   {
     i18n: 'Calculator5',
-    stat: () => {
-      let calc5uses = Math.floor(player.shopUpgrades.calculator5 / 10)
-      if (player.shopUpgrades.calculator5 === shopData.calculator5.maxLevel) {
-        calc5uses += 6
-      }
-      return calc5uses
-    }, // PL-AT Γ (1 code per 10 levels, +6 at max)
+    stat: () => getShopUpgradeEffects('calculator5', 'addCodeCapacity'), // PL-AT Γ (1 code per 10 levels, +6 at max)
     color: 'lime'
   },
   {
     i18n: 'Calculator6Max',
-    stat: () => player.shopUpgrades.calculator6 === shopData.calculator6.maxLevel ? 24 : 0, // PL-AT _ Maxed (24 codes)
+    stat: () => getShopUpgradeEffects('calculator6', 'addCodeCapacity'), // PL-AT _ Maxed (24 codes)
     color: 'lime'
   },
   {
     i18n: 'Calculator7Max',
-    stat: () => player.shopUpgrades.calculator7 === shopData.calculator7.maxLevel ? 48 : 0, // PL-AT ΩΩ Maxed (48 codes)
+    stat: () => getShopUpgradeEffects('calculator7', 'addCodeCapacity'), // PL-AT ΩΩ Maxed (48 codes)
     color: 'lime'
   }
 ]
@@ -2523,15 +2595,15 @@ export const allLuckConversionStats: NumberStatLine[] = [
   },
   {
     i18n: 'ShopRedLuck1',
-    stat: () => -0.01 * Math.floor(player.shopUpgrades.shopRedLuck1 / 20) // Shop Red Luck I
+    stat: () => getShopUpgradeEffects('shopRedLuck1', 'luckConversionRatio') // Shop Red Luck I
   },
   {
     i18n: 'ShopRedLuck2',
-    stat: () => -0.01 * Math.floor(player.shopUpgrades.shopRedLuck2 / 20) // Shop Red Luck II
+    stat: () => getShopUpgradeEffects('shopRedLuck2', 'luckConversionRatio') // Shop Red Luck II
   },
   {
     i18n: 'ShopRedLuck3',
-    stat: () => -0.01 * Math.floor(player.shopUpgrades.shopRedLuck3 / 20) // Shop Red Luck III
+    stat: () => getShopUpgradeEffects('shopRedLuck3', 'luckConversionRatio') // Shop Red Luck III
   },
   {
     i18n: 'HorseShoeRune',
@@ -2568,15 +2640,15 @@ export const allRedAmbrosiaLuckStats: NumberStatLine[] = [
   },
   {
     i18n: 'ShopRedLuck1',
-    stat: () => player.shopUpgrades.shopRedLuck1 * 0.05 // Shop Red Luck I
+    stat: () => getShopUpgradeEffects('shopRedLuck1', 'redLuck') // Shop Red Luck I
   },
   {
     i18n: 'ShopRedLuck2',
-    stat: () => player.shopUpgrades.shopRedLuck2 * 0.075 // Shop Red Luck II
+    stat: () => getShopUpgradeEffects('shopRedLuck2', 'redLuck') // Shop Red Luck II
   },
   {
     i18n: 'ShopRedLuck3',
-    stat: () => player.shopUpgrades.shopRedLuck3 * 0.1 // Shop Red Luck III
+    stat: () => getShopUpgradeEffects('shopRedLuck3', 'redLuck') // Shop Red Luck III
   },
   {
     i18n: 'Viscount',
@@ -2596,7 +2668,7 @@ export const allRedAmbrosiaLuckStats: NumberStatLine[] = [
 export const allRedAmbrosiaGenerationSpeedStats: NumberStatLine[] = [
   {
     i18n: 'Base',
-    stat: () => 1 // Base value of 1.00
+    stat: () => player.singularityChallenges.noAmbrosiaUpgrades.completions > 0 ? 1 : 0
   },
   {
     i18n: 'PseudoCoins',
@@ -2620,24 +2692,7 @@ export const allRedAmbrosiaGenerationSpeedStats: NumberStatLine[] = [
   }
 ]
 
-export const infinityShopUpgrades: NumberStatLine[] = [
-  {
-    i18n: 'Offerings',
-    stat: () => player.shopUpgrades.offeringEX3
-  },
-  {
-    i18n: 'Obtainium',
-    stat: () => player.shopUpgrades.obtainiumEX3
-  },
-  {
-    i18n: 'WowPass',
-    stat: () => player.shopUpgrades.seasonPassInfinity
-  },
-  {
-    i18n: 'Chronometer',
-    stat: () => player.shopUpgrades.chronometerInfinity
-  }
-]
+const infinityShopUpgrades: NumberStatLine[] = []
 
 export const allShopTablets: NumberStatLine[] = [
   {
@@ -2674,7 +2729,7 @@ export const allShopTablets: NumberStatLine[] = [
   },
   {
     i18n: 'Blue',
-    stat: () => Math.floor(0.005 * player.shopUpgrades.shopInfiniteShopUpgrades * sumOfExaltCompletions()), // Shop Upgrade
+    stat: () => getShopUpgradeEffects('shopInfiniteShopUpgrades', 'infiniteVouchers'), // Shop Upgrade
     acc: 0,
     color: 'lightblue'
   },
@@ -2701,8 +2756,6 @@ export const allTalismanRuneBonusStatsSum = () => {
     + +getAchievementReward('talismanPower')
     + (player.researches[106] / 1000)
     + (player.researches[107] / 1000)
-    + (player.researches[116] / 1000)
-    + (player.researches[117] / 1000)
     + (2 * player.researches[118] / 1000)
     + (0.004 * Math.floor(player.researches[200] / 10000))
     + (0.006 * Math.floor(player.cubeUpgrades[50] / 10000))
@@ -2719,7 +2772,7 @@ export const allTalismanRuneBonusStatsSum = () => {
 /**
  * Do NOT add anything here without adding it to @see {allTalismanRuneBonusStatsSum}
  */
-export const allTalismanRuneBonusStats: NumberStatLine[] = [
+const allTalismanRuneBonusStats: NumberStatLine[] = [
   {
     i18n: 'Base',
     stat: () => 1,
@@ -2753,26 +2806,10 @@ export const allTalismanRuneBonusStats: NumberStatLine[] = [
     }
   },
   {
-    i18n: 'Research116',
-    stat: () => player.researches[116] / 1000,
-    displayCriterion: () => {
-      const chal10 = player.highestchallengecompletions[10] >= 1
-      return chal10
-    }
-  },
-  {
-    i18n: 'Research117',
-    stat: () => player.researches[117] / 1000,
-    displayCriterion: () => {
-      const chal10 = player.highestchallengecompletions[10] >= 1
-      return chal10
-    }
-  },
-  {
     i18n: 'Research118',
     stat: () => 2 * player.researches[118] / 1000,
     displayCriterion: () => {
-      const chal10 = player.highestchallengecompletions[10] >= 1
+      const chal10 = player.highestchallengecompletions[9] >= 1
       return chal10
     }
   },
@@ -2877,6 +2914,10 @@ export const positiveSalvageStats: NumberStatLine[] = [
     }
   },
   {
+    i18n: 'AntUpgrade',
+    stat: () => getAntUpgradeEffect(AntUpgrades.Salvage).salvage // Ant Upgrade
+  },
+  {
     i18n: 'CubeBlessing',
     stat: () => calculateSalvageCubeBlessing() // Cube Blessing
   },
@@ -2922,10 +2963,26 @@ export const negativeSalvageStats: NumberStatLine[] = [
   }
 ]
 
-export const antSpeedStats: DecimalSourceLine[] = [
+export const antSpeedStats: StatLine[] = [
+  {
+    i18n: 'Base',
+    stat: () => {
+      return canGenerateAntCrumbs()
+        ? 1
+        : 0
+    }
+  },
   {
     i18n: 'GlobalSpeed',
-    stat: () => calculateGlobalSpeedMult() // Global Speed Multiplier
+    stat: () => {
+      const exponent = 1 + 3 * player.upgrades[79]
+      const speedMult = calculateGlobalSpeedMult()
+      if (speedMult > 1) {
+        return Decimal.pow(speedMult, exponent)
+      } else {
+        return speedMult
+      }
+    }
   },
   {
     i18n: 'AchievementBonus',
@@ -2933,17 +2990,12 @@ export const antSpeedStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'ImmortalELO',
-    stat: () => antSacrificePointsToMultiplier(player.antSacrificePoints), // Immortal ELO
-    displayCriterion: () => player.antSacrificePoints > 0 // Has sacrificed ants this Singularity
+    stat: () => calculateAntSpeedMultFromELO(), // Immortal ELO
+    displayCriterion: () => player.ants.immortalELO > 0 // Has sacrificed ants this Singularity
   },
   {
     i18n: 'AntUpgrade1',
-    stat: () => {
-      const base = 1.10 // Base +10% Ant Speed per upgrade lvl
-        + player.researches[101] / 1000 // Research 5x1
-        + player.researches[162] / 1000 // Research 7x12
-      return Decimal.pow(base, player.antUpgrades[0]! + G.bonusant1)
-    }
+    stat: () => getAntUpgradeEffect(AntUpgrades.AntSpeed).antSpeed // Ant Upgrade 1
   },
   {
     i18n: 'DiamondUpgrade19',
@@ -2958,36 +3010,37 @@ export const antSpeedStats: DecimalSourceLine[] = [
   {
     i18n: 'ReincarnationUpgrade17',
     stat: () =>
-      Decimal.pow(
-        1 + player.upgrades[77] / 250,
-        player.firstOwnedAnts + player.secondOwnedAnts + player.thirdOwnedAnts + player.fourthOwnedAnts
-          + player.fifthOwnedAnts + player.sixthOwnedAnts + player.seventhOwnedAnts + player.eighthOwnedAnts
-      ), // Reincarnation Upgrade 17
+      (player.upgrades[77] > 0)
+        ? Decimal.pow(1 + player.upgrades[77] / 250, player.ants.producers[AntProducers.Workers].purchased)
+        : 1, // Reincarnation Upgrade 17
     displayCriterion: () => player.researches[50] > 0
   },
   {
     i18n: 'ReincarnationUpgrade18',
-    stat: () => 1 + 0.005 * Math.pow(Decimal.log10(player.maxOfferings.add(1)), 2), // Reincarnation Upgrade 18
+    stat: () => (player.upgrades[78] > 0) ? 1 + 0.005 * Math.pow(Decimal.log10(player.maxOfferings.add(1)), 2) : 1, // Reincarnation Upgrade 18
     displayCriterion: () => player.researches[50] > 0
   },
   {
     i18n: 'Research4x21',
-    stat: () =>
-      Decimal.pow(
-        1 + player.researches[96] / 5000,
-        player.firstOwnedAnts + player.secondOwnedAnts + player.thirdOwnedAnts + player.fourthOwnedAnts
-          + player.fifthOwnedAnts + player.sixthOwnedAnts + player.seventhOwnedAnts + player.eighthOwnedAnts
-      ),
+    stat: () => Decimal.pow(1 + player.researches[96] / 5000, player.ants.producers[AntProducers.Workers].purchased),
     displayCriterion: () => isResearchUnlocked(96)
   },
   {
+    i18n: 'Research5x17',
+    stat: () => {
+      const sacCount = player.ants.antSacrificeCount
+      return 1 + player.researches[117] * sacCount / 10000
+    },
+    displayCriterion: () => isResearchUnlocked(117)
+  },
+  {
     i18n: 'Research6x22',
-    stat: () => 1 + player.researches[147] * Decimal.log10(player.antPoints.add(10)),
+    stat: () => 1 + player.researches[147] * Decimal.log10(player.ants.crumbs.add(10)),
     displayCriterion: () => isResearchUnlocked(147)
   },
   {
     i18n: 'Research8x2',
-    stat: () => 1 + player.researches[177] * Decimal.log10(player.antPoints.add(10)),
+    stat: () => 1 + player.researches[177] * Decimal.log10(player.ants.crumbs.add(10)),
     displayCriterion: () => isResearchUnlocked(177)
   },
   {
@@ -3021,20 +3074,329 @@ export const antSpeedStats: DecimalSourceLine[] = [
   },
   {
     i18n: 'ConstantUpgrade',
-    stat: () => Decimal.pow(1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10), player.constantUpgrades[5])
+    stat: () => 1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10) * player.constantUpgrades[5],
+    displayCriterion: () => player.ascensionCount > 0
+  },
+  {
+    i18n: 'Challenge15',
+    stat: () => G.challenge15Rewards.antSpeed.value, // Challenge 15 Reward
+    displayCriterion: () => player.highestchallengecompletions[14] > 0
+  },
+  {
+    i18n: 'PlatonicUpgrade',
+    stat: () =>
+      Decimal.pow(
+        1 + (1 / 100) * player.platonicUpgrades[12],
+        sumContents(player.highestchallengecompletions)
+      ),
+    displayCriterion: () => player.highestchallengecompletions[14] > 0
+  },
+  {
+    i18n: 'SingularityPerk',
+    stat: () => {
+      if (player.highestSingularityCount >= 100) {
+        return 1e12
+      } else if (player.highestSingularityCount >= 70) {
+        return 1e6
+      } else if (player.highestSingularityCount >= 40) {
+        return 1e3
+      } else if (player.highestSingularityCount >= 1) {
+        return 4.44
+      }
+      return 1
+    },
+    displayCriterion: () => player.highestSingularityCount >= 1
   },
   {
     i18n: 'CookieUpgrade',
-    stat: () =>
-      Decimal.pow(
-        1 + player.cubeUpgrades[65] / 250,
-        player.firstOwnedAnts + player.secondOwnedAnts + player.thirdOwnedAnts + player.fourthOwnedAnts
-          + player.fifthOwnedAnts + player.sixthOwnedAnts + player.seventhOwnedAnts + player.eighthOwnedAnts
-      ) // 65th Cube Upgrade, 15th Cookie Upgrade
+    stat: () => Decimal.pow(1 + player.cubeUpgrades[65] / 250, player.ants.producers[AntProducers.Workers].purchased), // 65th Cube Upgrade, 15th Cookie Upgrade
+    displayCriterion: () => goldenQuarkUpgrades.cookies3.level > 0
+  },
+  {
+    i18n: 'OcteractUpgrade',
+    stat: () => {
+      return octeractUpgrades.octeractStarter.level > 0 ? 100000 : 1
+    },
+    displayCriterion: () => octeractUpgrades.octeractStarter.level > 0
   }
 ]
 
-export const allMiscStats: DecimalSourceLine[] = [
+export const antELOStats: NumberStatLine[] = [
+  {
+    i18n: 'AntWorkers',
+    stat: () => player.ants.producers[AntProducers.Workers].purchased
+  },
+  {
+    i18n: 'AchievementBonus',
+    stat: () => +getAchievementReward('antELOAdditive')
+  },
+  {
+    i18n: 'SynergismLevel',
+    stat: () => getLevelReward('ants'),
+    displayCriterion: () => achievementLevel >= synergismLevelRewards.ants.minLevel
+  },
+  {
+    i18n: 'ReincarnationUpgrade20',
+    stat: () => {
+      if (player.upgrades[80] === 0) {
+        return 0
+      }
+      let ELO = 0
+      ELO += 10 * Math.min(50, player.ants.antSacrificeCount)
+      ELO += 5 * Math.min(50, Math.max(player.ants.antSacrificeCount - 50, 0))
+      ELO += Math.min(250, Math.max(0, player.ants.antSacrificeCount - 100))
+      return ELO
+    },
+    displayCriterion: () => player.researches[50] > 0 // Research 2x25
+  },
+  {
+    i18n: 'Challenge10',
+    stat: () => 100 * CalcECC('reincarnation', player.challengecompletions[10]),
+    displayCriterion: () => player.challengecompletions[9] > 0 || player.ascensionCount > 0
+  },
+  {
+    i18n: 'ShopUpgrade',
+    stat: () => getShopUpgradeEffects('antSpeed', 'antELO'),
+    displayCriterion: () =>
+      player.highestchallengecompletions[10] > 0 || player.ascensionCount > 0 || player.shopUpgrades.antSpeed > 0
+  },
+  {
+    i18n: 'Research5x8',
+    stat: () => 25 * player.researches[108],
+    displayCriterion: () => isResearchUnlocked(108)
+  },
+  {
+    i18n: 'Research5x9',
+    stat: () => 25 * player.researches[109],
+    displayCriterion: () => isResearchUnlocked(109)
+  },
+  {
+    i18n: 'Research5x20',
+    stat: () => 2 * player.researches[120],
+    displayCriterion: () => isResearchUnlocked(120)
+  },
+  {
+    i18n: 'Research5x23',
+    stat: () => 50 * player.researches[123],
+    displayCriterion: () => isResearchUnlocked(123)
+  },
+  {
+    i18n: 'Research7x19',
+    stat: () => 0.02 * player.researches[169],
+    displayCriterion: () => isResearchUnlocked(169)
+  },
+  {
+    i18n: 'Research8x3',
+    stat: () => 666 * player.researches[178],
+    displayCriterion: () => isResearchUnlocked(178)
+  },
+  {
+    i18n: 'AntUpgrade',
+    stat: () => getAntUpgradeEffect(AntUpgrades.AntSacrifice).elo,
+    displayCriterion: () => player.unlocks.anthill
+  },
+  {
+    i18n: 'AntUpgrade13',
+    stat: () => getAntUpgradeEffect(AntUpgrades.AntELO).antELO,
+    displayCriterion: () => player.unlocks.anthill
+  },
+  {
+    i18n: 'SingularityPerk',
+    stat: () => calculateSingularityPerkELO(),
+    displayCriterion: () => player.highestSingularityCount >= 2
+  }
+]
+
+export const additiveAntELOMultStats: NumberStatLine[] = [
+  {
+    i18n: 'Base',
+    stat: () => 1
+  },
+  {
+    i18n: 'AchievementMultiplier',
+    stat: () => +getAchievementReward('antELOAdditiveMultiplier')
+  },
+  {
+    i18n: 'AntQueens',
+    stat: () => player.ants.producers[AntProducers.Queens].purchased > 0 ? 0.01 : 0
+  },
+  {
+    i18n: 'AntLordRoyals',
+    stat: () => player.ants.producers[AntProducers.LordRoyals].purchased > 0 ? 0.01 : 0
+  },
+  {
+    i18n: 'AntAlmighties',
+    stat: () => player.ants.producers[AntProducers.Almighties].purchased > 0 ? 0.01 : 0
+  },
+  {
+    i18n: 'AntDisciples',
+    stat: () => player.ants.producers[AntProducers.Disciples].purchased > 0 ? 0.02 : 0
+  },
+  {
+    i18n: 'AntHolySpirit',
+    stat: () => player.ants.producers[AntProducers.HolySpirit].purchased > 0 ? 0.02 : 0
+  },
+  {
+    i18n: 'PlatonicUpgrade12',
+    stat: () => (1 / 200) * player.platonicUpgrades[12] * player.corruptions.used.extinction,
+    displayCriterion: () => player.challengecompletions[14] > 0
+  },
+  {
+    i18n: 'SingularityDebuff',
+    stat: () => calculateSingularityDebuff('Ant ELO'),
+    displayCriterion: () => player.highestSingularityCount >= 1,
+    color: 'red',
+    acc: 3
+  },
+  {
+    i18n: 'SingularityPerk',
+    stat: () => singularityELOBonusMult(),
+    displayCriterion: () => player.highestSingularityCount >= 3,
+    acc: 4
+  }
+]
+
+const effectiveAntELOStats: NumberStatLine[] = [
+  {
+    i18n: 'BaseELO',
+    stat: () => calculateBaseAntELO(),
+    color: 'gold'
+  },
+  {
+    i18n: 'AdditiveMultiplier',
+    stat: () => calculateELOMult()
+  }
+]
+
+export const rebornELOCreationSpeedMultStats: NumberStatLine[] = [
+  {
+    i18n: 'Base',
+    stat: () => 0.01,
+    acc: 3
+  },
+  {
+    i18n: 'EffectiveELO',
+    stat: () => calculateEffectiveAntELO()
+  },
+  {
+    i18n: 'CoinUpgrade24',
+    stat: () => 1 + 0.1 * player.upgrades[124]
+  },
+  {
+    i18n: 'Research5x10',
+    stat: () => 1 + player.researches[110] / 50,
+    displayCriterion: () => isResearchUnlocked(110)
+  },
+  {
+    i18n: 'Research5x20',
+    stat: () => 1 + player.researches[120] / 250,
+    displayCriterion: () => isResearchUnlocked(120)
+  },
+  {
+    i18n: 'Research6x23',
+    stat: () => 1 + player.researches[148] / 50,
+    displayCriterion: () => isResearchUnlocked(148)
+  },
+  {
+    i18n: 'AntQueens',
+    stat: () => player.ants.producers[AntProducers.Queens].purchased > 0 ? 1.15 : 1
+  },
+  {
+    i18n: 'AntLordRoyals',
+    stat: () => player.ants.producers[AntProducers.LordRoyals].purchased > 0 ? 1.25 : 1
+  },
+  {
+    i18n: 'AntAlmighties',
+    stat: () => player.ants.producers[AntProducers.Almighties].purchased > 0 ? 1.4 : 1
+  },
+  {
+    i18n: 'AntDisciples',
+    stat: () => player.ants.producers[AntProducers.Disciples].purchased > 0 ? 2 : 1
+  },
+  {
+    i18n: 'AntHolySpirit',
+    stat: () => player.ants.producers[AntProducers.HolySpirit].purchased > 0 ? 3 : 1
+  },
+  {
+    i18n: 'ThresholdModifiers',
+    stat: () => thresholdModifiers().rebornSpeedMult,
+    acc: 5
+  },
+  {
+    i18n: 'MortuusTalisman',
+    stat: () => getTalismanEffects('mortuus').antBonus,
+    displayCriterion: () => talismans.mortuus.isUnlocked()
+  },
+  {
+    i18n: 'CubeBlessing',
+    stat: () => calculateAntELOCubeBlessing(),
+    displayCriterion: () => player.ascensionCount > 0
+  },
+  {
+    i18n: 'PlatonicUpgrade12',
+    stat: () => 1 + player.platonicUpgrades[12] / 10,
+    displayCriterion: () => player.challengecompletions[14] > 0
+  },
+  {
+    i18n: 'Exalt6',
+    stat: () => (player.singularityChallenges.limitedTime.enabled && runes.antiquities.level === 0) ? 5 : 1,
+    displayCriterion: () => player.highestSingularityCount >= 216,
+    color: 'orchid'
+  }
+]
+
+export const ascensionCountMultStats: NumberStatLine[] = [
+  {
+    i18n: 'Base',
+    stat: () => 1 + +getAchievementReward('ascensionCountAdditive')
+  },
+  {
+    i18n: 'AchievementMultiplier',
+    stat: () => +getAchievementReward('ascensionCountMultiplier')
+  },
+  {
+    i18n: 'Challenge15',
+    stat: () => G.challenge15Rewards.ascensions.value,
+    displayCriterion: () => G.challenge15Rewards.ascensions.value > 1
+  },
+  {
+    i18n: 'PlatonicOMEGA',
+    stat: () => player.platonicUpgrades[15] > 0 ? 2 : 1,
+    displayCriterion: () => player.challengecompletions[14] > 0
+  },
+  {
+    i18n: 'PlatonicUpgrade16',
+    stat: () => 1 + player.platonicUpgrades[16] * 0.02 * (1 + Math.min(1, player.overfluxPowder / 100000)),
+    displayCriterion: () => player.challengecompletions[14] > 0
+  },
+  {
+    i18n: 'SingularityCount',
+    stat: () => 1 + player.singularityCount / 10,
+    displayCriterion: () => player.highestSingularityCount > 0
+  },
+  {
+    i18n: 'SingularityUpgrade',
+    stat: () => getGQUpgradeEffect('ascensions'),
+    displayCriterion: () => player.highestSingularityCount > 0
+  },
+  {
+    i18n: 'OcteractUpgrade1',
+    stat: () => getOcteractUpgradeEffect('octeractAscensions'),
+    displayCriterion: () => player.highestSingularityCount >= 8
+  },
+  {
+    i18n: 'OcteractUpgrade2',
+    stat: () => getOcteractUpgradeEffect('octeractAscensions2'),
+    displayCriterion: () => player.highestSingularityCount >= 8
+  },
+  {
+    i18n: 'OneMind',
+    stat: () => getGQUpgradeEffect('oneMind') ? calculateAscensionSpeedMult() / 10 : 1,
+    displayCriterion: () => player.highestSingularityCount >= 8
+  }
+]
+
+const allMiscStats: StatLine[] = [
   {
     i18n: 'PrestigeCount',
     stat: () => player.prestigeCount,
@@ -3113,6 +3475,9 @@ const associated = new Map<string, string>([
   ['kGlobalCubeMult', 'globalCubeMultiplierStats'],
   ['kAntSpeedMult', 'antSpeedMultStats'],
   ['kAntSacrificeMult', 'antSacrificeMultStats'],
+  ['kAntELO', 'eloStats'],
+  ['kAdditiveAntELOMult', 'additiveAntELOMultStats'],
+  ['kRebornELOCreationSpeedMult', 'rebornELOCreationSpeedMultStats'],
   ['kTalismanRuneBonusMult', 'talismanRuneBonusMultiplierStats'],
   ['kQuarkMult', 'globalQuarkMultiplierStats'],
   ['kGSpeedMultIgnoreDR', 'globalSpeedIgnoreDRStats'],
@@ -3125,6 +3490,7 @@ const associated = new Map<string, string>([
   ['kOrbPowderMult', 'powderMultiplierStats'],
   ['kOctMult', 'octeractMultiplierStats'],
   ['kASCMult', 'ascensionSpeedMultiplierStats'],
+  ['kACountMult', 'ascensionCountMultiplierStats'],
   ['kGQMult', 'goldenQuarkMultiplierStats'],
   ['kGQCost', 'goldenQuarkPurchaseCostStats'],
   ['kAddStats', 'addCodeStats'],
@@ -3139,9 +3505,9 @@ const associated = new Map<string, string>([
 ])
 
 export const displayStats = (btn: HTMLElement) => {
-  const children = btn.parentElement ? Array.from(btn.parentElement.querySelectorAll('.statsNerds')) : []
+  const children = btn.parentElement ? btn.parentElement.querySelectorAll<HTMLElement>('.statsNerds') : []
 
-  for (const e of children as HTMLElement[]) {
+  for (const e of children) {
     const statsEl = DOMCacheGetOrSet(associated.get(e.id)!)
     if (e.id !== btn.id) {
       e.style.backgroundColor = ''
@@ -3201,6 +3567,16 @@ export const loadStatisticsUpdate = () => {
       case 'antSacrificeMultStats':
         loadStatisticsAntSacrificeMult()
         break
+      case 'eloStats':
+        loadStatisticsAntELO()
+        loadStatisticsEffectiveAntELO()
+        break
+      case 'additiveAntELOMultStats':
+        loadStatisticsAdditiveAntELOMult()
+        break
+      case 'rebornELOCreationSpeedMultStats':
+        loadStatisticsRebornELOCreationSpeedMult()
+        break
       case 'talismanRuneBonusMultiplierStats':
         loadTalismanRuneBonusMultiplierStats()
         break
@@ -3209,6 +3585,9 @@ export const loadStatisticsUpdate = () => {
         break
       case 'ascensionSpeedMultiplierStats':
         loadStatisticsAscensionSpeed()
+        break
+      case 'ascensionCountMultiplierStats':
+        loadStatisticsAscensionCountMultiplierStats()
         break
       case 'goldenQuarkMultiplierStats':
         loadStatisticsGoldenQuarkMultipliers()
@@ -3270,7 +3649,7 @@ export const loadStatisticsUpdate = () => {
   }
 }
 
-export const loadStatistics = (
+const loadStatistics = (
   statsObj: StatLine[],
   parentDiv: string,
   statLinePrefix: string,
@@ -3282,8 +3661,6 @@ export const loadStatistics = (
   const parent = DOMCacheGetOrSet(parentDiv)
   const numStatLines = document.getElementsByClassName(specificClass).length
   let createdStatLines = 0
-
-  console.log()
 
   for (const obj of statsObj) {
     const key = obj.i18n
@@ -3312,13 +3689,24 @@ export const loadStatistics = (
     const statNumber = DOMCacheGetOrSet(statNumHTMLName)
 
     if (obj.displayCriterion) {
-      statLine.style.display = obj.displayCriterion() ? 'block' : 'none'
+      if (!prod) {
+        // Testing purposes: ALWAYS show statlines
+        statLine.style.display = 'block'
+        if (!obj.displayCriterion()) {
+          // Distinguish between shown via testing and shown via criterion
+          statLine.style.backgroundColor = 'crimson'
+        } else {
+          statLine.style.backgroundColor = ''
+        }
+      } else {
+        statLine.style.display = obj.displayCriterion() ? 'block' : 'none'
+      }
     }
 
     const accuracy = obj.acc ?? 2
     const num = obj.stat()
 
-    statNumber.textContent = `${format(num, accuracy, true)}`
+    statNumber.textContent = format(num, accuracy, true)
   }
 
   const statTotalHTMLName = `${statLinePrefix}T`
@@ -3346,23 +3734,31 @@ export const loadStatistics = (
   if (hasSummative) {
     const statTotalNumber = DOMCacheGetOrSet(statNumTotalHTMLName)
     const total = calcTotalFunc()
-    statTotalNumber.textContent = `${format(total, 3, true)}`
+    statTotalNumber.textContent = format(total, 3, true)
   }
 }
 
-export const loadQuarkMultiplier = () => {
+const loadQuarkMultiplier = () => {
   loadStatistics(allQuarkStats, 'globalQuarkMultiplierStats', 'sGQM', 'quarkStats', calculateQuarkMultiplier)
 }
 
-export const loadGlobalCubeMultiplierStats = () => {
+const loadGlobalCubeMultiplierStats = () => {
   loadStatistics(allCubeStats, 'globalCubeMultiplierStats', 'statGCM', 'GlobalCubeStat', calculateAllCubeMultiplier)
 }
 
-export const loadWowCubeMultiplierStats = () => {
+const loadWowCubeMultiplierStats = () => {
   loadStatistics(allWowCubeStats, 'cubeMultiplierStats', 'statCM', 'WowCubeStat', calculateCubeMultiplier)
+  loadStatistics(
+    allWowCubePowerStats,
+    'cubeMultiplierStats',
+    'statCM2',
+    'WowCubeStat2',
+    calculateCubeMultiplierWithTau,
+    'Total2'
+  )
 }
 
-export const loadTesseractMultiplierStats = () => {
+const loadTesseractMultiplierStats = () => {
   loadStatistics(
     allTesseractStats,
     'tesseractMultiplierStats',
@@ -3372,7 +3768,7 @@ export const loadTesseractMultiplierStats = () => {
   )
 }
 
-export const loadHypercubeMultiplierStats = () => {
+const loadHypercubeMultiplierStats = () => {
   loadStatistics(
     allHypercubeStats,
     'hypercubeMultiplierStats',
@@ -3382,7 +3778,7 @@ export const loadHypercubeMultiplierStats = () => {
   )
 }
 
-export const loadPlatonicMultiplierStats = () => {
+const loadPlatonicMultiplierStats = () => {
   loadStatistics(
     allPlatonicCubeStats,
     'platonicMultiplierStats',
@@ -3392,7 +3788,7 @@ export const loadPlatonicMultiplierStats = () => {
   )
 }
 
-export const loadHepteractMultiplierStats = () => {
+const loadHepteractMultiplierStats = () => {
   loadStatistics(
     allHepteractCubeStats,
     'hepteractMultiplierStats',
@@ -3402,7 +3798,7 @@ export const loadHepteractMultiplierStats = () => {
   )
 }
 
-export const loadOcteractMultiplierStats = () => {
+const loadOcteractMultiplierStats = () => {
   loadStatistics(
     allOcteractCubeStats,
     'octeractMultiplierStats',
@@ -3412,11 +3808,11 @@ export const loadOcteractMultiplierStats = () => {
   )
 }
 
-export const loadStatisticsOfferingBase = () => {
+const loadStatisticsOfferingBase = () => {
   loadStatistics(allBaseOfferingStats, 'baseOfferingStats', 'statOffB', 'OfferingBaseStat', calculateBaseOfferings)
 }
 
-export const loadStatisticsOfferingMultipliers = () => {
+const loadStatisticsOfferingMultipliers = () => {
   loadStatistics(allOfferingStats, 'offeringMultiplierStats', 'statOff', 'OfferingStat', calculateOfferingsDecimal)
   loadStatistics(
     offeringObtainiumTimeModifiers(player.prestigecounter, player.prestigeCount > 0),
@@ -3428,7 +3824,7 @@ export const loadStatisticsOfferingMultipliers = () => {
   )
 }
 
-export const loadStatisticsRuneEffectMultFirstFive = () => {
+const loadStatisticsRuneEffectMultFirstFive = () => {
   loadStatistics(
     firstFiveRuneEffectivenessStats,
     'runeEffectFirstFive',
@@ -3438,7 +3834,7 @@ export const loadStatisticsRuneEffectMultFirstFive = () => {
   )
 }
 
-export const loadStatisticsRuneEffectMultSI = () => {
+const loadStatisticsRuneEffectMultSI = () => {
   loadStatistics(
     runeEffectivenessStatsSI,
     'runeEffectSI',
@@ -3448,11 +3844,11 @@ export const loadStatisticsRuneEffectMultSI = () => {
   )
 }
 
-export const loadStatisticsObtainiumBase = () => {
+const loadStatisticsObtainiumBase = () => {
   loadStatistics(allBaseObtainiumStats, 'baseObtainiumStats', 'statObtB', 'ObtainiumBaseStat', calculateBaseObtainium)
 }
 
-export const loadStatisticsObtainiumIgnoreDR = () => {
+const loadStatisticsObtainiumIgnoreDR = () => {
   loadStatistics(
     allObtainiumIgnoreDRStats,
     'obtainiumIgnoreDRStats',
@@ -3462,7 +3858,7 @@ export const loadStatisticsObtainiumIgnoreDR = () => {
   )
 }
 
-export const loadStatisticsObtainiumMultipliers = () => {
+const loadStatisticsObtainiumMultipliers = () => {
   loadStatistics(allObtainiumStats, 'obtainiumMultiplierStats', 'statObt', 'ObtainiumStat', calculateObtainiumDecimal)
   loadStatistics(
     obtainiumDR.concat(offeringObtainiumTimeModifiers(player.reincarnationcounter, player.reincarnationCount >= 5)),
@@ -3474,11 +3870,11 @@ export const loadStatisticsObtainiumMultipliers = () => {
   )
 }
 
-export const loadStatisticsAntSpeedMult = () => {
-  loadStatistics(antSpeedStats, 'antSpeedMultStats', 'statASpM', 'AntSpeedStat', calculateAntSpeedMult)
+const loadStatisticsAntSpeedMult = () => {
+  loadStatistics(antSpeedStats, 'antSpeedMultStats', 'statASpM', 'AntSpeedStat', calculateRawAntSpeedMult)
 }
 
-export const loadStatisticsAntSacrificeMult = () => {
+const loadStatisticsAntSacrificeMult = () => {
   loadStatistics(
     antSacrificeRewardStats,
     'antSacrificeMultStats',
@@ -3488,7 +3884,43 @@ export const loadStatisticsAntSacrificeMult = () => {
   )
 }
 
-export const loadStatisticsGlobalSpeedIgnoreDR = () => {
+const loadStatisticsAntELO = () => {
+  loadStatistics(antELOStats, 'antELOStats', 'statAELo', 'AntELOStat', calculateBaseAntELO)
+}
+
+const loadStatisticsEffectiveAntELO = () => {
+  loadStatistics(
+    effectiveAntELOStats,
+    'effectiveAntELOStats',
+    'statEAELo',
+    'EffectiveAntELOStat',
+    calculateEffectiveAntELO
+  )
+}
+
+const loadStatisticsAdditiveAntELOMult = () => {
+  loadStatistics(
+    additiveAntELOMultStats,
+    'additiveAntELOMultStats',
+    'statAAELoM',
+    'AdditiveAntELOStat',
+    calculateELOMult
+  )
+}
+
+const loadStatisticsRebornELOCreationSpeedMult = () => {
+  loadStatistics(
+    rebornELOCreationSpeedMultStats,
+    'rebornELOCreationSpeedMultStats',
+    'statRELOCSM',
+    'RebornELOCreationSpeedStat',
+    rebornELOCreationSpeedMult
+  )
+
+  DOMCacheGetOrSet('rebornELOExtra').innerHTML = i18next.t('statistics.rebornELOCreationSpeedMultStats.extraInfo')
+}
+
+const loadStatisticsGlobalSpeedIgnoreDR = () => {
   loadStatistics(
     allGlobalSpeedIgnoreDRStats,
     'globalSpeedIgnoreDRStats',
@@ -3498,7 +3930,7 @@ export const loadStatisticsGlobalSpeedIgnoreDR = () => {
   )
 }
 
-export const loadStatisticsGlobalSpeed = () => {
+const loadStatisticsGlobalSpeed = () => {
   loadStatistics(
     allGlobalSpeedStats,
     'globalSpeedMultiplierStats',
@@ -3516,7 +3948,7 @@ export const loadStatisticsGlobalSpeed = () => {
   )
 }
 
-export const loadStatisticsAscensionSpeed = () => {
+const loadStatisticsAscensionSpeed = () => {
   loadStatistics(
     allAscensionSpeedStats,
     'ascensionSpeedMultiplierStats',
@@ -3534,7 +3966,7 @@ export const loadStatisticsAscensionSpeed = () => {
   )
 }
 
-export const loadStatisticsAdditiveLuckMult = () => {
+const loadStatisticsAdditiveLuckMult = () => {
   loadStatistics(
     allAdditiveLuckMultStats,
     'ambrosiaAdditiveLuckMultStats',
@@ -3544,7 +3976,7 @@ export const loadStatisticsAdditiveLuckMult = () => {
   )
 }
 
-export const loadStatisticsAmbrosiaLuck = () => {
+const loadStatisticsAmbrosiaLuck = () => {
   loadStatistics(allAmbrosiaLuckStats, 'ambrosiaLuckStats', 'statAL', 'AmbrosiaLuckStat', calculateAmbrosiaLuckRaw)
   loadStatistics(
     ambrosiaLuckModifiers,
@@ -3556,7 +3988,7 @@ export const loadStatisticsAmbrosiaLuck = () => {
   )
 }
 
-export const loadStatisticsBlueberryInventory = () => {
+const loadStatisticsBlueberryInventory = () => {
   loadStatistics(
     allAmbrosiaBlueberryStats,
     'ambrosiaBlueberryStats',
@@ -3566,7 +3998,7 @@ export const loadStatisticsBlueberryInventory = () => {
   )
 }
 
-export const loadStatisticsAmbrosiaGeneration = () => {
+const loadStatisticsAmbrosiaGeneration = () => {
   loadStatistics(
     allAmbrosiaGenerationSpeedStats,
     'ambrosiaGenerationStats',
@@ -3584,11 +4016,11 @@ export const loadStatisticsAmbrosiaGeneration = () => {
   )
 }
 
-export const loadStatisticsPowderMultiplier = () => {
+const loadStatisticsPowderMultiplier = () => {
   loadStatistics(allPowderMultiplierStats, 'powderMultiplierStats', 'statPoM', 'PowderStat', calculatePowderConversion)
 }
 
-export const loadStatisticsGoldenQuarkMultipliers = () => {
+const loadStatisticsGoldenQuarkMultipliers = () => {
   loadStatistics(
     allGoldenQuarkMultiplierStats,
     'goldenQuarkMultiplierStats',
@@ -3598,7 +4030,7 @@ export const loadStatisticsGoldenQuarkMultipliers = () => {
   )
 }
 
-export const loadStatisticsGoldenQuarkCost = () => {
+const loadStatisticsGoldenQuarkCost = () => {
   loadStatistics(
     allGoldenQuarkPurchaseCostStats,
     'goldenQuarkPurchaseCostStats',
@@ -3608,15 +4040,15 @@ export const loadStatisticsGoldenQuarkCost = () => {
   )
 }
 
-export const loadAddCodeEffects = () => {
+const loadAddCodeEffects = () => {
   loadStatistics(allAddCodeEffectStats, 'addCodeEffects', 'statACEf', 'addCodeEffectStat', () => 0, '', false)
 }
 
-export const loadAddCodeTimeStats = () => {
+const loadAddCodeTimeStats = () => {
   loadStatistics(allAddCodeTimerStats, 'addCodeTimer', 'statACTi', 'addCodeTimerStat', addCodeInterval)
 }
 
-export const loadAddCodeCapacityStats = () => {
+const loadAddCodeCapacityStats = () => {
   loadStatistics(allAddCodeCapacityStats, 'addCodeCapacity', 'statACC', 'addCodeCapacityStat', addCodeMaxUsesAdditive)
   loadStatistics(
     allAddCodeCapacityMultiplierStats,
@@ -3631,11 +4063,11 @@ export const loadAddCodeCapacityStats = () => {
   })
 }
 
-export const loadLuckConversionStats = () => {
+const loadLuckConversionStats = () => {
   loadStatistics(allLuckConversionStats, 'luckConversionStats', 'statLC', 'LuckConversionStat', calculateLuckConversion)
 }
 
-export const loadRedAmbrosiaLuckStats = () => {
+const loadRedAmbrosiaLuckStats = () => {
   loadStatistics(
     allRedAmbrosiaLuckStats,
     'redAmbrosiaLuckStats',
@@ -3645,7 +4077,7 @@ export const loadRedAmbrosiaLuckStats = () => {
   )
 }
 
-export const loadRedAmbrosiaGenerationStats = () => {
+const loadRedAmbrosiaGenerationStats = () => {
   loadStatistics(
     allRedAmbrosiaGenerationSpeedStats,
     'redAmbrosiaGenerationStats',
@@ -3655,7 +4087,7 @@ export const loadRedAmbrosiaGenerationStats = () => {
   )
 }
 
-export const loadShopVoucherStats = () => {
+const loadShopVoucherStats = () => {
   loadStatistics(
     infinityShopUpgrades,
     'shopVoucherStats',
@@ -3674,12 +4106,12 @@ export const loadShopVoucherStats = () => {
   )
 }
 
-export const loadMiscellaneousStats = () => {
+const loadMiscellaneousStats = () => {
   loadStatistics(allMiscStats, 'miscStats', 'sMisc', 'miscStat', () => 0, '', false)
   DOMCacheGetOrSet('gameStageStatistic').innerHTML = i18next.t('statistics.gameStage', { stage: synergismStage(0) })
 }
 
-export const loadTalismanRuneBonusMultiplierStats = () => {
+const loadTalismanRuneBonusMultiplierStats = () => {
   loadStatistics(
     allTalismanRuneBonusStats,
     'talismanRuneBonusMultiplierStats',
@@ -3689,7 +4121,7 @@ export const loadTalismanRuneBonusMultiplierStats = () => {
   )
 }
 
-export const loadSalvageStats = () => {
+const loadSalvageStats = () => {
   loadPositiveSalvageStats()
   loadNegativeSalvageStats()
 
@@ -3704,7 +4136,7 @@ export const loadSalvageStats = () => {
   DOMCacheGetOrSet('salvageExtra').innerHTML = i18next.t('statistics.salvageStats.extraInfo')
 }
 
-export const loadPositiveSalvageStats = () => {
+const loadPositiveSalvageStats = () => {
   loadStatistics(
     positiveSalvageStats,
     'salvagePositive',
@@ -3722,7 +4154,7 @@ export const loadPositiveSalvageStats = () => {
   )
 }
 
-export const loadNegativeSalvageStats = () => {
+const loadNegativeSalvageStats = () => {
   loadStatistics(
     negativeSalvageStats,
     'salvageNegative',
@@ -3737,6 +4169,16 @@ export const loadNegativeSalvageStats = () => {
     'SalvageStatNegative2',
     calculateNegativeSalvage,
     'Total2'
+  )
+}
+
+const loadStatisticsAscensionCountMultiplierStats = () => {
+  loadStatistics(
+    ascensionCountMultStats,
+    'ascensionCountMultiplierStats',
+    'statACM',
+    'AscensionCountMultStat',
+    calculateAscensionCount
   )
 }
 
@@ -3757,7 +4199,7 @@ export const c15RewardUpdate = () => {
   updateDisplayC15Rewards()
 }
 
-const updateDisplayC15Rewards = () => {
+export const updateDisplayC15Rewards = () => {
   DOMCacheGetOrSet('c15Reward0').innerHTML = i18next.t('wowCubes.platonicUpgrades.c15Rewards.0', {
     exponent: format(player.challenge15Exponent, 3, true)
   })
@@ -3774,6 +4216,7 @@ const updateDisplayC15Rewards = () => {
     const key = k as Challenge15Rewards
     const value = v.value
     const requirement = v.requirement
+    const doNotUsePercentage = v.doNotUsePercentage ?? false
 
     if (!LOADED_STATS_HTMLS.challenge15) {
       const elm = document.createElement('p')
@@ -3791,9 +4234,15 @@ const updateDisplayC15Rewards = () => {
     if (player.challenge15Exponent >= requirement) {
       elm.style.display = player.challenge15Exponent >= requirement ? 'block' : 'none'
       if (typeof value === 'number') {
-        elm.innerHTML = i18next.t(`wowCubes.platonicUpgrades.c15Rewards.${key}`, {
-          amount: formatAsPercentIncrease(value, 2)
-        })
+        if (doNotUsePercentage) {
+          elm.innerHTML = i18next.t(`wowCubes.platonicUpgrades.c15Rewards.${key}`, {
+            amount: format(value, 0, true)
+          })
+        } else {
+          elm.innerHTML = i18next.t(`wowCubes.platonicUpgrades.c15Rewards.${key}`, {
+            amount: formatAsPercentIncrease(value, 2)
+          })
+        }
       } else {
         // Do not pass boolean value (all texts will say 'Unlocked' as you cannot see rewards not yet earned)
         elm.textContent = i18next.t(`wowCubes.platonicUpgrades.c15Rewards.${key}`)
@@ -3825,7 +4274,7 @@ interface Stage {
   reset: boolean
 }
 
-export const gameStages = (): Stage[] => {
+const gameStages = (): Stage[] => {
   const stages: Stage[] = [
     { stage: 0, tier: 1, name: 'start', unlocked: true, reset: true },
     {
@@ -3853,7 +4302,7 @@ export const gameStages = (): Stage[] => {
       stage: 4,
       tier: 4,
       name: 'reincarnate-ant',
-      unlocked: player.firstOwnedAnts !== 0,
+      unlocked: player.ants.producers[AntProducers.Workers].purchased !== 0 || player.ants.antSacrificeCount > 0,
       reset: player.unlocks.reincarnate
     },
     {

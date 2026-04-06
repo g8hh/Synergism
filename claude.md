@@ -18,46 +18,24 @@
 2. **Check back with user** after writing significant code
 3. **Ask questions** when task requirements are unclear
 
-### Quality Assurance Commands
-Run these after making changes:
-```bash
-node --run format           # Format code
-npx -p typescript tsc      # TypeScript check
-```
-
 ## File Structure Rules
 ```
 src/                       # Core game logic
-├── mock/                  # Mock API responses  
-├── Purchases/             # Purchase-related logic
-├── saves/                 # Save system logic
-├── types/                 # TypeScript definitions
-└── [FeatureName].ts       # Individual game features
-
-index.html                 # Single HTML file - add new divs in body
-Synergism.css             # Single CSS file
+index.html
+Synergism.css
 translations/en.json       # Required for all new text strings
 ```
 
 ## Development Patterns
 
-### Adding New Features
-1. **File Location**: 
-   - Use existing subfolders if feature fits
-   - Otherwise place directly in `src/`
-2. **HTML**: Add new `<div>` elements one level into `<body>`
-3. **CSS**: Add styles to `Synergism.css`
-
 ### String Internationalization
-- **Required**: Add all user-facing text to `translations/en.json`
-- **Format**: `i18n` library usage
-- **Variables**: `{{variableName}}` for dynamic content
-- **Styling**: `<<color|text>>` for colored text
+- i18next: Add all user-facing text to `translations/en.json`
+- **Styling**: `<<color|{{text}}>>` for colored text
 
 ### Save System Variables
 **CRITICAL**: Before adding to `player` object:
 1. Get explicit permission from user
-2. Add to `src/types/Synergism.d.ts`
+2. Add to `src/types/Synergism.ts`
 3. Add to `src/saves/PlayerSchema.ts`
 4. Variable location: `player` in `src/Synergism.ts`
 
@@ -67,11 +45,6 @@ translations/en.json       # Required for all new text strings
 - **DOM Access**: ALWAYS use `DOMCacheGetOrSet('elementId')` instead of `document.getElementById`
   - Import: `import { DOMCacheGetOrSet } from './Cache/DOM'`
   - Reason: Performance optimization through caching
-- **Import Style**: Top-level imports ONLY - never use dynamic imports like `import().then()`
-  - Correct: `import { functionName } from './ModuleName'` at top of file
-  - Wrong: `import('./Module').then(({ functionName }) => ...)`
-- **Import Organization**: Alphabetical ordering within import groups
-- **Destructured Imports**: Use for specific functions/variables from modules
 
 ### General Patterns
 - Follow existing TypeScript patterns in codebase
@@ -79,9 +52,46 @@ translations/en.json       # Required for all new text strings
 - Match existing naming conventions
 - Maintain consistency with current architecture
 
+### Steam
+- There is a Steam version of the app that uses Electron.
+- Steam features MUST be gated by checking the `platform` variable from Config.ts
+- When using a feature only available to the Electron app, you MUST use dynamic imports. Example:
 
+```ts
+import { platform } from './Config'
 
+async function myFunction () {
+  if (platform === 'steam') {
+    const { steamOnlyFeature } = await import('./steam/steam')
 
+    await steamOnlyFeature()
+  } else {
+    // browser version
+    browserOnlyFeature()
+  }
+}
+```
 
+- The platform variable comes from esbuild define hooks. These act as macros essentially, which removes the
+  `else` block on Steam and vice-versa on browser builds.
+- **Wrong**: `import { steamOnlyFeature } from './steam/steam'`W
 
+### Recommended Patterns
+- Objects and arrays that are constant should be hoisted to the module scope when possible.
 
+Example (wrong):
+```ts
+function myFunction () {
+  const arr = [1, 2, 3, 4, 5]
+  return arr
+}
+```
+
+Example (correct):
+```ts
+const arr = [1, 2, 3, 4, 5]
+
+function myFunction () {
+  return arr
+}
+```

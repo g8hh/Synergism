@@ -8,7 +8,7 @@ import {
   updatePCoinCache
 } from '../PseudoCoinUpgrades'
 import { Alert } from '../UpdateHTML'
-import { memoize } from '../Utility'
+import { isMobile, memoize } from '../Utility'
 import { upgradeResponse } from './CartTab'
 
 interface Upgrades {
@@ -37,7 +37,6 @@ export interface UpgradesResponse {
   coins: number
   upgrades: Upgrades[]
   playerUpgrades: PlayerUpgrades[]
-  tier: number
 }
 
 interface CoinsResponse {
@@ -57,8 +56,8 @@ function setActiveUpgrade (upgrade: UpgradesList) {
 
   const name = i18next.t(`pseudoCoins.upgradeNames.${upgrade.internalName}`)
 
-  DOMCacheGetOrSet('pCoinUpgradeName').textContent = `${name ?? '???'}`
-  DOMCacheGetOrSet('description').textContent = `${upgrade.description ?? '???'}`
+  DOMCacheGetOrSet('pCoinUpgradeName').textContent = name
+  DOMCacheGetOrSet('description').textContent = upgrade.description
   DOMCacheGetOrSet('pCoinUpgradeIcon').setAttribute(
     'src',
     `Pictures/PseudoShop/${upgrade.internalName ?? 'PseudoCoins'}.png`
@@ -69,15 +68,15 @@ function setActiveUpgrade (upgrade: UpgradesList) {
     levelCostMap[level] = upgrade.cost[index]
   })
 
-  const buy = DOMCacheGetOrSet('buy')!
+  const buy = DOMCacheGetOrSet('buy')
   const currEffect = DOMCacheGetOrSet('pCoinEffectCurr')
   const nextEffect = DOMCacheGetOrSet('pCoinEffectNext')
 
   currEffect.innerHTML = `${i18next.t('pseudoCoins.currEffect')} ${
-    i18next.t(displayPCoinEffect(upgrade.internalName, upgrade.playerLevel))
+    displayPCoinEffect(upgrade.internalName, upgrade.playerLevel)
   }`
   nextEffect.innerHTML = `${i18next.t('pseudoCoins.nextEffect')} ${
-    i18next.t(displayPCoinEffect(upgrade.internalName, upgrade.playerLevel + 1))
+    displayPCoinEffect(upgrade.internalName, upgrade.playerLevel + 1)
   }`
 
   const costs = DOMCacheGetOrSet('pCoinScalingCosts')
@@ -162,7 +161,7 @@ const initializeUpgradeSubtab = memoize(() => {
     <div
       data-id="${u.upgradeId}"
       data-key="${u.name}"
-      style="margin: 40px;"
+      ${isMobile ? '' : 'style="margin: 40px;"'}
     >
       <img src='Pictures/PseudoShop/${u.internalName}.png' alt='${u.internalName}' />
       <p id="a">${u.playerLevel}/${u.maxLevel}</p>
@@ -210,14 +209,14 @@ export const updatePseudoCoins = async () => {
   const response = await fetch('https://synergism.cc/stripe/coins')
   const coins = await response.json() as CoinsResponse
 
-  tab!.querySelector('#pseudoCoinAmounts > #currentCoinBalance')!.innerHTML = `${
-    i18next.t('pseudoCoins.coinCount', { amount: Intl.NumberFormat().format(coins.coins) })
-  }`
+  tab.querySelector('#pseudoCoinAmounts > #currentCoinBalance')!.innerHTML = i18next.t('pseudoCoins.coinCount', {
+    amount: Intl.NumberFormat().format(coins.coins)
+  })
 
   // WOW this is so hacky and shit but It's the best I can do in a pinch -Platonic
-  DOMCacheGetOrSet('currentCoinBalance2')!.innerHTML = `${
-    i18next.t('pseudoCoins.coinCount', { amount: Intl.NumberFormat().format(coins.coins) })
-  }`
+  DOMCacheGetOrSet('currentCoinBalance2').innerHTML = i18next.t('pseudoCoins.coinCount', {
+    amount: Intl.NumberFormat().format(coins.coins)
+  })
 
   return coins.coins
 }

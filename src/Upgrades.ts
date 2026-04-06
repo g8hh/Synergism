@@ -4,27 +4,36 @@ import { achievementPoints, getAchievementReward } from './Achievements'
 import { buyAutobuyers, buyGenerator } from './Automation'
 import { buyUpgrades } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateAnts } from './Calculate'
+import { calculateGlobalSpeedMult, calculateTotalCoinOwned } from './Calculate'
+import { AntProducers } from './Features/Ants/structs/structs'
 import { getRuneEffects } from './Runes'
-import { getRuneSpiritEffect } from './RuneSpirits'
-import { format, player } from './Synergism'
+import { getShopUpgradeEffects } from './Shop'
+import {
+  calculateBuildingPower,
+  crystalUpgrade3Base,
+  crystalUpgrade3CrystalMultiplier,
+  crystalUpgrade3MaxBase,
+  crystalUpgrade4MaxExponent,
+  format,
+  formatAsPercentIncrease,
+  player
+} from './Synergism'
 import { revealStuff } from './UpdateHTML'
 import { sumContents } from './Utility'
 import { Globals as G, Upgrade } from './Variables'
 
 const crystalupgdesc: Record<number, () => Record<string, string>> = {
   3: () => ({
-    max: format(
-      100 * (0.12 + 0.88 * player.upgrades[122] + 0.001 * player.researches[129]
-          * Decimal.log(player.commonFragments.add(1), 4)),
-      2,
-      true
+    max: formatAsPercentIncrease(
+      crystalUpgrade3MaxBase(),
+      2
     )
   }),
   4: () => ({
     max: format(
-      10 + 0.05 * player.researches[129] * Decimal.log(player.commonFragments.add(1), 4)
-        + getRuneSpiritEffect('prism').crystalCaps
+      crystalUpgrade4MaxExponent(),
+      2,
+      true
     )
   })
 }
@@ -39,7 +48,8 @@ const constantUpgDesc: Record<number, () => Record<string, string>> = {
   }),
   2: () => ({
     max: format(
-      10 + 100 * +getAchievementReward('constUpgrade2Buff') + player.shopUpgrades.constantEX + 100
+      10 + 100 * +getAchievementReward('constUpgrade2Buff') + getShopUpgradeEffects('constantEX', 'maxPercentIncrease')
+        + 100
           * (G.challenge15Rewards.exponent.value - 1)
         + 0.3 * player.platonicUpgrades[18],
       2,
@@ -49,12 +59,12 @@ const constantUpgDesc: Record<number, () => Record<string, string>> = {
 }
 
 const upgradetexts = [
-  () => format((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 2),
-  () => format((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 2),
-  () => format((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 2),
-  () => format((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 2),
-  () => format((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 2),
-  () => format((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 2),
+  () => format((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 2),
+  () => format((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 2),
+  () => format((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 2),
+  () => format((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 2),
+  () => format((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 2),
+  () => format((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 2),
   () => Math.min(4, 1 + Math.floor(Decimal.log(player.fifthOwnedCoin + 1, 10))),
   () => format(Math.floor(player.multiplierBought / 7), 0, true),
   () => format(Math.floor(player.acceleratorBought / 10), 0, true),
@@ -71,7 +81,14 @@ const upgradetexts = [
     ),
   () => format(Decimal.pow(1.15, G.freeAccelerator).times(1e5), 2),
   () => format(Decimal.pow(1.15, G.freeAccelerator).times(1e5), 2),
-  () => format(Decimal.pow(G.acceleratorEffect, 1 / 3), 2),
+  () =>
+    format(
+      Decimal.min(
+        Decimal.pow(10, 1e33),
+        Decimal.pow(G.acceleratorEffect, G.deflationMultiplier[player.corruptions.used.deflation] / 3)
+      ),
+      2
+    ),
   () =>
     format(
       Decimal.min(1e125, player.transcendShards.add(1)),
@@ -80,7 +97,11 @@ const upgradetexts = [
     ),
   () => format(Decimal.min(1e125, player.transcendShards.add(1))),
   () => format(Decimal.min(1e200, player.transcendPoints.times(1e30).add(1))),
-  () => format(Decimal.pow((G.totalCoinOwned + 1) * Math.min(1e30, Math.pow(1.008, G.totalCoinOwned)), 10), 2),
+  () =>
+    format(
+      Decimal.pow((calculateTotalCoinOwned() + 1) * Math.min(1e30, Math.pow(1.008, calculateTotalCoinOwned())), 10),
+      2
+    ),
   () => ({
     x: format(Math.floor(1 + (1 / 101 * G.freeMultiplier))),
     y: format(Math.floor(5 + (1 / 101 * G.freeAccelerator)))
@@ -132,7 +153,7 @@ const upgradetexts = [
       Math.min(50, Math.floor(Decimal.log(player.coins.add(1), 1e30)))
         + Math.min(50, Math.floor(Decimal.log(player.coins.add(1), 1e300)))
     ),
-  () => format(Math.floor(G.totalCoinOwned / 2000)),
+  () => format(Math.floor(calculateTotalCoinOwned() / 2000)),
   () => format(Math.min(500, Math.floor(Decimal.log(player.prestigePoints.add(1), 1e25)))),
   () => format(G.totalAcceleratorBoost),
   () => format(Math.floor(3 / 103 * G.freeMultiplier)),
@@ -156,14 +177,14 @@ const upgradetexts = [
   () => format(Decimal.pow(G.globalMythosMultiplier, 0.025), 2),
   () => format(Decimal.min('1e1250', Decimal.pow(G.acceleratorEffect, 1 / 125)), 2),
   () => format(Decimal.min('1e2000', Decimal.pow(G.multiplierEffect, 1 / 180)), 2),
-  () => format(Decimal.pow('1e1000', Math.min(1000, G.buildingPower - 1)), 2),
+  () => format(Decimal.pow('1e1000', Math.min(1000, calculateBuildingPower() - 1)), 2),
   () => null,
   () => null,
   () => null,
   () => null,
   () => null,
   () => null,
-  () => Math.floor(1 / 50 * (sumContents(player.challengecompletions))),
+  () => Math.min(12, Math.floor(1 / 50 * (sumContents(player.challengecompletions)))),
   () => format(Decimal.min('1e6000', Decimal.pow(player.reincarnationPoints.add(1), 6))),
   () => format(Decimal.pow(player.reincarnationPoints.add(1), 2)),
   () => null,
@@ -201,15 +222,21 @@ const upgradetexts = [
   () =>
     format(
       Decimal.pow(
-        1.004 + 4 / 100000 * player.researches[96],
-        player.firstOwnedAnts + player.secondOwnedAnts + player.thirdOwnedAnts + player.fourthOwnedAnts
-          + player.fifthOwnedAnts + player.sixthOwnedAnts + player.seventhOwnedAnts + player.eighthOwnedAnts
+        1.004,
+        player.ants.producers[AntProducers.Workers].purchased
       ),
       3
     ),
   () => format(1 + 0.005 * Math.pow(Decimal.log10(player.maxOfferings.plus(1)), 2), 2, true),
-  () => null,
-  () => null,
+  () => format(Decimal.max(Decimal.pow(calculateGlobalSpeedMult(), 3), 1), 2, true),
+  () =>
+    format(
+      10 * Math.min(50, player.ants.antSacrificeCount)
+        + 5 * Math.min(50, Math.max(player.ants.antSacrificeCount - 50, 0))
+        + Math.min(250, Math.max(0, player.ants.antSacrificeCount - 100)),
+      0,
+      true
+    ),
   ...Array.from({ length: 39 }, () => () => null),
   () => null,
   () => null,
@@ -219,7 +246,163 @@ const upgradetexts = [
   () => format(0.333 * player.challengecompletions[10], 0)
 ]
 
-export const upgradeeffects = (i: number) => {
+// TODO: We really should make a more unified Upgrade Data object...
+export const upgradeRequirements = [
+  // Zeroth Upgrade, because upgrades are 1-indexed (FUCK YOU PLATONIC)
+  () => true,
+  // Coin Upgrades 1-5
+  () => true,
+  () => true,
+  () => true,
+  () => true,
+  () => true,
+  // Coin Upgrades 6-10
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  // Coin Upgrades 11-15
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  // Coin Upgrades 16-20
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Diamond Upgrades 1-5
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  // Diamond Upgrades 6-10
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  // Diamond Upgrades 11-15
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Diamond Upgrades 16-20
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => getAchievementReward('diamondUpgrade18'),
+  () => getAchievementReward('diamondUpgrade19'),
+  () => getAchievementReward('diamondUpgrade20'),
+  // Mythos Upgrade 1-5
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Mythos Upgrade 6-10
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Mythos Upgrade 11-15
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  // Mythos Upgrade 16-20
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  // Reincarnation Upgrade 1-5
+  () => player.researches[47] > 0,
+  () => player.researches[47] > 0,
+  () => player.researches[47] > 0,
+  () => player.researches[47] > 0,
+  () => player.researches[47] > 0,
+  // Reincarnation Upgrade 6-10
+  () => player.researches[48] > 0,
+  () => player.researches[48] > 0,
+  () => player.researches[48] > 0,
+  () => player.researches[48] > 0,
+  () => player.researches[48] > 0,
+  // Reincarnation Upgrade 11-15
+  () => player.researches[49] > 0,
+  () => player.researches[49] > 0,
+  () => player.researches[49] > 0,
+  () => player.researches[49] > 0,
+  () => player.researches[49] > 0,
+  // Reincarnation Upgrade 16-20
+  () => player.researches[50] > 0,
+  () => player.researches[50] > 0,
+  () => player.researches[50] > 0,
+  () => player.researches[50] > 0,
+  () => player.researches[50] > 0,
+  // Automation Upgrade 1-5
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  // Automation Upgrade 6-10
+  () => player.unlocks.prestige,
+  () => player.unlocks.prestige,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Automation Upgrade 11-15
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  // Automation Upgrade 16-20
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  () => player.unlocks.reincarnate,
+  // Generation Upgrades 1-5
+  () => player.unlocks.prestige,
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  () => player.unlocks.generation,
+  // Generation Upgrades 6-10
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Generation Upgrades 11-15
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Generation Upgrades 16-20
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  () => player.unlocks.transcend,
+  // Coin Upgrades 21-25
+  () => player.cubeUpgrades[19] > 0,
+  () => player.cubeUpgrades[19] > 0,
+  () => player.cubeUpgrades[19] > 0,
+  () => player.cubeUpgrades[19] > 0,
+  () => player.cubeUpgrades[19] > 0
+]
+
+const upgradeeffects = (i: number) => {
   const effect = upgradetexts[i - 1]?.()
   const type = typeof effect
   const element = DOMCacheGetOrSet('upgradeeffect')
@@ -280,7 +463,7 @@ export const clickUpgrades = (i: number, auto: boolean) => {
     || (i <= 60 && i >= 41 && !player.unlocks.transcend)
     || (i <= 80 && i >= 61 && !player.unlocks.reincarnate)
     || (i <= 120 && i >= 81 && !player.unlocks.prestige)
-    || DOMCacheGetOrSet(`upg${i}`)!.style.display === 'none'
+    || DOMCacheGetOrSet(`upg${i}`).style.display === 'none'
   ) {
     return
   }
@@ -327,8 +510,8 @@ export const categoryUpgrades = (i: number, auto: boolean) => {
   if (i === 1) {
     min = 121
     max = 125
-    for (let i = 1; i <= 20; i++) {
-      clickUpgrades(i, auto)
+    for (let j = 1; j <= 20; j++) {
+      clickUpgrades(j, auto)
     }
   }
   if (i === 2) {
@@ -351,55 +534,43 @@ export const categoryUpgrades = (i: number, auto: boolean) => {
     min = 61
     max = 80
   }
-  for (let i = min; i <= max; i++) {
-    clickUpgrades(i, auto)
+  for (let j = min; j <= max; j++) {
+    clickUpgrades(j, auto)
   }
 }
 
 const crystalupgeffect: Record<number, () => Record<string, string>> = {
   1: () => ({
     x: format(
-      Decimal.min(
-        Decimal.pow(10, 50 + 2 * player.crystalUpgrades[0]),
-        Decimal.pow(1.01, achievementPoints * player.crystalUpgrades[0])
-      ),
+      Decimal.pow(1 + 0.01 * player.crystalUpgrades[0], achievementPoints),
       2,
       true
     )
   }),
   2: () => ({
     x: format(
-      Decimal.min(
-        Decimal.pow(10, 100 + 5 * player.crystalUpgrades[1]),
-        Decimal.pow(Decimal.log(player.coins.add(1), 10), player.crystalUpgrades[1] / 3)
+      Decimal.pow(
+        1 + player.crystalUpgrades[1] * Decimal.log(player.coins.add(1), 10) / 100,
+        2 + Math.log2(player.crystalUpgrades[1] + 1)
       ),
       2,
       true
     )
   }),
   3: () => ({
+    base: formatAsPercentIncrease(
+      crystalUpgrade3Base(),
+      2
+    ),
     x: format(
-      Decimal.pow(
-        1
-          + Math.min(
-            0.12 + 0.88 * player.upgrades[122]
-              + 0.001 * player.researches[129] * Decimal.log(player.commonFragments.add(1), 4),
-            0.001 * player.crystalUpgrades[2]
-          ),
-        player.firstOwnedDiamonds + player.secondOwnedDiamonds + player.thirdOwnedDiamonds + player.fourthOwnedDiamonds
-          + player.fifthOwnedDiamonds
-      ),
+      crystalUpgrade3CrystalMultiplier(),
       2,
       true
     )
   }),
   4: () => ({
     x: format(
-      Math.min(
-        10 + 0.05 * player.researches[129] * Decimal.log(player.commonFragments.add(1), 4)
-          + getRuneSpiritEffect('prism').crystalCaps,
-        0.05 * player.crystalUpgrades[3]
-      ),
+      crystalUpgrade4MaxExponent() * (1 - Math.pow(0.995, player.crystalUpgrades[3])),
       2,
       true
     )
@@ -407,9 +578,9 @@ const crystalupgeffect: Record<number, () => Record<string, string>> = {
   5: () => ({
     x: format(
       Decimal.pow(
-        1.01,
-        (player.challengecompletions[1] + player.challengecompletions[2] + player.challengecompletions[3]
-          + player.challengecompletions[4] + player.challengecompletions[5]) * player.crystalUpgrades[4]
+        1 + player.crystalUpgrades[4] / 20,
+        player.challengecompletions[1] + player.challengecompletions[2] + player.challengecompletions[3]
+          + player.challengecompletions[4] + player.challengecompletions[5]
       ),
       2,
       true
@@ -432,7 +603,7 @@ export const crystalupgradedescriptions = (i: number) => {
     G.crystalUpgradesCost[i - 1] - getRuneEffects('prism').costDivisorLog10
       + G.crystalUpgradeCostIncrement[i - 1] * Math.floor(Math.pow(player.crystalUpgrades[i - 1] + 0.5 - c, 2) / 2)
   )
-  DOMCacheGetOrSet('crystalupgradedescription').textContent = returnCrystalUpgDesc(i)
+  DOMCacheGetOrSet('crystalupgradedescription').innerHTML = returnCrystalUpgDesc(i)
   DOMCacheGetOrSet('crystalupgradeslevel1').innerHTML = i18next.t('buildings.crystalUpgrades.currentLevel', {
     amount: format(p, 0, true)
   })
@@ -494,7 +665,8 @@ const constUpgEffect: Record<number, () => Record<string, string>> = {
         1
           + 0.001
             * Math.min(
-              100 + 1000 * +getAchievementReward('constUpgrade2Buff') + 10 * player.shopUpgrades.constantEX
+              100 + 1000 * +getAchievementReward('constUpgrade2Buff')
+                + 10 * getShopUpgradeEffects('constantEX', 'maxPercentIncrease')
                 + 3 * player.platonicUpgrades[18] + 1000 * (G.challenge15Rewards.exponent.value - 1),
               player.constantUpgrades[2]
             ),
@@ -511,10 +683,10 @@ const constUpgEffect: Record<number, () => Record<string, string>> = {
     x: format(1 + 0.04 * player.constantUpgrades[4], 2, true)
   }),
   5: () => ({
-    x: format(Decimal.pow(1 + 0.1 * Decimal.log(player.ascendShards.add(1), 10), player.constantUpgrades[5]), 2, true)
+    x: format(1 + 0.1 * player.constantUpgrades[5] * Decimal.log(player.ascendShards.add(1), 10), 2, true)
   }),
   6: () => ({
-    x: format(2 * player.constantUpgrades[6])
+    x: format(Math.round(2000 * (1 - Math.pow(0.999, player.constantUpgrades[6]))), 0, true)
   }),
   7: () => ({
     x: format(7 * Math.min(1000, player.constantUpgrades[7]))
@@ -599,5 +771,4 @@ export const buyConstantUpgrades = (i: number, fast = false) => {
       }
     }
   }
-  calculateAnts()
 }

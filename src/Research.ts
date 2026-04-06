@@ -1,14 +1,15 @@
 import Decimal, { type DecimalSource } from 'break_infinity.js'
 import i18next from 'i18next'
+import { getAchievementReward } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateAnts } from './Calculate'
 import { getResetResearches } from './Reset'
+import { runes } from './Runes'
 import { calculateSingularityDebuff } from './singularity'
 import { format, player } from './Synergism'
 import { revealStuff, updateChallengeDisplay } from './UpdateHTML'
 import { sortDecimalWithIndices, updateClassList } from './Utility'
 
-export interface IResearchData {
+interface IResearchData {
   baseCost: Decimal
   maxLevel: number
   // Some research (e.g. 200) can have custom growth (i.e. nonconstant)
@@ -41,15 +42,15 @@ const researchBaseCosts: DecimalSource[] = [
   1, 20, 3e3, 4e5, 5e7,
   10, 40, 160, 1000, 10000,
   4e9, 7e9, 1e10, 1.2e10, 1.5e10,
-  1e12, 1e13, 3e12, 2e13, 2e13,
-  2e14, 6e14, 2e15, 6e15, 2e16,
-  1e16, 2e16, 2e17, 4e17, 1e18,
-  1e13, 1e14, 1e15, 7.777e18, 7.777e20,
-  1e16, 3e16, 1e17, 3e17, 1e20,
-  1e18, 3e18, 1e19, 3e19, 1e20,
-  1e20, 2e20, 4e20, 8e20, 1e21,
-  2e21, 4e21, 8e21, 2e22, 4e22,
-  3.2e21, 2e23, 4e23, 1e21, 7.777e32,
+  1e12, 1e13, 1e12, 4e12, 7e12,
+  1e13, 1e13, 4e13, 6e13, 1e14,
+  8e13, 1e14, 2e14, 2e14, 1e15,
+  4e12, 3e13, 8e13, 7.777e18, 7.777e20,
+  2e14, 3e14, 1e16, 3e16, 1e16,
+  1e17, 3e17, 5e16, 1.2e17, 1e18,
+  1e18, 2e18, 3e18, 4e18, 1e19,
+  1e19, 2e19, 1e21, 5e21, 1e22,
+  1e21, 1e22, 1e22, 1e20, 7.777e32,
   5e8, 5e12, 5e16, 5e20, 5e24, /*ascension tier */
   1e25, 2e25, 4e25, 8e25, 1e26,
   4e26, 8e26, 1e27, 2e27, 1e28,
@@ -58,7 +59,7 @@ const researchBaseCosts: DecimalSource[] = [
   2e30, 4e30, 8e30, 1e31, 2e31,
   5e31, 1e32, 2e32, 4e32, 8e32, /*challenge 12 tier */
   1e33, 2e33, 4e33, 8e33, 1e34,
-  3e34, 1e35, 3e35, 6e35, 1e36,
+  3e34, 1e35, 3e35, 6e37, 1e36,
   3e36, 1e37, 3e37, 1e38, 3e38, /*challenge 13 tier */
   1e39, 3e39, 1e40, 3e40, 1e50,
   3e41, 1e42, 3e42, 6e42, 1e43,
@@ -88,21 +89,21 @@ const researchMaxLevels: DecimalSource[] = [
   10, 1, 20, 20, 20,
   20, 20, 20, 20, 10,
   20, 20, 20, 20, 1,
-  20, 5, 5, 3, 2,
-  10, 10, 10, 10, 1,
+  20, 7, 7, 3, 2,
+  10, 12, 10, 10, 1,
   10, 10, 20, 25, 25,
   15, 15, 15, 15, 30,
-  10, 10, 10, 100, 100,
+  2, 10, 10, 100, 100,
   25, 25, 25, 1, 5,
   10, 10, 10, 10, 1,
   10, 10, 10, 1, 1,
   25, 25, 25, 15, 1,
   10, 10, 10, 10, 1,
-  10, 1, 6, 10, 1,
+  10, 1, 25, 10, 1,
   25, 25, 1, 15, 1,
   10, 10, 10, 1, 1,
   10, 10, 10, 10, 1,
-  25, 25, 25, 15, 1,
+  25, 25, 25, 100000, 1,
   10, 10, 10, 1, 1,
   10, 3, 6, 10, 5,
   25, 25, 1, 15, 1,
@@ -111,7 +112,7 @@ const researchMaxLevels: DecimalSource[] = [
   25, 25, 25, 15, 100000
 ]
 
-export interface IResearchData {
+interface IResearchData {
   baseCost: Decimal
   maxLevel: number
   // Some research (e.g. 200) can have custom growth (i.e. nonconstant)
@@ -163,10 +164,15 @@ type RangeCondition = {
 
 const researchUnlockRanges: RangeCondition[] = [
   { range: [0, 0], condition: () => true }, // Not sure if needed!
-  { range: [1, 80], condition: () => player.unlocks.reincarnate },
+  { range: [1, 76], condition: () => player.unlocks.reincarnate },
+  { range: [77, 77], condition: () => runes.thrift.isUnlocked() },
+  { range: [78, 78], condition: () => player.unlocks.reincarnate },
+  { range: [79, 79], condition: () => runes.prism.isUnlocked() },
+  { range: [80, 80], condition: () => runes.duplication.isUnlocked() },
   { range: [81, 100], condition: () => player.unlocks.anthill },
-  { range: [101, 110], condition: () => player.unlocks.talismans },
-  { range: [111, 125], condition: () => player.unlocks.ascensions },
+  { range: [101, 118], condition: () => player.unlocks.talismans },
+  { range: [119, 123], condition: () => player.unlocks.ascensions },
+  { range: [124, 125], condition: () => Boolean(getAchievementReward('antSacrificeUnlock')) },
   { range: [126, 140], condition: () => player.ascensionCount > 0 },
   { range: [141, 155], condition: () => player.highestchallengecompletions[11] > 0 },
   { range: [156, 170], condition: () => player.highestchallengecompletions[12] > 0 },
@@ -228,7 +234,7 @@ export const isResearchUnlocked = (index: number): boolean => {
   return unlockFunction ? unlockFunction() : false
 }
 
-export const getBuyableResearchLevel = (index: number): number => {
+const getBuyableResearchLevel = (index: number): number => {
   const buyToLevelFunc = researchData[index].buyToLevel
   const baseCost = researchData[index].baseCost
   const currLevel = player.researches[index]
@@ -240,7 +246,7 @@ export const getBuyableResearchLevel = (index: number): number => {
   return buyToLevelFunc(budget, baseCost.times(researchCostMulti), currLevel, maxLevel)
 }
 
-export const getCostForResearchLevels = (index: number, buyTo: number): Decimal => {
+const getCostForResearchLevels = (index: number, buyTo: number): Decimal => {
   const costForLevelsFunc = researchData[index].costForLevels
   const baseCost = researchData[index].baseCost
   const currLevel = player.researches[index]
@@ -270,21 +276,18 @@ export const updateResearchAuto = (index: number) => {
   }
 }
 
-// For mode 'cheapest' and assumes you have Cube Upgrade 9 (1x9) purchased
 export const updateResearchRoomba = () => {
   if (isResearchMaxed(player.autoResearch) || !isResearchUnlocked(player.autoResearch)) {
     DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
     player.roombaResearchIndex = Math.min(researchOrderByCost.length - 1, player.roombaResearchIndex + 1)
     player.autoResearch = researchOrderByCost[player.roombaResearchIndex]
   }
-  // Edge Case? If we reach end of the list, but there is still unlockable research,
-  // we can loop around again. This should not affect performance that much, and stops
-  // a few of the more annoying bugs
+
+  // Loops us back to the start
   if (player.roombaResearchIndex === 200 && !isResearchUnlocked(200)) {
-    player.roombaResearchIndex = 0 // Reset to the start if we reach the end
+    player.roombaResearchIndex = 0
     player.autoResearch = researchOrderByCost[player.roombaResearchIndex]
   }
-
   DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.add('researchRoomba')
 }
 
@@ -339,9 +342,6 @@ export const buyResearch = (index: number, auto: boolean, hover: boolean) => {
     if ((index >= 66 && index <= 70) || index === 105) {
       updateChallengeDisplay()
     }
-
-    // Update ants.
-    calculateAnts()
   }
 
   return

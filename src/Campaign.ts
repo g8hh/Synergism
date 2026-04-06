@@ -1,7 +1,7 @@
 import i18next from 'i18next'
 import { awardAchievementGroup } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { inheritanceTokens, isIARuneUnlocked, singularityBonusTokenMult } from './Calculate'
+import { inheritanceTokens, singularityBonusTokenMult } from './Calculate'
 import {
   corrIcons,
   CorruptionLoadout,
@@ -12,13 +12,14 @@ import {
 } from './Corruptions'
 import { getOcteractUpgradeEffect } from './Octeracts'
 import { reset } from './Reset'
+import { getShopUpgradeEffects } from './Shop'
 import { getGQUpgradeEffect } from './singularity'
 import { format, formatAsPercentIncrease, player } from './Synergism'
 import { IconSets } from './Themes'
 import { Alert, Confirm, Notification } from './UpdateHTML'
 
 export let campaignTokens = 0
-export let maxCampaignTokens = 0
+let maxCampaignTokens = 0
 
 export type CampaignKeys =
   | 'first'
@@ -72,7 +73,7 @@ export type CampaignKeys =
   | 'fortyNinth'
   | 'fiftieth'
 
-export type CampaignTokenRewardNames =
+type CampaignTokenRewardNames =
   | 'tutorial'
   | 'cube'
   | 'obtainium'
@@ -105,13 +106,16 @@ export interface ICampaignManagerData {
   campaigns?: Record<CampaignKeys, number>
 }
 
-export interface ICampaignData {
+interface ICampaignData {
   campaignCorruptions: Partial<Corruptions>
   unlockRequirement: () => boolean
   limit: number
   isMeta: boolean
   cardinal: number
 }
+
+const timeThresholdReqs = [20, 100, 250, 500, 1000, 2000, 3500, 5000]
+const bonusRune6ThresholdReqs = [500, 750, 1000, 1250, 1500, 1750, 2000, 3000, 4000, 6000, 8000, 10000]
 
 export class CampaignManager {
   #currentCampaign: CampaignKeys | undefined
@@ -264,11 +268,6 @@ export class CampaignManager {
     }
 
     this.#currentCampaign = campaignManagerData?.currentCampaign ?? undefined
-    if (this.#currentCampaign !== undefined) {
-      player.corruptions.used = new CorruptionLoadout(
-        this.#campaigns[this.#currentCampaign].campaignCorruptions
-      )
-    }
   }
 
   computeMaxCampaignTokens () {
@@ -403,9 +402,8 @@ export class CampaignManager {
    * the penalty is *(time/10)^2, reducing the threshold to 5 seconds would make the penalty *(time/5)^2
    */
   get timeThresholdReduction () {
-    const thresholdReqs = [20, 100, 250, 500, 1000, 2000, 3500, 5000]
-    for (let i = 0; i < thresholdReqs.length; i++) {
-      if (campaignTokens < thresholdReqs[i]) {
+    for (let i = 0; i < timeThresholdReqs.length; i++) {
+      if (campaignTokens < timeThresholdReqs[i]) {
         return i / 4
       }
     }
@@ -443,9 +441,8 @@ export class CampaignManager {
   }
 
   get bonusRune6 () {
-    const thresholdReqs = [500, 750, 1000, 1250, 1500, 1750, 2000, 3000, 4000, 6000, 8000, 10000]
-    for (let i = 0; i < thresholdReqs.length; i++) {
-      if (campaignTokens < thresholdReqs[i]) {
+    for (let i = 0; i < bonusRune6ThresholdReqs.length; i++) {
+      if (campaignTokens < bonusRune6ThresholdReqs[i]) {
         return i
       }
     }
@@ -516,7 +513,7 @@ export const updateMaxTokens = () => {
   maxCampaignTokens = sum
 }
 
-export class Campaign {
+class Campaign {
   #name: string
   #description: string
   #campaignCorruptions: Corruptions
@@ -1410,7 +1407,7 @@ export const campaignDatas: Record<CampaignKeys, ICampaignData> = {
 
 // For icons, display them only if the player has enough tokens and fits the other requirements
 // This is more of a display thing, the actual reward is computed in the CampaignManager
-export const campaignTokenRewardDatas: Record<CampaignTokenRewardNames, CampaignTokenRewardDisplay> = {
+const campaignTokenRewardDatas: Record<CampaignTokenRewardNames, CampaignTokenRewardDisplay> = {
   tutorial: {
     tokenRequirement: 0,
     reward: () => ({
@@ -1456,7 +1453,7 @@ export const campaignTokenRewardDatas: Record<CampaignTokenRewardNames, Campaign
   rune6: {
     tokenRequirement: 500,
     reward: () => String(player.campaigns.bonusRune6),
-    otherUnlockRequirement: () => (isIARuneUnlocked())
+    otherUnlockRequirement: () => (getShopUpgradeEffects('infiniteAscent', 'runeUnlocked'))
   },
   goldenQuark: {
     tokenRequirement: 500,
@@ -1471,16 +1468,16 @@ export const campaignTokenRewardDatas: Record<CampaignTokenRewardNames, Campaign
   ambrosiaLuck: {
     tokenRequirement: 2000,
     reward: () => format(player.campaigns.ambrosiaLuckBonus, 2, true),
-    otherUnlockRequirement: () => (player.highestSingularityCount > 8)
+    otherUnlockRequirement: () => (player.singularityChallenges.noSingularityUpgrades.completions > 0)
   },
   blueberrySpeed: {
     tokenRequirement: 2000,
     reward: () => formatAsPercentIncrease(player.campaigns.blueberrySpeedBonus),
-    otherUnlockRequirement: () => (player.highestSingularityCount > 9)
+    otherUnlockRequirement: () => (player.singularityChallenges.noSingularityUpgrades.completions > 0)
   }
 }
 
-export const activeCampaignTextHTML = () => {
+const activeCampaignTextHTML = () => {
   const campaignName = player.campaigns.current
     ? i18next.t(`campaigns.data.${player.campaigns.current}.name`)
     : i18next.t('campaigns.emptyCampaignName')
@@ -1532,7 +1529,7 @@ export const campaignCorruptionStatsHTMLReset = () => {
   DOMCacheGetOrSet('campaignDesc').textContent = ''
 }
 
-export const campaignCorruptionStatHTMLUpdate = (key: CampaignKeys) => {
+const campaignCorruptionStatHTMLUpdate = (key: CampaignKeys) => {
   // Clear existing HTMLS
   campaignCorruptionStatsHTMLReset()
   DOMCacheGetOrSet('campaignName').textContent = `${
@@ -1598,32 +1595,32 @@ export const campaignCorruptionStatHTMLUpdate = (key: CampaignKeys) => {
   const campaignButton = document.createElement('button')
   if (player.campaigns.current === key) {
     campaignButton.textContent = i18next.t('campaigns.corruptionStats.resetCampaign')
-    campaignButton.onclick = async () => {
+    campaignButton.addEventListener('click', async () => {
       if (player.challengecompletions[10] === 0) {
         const p = await Confirm(i18next.t('campaigns.noChallengeCompletionConfirm'))
         if (!p) return
       }
       reset('ascension')
-    }
+    })
   } else {
     campaignButton.textContent = i18next.t('campaigns.corruptionStats.startCampaign')
-    campaignButton.onclick = () => {
+    campaignButton.addEventListener('click', () => {
       if (player.currentChallenge.ascension !== 0) {
         return Alert(i18next.t('campaigns.errorMessages.ascensionChallenge'))
       }
       reset('ascension')
       player.campaigns.campaign = key
-    }
+    })
   }
 
   const saveLoadoutButton = document.createElement('button')
   saveLoadoutButton.classList.add('chal14')
   saveLoadoutButton.textContent = i18next.t('campaigns.saveLoadout')
-  saveLoadoutButton.onclick = () => {
+  saveLoadoutButton.addEventListener('click', () => {
     player.corruptions.next = new CorruptionLoadout(usableCorruption.loadout)
     corruptionStatsUpdate()
     Notification(i18next.t('campaigns.saveLoadoutNotification', { name: i18next.t(`campaigns.data.${key}.name`) }))
-  }
+  })
 
   corruptionStats.appendChild(corruptionScoreMultiplierText)
   corruptionStats.appendChild(totalCorruptionDifficultyScoreText)
@@ -1649,9 +1646,7 @@ export const createCampaignIconHTMLS = () => {
 
     campaignIconDiv.appendChild(campaignIcon)
 
-    campaignIcon.onclick = () => {
-      campaignCorruptionStatHTMLUpdate(key)
-    }
+    campaignIcon.addEventListener('click', campaignCorruptionStatHTMLUpdate.bind(null, key))
   }
 }
 
@@ -1676,19 +1671,19 @@ export const campaignTokenRewardHTMLUpdate = () => {
       tokenIcon.classList.add('campaignTokenRewardIcon')
 
       if (typeof value.reward() === 'string') {
-        tokenIcon.onclick = () => {
+        tokenIcon.addEventListener('click', () => {
           DOMCacheGetOrSet('campaignTokenRewardText').innerHTML = i18next.t(`campaigns.tokens.rewardTexts.${key}`, {
             reward: value.reward()
           })
-        }
+        })
       } else {
-        tokenIcon.onclick = () => {
+        tokenIcon.addEventListener('click', () => {
           const reward = value.reward() as Partial<Record<CampaignTokenRewardNames, string>>
           DOMCacheGetOrSet('campaignTokenRewardText').innerHTML = i18next.t(
             `campaigns.tokens.rewardTexts.${key}`,
             reward
           )
-        }
+        })
       }
 
       DOMCacheGetOrSet('campaignTokenRewardIcons').appendChild(tokenIcon)
@@ -1715,9 +1710,7 @@ export const campaignTokenRewardHTMLUpdate = () => {
       }
     }
 
-    totalRewardIcon.onclick = () => {
-      return Alert(popupText)
-    }
+    totalRewardIcon.addEventListener('click', Alert.bind(null, popupText))
     DOMCacheGetOrSet('campaignTokenRewardIcons').appendChild(totalRewardIcon)
   }
 }

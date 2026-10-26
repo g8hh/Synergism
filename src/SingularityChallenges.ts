@@ -1,11 +1,16 @@
 import i18next from 'i18next'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
+  calculateAmbrosiaRewardLuck,
+  calculateBarEXALTPurpleHoneyRequirement,
   calculateExalt3AscensionLimit,
   calculateExalt4EffectiveSingularityMultiplier,
   calculateExalt6PenaltyPerSecond,
   calculateExalt6TimeLimit,
-  calculateGoldenQuarks
+  calculateGoldenQuarks,
+  calculateRedAmbrosiaRewardLuck,
+  calculateRequiredBlueberryTimeEXALT,
+  calculateRequiredRedAmbrosiaTimeEXALT
 } from './Calculate'
 import { singularity } from './Reset'
 import { runes } from './Runes'
@@ -14,13 +19,97 @@ import { Alert, Confirm } from './UpdateHTML'
 import { toOrdinal } from './Utility'
 import { Globals as G } from './Variables'
 
+export type SingularityChallengeRewards = {
+  noSingularityUpgrades: {
+    cubes: number
+    goldenQuarks: number
+    blueberries: number
+    shopUpgrade: boolean
+    additiveLuckMult: number
+    shopUpgrade2: boolean
+  }
+  oneChallengeCap: {
+    blueberrySpeedMult: number
+    capIncrease: number
+    freeCorruptionLevel: number
+    shopUpgrade: boolean
+    reinCapIncrease2: number
+    ascCapIncrease2: number
+  }
+  noOcteracts: {
+    octeractPow: number
+    offeringBonus: boolean
+    obtainiumBonus: boolean
+    shopUpgrade: boolean
+  }
+  limitedAscensions: {
+    ascensionSpeedMult: number
+    hepteractCap: boolean
+    shopUpgrade: boolean
+    shopUpgrade2: boolean
+  }
+  noAmbrosiaUpgrades: {
+    bonusAmbrosia: number
+    blueberries: number
+    additiveLuckMult: number
+    ambrosiaLuck: number
+    redLuck: number
+    blueberrySpeedMult: number
+    redSpeedMult: number
+    shopUpgrade: boolean
+    shopUpgrade2: boolean
+  }
+  noQuarkUpgrades: {
+    freeObtainiumLevels: number
+    freeOfferingLevels: number
+    freeSpeedLevels: number
+    freeCubeLevels: number
+    freeQuarkLevel: number
+    freeInfinityLevels: number
+    shopUpgrade: boolean
+    topHatUnlock: boolean
+  }
+  limitedTime: {
+    preserveQuarks: boolean
+    quarkMult: number
+    globalSpeed: number
+    ascensionSpeed: number
+    barRequirementMultiplier: number
+    shopUpgrade: boolean
+    shopUpgrade2: boolean
+  }
+  sadisticPrequel: {
+    extraFree: number
+    quarkMult: number
+    freeUpgradeMult: number
+    shopUpgrade: boolean
+    shopUpgrade2: boolean
+    shopUpgrade3: boolean
+  }
+  taxmanLastStand: {
+    shopUpgrade: boolean
+    talismanUnlock: boolean
+    talismanFreeLevel: number
+    talismanRuneEffect: number
+    purpleHoneyLuck: number
+    purpleBarSize: number
+  }
+  barDependence: {
+    purpleAmbrosiaCostReduction: number
+    purpleHoneyLuck: number
+    blueberries: number
+    shopUpgrade: boolean
+  }
+}
+
+export type SingularityChallengeDataKeys = keyof SingularityChallengeRewards
+
 interface ISingularityChallengeData {
   baseReq: number
   maxCompletions: number
   unlockSingularity: number
   HTMLTag: SingularityChallengeDataKeys
   singularityRequirement: (baseReq: number, completions: number) => number
-  effect: (n: number) => Record<string, number | boolean>
   achievementPointValue: (n: number) => number
   scalingrewardcount: number
   uniquerewardcount: number
@@ -31,20 +120,14 @@ interface ISingularityChallengeData {
   highestSingularityCompleted?: number
 }
 
-export type SingularityChallengeDataKeys =
-  | 'noSingularityUpgrades'
-  | 'oneChallengeCap'
-  | 'noOcteracts'
-  | 'limitedAscensions'
-  | 'noQuarkUpgrades'
-  | 'noAmbrosiaUpgrades'
-  | 'limitedTime'
-  | 'sadisticPrequel'
-  | 'taxmanLastStand'
+interface ISingularityChallengeDataWithEffect<
+  T extends SingularityChallengeDataKeys,
+  K extends keyof SingularityChallengeRewards[T]
+> extends ISingularityChallengeData {
+  effect: (n: number, key: K) => SingularityChallengeRewards[T][K]
+}
 
 export class SingularityChallenge {
-  public name
-  public description
   public baseReq
   public completions
   public maxCompletions
@@ -54,7 +137,6 @@ export class SingularityChallenge {
   public enabled
   public resetTime
   public singularityRequirement
-  public effect
   public achievementPointValue
   public alternateDescription
   public scalingrewardcount
@@ -62,12 +144,7 @@ export class SingularityChallenge {
   #key: string
 
   public constructor (data: ISingularityChallengeData, key: string) {
-    const name = i18next.t(`singularityChallenge.data.${key}.name`)
-    const description = i18next.t(
-      `singularityChallenge.data.${key}.description`
-    )
-    this.name = name
-    this.description = description
+    this.#key = key
     this.baseReq = data.baseReq
     this.completions = data.completions ?? 0
     this.maxCompletions = data.maxCompletions
@@ -77,7 +154,6 @@ export class SingularityChallenge {
     this.enabled = data.enabled ?? false
     this.resetTime = data.resetTime ?? false
     this.singularityRequirement = data.singularityRequirement
-    this.effect = data.effect
     this.achievementPointValue = data.achievementPointValue
     this.alternateDescription = data.alternateDescription ?? undefined
     this.scalingrewardcount = data.scalingrewardcount
@@ -85,7 +161,18 @@ export class SingularityChallenge {
 
     this.updateIconHTML()
     this.updateChallengeCompletions()
-    this.#key = key
+  }
+
+  public get name () {
+    return i18next.t(`singularityChallenge.data.${this.#key}.name`)
+  }
+
+  get #unprocessedName () {
+    return i18next.t(`singularityChallenge.data.${this.#key}.name`, { applyPostProcessor: false })
+  }
+
+  public get description () {
+    return i18next.t(`singularityChallenge.data.${this.#key}.description`)
   }
 
   public computeSingularityRquirement () {
@@ -120,7 +207,7 @@ export class SingularityChallenge {
     }
     const confirmation = await Confirm(
       i18next.t('singularityChallenge.enterChallenge.confirmation', {
-        name: this.name
+        name: this.#unprocessedName
       })
     )
 
@@ -128,33 +215,30 @@ export class SingularityChallenge {
       return Alert(i18next.t('singularityChallenge.enterChallenge.decline'))
     }
 
+    const challenge = player.singularityChallenges[this.HTMLTag]
     if (!player.insideSingularityChallenge) {
-      const setSingularity = this.computeSingularityRquirement()
+      const setSingularity = challenge.computeSingularityRquirement()
       const holdSingTimer = player.singularityCounter
-      const holdQuarkExport = player.quarkstimer
-      const holdGoldenQuarkExport = player.goldenQuarksTimer
       const goldenQuarkGain = calculateGoldenQuarks()
       const currentGQ = player.goldenQuarks
-      this.enabled = true
-      G.currentSingChallenge = this.HTMLTag
+      challenge.enabled = true
+      G.currentSingChallenge = challenge.HTMLTag
       player.insideSingularityChallenge = true
       singularity(setSingularity)
 
-      if (!this.resetTime) {
+      if (!challenge.resetTime) {
         player.singularityCounter = holdSingTimer
       } else {
         player.singularityCounter = 0
       }
       player.goldenQuarks = currentGQ + goldenQuarkGain
-      player.quarkstimer = holdQuarkExport
-      player.goldenQuarksTimer = holdGoldenQuarkExport
 
-      this.updateChallengeHTML()
+      challenge.updateChallengeHTML()
       return Alert(
         i18next.t('singularityChallenge.enterChallenge.acceptSuccess', {
-          name: this.name,
-          tier: this.completions + 1,
-          singReq: this.computeSingularityRquirement()
+          name: challenge.#unprocessedName,
+          tier: challenge.completions + 1,
+          singReq: challenge.computeSingularityRquirement()
         })
       )
     } else {
@@ -171,7 +255,7 @@ export class SingularityChallenge {
         : ''
       const confirmation = await Confirm(
         i18next.t('singularityChallenge.exitChallenge.confirmation', {
-          name: this.name,
+          name: this.#unprocessedName,
           tier: this.completions + 1,
           warning: extra
         })
@@ -181,30 +265,31 @@ export class SingularityChallenge {
       }
     }
 
-    this.enabled = false
+    const challenge = player.singularityChallenges[this.HTMLTag]
+    if (!challenge.enabled) {
+      return
+    }
+
+    challenge.enabled = false
     G.currentSingChallenge = undefined
     player.insideSingularityChallenge = false
     const highestSingularityHold = player.highestSingularityCount
     const holdSingTimer = player.singularityCounter
-    const holdQuarkExport = player.quarkstimer
-    const holdGoldenQuarkExport = player.goldenQuarksTimer
-    this.updateIconHTML()
+    challenge.updateIconHTML()
     if (success) {
-      this.highestSingularityCompleted = player.singularityCount
-      this.updateChallengeCompletions()
+      challenge.highestSingularityCompleted = player.singularityCount
+      challenge.updateChallengeCompletions()
       singularity(highestSingularityHold)
       player.singularityCounter = holdSingTimer
       return Alert(
         i18next.t('singularityChallenge.exitChallenge.acceptSuccess', {
-          tier: toOrdinal(this.completions),
-          name: this.name
+          tier: toOrdinal(challenge.completions),
+          name: challenge.#unprocessedName
         })
       )
     } else {
       singularity(highestSingularityHold)
       player.singularityCounter = holdSingTimer
-      player.quarkstimer = holdQuarkExport
-      player.goldenQuarksTimer = holdGoldenQuarkExport
       return Alert(
         i18next.t('singularityChallenge.exitChallenge.acceptFailure')
       )
@@ -259,7 +344,7 @@ export class SingularityChallenge {
   scaleString (): string {
     let text = ''
     for (let i = 1; i <= this.scalingrewardcount; i++) {
-      const list = i18next.t(`singularityChallenge.data.${String(this.HTMLTag)}.ScalingReward${i}`)
+      const list = i18next.t(`singularityChallenge.data.${this.HTMLTag}.ScalingReward${i}`)
       text += i > 1 ? `\n${list}` : list
     }
     return text
@@ -269,7 +354,7 @@ export class SingularityChallenge {
   uniqueString (): string {
     let text = ''
     for (let i = 1; i <= this.uniquerewardcount; i++) {
-      const list = i18next.t(`singularityChallenge.data.${String(this.HTMLTag)}.UniqueReward${i}`)
+      const list = i18next.t(`singularityChallenge.data.${this.HTMLTag}.UniqueReward${i}`)
       text += i > 1 ? `\n${list}` : list
     }
     return text
@@ -281,13 +366,21 @@ export class SingularityChallenge {
     DOMCacheGetOrSet('singularityChallengesUniqueRewards').innerHTML = this.uniqueString()
   }
 
+  public modalHTML (): string {
+    return `<div class="singularityChallengeDetails">
+      <p class="singularityChallengesInfo">${this.toString()}</p>
+      <div class="singularityChallengeAllRewards">
+        <p class="singularityChallengeScalingHeader">${i18next.t('singularityChallenge.ScalingHeader')}</p>
+        <p class="singularityChallengeUniqueHeader">${i18next.t('singularityChallenge.UniqueHeader')}</p>
+        <p class="singularityChallengesScalingRewards">${this.scaleString()}</p>
+        <p class="singularityChallengesUniqueRewards">${this.uniqueString()}</p>
+      </div>
+    </div>`
+  }
+
   public updateIconHTML (): void {
     const color = this.enabled ? 'orchid' : ''
     DOMCacheGetOrSet(this.HTMLTag).style.backgroundColor = color
-  }
-
-  public get rewards () {
-    return this.effect(this.completions)
   }
 
   public get rewardAP () {
@@ -301,7 +394,6 @@ export class SingularityChallenge {
   valueOf (): ISingularityChallengeData {
     return {
       baseReq: this.baseReq,
-      effect: this.effect,
       HTMLTag: this.HTMLTag,
       maxCompletions: this.maxCompletions,
       achievementPointValue: this.achievementPointValue,
@@ -321,10 +413,9 @@ export class SingularityChallenge {
   }
 }
 
-export const singularityChallengeData: Record<
-  SingularityChallengeDataKeys,
-  ISingularityChallengeData
-> = {
+export const singularityChallengeData: {
+  [K in SingularityChallengeDataKeys]: ISingularityChallengeDataWithEffect<K, keyof SingularityChallengeRewards[K]>
+} = {
   noSingularityUpgrades: {
     baseReq: 1,
     maxCompletions: 15,
@@ -338,14 +429,19 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 2,
     uniquerewardcount: 5,
-    effect: (n: number) => {
-      return {
-        cubes: 1 + n,
-        goldenQuarks: 1 + 0.12 * +(n > 0),
-        blueberries: +(n > 0),
-        shopUpgrade: n >= 10,
-        luckBonus: n >= 15 ? 0.05 : 0,
-        shopUpgrade2: n >= 15
+    effect: (n, key) => {
+      if (key === 'cubes') {
+        return 1 + n
+      } else if (key === 'goldenQuarks') {
+        return 1 + 0.12 * +(n > 0)
+      } else if (key === 'blueberries') {
+        return +(n > 0)
+      } else if (key === 'shopUpgrade') {
+        return n >= 10
+      } else if (key === 'additiveLuckMult') {
+        return n >= 15 ? 0.05 : 0
+      } else {
+        return n >= 15 // shopUpgrade2
       }
     }
   },
@@ -362,15 +458,19 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 3,
     uniquerewardcount: 4,
-    effect: (n: number) => {
-      return {
-        corrScoreIncrease: 0.05 * n,
-        blueberrySpeedMult: (1 + n / 60),
-        capIncrease: 3 * +(n > 0),
-        freeCorruptionLevel: n >= 12,
-        shopUpgrade: n >= 12,
-        reinCapIncrease2: 7 * +(n >= 15),
-        ascCapIncrease2: 2 * +(n >= 15)
+    effect: (n, key) => {
+      if (key === 'blueberrySpeedMult') {
+        return (1 + n / 60)
+      } else if (key === 'capIncrease') {
+        return 3 * +(n > 0)
+      } else if (key === 'freeCorruptionLevel') {
+        return n >= 1 ? 1 + 0.2 * n : 0
+      } else if (key === 'shopUpgrade') {
+        return n >= 12
+      } else if (key === 'reinCapIncrease2') {
+        return 7 * +(n >= 15)
+      } else {
+        return 2 * +(n >= 15) // ascCapIncrease2
       }
     }
   },
@@ -391,12 +491,15 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 2,
     uniquerewardcount: 3,
-    effect: (n: number) => {
-      return {
-        octeractPow: (n <= 10) ? 0.02 * n : 0.2 + (n - 10) / 100,
-        offeringBonus: n > 0,
-        obtainiumBonus: n >= 10,
-        shopUpgrade: n >= 10
+    effect: (n, key) => {
+      if (key === 'octeractPow') {
+        return (n <= 10) ? 0.02 * n : 0.2 + (n - 10) / 100
+      } else if (key === 'offeringBonus') {
+        return n > 0
+      } else if (key === 'obtainiumBonus') {
+        return n >= 10
+      } else {
+        return n >= 10 // shopUpgrade
       }
     },
     alternateDescription: () => {
@@ -425,12 +528,15 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 2,
     uniquerewardcount: 3,
-    effect: (n: number) => {
-      return {
-        ascensionSpeedMult: (0.25 * n) / 100,
-        hepteractCap: n > 0,
-        shopUpgrade0: n >= 8,
-        shopUpgrade: n >= 10
+    effect: (n, key) => {
+      if (key === 'ascensionSpeedMult') {
+        return 1 + 0.25 * n / 100
+      } else if (key === 'hepteractCap') {
+        return n > 0
+      } else if (key === 'shopUpgrade') {
+        return n >= 8
+      } else {
+        return n >= 10 // shopUpgrade2
       }
     },
     alternateDescription: () => {
@@ -463,17 +569,25 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 5,
     uniquerewardcount: 8,
-    effect: (n: number) => {
-      return {
-        bonusAmbrosia: +(n > 0),
-        blueberries: Math.floor(n / 5) + +(n > 0),
-        luckBonus: n / 200,
-        additiveLuck: 20 * n,
-        redLuck: 4 * n,
-        blueberrySpeedMult: 1 + n / 25,
-        redSpeedMult: 1 + 2 * n / 100,
-        shopUpgrade: n >= 8,
-        shopUpgrade2: n >= 10
+    effect: (n, key) => {
+      if (key === 'bonusAmbrosia') {
+        return +(n > 0)
+      } else if (key === 'blueberries') {
+        return Math.floor(n / 5) + +(n > 0)
+      } else if (key === 'additiveLuckMult') {
+        return n / 200
+      } else if (key === 'ambrosiaLuck') {
+        return 20 * n
+      } else if (key === 'redLuck') {
+        return 4 * n
+      } else if (key === 'blueberrySpeedMult') {
+        return 1 + n / 25
+      } else if (key === 'redSpeedMult') {
+        return 1 + 2 * n / 100
+      } else if (key === 'shopUpgrade') {
+        return n >= 8
+      } else {
+        return n >= 10 // shopUpgrade2
       }
     }
   },
@@ -496,16 +610,23 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 6,
     uniquerewardcount: 3,
-    effect: (n: number) => {
-      return {
-        freeObtainiumLevels: n,
-        freeOfferingLevels: n,
-        freeSpeedLevels: n,
-        freeCubeLevels: n,
-        freeQuarkLevel: n >= 5 ? 1 : 0,
-        freeInfinityLevels: n,
-        shopUpgrade: n >= 1,
-        topHatUnlock: n >= 10
+    effect: (n, key) => {
+      if (key === 'freeObtainiumLevels') {
+        return n
+      } else if (key === 'freeOfferingLevels') {
+        return n
+      } else if (key === 'freeSpeedLevels') {
+        return n
+      } else if (key === 'freeCubeLevels') {
+        return n
+      } else if (key === 'freeQuarkLevel') {
+        return n >= 5 ? 1 : 0
+      } else if (key === 'freeInfinityLevels') {
+        return n
+      } else if (key === 'shopUpgrade') {
+        return n >= 1
+      } else {
+        return n >= 10 // topHatUnlock
       }
     },
     alternateDescription: () => {
@@ -531,15 +652,21 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 5,
     uniquerewardcount: 3,
-    effect: (n: number) => {
-      return {
-        preserveQuarks: +(n > 0),
-        quarkMult: 1 + 0.02 * n,
-        globalSpeed: 0.12 * n,
-        ascensionSpeed: 0.12 * n,
-        barRequirementMultiplier: 1 - 0.02 * n,
-        tier1Upgrade: n >= 5,
-        tier2Upgrade: n >= 10
+    effect: (n, key) => {
+      if (key === 'preserveQuarks') {
+        return +(n > 0)
+      } else if (key === 'quarkMult') {
+        return 1 + 0.02 * n
+      } else if (key === 'globalSpeed') {
+        return 1 + 0.12 * n
+      } else if (key === 'ascensionSpeed') {
+        return 1 + 0.12 * n
+      } else if (key === 'barRequirementMultiplier') {
+        return 1 - 0.01 * n
+      } else if (key === 'shopUpgrade') {
+        return n >= 5
+      } else {
+        return n >= 10 // shopUpgrade2
       }
     },
     alternateDescription: () => {
@@ -572,19 +699,24 @@ export const singularityChallengeData: Record<
     },
     scalingrewardcount: 3,
     uniquerewardcount: 4,
-    effect: (n: number) => {
-      return {
-        extraFree: 50 * +(n > 0),
-        quarkMult: 1 + 0.06 * n,
-        freeUpgradeMult: 0.06 * n,
-        shopUpgrade: n >= 5,
-        shopUpgrade2: n >= 10,
-        shopUpgrade3: n >= 15
+    effect: (n, key) => {
+      if (key === 'extraFree') {
+        return 50 * +(n > 0)
+      } else if (key === 'quarkMult') {
+        return 1 + 0.06 * n
+      } else if (key === 'freeUpgradeMult') {
+        return 1 + 0.06 * n
+      } else if (key === 'shopUpgrade') {
+        return n >= 5
+      } else if (key === 'shopUpgrade2') {
+        return n >= 10
+      } else {
+        return n >= 15 // shopUpgrade3
       }
     }
   },
   taxmanLastStand: {
-    baseReq: 240,
+    baseReq: 266,
     maxCompletions: 10,
     unlockSingularity: 281,
     achievementPointValue: (n) => {
@@ -592,19 +724,23 @@ export const singularityChallengeData: Record<
     },
     HTMLTag: 'taxmanLastStand',
     singularityRequirement: (baseReq: number, completions: number) => {
-      return baseReq + 4 * completions
+      return baseReq + 2 * completions
     },
     scalingrewardcount: 5,
     uniquerewardcount: 3,
-    effect: (n: number) => {
-      return {
-        horseShoeUnlock: n > 0,
-        shopUpgrade: n >= 5,
-        talismanUnlock: n >= 10,
-        talismanFreeLevel: 25 * n,
-        talismanRuneEffect: 0.03 * n,
-        antiquityOOM: 1 / 50 * n / 10,
-        horseShoeOOM: 1 / 20 * n / 10
+    effect: (n, key) => {
+      if (key === 'shopUpgrade') {
+        return n >= 5
+      } else if (key === 'talismanUnlock') {
+        return n >= 10
+      } else if (key === 'talismanFreeLevel') {
+        return 25 * n
+      } else if (key === 'talismanRuneEffect') {
+        return 0.03 * n
+      } else if (key === 'purpleHoneyLuck') {
+        return 3 * n
+      } else {
+        return 1 - 0.01 * n // purpleBarSize
       }
     },
     alternateDescription: () => {
@@ -630,7 +766,69 @@ export const singularityChallengeData: Record<
       }
       return stringText
     }
+  },
+  barDependence: {
+    baseReq: 288,
+    maxCompletions: 10,
+    unlockSingularity: 290,
+    achievementPointValue: (n) => {
+      return 50 * n
+    },
+    HTMLTag: 'barDependence',
+    singularityRequirement: (baseReq: number, completions: number) => {
+      return baseReq + completions
+    },
+    scalingrewardcount: 3,
+    uniquerewardcount: 2,
+    effect: (n, key) => {
+      if (key === 'shopUpgrade') {
+        return n >= 2
+      }
+      if (key === 'blueberries') {
+        return n
+      }
+      if (key === 'purpleHoneyLuck') {
+        return 50 * +(n > 0)
+      }
+      return 1 - 0.05 * n // purpleAmbrosiaCostReduction
+    },
+    alternateDescription: () => {
+      const baseDesc = i18next.t('singularityChallenge.data.barDependence.description')
+      const warningText = i18next.t('singularityChallenge.data.barDependence.warning')
+
+      const introText = i18next.t('singularityChallenge.data.barDependence.barIntro')
+      const introText2 = i18next.t('singularityChallenge.data.barDependence.barIntro2')
+
+      const blueberryReq = calculateRequiredBlueberryTimeEXALT()
+      const secs = (calculateAmbrosiaRewardLuck() / 100
+        + getSingularityChallengeEffect('noAmbrosiaUpgrades', 'bonusAmbrosia')) * 0.01
+      const barMod1Text = i18next.t('singularityChallenge.data.barDependence.barMod1', {
+        secs: format(secs, 2, true),
+        req: format(blueberryReq, 0, true)
+      })
+
+      const redReq = calculateRequiredRedAmbrosiaTimeEXALT()
+      const secs2 = calculateRedAmbrosiaRewardLuck() / 2000
+      const barMod2Text = i18next.t('singularityChallenge.data.barDependence.barMod2', {
+        secs: format(secs2, 2, true),
+        req: format(redReq, 0, true)
+      })
+
+      const purpleReq = calculateBarEXALTPurpleHoneyRequirement()
+      const barMod3Text = i18next.t('singularityChallenge.data.barDependence.barMod3', {
+        req: format(purpleReq, 0, true)
+      })
+      return `${baseDesc}<br>${warningText}<br>${introText}<br>${introText2}<br>${barMod1Text}<br>${barMod2Text}<br>${barMod3Text}`
+    }
   }
+}
+
+export const getSingularityChallengeEffect = <
+  T extends SingularityChallengeDataKeys,
+  K extends keyof SingularityChallengeRewards[T]
+>(challenge: T, key: K): SingularityChallengeRewards[T][K] => {
+  const completions = player.singularityChallenges[challenge].completions
+  return singularityChallengeData[challenge].effect(completions, key) as SingularityChallengeRewards[T][K]
 }
 
 export const maxAPFromChallenges = Object.values(singularityChallengeData).reduce(

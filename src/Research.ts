@@ -2,25 +2,15 @@ import Decimal, { type DecimalSource } from 'break_infinity.js'
 import i18next from 'i18next'
 import { getAchievementReward } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { getResetResearches } from './Reset'
+import { activeCorruptionLevel, corruptionEffect } from './Corruptions'
+import type { resetTiers } from './Reset'
 import { runes } from './Runes'
+import { getShopUpgradeEffects } from './Shop'
 import { calculateSingularityDebuff } from './singularity'
 import { format, player } from './Synergism'
 import { revealStuff, updateChallengeDisplay } from './UpdateHTML'
 import { sortDecimalWithIndices, updateClassList } from './Utility'
-
-interface IResearchData {
-  baseCost: Decimal
-  maxLevel: number
-  // Some research (e.g. 200) can have custom growth (i.e. nonconstant)
-  // may as well specify in general.
-  buyToLevel: (budget: Decimal, baseCost: Decimal, currLevel: number, maxLevel: number) => number
-  // A given levelsBuyable should correspond to a cost for that many levels
-  // It is generally difficult to calculate inverses since budget != cost for levels
-  // So we should choose functions for which it is easy to compute the inverse.
-  costForLevels: (baseCost: Decimal, currLevel: number, buyTo: number) => Decimal
-  unlocked: () => boolean
-}
+import { Globals as G } from './Variables'
 
 // TODO: Maybe we should just manually create this map? I was a bit lazy to port all the values
 // dprint-ignore
@@ -123,6 +113,8 @@ interface IResearchData {
   // So we should choose functions for which the inverse is analytical (see below functions)
   costForLevels: (baseCost: Decimal, currLevel: number, buyTo: number) => Decimal
   unlocked: () => boolean
+  // Smallest reset tier which resets this research
+  minimumResetTier: keyof typeof resetTiers
 }
 
 // Requires degree != 0, should only be used for positive degree, though
@@ -131,7 +123,11 @@ const polyBuyToLevel = (
 ): (budget: Decimal, baseCost: Decimal, currLevel: number, maxLevel: number) => number => {
   return (budget: Decimal, baseCost: Decimal, currLevel: number, maxLevel: number) => {
     const effectiveBudget = budget.add(baseCost.times(Math.pow(currLevel, degree)))
-    return Math.min(maxLevel, Decimal.floor(Decimal.pow(effectiveBudget.div(baseCost), 1 / degree)).toNumber())
+    // Floating point imprecision sometimes causes the floor to return something less than the current level.
+    return Math.max(
+      currLevel,
+      Math.min(maxLevel, Decimal.floor(Decimal.pow(effectiveBudget.div(baseCost), 1 / degree)).toNumber())
+    )
   }
 }
 
@@ -139,7 +135,7 @@ const polyBuyToLevel = (
 const polyCostForLevels = (degree: number): (baseCost: Decimal, currlevel: number, toBuy: number) => Decimal => {
   return (baseCost: Decimal, currLevel: number, buyTo: number) => {
     if (currLevel === buyTo) {
-      return new Decimal(0)
+      return new Decimal()
     }
     return baseCost.times(Math.pow(buyTo, degree) - Math.pow(currLevel, degree))
   }
@@ -180,13 +176,51 @@ const researchUnlockRanges: RangeCondition[] = [
   { range: [186, 200], condition: () => player.highestchallengecompletions[14] > 0 }
 ]
 
+// Researches which reset on Ascension
+// dprint-ignore
+const ascensionResetResearches = [
+  6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25,                           // row 1
+  26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,                                       // row 2
+  51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 63, 64, 65,                                   // row 3
+  76, 81, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 98,                               // row 4
+  101, 102, 103, 104, 106, 107, 108, 109, 110, 116, 117, 118, 121, 122, 123,                // row 5
+  126, 127, 128, 129, 131, 132, 133, 134, 136, 139, 141, 142, 143, 144, 146, 147, 148, 149, // row 6
+  151, 154, 156, 157, 158, 159, 161, 162, 163, 164, 166, 169, 171, 172, 173, 174,           // row 7
+  176, 177, 178, 179, 181, 184, 186, 187, 188, 189, 191, 193, 194, 196, 199                 // row 8
+]
+
+// Researches which reset on Singularity, but not on Ascension
+// dprint-ignore
+const singularityResetResearches = [
+  1, 2, 3, 4, 5, 18, 19, 20,              // row 1
+  39, 40,                                 // row 2
+  66, 67, 68, 69, 70,                     // row 3
+  77, 78, 79, 80, 83, 84, 95,             // row 4
+  105, 111, 112, 113, 114, 115, 119, 120, // row 5
+  137, 138, 140,                          // row 6
+  152, 153, 155, 160, 165, 167, 168, 170, // row 7
+  182, 183, 185, 192, 197, 198, 200       // row 8
+]
+
+// Every other research never resets
+
 const createResearchDataMap = (
   rangeLC: RangeLevelAndCost[],
   rangeU: RangeCondition[],
   costs: DecimalSource[],
-  maxLevels: DecimalSource[]
+  maxLevels: DecimalSource[],
+  ascensionResets: number[],
+  singularityResets: number[]
 ): Record<number, IResearchData> => {
   const dataMap: Record<number, IResearchData> = {}
+
+  const resetTierLookup: Record<number, keyof typeof resetTiers> = {}
+  for (const i of ascensionResets) {
+    resetTierLookup[i] = 'ascension'
+  }
+  for (const i of singularityResets) {
+    resetTierLookup[i] = 'singularity'
+  }
 
   const unlockLookup: Record<number, () => boolean> = {}
   for (const { range, condition } of rangeU) {
@@ -214,7 +248,8 @@ const createResearchDataMap = (
         maxLevel: Number(maxLevels[i]),
         buyToLevel: levelCostFunctions.level,
         costForLevels: levelCostFunctions.cost,
-        unlocked: unlockFunction
+        unlocked: unlockFunction,
+        minimumResetTier: resetTierLookup[i] ?? 'never'
       }
     }
   }
@@ -226,12 +261,27 @@ export const researchData = createResearchDataMap(
   researchLevelCostRanges,
   researchUnlockRanges,
   researchBaseCosts,
-  researchMaxLevels
+  researchMaxLevels,
+  ascensionResetResearches,
+  singularityResetResearches
 )
 
 export const isResearchUnlocked = (index: number): boolean => {
+  // Every research is unlocked once the player has done a Singularity
+  if (player.highestSingularityCount > 0) {
+    return true
+  }
   const unlockFunction = researchData[index].unlocked
   return unlockFunction ? unlockFunction() : false
+}
+
+const researchCostMultiplier = (index: number) => {
+  const illiteracy = researchData[index].minimumResetTier === 'ascension'
+    ? corruptionEffect(activeCorruptionLevel(), 'illiteracy')
+    : G.dOne
+  return illiteracy
+    .times(calculateSingularityDebuff('Researches'))
+    .times(getShopUpgradeEffects('obtainiumAuto', 'researchCostMult'))
 }
 
 const getBuyableResearchLevel = (index: number): number => {
@@ -241,9 +291,7 @@ const getBuyableResearchLevel = (index: number): number => {
   const maxLevel = researchData[index].maxLevel
   const budget = player.obtainium
 
-  const researchCostMulti = calculateSingularityDebuff('Researches')
-
-  return buyToLevelFunc(budget, baseCost.times(researchCostMulti), currLevel, maxLevel)
+  return buyToLevelFunc(budget, baseCost.times(researchCostMultiplier(index)), currLevel, maxLevel)
 }
 
 const getCostForResearchLevels = (index: number, buyTo: number): Decimal => {
@@ -251,17 +299,42 @@ const getCostForResearchLevels = (index: number, buyTo: number): Decimal => {
   const baseCost = researchData[index].baseCost
   const currLevel = player.researches[index]
 
-  const researchCostMulti = calculateSingularityDebuff('Researches')
-
-  return costForLevelsFunc(baseCost.times(researchCostMulti), currLevel, buyTo)
+  return costForLevelsFunc(baseCost.times(researchCostMultiplier(index)), currLevel, buyTo)
 }
 
 export const researchOrderByCost: number[] = sortDecimalWithIndices(researchBaseCosts)
 
+let roombaHighlightIndex = 0
+
+export const setResearchRoombaHighlight = (index: number) => {
+  if (roombaHighlightIndex === index) {
+    return
+  }
+
+  if (roombaHighlightIndex > 0) {
+    DOMCacheGetOrSet(`res${roombaHighlightIndex}`).classList.remove('researchRoomba')
+  }
+
+  if (index > 0) {
+    DOMCacheGetOrSet(`res${index}`).classList.add('researchRoomba')
+  }
+
+  roombaHighlightIndex = index
+}
+
+export const syncResearchRoombaHighlight = (previous: number) => {
+  const current = player.autoResearch || 1
+
+  if (previous !== current) {
+    DOMCacheGetOrSet(`res${previous}`).classList.remove('researchRoomba')
+  }
+
+  DOMCacheGetOrSet(`res${current}`).classList.add('researchRoomba')
+}
+
 // For mode 'manual'
 export const updateResearchAuto = (index: number) => {
-  DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
-  DOMCacheGetOrSet(`res${index}`).classList.add('researchRoomba')
+  setResearchRoombaHighlight(index)
   player.autoResearch = index
 
   // Research is maxed
@@ -276,19 +349,15 @@ export const updateResearchAuto = (index: number) => {
   }
 }
 
-export const updateResearchRoomba = () => {
-  if (isResearchMaxed(player.autoResearch) || !isResearchUnlocked(player.autoResearch)) {
-    DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
-    player.roombaResearchIndex = Math.min(researchOrderByCost.length - 1, player.roombaResearchIndex + 1)
-    player.autoResearch = researchOrderByCost[player.roombaResearchIndex]
+export const advanceResearchRoomba = () => {
+  const maxIndex = researchOrderByCost.length - 1
+  player.roombaResearchIndex = player.roombaResearchIndex % maxIndex + 1
+  const checkedResearch = researchOrderByCost[player.roombaResearchIndex]
+  if (!isResearchMaxed(checkedResearch) && isResearchUnlocked(checkedResearch)) {
+    player.autoResearch = checkedResearch
   }
 
-  // Loops us back to the start
-  if (player.roombaResearchIndex === 200 && !isResearchUnlocked(200)) {
-    player.roombaResearchIndex = 0
-    player.autoResearch = researchOrderByCost[player.roombaResearchIndex]
-  }
-  DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.add('researchRoomba')
+  setResearchRoombaHighlight(player.autoResearch)
 }
 
 /**
@@ -298,19 +367,120 @@ export const updateResearchRoomba = () => {
 export const roombaResearchEnabled = (): boolean => {
   return (player.cubeUpgrades[9] === 1 || player.highestSingularityCount > 10)
 }
+
+const getResearchBuyAmount = (auto: boolean, hover: boolean, buyMaxOverride?: boolean) => {
+  const shouldBuyMax = buyMaxOverride ?? (player.researchBuyMaxToggle || auto || hover)
+  return shouldBuyMax ? Number.POSITIVE_INFINITY : 1
+}
+
+const getResearchDetails = (index: number, auto = false, buyMaxOverride?: boolean) => {
+  const buyAmount = getResearchBuyAmount(auto, false, buyMaxOverride)
+  const description = i18next.t(`researches.descriptions.${index}`)
+
+  let levelToBuy = getBuyableResearchLevel(index)
+  levelToBuy = Math.min(researchData[index].maxLevel, levelToBuy, player.researches[index] + buyAmount)
+
+  let obtainiumCost: Decimal
+
+  // If levelToBuy is = current level, either we've already maxxed the upgrade
+  // OR we cannot afford any levels. Check which one.
+  if (levelToBuy === player.researches[index]) {
+    // If max level, we don't actually need to change anything
+    // If not max level, we need to show the cost of the next level
+    if (!isResearchMaxed(index)) {
+      levelToBuy += 1
+      obtainiumCost = getCostForResearchLevels(index, levelToBuy)
+    } else {
+      obtainiumCost = new Decimal()
+    }
+  } else {
+    obtainiumCost = getCostForResearchLevels(index, levelToBuy)
+  }
+
+  let costText = i18next.t('researches.cost', {
+    x: format(obtainiumCost.ceil(), 0, false),
+    y: format(levelToBuy - player.researches[index], 0, true)
+  })
+  let costColor = 'limegreen'
+  let levelColor = 'white'
+
+  if (isResearchMaxed(index)) {
+    costColor = 'Gold'
+    levelColor = 'plum'
+    costText += i18next.t('researches.maxed')
+  } else if (player.obtainium.lt(obtainiumCost)) {
+    costColor = 'var(--crimson-text-color)'
+  }
+
+  const levelText = i18next.t('researches.level', {
+    x: player.researches[index],
+    y: researchData[index].maxLevel
+  })
+  const minimumResetTier = researchData[index].minimumResetTier
+  const resets = minimumResetTier === 'ascension'
+
+  return {
+    description,
+    costText,
+    costColor,
+    levelText,
+    levelColor,
+    obtainiumCost,
+    resetText: getResetText(minimumResetTier),
+    resets
+  }
+}
+
+// Only name the reset tier once the player has reached it
+const getResetText = (tier: keyof typeof resetTiers) => {
+  switch (tier) {
+    case 'ascension':
+      return player.highestchallengecompletions[10] > 0 || player.highestSingularityCount > 0
+        ? i18next.t('researches.resetsOnAscension')
+        : i18next.t('researches.resets')
+    case 'singularity':
+      return runes.antiquities.level > 0 || player.highestSingularityCount > 0
+        ? i18next.t('researches.resetsOnSingularity')
+        : i18next.t('researches.resets')
+    default:
+      return i18next.t('researches.doesNotReset')
+  }
+}
+
+const updateResearchButtonState = (index: number, obtainiumCost: Decimal) => {
+  const p = `res${index}`
+
+  if (isResearchMaxed(index)) {
+    updateClassList(p, ['researchMaxed'], ['researchAvailable', 'researchPurchased', 'researchPurchasedAvailable'])
+  } else {
+    if (player.researches[index] > 0) {
+      updateClassList(p, ['researchPurchased', 'researchPurchasedAvailable'], [
+        'researchAvailable',
+        'researchMaxed'
+      ])
+    } else {
+      updateClassList(p, ['researchAvailable'], ['researchPurchased', 'researchMaxed'])
+    }
+  }
+
+  if (player.obtainium.lt(obtainiumCost) && !isResearchMaxed(index)) {
+    updateClassList(p, [], ['researchMaxed', 'researchAvailable', 'researchPurchasedAvailable'])
+  }
+}
+
 /**
  * Attempts to buy the research of the index selected. This is hopefully an improvement over buyResearch. Fuck
  * @param index
  * @param auto
  * @returns
  */
-export const buyResearch = (index: number, auto: boolean, hover: boolean) => {
+export const buyResearch = (index: number, auto: boolean, hover: boolean, buyMaxOverride?: boolean) => {
   if (isResearchMaxed(index) || !isResearchUnlocked(index)) {
     return
   }
 
   // Get our costs, and determine if anything is purchasable.
-  const buyAmount = (player.researchBuyMaxToggle || auto || hover) ? Number.POSITIVE_INFINITY : 1
+  const buyAmount = getResearchBuyAmount(auto, hover, buyMaxOverride)
   const maxLevel = researchData[index].maxLevel
 
   let levelToBuy = getBuyableResearchLevel(index)
@@ -320,14 +490,14 @@ export const buyResearch = (index: number, auto: boolean, hover: boolean) => {
 
   // If the cost is 0, then we are only able to buy up to currentLevel, which is true
   // when the cost to the next level is too prohibitive (getCost is cumulative)
-  const canBuy = researchCost.gt(0)
+  const canBuy = researchCost.gt(new Decimal())
 
   if (canBuy) {
     player.researches[index] = levelToBuy
     player.obtainium = player.obtainium.sub(researchCost)
     // Quick check after upgrading for max. This is to update any automation regardless of auto state
-    if (isResearchMaxed(index)) {
-      DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
+    if (isResearchMaxed(index) && roombaHighlightIndex === index) {
+      setResearchRoombaHighlight(0)
     }
 
     researchDescriptions(index, auto)
@@ -349,73 +519,35 @@ export const buyResearch = (index: number, auto: boolean, hover: boolean) => {
 
 export const isResearchMaxed = (index: number) => player.researches[index] >= researchData[index].maxLevel
 
-export const researchDescriptions = (index: number, auto = false) => {
-  const buyAmount = (player.researchBuyMaxToggle || auto) ? Number.POSITIVE_INFINITY : 1
+export const researchDescriptions = (index: number, auto = false, buyMaxOverride?: boolean) => {
+  const details = getResearchDetails(index, auto, buyMaxOverride)
+  updateResearchButtonState(index, details.obtainiumCost)
 
-  const y = i18next.t(`researches.descriptions.${index}`)
-  const p = `res${index}`
-
-  let levelToBuy = getBuyableResearchLevel(index)
-  levelToBuy = Math.min(researchData[index].maxLevel, levelToBuy, player.researches[index] + buyAmount)
-
-  let obtainiumCost = new Decimal(0)
-
-  // If levelToBuy is = current level, either we've already maxxed the upgrade
-  // OR we cannot afford any levels. Check which one.
-  if (levelToBuy === player.researches[index]) {
-    // If max level, we don't actually need to change anything
-    // If not max level, we need to show the cost of the next level
-    if (!isResearchMaxed(index)) {
-      levelToBuy += 1
-      obtainiumCost = getCostForResearchLevels(index, levelToBuy)
-    }
-  } else {
-    obtainiumCost = getCostForResearchLevels(index, levelToBuy)
-  }
-
-  let z = i18next.t('researches.cost', {
-    x: format(obtainiumCost, 0, false),
-    y: format(levelToBuy - player.researches[index], 0, true)
-  })
-
-  if (isResearchMaxed(index)) {
-    DOMCacheGetOrSet('researchcost').style.color = 'Gold'
-    DOMCacheGetOrSet('researchinfo3').style.color = 'plum'
-    updateClassList(p, ['researchMaxed'], ['researchAvailable', 'researchPurchased', 'researchPurchasedAvailable'])
-    z += i18next.t('researches.maxed')
-  } else {
-    DOMCacheGetOrSet('researchcost').style.color = 'limegreen'
-    DOMCacheGetOrSet('researchinfo3').style.color = 'white'
-    if (player.researches[index] > 0) {
-      updateClassList(p, ['researchPurchased', 'researchPurchasedAvailable'], [
-        'researchAvailable',
-        'researchMaxed'
-      ])
-    } else {
-      updateClassList(p, ['researchAvailable'], ['researchPurchased', 'researchMaxed'])
-    }
-  }
-
-  if (player.obtainium.lt(obtainiumCost) && !isResearchMaxed(index)) {
-    DOMCacheGetOrSet('researchcost').style.color = 'var(--crimson-text-color)'
-    updateClassList(p, [], ['researchMaxed', 'researchAvailable', 'researchPurchasedAvailable'])
-  }
-
-  DOMCacheGetOrSet('researchinfo2').innerHTML = y
-  DOMCacheGetOrSet('researchcost').textContent = z
-  DOMCacheGetOrSet('researchinfo3').textContent = i18next.t('researches.level', {
-    x: player.researches[index],
-    y: researchData[index].maxLevel
-  })
+  DOMCacheGetOrSet('researchinfo2').innerHTML = details.description
+  DOMCacheGetOrSet('researchcost').style.color = details.costColor
+  DOMCacheGetOrSet('researchcost').textContent = details.costText
+  DOMCacheGetOrSet('researchinfo3').style.color = details.levelColor
+  DOMCacheGetOrSet('researchinfo3').textContent = details.levelText
   const resetInfo = DOMCacheGetOrSet('researchinfo4')
 
-  if (getResetResearches().includes(index)) {
-    resetInfo.textContent = i18next.t('researches.resets')
+  resetInfo.innerHTML = details.resetText
+  if (details.resets) {
     resetInfo.classList.remove('crimsonText')
   } else {
-    resetInfo.textContent = i18next.t('researches.doesNotReset')
     resetInfo.classList.add('crimsonText')
   }
+}
+
+export const researchModalHTML = (index: number, auto = false, buyMaxOverride?: boolean) => {
+  const details = getResearchDetails(index, auto, buyMaxOverride)
+  const resetClass = details.resets ? '' : ' crimsonText'
+
+  return `<div class="researchModal">
+    <div class="researchModalDescription">${details.description}</div>
+    <div style="color: ${details.costColor}">${details.costText}</div>
+    <div style="color: ${details.levelColor}">${details.levelText}</div>
+    <div class="${resetClass.trim()}">${details.resetText}</div>
+  </div>`
 }
 
 // This should only happen in rare cases, when an update changes max levels
@@ -444,4 +576,16 @@ export const updateResearchBG = (index: number) => {
   } else {
     updateClassList(id, [], ['researchPurchased', 'researchMaxed'])
   }
+}
+
+export const toggleMaxedResearches = (): void => {
+  const toggle = DOMCacheGetOrSet('toggleMaxedResearches')
+  const hideMaxed = toggle.getAttribute('aria-pressed') !== 'true'
+  const i18nKey = hideMaxed ? 'researches.maxedResearchesHide' : 'researches.maxedResearchesShow'
+
+  toggle.setAttribute('aria-pressed', `${hideMaxed}`)
+  toggle.setAttribute('i18n', i18nKey)
+  toggle.textContent = i18next.t(i18nKey)
+  toggle.style.border = `2px solid ${hideMaxed ? 'red' : 'green'}`
+  DOMCacheGetOrSet('researchtable').classList.toggle('hideMaxedResearches', hideMaxed)
 }

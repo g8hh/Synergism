@@ -1,20 +1,29 @@
-/// <reference types="@types/cloudflare-turnstile" />
-
 import DOMPurify from 'dompurify'
 import i18next from 'i18next'
-import { z } from 'zod'
+import * as z from 'zod'
+import { type AccountActionId, renderAccountActions } from './account/actions'
+import { achievementLevel } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { calculateAmbrosiaGenerationSpeed, calculateOffline, calculateRedAmbrosiaGenerationSpeed } from './Calculate'
-import { isSynergismCC, platform } from './Config'
+import {
+  afterOfflineProgress,
+  calculateAmbrosiaGenerationSpeed,
+  calculateGlobalSpeedMult,
+  calculateOffline,
+  calculateRedAmbrosiaGenerationSpeed
+} from './Calculate'
+import { isSynergismCC } from './Config'
 import { updateGlobalsIsEvent } from './Event'
+import { storageGetItem, storageRemoveItem, storageSetItem } from './events/storage-events'
 import { addTimers, automaticTools } from './Helper'
 import { exportData, importSynergism, saveFilename } from './ImportExport'
-import { updateLotusDisplay } from './purchases/ConsumablesTab'
+import { updateBellButton, updateLotusDisplay } from './purchases/ConsumablesTab'
+import { setLotusBalanceLoading, setPseudoCoinBalanceLoading } from './purchases/PseudoCoinBalances'
 import { updatePseudoCoins } from './purchases/UpgradesSubtab'
 import { QuarkHandler, setPersonalQuarkBonus } from './Quark'
 import { updatePrestigeCount, updateReincarnationCount, updateTranscensionCount } from './Reset'
+import { flushSaveStorage, getStoredSave } from './saves/SaveStorage'
 import { format, player, saveSynergy } from './Synergism'
-import { Alert, Confirm, Notification } from './UpdateHTML'
+import { Alert, Confirm, Notification, Prompt } from './UpdateHTML'
 import { assert, btoa, displayHTMLError, isomorphicDecode, memoize } from './Utility'
 
 export type PseudoCoinConsumableNames = 'HAPPY_HOUR_BELL'
@@ -37,12 +46,21 @@ interface Consumable {
   displayName: string
 }
 
+interface PendingTimeSkip {
+  consumable: string
+  id: string
+  createdAt: number
+}
+
 interface Save {
   id: number
   name: string
   uploadedAt: string
+  updatedAt: string
   save: string
   actionButtons?: {
+    rename: HTMLButtonElement
+    refresh: HTMLButtonElement
     download: HTMLButtonElement
     load: HTMLButtonElement
     delete: HTMLButtonElement
@@ -76,18 +94,25 @@ let loggedIn = false
 let tips = 0
 let ownedLotus = 0
 let usedLotus = 0
+let lotusInventoryLoaded = false
+let ownedBells = 0
 let subscription: SubscriptionMetadata = null
 let lotusTimeExpiresAt: number | undefined = undefined
+const boundLogoutButtons = new WeakSet<HTMLElement>()
+const signedOutAccountActions: AccountActionId[] = ['login', 'register', 'forgotPassword']
 
 const cloudSaves: Save[] = []
 
-const isLoggedIn = () => loggedIn
+export const isLoggedIn = () => loggedIn
 
 export const getTips = () => tips
 export const setTips = (newTips: number) => tips = newTips
 
 export const getOwnedLotus = () => ownedLotus
 export const getUsedLotus = () => usedLotus
+export const isLotusInventoryLoaded = () => lotusInventoryLoaded
+export const getOwnedBells = () => ownedBells
+export const setOwnedBells = (newOwnedBells: number) => ownedBells = newOwnedBells
 export const getLotusTimeExpiresAt = () => lotusTimeExpiresAt
 
 export const getSubMetadata = () => subscription
@@ -107,14 +132,17 @@ export const allDurableConsumables: Record<PseudoCoinConsumableNames, Consumable
 const messageSchema = z.preprocess(
   (data, ctx) => {
     if (typeof data === 'string') {
+      if (data === 'pong') return data
       try {
         return JSON.parse(data)
       } catch {}
     }
 
     ctx.addIssue({ code: 'custom', message: 'Invalid message received.' })
+    return undefined
   },
   z.union([
+    z.literal('pong'),
     /** Received after the user connects to the websocket */
     z.object({ type: z.literal('join') }),
     z.object({ type: z.literal('error'), message: z.string() }),
@@ -141,7 +169,7 @@ const messageSchema = z.preprocess(
       }).array(),
       tips: z.number().int().nonnegative(),
       inventory: z.object({
-        type: z.literal('LOTUS'),
+        type: z.string(),
         amount: z.number().int().gte(0),
         used: z.number().int().gte(0)
       }).array()
@@ -158,7 +186,7 @@ const messageSchema = z.preprocess(
     z.object({
       type: z.literal('time-skip'),
       consumableName: z.string(),
-      id: z.string().uuid(),
+      id: z.uuid(),
       amount: z.number().int()
     }),
 
@@ -181,6 +209,12 @@ const messageSchema = z.preprocess(
     z.object({
       type: z.literal('lotus-active'),
       remainingMs: z.number()
+    }),
+
+    /** Received when the player's count of free Happy Hour Bells changes */
+    z.object({
+      type: z.literal('happy-hour-bells'),
+      amount: z.number().int().gte(0)
     }),
 
     /** A warning - should *NOT* disconnect from the WebSocket */
@@ -248,7 +282,7 @@ interface BonusTypes {
   quark: number
 }
 
-export type SubscriptionProvider = 'paypal' | 'stripe' | 'patreon' | 'steam'
+export type SubscriptionProvider = 'paypal' | 'stripe' | 'patreon' | 'steam' | 'apple' | 'google' | 'xsolla'
 
 export type SubscriptionMetadata = {
   provider: SubscriptionProvider
@@ -298,15 +332,44 @@ async function fetchMeRoute () {
   return await fetch('https://synergism.cc/api/v1/users/me', { credentials: 'same-origin' }).catch(() => fallback)
 }
 
-export async function handleLogin () {
-  generateSubtabBrowser: {
-    const subtabElement = document.querySelector('#accountSubTab div#left.scrollbarX')!
+export async function claimLink (code: string) {
+  const claim = (force: boolean) =>
+    fetch('https://synergism.cc/login/link/claim', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ code, force })
+    })
 
-    const logoutElement = document.getElementById('logoutButton')
-    if (logoutElement !== null) {
-      logoutElement.addEventListener('click', logout, { once: true })
-      document.getElementById('accountSubTab')?.appendChild(logoutElement)
+  let response = await claim(false)
+
+  if (response.status === 409) {
+    const { error } = await response.json()
+    if (!await Confirm(error)) return
+    response = await claim(true)
+  }
+
+  if (!response.ok) {
+    await displayHTMLError(response)
+    return
+  }
+
+  await handleLogin()
+}
+
+export async function handleLogin () {
+  const wasLoggedIn = loggedIn
+
+  generateSubtabBrowser: {
+    const subtabElement = DOMCacheGetOrSet('accountInfo')
+    const oauthLoginElement = DOMCacheGetOrSet('accountOAuthLogin')
+
+    const logoutElement = DOMCacheGetOrSet('logoutButton')
+    if (!boundLogoutButtons.has(logoutElement)) {
+      boundLogoutButtons.add(logoutElement)
+      logoutElement.addEventListener('click', logout)
     }
+    DOMCacheGetOrSet('accountSubTab').appendChild(logoutElement)
 
     const response = await fetchMeRoute()
 
@@ -318,8 +381,11 @@ export async function handleLogin () {
 
     loggedIn = hasAccount(account)
     subscription = sub
+    logoutElement.style.display = loggedIn ? '' : 'none'
+    oauthLoginElement.style.display = 'none'
+    renderAccountActions([])
 
-    if (!isSynergismCC && platform === 'browser') {
+    if (!isSynergismCC && PLATFORM === 'browser' && !DEV) {
       subtabElement.innerHTML = i18next.t('account.loginNotAvailable')
     } else if (hasAccount(account)) {
       if (account.member == null || Object.keys(account.member).length === 0) {
@@ -349,6 +415,23 @@ export async function handleLogin () {
         user = DOMPurify.sanitize(user)
       }
 
+      let emailStatus = ''
+      let email: string | undefined
+      const accountActions: AccountActionId[] = []
+
+      if (isEmailAccount(account)) {
+        email = account.member.email
+        emailStatus = i18next.t(account.member.verified ? 'account.email.verified' : 'account.email.notVerified')
+
+        if (!account.member.verified) {
+          accountActions.push('resendVerification')
+        }
+      }
+
+      if (linkedAccounts.includes('email')) {
+        accountActions.push('changePassword')
+      }
+
       const boosted = discord && (Boolean(account.member?.premium_since) || account.member?.roles.includes(BOOSTER))
       // It is possible for someone to have the roles through the Patreon integration with Discord, yet not have their
       // patreon linked to their Synergism (Discord/email) account.
@@ -373,7 +456,7 @@ export async function handleLogin () {
       }
 
       subtabElement.innerHTML = `
-      ${user ? i18next.t('account.helloUser', { username: user }) : i18next.t('account.helloNoUser')}
+      ${user ? i18next.t('account.helloUser', { username: user }) : i18next.t('account.helloNoUser')} ${emailStatus}
       ${i18next.t('account.personalQuarkBonus', { percent: format(bonus.quark, 2, true) })}
 
       ${i18next.t('account.subscriptionBonuses')}
@@ -440,17 +523,26 @@ export async function handleLogin () {
         `
       }
 
+      if (linkedAccounts.length > 0) {
+        const linkedNames = linkedAccounts.map((name) => i18next.t(`account.platforms.${name}`, { defaultValue: name }))
+        subtabElement.insertAdjacentHTML(
+          'beforeend',
+          `<div>${i18next.t('account.linkedAccounts', { accounts: linkedNames.join(', ') })}</div>`
+        )
+      }
+
       const allPlatforms = [
         { name: 'discord', direct: false },
-        { name: 'patreon', direct: false },
-        { name: 'steam', direct: true }
+        { name: 'patreon', direct: false }
       ]
 
-      const unlinkedPlatforms = platform === 'steam'
-        ? allPlatforms.filter((p) => p.direct && !linkedAccounts.includes(p.name))
-        : allPlatforms.filter((p) => !linkedAccounts.includes(p.name))
+      if (PLATFORM === 'steam') {
+        allPlatforms.push({ name: 'steam', direct: true })
+      }
 
-      if (unlinkedPlatforms.length > 0) {
+      const unlinkedPlatforms = allPlatforms.filter((p) => !linkedAccounts.includes(p.name))
+
+      if (PLATFORM !== 'mobile' && unlinkedPlatforms.length > 0) {
         const linkAccountsSection = document.createElement('div')
 
         const buttonContainer = document.createElement('div')
@@ -511,7 +603,7 @@ export async function handleLogin () {
               if (button.dataset.loading) return
               button.dataset.loading = 'true'
 
-              if (platform === 'steam') {
+              if (PLATFORM === 'steam') {
                 const { getSessionTicket } = await import('./steam/steam')
                 const sessionTicket = await getSessionTicket()
 
@@ -532,19 +624,14 @@ export async function handleLogin () {
                 })
 
                 if (directLoginResponse.redirected || directLoginResponse.ok) {
-                  location.reload()
+                  await handleLogin()
                 } else {
                   await displayHTMLError(directLoginResponse)
                 }
               }
             } else {
-              if (platform === 'steam') {
-                const res = await fetch('https://synergism.cc/login/link-token', { credentials: 'include' })
-                const { token } = await res.json()
-                window.open(
-                  `https://synergism.cc/login?with=${unlinked.name}&link=true&platform=steam&link_token=${token}`,
-                  '_blank'
-                )
+              if (PLATFORM === 'steam') {
+                window.open(`https://synergism.cc/login?with=${unlinked.name}&link=true&platform=steam`, '_blank')
               } else {
                 window.open(`https://synergism.cc/login?with=${unlinked.name}&link=true`, '_blank')
               }
@@ -556,48 +643,50 @@ export async function handleLogin () {
         linkAccountsSection.appendChild(buttonContainer)
         subtabElement.appendChild(linkAccountsSection)
       }
+
+      renderAccountActions(accountActions, email)
     } else if (!hasAccount(account)) {
       // User is not logged in
-      subtabElement.querySelector('#open-register')?.addEventListener('click', () => {
-        subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'flex')
-        subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'none')
-        subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'none')
-        renderCaptcha()
-      })
+      subtabElement.innerHTML = ''
+      renderAccountActions(signedOutAccountActions)
 
-      subtabElement.querySelector('#open-signin')?.addEventListener('click', () => {
-        subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'none')
-        subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'flex')
-        subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'none')
-        renderCaptcha()
-      })
-
-      subtabElement.querySelector('#open-forgotpassword')?.addEventListener('click', () => {
-        subtabElement.querySelector<HTMLElement>('#register')?.style.setProperty('display', 'none')
-        subtabElement.querySelector<HTMLElement>('#login')?.style.setProperty('display', 'none')
-        subtabElement.querySelector<HTMLElement>('#forgotpassword')?.style.setProperty('display', 'flex')
-        renderCaptcha()
-      })
-
-      if (platform === 'steam') {
-        for (const link of subtabElement.querySelectorAll<HTMLAnchorElement>('a[href*="synergism.cc/login?with="]')) {
+      if (PLATFORM === 'steam') {
+        for (const link of oauthLoginElement.querySelectorAll<HTMLAnchorElement>('a')) {
           const url = new URL(link.href)
           url.searchParams.set('platform', 'steam')
           link.href = url.toString()
         }
+      }
+
+      if (PLATFORM !== 'mobile') {
+        oauthLoginElement.style.display = ''
       }
     } else {
       assert(false, `unknown account type ${account.accountType}`)
     }
   }
 
-  if (loggedIn) {
+  if (loggedIn && !wasLoggedIn) {
+    setLotusBalanceLoading()
+    updatePseudoCoins().catch(console.error)
     handleWebSocket()
     handleCloudSaves()
+
+    const { finishPurchaseAuthentication } = await import('./purchases/PurchaseAuth')
+    finishPurchaseAuthentication(true)
+
+    if (PLATFORM === 'mobile') {
+      import('./mobile/microtxn')
+        .then(({ resumePendingMobilePurchase }) => resumePendingMobilePurchase())
+        .catch(console.error)
+    }
+  } else if (!loggedIn && wasLoggedIn) {
+    setPseudoCoinBalanceLoading()
+    setLotusBalanceLoading()
   }
 
   // Steam cloud saves work without login
-  if (platform === 'steam') {
+  if (PLATFORM === 'steam') {
     handleSteamCloudSave()
   }
 }
@@ -610,6 +699,17 @@ const queue: string[] = []
  */
 const exponentialBackoff = [5000, 15000, 30000, 60000]
 let tries = 0
+let reconnectTimeout: number | undefined
+
+if (PLATFORM === 'mobile') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible' || !isLoggedIn()) return
+    if (ws && ws.readyState !== WebSocket.CLOSED) return
+
+    tries = 0
+    handleWebSocket()
+  })
+}
 
 function resetWebSocket () {
   for (const key of Object.keys(allDurableConsumables)) {
@@ -620,27 +720,69 @@ function resetWebSocket () {
     }
   }
 
+  ownedLotus = 0
+  usedLotus = 0
+  lotusInventoryLoaded = false
   lotusTimeExpiresAt = undefined
+  ownedBells = 0
+  queue.length = 0
+  setLotusBalanceLoading()
+  updateBellButton()
   setFavicon('./favicon.ico')
 }
 
-function handleWebSocket () {
-  assert(!ws || ws.readyState === WebSocket.CLOSED, 'WebSocket has been set and is not closed')
+async function handleWebSocket () {
+  if (reconnectTimeout !== undefined) {
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = undefined
+  }
 
-  ws = new WebSocket('wss://synergism.cc/consumables/connect')
+  if (ws && ws.readyState !== WebSocket.CLOSED) {
+    return
+  }
 
-  ws.addEventListener('close', () => {
-    const delay = exponentialBackoff[++tries]
+  const url = 'wss://synergism.cc/consumables/connect'
+
+  if (PLATFORM === 'mobile') {
+    ws = (await import('./mobile/native-websocket')).createNativeWebSocket(url)
+  } else {
+    ws = new WebSocket(url)
+  }
+
+  let interval: number | undefined
+
+  ws.addEventListener('close', (event) => {
+    if (!loggedIn) {
+      if (interval) clearInterval(interval)
+      return
+    }
+
+    setLotusBalanceLoading()
+    const delay = PLATFORM === 'mobile'
+      ? exponentialBackoff[Math.min(tries, exponentialBackoff.length - 1)]
+      : exponentialBackoff[tries]
+    tries++
+
+    console.log(
+      `[Consumables WS] closed: code=${event.code}, reason=${event.reason || '(none)'}, clean=${event.wasClean}; `
+        + (delay !== undefined ? `reconnecting in ${delay}ms` : 'giving up')
+    )
 
     if (delay !== undefined) {
-      setTimeout(handleWebSocket, delay)
+      reconnectTimeout = setTimeout(handleWebSocket, delay)
     } else {
       Notification(i18next.t('account.consumables.connectionFailed'))
       resetWebSocket()
     }
+
+    if (interval) {
+      clearInterval(interval)
+      interval = undefined
+    }
   })
 
   ws.addEventListener('open', () => {
+    console.log('[Consumables WS] connected')
     tries = 0
 
     for (const message of queue) {
@@ -648,10 +790,27 @@ function handleWebSocket () {
     }
 
     queue.length = 0
+
+    interval = setInterval(
+      (ws_: WebSocket) => {
+        ws_.send('ping')
+      },
+      30_000,
+      ws
+    )
+  })
+
+  ws.addEventListener('error', () => {
+    if (interval) {
+      clearInterval(interval)
+      interval = undefined
+    }
   })
 
   ws.addEventListener('message', (ev) => {
-    const data = messageSchema.parse(ev.data)
+    const { success, data } = messageSchema.safeParse(ev.data)
+
+    if (!success || data === 'pong') return
 
     if (data.type === 'warn') {
       Notification(data.message, 5_000)
@@ -677,7 +836,7 @@ function handleWebSocket () {
         setFavicon('./favicon.ico')
       }
     } else if (data.type === 'join') {
-      Notification(i18next.t('account.consumables.connectionEstablished'))
+      Notification(i18next.t('account.consumables.connectionEstablished'), 1000)
     } else if (data.type === 'info-all') {
       resetWebSocket() // So that we can get an accurate count each time
       if (data.active.length !== 0) {
@@ -707,14 +866,15 @@ function handleWebSocket () {
 
       const lotusInventory = data.inventory.find((item) => item.type === 'LOTUS')
 
-      if (lotusInventory) {
-        ownedLotus = lotusInventory.amount
-        usedLotus = lotusInventory.used
-        try {
-          updateLotusDisplay()
-        } catch {
-          // This can throw if /consumables/list has not returned a response by the time this runs
-        }
+      ownedLotus = lotusInventory?.amount ?? 0
+      usedLotus = lotusInventory?.used ?? 0
+      lotusInventoryLoaded = true
+      ownedBells = data.inventory.find((item) => item.type === 'HAPPY_HOUR_BELL')?.amount ?? 0
+      updateBellButton()
+      try {
+        updateLotusDisplay()
+      } catch {
+        // This can throw if /consumables/list has not returned a response by the time this runs
       }
     } else if (data.type === 'thanks') {
       Alert(i18next.t('pseudoCoins.consumables.thanks'))
@@ -725,21 +885,22 @@ function handleWebSocket () {
       Notification(i18next.t('pseudoCoins.consumables.tipReceived', { offlineTime: data.tips }))
     } else if (data.type === 'applied-tip') {
       tips = data.remaining
-      calculateOffline(data.amount * 60, true)
-      DOMCacheGetOrSet('exitOffline').style.visibility = 'unset'
+      calculateOffline(data.amount * 60, true).catch(console.error)
     } else if (data.type === 'time-skip') {
       const timeSkipName = data.consumableName as PseudoCoinTimeskipNames
       const minutes = data.amount
 
-      // Do the thing with the timeSkip
-      activateTimeSkip(timeSkipName, minutes)
-      saveSynergy()
+      afterOfflineProgress().then(() => {
+        // Do the thing with the timeSkip
+        activateTimeSkip(timeSkipName, minutes)
+        saveSynergy()
 
-      sendToWebsocket(JSON.stringify({
-        type: 'confirm',
-        id: data.id,
-        consumableId: data.consumableName
-      }))
+        sendToWebsocket(JSON.stringify({
+          type: 'confirm',
+          id: data.id,
+          consumableId: data.consumableName
+        }))
+      }).catch(console.error)
 
       setTimeout(updatePseudoCoins, 4000)
     } else if (data.type === 'lotus') {
@@ -763,6 +924,9 @@ function handleWebSocket () {
       updateLotusDisplay()
 
       Notification(i18next.t('pseudoCoins.lotus.lotusActive'))
+    } else if (data.type === 'happy-hour-bells') {
+      ownedBells = data.amount
+      updateBellButton()
     } else {
       // eslint-disable-next-line unicorn/consistent-function-scoping
       const assertNever = (_x: never) => {
@@ -787,78 +951,127 @@ export function sendToWebsocket (message: string) {
   ws.send(message)
 }
 
-async function logout () {
-  await fetch('https://synergism.cc/api/v1/users/logout')
+export async function buyTimeSkip (consumable: string) {
+  const id = crypto.randomUUID()
+  const pending = JSON.parse(storageGetItem('pendingTimeSkips') ?? '[]') as PendingTimeSkip[]
 
-  await Alert(i18next.t('account.logout'))
-  location.reload()
+  pending.push({ consumable, id, createdAt: Date.now() })
+  storageSetItem('pendingTimeSkips', JSON.stringify(pending))
+
+  await finishTimeSkipPurchase(consumable, id)
 }
 
-const hasCaptcha = new WeakSet<HTMLElement>()
+export async function resumePendingTimeSkips () {
+  if (!isLoggedIn()) return
 
-export const renderCaptcha = platform === 'steam'
-  ? memoize(() => {
-    const captchaElements = document.querySelectorAll('.turnstile')
+  const pending = (JSON.parse(storageGetItem('pendingTimeSkips') ?? '[]') as PendingTimeSkip[])
+    .filter(({ createdAt }) => Date.now() - createdAt < 12 * 60 * 60 * 1000)
 
-    for (const element of captchaElements) {
-      if (element.parentElement instanceof HTMLFormElement) {
-        const form = element.parentElement
-        form.addEventListener('submit', async (ev) => {
-          ev.preventDefault()
+  storageSetItem('pendingTimeSkips', JSON.stringify(pending))
 
-          if (form.dataset.submitting) return
-          form.dataset.submitting = 'true'
+  for (const { consumable, id } of pending) {
+    await finishTimeSkipPurchase(consumable, id)
+  }
+}
 
-          try {
-            const { getSessionTicket } = await import('./steam/steam')
+async function finishTimeSkipPurchase (consumable: string, id: string) {
+  for (const delay of [0, ...exponentialBackoff]) {
+    await new Promise((resolve) => setTimeout(resolve, delay))
 
-            const sessionTicket = await getSessionTicket()
+    let timeSkip: { consumableName: string; amount: number } | undefined
 
-            if (!sessionTicket) {
-              Alert('Failed to validate with Steam. Is Steam open?')
-              return
-            }
-
-            const dataAction = form.getAttribute('data-steam-action') ?? form.action
-
-            const fd = new FormData(form)
-            const body = new URLSearchParams()
-
-            fd.forEach((value, key) => body.set(key, `${value}`))
-            body.set('sessionTicket', sessionTicket)
-
-            const response = await fetch(dataAction, {
-              method: form.method.toUpperCase(),
-              body,
-              credentials: 'include'
-            })
-
-            if (response.redirected || response.ok) {
-              location.reload()
-            } else {
-              await displayHTMLError(response)
-            }
-          } finally {
-            form.dataset.submitting = undefined
-          }
-        })
-      }
-    }
-  })
-  : () => {
-    const captchaElements = Array.from<HTMLElement>(document.querySelectorAll('.turnstile'))
-    const visible = captchaElements.find((el) => el.offsetParent !== null)
-
-    if (visible && !hasCaptcha.has(visible)) {
-      turnstile.render(visible, {
-        sitekey: visible.getAttribute('data-sitekey')!,
-        'error-callback' () {},
-        retry: 'never'
+    try {
+      const response = await fetch('https://synergism.cc/consumables/buy', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ consumable, id })
       })
 
-      hasCaptcha.add(visible)
+      if (response.status === 400) {
+        Notification(await response.text(), 5_000)
+      } else if (!response.ok) {
+        continue
+      } else {
+        const reader = response.body!.pipeThrough(new TextDecoderStream()).getReader()
+        let buffered = ''
+        let failed = false
+
+        while (timeSkip === undefined && !failed) {
+          const { done, value } = await reader.read()
+
+          if (done && buffered === '') throw new Error('Time skip purchase ended without a result')
+
+          // Android's CapacitorHttp drops the body's trailing newline, so the last line can arrive unterminated
+          const lines = (buffered + (value ?? '')).split('\n')
+          buffered = done ? '' : lines.pop()!
+
+          for (const line of lines) {
+            const { success, data } = messageSchema.safeParse(line)
+
+            if (!success || data === 'pong') continue
+
+            if (data.type === 'warn') {
+              Notification(data.message, 5_000)
+            } else if (data.type === 'error') {
+              Notification(data.message, 5_000)
+              failed = true
+            } else if (data.type === 'time-skip') {
+              timeSkip = data
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e)
+      continue
     }
+
+    if (timeSkip !== undefined) {
+      await afterOfflineProgress()
+      activateTimeSkip(timeSkip.consumableName as PseudoCoinTimeskipNames, timeSkip.amount)
+      saveSynergy()
+      await flushSaveStorage()
+      updatePseudoCoins()
+    }
+
+    storageSetItem(
+      'pendingTimeSkips',
+      JSON.stringify(
+        (JSON.parse(storageGetItem('pendingTimeSkips') ?? '[]') as PendingTimeSkip[]).filter((pending) =>
+          pending.id !== id
+        )
+      )
+    )
+    return
   }
+
+  Notification(i18next.t('pseudoCoins.timeSkips.connectionLost'))
+}
+
+async function logout () {
+  const confirmed = await Confirm(i18next.t('account.logoutConfirm'))
+  if (!confirmed) {
+    return
+  }
+
+  await fetch('https://synergism.cc/api/v1/users/logout')
+
+  if (PLATFORM === 'mobile') {
+    const { CapacitorCookies } = await import('@capacitor/core')
+    await CapacitorCookies.clearAllCookies()
+  } else if (PLATFORM === 'steam') {
+    const { clearAuthCookie } = await import('./steam/steam')
+    await clearAuthCookie()
+  }
+
+  await handleLogin()
+  ws?.close()
+  ws = undefined
+  resetWebSocket()
+  storageRemoveItem('pendingTimeSkips')
+  await Alert(i18next.t('account.logout'))
+}
 
 const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
   const seconds = minutes * 60
@@ -888,9 +1101,10 @@ const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
     }
 
     // Timer Things
-    addTimers('prestige', seconds)
-    addTimers('transcension', seconds)
-    addTimers('reincarnation', seconds)
+    const globalSpeedMult = memoize(calculateGlobalSpeedMult)
+    addTimers('prestige', seconds, globalSpeedMult)
+    addTimers('transcension', seconds, globalSpeedMult)
+    addTimers('reincarnation', seconds, globalSpeedMult)
     automaticTools('antSacrifice', seconds)
     updatePrestigeCount(seconds / Math.max(0.25, player.fastestprestige))
     updateTranscensionCount(seconds / Math.max(0.25, player.fastesttranscend))
@@ -914,13 +1128,13 @@ const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
       time: format(seconds, 0, true)
     })
     DOMCacheGetOrSet('fastForwardPrestigeCount').innerHTML = i18next.t('offlineProgress.prestigeCount', {
-      value: Math.floor(addedStats.prestigeCount)
+      value: format(addedStats.prestigeCount, 0, true)
     })
     DOMCacheGetOrSet('fastForwardPrestigeTimer').innerHTML = i18next.t('offlineProgress.currentPrestigeTimer', {
       value: format(addedStats.prestigeTime, 2, true)
     })
     DOMCacheGetOrSet('fastForwardTranscensionCount').innerHTML = i18next.t('offlineProgress.transcensionCount', {
-      value: Math.floor(addedStats.transcensionCount)
+      value: format(addedStats.transcensionCount, 0, true)
     })
     DOMCacheGetOrSet('fastForwardTranscensionTimer').innerHTML = i18next.t(
       'offlineProgress.currentTranscensionCounter',
@@ -929,7 +1143,7 @@ const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
       }
     )
     DOMCacheGetOrSet('fastForwardReincarnationCount').innerHTML = i18next.t('offlineProgress.reincarnationCount', {
-      value: Math.floor(addedStats.reincarnationCount)
+      value: format(addedStats.reincarnationCount, 0, true)
     })
     DOMCacheGetOrSet('fastForwardReincarnationTimer').innerHTML = i18next.t(
       'offlineProgress.currentReincarnationTimer',
@@ -965,18 +1179,22 @@ const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
   if (name.includes('AMBROSIA')) {
     const beforeStats = {
       redAmbrosia: player.lifetimeRedAmbrosia,
-      ambrosia: player.lifetimeAmbrosia
+      ambrosia: player.lifetimeAmbrosia,
+      purpleHoney: player.purpleReactor.lifetimePurpleHoney
     }
 
+    // Run many times because Purple Bar Points is a resource with dynamic /s gains.
     // Timer Things
-    addTimers('ambrosia', seconds)
-    addTimers('redAmbrosia', seconds)
+    for (let i = 0; i < minutes; i++) {
+      addTimers('purpleReactor', 60)
+    }
 
     const addedStats = {
       redAmbrosia: player.lifetimeRedAmbrosia - beforeStats.redAmbrosia,
       ambrosia: player.lifetimeAmbrosia - beforeStats.ambrosia,
       ambrosiaBarFill: calculateAmbrosiaGenerationSpeed() * seconds,
-      redBarFill: calculateRedAmbrosiaGenerationSpeed() * seconds
+      redBarFill: calculateRedAmbrosiaGenerationSpeed() * seconds,
+      purpleHoney: player.purpleReactor.lifetimePurpleHoney - beforeStats.purpleHoney
     }
 
     DOMCacheGetOrSet('fastForwardTimer').innerHTML = i18next.t('fastForward.ambrosia', {
@@ -989,6 +1207,9 @@ const createFastForward = (name: PseudoCoinTimeskipNames, minutes: number) => {
     DOMCacheGetOrSet('fastForwardRedAmbrosiaCount').innerHTML = i18next.t('offlineProgress.redAmbrosia', {
       value: format(addedStats.redAmbrosia, 0, true),
       value2: format(addedStats.redBarFill, 0, true)
+    })
+    DOMCacheGetOrSet('fastForwardPurpleHoneyCount').innerHTML = i18next.t('offlineProgress.purpleHoney', {
+      value: format(addedStats.purpleHoney, 0, true)
     })
   }
 
@@ -1041,15 +1262,42 @@ const buyLotusNotification = (amount: number) => {
   }
 }
 
-function handleCloudSaves () {
+async function uploadSave (name: string, save: string): Promise<Response> {
+  const fd = new FormData()
+  fd.set('file', new File([save], name))
+  fd.set('name', name)
+
+  return fetch('https://synergism.cc/saves/upload', {
+    method: 'POST',
+    body: fd
+  })
+}
+
+async function decodeSave (save: string) {
+  const decoded = atob(save)
+  const bytes = new Uint8Array(decoded.length)
+  for (let i = 0; i < decoded.length; i++) {
+    bytes[i] = decoded.charCodeAt(i)
+  }
+
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
+  const textBody = await new Response(stream).text()
+  const encoder = new TextEncoder()
+  const jsonBytes = encoder.encode(textBody)
+  const final = btoa(isomorphicDecode(jsonBytes))
+
+  return final
+}
+
+const initializeCloudSaves = memoize(() => {
   const subtabElement = document.querySelector('#accountSubTab div#right.scrollbarX')!
   const table = subtabElement.querySelector('#table > #dataGrid')!
 
-  const uploadButton = subtabElement.querySelector<HTMLButtonElement>('button#upload')
-  const transferButton = subtabElement.querySelector<HTMLButtonElement>('button#transfer')
+  const uploadButton = subtabElement.querySelector<HTMLButtonElement>('button#upload')!
+  const transferButton = subtabElement.querySelector<HTMLButtonElement>('button#transfer')!
 
   function populateTable () {
-    fetch('/saves/retrieve/all')
+    fetch('https://synergism.cc/saves/retrieve/all')
       .then((response) => response.json())
       .then(($saves: Save[]) => {
         cloudSaves.length = 0
@@ -1071,7 +1319,7 @@ function handleCloudSaves () {
         }
 
         cloudSaves.forEach((save, index) => {
-          const { id, name, uploadedAt } = save
+          const { id, name, uploadedAt, updatedAt } = save
           const rowDiv = document.createElement('div')
           rowDiv.className = 'grid-row'
           rowDiv.style.display = 'contents'
@@ -1083,19 +1331,26 @@ function handleCloudSaves () {
           const nameCell = document.createElement('div')
           nameCell.className = 'grid-cell name-cell'
           nameCell.textContent = name.length > 60 ? `${name.slice(0, 60)}...` : name
+          nameCell.title = name
 
           const dateCell = document.createElement('div')
           dateCell.className = 'grid-cell date-cell'
           dateCell.textContent = new Date(uploadedAt).toLocaleString()
 
+          const updatedCell = document.createElement('div')
+          updatedCell.className = 'grid-cell date-cell'
+          updatedCell.textContent = new Date(updatedAt).toLocaleString()
+
           rowDiv.appendChild(idCell)
           rowDiv.appendChild(nameCell)
           rowDiv.appendChild(dateCell)
+          rowDiv.appendChild(updatedCell)
 
           if (index % 2 === 0) {
             idCell.classList.add('alt-row')
             nameCell.classList.add('alt-row')
             dateCell.classList.add('alt-row')
+            updatedCell.classList.add('alt-row')
           }
 
           // Create the expandable details row
@@ -1120,6 +1375,19 @@ function handleCloudSaves () {
           loadBtn.setAttribute('data-id', id.toString())
           loadBtn.textContent = i18next.t('account.loadSave')
 
+          const renameBtn = document.createElement('button')
+          renameBtn.type = 'button'
+          renameBtn.className = 'btn-rename'
+          renameBtn.setAttribute('data-id', id.toString())
+          renameBtn.textContent = i18next.t('account.rename')
+          renameBtn.setAttribute('aria-label', i18next.t('account.rename'))
+
+          const refreshBtn = document.createElement('button')
+          refreshBtn.type = 'button'
+          refreshBtn.className = 'btn-refresh'
+          refreshBtn.setAttribute('data-id', id.toString())
+          refreshBtn.textContent = i18next.t('account.refresh')
+
           const deleteBtn = document.createElement('button')
           deleteBtn.className = 'btn-delete'
           deleteBtn.setAttribute('data-id', id.toString())
@@ -1127,11 +1395,15 @@ function handleCloudSaves () {
 
           actionsDiv.appendChild(downloadBtn)
           actionsDiv.appendChild(loadBtn)
+          actionsDiv.appendChild(renameBtn)
+          actionsDiv.appendChild(refreshBtn)
           actionsDiv.appendChild(deleteBtn)
           detailsContent.appendChild(actionsDiv)
           detailsRow.appendChild(detailsContent)
 
           save.actionButtons = {
+            rename: renameBtn,
+            refresh: refreshBtn,
             download: downloadBtn,
             load: loadBtn,
             delete: deleteBtn
@@ -1160,6 +1432,10 @@ function handleCloudSaves () {
               handleDownload(saveId)
             } else if (target.classList.contains('btn-load')) {
               handleLoadSave(saveId)
+            } else if (target.classList.contains('btn-rename')) {
+              void handleRenameSave(saveId, nameCell)
+            } else if (target.classList.contains('btn-refresh')) {
+              void handleRefreshSave(saveId)
             } else if (target.classList.contains('btn-delete')) {
               handleDeleteSave(saveId)
             }
@@ -1169,26 +1445,105 @@ function handleCloudSaves () {
           table.appendChild(detailsRow)
         })
 
-        async function decodeSave (save: string) {
-          const decoded = atob(save)
-          const bytes = new Uint8Array(decoded.length)
-          for (let i = 0; i < decoded.length; i++) {
-            bytes[i] = decoded.charCodeAt(i)
+        async function handleRenameSave (saveId: number, nameCell: HTMLDivElement) {
+          const save = cloudSaves.find((s) => saveId === s.id)
+
+          if (!save) {
+            populateTable()
+            Alert(i18next.t('account.noSaveFound'))
+            return
           }
 
-          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
-          const textBody = await new Response(stream).text()
-          const encoder = new TextEncoder()
-          const jsonBytes = encoder.encode(textBody)
-          const final = btoa(isomorphicDecode(jsonBytes))
+          const buttons = Object.values(save.actionButtons ?? {})
+          buttons.forEach((button) => button.disabled = true)
 
-          return final
+          try {
+            const input = await Prompt(i18next.t('account.renameSavePrompt'), save.name)
+            if (input === null) return
+
+            const newName = input.trim()
+            if (newName === save.name) return
+
+            if (newName.length === 0 || newName.length > 255) {
+              await Alert(i18next.t('account.invalidSaveName'))
+              return
+            }
+
+            if (cloudSaves.some((s) => s.id !== saveId && s.name === newName)) {
+              await Alert(i18next.t('account.duplicateSaveName'))
+              return
+            }
+
+            const response = await fetch('https://synergism.cc/saves/rename', {
+              method: 'PATCH',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: save.name, newName })
+            })
+
+            if (!response.ok) {
+              throw new Error(`Received status ${response.status}`)
+            }
+
+            save.name = newName
+            nameCell.textContent = newName.length > 60 ? `${newName.slice(0, 60)}...` : newName
+            nameCell.title = newName
+          } catch (error) {
+            console.error('Failed to rename cloud save', error)
+            await Alert(i18next.t('account.notRenamed'))
+          } finally {
+            buttons.forEach((button) => button.disabled = false)
+          }
+        }
+
+        async function handleRefreshSave (saveId: number) {
+          const save = cloudSaves.find((s) => saveId === s.id)
+
+          if (!save) {
+            populateTable()
+            Alert(i18next.t('account.noSaveFound'))
+            return
+          }
+
+          const buttons = Object.values(save.actionButtons ?? {})
+          buttons.forEach((button) => button.disabled = true)
+
+          try {
+            const confirmed = await Confirm(i18next.t('account.refreshSavePrompt', { name: save.name }))
+            if (!confirmed) return
+
+            if (save.actionButtons) {
+              save.actionButtons.refresh.textContent = i18next.t('account.refreshing')
+            }
+
+            const localSave = await getStoredSave()
+            assert(localSave !== null, 'no save')
+
+            const response = await uploadSave(save.name, localSave)
+
+            if (!response.ok) {
+              throw new Error(`Received status ${response.status}`)
+            }
+
+            Notification(i18next.t('account.refreshedSave', { name: save.name }))
+            populateTable()
+          } catch (error) {
+            console.error('Failed to refresh cloud save', error)
+            await Alert(i18next.t('account.notRefreshed'))
+          } finally {
+            buttons.forEach((button) => button.disabled = false)
+
+            if (save.actionButtons) {
+              save.actionButtons.refresh.textContent = i18next.t('account.refresh')
+            }
+          }
         }
 
         async function handleDownload (saveId: number) {
           const save = cloudSaves.find((s) => saveId === s.id)
 
           if (!save) {
+            populateTable()
             Alert(i18next.t('account.noSaveFound'))
             return
           }
@@ -1208,6 +1563,7 @@ function handleCloudSaves () {
           const save = cloudSaves.find((s) => saveId === s.id)
 
           if (!save) {
+            populateTable()
             Alert(i18next.t('account.noSaveFound'))
             return
           }
@@ -1220,19 +1576,22 @@ function handleCloudSaves () {
           const save = cloudSaves.find((s) => saveId === s.id)
 
           if (!save) {
+            populateTable()
             Alert(i18next.t('account.noSaveFound'))
             return
           }
 
           // Disable the action buttons during deletion
           if (save.actionButtons) {
+            save.actionButtons.rename.disabled = true
+            save.actionButtons.refresh.disabled = true
             save.actionButtons.download.disabled = true
             save.actionButtons.load.disabled = true
             save.actionButtons.delete.disabled = true
             save.actionButtons.delete.textContent = 'Deleting...'
           }
 
-          const response = await fetch('/saves/delete', {
+          const response = await fetch('https://synergism.cc/saves/delete', {
             method: 'DELETE',
             body: JSON.stringify({ name: save.name })
           })
@@ -1244,6 +1603,8 @@ function handleCloudSaves () {
             Alert(i18next.t('account.notDeleted'))
 
             if (save.actionButtons) {
+              save.actionButtons.rename.disabled = false
+              save.actionButtons.refresh.disabled = false
               save.actionButtons.download.disabled = false
               save.actionButtons.load.disabled = false
               save.actionButtons.delete.disabled = false
@@ -1256,55 +1617,49 @@ function handleCloudSaves () {
       })
   }
 
-  populateTable()
-
   // Handle uploading savefiles
-  uploadButton?.addEventListener('click', () => {
+  uploadButton.addEventListener('click', async () => {
     uploadButton.disabled = true
     const originalText = uploadButton.textContent
     uploadButton.innerHTML = '<span class="spinner"></span> Uploading...'
 
-    const name = saveFilename()
-    const save = localStorage.getItem('Synergysave2')
-    assert(save !== null, 'no save')
+    try {
+      const name = saveFilename()
+      const save = await getStoredSave()
+      assert(save !== null, 'no save')
 
-    const fd = new FormData()
-    fd.set('file', new File([save], name))
-    fd.set('name', name)
+      const response = await uploadSave(name, save)
 
-    fetch('/saves/upload', {
-      method: 'POST',
-      body: fd
-    }).then((response) => {
       if (!response.ok) {
-        response.text().then((error) => Notification(error || i18next.t('settings.cloud.uploadFailed')))
+        const error = await response.text()
+        Notification(error || i18next.t('settings.cloud.uploadFailed'))
 
         throw new TypeError(`Received status ${response.status}`)
       }
 
       uploadButton.textContent = i18next.t('settings.cloud.uploadSuccess')
       populateTable()
-    }).catch((e) => {
+    } catch (e) {
       console.error(e)
       uploadButton.textContent = i18next.t('settings.cloud.uploadFailed')
-    }).finally(() => {
+    } finally {
       setTimeout(
-        (uploadButton_) => {
+        (uploadButton_: HTMLButtonElement) => {
           uploadButton_.disabled = false
           uploadButton_.textContent = originalText
         },
         5000,
         uploadButton
       )
-    })
+    }
   })
 
-  transferButton?.addEventListener('click', () => {
+  transferButton.addEventListener('click', () => {
     transferButton.disabled = true
     const originalText = transferButton.textContent
     transferButton.innerHTML = '<span class="spinner"></span> Transferring...'
 
-    fetch('/saves/transfer').then((response) => {
+    fetch('https://synergism.cc/saves/transfer').then((response) => {
       if (!response.ok) {
         throw new TypeError(`Received status ${response.status}`)
       }
@@ -1316,7 +1671,7 @@ function handleCloudSaves () {
       transferButton.textContent = i18next.t('settings.cloud.transferFailed')
     }).finally(() => {
       setTimeout(
-        (transferButton_) => {
+        (transferButton_: HTMLButtonElement) => {
           transferButton_.disabled = false
           transferButton_.textContent = originalText
         },
@@ -1325,9 +1680,46 @@ function handleCloudSaves () {
       )
     })
   })
+
+  setInterval(async () => {
+    // Skip brand new saves
+    if (!loggedIn || achievementLevel <= 1) return
+
+    const fileName = '[Auto] Latest Save'
+    const latestSaveExists = cloudSaves.some((save) => save.name === fileName)
+
+    try {
+      const save = await getStoredSave()
+      if (save === null) return
+
+      const response = await uploadSave(fileName, save)
+
+      // A 400 here means no slot was available.
+      if (response.status === 400) return
+
+      if (!response.ok) {
+        throw new TypeError(`Received status ${response.status}`)
+      }
+
+      if (!latestSaveExists) populateTable()
+    } catch (error) {
+      console.error('Failed to automatically upload cloud save', error)
+    }
+  }, 1000 * 60 * 60)
+
+  return populateTable
+})
+
+function handleCloudSaves () {
+  const populateTable = initializeCloudSaves()
+  populateTable()
 }
 
 async function handleSteamCloudSave () {
+  if (PLATFORM !== 'steam') {
+    return
+  }
+
   const { cloudFileExists, cloudReadFile, cloudWriteFile, getSteamId } = await import('./steam/steam')
 
   const steamId = await getSteamId()
@@ -1361,14 +1753,19 @@ async function handleSteamCloudSave () {
     ? i18next.t('account.steamCloud.exists')
     : i18next.t('account.steamCloud.noSave')
 
+  const updatedCell = document.createElement('div')
+  updatedCell.className = 'grid-cell date-cell'
+
   rowDiv.appendChild(idCell)
   rowDiv.appendChild(nameCell)
   rowDiv.appendChild(dateCell)
+  rowDiv.appendChild(updatedCell)
 
   // Alternate row styling (Steam is always first)
   idCell.classList.add('alt-row')
   nameCell.classList.add('alt-row')
   dateCell.classList.add('alt-row')
+  updatedCell.classList.add('alt-row')
 
   // Create the expandable details row
   const detailsRow = document.createElement('div')
@@ -1432,7 +1829,18 @@ async function handleSteamCloudSave () {
     uploadBtn.disabled = true
     uploadBtn.textContent = i18next.t('account.steamCloud.uploading')
 
-    const localSave = localStorage.getItem('Synergysave2')
+    let localSave: string | null
+
+    try {
+      localSave = await getStoredSave()
+    } catch (error) {
+      console.error('Failed to read local save for Steam Cloud upload', error)
+      Alert(i18next.t('account.steamCloud.uploadFailed'))
+      uploadBtn.disabled = false
+      uploadBtn.textContent = i18next.t('account.steamCloud.upload')
+      return
+    }
+
     if (!localSave) {
       Alert(i18next.t('account.steamCloud.noLocalSave'))
       uploadBtn.disabled = false

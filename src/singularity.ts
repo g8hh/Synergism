@@ -1,103 +1,170 @@
 import i18next from 'i18next'
+import { resetCubeRateTracking } from './AutoAscension'
 import { getAmbrosiaUpgradeEffects } from './BlueberryUpgrades'
+import { calculateSingularityUpgradePurchase } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
+  calculateBlueberryInventory,
   calculateExalt4EffectiveSingularityMultiplier,
   calculateGoldenQuarkCost,
-  calculateImmaculateAlchemyBonus
+  calculateImmaculateAlchemyBonus,
+  calculateIrish3PurpleLuck,
+  calculateMaxBaseCubeQuarkMultiplier
 } from './Calculate'
-import { updateMaxTokens, updateTokens } from './Campaign'
+import { updateTokens } from './Campaign'
+import { activeEffectiveCorruptionLevel } from './Corruptions'
+import { addCodeAvailableUses, addCodeMaxUses } from './ImportExport'
 import { getOcteractUpgradeEffect, octeractUpgrades } from './Octeracts'
+import { PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getGlobalBonus, getPersonalBonus, getQuarkBonus } from './Quark'
 import { redAmbrosiaUpgrades } from './RedAmbrosiaUpgrades'
 import { singularity } from './Reset'
+import { Seed, seededRandom } from './RNG'
 import { runes } from './Runes'
 import { getShopUpgradeEffects } from './Shop'
+import { getSingularityChallengeEffect } from './SingularityChallenges'
 import { format, formatAsPercentIncrease, player } from './Synergism'
-import { Alert, Confirm, Prompt, revealStuff } from './UpdateHTML'
-import { isMobile, toOrdinal } from './Utility'
+import {
+  Alert,
+  Confirm,
+  InfoAlert,
+  infoAlertInactiveHTML,
+  infoAlertTableHTML,
+  Prompt,
+  PurchasePrompt,
+  revealStuff
+} from './UpdateHTML'
+import { isMobile, sumContents, toOrdinal } from './Utility'
 
-export type SingularityDataKeys =
-  | 'goldenQuarks1'
-  | 'goldenQuarks2'
-  | 'goldenQuarks3'
-  | 'starterPack'
-  | 'wowPass'
-  | 'cookies'
-  | 'cookies2'
-  | 'cookies3'
-  | 'cookies4'
-  | 'cookies5'
-  | 'ascensions'
-  | 'corruptionFourteen'
-  | 'corruptionFifteen'
-  | 'singOfferings1'
-  | 'singOfferings2'
-  | 'singOfferings3'
-  | 'singObtainium1'
-  | 'singObtainium2'
-  | 'singObtainium3'
-  | 'singCubes1'
-  | 'singCubes2'
-  | 'singCubes3'
-  | 'singCitadel'
-  | 'singCitadel2'
-  | 'octeractUnlock'
-  | 'singOcteractPatreonBonus'
-  | 'offeringAutomatic'
-  | 'intermediatePack'
-  | 'advancedPack'
-  | 'expertPack'
-  | 'masterPack'
-  | 'divinePack'
-  | 'wowPass2'
-  | 'wowPass3'
-  | 'potionBuff'
-  | 'potionBuff2'
-  | 'potionBuff3'
-  | 'singChallengeExtension'
-  | 'singChallengeExtension2'
-  | 'singChallengeExtension3'
-  | 'singQuarkImprover1'
-  | 'singQuarkHepteract'
-  | 'singQuarkHepteract2'
-  | 'singQuarkHepteract3'
-  | 'singOcteractGain'
-  | 'singOcteractGain2'
-  | 'singOcteractGain3'
-  | 'singOcteractGain4'
-  | 'singOcteractGain5'
-  | 'platonicTau'
-  | 'platonicAlpha'
-  | 'platonicDelta'
-  | 'platonicPhi'
-  | 'singFastForward'
-  | 'singFastForward2'
-  | 'singAscensionSpeed'
-  | 'singAscensionSpeed2'
-  | 'ultimatePen'
-  | 'halfMind'
-  | 'oneMind'
-  | 'wowPass4'
-  | 'blueberries'
-  | 'singAmbrosiaLuck'
-  | 'singAmbrosiaLuck2'
-  | 'singAmbrosiaLuck3'
-  | 'singAmbrosiaLuck4'
-  | 'singAmbrosiaGeneration'
-  | 'singAmbrosiaGeneration2'
-  | 'singAmbrosiaGeneration3'
-  | 'singAmbrosiaGeneration4'
-  | 'singBonusTokens1'
-  | 'singBonusTokens2'
-  | 'singBonusTokens3'
-  | 'singBonusTokens4'
-  | 'singInfiniteShopUpgrades'
-  | 'singTalismanBonusRunes1'
-  | 'singTalismanBonusRunes2'
-  | 'singTalismanBonusRunes3'
-  | 'singTalismanBonusRunes4'
-  | 'favoriteUpgrade'
+const funny32BitNumber = 2 ** 31 - 1
+
+type GoldenQuarkUpgradeRewards = {
+  goldenQuarks1: { goldenQuarkMult: number }
+  goldenQuarks2: { goldenQuarkCostMult: number }
+  goldenQuarks3: { exportGQPerHour: number }
+  starterPack: {
+    obtainiumMult: number
+    offeringMult: number
+    cubeMult: number
+  }
+  cookies: { unlocked: boolean }
+  cookies2: { unlocked: boolean }
+  cookies3: { unlocked: boolean }
+  cookies4: { unlocked: boolean }
+  cookies5: { unlocked: boolean }
+  ascensions: { ascensionCountMult: number }
+  corruptionFourteen: { unlocked: boolean }
+  corruptionFifteen: { freeCorruptionLevel: number }
+  singOfferings1: { offeringMult: number }
+  singOfferings2: { offeringMult: number }
+  singOfferings3: { offeringMult: number }
+  singObtainium1: { obtainiumMult: number }
+  singObtainium2: { obtainiumMult: number }
+  singObtainium3: { obtainiumMult: number }
+  singCubes1: { cubeMult: number }
+  singCubes2: { cubeMult: number }
+  singCubes3: { cubeMult: number }
+  singCitadel: {
+    offeringMult: number
+    obtainiumMult: number
+    cubeMult: number
+  }
+  singCitadel2: {
+    offeringMult: number
+    obtainiumMult: number
+    cubeMult: number
+    citadel1FreeLevels: number
+  }
+  octeractUnlock: { unlocked: boolean }
+  singOcteractPatreonBonus: { octeractMult: number }
+  offeringAutomatic: { unlocked: boolean }
+  intermediatePack: {
+    globalSpeedMult: number
+    ascensionSpeedMult: number
+    packQuarkAdd: number
+  }
+  advancedPack: {
+    packQuarkAdd: number
+    cubesBanked: number
+  }
+  expertPack: {
+    packQuarkAdd: number
+    freeCorruptionLevels: number
+    addCodeAscensionTimeMult: number
+  }
+  masterPack: {
+    packQuarkAdd: number
+    freeCorruptionLevels: number
+  }
+  divinePack: {
+    packQuarkAdd: number
+    octeractMult: number
+  }
+  wowPass: { unlocked: boolean }
+  wowPass2: { unlocked: boolean }
+  wowPass3: { unlocked: boolean }
+  wowPass4: { unlocked: boolean }
+  wowPass5: { unlocked: boolean }
+  potionBuff: { potionPowerMult: number }
+  potionBuff2: { potionPowerMult: number }
+  potionBuff3: { potionPowerMult: number }
+  singChallengeExtension: {
+    reincarnationCapIncrease: number
+    ascensionCapIncrease: number
+  }
+  singChallengeExtension2: {
+    reincarnationCapIncrease: number
+    ascensionCapIncrease: number
+  }
+  singChallengeExtension3: {
+    reincarnationCapIncrease: number
+    ascensionCapIncrease: number
+  }
+  singQuarkImprover1: { quarkMult: number }
+  singQuarkHepteract: { quarkHeptExponent: number }
+  singQuarkHepteract2: { quarkHeptExponent: number }
+  singQuarkHepteract3: { quarkHeptExponent: number }
+  singOcteractGain: { octeractMult: number }
+  singOcteractGain2: { octeractMult: number }
+  singOcteractGain3: { octeractMult: number }
+  singOcteractGain4: { octeractMult: number }
+  singOcteractGain5: { octeractMult: number }
+  platonicTau: {
+    unlocked: boolean
+    tauPower: number
+  }
+  platonicAlpha: { unlocked: boolean }
+  platonicDelta: { cubeMult: number }
+  platonicPhi: { dailyCodes: number }
+  singFastForward: { lookahead: number }
+  singFastForward2: { lookahead: number }
+  singAscensionSpeed: { exponentSpread: number }
+  singAscensionSpeed2: { exponentSpread: number }
+  ultimatePen: { platonicPowers: boolean }
+  halfMind: { unlocked: boolean }
+  oneMind: { unlocked: boolean }
+  blueberries: { blueberries: number }
+  singAmbrosiaLuck: { ambrosiaLuck: number }
+  singAmbrosiaLuck2: { ambrosiaLuck: number }
+  singAmbrosiaLuck3: { ambrosiaLuck: number }
+  singAmbrosiaLuck4: { ambrosiaLuck: number }
+  singAmbrosiaGeneration: { ambrosiaBarSpeedMult: number }
+  singAmbrosiaGeneration2: { ambrosiaBarSpeedMult: number }
+  singAmbrosiaGeneration3: { ambrosiaBarSpeedMult: number }
+  singAmbrosiaGeneration4: { ambrosiaBarSpeedMult: number }
+  singBonusTokens1: { firstCompletionBonusTokens: number }
+  singBonusTokens2: { tokenMultiplier: number }
+  singBonusTokens3: { lastCompletionBonusTokens: number }
+  singBonusTokens4: { initialTokenBonus: number }
+  singInfiniteShopUpgrades: { infinityVouchers: number }
+  singTalismanBonusRunes1: { talismanRuneEffect: number }
+  singTalismanBonusRunes2: { talismanRuneEffect: number }
+  singTalismanBonusRunes3: { talismanRuneEffect: number }
+  singTalismanBonusRunes4: { talismanRuneEffect: number }
+  favoriteUpgrade: { quarkMult: number }
+}
+
+export type SingularityDataKeys = keyof GoldenQuarkUpgradeRewards
 
 const overclockPerks = [50, 60, 75, 100, 125, 150, 175, 200, 225, 250]
 const tokenInheritanceTokens = [1, 10, 25, 40, 75, 100, 150, 200, 250, 300, 350, 400, 500, 600, 750]
@@ -105,6 +172,7 @@ const singularityPenaltyThresholds = [11, 26, 37, 51, 101, 151, 201, 216, 230, 2
 
 export const updateSingularityPenalties = (): void => {
   const singularityCount = player.singularityCount
+  const nextPenaltySpike = calculateNextSpike(singularityCount)
   const platonic = singularityCount > 36
     ? i18next.t('singularity.penalties.platonicCosts', {
       multiplier: format(
@@ -123,7 +191,10 @@ export const updateSingularityPenalties = (): void => {
       )
     })
     : '<span class="grayText">????????? ????? ????? ??? ?????????? ?? ???</span> <span class="redText">(51)</span>'
-  const str = `${getSingularityOridnalText(singularityCount)}<br>${
+  const highestSingularityText = i18next.t('singularity.perks.header', {
+    ord: toOrdinal(player.highestSingularityCount)
+  })
+  const str = `${getSingularityOridnalText(singularityCount)}<br>${highestSingularityText}${
     i18next.t(
       'singularity.penalties.globalSpeed',
       {
@@ -210,11 +281,11 @@ export const updateSingularityPenalties = (): void => {
         ${platonic}
         ${hepteract}
         ${
-    singularityCount >= 270
+    nextPenaltySpike === -1
       ? i18next.t('singularity.penalties.penaltySmooth')
       : i18next.t('singularity.penalties.penaltyRough', {
         num: format(
-          calculateNextSpike(player.singularityCount),
+          nextPenaltySpike,
           0,
           true
         )
@@ -241,27 +312,132 @@ type SingularitySpecialCostFormulae =
   | 'Cubic'
   | 'Exponential2'
 
-interface GoldenQuarkUpgrade {
+type SingularityCostFormula = (costPerLevel: number, level: number, maxLevel: number) => number
+
+function sumPowersOfFour (level: number): number {
+  return 4 * (Math.pow(4, level) - 1) / 3
+}
+
+function sumLevelsTimesPowersOfFour (level: number): number {
+  return (4 + (3 * level - 1) * Math.pow(4, level + 1)) / 9
+}
+
+function sumSquaredLevelsTimesPowersOfFour (level: number): number {
+  return ((9 * Math.pow(level, 2) - 6 * level + 5) * Math.pow(4, level + 1) - 20) / 27
+}
+
+function sumConsecutiveProducts (level: number): number {
+  return level * (level + 1) * (level + 2) / 3
+}
+
+function sumSquaredAndCubedLevels (level: number): number {
+  return Math.pow(level * (level + 1) / 2, 2) + level * (level + 1) * (2 * level + 1) / 6
+}
+
+/**
+ * Cumulative cost of a Default upgrade at a given level.
+ */
+function defaultGQUpgradeCostFormula (costPerLevel: number, level: number, maxLevel: number): number {
+  // Preserve the additional scaling for Default upgrades that were formerly uncapped.
+  if (maxLevel === funny32BitNumber) {
+    if (level <= 100) {
+      return Math.round(costPerLevel * level * (level + 1) / 2)
+    }
+
+    const costFromLevel101To400 = sumConsecutiveProducts(Math.min(level, 400) - 1) - sumConsecutiveProducts(99)
+
+    if (level <= 400) {
+      return Math.floor(costPerLevel * (5050 * 50 + costFromLevel101To400) / 50)
+    }
+
+    const costAfterLevel400 = sumSquaredAndCubedLevels(level - 1) - sumSquaredAndCubedLevels(399)
+    return Math.floor(
+      costPerLevel * (5050 * 5000 + 100 * costFromLevel101To400 + costAfterLevel400) / 5000
+    )
+  }
+
+  const overclockedLevels = Math.max(0, level - maxLevel)
+  const levelsBeforeOverclocking = Math.min(level, maxLevel)
+  return Math.round(
+    costPerLevel * (
+      levelsBeforeOverclocking * (levelsBeforeOverclocking + 1) / 2
+      + maxLevel * sumPowersOfFour(overclockedLevels)
+      + sumLevelsTimesPowersOfFour(overclockedLevels)
+    )
+  )
+}
+
+/**
+ * Cumulative cost of a Quadratic upgrade at a given level.
+ */
+function quadraticGQUpgradeCostFormula (costPerLevel: number, level: number, maxLevel: number): number {
+  const overclockedLevels = Math.max(0, level - maxLevel)
+  const levelsBeforeOverclocking = level - overclockedLevels
+  return Math.round(
+    costPerLevel * (
+      Math.pow(levelsBeforeOverclocking, 2)
+      + (2 * maxLevel - 1) * sumPowersOfFour(overclockedLevels)
+      + 2 * sumLevelsTimesPowersOfFour(overclockedLevels)
+    )
+  )
+}
+
+/**
+ * Cumulative cost of a Cubic upgrade at a given level.
+ */
+function cubicGQUpgradeCostFormula (costPerLevel: number, level: number, maxLevel: number): number {
+  const overclockedLevels = Math.max(0, level - maxLevel)
+  const levelsBeforeOverclocking = level - overclockedLevels
+  return Math.round(
+    costPerLevel * (
+      Math.pow(levelsBeforeOverclocking, 3)
+      + (3 * Math.pow(maxLevel, 2) - 3 * maxLevel + 1) * sumPowersOfFour(overclockedLevels)
+      + (6 * maxLevel - 3) * sumLevelsTimesPowersOfFour(overclockedLevels)
+      + 3 * sumSquaredLevelsTimesPowersOfFour(overclockedLevels)
+    )
+  )
+}
+
+/**
+ * Cumulative cost of an Exponential2 upgrade at a given level.
+ */
+function exponential2GQUpgradeCostFormula (costPerLevel: number, level: number, maxLevel: number): number {
+  const overclockedLevels = Math.max(0, level - maxLevel)
+  const levelsBeforeOverclocking = level - overclockedLevels
+  return Math.round(
+    costPerLevel * (
+      Math.pow(2, levelsBeforeOverclocking) - 1
+      + Math.pow(2, maxLevel - 1) * sumPowersOfFour(overclockedLevels)
+    )
+  )
+}
+
+const singularityCostFormulae: Record<SingularitySpecialCostFormulae, SingularityCostFormula> = {
+  Default: defaultGQUpgradeCostFormula,
+  Quadratic: quadraticGQUpgradeCostFormula,
+  Cubic: cubicGQUpgradeCostFormula,
+  Exponential2: exponential2GQUpgradeCostFormula
+}
+
+interface GoldenQuarkUpgrade<T extends SingularityDataKeys, K extends keyof GoldenQuarkUpgradeRewards[T]> {
   level: number
-  freeLevel: number
-  goldenQuarksInvested: number
   maxLevel: number
   canExceedCap: boolean
   qualityOfLife: boolean
   costPerLevel: number
   minimumSingularity: number
   specialCostForm: SingularitySpecialCostFormulae
-  effect(n: number): number
-  effectDescription(n: number): string
+  effect(n: number, key: K): GoldenQuarkUpgradeRewards[T][K]
+  effectDescription(): string
   name(): string
   description(): string
 }
 
-export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade> = {
+export const goldenQuarkUpgrades: {
+  [K in SingularityDataKeys]: GoldenQuarkUpgrade<K, keyof GoldenQuarkUpgradeRewards[K]>
+} = {
   goldenQuarks1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 15,
     canExceedCap: true,
     qualityOfLife: true,
@@ -271,9 +447,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.1 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: function() {
+      const goldenQuarkMult = getGQUpgradeEffect('goldenQuarks1', 'goldenQuarkMult')
       return i18next.t('singularity.data.goldenQuarks1.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(goldenQuarkMult, 2)
       })
     },
     name: () => {
@@ -285,8 +462,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   goldenQuarks2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 75,
     canExceedCap: true,
     qualityOfLife: true,
@@ -296,13 +471,9 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n > 250 ? 1 / Math.log2(n / 62.5) : 1 - Math.min(0.5, n / 500)
     },
-    effectDescription: function(n: number) {
-      const effectValue = this.effect(n)
-      // Convert the effect to percentage format like the original
-      const percentageValue = n > 250
-        ? 100 - 100 * effectValue // Since effectValue = 1/Math.log2(n/62.5), this gives us the reduction %
-        : (1 - effectValue) * 100 // Since effectValue = 1 - reduction, this gives us the reduction %
-
+    effectDescription: function() {
+      const goldenQuarkCostMult = getGQUpgradeEffect('goldenQuarks2', 'goldenQuarkCostMult')
+      const percentageValue = 100 * (1 - goldenQuarkCostMult)
       return i18next.t('singularity.data.goldenQuarks2.effect', {
         n: format(percentageValue, 2, true)
       })
@@ -316,8 +487,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   goldenQuarks3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1000,
     canExceedCap: false,
     qualityOfLife: false,
@@ -327,9 +496,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return (n * (n + 1)) / 2
     },
-    effectDescription: function(n: number) {
+    effectDescription: function() {
+      const exportGQPerHour = getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour')
       return i18next.t('singularity.data.goldenQuarks3.effect', {
-        n: format(this.effect(n))
+        n: format(exportGQPerHour, 1, true)
       })
     },
     name: () => {
@@ -341,21 +511,28 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   starterPack: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 10,
     minimumSingularity: 0,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'obtainiumMult') {
+        return 1 + 5 * n
+      }
+      if (key === 'offeringMult') {
+        return 1 + 5 * n
+      } else {
+        return 1 + 4 * n // cubeMult
+      }
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.starterPack.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const n = getGQUpgradeEffect('starterPack', 'obtainiumMult') // simply need to check that one is >1
+      return i18next.t(
+        `singularity.data.starterPack.effect${n > 1 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => {
       return i18next.t('singularity.data.starterPack.name')
     },
@@ -363,8 +540,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   wowPass: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -372,19 +547,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 0,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.wowPass.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('wowPass', 'unlocked')
+      return i18next.t(
+        `singularity.data.wowPass.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.wowPass.name'),
     description: () => i18next.t('singularity.data.wowPass.description')
   },
   cookies: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -392,19 +567,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 0,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.cookies.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('cookies', 'unlocked')
+      return i18next.t(
+        `singularity.data.cookies.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.cookies.name'),
     description: () => i18next.t('singularity.data.cookies.description')
   },
   cookies2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -412,19 +587,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 0,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.cookies2.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('cookies2', 'unlocked')
+      return i18next.t(
+        `singularity.data.cookies2.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.cookies2.name'),
     description: () => i18next.t('singularity.data.cookies2.description')
   },
   cookies3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -432,19 +607,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 0,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.cookies3.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('cookies3', 'unlocked')
+      return i18next.t(
+        `singularity.data.cookies3.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.cookies3.name'),
     description: () => i18next.t('singularity.data.cookies3.description')
   },
   cookies4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -452,19 +627,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 0,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.cookies4.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('cookies4', 'unlocked')
+      return i18next.t(
+        `singularity.data.cookies4.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.cookies4.name'),
     description: () => i18next.t('singularity.data.cookies4.description')
   },
   cookies5: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -472,20 +647,20 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 209,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.cookies5.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('cookies5', 'unlocked')
+      return i18next.t(
+        `singularity.data.cookies5.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.cookies5.name'),
     description: () => i18next.t('singularity.data.cookies5.description')
   },
   ascensions: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 5,
@@ -494,10 +669,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return (1 + (2 * n) / 100) * (1 + Math.floor(n / 10) / 100)
     },
-    effectDescription: function(n: number) {
-      const effectValue = this.effect(n)
+    effectDescription: () => {
+      const ascensionCountMult = getGQUpgradeEffect('ascensions', 'ascensionCountMult')
       return i18next.t('singularity.data.ascensions.effect', {
-        n: formatAsPercentIncrease(effectValue, 1)
+        n: formatAsPercentIncrease(ascensionCountMult, 1)
       })
     },
     name: () => i18next.t('singularity.data.ascensions.name'),
@@ -505,8 +680,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   corruptionFourteen: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
@@ -514,22 +687,22 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 0,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.corruptionFourteen.effect${n > 0 ? 'Have' : 'HaveNot'}`,
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('corruptionFourteen', 'unlocked')
+      return i18next.t(
+        `singularity.data.corruptionFourteen.effect${unlocked ? 'Have' : 'HaveNot'}`,
         {
-          m: n > 0 ? ':)' : ':('
+          m: unlocked ? ':)' : ':('
         }
-      ),
+      )
+    },
     name: () => i18next.t('singularity.data.corruptionFourteen.name'),
     description: () => i18next.t('singularity.data.corruptionFourteen.description')
   },
   corruptionFifteen: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
@@ -539,21 +712,21 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.corruptionFifteen.effect${n > 0 ? 'Have' : 'HaveNot'}`,
+    effectDescription: () => {
+      const freeCorruptionLevel = getGQUpgradeEffect('corruptionFifteen', 'freeCorruptionLevel')
+      return i18next.t(
+        `singularity.data.corruptionFifteen.effect${freeCorruptionLevel > 0 ? 'Have' : 'HaveNot'}`,
         {
-          m: n > 0 ? ':)' : ':('
+          m: freeCorruptionLevel > 0 ? ':)' : ':('
         }
-      ),
+      )
+    },
     name: () => i18next.t('singularity.data.corruptionFifteen.name'),
     description: () => i18next.t('singularity.data.corruptionFifteen.description')
   },
   singOfferings1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 1,
@@ -562,9 +735,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.02 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const offeringMult = getGQUpgradeEffect('singOfferings1', 'offeringMult')
       return i18next.t('singularity.data.singOfferings1.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(offeringMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOfferings1.name'),
@@ -572,8 +746,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singOfferings2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 25,
     canExceedCap: true,
     qualityOfLife: false,
@@ -583,9 +755,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.08 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const offeringMult = getGQUpgradeEffect('singOfferings2', 'offeringMult')
       return i18next.t('singularity.data.singOfferings2.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(offeringMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOfferings2.name'),
@@ -593,8 +766,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singOfferings3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 40,
     canExceedCap: true,
     qualityOfLife: false,
@@ -604,9 +775,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.04 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const offeringMult = getGQUpgradeEffect('singOfferings3', 'offeringMult')
       return i18next.t('singularity.data.singOfferings3.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(offeringMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOfferings3.name'),
@@ -614,9 +786,7 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singObtainium1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 1,
@@ -625,9 +795,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.02 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const obtainiumMult = getGQUpgradeEffect('singObtainium1', 'obtainiumMult')
       return i18next.t('singularity.data.singObtainium1.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(obtainiumMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singObtainium1.name'),
@@ -635,8 +806,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singObtainium2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 25,
     canExceedCap: true,
     qualityOfLife: false,
@@ -646,9 +815,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.08 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const obtainiumMult = getGQUpgradeEffect('singObtainium2', 'obtainiumMult')
       return i18next.t('singularity.data.singObtainium2.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(obtainiumMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singObtainium2.name'),
@@ -656,8 +826,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singObtainium3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 40,
     canExceedCap: true,
     qualityOfLife: false,
@@ -667,9 +835,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.04 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const obtainiumMult = getGQUpgradeEffect('singObtainium3', 'obtainiumMult')
       return i18next.t('singularity.data.singObtainium3.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(obtainiumMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singObtainium3.name'),
@@ -677,9 +846,7 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singCubes1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 1,
@@ -688,9 +855,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.006 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const cubeMult = getGQUpgradeEffect('singCubes1', 'cubeMult')
       return i18next.t('singularity.data.singCubes1.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 3)
+        n: formatAsPercentIncrease(cubeMult, 3)
       })
     },
     name: () => i18next.t('singularity.data.singCubes1.name'),
@@ -698,8 +866,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singCubes2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 25,
     canExceedCap: true,
     qualityOfLife: false,
@@ -709,9 +875,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.08 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const cubeMult = getGQUpgradeEffect('singCubes2', 'cubeMult')
       return i18next.t('singularity.data.singCubes2.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(cubeMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singCubes2.name'),
@@ -719,8 +886,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singCubes3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 40,
     canExceedCap: true,
     qualityOfLife: false,
@@ -730,9 +895,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.04 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const cubeMult = getGQUpgradeEffect('singCubes3', 'cubeMult')
       return i18next.t('singularity.data.singCubes3.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(cubeMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singCubes3.name'),
@@ -740,9 +906,7 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singCitadel: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 500000,
@@ -751,9 +915,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return (1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100)
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const citadelMult = getGQUpgradeEffect('singCitadel', 'cubeMult')
       return i18next.t('singularity.data.singCitadel.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(citadelMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singCitadel.name'),
@@ -761,20 +926,22 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singCitadel2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 100,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 1e14,
     minimumSingularity: 204,
     specialCostForm: 'Quadratic',
-    effect: (n: number) => {
-      return (1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100)
+    effect: (n, key) => {
+      if (key === 'citadel1FreeLevels') {
+        return n
+      }
+      return (1 + 0.02 * n) * (1 + Math.floor(n / 10) / 100) // other keys!
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const citadelMult = getGQUpgradeEffect('singCitadel2', 'cubeMult')
       return i18next.t('singularity.data.singCitadel2.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(citadelMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singCitadel2.name'),
@@ -782,8 +949,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   octeractUnlock: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -791,19 +956,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 8,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.octeractUnlock.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('octeractUnlock', 'unlocked')
+      return i18next.t(
+        `singularity.data.octeractUnlock.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.octeractUnlock.name'),
     description: () => i18next.t('singularity.data.octeractUnlock.description')
   },
   singOcteractPatreonBonus: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
@@ -811,140 +976,160 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 12,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      const quarkBonus = getQuarkBonus()
+      return (n > 0) ? 1 + quarkBonus / 100 : 1
     },
-    effectDescription: (_n: number) =>
-      i18next.t('singularity.data.singOcteractPatreonBonus.effect', {
-        n: format(1 + getQuarkBonus() / 100, 3, true),
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('singOcteractPatreonBonus', 'octeractMult')
+      return i18next.t('singularity.data.singOcteractPatreonBonus.effect', {
+        n: format(octeractMult, 3, true),
         x: format(1 + getGlobalBonus() / 100, 3, true),
         y: format(1 + getPersonalBonus() / 100, 3, true)
-      }),
+      })
+    },
     name: () => i18next.t('singularity.data.singOcteractPatreonBonus.name'),
     description: () => i18next.t('singularity.data.singOcteractPatreonBonus.description')
   },
   offeringAutomatic: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 1e14,
     minimumSingularity: 222,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) => i18next.t('singularity.data.offeringAutomatic.effect', { n }),
+    effectDescription: () => i18next.t('singularity.data.offeringAutomatic.effect'),
     name: () => i18next.t('singularity.data.offeringAutomatic.name'),
     description: () => i18next.t('singularity.data.offeringAutomatic.description')
   },
   intermediatePack: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 1,
     minimumSingularity: 4,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'globalSpeedMult') {
+        return n > 0 ? 2 : 1
+      } else if (key === 'ascensionSpeedMult') {
+        return n > 0 ? 1.5 : 1
+      } else {
+        return n > 0 ? 0.02 : 0 // packQuarkAdd
+      }
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.intermediatePack.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const globalSpeedMult = getGQUpgradeEffect('intermediatePack', 'globalSpeedMult')
+      return i18next.t(
+        `singularity.data.intermediatePack.effect${globalSpeedMult > 1 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.intermediatePack.name'),
     description: () => i18next.t('singularity.data.intermediatePack.description')
   },
   advancedPack: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 200,
     minimumSingularity: 9,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'cubesBanked') {
+        return n > 0 ? 500 : 0
+      } else {
+        return n > 0 ? 0.04 : 0 // packQuarkAdd
+      }
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.advancedPack.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const cubesBanked = getGQUpgradeEffect('advancedPack', 'cubesBanked')
+      return i18next.t(
+        `singularity.data.advancedPack.effect${cubesBanked > 0 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.advancedPack.name'),
     description: () => i18next.t('singularity.data.advancedPack.description')
   },
   expertPack: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 800,
     minimumSingularity: 16,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'addCodeAscensionTimeMult') {
+        return n > 0 ? 1.2 : 1
+      } else if (key === 'freeCorruptionLevels') {
+        return n > 0 ? 1 : 0
+      } else {
+        return n > 0 ? 0.06 : 0 // packQuarkAdd
+      }
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.expertPack.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const addCodeAscensionTimeMult = getGQUpgradeEffect('expertPack', 'addCodeAscensionTimeMult')
+      return i18next.t(
+        `singularity.data.expertPack.effect${addCodeAscensionTimeMult > 1 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.expertPack.name'),
     description: () => i18next.t('singularity.data.expertPack.description')
   },
   masterPack: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 3200,
     minimumSingularity: 25,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'freeCorruptionLevels') {
+        return n > 0 ? 1 : 0
+      } else {
+        return n > 0 ? 0.08 : 0 // packQuarkAdd
+      }
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.masterPack.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const freeCorruptionLevels = getGQUpgradeEffect('masterPack', 'freeCorruptionLevels')
+      return i18next.t(
+        `singularity.data.masterPack.effect${freeCorruptionLevels > 0 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.masterPack.name'),
     description: () => i18next.t('singularity.data.masterPack.description')
   },
   divinePack: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 12800,
     minimumSingularity: 36,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      if (n === 0) {
-        return 1
+    effect: (n, key) => {
+      if (key === 'octeractMult') {
+        if (n === 0) {
+          return 1
+        } else {
+          return divinePackOcteractMultiplier(activeEffectiveCorruptionLevel())
+        }
+      } else {
+        return n > 0 ? 0.1 : 0 // packQuarkAdd
       }
-      const corruptions = player.corruptions.used
-      const octMult = Object.values(corruptions.loadout).reduce(
-        (acc, curr) => acc * (curr === 16 ? 1.4 : (curr === 15 ? 1.3 : (curr === 14 ? 1.25 : 1))),
-        1
-      )
-      return octMult
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('divinePack', 'octeractMult')
       return i18next.t(
-        `singularity.data.divinePack.effect${n > 0 ? 'Have' : 'HaveNot'}`,
+        `singularity.data.divinePack.effect${octeractMult > 1 ? 'Have' : 'HaveNot'}`,
         {
-          n: formatAsPercentIncrease(this.effect(n), 0)
+          n: formatAsPercentIncrease(octeractMult, 0)
         }
       )
     },
@@ -953,8 +1138,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   wowPass2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -962,19 +1145,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 9,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.wowPass2.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('wowPass2', 'unlocked')
+      return i18next.t(
+        `singularity.data.wowPass2.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.wowPass2.name'),
     description: () => i18next.t('singularity.data.wowPass2.description')
   },
   wowPass3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -982,19 +1165,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 83,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.wowPass3.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('wowPass3', 'unlocked')
+      return i18next.t(
+        `singularity.data.wowPass3.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.wowPass3.name'),
     description: () => i18next.t('singularity.data.wowPass3.description')
   },
   potionBuff: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1004,9 +1187,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return Math.max(1, 10 * Math.pow(n, 2))
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const potionPowerMult = getGQUpgradeEffect('potionBuff', 'potionPowerMult')
       return i18next.t('singularity.data.potionBuff.effect', {
-        n: format(this.effect(n), 0, true)
+        n: format(potionPowerMult, 0, true)
       })
     },
     name: () => i18next.t('singularity.data.potionBuff.name'),
@@ -1014,8 +1198,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   potionBuff2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1025,9 +1207,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return Math.max(1, 2 * n)
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const potionPowerMult = getGQUpgradeEffect('potionBuff2', 'potionPowerMult')
       return i18next.t('singularity.data.potionBuff2.effect', {
-        n: format(this.effect(n), 0, true)
+        n: format(potionPowerMult, 0, true)
       })
     },
     name: () => i18next.t('singularity.data.potionBuff2.name'),
@@ -1035,8 +1218,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   potionBuff3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1046,9 +1227,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return Math.max(1, 1 + 0.5 * n)
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const potionPowerMult = getGQUpgradeEffect('potionBuff3', 'potionPowerMult')
       return i18next.t('singularity.data.potionBuff3.effect', {
-        n: format(this.effect(n), 2, true)
+        n: format(potionPowerMult, 2, true)
       })
     },
     name: () => i18next.t('singularity.data.potionBuff3.name'),
@@ -1056,71 +1238,81 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singChallengeExtension: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 4,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 999,
     minimumSingularity: 11,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'ascensionCapIncrease') {
+        return n
+      }
+      return 2 * n // reincarnationCapIncrease
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singChallengeExtension.effect', {
-        n: 2 * n,
-        m: n
-      }),
+    effectDescription: () => {
+      const reincarnationCapIncrease = getGQUpgradeEffect('singChallengeExtension', 'reincarnationCapIncrease')
+      const ascensionCapIncrease = getGQUpgradeEffect('singChallengeExtension', 'ascensionCapIncrease')
+      return i18next.t('singularity.data.singChallengeExtension.effect', {
+        n: reincarnationCapIncrease,
+        m: ascensionCapIncrease
+      })
+    },
     name: () => i18next.t('singularity.data.singChallengeExtension.name'),
     description: () => i18next.t('singularity.data.singChallengeExtension.description')
   },
   singChallengeExtension2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 3,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 29999,
     minimumSingularity: 26,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'ascensionCapIncrease') {
+        return n
+      }
+      return 2 * n // reincarnationCapIncrease
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singChallengeExtension2.effect', {
-        n: 2 * n,
-        m: n
-      }),
+    effectDescription: () => {
+      const reincarnationCapIncrease = getGQUpgradeEffect('singChallengeExtension2', 'reincarnationCapIncrease')
+      const ascensionCapIncrease = getGQUpgradeEffect('singChallengeExtension2', 'ascensionCapIncrease')
+      return i18next.t('singularity.data.singChallengeExtension2.effect', {
+        n: reincarnationCapIncrease,
+        m: ascensionCapIncrease
+      })
+    },
     name: () => i18next.t('singularity.data.singChallengeExtension2.name'),
     description: () => i18next.t('singularity.data.singChallengeExtension2.description')
   },
   singChallengeExtension3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 3,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 749999,
     minimumSingularity: 51,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'ascensionCapIncrease') {
+        return n
+      }
+      return 2 * n // reincarnationCapIncrease
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singChallengeExtension3.effect', {
-        n: 2 * n,
-        m: n
-      }),
+    effectDescription: () => {
+      const reincarnationCapIncrease = getGQUpgradeEffect('singChallengeExtension3', 'reincarnationCapIncrease')
+      const ascensionCapIncrease = getGQUpgradeEffect('singChallengeExtension3', 'ascensionCapIncrease')
+      return i18next.t('singularity.data.singChallengeExtension3.effect', {
+        n: reincarnationCapIncrease,
+        m: ascensionCapIncrease
+      })
+    },
     name: () => i18next.t('singularity.data.singChallengeExtension3.name'),
     description: () => i18next.t('singularity.data.singChallengeExtension3.description')
   },
   singQuarkImprover1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 30,
     canExceedCap: true,
     qualityOfLife: true,
@@ -1130,9 +1322,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + n / 200
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const quarkMult = getGQUpgradeEffect('singQuarkImprover1', 'quarkMult')
       return i18next.t('singularity.data.singQuarkImprover1.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(quarkMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singQuarkImprover1.name'),
@@ -1140,8 +1333,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singQuarkHepteract: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1151,17 +1342,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singQuarkHepteract.effect', {
-        n: format(n / 100, 2, true)
-      }),
+    effectDescription: () => {
+      const quarkHeptExponent = getGQUpgradeEffect('singQuarkHepteract', 'quarkHeptExponent')
+      return i18next.t('singularity.data.singQuarkHepteract.effect', {
+        n: format(quarkHeptExponent, 2, true)
+      })
+    },
     name: () => i18next.t('singularity.data.singQuarkHepteract.name'),
     description: () => i18next.t('singularity.data.singQuarkHepteract.description')
   },
   singQuarkHepteract2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1171,17 +1362,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singQuarkHepteract2.effect', {
-        n: format(n / 100, 2, true)
-      }),
+    effectDescription: () => {
+      const quarkHeptExponent = getGQUpgradeEffect('singQuarkHepteract2', 'quarkHeptExponent')
+      return i18next.t('singularity.data.singQuarkHepteract2.effect', {
+        n: format(quarkHeptExponent, 2, true)
+      })
+    },
     name: () => i18next.t('singularity.data.singQuarkHepteract2.name'),
     description: () => i18next.t('singularity.data.singQuarkHepteract2.description')
   },
   singQuarkHepteract3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: true,
     qualityOfLife: true,
@@ -1191,18 +1382,18 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 200
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singQuarkHepteract3.effect', {
-        n: format(n / 200, 3, true)
-      }),
+    effectDescription: () => {
+      const quarkHeptExponent = getGQUpgradeEffect('singQuarkHepteract3', 'quarkHeptExponent')
+      return i18next.t('singularity.data.singQuarkHepteract3.effect', {
+        n: format(quarkHeptExponent, 2, true)
+      })
+    },
     name: () => i18next.t('singularity.data.singQuarkHepteract3.name'),
     description: () => i18next.t('singularity.data.singQuarkHepteract3.description')
   },
   singOcteractGain: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: funny32BitNumber,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 20000,
@@ -1211,9 +1402,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.0125 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('singOcteractGain', 'octeractMult')
       return i18next.t('singularity.data.singOcteractGain.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 2)
+        n: formatAsPercentIncrease(octeractMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOcteractGain.name'),
@@ -1221,8 +1413,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singOcteractGain2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 25,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1232,9 +1422,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.05 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('singOcteractGain2', 'octeractMult')
       return i18next.t('singularity.data.singOcteractGain2.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(octeractMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOcteractGain2.name'),
@@ -1242,8 +1433,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singOcteractGain3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 50,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1253,9 +1442,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.025 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('singOcteractGain3', 'octeractMult')
       return i18next.t('singularity.data.singOcteractGain3.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 1)
+        n: formatAsPercentIncrease(octeractMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOcteractGain3.name'),
@@ -1263,8 +1453,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singOcteractGain4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 100,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1274,9 +1462,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.02 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('singOcteractGain4', 'octeractMult')
       return i18next.t('singularity.data.singOcteractGain4.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(octeractMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOcteractGain4.name'),
@@ -1284,8 +1473,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singOcteractGain5: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 200,
     canExceedCap: true,
     qualityOfLife: false,
@@ -1295,9 +1482,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + 0.01 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const octeractMult = getGQUpgradeEffect('singOcteractGain5', 'octeractMult')
       return i18next.t('singularity.data.singOcteractGain5.effect', {
-        n: formatAsPercentIncrease(this.effect(n), 0)
+        n: formatAsPercentIncrease(octeractMult, 2)
       })
     },
     name: () => i18next.t('singularity.data.singOcteractGain5.name'),
@@ -1305,28 +1493,29 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   platonicTau: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
     costPerLevel: 100000,
     minimumSingularity: 29,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n, key) => {
+      if (key === 'tauPower') {
+        return n > 0 ? 1.01 : 1
+      }
+      return n > 0 // unlocked
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.platonicTau.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('platonicTau', 'unlocked')
+      return i18next.t(
+        `singularity.data.platonicTau.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.platonicTau.name'),
     description: () => i18next.t('singularity.data.platonicTau.description')
   },
   platonicAlpha: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1334,39 +1523,40 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 70,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.platonicAlpha.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('platonicAlpha', 'unlocked')
+      return i18next.t(
+        `singularity.data.platonicAlpha.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.platonicAlpha.name'),
     description: () => i18next.t('singularity.data.platonicAlpha.description')
   },
   platonicDelta: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
     costPerLevel: 5e9,
     minimumSingularity: 110,
     specialCostForm: 'Default',
-    effect: (n: number) => {
-      return n
+    effect: (n) => {
+      const speedMult = getShopUpgradeEffects('shopSingularitySpeedup', 'singularityUpgradeSpeedMult')
+      return n > 0 ? 1 + Math.min((player.singularityCounter + 1) * speedMult / (3600 * 24), 9) : 1
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.platonicDelta.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const cubeMult = getGQUpgradeEffect('platonicDelta', 'cubeMult')
+      return i18next.t(
+        `singularity.data.platonicDelta.effect${cubeMult > 1 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.platonicDelta.name'),
     description: () => i18next.t('singularity.data.platonicDelta.description')
   },
   platonicPhi: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1374,39 +1564,40 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 149,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      const speedMult = getShopUpgradeEffects('shopSingularitySpeedup', 'singularityUpgradeSpeedMult')
+      return n > 0 ? Math.floor(5 * Math.min(player.singularityCounter * speedMult / (3600 * 24), 10)) : 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.platonicPhi.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const level = goldenQuarkUpgrades.platonicPhi.level
+      return i18next.t(
+        `singularity.data.platonicPhi.effect${level > 0 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.platonicPhi.name'),
     description: () => i18next.t('singularity.data.platonicPhi.description')
   },
   singFastForward: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
     costPerLevel: 7e6 - 1,
     minimumSingularity: 50,
     specialCostForm: 'Default',
-    effect: (n: number) => {
+    effect: (n) => {
       return n
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.singFastForward.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const lookahead = getGQUpgradeEffect('singFastForward', 'lookahead')
+      return i18next.t(
+        `singularity.data.singFastForward.effect${lookahead > 0 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.singFastForward.name'),
     description: () => i18next.t('singularity.data.singFastForward.description')
   },
   singFastForward2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1416,17 +1607,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.singFastForward2.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const lookahead = getGQUpgradeEffect('singFastForward2', 'lookahead')
+      return i18next.t(
+        `singularity.data.singFastForward2.effect${lookahead > 0 ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.singFastForward2.name'),
     description: () => i18next.t('singularity.data.singFastForward2.description')
   },
   singAscensionSpeed: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1434,20 +1625,20 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 128,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return 0.03 * n
+      return (n > 0) ? 0.03 : 0
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singAscensionSpeed.effect', {
-        n: format(1 + 0.03 * n, 2, true),
-        m: format(1 - 0.03 * n, 2, true)
-      }),
+    effectDescription: () => {
+      const exponentSpread = getGQUpgradeEffect('singAscensionSpeed', 'exponentSpread')
+      return i18next.t('singularity.data.singAscensionSpeed.effect', {
+        n: format(1 + exponentSpread, 2, true),
+        m: format(1 - exponentSpread, 2, true)
+      })
+    },
     name: () => i18next.t('singularity.data.singAscensionSpeed.name'),
     description: () => i18next.t('singularity.data.singAscensionSpeed.description')
   },
   singAscensionSpeed2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 30,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1457,9 +1648,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 0.001 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const exponentSpread = getGQUpgradeEffect('singAscensionSpeed2', 'exponentSpread')
       return i18next.t('singularity.data.singAscensionSpeed2.effect', {
-        n: format(this.effect(n), 3, true)
+        n: format(exponentSpread, 3, true)
       })
     },
     name: () => i18next.t('singularity.data.singAscensionSpeed2.name'),
@@ -1467,8 +1659,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   ultimatePen: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1476,22 +1666,22 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 300,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.ultimatePen.effect', {
-        n: n > 0 ? '' : 'NOT',
-        m: n > 0
+    effectDescription: () => {
+      const platonicPowers = getGQUpgradeEffect('ultimatePen', 'platonicPowers')
+      return i18next.t('singularity.data.ultimatePen.effect', {
+        n: platonicPowers ? '' : 'NOT',
+        m: platonicPowers
           ? ' However, the pen just ran out of ink. How will you get more?'
           : ''
-      }),
+      })
+    },
     name: () => i18next.t('singularity.data.ultimatePen.name'),
     description: () => i18next.t('singularity.data.ultimatePen.description')
   },
   halfMind: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1499,19 +1689,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 150,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.halfMind.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('halfMind', 'unlocked')
+      return i18next.t(
+        `singularity.data.halfMind.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.halfMind.name'),
     description: () => i18next.t('singularity.data.halfMind.description')
   },
   oneMind: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1519,19 +1709,19 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 162,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.oneMind.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('oneMind', 'unlocked')
+      return i18next.t(
+        `singularity.data.oneMind.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.oneMind.name'),
     description: () => i18next.t('singularity.data.oneMind.description')
   },
   wowPass4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 1,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1539,19 +1729,39 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     minimumSingularity: 147,
     specialCostForm: 'Default',
     effect: (n: number) => {
-      return n
+      return n > 0
     },
-    effectDescription: (n: number) =>
-      i18next.t(
-        `singularity.data.wowPass4.effect${n > 0 ? 'Have' : 'HaveNot'}`
-      ),
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('wowPass4', 'unlocked')
+      return i18next.t(
+        `singularity.data.wowPass4.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
     name: () => i18next.t('singularity.data.wowPass4.name'),
     description: () => i18next.t('singularity.data.wowPass4.description')
   },
+  wowPass5: {
+    level: 0,
+    maxLevel: 1,
+    canExceedCap: false,
+    qualityOfLife: true,
+    costPerLevel: 4e27,
+    minimumSingularity: 283,
+    specialCostForm: 'Default',
+    effect: (n: number) => {
+      return n > 0
+    },
+    effectDescription: () => {
+      const unlocked = getGQUpgradeEffect('wowPass5', 'unlocked')
+      return i18next.t(
+        `singularity.data.wowPass5.effect${unlocked ? 'Have' : 'HaveNot'}`
+      )
+    },
+    name: () => i18next.t('singularity.data.wowPass5.name'),
+    description: () => i18next.t('singularity.data.wowPass5.description')
+  },
   blueberries: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1561,15 +1771,16 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n
     },
-    effectDescription: (n: number) => i18next.t('singularity.data.blueberries.effect', { n }),
+    effectDescription: () => {
+      const blueberries = getGQUpgradeEffect('blueberries', 'blueberries')
+      return i18next.t('singularity.data.blueberries.effect', { n: blueberries })
+    },
     name: () => i18next.t('singularity.data.blueberries.name'),
     description: () => i18next.t('singularity.data.blueberries.description')
   },
   singAmbrosiaLuck: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: 75,
     canExceedCap: false,
     qualityOfLife: true,
     costPerLevel: 1e9,
@@ -1578,9 +1789,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 4 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const ambrosiaLuck = getGQUpgradeEffect('singAmbrosiaLuck', 'ambrosiaLuck')
       return i18next.t('singularity.data.singAmbrosiaLuck.effect', {
-        n: format(this.effect(n))
+        n: format(ambrosiaLuck)
       })
     },
     name: () => i18next.t('singularity.data.singAmbrosiaLuck.name'),
@@ -1588,8 +1800,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singAmbrosiaLuck2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 30,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1599,9 +1809,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 2 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const ambrosiaLuck = getGQUpgradeEffect('singAmbrosiaLuck2', 'ambrosiaLuck')
       return i18next.t('singularity.data.singAmbrosiaLuck2.effect', {
-        n: format(this.effect(n))
+        n: format(ambrosiaLuck)
       })
     },
     name: () => i18next.t('singularity.data.singAmbrosiaLuck2.name'),
@@ -1609,8 +1820,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singAmbrosiaLuck3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 30,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1620,9 +1829,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 3 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const ambrosiaLuck = getGQUpgradeEffect('singAmbrosiaLuck3', 'ambrosiaLuck')
       return i18next.t('singularity.data.singAmbrosiaLuck3.effect', {
-        n: format(this.effect(n))
+        n: format(ambrosiaLuck)
       })
     },
     name: () => i18next.t('singularity.data.singAmbrosiaLuck3.name'),
@@ -1630,8 +1840,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singAmbrosiaLuck4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 50,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1641,9 +1849,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 5 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const ambrosiaLuck = getGQUpgradeEffect('singAmbrosiaLuck4', 'ambrosiaLuck')
       return i18next.t('singularity.data.singAmbrosiaLuck4.effect', {
-        n: format(this.effect(n))
+        n: format(ambrosiaLuck)
       })
     },
     name: () => i18next.t('singularity.data.singAmbrosiaLuck4.name'),
@@ -1651,9 +1860,7 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singAmbrosiaGeneration: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
-    maxLevel: -1,
+    maxLevel: 75,
     canExceedCap: false,
     qualityOfLife: true,
     costPerLevel: 1e9,
@@ -1662,17 +1869,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singAmbrosiaGeneration.effect', {
-        n: format(n)
-      }),
+    effectDescription: () => {
+      const ambrosiaBarSpeedMult = getGQUpgradeEffect('singAmbrosiaGeneration', 'ambrosiaBarSpeedMult')
+      return i18next.t('singularity.data.singAmbrosiaGeneration.effect', {
+        n: formatAsPercentIncrease(ambrosiaBarSpeedMult, 2)
+      })
+    },
     name: () => i18next.t('singularity.data.singAmbrosiaGeneration.name'),
     description: () => i18next.t('singularity.data.singAmbrosiaGeneration.description')
   },
   singAmbrosiaGeneration2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 20,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1682,17 +1889,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singAmbrosiaGeneration2.effect', {
-        n: format(n)
-      }),
+    effectDescription: () => {
+      const ambrosiaBarSpeedMult = getGQUpgradeEffect('singAmbrosiaGeneration2', 'ambrosiaBarSpeedMult')
+      return i18next.t('singularity.data.singAmbrosiaGeneration2.effect', {
+        n: formatAsPercentIncrease(ambrosiaBarSpeedMult, 2)
+      })
+    },
     name: () => i18next.t('singularity.data.singAmbrosiaGeneration2.name'),
     description: () => i18next.t('singularity.data.singAmbrosiaGeneration2.description')
   },
   singAmbrosiaGeneration3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 35,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1702,17 +1909,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singAmbrosiaGeneration3.effect', {
-        n: format(n)
-      }),
+    effectDescription: () => {
+      const ambrosiaBarSpeedMult = getGQUpgradeEffect('singAmbrosiaGeneration3', 'ambrosiaBarSpeedMult')
+      return i18next.t('singularity.data.singAmbrosiaGeneration3.effect', {
+        n: formatAsPercentIncrease(ambrosiaBarSpeedMult, 2)
+      })
+    },
     name: () => i18next.t('singularity.data.singAmbrosiaGeneration3.name'),
     description: () => i18next.t('singularity.data.singAmbrosiaGeneration3.description')
   },
   singAmbrosiaGeneration4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 50,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1722,17 +1929,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + (2 * n) / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singAmbrosiaGeneration4.effect', {
-        n: format(2 * n)
-      }),
+    effectDescription: () => {
+      const ambrosiaBarSpeedMult = getGQUpgradeEffect('singAmbrosiaGeneration4', 'ambrosiaBarSpeedMult')
+      return i18next.t('singularity.data.singAmbrosiaGeneration4.effect', {
+        n: formatAsPercentIncrease(ambrosiaBarSpeedMult, 2)
+      })
+    },
     name: () => i18next.t('singularity.data.singAmbrosiaGeneration4.name'),
     description: () => i18next.t('singularity.data.singAmbrosiaGeneration4.description')
   },
   singBonusTokens1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 5,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1742,17 +1949,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singBonusTokens1.effect', {
-        n: format(n)
-      }),
+    effectDescription: () => {
+      const firstCompletionBonusTokens = getGQUpgradeEffect('singBonusTokens1', 'firstCompletionBonusTokens')
+      return i18next.t('singularity.data.singBonusTokens1.effect', {
+        n: format(2 * firstCompletionBonusTokens)
+      })
+    },
     name: () => i18next.t('singularity.data.singBonusTokens1.name'),
     description: () => i18next.t('singularity.data.singBonusTokens1.description')
   },
   singBonusTokens2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 5,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1762,17 +1969,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 1 + n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singBonusTokens2.effect', {
-        n: format(n)
-      }),
+    effectDescription: () => {
+      const tokenMultiplier = getGQUpgradeEffect('singBonusTokens2', 'tokenMultiplier')
+      return i18next.t('singularity.data.singBonusTokens2.effect', {
+        n: formatAsPercentIncrease(tokenMultiplier, 0)
+      })
+    },
     name: () => i18next.t('singularity.data.singBonusTokens2.name'),
     description: () => i18next.t('singularity.data.singBonusTokens2.description')
   },
   singBonusTokens3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 5,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1782,9 +1989,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 2 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const lastCompletionBonusTokens = getGQUpgradeEffect('singBonusTokens3', 'lastCompletionBonusTokens')
       return i18next.t('singularity.data.singBonusTokens3.effect', {
-        n: format(this.effect(n))
+        n: format(2 * lastCompletionBonusTokens)
       })
     },
     name: () => i18next.t('singularity.data.singBonusTokens3.name'),
@@ -1792,8 +2000,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singBonusTokens4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 30,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1803,9 +2009,10 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return 5 * n
     },
-    effectDescription: function(n: number) {
+    effectDescription: () => {
+      const initialTokenBonus = getGQUpgradeEffect('singBonusTokens4', 'initialTokenBonus')
       return i18next.t('singularity.data.singBonusTokens4.effect', {
-        n: format(this.effect(n))
+        n: format(initialTokenBonus)
       })
     },
     name: () => i18next.t('singularity.data.singBonusTokens4.name'),
@@ -1813,8 +2020,6 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   },
   singInfiniteShopUpgrades: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 80,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1824,17 +2029,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singInfiniteShopUpgrades.effect', {
-        n: format(n)
-      }),
+    effectDescription: () => {
+      const infinityVouchers = getGQUpgradeEffect('singInfiniteShopUpgrades', 'infinityVouchers')
+      return i18next.t('singularity.data.singInfiniteShopUpgrades.effect', {
+        n: format(infinityVouchers)
+      })
+    },
     name: () => i18next.t('singularity.data.singInfiniteShopUpgrades.name'),
     description: () => i18next.t('singularity.data.singInfiniteShopUpgrades.description')
   },
   singTalismanBonusRunes1: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 5,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1844,17 +2049,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singTalismanBonusRunes1.effect', {
-        n: format(n, 0, true)
-      }),
+    effectDescription: () => {
+      const talismanRuneEffect = getGQUpgradeEffect('singTalismanBonusRunes1', 'talismanRuneEffect')
+      return i18next.t('singularity.data.singTalismanBonusRunes1.effect', {
+        n: formatAsPercentIncrease(1 + talismanRuneEffect, 0)
+      })
+    },
     name: () => i18next.t('singularity.data.singTalismanBonusRunes1.name'),
     description: () => i18next.t('singularity.data.singTalismanBonusRunes1.description')
   },
   singTalismanBonusRunes2: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 5,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1864,17 +2069,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singTalismanBonusRunes2.effect', {
-        n: format(n, 0, true)
-      }),
+    effectDescription: () => {
+      const talismanRuneEffect = getGQUpgradeEffect('singTalismanBonusRunes2', 'talismanRuneEffect')
+      return i18next.t('singularity.data.singTalismanBonusRunes2.effect', {
+        n: formatAsPercentIncrease(1 + talismanRuneEffect, 0)
+      })
+    },
     name: () => i18next.t('singularity.data.singTalismanBonusRunes2.name'),
     description: () => i18next.t('singularity.data.singTalismanBonusRunes2.description')
   },
   singTalismanBonusRunes3: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 5,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1884,17 +2089,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singTalismanBonusRunes3.effect', {
-        n: format(n, 0, true)
-      }),
+    effectDescription: () => {
+      const talismanRuneEffect = getGQUpgradeEffect('singTalismanBonusRunes3', 'talismanRuneEffect')
+      return i18next.t('singularity.data.singTalismanBonusRunes3.effect', {
+        n: formatAsPercentIncrease(1 + talismanRuneEffect, 0)
+      })
+    },
     name: () => i18next.t('singularity.data.singTalismanBonusRunes3.name'),
     description: () => i18next.t('singularity.data.singTalismanBonusRunes3.description')
   },
   singTalismanBonusRunes4: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 10,
     canExceedCap: false,
     qualityOfLife: false,
@@ -1904,17 +2109,17 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     effect: (n: number) => {
       return n / 100
     },
-    effectDescription: (n: number) =>
-      i18next.t('singularity.data.singTalismanBonusRunes4.effect', {
-        n: format(n, 0, true)
-      }),
+    effectDescription: () => {
+      const talismanRuneEffect = getGQUpgradeEffect('singTalismanBonusRunes4', 'talismanRuneEffect')
+      return i18next.t('singularity.data.singTalismanBonusRunes4.effect', {
+        n: formatAsPercentIncrease(1 + talismanRuneEffect, 0)
+      })
+    },
     name: () => i18next.t('singularity.data.singTalismanBonusRunes4.name'),
     description: () => i18next.t('singularity.data.singTalismanBonusRunes4.description')
   },
   favoriteUpgrade: {
     level: 0,
-    freeLevel: 0,
-    goldenQuarksInvested: 0,
     maxLevel: 100,
     canExceedCap: false,
     qualityOfLife: true,
@@ -1922,12 +2127,24 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     specialCostForm: 'Exponential2',
     minimumSingularity: 2,
     effect: (n: number) => {
-      const upgrade1 = +(goldenQuarkUpgrades.goldenQuarks1.level >= goldenQuarkUpgrades.goldenQuarks1.maxLevel)
-      const upgrade2 = +(goldenQuarkUpgrades.platonicDelta.level >= goldenQuarkUpgrades.platonicDelta.maxLevel)
-      const upgrade3 = +(goldenQuarkUpgrades.oneMind.level >= goldenQuarkUpgrades.oneMind.maxLevel)
-      const upgrade4 = +(octeractUpgrades.octeractImprovedFree.level >= octeractUpgrades.octeractImprovedFree.maxLevel)
-      const upgrade5 = +(octeractUpgrades.octeractCorruption.level >= octeractUpgrades.octeractCorruption.maxLevel)
-      const upgrade6 = +(octeractUpgrades.octeractBlueberries.level >= octeractUpgrades.octeractBlueberries.maxLevel)
+      const upgrade1 = +(
+        goldenQuarkUpgrades.goldenQuarks1.level >= goldenQuarkUpgrades.goldenQuarks1.maxLevel
+      )
+      const upgrade2 = +(
+        goldenQuarkUpgrades.platonicDelta.level >= goldenQuarkUpgrades.platonicDelta.maxLevel
+      )
+      const upgrade3 = +(
+        goldenQuarkUpgrades.oneMind.level >= goldenQuarkUpgrades.oneMind.maxLevel
+      )
+      const upgrade4 = +(
+        octeractUpgrades.octeractImprovedFree.level >= octeractUpgrades.octeractImprovedFree.maxLevel
+      )
+      const upgrade5 = +(
+        octeractUpgrades.octeractCorruption.level >= octeractUpgrades.octeractCorruption.maxLevel
+      )
+      const upgrade6 = +(
+        octeractUpgrades.octeractBlueberries.level >= octeractUpgrades.octeractBlueberries.maxLevel
+      )
       const upgrade7 = +(redAmbrosiaUpgrades.tutorial.level >= redAmbrosiaUpgrades.tutorial.maxLevel)
       const upgrade8 =
         +(redAmbrosiaUpgrades.infiniteShopUpgrades.level >= redAmbrosiaUpgrades.infiniteShopUpgrades.maxLevel)
@@ -1941,16 +2158,21 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
     description: () => {
       const titleText = i18next.t('singularity.data.favoriteUpgrade.description')
       const upgrade1 = i18next.t('singularity.data.favoriteUpgrade.upgrade1', {
-        checkMark: goldenQuarkUpgrades.goldenQuarks1.level >= goldenQuarkUpgrades.goldenQuarks1.maxLevel ? '✔️' : '❌'
+        checkMark: goldenQuarkUpgrades.goldenQuarks1.level >= goldenQuarkUpgrades.goldenQuarks1.maxLevel
+          ? '✔️'
+          : '❌'
       })
       const upgrade2 = i18next.t('singularity.data.favoriteUpgrade.upgrade2', {
-        checkMark: goldenQuarkUpgrades.platonicDelta.level >= goldenQuarkUpgrades.platonicDelta.maxLevel ? '✔️' : '❌'
+        checkMark: goldenQuarkUpgrades.platonicDelta.level >= goldenQuarkUpgrades.platonicDelta.maxLevel
+          ? '✔️'
+          : '❌'
       })
       const upgrade3 = i18next.t('singularity.data.favoriteUpgrade.upgrade3', {
         checkMark: goldenQuarkUpgrades.oneMind.level >= goldenQuarkUpgrades.oneMind.maxLevel ? '✔️' : '❌'
       })
       const upgrade4 = i18next.t('singularity.data.favoriteUpgrade.upgrade4', {
-        checkMark: octeractUpgrades.octeractImprovedFree.level >= octeractUpgrades.octeractImprovedFree.maxLevel
+        checkMark: octeractUpgrades.octeractImprovedFree.level
+            >= octeractUpgrades.octeractImprovedFree.maxLevel
           ? '✔️'
           : '❌'
       })
@@ -1980,8 +2202,8 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
       })
       return `${titleText}<br>${upgrade1}<br>${upgrade2}<br>${upgrade3}<br>${upgrade4}<br>${upgrade5}<br>${upgrade6}<br>${upgrade7}<br>${upgrade8}<br>${upgrade9}`
     },
-    effectDescription: (_n: number) => {
-      const bonus = getGQUpgradeEffect('favoriteUpgrade')
+    effectDescription: () => {
+      const bonus = getGQUpgradeEffect('favoriteUpgrade', 'quarkMult')
       return i18next.t('singularity.data.favoriteUpgrade.effect', {
         n: formatAsPercentIncrease(bonus, 2)
       })
@@ -1989,26 +2211,445 @@ export const goldenQuarkUpgrades: Record<SingularityDataKeys, GoldenQuarkUpgrade
   }
 }
 
+export const goldenQuarkUpgradeNames = Object.keys(goldenQuarkUpgrades) as SingularityDataKeys[]
+
 export const blankGQLevelObject: Record<
   SingularityDataKeys,
-  { level: number; freeLevel: number; goldenQuarksInvested: number }
+  { freeLevel: number; goldenQuarksInvested: number }
 > = Object.fromEntries(
   Object.keys(goldenQuarkUpgrades).map((key) => [
     key as SingularityDataKeys,
     {
-      level: 0,
       freeLevel: 0,
       goldenQuarksInvested: 0
     }
   ])
-) as Record<SingularityDataKeys, { level: number; freeLevel: number; goldenQuarksInvested: number }>
+) as Record<SingularityDataKeys, { freeLevel: number; goldenQuarksInvested: number }>
 
-export const maxGoldenQuarkUpgradeAP = Object.values(goldenQuarkUpgrades).reduce((acc, upgrade) => {
-  if (upgrade.maxLevel === -1) {
-    return acc
+export function updateGoldenQuarkUpgradeVisibility (
+  upgradeKey: SingularityDataKeys,
+  element = DOMCacheGetOrSet(upgradeKey)
+): boolean {
+  const isMaxed = goldenQuarkUpgrades[upgradeKey].level >= computeGQUpgradeMaxLevel(upgradeKey)
+  const hideMaxed = DOMCacheGetOrSet('toggleMaxedGoldenQuarkUpgrades').getAttribute('aria-pressed') === 'true'
+
+  element.classList.toggle('upgradeHiddenByMaxLevel', hideMaxed && isMaxed)
+  return isMaxed
+}
+
+export function toggleMaxedGoldenQuarkUpgrades (): void {
+  const toggle = DOMCacheGetOrSet('toggleMaxedGoldenQuarkUpgrades')
+  const hideMaxed = toggle.getAttribute('aria-pressed') !== 'true'
+  const i18nKey = hideMaxed ? 'general.maxedUpgradesHide' : 'general.maxedUpgradesShow'
+
+  toggle.setAttribute('aria-pressed', `${hideMaxed}`)
+  toggle.setAttribute('i18n', i18nKey)
+  toggle.textContent = i18next.t(i18nKey)
+  toggle.style.border = `2px solid ${hideMaxed ? 'red' : 'green'}`
+
+  for (const key of goldenQuarkUpgradeNames) {
+    if (key !== 'offeringAutomatic') {
+      updateGoldenQuarkUpgradeVisibility(key)
+    }
   }
-  return acc + 5
-}, 0)
+}
+
+export type DailyFreeUpgradeKey =
+  | 'goldenQuarks1'
+  | 'goldenQuarks2'
+  | 'goldenQuarks3'
+  | 'singCubes1'
+  | 'singCubes2'
+  | 'singCubes3'
+  | 'singOfferings1'
+  | 'singOfferings2'
+  | 'singOfferings3'
+  | 'singObtainium1'
+  | 'singObtainium2'
+  | 'singObtainium3'
+  | 'ascensions'
+  | 'singAmbrosiaGeneration2'
+  | 'singAmbrosiaGeneration3'
+  | 'singAmbrosiaGeneration'
+  | 'singAmbrosiaGeneration4'
+
+export interface DailyFreeUpgradeEntry {
+  amount: number
+  weight: number
+  /** -1 means no cap */
+  freeLevelCap: number
+  /** `description` must be the full line from a single i18next.t call: nesting translated strings duplicates stat symbols */
+  requirement?: { isUnlocked: () => boolean; description: () => string }
+  flatBonus?: { amount: number; minSingularity: number }
+}
+
+export const dailyFreeUpgradeTable: Record<DailyFreeUpgradeKey, DailyFreeUpgradeEntry> = {
+  goldenQuarks1: {
+    amount: 0.2,
+    weight: 7,
+    freeLevelCap: 10_000,
+    flatBonus: { amount: 0.2, minSingularity: 20 }
+  },
+  goldenQuarks2: {
+    amount: 0.2,
+    weight: 2,
+    freeLevelCap: 2_000,
+    flatBonus: { amount: 0.2, minSingularity: 20 }
+  },
+  goldenQuarks3: {
+    amount: 0.2,
+    weight: 1,
+    freeLevelCap: 30_000,
+    flatBonus: { amount: 1, minSingularity: 20 }
+  },
+  singCubes1: { amount: 1, weight: 200, freeLevelCap: 1_000_000 },
+  singCubes2: { amount: 0.5, weight: 55, freeLevelCap: 100_000 },
+  singCubes3: { amount: 0.25, weight: 5, freeLevelCap: 10_000 },
+  singOfferings1: { amount: 1, weight: 200, freeLevelCap: 1_000_000 },
+  singOfferings2: { amount: 0.5, weight: 60, freeLevelCap: 100_000 },
+  singOfferings3: { amount: 0.25, weight: 5, freeLevelCap: 10_000 },
+  singObtainium1: { amount: 1, weight: 200, freeLevelCap: 1_000_000 },
+  singObtainium2: { amount: 0.5, weight: 60, freeLevelCap: 100_000 },
+  singObtainium3: { amount: 0.25, weight: 5, freeLevelCap: 10_000 },
+  ascensions: { amount: 1, weight: 200, freeLevelCap: 1_000_000 },
+  singAmbrosiaGeneration2: {
+    amount: 0.10,
+    weight: 10,
+    freeLevelCap: 5,
+    requirement: {
+      isUnlocked: () => player.singularityChallenges.noAmbrosiaUpgrades.completions >= 1,
+      description: () => i18next.t('singularity.freeUpgradeInfo.daily.requirements.noAmbrosiaUpgrades1')
+    }
+  },
+  singAmbrosiaGeneration3: {
+    amount: 0.07,
+    weight: 7,
+    freeLevelCap: 5,
+    requirement: {
+      isUnlocked: () => player.singularityChallenges.limitedTime.completions >= 1,
+      description: () => i18next.t('singularity.freeUpgradeInfo.daily.requirements.limitedTime1')
+    }
+  },
+  singAmbrosiaGeneration: {
+    amount: 0.04,
+    weight: 4,
+    freeLevelCap: 5,
+    requirement: {
+      isUnlocked: () => player.singularityChallenges.sadisticPrequel.completions >= 1,
+      description: () => i18next.t('singularity.freeUpgradeInfo.daily.requirements.sadisticPrequel1')
+    }
+  },
+  singAmbrosiaGeneration4: {
+    amount: 0.02,
+    weight: 1,
+    freeLevelCap: 5,
+    requirement: {
+      isUnlocked: () => player.singularityChallenges.taxmanLastStand.completions >= 1,
+      description: () => i18next.t('singularity.freeUpgradeInfo.daily.requirements.taxmanLastStand1')
+    }
+  }
+}
+
+export const dailyFreeUpgradeKeys = Object.keys(dailyFreeUpgradeTable) as DailyFreeUpgradeKey[]
+
+export const maxGoldenQuarkUpgradeAP = 6 * goldenQuarkUpgradeNames.length
+  + 6 * dailyFreeUpgradeKeys.filter((key) => dailyFreeUpgradeTable[key].freeLevelCap !== -1).length
+
+const hasGQFreeLevelCap = (key: SingularityDataKeys): key is DailyFreeUpgradeKey =>
+  key in dailyFreeUpgradeTable && dailyFreeUpgradeTable[key as DailyFreeUpgradeKey].freeLevelCap !== -1
+
+export const getGQUpgradeAP = (key: SingularityDataKeys): number =>
+  (goldenQuarkUpgrades[key].level >= goldenQuarkUpgrades[key].maxLevel ? 6 : 0)
+  + (hasGQFreeLevelCap(key) && isDailyFreeUpgradeCapped(key) ? 6 : 0)
+
+export const calculateGQUpgradeAP = () => sumContents(goldenQuarkUpgradeNames.map(getGQUpgradeAP))
+
+const getDailyFreeUpgradeRoom = (key: DailyFreeUpgradeKey): number => {
+  const cap = dailyFreeUpgradeTable[key].freeLevelCap
+  return cap === -1 ? Number.POSITIVE_INFINITY : Math.max(0, cap - player.goldenQuarkUpgrades[key].freeLevel)
+}
+
+export const isDailyFreeUpgradeCapped = (key: DailyFreeUpgradeKey): boolean => getDailyFreeUpgradeRoom(key) <= 0
+
+export const isDailyFreeUpgradeUnlocked = (key: DailyFreeUpgradeKey): boolean =>
+  dailyFreeUpgradeTable[key].requirement?.isUnlocked() ?? true
+
+export const clampGQFreeLevelsToCaps = () => {
+  for (const key of dailyFreeUpgradeKeys) {
+    const cap = dailyFreeUpgradeTable[key].freeLevelCap
+    if (cap !== -1) {
+      player.goldenQuarkUpgrades[key].freeLevel = Math.min(player.goldenQuarkUpgrades[key].freeLevel, cap)
+    }
+  }
+}
+
+export const getDailyFreeUpgradeWeight = (key: DailyFreeUpgradeKey): number => {
+  if (!isDailyFreeUpgradeUnlocked(key) || isDailyFreeUpgradeCapped(key)) {
+    return 0
+  }
+  return dailyFreeUpgradeTable[key].weight
+}
+
+const addDailyFreeUpgradeLevels = (key: DailyFreeUpgradeKey, amount: number): number => {
+  const gained = Math.min(amount, getDailyFreeUpgradeRoom(key))
+  player.goldenQuarkUpgrades[key].freeLevel += gained
+  return gained
+}
+
+export const getDailyFreeUpgradeRolls = () => {
+  let additive = 3 * Math.sqrt(player.highestSingularityCount)
+  additive += getOcteractUpgradeEffect('octeractImprovedDaily', 'extraGoldenQuarks')
+  additive += getShopUpgradeEffects('shopImprovedDaily2', 'freeSingularityUpgrades')
+  additive += getShopUpgradeEffects('shopImprovedDaily3', 'freeSingularityUpgrades')
+  additive += getShopUpgradeEffects('shopImprovedDaily4', 'freeSingularityUpgrades')
+  additive += getGQUpgradeEffect('platonicPhi', 'dailyCodes')
+  additive += getOcteractUpgradeEffect('octeractImprovedDaily3', 'extraGoldenQuarks')
+  additive += getSingularityChallengeEffect('sadisticPrequel', 'extraFree')
+
+  let multiplier = getOcteractUpgradeEffect('octeractImprovedDaily2', 'goldenQuarkMult')
+  multiplier *= getOcteractUpgradeEffect('octeractImprovedDaily3', 'goldenQuarkMult')
+  multiplier *= getSingularityChallengeEffect('sadisticPrequel', 'freeUpgradeMult')
+  if (player.highestSingularityCount >= 200) {
+    multiplier *= 2
+  }
+  multiplier *= PCoinUpgradeEffects.FREE_UPGRADE_PROMOCODE_BUFF
+
+  return {
+    additive,
+    multiplier,
+    rolls: Math.floor(additive * multiplier)
+  }
+}
+
+export const awardDailyFreeUpgrades = (): Partial<Record<DailyFreeUpgradeKey, number>> => {
+  const gainedLevels: Partial<Record<DailyFreeUpgradeKey, number>> = {}
+  const addLevels = (key: DailyFreeUpgradeKey, amount: number) => {
+    const gained = addDailyFreeUpgradeLevels(key, amount)
+    if (gained > 0) {
+      gainedLevels[key] = (gainedLevels[key] ?? 0) + gained
+    }
+  }
+
+  const { rolls } = getDailyFreeUpgradeRolls()
+  const weights = dailyFreeUpgradeKeys.map(getDailyFreeUpgradeWeight)
+  let totalWeight = sumContents(weights)
+
+  for (let i = 0; i < rolls && totalWeight > 0; i++) {
+    let remaining = totalWeight * seededRandom(Seed.PromoCodes)
+    let index = -1
+    for (let j = 0; j < weights.length; j++) {
+      if (weights[j] <= 0) {
+        continue
+      }
+      index = j
+      remaining -= weights[j]
+      if (remaining < 0) {
+        break
+      }
+    }
+
+    const key = dailyFreeUpgradeKeys[index]
+    addLevels(key, dailyFreeUpgradeTable[key].amount)
+
+    if (isDailyFreeUpgradeCapped(key)) {
+      weights[index] = 0
+      totalWeight = sumContents(weights)
+    }
+  }
+
+  for (const key of dailyFreeUpgradeKeys) {
+    const flatBonus = dailyFreeUpgradeTable[key].flatBonus
+    if (flatBonus !== undefined && player.highestSingularityCount >= flatBonus.minSingularity) {
+      addLevels(key, flatBonus.amount)
+    }
+  }
+
+  return gainedLevels
+}
+
+export const addCodeFreeUpgrades = {
+  goldenQuarks1: 0.01,
+  goldenQuarks3: 0.05
+}
+
+export const addCodeFreeUpgradeKeys = Object.keys(addCodeFreeUpgrades) as (keyof typeof addCodeFreeUpgrades)[]
+
+export const addCodeFreeUpgradeMinSingularity = 150
+
+export const awardAddCodeFreeUpgrades = (uses: number): Record<keyof typeof addCodeFreeUpgrades, number> => {
+  const gained = { goldenQuarks1: 0, goldenQuarks3: 0 }
+  if (player.highestSingularityCount >= addCodeFreeUpgradeMinSingularity) {
+    for (const key of addCodeFreeUpgradeKeys) {
+      gained[key] = addDailyFreeUpgradeLevels(key, addCodeFreeUpgrades[key] * uses)
+    }
+  }
+  return gained
+}
+
+export const singularityMilestoneFreeUpgrades: ReadonlyArray<
+  { singularity: number; key: DailyFreeUpgradeKey; amount: number }
+> = [
+  { singularity: 5, key: 'goldenQuarks3', amount: 1 },
+  { singularity: 10, key: 'goldenQuarks3', amount: 2 }
+]
+
+export const awardSingularityMilestoneFreeUpgrades = (reachedSingularity: number) => {
+  for (const milestone of singularityMilestoneFreeUpgrades) {
+    if (milestone.singularity === reachedSingularity) {
+      addDailyFreeUpgradeLevels(milestone.key, milestone.amount)
+    }
+  }
+}
+
+const dailyFreeUpgradeInfoHTML = (): string => {
+  const { additive, multiplier, rolls } = getDailyFreeUpgradeRolls()
+  const weights = dailyFreeUpgradeKeys.map(getDailyFreeUpgradeWeight)
+  const totalWeight = sumContents(weights)
+
+  const rollsHTML = `<p class="freeUpgradeInfoSummary">${
+    i18next.t('singularity.freeUpgradeInfo.daily.rolls', {
+      rolls: format(rolls, 0, true),
+      additive: format(additive, 2, true),
+      multiplier: format(multiplier, 2, true)
+    })
+  }</p>`
+
+  const maxedHTML = totalWeight === 0
+    ? `<p class="freeUpgradeInfoMaxed">${i18next.t('singularity.freeUpgradeInfo.daily.allMaxed')}</p>`
+    : ''
+
+  const rowsHTML = dailyFreeUpgradeKeys.map((key, index) => {
+    const entry = dailyFreeUpgradeTable[key]
+    const freeLevel = format(player.goldenQuarkUpgrades[key].freeLevel, 2, true)
+    const freeLevelText = entry.freeLevelCap === -1
+      ? freeLevel
+      : `${freeLevel} / ${format(entry.freeLevelCap, 0, true)}`
+
+    let chanceText: string
+    const unlocked = isDailyFreeUpgradeUnlocked(key)
+    if (!unlocked) {
+      chanceText = infoAlertInactiveHTML(i18next.t('singularity.freeUpgradeInfo.locked'))
+    } else if (isDailyFreeUpgradeCapped(key)) {
+      chanceText = infoAlertInactiveHTML(i18next.t('singularity.freeUpgradeInfo.daily.capped'))
+    } else {
+      chanceText = `${format(100 * weights[index] / totalWeight, 2, true)}%`
+    }
+
+    let rowHTML = `<tr>
+      <td>${goldenQuarkUpgrades[key].name()}</td>
+      <td>+${format(entry.amount, 2, true)}</td>
+      <td>${chanceText}</td>
+      <td>${freeLevelText}</td>
+    </tr>`
+
+    if (!unlocked && entry.requirement !== undefined) {
+      rowHTML += `<tr class="freeUpgradeInfoInactive">
+        <td colspan="4">${entry.requirement.description()}</td>
+      </tr>`
+    }
+
+    if (
+      entry.flatBonus !== undefined && player.highestSingularityCount >= entry.flatBonus.minSingularity
+      && !isDailyFreeUpgradeCapped(key)
+    ) {
+      rowHTML += `<tr>
+        <td colspan="4">${
+        i18next.t('singularity.freeUpgradeInfo.daily.flatBonus', {
+          amount: format(entry.flatBonus.amount, 2, true)
+        })
+      }</td>
+      </tr>`
+    }
+
+    return rowHTML
+  }).join('')
+
+  return `${rollsHTML}${maxedHTML}${
+    infoAlertTableHTML([
+      i18next.t('singularity.freeUpgradeInfo.upgrade'),
+      i18next.t('singularity.freeUpgradeInfo.daily.perRoll'),
+      i18next.t('singularity.freeUpgradeInfo.daily.chance'),
+      i18next.t('singularity.freeUpgradeInfo.freeLevels')
+    ], rowsHTML)
+  }`
+}
+
+const addFreeUpgradeInfoHTML = (): string => {
+  const unlocked = player.highestSingularityCount >= addCodeFreeUpgradeMinSingularity
+  const uses = addCodeAvailableUses()
+
+  const summaryHTML = unlocked
+    ? `<p class="freeUpgradeInfoSummary">${
+      i18next.t('singularity.freeUpgradeInfo.add.uses', {
+        uses: format(uses, 0, true),
+        max: format(addCodeMaxUses(), 0, true)
+      })
+    }</p>`
+    : `<p class="freeUpgradeInfoInactive">${
+      i18next.t('singularity.freeUpgradeInfo.add.requirement', {
+        singularity: addCodeFreeUpgradeMinSingularity
+      })
+    }</p>`
+
+  const rowsHTML = addCodeFreeUpgradeKeys.map((key) => {
+    const perAdd = addCodeFreeUpgrades[key]
+    const fromAvailable = unlocked
+      ? `+${format(perAdd * uses, 2, true)}`
+      : infoAlertInactiveHTML(i18next.t('singularity.freeUpgradeInfo.locked'))
+    return `<tr>
+      <td>${goldenQuarkUpgrades[key].name()}</td>
+      <td>+${format(perAdd, 2, true)}</td>
+      <td>${fromAvailable}</td>
+      <td>${format(player.goldenQuarkUpgrades[key].freeLevel, 2, true)}</td>
+    </tr>`
+  }).join('')
+
+  return `${summaryHTML}${
+    infoAlertTableHTML([
+      i18next.t('singularity.freeUpgradeInfo.upgrade'),
+      i18next.t('singularity.freeUpgradeInfo.add.perAdd'),
+      i18next.t('singularity.freeUpgradeInfo.add.fromAvailable'),
+      i18next.t('singularity.freeUpgradeInfo.freeLevels')
+    ], rowsHTML)
+  }`
+}
+
+const milestoneFreeUpgradeInfoHTML = (): string => {
+  const rowsHTML = singularityMilestoneFreeUpgrades.map((milestone) => {
+    const status = player.highestSingularityCount >= milestone.singularity
+      ? i18next.t('singularity.freeUpgradeInfo.milestones.obtained')
+      : infoAlertInactiveHTML(i18next.t('singularity.freeUpgradeInfo.milestones.notObtained'))
+    return `<tr>
+      <td>${
+      i18next.t('singularity.freeUpgradeInfo.milestones.singularity', { singularity: milestone.singularity })
+    }</td>
+      <td>${goldenQuarkUpgrades[milestone.key].name()}</td>
+      <td>+${format(milestone.amount, 2, true)}</td>
+      <td>${status}</td>
+    </tr>`
+  }).join('')
+
+  return `<p class="freeUpgradeInfoSummary">${i18next.t('singularity.freeUpgradeInfo.milestones.summary')}</p>${
+    infoAlertTableHTML([
+      i18next.t('singularity.freeUpgradeInfo.milestones.milestone'),
+      i18next.t('singularity.freeUpgradeInfo.upgrade'),
+      i18next.t('singularity.freeUpgradeInfo.milestones.reward'),
+      i18next.t('singularity.freeUpgradeInfo.milestones.status')
+    ], rowsHTML)
+  }`
+}
+
+const freeUpgradeInfoSections = [
+  { labelKey: 'singularity.freeUpgradeInfo.daily.section', html: dailyFreeUpgradeInfoHTML },
+  { labelKey: 'singularity.freeUpgradeInfo.add.section', html: addFreeUpgradeInfoHTML },
+  { labelKey: 'singularity.freeUpgradeInfo.milestones.section', html: milestoneFreeUpgradeInfoHTML }
+]
+
+export const showFreeUpgradeInfo = () =>
+  InfoAlert(
+    i18next.t('singularity.freeUpgradeInfo.title'),
+    freeUpgradeInfoSections.map(({ labelKey, html }) => ({ label: i18next.t(labelKey), html }))
+  )
 
 /**
  * Get the upgrade's HTML representation with all relevant information
@@ -2018,12 +2659,14 @@ export function upgradeGQToString (upgradeKey: SingularityDataKeys): string {
   const name = upgrade.name()
   const description = upgrade.description()
   const costNextLevel = getGQUpgradeCostTNL(upgradeKey)
-  const maxLevel = upgrade.maxLevel === -1 ? '' : `/${format(computeGQUpgradeMaxLevel(upgradeKey), 0, true)}`
-  const effectDesc = getGQUpgradeDescription(upgradeKey)
-  const freeLevelMult = computeFreeLevelMultiplier()
-  const freeLevelsWithMult = upgrade.freeLevel * freeLevelMult
+  const maxLevel = `/${format(computeGQUpgradeMaxLevel(upgradeKey), 0, true)}`
+  const effectDesc = upgrade.effectDescription()
+  const freeLevelMult = computeFreeLevelMultiplier(upgradeKey)
+  const freeLevelsWithMult = player.goldenQuarkUpgrades[upgradeKey].freeLevel * freeLevelMult
   const totalEffectiveLevels = actualGQUpgradeTotalLevels(upgradeKey)
-  const color = computeGQUpgradeMaxLevel(upgradeKey) === upgrade.level ? 'plum' : 'white'
+  const color = computeGQUpgradeMaxLevel(upgradeKey) === goldenQuarkUpgrades[upgradeKey].level
+    ? 'plum'
+    : 'white'
 
   // Upgrade Name Text
   const nameHTML = `<span style="color: gold">${name}</span>`
@@ -2049,10 +2692,12 @@ export function upgradeGQToString (upgradeKey: SingularityDataKeys): string {
     : ''
 
   let freeLevelText = freeLevelsWithMult > 0
-    ? `<span style="color: orange"> [+${format(upgrade.freeLevel, 2, true)}${freeMultText}]</span>`
+    ? `<span style="color: orange"> [+${
+      format(player.goldenQuarkUpgrades[upgradeKey].freeLevel, 2, true)
+    }${freeMultText}]</span>`
     : ''
 
-  if (freeLevelsWithMult > upgrade.level) {
+  if (freeLevelsWithMult > goldenQuarkUpgrades[upgradeKey].level) {
     freeLevelText = `${freeLevelText}<span style="color: lightgray"> ${
       i18next.t(
         'general.softCapped'
@@ -2060,7 +2705,7 @@ export function upgradeGQToString (upgradeKey: SingularityDataKeys): string {
     }</span>`
   }
 
-  const effectiveLevelText = totalEffectiveLevels !== upgrade.level
+  const effectiveLevelText = totalEffectiveLevels !== goldenQuarkUpgrades[upgradeKey].level
     ? `<br><b><span style="color: white">${
       i18next.t('general.effectiveLevel', {
         level: format(totalEffectiveLevels, 2, true)
@@ -2068,21 +2713,37 @@ export function upgradeGQToString (upgradeKey: SingularityDataKeys): string {
     }</span></b>`
     : ''
 
+  const fullyCapped = upgradeKey in dailyFreeUpgradeTable
+    && isDailyFreeUpgradeCapped(upgradeKey as DailyFreeUpgradeKey)
+    && goldenQuarkUpgrades[upgradeKey].level >= computeGQUpgradeMaxLevel(upgradeKey)
+  const fullyCappedText = fullyCapped
+    ? `<span style="color: gold" role="img" aria-label="${i18next.t('general.fullyCapped')}"> ★</span>`
+    : ''
+
   const levelText = `<span style="color: ${color}">${i18next.t('general.level')} ${
-    format(upgrade.level, 0, true)
-  }${maxLevel}${freeLevelText}</span>`
+    format(goldenQuarkUpgrades[upgradeKey].level, 0, true)
+  }${maxLevel}${freeLevelText}${fullyCappedText}</span>`
+
+  const overclockLevels = computeGQUpgradeMaxLevel(upgradeKey) - upgrade.maxLevel
+  const overclockHTML = overclockLevels > 0
+    ? `<br><span style="color: orchid">${
+      i18next.t('singularity.toString.overclockLevels', { levels: format(overclockLevels, 0, true) })
+    }</span>`
+    : ''
 
   // Upgrade Effect Text
   const upgradeEffectHTML = `<span style="color: gold">${effectDesc}</span>`
 
   // TNL Cost Text
-  const costHTML = computeGQUpgradeMaxLevel(upgradeKey) === upgrade.level
+  const costHTML = computeGQUpgradeMaxLevel(upgradeKey) === goldenQuarkUpgrades[upgradeKey].level
     ? ''
     : i18next.t('singularity.toString.costNextLevel', { amount: format(costNextLevel, 0, true) })
 
-  const investedGQHTML = upgrade.goldenQuarksInvested > 0
+  const investedGQHTML = player.goldenQuarkUpgrades[upgradeKey].goldenQuarksInvested > 0
     ? `<br><span style="color: orange">${
-      i18next.t('singularity.toString.spentGQ', { spent: format(upgrade.goldenQuarksInvested, 0, true) })
+      i18next.t('singularity.toString.spentGQ', {
+        spent: format(player.goldenQuarkUpgrades[upgradeKey].goldenQuarksInvested, 0, true)
+      })
     }</span>`
     : ''
 
@@ -2091,7 +2752,26 @@ export function upgradeGQToString (upgradeKey: SingularityDataKeys): string {
     ? `<br><span style="color: orchid">${i18next.t('general.alwaysEnabled')}</span>`
     : ''
 
-  return `${nameHTML}<br>${levelText}${effectiveLevelText}<br>${descriptionHTML}<br>${minSingularityHTML}<br>${upgradeEffectHTML}<br>${costHTML}${investedGQHTML}${qualityOfLifeText}`
+  const maxLevelAPCheck = goldenQuarkUpgrades[upgradeKey].level >= upgrade.maxLevel ? '✔' : '✖'
+  const maxLevelAPHTML = `<br>${
+    upgrade.canExceedCap
+      ? i18next.t('singularity.toString.upgradeAPMaxOverclock', {
+        amount: 6,
+        level: format(upgrade.maxLevel, 0, true),
+        check: maxLevelAPCheck
+      })
+      : i18next.t('general.upgradeAPMax', { amount: 6, check: maxLevelAPCheck })
+  }`
+  const freeLevelAPHTML = hasGQFreeLevelCap(upgradeKey)
+    ? `<br>${
+      i18next.t('general.upgradeAPFreeLevelCap', {
+        amount: 6,
+        check: isDailyFreeUpgradeCapped(upgradeKey) ? '✔' : '✖'
+      })
+    }`
+    : ''
+
+  return `${nameHTML}<br>${levelText}${overclockHTML}${effectiveLevelText}<br>${descriptionHTML}<br>${minSingularityHTML}<br>${upgradeEffectHTML}<br>${costHTML}${investedGQHTML}${qualityOfLifeText}${maxLevelAPHTML}${freeLevelAPHTML}`
 }
 
 export function updateMobileGQHTML (k: SingularityDataKeys) {
@@ -2107,17 +2787,11 @@ export function updateMobileGQHTML (k: SingularityDataKeys) {
 
     buyOne.classList.add('modalBtnBuy')
     buyOne.textContent = i18next.t('general.buyOne')
-    buyOne.addEventListener('click', (event: MouseEvent) => {
-      buyGQUpgradeLevel(k, event, false)
-      updateMobileGQHTML(k)
-    })
+    buyOne.dataset.modalAction = 'one'
 
     buyMax.classList.add('modalBtnBuy')
     buyMax.textContent = i18next.t('general.buyMax')
-    buyMax.addEventListener('click', (event: MouseEvent) => {
-      buyGQUpgradeLevel(k, event, true)
-      updateMobileGQHTML(k)
-    })
+    buyMax.dataset.modalAction = 'max'
 
     buttonDiv.appendChild(buyOne)
     buttonDiv.appendChild(buyMax)
@@ -2125,50 +2799,79 @@ export function updateMobileGQHTML (k: SingularityDataKeys) {
   }
 }
 
+export const getGQUpgradeCumulativeCost = (upgradeKey: SingularityDataKeys, level: number): number => {
+  const upgrade = goldenQuarkUpgrades[upgradeKey]
+  const costForm = singularityCostFormulae[upgrade.specialCostForm]
+
+  return costForm(upgrade.costPerLevel, level, upgrade.maxLevel)
+}
+
+export const maximumAffordableLevel = (upgradeKey: SingularityDataKeys, goldenQuarkAmount: number): number => {
+  const maxLevel = computeGQUpgradeMaxLevel(upgradeKey)
+
+  if (goldenQuarkUpgrades[upgradeKey].level === maxLevel) {
+    return maxLevel // no need to check maxed upgrades for affordability
+  }
+
+  const availableGQ = goldenQuarkAmount + player.goldenQuarkUpgrades[upgradeKey].goldenQuarksInvested
+
+  let low = goldenQuarkUpgrades[upgradeKey].level
+  let high = maxLevel
+
+  while (low < high) {
+    const middle = low + Math.ceil((high - low) / 2)
+
+    if (getGQUpgradeCumulativeCost(upgradeKey, middle) <= availableGQ) {
+      low = middle
+    } else {
+      high = middle - 1
+    }
+  }
+
+  return low
+}
+
+const gqLevelReconstructionTolerance = 1e-10
+
+export const setGQUpgradeLevels = () => {
+  for (const upgradeKey of goldenQuarkUpgradeNames) {
+    const upgrade = goldenQuarkUpgrades[upgradeKey]
+    const oldInvested = player.goldenQuarkUpgrades[upgradeKey].goldenQuarksInvested || 0
+
+    upgrade.level = 0
+
+    // Accumulated purchase costs can round slightly below the cumulative level cost once costs
+    // exceed 2^53, so the tolerance must be relative. It is far below the smallest relative
+    // cost step of any upgrade (~2e-5 for uncapped Default upgrades at level 1e6).
+    const maxAffordableLevel = maximumAffordableLevel(upgradeKey, oldInvested * gqLevelReconstructionTolerance)
+    const totalCost = getGQUpgradeCumulativeCost(upgradeKey, maxAffordableLevel)
+
+    upgrade.level = maxAffordableLevel
+
+    player.goldenQuarkUpgrades[upgradeKey].goldenQuarksInvested = totalCost
+
+    const toRefund = oldInvested - totalCost
+    if (toRefund > 0) {
+      player.goldenQuarks += toRefund
+    }
+  }
+}
+
 /**
  * Get the cost for upgrading once. Returns 0 if maxed.
  */
 export function getGQUpgradeCostTNL (upgradeKey: SingularityDataKeys): number {
-  const upgrade = goldenQuarkUpgrades[upgradeKey]
-  let costMultiplier = 1
-
-  if (computeGQUpgradeMaxLevel(upgradeKey) === upgrade.level) {
+  if (computeGQUpgradeMaxLevel(upgradeKey) === goldenQuarkUpgrades[upgradeKey].level) {
     return 0
   }
 
-  // Overcap
-  if (computeGQUpgradeMaxLevel(upgradeKey) > upgrade.maxLevel && upgrade.level >= upgrade.maxLevel) {
-    costMultiplier *= Math.pow(4, upgrade.level - upgrade.maxLevel + 1)
+  const nextLevelCost = getGQUpgradeCumulativeCost(upgradeKey, goldenQuarkUpgrades[upgradeKey].level + 1)
+
+  if (!Number.isFinite(nextLevelCost)) {
+    return Number.POSITIVE_INFINITY
   }
 
-  if (upgrade.specialCostForm === 'Exponential2') {
-    return (
-      upgrade.costPerLevel * Math.sqrt(costMultiplier) * Math.pow(2, upgrade.level)
-    )
-  }
-
-  if (upgrade.specialCostForm === 'Cubic') {
-    return (
-      upgrade.costPerLevel
-      * costMultiplier
-      * (Math.pow(upgrade.level + 1, 3) - Math.pow(upgrade.level, 3))
-    )
-  }
-
-  if (upgrade.specialCostForm === 'Quadratic') {
-    return (
-      upgrade.costPerLevel
-      * costMultiplier
-      * (Math.pow(upgrade.level + 1, 2) - Math.pow(upgrade.level, 2))
-    )
-  }
-
-  costMultiplier *= upgrade.maxLevel === -1 && upgrade.level >= 100 ? upgrade.level / 50 : 1
-  costMultiplier *= upgrade.maxLevel === -1 && upgrade.level >= 400 ? upgrade.level / 100 : 1
-
-  return computeGQUpgradeMaxLevel(upgradeKey) === upgrade.level
-    ? 0
-    : Math.ceil(upgrade.costPerLevel * (1 + upgrade.level) * costMultiplier)
+  return nextLevelCost - getGQUpgradeCumulativeCost(upgradeKey, goldenQuarkUpgrades[upgradeKey].level)
 }
 
 /**
@@ -2180,82 +2883,77 @@ export async function buyGQUpgradeLevel (
   buyMax = false
 ): Promise<void> {
   const upgrade = goldenQuarkUpgrades[upgradeKey]
-  let purchased = 0
-  let maxPurchasable = 1
-  let GQBudget = player.goldenQuarks
-
-  if (event.shiftKey || buyMax) {
-    maxPurchasable = 100000000
-    const buy = Number(
-      await Prompt(
-        i18next.t('singularity.goldenQuarks.spendPrompt', {
-          gq: format(player.goldenQuarks, 0, true)
-        })
-      )
-    )
-
-    if (isNaN(buy) || !isFinite(buy) || !Number.isInteger(buy)) {
-      return Alert(i18next.t('general.validation.finite'))
-    }
-
-    if (buy === -1) {
-      GQBudget = player.goldenQuarks
-    } else if (buy <= 0) {
-      return Alert(i18next.t('general.validation.zeroOrLess'))
-    } else {
-      GQBudget = buy
-    }
-    GQBudget = Math.min(player.goldenQuarks, GQBudget)
-  }
-
-  if (upgrade.maxLevel > 0) {
-    maxPurchasable = Math.min(
-      maxPurchasable,
-      computeGQUpgradeMaxLevel(upgradeKey) - upgrade.level
-    )
-  }
-
-  if (maxPurchasable === 0) {
+  if (computeGQUpgradeMaxLevel(upgradeKey) === goldenQuarkUpgrades[upgradeKey].level) {
     return Alert(i18next.t('singularity.goldenQuarks.hasUpgrade'))
   }
-
   if (player.highestSingularityCount < upgrade.minimumSingularity) {
     return Alert(i18next.t('singularity.goldenQuarks.notHighEnoughLevel'))
   }
 
-  while (maxPurchasable > 0) {
-    const cost = getGQUpgradeCostTNL(upgradeKey)
-    if (player.goldenQuarks < cost || GQBudget < cost) {
-      break
-    } else {
-      player.goldenQuarks -= cost
-      upgrade.goldenQuarksInvested += cost
-      GQBudget -= cost
-      upgrade.level += 1
-      purchased += 1
-      maxPurchasable -= 1
-    }
-
-    // Special upgrade effects
-    if (upgradeKey === 'oneMind') {
-      player.ascensionCounter = 0
-      player.ascensionCounterReal = 0
-      player.ascensionCounterRealReal = 0
-      void Alert(i18next.t('singularity.goldenQuarks.ascensionReset'))
-    }
-
-    if (upgradeKey === 'singCitadel2') {
-      goldenQuarkUpgrades.singCitadel.freeLevel = upgrade.level
-    }
+  const purchaseOptions = {
+    getMaxLevels: () =>
+      player.highestSingularityCount >= upgrade.minimumSingularity
+        ? computeGQUpgradeMaxLevel(upgradeKey) - goldenQuarkUpgrades[upgradeKey].level
+        : 0,
+    getBalance: () => player.goldenQuarks,
+    getCost: (levels: number) =>
+      getGQUpgradeCumulativeCost(upgradeKey, goldenQuarkUpgrades[upgradeKey].level + levels)
+      - getGQUpgradeCumulativeCost(upgradeKey, goldenQuarkUpgrades[upgradeKey].level)
+  }
+  const initialPurchase = calculateSingularityUpgradePurchase(purchaseOptions, 1, 'levels')
+  if (initialPurchase === null || initialPurchase.levels <= 0) {
+    return Alert(i18next.t('singularity.goldenQuarks.poor'))
   }
 
-  if (purchased === 0) {
-    return Alert(i18next.t('general.validation.moreThanPlayerHas'))
+  const selectedPurchase = event.shiftKey || buyMax
+    ? await PurchasePrompt({
+      ...purchaseOptions,
+      title: upgrade.name(),
+      getLevel: () => goldenQuarkUpgrades[upgradeKey].level,
+      getMaxLevel: () => computeGQUpgradeMaxLevel(upgradeKey),
+      resource: 'goldenQuarks'
+    })
+    : initialPurchase
+  if (selectedPurchase === null || selectedPurchase.levels <= 0) {
+    return
   }
-  if (purchased > 1) {
+
+  const purchase = calculateSingularityUpgradePurchase(
+    {
+      ...purchaseOptions,
+      getBalance: () => Math.min(purchaseOptions.getBalance(), selectedPurchase.cost)
+    },
+    selectedPurchase.levels,
+    'levels'
+  )
+  if (purchase === null || purchase.levels <= 0) {
+    return Alert(i18next.t('singularity.goldenQuarks.poor'))
+  }
+
+  const { levels: levelsToPurchase, cost } = purchase
+  player.goldenQuarks -= cost
+  goldenQuarkUpgrades[upgradeKey].level += levelsToPurchase
+  player.goldenQuarkUpgrades[upgradeKey].goldenQuarksInvested = getGQUpgradeCumulativeCost(
+    upgradeKey,
+    goldenQuarkUpgrades[upgradeKey].level
+  )
+
+  if (upgradeKey === 'oneMind') {
+    player.ascensionCounter = 0
+    player.ascensionCounterReal = 0
+    player.ascensionCounterRealReal = 0
+    resetCubeRateTracking()
+    void Alert(i18next.t('singularity.goldenQuarks.ascensionReset'))
+  }
+
+  if (upgradeKey === 'singCitadel2') {
+    player.goldenQuarkUpgrades.singCitadel.freeLevel = goldenQuarkUpgrades.singCitadel2.level
+  }
+
+  if (levelsToPurchase > 1) {
     void Alert(
       i18next.t('singularity.goldenQuarks.multiBuyPurchased', {
-        levels: format(purchased)
+        levels: format(levelsToPurchase)
       })
     )
   }
@@ -2263,21 +2961,29 @@ export async function buyGQUpgradeLevel (
   updateSingularityPenalties()
   updateSingularityPerks()
   updateTokens()
-  updateMaxTokens()
   revealStuff()
 }
 
-function computeFreeLevelMultiplier (): number {
+const freeLevelMultiplierExemptUpgrades: ReadonlySet<SingularityDataKeys> = new Set([
+  'singAmbrosiaGeneration',
+  'singAmbrosiaGeneration2',
+  'singAmbrosiaGeneration3',
+  'singAmbrosiaGeneration4'
+])
+
+function computeFreeLevelMultiplier (upgradeKey: SingularityDataKeys): number {
+  if (freeLevelMultiplierExemptUpgrades.has(upgradeKey)) {
+    return 1
+  }
   return getShopUpgradeEffects('shopSingularityPotency', 'freeUpgradeMult') + 0.3 / 100 * player.cubeUpgrades[75]
 }
 
 export function computeGQUpgradeFreeLevelSoftcap (upgradeKey: SingularityDataKeys): number {
-  const upgrade = goldenQuarkUpgrades[upgradeKey]
-  const freeLevelMult = computeFreeLevelMultiplier()
-  const baseRealFreeLevels = freeLevelMult * upgrade.freeLevel
+  const freeLevelMult = computeFreeLevelMultiplier(upgradeKey)
+  const baseRealFreeLevels = freeLevelMult * player.goldenQuarkUpgrades[upgradeKey].freeLevel
   return (
-    Math.min(upgrade.level, baseRealFreeLevels)
-    + Math.sqrt(Math.max(0, baseRealFreeLevels - upgrade.level))
+    Math.min(goldenQuarkUpgrades[upgradeKey].level, baseRealFreeLevels)
+    + Math.sqrt(Math.max(0, baseRealFreeLevels - goldenQuarkUpgrades[upgradeKey].level))
   )
 }
 
@@ -2294,9 +3000,13 @@ export function computeGQUpgradeMaxLevel (upgradeKey: SingularityDataKeys): numb
         break
       }
     }
-    cap += getOcteractUpgradeEffect('octeractSingUpgradeCap')
+    cap += getOcteractUpgradeEffect('octeractSingUpgradeCap', 'goldenQuarkUpgradeCapIncrease')
     return cap
   }
+}
+
+export const divinePackOcteractMultiplier = (effectiveLevel: number) => {
+  return Math.pow(1.3, Math.min(10, Math.max(0, effectiveLevel - 35)))
 }
 
 export function actualGQUpgradeTotalLevels (upgradeKey: SingularityDataKeys): number {
@@ -2319,15 +3029,15 @@ export function actualGQUpgradeTotalLevels (upgradeKey: SingularityDataKeys): nu
   }
 
   const actualFreeLevels = computeGQUpgradeFreeLevelSoftcap(upgradeKey)
-  const linearLevels = upgrade.level + actualFreeLevels
+  const linearLevels = goldenQuarkUpgrades[upgradeKey].level + actualFreeLevels
   let polynomialLevels = 0
 
-  if (getOcteractUpgradeEffect('octeractImprovedFree')) {
-    let exponent = 0.6
-    exponent += getOcteractUpgradeEffect('octeractImprovedFree2')
-    exponent += getOcteractUpgradeEffect('octeractImprovedFree3')
-    exponent += getOcteractUpgradeEffect('octeractImprovedFree4')
-    polynomialLevels = Math.pow(upgrade.level * actualFreeLevels, exponent)
+  if (getOcteractUpgradeEffect('octeractImprovedFree', 'unlocked')) {
+    let exponent = getOcteractUpgradeEffect('octeractImprovedFree', 'freeLevelPower')
+    exponent += getOcteractUpgradeEffect('octeractImprovedFree2', 'freeLevelPowerIncrease')
+    exponent += getOcteractUpgradeEffect('octeractImprovedFree3', 'freeLevelPowerIncrease')
+    exponent += getOcteractUpgradeEffect('octeractImprovedFree4', 'freeLevelPowerIncrease')
+    polynomialLevels = Math.pow(goldenQuarkUpgrades[upgradeKey].level * actualFreeLevels, exponent)
   }
 
   return Math.max(linearLevels, polynomialLevels)
@@ -2336,16 +3046,13 @@ export function actualGQUpgradeTotalLevels (upgradeKey: SingularityDataKeys): nu
 /**
  * Gets effect of a Golden Quark upgrade, using actualTotalLevels
  */
-export function getGQUpgradeEffect (upgradeKey: SingularityDataKeys): number {
+export const getGQUpgradeEffect = <
+  T extends SingularityDataKeys,
+  K extends keyof GoldenQuarkUpgradeRewards[T]
+>(upgradeKey: T, key: K): GoldenQuarkUpgradeRewards[T][K] => {
   const upgrade = goldenQuarkUpgrades[upgradeKey]
   const totalLevels = actualGQUpgradeTotalLevels(upgradeKey)
-  return upgrade.effect(totalLevels)
-}
-
-function getGQUpgradeDescription (upgradeKey: SingularityDataKeys): string {
-  const upgrade = goldenQuarkUpgrades[upgradeKey]
-  const totalLevels = actualGQUpgradeTotalLevels(upgradeKey)
-  return upgrade.effectDescription(totalLevels)
+  return upgrade.effect(totalLevels, key) as GoldenQuarkUpgradeRewards[T][K]
 }
 
 const currentSingularityText = () => i18next.t('singularity.perks.usesCurrentSing')
@@ -2355,7 +3062,7 @@ const currentSingularityText = () => i18next.t('singularity.perks.usesCurrentSin
  * They can have one or several levels with a description for each level
  */
 interface SingularityPerk {
-  readonly name: () => string
+  readonly name: string
   readonly levels: number[]
   readonly description: (n: number, levels: number[]) => string
   readonly ID: string
@@ -2363,11 +3070,11 @@ interface SingularityPerk {
 
 // List of Singularity Perks based on player.highestSingularityCount
 // The list is ordered on first level acquisition, so be careful when inserting a new one ;)
+export const generousOrbsLevels = [1, 5, 10, 25, 50, 100, 200]
+
 export const singularityPerks: SingularityPerk[] = [
   {
-    name: () => {
-      return i18next.t('singularity.perks.welcometoSingularity.name')
-    },
+    name: 'singularity.perks.welcometoSingularity.name',
     levels: [1],
     description: () => {
       return i18next.t('singularity.perks.welcometoSingularity.default')
@@ -2375,9 +3082,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'welcometoSingularity'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.unlimitedGrowth.name')
-    },
+    name: 'singularity.perks.unlimitedGrowth.name',
     levels: [1],
     description: () => {
       return i18next.t('singularity.perks.unlimitedGrowth.default', {
@@ -2387,9 +3092,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'unlimitedGrowth'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.goldenCoins.name')
-    },
+    name: 'singularity.perks.goldenCoins.name',
     levels: [1],
     description: () => {
       return i18next.t('singularity.perks.goldenCoins.default', {
@@ -2403,9 +3106,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'goldenCoins'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.xyz.name')
-    },
+    name: 'singularity.perks.xyz.name',
     levels: [1, 20, 200],
     description: (n: number, levels: number[]) => {
       if (n >= levels[2]) {
@@ -2419,37 +3120,17 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'xyz'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.generousOrbs.name')
-    },
-    levels: [1, 2, 5, 10, 15, 20, 25, 30, 35],
-    description: (n: number, levels: number[]) => {
-      const overfluxBonus: Record<number, number> = {
-        8: 700, // How to read: levels[8] -> Sing 35 gives 700%
-        7: 500,
-        6: 415,
-        5: 360,
-        4: 315,
-        3: 280,
-        2: 255,
-        1: 230
-      }
-
-      for (let i = 8; i > 0; i--) {
-        if (n >= levels[i]) {
-          return i18next.t('singularity.perks.generousOrbs.default', {
-            amount: overfluxBonus[i]
-          })
-        }
-      }
-      return i18next.t('singularity.perks.generousOrbs.default', { amount: '215' })
+    name: 'singularity.perks.generousOrbs.name',
+    levels: generousOrbsLevels,
+    description: (n: number) => {
+      return i18next.t('singularity.perks.generousOrbs.default', {
+        amount: format(100 * (calculateMaxBaseCubeQuarkMultiplier(n) - 1))
+      })
     },
     ID: 'generousOrbs'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.researchDummies.name')
-    },
+    name: 'singularity.perks.researchDummies.name',
     levels: [1, 11],
     description: (n: number, levels: number[]) => {
       if (n >= levels[1]) {
@@ -2461,9 +3142,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'researchDummies'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.recycledContent.name')
-    },
+    name: 'singularity.perks.recycledContent.name',
     levels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     description: (n: number, _levels: number[]) => {
       const salvageBonus = Math.min(50, 5 * n)
@@ -2474,9 +3153,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'recycledContent'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.antGodsCornucopia.name')
-    },
+    name: 'singularity.perks.antGodsCornucopia.name',
     levels: [1, 30, 70, 100],
     description: (n: number, levels: number[]) => {
       if (n >= levels[3]) {
@@ -2492,9 +3169,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'antGodsCornucopia'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.bringToLife.name')
-    },
+    name: 'singularity.perks.bringToLife.name',
     levels: [1, 9, 25, 49, 81, 121, 169, 196, 225, 256, 289],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i > 0; i--) {
@@ -2510,9 +3185,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'bringToLife'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.tokenInheritance.name')
-    },
+    name: 'singularity.perks.tokenInheritance.name',
     levels: [2, 5, 10, 17, 26, 37, 50, 65, 82, 101, 220, 240, 260, 270, 277],
     description: (n: number, levels: number[]) => {
       for (let i = 15; i > 0; i--) {
@@ -2527,9 +3200,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'tokenInheritance'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.sweepomatic.name')
-    },
+    name: 'singularity.perks.sweepomatic.name',
     levels: [2, 101],
     description: (n: number, levels: number[]) => {
       if (n >= levels[1]) {
@@ -2541,9 +3212,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'sweepomatic'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.superStart.name')
-    },
+    name: 'singularity.perks.superStart.name',
     levels: [2, 3, 4, 7, 15],
     description: (n: number, levels: number[]) => {
       if (n >= levels[4]) {
@@ -2561,9 +3230,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'superStart'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.invigoratedSpirits.name')
-    },
+    name: 'singularity.perks.invigoratedSpirits.name',
     levels: [2, 10, 26, 50, 82, 122, 170, 197, 226, 257, 290],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2583,9 +3250,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'invigoratedSpirits'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.eloBonus.name')
-    },
+    name: 'singularity.perks.eloBonus.name',
     levels: [3, 11, 27, 51, 83, 123, 171, 198, 227, 258, 291],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2601,9 +3266,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'eloBonus'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.notSoChallenging.name')
-    },
+    name: 'singularity.perks.notSoChallenging.name',
     levels: [4, 7, 10, 15, 20],
     description: (n: number, levels: number[]) => {
       if (n >= levels[4]) {
@@ -2621,19 +3284,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'notSoChallenging'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.autoCampaigns.name')
-    },
-    levels: [4],
-    description: () => {
-      return i18next.t('singularity.perks.autoCampaigns.default')
-    },
-    ID: 'autoCampaigns'
-  },
-  {
-    name: () => {
-      return i18next.t('singularity.perks.automationUpgrades.name')
-    },
+    name: 'singularity.perks.automationUpgrades.name',
     levels: [5, 10, 15, 25, 30, 100],
     description: (n: number, levels: number[]) => {
       if (n >= levels[5]) {
@@ -2653,9 +3304,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'automationUpgrades'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.evenMoreQuarks.name')
-    },
+    name: 'singularity.perks.evenMoreQuarks.name',
     // dprint-ignore
     levels: [
       5, 7, 10, 20, 35, 50, 65, 80, 90, 100, 121, 144, 150, 160, 166, 169, 170,
@@ -2678,9 +3327,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'evenMoreQuarks'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.potionAutogenerator.name')
-    },
+    name: 'singularity.perks.potionAutogenerator.name',
     levels: [6],
     description: () => {
       return i18next.t('singularity.perks.potionAutogenerator.default')
@@ -2688,9 +3335,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'potionAutogenerator'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.persistentGlobalResets.name')
-    },
+    name: 'singularity.perks.persistentGlobalResets.name',
     levels: [8],
     description: () => {
       return i18next.t('singularity.perks.persistentGlobalResets.default')
@@ -2698,25 +3343,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'persistentGlobalResets'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.shopSpecialOffer.name')
-    },
-    levels: [10, 50],
-    description: (n: number, levels: number[]) => {
-      if (n >= levels[1]) {
-        return i18next.t('singularity.perks.shopSpecialOffer.hasLevel2')
-      } else if (n >= levels[0]) {
-        return i18next.t('singularity.perks.shopSpecialOffer.hasLevel1')
-      } else {
-        return i18next.t('singularity.perks.shopSpecialOffer.default')
-      }
-    },
-    ID: 'shopSpecialOffer'
-  },
-  {
-    name: () => {
-      return i18next.t('singularity.perks.forTheLoveOfTheAntGod.name')
-    },
+    name: 'singularity.perks.forTheLoveOfTheAntGod.name',
     levels: [10, 15, 20],
     description: (n: number, levels: number[]) => {
       if (n >= levels[2]) {
@@ -2730,9 +3357,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'forTheLoveOfTheAntGod'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.itAllAddsUp.name')
-    },
+    name: 'singularity.perks.itAllAddsUp.name',
     levels: [
       10,
       16,
@@ -2754,7 +3379,8 @@ export const singularityPerks: SingularityPerk[] = [
       for (let i = levels.length - 1; i >= 0; i--) {
         if (n >= levels[i]) {
           return i18next.t('singularity.perks.itAllAddsUp.default', {
-            div: format(1 + (i + 1) / 5, 2, true)
+            div: format(1 + (i + 1) / 5, 2, true),
+            seconds: format(1440 * (i + 1), 0)
           })
         }
       }
@@ -2764,9 +3390,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'itAllAddsUp'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.automagicalRunes.name')
-    },
+    name: 'singularity.perks.automagicalRunes.name',
     levels: [15, 30, 40, 50],
     description: (n: number, levels: number[]) => {
       if (n >= levels[3]) {
@@ -2782,9 +3406,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'automagicalRunes'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.firstClearTokens.name')
-    },
+    name: 'singularity.perks.firstClearTokens.name',
     levels: [16],
     description: () => {
       return i18next.t('singularity.perks.firstClearTokens.default')
@@ -2792,9 +3414,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'firstClearTokens'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.derpSmithsCornucopia.name')
-    },
+    name: 'singularity.perks.derpSmithsCornucopia.name',
     levels: [
       18,
       38,
@@ -2827,9 +3447,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'derpSmithsCornucopia'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.eternalAscensions.name')
-    },
+    name: 'singularity.perks.eternalAscensions.name',
     levels: [25],
     description: () => {
       return i18next.t('singularity.perks.eternalAscensions.default')
@@ -2837,9 +3455,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'eternalAscensions'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.exaltedAchievements.name')
-    },
+    name: 'singularity.perks.exaltedAchievements.name',
     levels: [25],
     description: () => {
       return i18next.t('singularity.perks.exaltedAchievements.default')
@@ -2847,23 +3463,15 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'exaltedAchievements'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.coolQOLCubes.name')
-    },
-    levels: [25, 35],
-    description: (n: number, levels: number[]) => {
-      if (n >= levels[1]) {
-        return i18next.t('singularity.perks.coolQOLCubes.hasLevel1')
-      } else {
-        return i18next.t('singularity.perks.coolQOLCubes.default')
-      }
+    name: 'singularity.perks.coolQOLCubes.name',
+    levels: [10],
+    description: () => {
+      return i18next.t('singularity.perks.coolQOLCubes.default')
     },
     ID: 'coolQOLCubes'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.infiniteRecycling.name')
-    },
+    name: 'singularity.perks.infiniteRecycling.name',
     levels: [30, 40, 61, 81, 111, 131, 161, 191, 236, 260],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2879,9 +3487,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'infiniteRecycling'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.irishAnt.name')
-    },
+    name: 'singularity.perks.irishAnt.name',
     levels: [35, 42, 49, 56, 63, 70, 77, 135, 142, 149, 156, 163, 170, 177],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2899,9 +3505,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'irishAnt'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.bonusTokens.name')
-    },
+    name: 'singularity.perks.bonusTokens.name',
     levels: [41, 58, 113, 163, 229],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2916,9 +3520,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'bonusTokens'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.immaculateAlchemy.name')
-    },
+    name: 'singularity.perks.immaculateAlchemy.name',
     levels: [50],
     description: (_n: number, _levels: number[]) => {
       const multiplier = calculateImmaculateAlchemyBonus()
@@ -2929,9 +3531,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'immaculateAlchemy'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.overclocked.name')
-    },
+    name: 'singularity.perks.overclocked.name',
     levels: [50, 60, 75, 100, 125, 150, 175, 200, 225, 250],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2945,9 +3545,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'overclocked'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.wowCubeAutomatedShipping.name')
-    },
+    name: 'singularity.perks.wowCubeAutomatedShipping.name',
     levels: [50],
     description: () => {
       return i18next.t(
@@ -2957,9 +3555,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'wowCubeAutomatedShipping'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.platonicClones.name')
-    },
+    name: 'singularity.perks.platonicClones.name',
     levels: [50],
     description: () => {
       return i18next.t('singularity.perks.platonicClones.default')
@@ -2967,9 +3563,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'platonicClones'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.congealedblueberries.name')
-    },
+    name: 'singularity.perks.congealedblueberries.name',
     levels: [64, 128, 192, 256, 270],
     description (n, levels) {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -2984,9 +3578,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'congealedblueberries'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.lastClearTokens.name')
-    },
+    name: 'singularity.perks.lastClearTokens.name',
     levels: [69],
     description: () => {
       return i18next.t('singularity.perks.lastClearTokens.default')
@@ -2994,9 +3586,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'lastClearTokens'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.recyclistsDesktop.name')
-    },
+    name: 'singularity.perks.recyclistsDesktop.name',
     levels: [75, 85, 105, 125, 155, 185, 215, 245, 260, 275],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -3012,9 +3602,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'recyclistsDesktop'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.goldenRevolution.name')
-    },
+    name: 'singularity.perks.goldenRevolution.name',
     levels: [100],
     description: () => {
       return i18next.t('singularity.perks.goldenRevolution.default', {
@@ -3024,9 +3612,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'goldenRevolution'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.goldenRevolutionII.name')
-    },
+    name: 'singularity.perks.goldenRevolutionII.name',
     levels: [100],
     description: () => {
       return i18next.t('singularity.perks.goldenRevolutionII.default', {
@@ -3036,9 +3622,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'goldenRevolution2'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.goldenRevolutionIII.name')
-    },
+    name: 'singularity.perks.goldenRevolutionIII.name',
     levels: [100],
     description: () => {
       return i18next.t('singularity.perks.goldenRevolutionIII.default', {
@@ -3048,9 +3632,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'goldenRevolution3'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.irishAnt2.name')
-    },
+    name: 'singularity.perks.irishAnt2.name',
     levels: [100, 150, 200, 225, 250, 255, 260, 265, 269, 272],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -3066,9 +3648,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'irishAnt2'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.platSigma.name')
-    },
+    name: 'singularity.perks.platSigma.name',
     levels: [125, 200],
     description: (n: number, levels: number[]) => {
       let counter = 0
@@ -3086,9 +3666,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'platSigma'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.primalPower.name')
-    },
+    name: 'singularity.perks.primalPower.name',
     levels: [131, 269],
     description: (n: number, levels: number[]) => {
       if (n >= levels[1]) {
@@ -3100,9 +3678,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'primalPower'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.midasMilleniumAgedGold.name')
-    },
+    name: 'singularity.perks.midasMilleniumAgedGold.name',
     levels: [150],
     description: () => {
       return i18next.t('singularity.perks.midasMilleniumAgedGold.default')
@@ -3110,9 +3686,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'midasMilleniumAgedGold'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.goldenRevolution4.name')
-    },
+    name: 'singularity.perks.goldenRevolution4.name',
     levels: [160, 173, 185, 194, 204, 210, 219, 229, 240, 249],
     description: (n: number, levels: number[]) => {
       const perSecond = 1000000
@@ -3130,9 +3704,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'goldenRevolution4'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.octeractMetagenesis.name')
-    },
+    name: 'singularity.perks.octeractMetagenesis.name',
     levels: [200, 205],
     description: (n: number, levels: number[]) => {
       if (n >= levels[1]) {
@@ -3144,9 +3716,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'octeractMetagenesis'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.skrauQ.name')
-    },
+    name: 'singularity.perks.skrauQ.name',
     levels: [200],
     description: () => {
       const amt = (player.singularityCount >= 200)
@@ -3157,9 +3727,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'skrauQ'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.demeterHarvest.name')
-    },
+    name: 'singularity.perks.demeterHarvest.name',
     levels: [230, 245, 260, 275, 290],
     description: (n: number, levels: number[]) => {
       for (let i = levels.length - 1; i >= 0; i--) {
@@ -3175,9 +3743,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'demeterHarvest'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.permanentBenefaction.name')
-    },
+    name: 'singularity.perks.permanentBenefaction.name',
     levels: [244],
     description: () => {
       return i18next.t('singularity.perks.permanentBenefaction.default')
@@ -3185,9 +3751,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'permanentBenefaction'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.infiniteShopUpgrades.name')
-    },
+    name: 'singularity.perks.infiniteShopUpgrades.name',
     levels: [250, 280],
     description: () => {
       if (player.highestSingularityCount < 280) {
@@ -3205,9 +3769,7 @@ export const singularityPerks: SingularityPerk[] = [
     ID: 'infiniteShopUpgrades'
   },
   {
-    name: () => {
-      return i18next.t('singularity.perks.taxReduction.name')
-    },
+    name: 'singularity.perks.taxReduction.name',
     levels: [281],
     description: () => {
       return i18next.t('singularity.perks.taxReduction.default', {
@@ -3215,36 +3777,333 @@ export const singularityPerks: SingularityPerk[] = [
       })
     },
     ID: 'taxReduction'
+  },
+  {
+    name: 'singularity.perks.irishAnt3.name',
+    levels: [285, 293],
+    description: (n: number, levels: number[]) => {
+      let perSing = 2
+      if (n >= levels[1]) {
+        perSing++
+      }
+
+      return i18next.t('singularity.perks.irishAnt3.default', {
+        amt: format(calculateIrish3PurpleLuck(), 0, true),
+        amt2: format(perSing, 0, true)
+      })
+    },
+    ID: 'irishAnt3'
+  },
+  {
+    name: 'singularity.perks.efficientBlueberries.name',
+    levels: [283, 289],
+    description: () => {
+      let perTwo = 2 / 100
+      if (player.highestSingularityCount >= 289) {
+        perTwo += 1 / 100
+      }
+      const effect = perTwo * Math.floor(calculateBlueberryInventory() / 2)
+      return i18next.t('singularity.perks.efficientBlueberries.default', {
+        amt: format(effect, 2, true),
+        amt2: format(perTwo, 2, true)
+      })
+    },
+    ID: 'efficientBlueberries'
+  },
+  {
+    name: 'singularity.perks.reactorSpeedup.name',
+    levels: [282, 284, 286, 288, 290, 292, 294, 296, 298, 300],
+    description: (n: number, levels: number[]) => {
+      for (let i = levels.length - 1; i >= 0; i--) {
+        if (n >= levels[i]) {
+          return i18next.t('singularity.perks.reactorSpeedup.default', {
+            amt: formatAsPercentIncrease(1 - (i + 1) / 100, 0)
+          })
+        }
+      }
+
+      return i18next.t('singularity.perks.evenMoreQuarks.bug')
+    },
+    ID: 'reactorSpeedup'
   }
 ]
 
-// Placeholder text for Perk Info that is seen upon first load, check Line 645 EventListeners.ts for actual Perk Info code.
-export const updateSingularityPerks = (): void => {
-  const singularityCount = player.highestSingularityCount
-  DOMCacheGetOrSet('singularityPerksHeader').innerHTML = i18next.t(
-    'singularity.perks.header',
-    {
-      ord: toOrdinal(singularityCount)
-    }
-  )
-  DOMCacheGetOrSet('singularityPerksText').innerHTML = i18next.t(
-    'singularity.perks.levelInfo',
-    {
-      level: '#',
-      singularity: '#'
-    }
-  )
-  DOMCacheGetOrSet('singularityPerksDesc').innerHTML = i18next.t(
-    'singularity.perks.description'
-  )
-  handlePerks(singularityCount)
+interface SingularityPerkTreePlacement {
+  readonly parentID: string | null
+  readonly x: number
+  readonly y: number
+  // Draw separate straight lines to children instead of a shared branch and junction.
+  readonly independentChildConnections?: boolean
 }
 
-interface ISingularityPerkDisplayInfo {
-  name: string
-  lastUpgraded: number
-  acquired: number
-  htmlID: string
+const xScale = 1 // Identity
+const yScale = 1.33
+const xPrime = (k: number) => k * xScale
+// 0.25 yScale shift to make tree further away from the subtab buttons
+const yPrime = (k: number) => (k + 0.25) * yScale
+
+// These are visual progression branches, not perk prerequisites.
+// The Singularity 1 Perks form the central hub and each family grows into the surrounding web.
+const SINGULARITY_PERK_TREE_PLACEMENTS: Record<string, SingularityPerkTreePlacement> = {
+  welcometoSingularity: { parentID: null, x: -1, y: 0 },
+  tokenInheritance: { parentID: 'welcometoSingularity', x: -3, y: -2, independentChildConnections: true },
+  bonusTokens: { parentID: 'tokenInheritance', x: -4, y: -3 },
+  firstClearTokens: { parentID: 'tokenInheritance', x: -4, y: -2 },
+  lastClearTokens: { parentID: 'firstClearTokens', x: -5, y: -2 },
+  sweepomatic: { parentID: 'welcometoSingularity', x: -3, y: 0 },
+  automationUpgrades: { parentID: 'sweepomatic', x: -4, y: 0, independentChildConnections: true },
+  potionAutogenerator: { parentID: 'automationUpgrades', x: -4, y: 1 },
+  automagicalRunes: { parentID: 'automationUpgrades', x: -4, y: -1 },
+  eternalAscensions: { parentID: 'automationUpgrades', x: -5, y: 0, independentChildConnections: true },
+  wowCubeAutomatedShipping: { parentID: 'eternalAscensions', x: -5, y: 1 },
+  platonicClones: { parentID: 'eternalAscensions', x: -5, y: -1 },
+  persistentGlobalResets: { parentID: 'welcometoSingularity', x: -3, y: -1 },
+
+  unlimitedGrowth: { parentID: null, x: 0, y: -1, independentChildConnections: true },
+  derpSmithsCornucopia: { parentID: 'unlimitedGrowth', x: 0, y: -2 },
+  primalPower: { parentID: 'derpSmithsCornucopia', x: 0, y: -3 },
+  infiniteShopUpgrades: { parentID: 'primalPower', x: -1, y: -3 },
+  evenMoreQuarks: { parentID: 'unlimitedGrowth', x: -1, y: -1 },
+  skrauQ: { parentID: 'evenMoreQuarks', x: -1, y: -2 },
+
+  goldenCoins: { parentID: null, x: 1, y: -1 },
+  immaculateAlchemy: { parentID: 'goldenCoins', x: 1, y: -3 },
+  goldenRevolution: { parentID: 'immaculateAlchemy', x: 1, y: -4 },
+  goldenRevolution2: { parentID: 'goldenRevolution', x: 0, y: -4 },
+  goldenRevolution3: { parentID: 'goldenRevolution', x: 2, y: -4 },
+  goldenRevolution4: { parentID: 'goldenRevolution3', x: 3, y: -4 },
+  taxReduction: { parentID: 'goldenRevolution4', x: 3, y: -3 },
+
+  xyz: { parentID: null, x: 2, y: 0, independentChildConnections: true },
+  octeractMetagenesis: { parentID: 'xyz', x: 3, y: 0 },
+  itAllAddsUp: { parentID: 'xyz', x: 2, y: -1 },
+  platSigma: { parentID: 'itAllAddsUp', x: 3, y: -1 },
+  midasMilleniumAgedGold: { parentID: 'platSigma', x: 4, y: -1 },
+
+  generousOrbs: { parentID: null, x: -1, y: 1 },
+  overclocked: { parentID: 'generousOrbs', x: -2, y: 1 },
+
+  researchDummies: { parentID: null, x: 2, y: 1 },
+  superStart: { parentID: 'researchDummies', x: 3, y: 1, independentChildConnections: true },
+  notSoChallenging: { parentID: 'superStart', x: 4, y: 1 },
+  coolQOLCubes: { parentID: 'superStart', x: 3, y: 2 },
+  permanentBenefaction: { parentID: 'coolQOLCubes', x: 4, y: 2 },
+
+  recycledContent: { parentID: null, x: 1, y: 2 },
+  infiniteRecycling: { parentID: 'recycledContent', x: 0, y: 3 },
+  demeterHarvest: { parentID: 'recycledContent', x: 1, y: 3 },
+  recyclistsDesktop: { parentID: 'recycledContent', x: 2, y: 3 },
+
+  antGodsCornucopia: { parentID: null, x: 0, y: 2 },
+  eloBonus: { parentID: 'antGodsCornucopia', x: -2, y: 2 },
+  invigoratedSpirits: { parentID: 'eloBonus', x: -3, y: 2 },
+  bringToLife: { parentID: 'invigoratedSpirits', x: -4, y: 2 },
+  forTheLoveOfTheAntGod: { parentID: 'antGodsCornucopia', x: -2, y: 3 },
+  irishAnt: { parentID: 'forTheLoveOfTheAntGod', x: -3, y: 3, independentChildConnections: true },
+  irishAnt2: { parentID: 'irishAnt', x: -4, y: 3 },
+  congealedblueberries: { parentID: 'irishAnt', x: -3, y: 4 },
+  efficientBlueberries: { parentID: 'congealedblueberries', x: -2, y: 4 },
+  reactorSpeedup: { parentID: 'congealedblueberries', x: -4, y: 4 },
+  irishAnt3: { parentID: 'irishAnt2', x: -5, y: 3 },
+
+  exaltedAchievements: { parentID: null, x: 0.5, y: 0.5 }
+}
+const SINGULARITY_PERK_TREE_BOUNDS = {
+  minimumX: -6,
+  maximumX: 6,
+  minimumY: -6,
+  maximumY: 6,
+  paddingPercent: 5
+} as const
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
+const MAX_PERK_PREVIEWS = 3
+
+let singularityPerkTreeCanvas: HTMLElement | null = null
+let singularityPerkTreeConnectionLayer: SVGGElement | null = null
+let singularityPerkTreeFrame: number | null = null
+let singularityPerkTreeResizeObserver: ResizeObserver | null = null
+
+const singularityPerkTreeElementCenter = (
+  element: HTMLElement,
+  canvasRect: DOMRect
+): { x: number; y: number } => {
+  const elementRect = element.getBoundingClientRect()
+  return {
+    x: elementRect.left + elementRect.width / 2 - canvasRect.left,
+    y: elementRect.top + elementRect.height / 2 - canvasRect.top
+  }
+}
+
+const singularityPerkTreePath = (pathData: string, modifierClass: string | null) => {
+  const path = document.createElementNS(SVG_NAMESPACE, 'path')
+  path.setAttribute('d', pathData)
+  path.classList.add('singularityPerkTreeConnection')
+  if (modifierClass !== null) {
+    path.classList.add(modifierClass)
+  }
+  return path
+}
+
+const singularityPerkTreeConnectionClass = (element: HTMLElement) => {
+  if (element.classList.contains('newPerk')) {
+    return 'singularityPerkTreeConnectionNew'
+  }
+  if (element.classList.contains('singularityPerkPreview')) {
+    return 'singularityPerkTreeConnectionPreview'
+  }
+  return null
+}
+
+const drawSingularityPerkTreeConnections = (): void => {
+  singularityPerkTreeFrame = null
+  const canvas = singularityPerkTreeCanvas
+  const connectionLayer = singularityPerkTreeConnectionLayer
+  if (canvas === null || connectionLayer === null) {
+    return
+  }
+
+  const canvasRect = canvas.getBoundingClientRect()
+  if (canvasRect.width === 0 || canvasRect.height === 0) {
+    connectionLayer.replaceChildren()
+    return
+  }
+
+  const connectionSVG = connectionLayer.ownerSVGElement
+  connectionSVG?.setAttribute('viewBox', `0 0 ${canvasRect.width} ${canvasRect.height}`)
+  const paths = document.createDocumentFragment()
+  const visibleChildrenByParent = new Map<string, HTMLElement[]>()
+
+  for (const [perkID, { parentID }] of Object.entries(SINGULARITY_PERK_TREE_PLACEMENTS)) {
+    if (parentID === null) {
+      continue
+    }
+
+    const child = DOMCacheGetOrSet(perkID)
+    if (child.style.display === 'none') {
+      continue
+    }
+
+    const visibleChildren = visibleChildrenByParent.get(parentID) ?? []
+    visibleChildren.push(child)
+    visibleChildrenByParent.set(parentID, visibleChildren)
+  }
+
+  for (const [parentID, children] of visibleChildrenByParent) {
+    const parent = DOMCacheGetOrSet(parentID)
+    if (parent.style.display === 'none') {
+      continue
+    }
+
+    const start = singularityPerkTreeElementCenter(parent, canvasRect)
+    if (SINGULARITY_PERK_TREE_PLACEMENTS[parentID].independentChildConnections) {
+      for (const child of children) {
+        const end = singularityPerkTreeElementCenter(child, canvasRect)
+        paths.append(singularityPerkTreePath(
+          `M ${start.x} ${start.y} L ${end.x} ${end.y}`,
+          singularityPerkTreeConnectionClass(child)
+        ))
+      }
+      continue
+    }
+
+    const childCenters = children.map((child) => singularityPerkTreeElementCenter(child, canvasRect))
+    const averageEnd = childCenters.reduce(
+      (total, point) => ({ x: total.x + point.x / childCenters.length, y: total.y + point.y / childCenters.length }),
+      { x: 0, y: 0 }
+    )
+    const isHorizontal = Math.abs(averageEnd.x - start.x) >= Math.abs(averageEnd.y - start.y)
+    const junction = {
+      x: isHorizontal ? start.x + (averageEnd.x - start.x) / 2 : start.x,
+      y: isHorizontal ? start.y : start.y + (averageEnd.y - start.y) / 2
+    }
+    const hasNewChild = children.some((child) => child.classList.contains('newPerk'))
+    const allPreviewChildren = children.every((child) => child.classList.contains('singularityPerkPreview'))
+
+    paths.append(singularityPerkTreePath(
+      isHorizontal
+        ? `M ${start.x} ${start.y} H ${junction.x}`
+        : `M ${start.x} ${start.y} V ${junction.y}`,
+      hasNewChild
+        ? 'singularityPerkTreeConnectionNew'
+        : allPreviewChildren
+        ? 'singularityPerkTreeConnectionPreview'
+        : null
+    ))
+
+    for (let childIndex = 0; childIndex < children.length; childIndex++) {
+      const child = children[childIndex]
+      const end = childCenters[childIndex]
+      paths.append(singularityPerkTreePath(
+        isHorizontal
+          ? `M ${junction.x} ${junction.y} V ${end.y} H ${end.x}`
+          : `M ${junction.x} ${junction.y} H ${end.x} V ${end.y}`,
+        singularityPerkTreeConnectionClass(child)
+      ))
+    }
+
+    if (children.length > 1) {
+      const junctionNode = document.createElementNS(SVG_NAMESPACE, 'circle')
+      junctionNode.setAttribute('cx', `${junction.x}`)
+      junctionNode.setAttribute('cy', `${junction.y}`)
+      junctionNode.setAttribute('r', '3')
+      junctionNode.classList.add('singularityPerkTreeJunction')
+      paths.append(junctionNode)
+    }
+  }
+
+  connectionLayer.replaceChildren(paths)
+}
+
+const scheduleSingularityPerkTreeConnections = () => {
+  singularityPerkTreeFrame ??= requestAnimationFrame(drawSingularityPerkTreeConnections)
+}
+
+export const initializeSingularityPerkTree = () => {
+  const tree = DOMCacheGetOrSet('singularityPerksGrid')
+  const canvas = document.createElement('div')
+  const connectionLayer = document.createElementNS(SVG_NAMESPACE, 'svg')
+  const connectionGroup = document.createElementNS(SVG_NAMESPACE, 'g')
+
+  tree.replaceChildren()
+  tree.setAttribute('role', 'group')
+  tree.setAttribute('aria-label', i18next.t('singularity.perks.treeLabel'))
+  canvas.classList.add('singularityPerkTreeCanvas')
+  connectionLayer.id = 'singularityPerkTreeConnections'
+  connectionLayer.setAttribute('aria-hidden', 'true')
+  connectionLayer.setAttribute('focusable', 'false')
+  connectionLayer.append(connectionGroup)
+  canvas.append(connectionLayer)
+  tree.append(canvas)
+  singularityPerkTreeCanvas = canvas
+  singularityPerkTreeConnectionLayer = connectionGroup
+
+  singularityPerkTreeResizeObserver?.disconnect()
+  singularityPerkTreeResizeObserver = new ResizeObserver(scheduleSingularityPerkTreeConnections)
+  singularityPerkTreeResizeObserver.observe(canvas)
+  window.removeEventListener('resize', scheduleSingularityPerkTreeConnections)
+  window.addEventListener('resize', scheduleSingularityPerkTreeConnections)
+}
+
+export const addSingularityPerkToTree = (perkElement: HTMLElement, perkID: string) => {
+  const placement = SINGULARITY_PERK_TREE_PLACEMENTS[perkID]
+  if (singularityPerkTreeCanvas === null) {
+    throw new TypeError('initializeSingularityPerkTree must be called before adding perks.')
+  }
+  if (placement === undefined) {
+    throw new TypeError(`Singularity Perk "${perkID}" is missing a tree placement.`)
+  }
+
+  const { minimumX, maximumX, minimumY, maximumY, paddingPercent } = SINGULARITY_PERK_TREE_BOUNDS
+  const availablePercent = 100 - 2 * paddingPercent
+  perkElement.style.setProperty(
+    '--singularity-perk-tree-x',
+    `${paddingPercent + availablePercent * (xPrime(placement.x) - minimumX) / (maximumX - minimumX)}%`
+  )
+  perkElement.style.setProperty(
+    '--singularity-perk-tree-y',
+    `${paddingPercent + availablePercent * (yPrime(placement.y) - minimumY) / (maximumY - minimumY)}%`
+  )
+  singularityPerkTreeCanvas.append(perkElement)
 }
 
 /*
@@ -3267,77 +4126,128 @@ export const getLastUpgradeInfo = (
   return { level: 0, singularity: perk.levels[0], next: perk.levels[0] }
 }
 
-const handlePerks = (singularityCount: number) => {
-  const availablePerks: ISingularityPerkDisplayInfo[] = []
-  let singularityCountForNextPerk: number | null = null
-  let singularityCountForNextPerkUpgrade = Number.POSITIVE_INFINITY
-  for (const perk of singularityPerks) {
-    const upgradeInfo = getLastUpgradeInfo(perk, singularityCount)
-    if (upgradeInfo.level > 0) {
-      availablePerks.push({
-        name: perk.name(),
-        lastUpgraded: upgradeInfo.singularity,
-        acquired: perk.levels[0],
-        htmlID: perk.ID
-      })
-      if (upgradeInfo.next) {
-        singularityCountForNextPerkUpgrade = Math.min(
-          singularityCountForNextPerkUpgrade,
-          upgradeInfo.next
-        )
-      }
-    } else {
-      if (singularityCountForNextPerk === null) {
-        singularityCountForNextPerk = upgradeInfo.singularity
-      }
-      DOMCacheGetOrSet(perk.ID).style.display = 'none'
-    }
+const getRecentSingularityPerkStatus = (
+  perkInfo: ReturnType<typeof getLastUpgradeInfo>,
+  singTolerance: number
+): 'unlocked' | 'upgraded' | null => {
+  if (
+    perkInfo.level === 0
+    || player.highestSingularityCount - perkInfo.singularity > singTolerance
+  ) {
+    return null
   }
-  // We want to sort the perks so that the most recently upgraded or lastUpgraded are listed first
-  availablePerks.sort((p1, p2) => {
-    if (p1.acquired === p2.acquired && p1.lastUpgraded === p2.lastUpgraded) {
-      return 0
-    }
-    if (p1.lastUpgraded > p2.lastUpgraded) {
-      return -1
-    } else if (
-      p1.lastUpgraded === p2.lastUpgraded
-      && p1.acquired > p2.acquired
-    ) {
-      return -1
-    }
-    return 1
-  })
 
-  for (const availablePerk of availablePerks) {
-    const singTolerance = calculateMaxSingularityLookahead(true) - 1
-    const perkId = DOMCacheGetOrSet(availablePerk.htmlID)
-    perkId.style.display = ''
-    DOMCacheGetOrSet('singularityPerksGrid').append(perkId)
-    if (singularityCount - availablePerk.lastUpgraded <= singTolerance) { // Is new?
-      perkId.classList.replace('oldPerk', 'newPerk')
-    } else {
-      perkId.classList.replace('newPerk', 'oldPerk')
+  return perkInfo.level === 1 ? 'unlocked' : 'upgraded'
+}
+
+const getNextSingularityPerkUpgrade = (): number | null => {
+  let nextUpgrade = Number.POSITIVE_INFINITY
+
+  for (const perk of singularityPerks) {
+    const perkInfo = getLastUpgradeInfo(perk, player.highestSingularityCount)
+    if (perkInfo.level > 0 && perkInfo.next !== null) {
+      nextUpgrade = Math.min(nextUpgrade, perkInfo.next)
     }
   }
-  const nextUnlockedId = DOMCacheGetOrSet('singualrityUnlockNext')
-  if (singularityCountForNextPerk) {
-    nextUnlockedId.style.display = ''
-    nextUnlockedId.innerHTML = i18next.t('singularity.perks.unlockedIn', {
-      sing: singularityCountForNextPerk
-    })
-  } else {
-    nextUnlockedId.style.display = 'none'
+
+  return Number.isFinite(nextUpgrade) ? nextUpgrade : null
+}
+
+export const singularityPerkModalHTML = (perk: SingularityPerk, imageSrc: string): string => {
+  const perkInfo = getLastUpgradeInfo(perk, player.highestSingularityCount)
+  if (perkInfo.level === 0) {
+    return `<div class="singularityPerkModal" data-modal-preserve="children">
+    <div class="singularityPerkModalTitle" data-modal-preserve="children">
+      <img src="${imageSrc}" alt="" class="singularityPerkPreview" data-modal-preserve="children">
+      <span>${i18next.t(perk.name)}</span>
+    </div>
+    <div class="singularityPerkModalLevel">${
+      i18next.t('singularity.perks.previewInfo', {
+        singularity: perkInfo.singularity
+      })
+    }</div>
+  </div>`
   }
-  const countNext = DOMCacheGetOrSet('singualrityImproveNext')
-  if (singularityCountForNextPerkUpgrade < Number.POSITIVE_INFINITY) {
-    countNext.style.display = ''
-    countNext.innerHTML = i18next.t('singularity.perks.improvedIn', {
-      sing: singularityCountForNextPerkUpgrade
-    })
-  } else {
-    countNext.style.display = 'none'
+  const levelInfo = i18next.t('singularity.perks.levelInfo', {
+    level: perkInfo.level,
+    singularity: perkInfo.singularity
+  })
+  const recentStatus = getRecentSingularityPerkStatus(
+    perkInfo,
+    calculateMaxSingularityLookahead(true) - 1
+  )
+  const recentStatusText = recentStatus === 'unlocked'
+    ? i18next.t('singularity.perks.new')
+    : recentStatus === 'upgraded'
+    ? i18next.t('singularity.perks.upgraded')
+    : ''
+  const nextSoonText = perkInfo.next !== null && perkInfo.next === getNextSingularityPerkUpgrade()
+    ? i18next.t('singularity.perks.nextSoon')
+    : ''
+  const statusText = [recentStatusText, nextSoonText].filter(Boolean).join(' ')
+  const nextLevelInfo = perkInfo.next === null
+    ? i18next.t('singularity.perks.highestLevel')
+    : i18next.t('singularity.perks.nextLevelInfo', { singularity: perkInfo.next })
+
+  return `<div class="singularityPerkModal" data-modal-preserve="children">
+    <div class="singularityPerkModalTitle" data-modal-preserve="children">
+      <img src="${imageSrc}" alt="" data-modal-preserve="children">
+      <span>${i18next.t(perk.name)}${statusText === '' ? '' : ` ${statusText}`}</span>
+    </div>
+    <div class="singularityPerkModalLevel">${levelInfo}</div>
+    <div class="singularityPerkModalNextLevel">${nextLevelInfo}</div>
+    <div class="singularityPerkModalDescription" data-modal-preserve="children">${
+    perk.description(
+      player.highestSingularityCount,
+      perk.levels
+    )
+  }</div>
+  </div>`
+}
+
+export const updateSingularityPerks = () => {
+  const singTolerance = calculateMaxSingularityLookahead(true) - 1
+  const nextPerkUpgrade = getNextSingularityPerkUpgrade()
+  const lockedPerks: SingularityPerk[] = []
+  for (const perk of singularityPerks) {
+    const upgradeInfo = getLastUpgradeInfo(perk, player.highestSingularityCount)
+    const perkElement = DOMCacheGetOrSet(perk.ID)
+    if (upgradeInfo.level > 0) {
+      perkElement.style.display = ''
+      perkElement.classList.remove('singularityPerkPreview')
+      const recentStatus = getRecentSingularityPerkStatus(upgradeInfo, singTolerance)
+      if (recentStatus !== null) {
+        perkElement.classList.replace('oldPerk', 'newPerk')
+      } else {
+        perkElement.classList.replace('newPerk', 'oldPerk')
+      }
+      perkElement.classList.toggle('singularityPerkRecentlyUnlocked', recentStatus === 'unlocked')
+      perkElement.classList.toggle('singularityPerkRecentlyUpgraded', recentStatus === 'upgraded')
+      perkElement.classList.toggle(
+        'singularityPerkNextUpgrade',
+        upgradeInfo.next !== null && upgradeInfo.next === nextPerkUpgrade
+      )
+    } else {
+      lockedPerks.push(perk)
+    }
   }
+  lockedPerks.sort((a, b) => a.levels[0] - b.levels[0])
+  const previewCutoff = lockedPerks.length > 0
+    ? lockedPerks[Math.min(MAX_PERK_PREVIEWS, lockedPerks.length) - 1].levels[0]
+    : 0
+  for (let index = 0; index < lockedPerks.length; index++) {
+    const perkElement = DOMCacheGetOrSet(lockedPerks[index].ID)
+    const isPreview = index < MAX_PERK_PREVIEWS || lockedPerks[index].levels[0] === previewCutoff
+    perkElement.style.display = isPreview ? '' : 'none'
+    perkElement.classList.toggle('singularityPerkPreview', isPreview)
+    perkElement.classList.replace('newPerk', 'oldPerk')
+    perkElement.classList.remove(
+      'singularityPerkRecentlyUnlocked',
+      'singularityPerkRecentlyUpgraded',
+      'singularityPerkNextUpgrade'
+    )
+  }
+  scheduleSingularityPerkTreeConnections()
 }
 
 export const calculateMaxSingularityLookahead = (nonZero: boolean): number => {
@@ -3345,9 +4255,9 @@ export const calculateMaxSingularityLookahead = (nonZero: boolean): number => {
     return 0
   } else {
     let maxLookahead = 1
-    maxLookahead += getGQUpgradeEffect('singFastForward')
-    maxLookahead += getGQUpgradeEffect('singFastForward2')
-    maxLookahead += getOcteractUpgradeEffect('octeractFastForward')
+    maxLookahead += getGQUpgradeEffect('singFastForward', 'lookahead')
+    maxLookahead += getGQUpgradeEffect('singFastForward2', 'lookahead')
+    maxLookahead += getOcteractUpgradeEffect('octeractFastForward', 'lookahead')
     return maxLookahead
   }
 }
@@ -3440,8 +4350,8 @@ const calculateSingularityReductions = () => {
   return (
     getShopUpgradeEffects('shopSingularityPenaltyDebuff', 'singularityPenaltyReducers')
     + (player.insideSingularityChallenge
-      ? getAmbrosiaUpgradeEffects('ambrosiaSingReduction2').singularityReduction
-      : getAmbrosiaUpgradeEffects('ambrosiaSingReduction1').singularityReduction)
+      ? getAmbrosiaUpgradeEffects('ambrosiaSingReduction2', 'singularityReduction')
+      : getAmbrosiaUpgradeEffects('ambrosiaSingReduction1', 'singularityReduction'))
   )
 }
 
@@ -3508,14 +4418,6 @@ export const calculateEffectiveSingularities = (
     effectiveSingularities *= Math.pow(3, singularityCount - 269)
   }
 
-  if (
-    player.singularityChallenges.taxmanLastStand.enabled
-    && player.singularityChallenges.taxmanLastStand.completions >= 8
-    && player.platonicUpgrades[15] === 0
-  ) {
-    effectiveSingularities = Math.pow(effectiveSingularities, 3 / 2)
-  }
-
   return effectiveSingularities
 }
 
@@ -3535,13 +4437,9 @@ export const calculateSingularityDebuff = (
   debuff: SingularityDebuffs,
   singularityCount: number = player.singularityCount
 ) => {
-  if (singularityCount === 0 || runes.antiquities.level > 0) {
-    return (debuff === 'Salvage' || debuff === 'Ant ELO') ? 0 : 1
-  }
-
   const constitutiveSingularityCount = singularityCount - calculateSingularityReductions()
-  if (constitutiveSingularityCount < 1) {
-    return 1
+  if (constitutiveSingularityCount < 1 || runes.antiquities.level > 0) {
+    return (debuff === 'Salvage' || debuff === 'Ant ELO') ? 0 : 1
   }
 
   const effectiveSingularities = calculateEffectiveSingularities(

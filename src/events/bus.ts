@@ -1,0 +1,32 @@
+import type { StorageRetrieveEvent } from './storage-events'
+
+interface GameEvents {
+  'storage:save': SynEvent<{ key: string; value: string }>
+  'storage:remove': SynEvent<{ key: string }>
+  'storage:get': StorageRetrieveEvent
+  'subscription:order': SynEvent<{ lookupKey: string }>
+  'subscription:manage': SynEvent<undefined>
+  'error:report': SynEvent<{ error?: unknown; extra?: Record<string, unknown> }>
+}
+
+type TypedBus = Omit<EventTarget, 'addEventListener' | 'removeEventListener' | 'dispatchEvent'> & {
+  dispatchEvent(event: GameEvents[keyof GameEvents]): boolean
+  addEventListener<K extends keyof GameEvents>(
+    type: K,
+    listener: (this: EventTarget, event: GameEvents[K]) => void,
+    options?: AddEventListenerOptions | boolean
+  ): void
+  removeEventListener<K extends keyof GameEvents>(
+    type: K,
+    listener: (this: EventTarget, event: GameEvents[K]) => void,
+    options?: EventListenerOptions | boolean
+  ): void
+}
+
+export const bus = new EventTarget() as TypedBus
+
+export class SynEvent<T> extends CustomEvent<T> {
+  constructor (type: string, details?: T) {
+    super(type, { detail: details })
+  }
+}

@@ -1,13 +1,25 @@
 import Decimal from 'break_infinity.js'
+import { getAmbrosiaUpgradeEffects } from './BlueberryUpgrades'
 import {
   calculateAmbrosiaGenerationSpeed,
-  calculateAmbrosiaLuck,
+  calculateAmbrosiaRewardLuck,
   calculateAscensionSpeedMult,
+  calculateEncabulatorSpeed,
   calculateGlobalSpeedMult,
   calculateGoldenQuarks,
   calculateOcteractMultiplier,
+  calculatePurpleHoneyConversionFactor,
+  calculatePurpleHoneyExtractionMultiplier,
+  calculatePurpleHoneyPerExtraction,
+  calculatePurpleHoneyRewardLuck,
+  calculatePurpleOverflowResolution,
+  calculatePurpleReactantCapacity,
+  calculatePurpleReactantConversion,
+  calculatePurpleReactantRouting,
   calculateRedAmbrosiaGenerationSpeed,
   calculateRedAmbrosiaLuck,
+  calculateRedAmbrosiaReactantCapacity,
+  calculateRedAmbrosiaRewardLuck,
   calculateRequiredBlueberryTime,
   calculateRequiredRedAmbrosiaTime,
   calculateResearchAutomaticObtainium
@@ -16,6 +28,9 @@ import { sacrificeAnts } from './Features/Ants/AntSacrifice/sacrifice'
 import { canAutoSacrifice } from './Features/Ants/Automation/sacrifice'
 import { getLevelMilestone } from './Levels'
 import { getOcteractUpgradeEffect } from './Octeracts'
+import { getPurpleReactorUpgradeEffects } from './Purple'
+import { getPurpleAmbrosiaUpgradeEffects } from './PurpleAmbrosiaUpgrades'
+import { PURPLE_REACTOR_TICK_INTERVAL } from './PurpleReactor'
 import { quarkHandler } from './Quark'
 import { getRedAmbrosiaUpgradeEffects } from './RedAmbrosiaUpgrades'
 import { Seed, seededRandom } from './RNG'
@@ -24,10 +39,11 @@ import { getNumberUnlockedRunes, indexToRune, type RuneKeys, runes, sacrificeOff
 import { buyAllSpiritLevels } from './RuneSpirits'
 import { getShopUpgradeEffects, useConsumable } from './Shop'
 import { getGQUpgradeEffect } from './singularity'
+import { getSingularityChallengeEffect } from './SingularityChallenges'
 import { player } from './Synergism'
-import { Tabs } from './Tabs'
+import { autoCraftSynthesis } from './Synthesis'
 import { buyAllTalismanResources } from './Talismans'
-import { visualUpdateAmbrosia, visualUpdateOcteracts, visualUpdateResearch } from './UpdateVisuals'
+import { animatePurpleHoneyGain } from './UpdateVisuals'
 import { Globals as G } from './Variables'
 
 type TimerInput =
@@ -40,60 +56,308 @@ type TimerInput =
   | 'singularity'
   | 'octeracts'
   | 'autoPotion'
-  | 'ambrosia'
-  | 'redAmbrosia'
+  | 'purpleReactor'
 
 const octeractGiveawayLevels = [160, 173, 185, 194, 204, 210, 219, 229, 240, 249]
+
+const awardAmbrosiaBarFill = (globalSpeedMult?: () => number) => {
+  const ambrosiaLuck = calculateAmbrosiaRewardLuck()
+  const RNG = seededRandom(Seed.Ambrosia)
+  const ambrosiaMult = Math.floor(ambrosiaLuck / 100)
+  const luckMult = RNG < ambrosiaLuck / 100 - Math.floor(ambrosiaLuck / 100) ? 1 : 0
+  const bonusAmbrosia = getSingularityChallengeEffect('noAmbrosiaUpgrades', 'bonusAmbrosia')
+  const ambrosiaToGain = (ambrosiaMult + luckMult) + bonusAmbrosia
+
+  if (player.singularityChallenges.barDependence.enabled) {
+    addTimers('prestige', ambrosiaToGain * 0.01, globalSpeedMult, true)
+    addTimers('transcension', ambrosiaToGain * 0.01, globalSpeedMult, true)
+    addTimers('reincarnation', ambrosiaToGain * 0.01, globalSpeedMult, true)
+    addTimers('autoPotion', ambrosiaToGain * 0.01, globalSpeedMult, true)
+  } else {
+    player.ambrosia += ambrosiaToGain
+    player.lifetimeAmbrosia += ambrosiaToGain
+  }
+  player.purpleHoneyProgress += getPurpleAmbrosiaUpgradeEffects('cancer', 'purpleBarPointsOnFill')
+}
+
+/**
+ * @returns seconds of Ambrosia generation granted by Red Ambrosia Accelerator
+ */
+const awardRedAmbrosiaBarFill = () => {
+  const redAmbrosiaLuck = calculateRedAmbrosiaRewardLuck()
+  const RNG = seededRandom(Seed.RedAmbrosia)
+  const redAmbrosiaMult = Math.floor(redAmbrosiaLuck / 100)
+  const luckMult = RNG < redAmbrosiaLuck / 100 - Math.floor(redAmbrosiaLuck / 100) ? 1 : 0
+  const redAmbrosiaToGain = redAmbrosiaMult + luckMult
+
+  if (player.singularityChallenges.barDependence.enabled) {
+    addTimers('ascension', redAmbrosiaToGain * 0.05, undefined, true)
+  } else {
+    player.redAmbrosia += redAmbrosiaToGain
+    player.lifetimeRedAmbrosia += redAmbrosiaToGain
+  }
+  player.purpleHoneyProgress += getPurpleAmbrosiaUpgradeEffects('cancer', 'purpleBarPointsOnFill')
+
+  // Red-Blue Ultrafusion uses base Red Luck, not TWO MIND reward luck
+  const baseRedLuck = calculateRedAmbrosiaLuck()
+  const acceleratorMult = Math.floor(baseRedLuck / 100)
+    + (RNG < baseRedLuck / 100 - Math.floor(baseRedLuck / 100) ? 1 : 0)
+  return acceleratorMult * getRedAmbrosiaUpgradeEffects('redAmbrosiaAccelerator', 'ambrosiaTimePerRedAmbrosia')
+}
+
+const gainAmbrosia = (globalSpeedMult?: () => number) => {
+  if (player.singularityChallenges.noSingularityUpgrades.completions === 0) {
+    return
+  }
+
+  let timeToAmbrosia = calculateRequiredBlueberryTime()
+
+  while (player.blueberryTime >= timeToAmbrosia) {
+    awardAmbrosiaBarFill(globalSpeedMult)
+    player.blueberryTime -= timeToAmbrosia
+    timeToAmbrosia = calculateRequiredBlueberryTime()
+  }
+}
+
+/**
+ * Converts Red Ambrosia Bar Points into Red Ambrosia.
+ * @returns seconds of Ambrosia generation granted by Red Ambrosia Accelerator
+ */
+const gainRedAmbrosia = () => {
+  if (player.singularityChallenges.noAmbrosiaUpgrades.completions === 0) {
+    return 0
+  }
+
+  let timeToRedAmbrosia = calculateRequiredRedAmbrosiaTime()
+  let ambrosiaTimeToGrant = 0
+
+  while (player.redAmbrosiaTime >= timeToRedAmbrosia) {
+    ambrosiaTimeToGrant += awardRedAmbrosiaBarFill()
+    player.redAmbrosiaTime -= timeToRedAmbrosia
+    timeToRedAmbrosia = calculateRequiredRedAmbrosiaTime()
+  }
+
+  return ambrosiaTimeToGrant
+}
+
+/**
+ * Routes Bar Points into their tanks, runs the main reaction, and then reacts any excess against the
+ * stock left over. Bar Points that are not reacted go to the regular Ambrosia/Red Ambrosia bars.
+ * @returns Purple Bar Points gained
+ */
+const reactPurpleReactants = (
+  ambrosiaBarPoints: number,
+  redAmbrosiaBarPoints: number,
+  reactionSeconds: number
+) => {
+  const ambrosiaRouting = calculatePurpleReactantRouting(
+    ambrosiaBarPoints,
+    player.purpleReactor.ambrosiaBarPointPercentage,
+    player.purpleReactor.storedAmbrosiaBarPoints,
+    calculatePurpleReactantCapacity(),
+    1
+  )
+  const redAmbrosiaRouting = calculatePurpleReactantRouting(
+    redAmbrosiaBarPoints,
+    player.purpleReactor.redAmbrosiaBarPointPercentage,
+    player.purpleReactor.storedRedAmbrosiaBarPoints,
+    calculateRedAmbrosiaReactantCapacity(),
+    1
+  )
+
+  const reaction = calculatePurpleReactantConversion(
+    ambrosiaRouting.storedBarPoints,
+    redAmbrosiaRouting.storedBarPoints,
+    calculatePurpleReactantCapacity() * calculateEncabulatorSpeed() / 100 / 3600 * reactionSeconds
+  )
+  const ambrosiaAfterReaction = Math.max(0, ambrosiaRouting.storedBarPoints - reaction.ambrosiaBarPointsSpent)
+  const redAmbrosiaAfterReaction = Math.max(0, redAmbrosiaRouting.storedBarPoints - reaction.redAmbrosiaBarPointsSpent)
+
+  // Overflow reacts only with stock the main reaction did not consume.
+  const overflow = calculatePurpleOverflowResolution(
+    ambrosiaRouting.excessBarPoints,
+    redAmbrosiaRouting.excessBarPoints,
+    ambrosiaAfterReaction,
+    redAmbrosiaAfterReaction
+  )
+
+  player.purpleReactor.storedAmbrosiaBarPoints = Math.max(
+    0,
+    ambrosiaAfterReaction - overflow.storedAmbrosiaBarPointsSpent
+  )
+  player.purpleReactor.storedRedAmbrosiaBarPoints = Math.max(
+    0,
+    redAmbrosiaAfterReaction - overflow.storedRedAmbrosiaBarPointsSpent
+  )
+  player.blueberryTime += ambrosiaRouting.regularBarPoints + overflow.ambrosiaRefundBarPoints
+  player.redAmbrosiaTime += redAmbrosiaRouting.regularBarPoints + overflow.redAmbrosiaRefundBarPoints
+
+  return reaction.purpleBarPointsGained + overflow.purpleBarPointsGained
+}
+
+const calculateAmbrosiaBarPointsGenerated = (seconds: number) =>
+  seconds > 0 && player.singularityChallenges.noSingularityUpgrades.completions > 0
+    ? calculateAmbrosiaGenerationSpeed() * seconds
+    : 0
+
+const calculateRedAmbrosiaBarPointsGenerated = (seconds: number) =>
+  seconds > 0 && player.singularityChallenges.noAmbrosiaUpgrades.completions > 0
+    ? calculateRedAmbrosiaGenerationSpeed() * seconds
+    : 0
+
+/**
+ * Runs the Chroma-Encabulator in one pass, then converts full bars into Ambrosia/Red Ambrosia.
+ * Every source of Bar Points is routed through the tanks first.
+ * @param ambrosiaSeconds seconds of Ambrosia Bar Point generation
+ * @param redAmbrosiaSeconds seconds of Red Ambrosia Bar Point generation
+ * @param reactionSeconds seconds of Encabulator reaction
+ */
+export const runPurpleReactor = (
+  ambrosiaSeconds: number,
+  redAmbrosiaSeconds: number,
+  reactionSeconds: number,
+  globalSpeedMult?: () => number
+) => {
+  const purpleBarPointsGained = reactPurpleReactants(
+    calculateAmbrosiaBarPointsGenerated(ambrosiaSeconds),
+    calculateRedAmbrosiaBarPointsGenerated(redAmbrosiaSeconds),
+    reactionSeconds
+  )
+
+  const conversionFactor = calculatePurpleHoneyConversionFactor()
+  const purpleHoneyProgress = player.purpleHoneyProgress + purpleBarPointsGained
+  const completedExtractions = Math.floor(purpleHoneyProgress / conversionFactor)
+  const { guaranteedMultiplier, bonusMultiplierChance } = calculatePurpleHoneyExtractionMultiplier(
+    calculatePurpleHoneyRewardLuck()
+  )
+  let bonusExtractions = 0
+
+  if (bonusMultiplierChance > 0) {
+    let extractionsToLoop = completedExtractions
+    if (completedExtractions > 100) {
+      const hundredBundles = Math.floor(completedExtractions / 100)
+      extractionsToLoop %= 100
+      bonusExtractions = Math.floor(bonusMultiplierChance * 100 * hundredBundles)
+    }
+    for (let i = 0; i < extractionsToLoop; i++) {
+      if (seededRandom(Seed.PurpleHoney) < bonusMultiplierChance) {
+        bonusExtractions++
+      }
+    }
+  }
+
+  const purpleHoneyExtracted = completedExtractions * guaranteedMultiplier + bonusExtractions
+  const purpleHoneyGained = purpleHoneyExtracted * calculatePurpleHoneyPerExtraction()
+
+  player.purpleHoneyProgress = purpleHoneyProgress % conversionFactor
+
+  const ambrosiaBarPointsRebated = completedExtractions * (
+    getPurpleAmbrosiaUpgradeEffects('gemini', 'ambrosiaBarPointsOnFill')
+    + getShopUpgradeEffects('shopPurpleBarRebate', 'ambrosiaBarPointsPerFill')
+  )
+  const redAmbrosiaBarPointsRebated = completedExtractions * (
+    getPurpleAmbrosiaUpgradeEffects('gemini', 'redAmbrosiaBarPointsOnFill')
+    + getShopUpgradeEffects('shopPurpleBarRebate', 'redAmbrosiaBarPointsPerFill')
+  )
+  let ambrosiaTimeToGrant = 0
+
+  if (completedExtractions > 0) {
+    if (player.singularityChallenges.barDependence.enabled) {
+      // Each Purple Honey extracted (from Purple Honey Luck) grants the effect of both bars directly.
+      for (let i = 0; i < purpleHoneyExtracted; i++) {
+        if (player.singularityChallenges.noSingularityUpgrades.completions > 0) {
+          awardAmbrosiaBarFill(globalSpeedMult)
+        }
+        if (player.singularityChallenges.noAmbrosiaUpgrades.completions > 0) {
+          ambrosiaTimeToGrant += awardRedAmbrosiaBarFill()
+        }
+      }
+    } else {
+      player.purpleReactor.purpleHoney += purpleHoneyGained
+      player.purpleReactor.lifetimePurpleHoney += purpleHoneyGained
+      animatePurpleHoneyGain(purpleHoneyGained)
+      player.stats.highestPurpleHoney = Math.max(
+        player.stats.highestPurpleHoney,
+        player.purpleReactor.purpleHoney
+      )
+      if (player.singularityCounter >= 3600 && !player.singularityChallenges.barDependence.enabled) {
+        const quarksToAdd = purpleHoneyGained
+          * getPurpleReactorUpgradeEffects('purpleQuarkGain', 'quarksPerPurpleHoney')
+        player.worlds.add(quarksToAdd, true, true)
+      }
+    }
+  }
+
+  // Bar Points granted after the reaction are routed without reacting again. Purple Bar Points from
+  // their overflow count toward the next extraction, which keeps this pass from feeding itself.
+  if (ambrosiaBarPointsRebated > 0 || redAmbrosiaBarPointsRebated > 0) {
+    player.purpleHoneyProgress += reactPurpleReactants(ambrosiaBarPointsRebated, redAmbrosiaBarPointsRebated, 0)
+  }
+
+  gainAmbrosia(globalSpeedMult)
+  ambrosiaTimeToGrant += gainRedAmbrosia()
+  if (ambrosiaTimeToGrant > 0) {
+    player.purpleHoneyProgress += reactPurpleReactants(calculateAmbrosiaBarPointsGenerated(ambrosiaTimeToGrant), 0, 0)
+    gainAmbrosia(globalSpeedMult)
+  }
+}
 
 /**
  * addTimers will add (in milliseconds) time to the reset counters, and quark export timer
  * @param input
  * @param time
+ * @param globalSpeedMult
  */
-export const addTimers = (input: TimerInput, time = 0) => {
-  const globalTimeMultiplier = getGQUpgradeEffect('halfMind')
-    ? 10
-    : calculateGlobalSpeedMult()
-
-  const timeMultiplier = input === 'ascension'
-      || input === 'quarks'
-      || input === 'goldenQuarks'
-      || input === 'singularity'
-      || input === 'octeracts'
-      || input === 'autoPotion'
-      || input === 'ambrosia'
-      || input === 'redAmbrosia'
-    ? 1
-    : globalTimeMultiplier
+export const addTimers = (input: TimerInput, time = 0, globalSpeedMult?: () => number, barDependenceSrc = false) => {
+  const timeMultiplier = input === 'prestige'
+      || input === 'transcension'
+      || input === 'reincarnation'
+    ? getGQUpgradeEffect('halfMind', 'unlocked')
+      ? G.MIND_DIVISOR
+      : globalSpeedMult?.() ?? calculateGlobalSpeedMult()
+    : 1
 
   switch (input) {
     case 'prestige': {
+      if (player.singularityChallenges.barDependence.enabled && !barDependenceSrc) {
+        return
+      }
       player.prestigecounter += time * timeMultiplier
       break
     }
     case 'transcension': {
+      if (player.singularityChallenges.barDependence.enabled && !barDependenceSrc) {
+        return
+      }
       player.transcendcounter += time * timeMultiplier
       break
     }
     case 'reincarnation': {
+      if (player.singularityChallenges.barDependence.enabled && !barDependenceSrc) {
+        return
+      }
       player.reincarnationcounter += time * timeMultiplier
       break
     }
     case 'ascension': {
+      if (player.singularityChallenges.barDependence.enabled && !barDependenceSrc) {
+        return
+      }
       // Anything in here is affected by add code
-      const ascensionSpeedMulti = getGQUpgradeEffect('oneMind')
-        ? 10
+      const ascensionSpeedMulti = getGQUpgradeEffect('oneMind', 'unlocked')
+        ? G.MIND_DIVISOR
         : calculateAscensionSpeedMult()
       player.ascensionCounter += time * timeMultiplier * ascensionSpeedMulti
       player.ascensionCounterReal += time * timeMultiplier
       break
     }
     case 'singularity': {
+      const singularitySpeedMulti = getAmbrosiaUpgradeEffects('ambrosiaBrickOfLead', 'singularitySpeedMult')
       player.ascensionCounterRealReal += time
-      player.singularityCounter += time * timeMultiplier
+      player.singularityCounter += time * timeMultiplier * singularitySpeedMulti
 
       if (player.insideSingularityChallenge) {
-        player.singChallengeTimer += time * timeMultiplier
+        player.singChallengeTimer += time * timeMultiplier * singularitySpeedMulti
       } else {
         player.singChallengeTimer = 0
       }
@@ -110,7 +374,7 @@ export const addTimers = (input: TimerInput, time = 0) => {
       break
     }
     case 'goldenQuarks': {
-      if (getGQUpgradeEffect('goldenQuarks3') === 0) {
+      if (getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour') === 0) {
         return
       } else {
         player.goldenQuarksTimer += time * timeMultiplier
@@ -121,7 +385,7 @@ export const addTimers = (input: TimerInput, time = 0) => {
       break
     }
     case 'octeracts': {
-      if (!getGQUpgradeEffect('octeractUnlock')) {
+      if (!getGQUpgradeEffect('octeractUnlock', 'unlocked')) {
         return
       } else {
         player.octeractTimer += time * timeMultiplier
@@ -149,11 +413,13 @@ export const addTimers = (input: TimerInput, time = 0) => {
             player.quarksThisSingularity *= 1 - quarkFraction
           }
         }
-        visualUpdateOcteracts()
       }
       break
     }
     case 'autoPotion': {
+      if (player.singularityChallenges.barDependence.enabled && !barDependenceSrc) {
+        return
+      }
       if (player.highestSingularityCount < 6) {
         return
       } else {
@@ -167,7 +433,7 @@ export const addTimers = (input: TimerInput, time = 0) => {
         player.autoPotionTimerObtainium += time * timeMultiplier
 
         const timerThreshold = (180 * Math.pow(1.03, -player.highestSingularityCount))
-          / getOcteractUpgradeEffect('octeractAutoPotionSpeed')
+          / getOcteractUpgradeEffect('octeractAutoPotionSpeed', 'autoPotionSpeedMult')
 
         const effectiveOfferingThreshold = toggleOfferingOn
           ? Math.min(1, timerThreshold) / 20
@@ -204,79 +470,18 @@ export const addTimers = (input: TimerInput, time = 0) => {
       }
       break
     }
-    case 'ambrosia': {
-      if (player.singularityChallenges.noSingularityUpgrades.completions > 0) {
-        const compute = calculateAmbrosiaGenerationSpeed()
-        if (compute === 0) {
-          break
-        }
-
-        G.ambrosiaTimer += time * timeMultiplier
-
-        if (G.ambrosiaTimer < 0.125) {
-          break
-        }
-
-        const ambrosiaLuck = calculateAmbrosiaLuck()
-        const baseBlueberryTime = calculateAmbrosiaGenerationSpeed()
-        player.blueberryTime += Math.floor(8 * G.ambrosiaTimer) / 8 * baseBlueberryTime
-        G.ambrosiaTimer %= 0.125
-
-        let timeToAmbrosia = calculateRequiredBlueberryTime()
-
-        while (player.blueberryTime >= timeToAmbrosia) {
-          const RNG = seededRandom(Seed.Ambrosia)
-          const ambrosiaMult = Math.floor(ambrosiaLuck / 100)
-          const luckMult = RNG < ambrosiaLuck / 100 - Math.floor(ambrosiaLuck / 100) ? 1 : 0
-          const bonusAmbrosia = (player.singularityChallenges.noAmbrosiaUpgrades.rewards.bonusAmbrosia) ? 1 : 0
-          const ambrosiaToGain = (ambrosiaMult + luckMult) + bonusAmbrosia
-
-          player.ambrosia += ambrosiaToGain
-          player.lifetimeAmbrosia += ambrosiaToGain
-          player.blueberryTime -= timeToAmbrosia
-
-          timeToAmbrosia = calculateRequiredBlueberryTime()
-        }
-
-        visualUpdateAmbrosia()
+    case 'purpleReactor': {
+      G.purpleReactorTimer += time * timeMultiplier
+      if (G.purpleReactorTimer < PURPLE_REACTOR_TICK_INTERVAL) {
+        break
       }
+
+      const elapsed = Math.floor(G.purpleReactorTimer / PURPLE_REACTOR_TICK_INTERVAL)
+        * PURPLE_REACTOR_TICK_INTERVAL
+      G.purpleReactorTimer %= PURPLE_REACTOR_TICK_INTERVAL
+      runPurpleReactor(elapsed, elapsed, elapsed, globalSpeedMult)
+      autoCraftSynthesis()
       break
-    }
-    case 'redAmbrosia': {
-      if (player.singularityChallenges.noAmbrosiaUpgrades.completions > 0) {
-        const speed = calculateRedAmbrosiaGenerationSpeed()
-        G.redAmbrosiaTimer += time * timeMultiplier
-        if (G.redAmbrosiaTimer < 0.125) {
-          break
-        }
-
-        player.redAmbrosiaTime += Math.floor(8 * G.redAmbrosiaTimer) / 8 * speed
-        G.redAmbrosiaTimer %= 0.125
-        let timeToRedAmbrosia = calculateRequiredRedAmbrosiaTime()
-
-        let ambrosiaTimeToGrant = 0
-        const timeCoeff = getRedAmbrosiaUpgradeEffects('redAmbrosiaAccelerator').ambrosiaTimePerRedAmbrosia
-
-        while (player.redAmbrosiaTime >= timeToRedAmbrosia) {
-          const redAmbrosiaLuck = calculateRedAmbrosiaLuck()
-          const RNG = seededRandom(Seed.RedAmbrosia)
-          const redAmbrosiaMult = Math.floor(redAmbrosiaLuck / 100)
-          const luckMult = RNG < redAmbrosiaLuck / 100 - Math.floor(redAmbrosiaLuck / 100) ? 1 : 0
-          const redAmbrosiaToGain = redAmbrosiaMult + luckMult
-
-          player.redAmbrosia += redAmbrosiaToGain
-          player.lifetimeRedAmbrosia += redAmbrosiaToGain
-          ambrosiaTimeToGrant += redAmbrosiaToGain * timeCoeff
-          player.redAmbrosiaTime -= timeToRedAmbrosia
-          timeToRedAmbrosia = calculateRequiredRedAmbrosiaTime()
-        }
-
-        if (ambrosiaTimeToGrant > 0) {
-          addTimers('ambrosia', ambrosiaTimeToGrant)
-        }
-
-        visualUpdateAmbrosia()
-      }
     }
   }
 }
@@ -324,10 +529,6 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
 
       // Add Obtainium
       player.obtainium = player.obtainium.add(obtainiumGain)
-      // Update visual displays if appropriate
-      if (G.currentTab === Tabs.Research) {
-        visualUpdateResearch()
-      }
       break
     }
     case 'addOfferings':
@@ -343,7 +544,7 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       player.sacrificeTimer += time
       if (
         player.sacrificeTimer >= autoSacrificeInterval
-        && player.offerings.gt(0)
+        && player.offerings.gt(new Decimal())
       ) {
         // Automatic purchase of Blessings
         if (player.highestSingularityCount >= 15) {
@@ -354,11 +555,7 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
             buyAllSpiritLevels(player.offerings.div(2))
           }
         }
-        if (
-          player.autoBuyFragment
-          && player.highestSingularityCount >= 40
-          && player.cubeUpgrades[51] > 0
-        ) {
+        if (player.autoBuyFragment && player.highestSingularityCount >= 40) {
           buyAllTalismanResources()
         }
 
@@ -394,7 +591,7 @@ export const automaticTools = (input: AutoToolInput, time: number) => {
       }
       break
     case 'antSacrifice': {
-      const globalDelta = getGQUpgradeEffect('halfMind') ? 10 : calculateGlobalSpeedMult()
+      const globalDelta = getGQUpgradeEffect('halfMind', 'unlocked') ? G.MIND_DIVISOR : calculateGlobalSpeedMult()
 
       player.antSacrificeTimer += time * globalDelta
       player.antSacrificeTimerReal += time

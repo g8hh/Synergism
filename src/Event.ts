@@ -1,9 +1,10 @@
+import i18next from 'i18next'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { allDurableConsumables, type PseudoCoinConsumableNames } from './Login'
+import { refreshQuarkBonus } from './Quark'
 import { getGQUpgradeEffect } from './singularity'
 import { getTimePinnedToLoadDate, player } from './Synergism'
-import { revealStuff } from './UpdateHTML'
-import { timeRemainingHours } from './Utility'
+import { openIframeOverlay, revealStuff } from './UpdateHTML'
 import { Globals as G } from './Variables'
 
 export enum BuffType {
@@ -48,6 +49,58 @@ interface GameEvent {
 let nowEvent: GameEvent | null = null
 export const getEvent = () => nowEvent
 
+let eventPageUrl: string | null = null
+
+const openEventPage = (url: string) => {
+  eventPageUrl = url
+  openIframeOverlay(url)
+}
+
+const renderEventPages = () => {
+  const container = DOMCacheGetOrSet('globalEventPages')
+  container.replaceChildren()
+
+  if (nowEvent === null) {
+    return
+  }
+
+  for (const [i, url] of nowEvent.url.entries()) {
+    if (url !== '') {
+      const { hostname } = new URL(url)
+      const button = document.createElement('button')
+      button.textContent = i18next.t('pseudoCoins.consumables.globalEventPage', { name: nowEvent.name[i] })
+      button.addEventListener('click', () => {
+        if (hostname === 'synergism.cc' || hostname.endsWith('.synergism.cc')) {
+          openEventPage(url)
+        } else {
+          window.open(url, '_blank')
+        }
+      })
+      container.appendChild(button)
+    }
+  }
+}
+
+export const eventPageMessageHandler = async (event: MessageEvent<{ type?: string } | null>) => {
+  if (eventPageUrl === null || event.origin !== new URL(eventPageUrl).origin) {
+    return
+  }
+
+  if (event.data?.type === 'synergism:token-request') {
+    const response = await fetch('https://synergism.cc/events/token', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: eventPageUrl })
+    })
+    const token = response.ok ? (await response.json() as { token: string }).token : null
+
+    event.ports[0].postMessage({ token })
+  } else if (event.data?.type === 'synergism:bonus-updated') {
+    await refreshQuarkBonus()
+  }
+}
+
 export const eventCheck = async () => {
   if (!player.dayCheck) {
     return
@@ -68,8 +121,7 @@ export const eventCheck = async () => {
     nowEvent = apiEvents
   }
 
-  const eventNowEndDate = new Date(nowEvent?.end ?? 0)
-  DOMCacheGetOrSet('globalEventTimer').textContent = timeRemainingHours(eventNowEndDate)
+  renderEventPages()
 
   const updateIsEventCheck = G.isEvent
 
@@ -131,22 +183,41 @@ export const getEventBuff = (buff: BuffType): number => {
       return event.obtainium
     case BuffType.Octeract:
       return event.octeract
-    case BuffType.OneMind:
-      return getGQUpgradeEffect('oneMind') > 0 ? event.oneMind : 0
+    case BuffType.OneMind: {
+      const full = getGQUpgradeEffect('oneMind', 'unlocked')
+      if (full) {
+        return event.oneMind
+      }
+
+      const half = getGQUpgradeEffect('halfMind', 'unlocked')
+      if (half) {
+        return event.oneMind / 2
+      }
+
+      return 0
+    }
     case BuffType.BlueberryTime:
       return event.blueberryTime
     case BuffType.AmbrosiaLuck:
       return event.ambrosiaLuck
+    default:
+      return 0
   }
+}
+
+export const activeHappyHourBells = () => {
+  const now = Date.now()
+  return allDurableConsumables.HAPPY_HOUR_BELL.ends.filter((end) => end > now).length
 }
 
 export const consumableEventBuff = (buff: BuffType) => {
   const { HAPPY_HOUR_BELL } = allDurableConsumables
+  const active = activeHappyHourBells()
   // The interval is the number of events queued excluding the first.
-  const happyHourInterval = HAPPY_HOUR_BELL.amount - 1
+  const happyHourInterval = active - 1
 
   // If no consumable is active, early return
-  if (HAPPY_HOUR_BELL.amount === 0) {
+  if (active === 0) {
     return 0
   }
 
@@ -179,15 +250,17 @@ export const consumableEventBuff = (buff: BuffType) => {
       return HAPPY_HOUR_BELL ? 0.1 + 0.01 * happyHourInterval : 0
     case BuffType.AmbrosiaLuck:
       return HAPPY_HOUR_BELL ? 0.1 + 0.01 * happyHourInterval : 0
+    default:
+      return 0
   }
 }
 
 const isConsumableActive = (name?: PseudoCoinConsumableNames) => {
   if (typeof name === 'string') {
-    return allDurableConsumables[name].amount > 0
+    return allDurableConsumables[name].ends.some((end) => end > Date.now())
   }
 
-  return allDurableConsumables.HAPPY_HOUR_BELL.amount !== 0
+  return allDurableConsumables.HAPPY_HOUR_BELL.ends.some((end) => end > Date.now())
 }
 
 export const updateGlobalsIsEvent = () => {

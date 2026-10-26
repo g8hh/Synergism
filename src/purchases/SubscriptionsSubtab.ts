@@ -1,60 +1,82 @@
 import { type FUNDING_SOURCE, loadScript } from '@paypal/paypal-js'
 import i18next from 'i18next'
-import { isSynergismCC, platform, prod } from '../Config'
-import { getSubMetadata, type SubscriptionMetadata, type SubscriptionProvider } from '../Login'
+import { isSynergismCC } from '../Config'
+import { bus, SynEvent } from '../events/bus'
+import { getSubMetadata, handleLogin, type SubscriptionMetadata, type SubscriptionProvider } from '../Login'
 import { Alert, Confirm, Notification } from '../UpdateHTML'
 import { assert, memoize } from '../Utility'
 import { type SubscriptionProduct, subscriptionProducts } from './CartTab'
 import { addToCart, getQuantity } from './CartUtil'
+import { requirePurchaseAuthentication } from './PurchaseAuth'
 
 const subscriptionsContainer = document.querySelector<HTMLElement>('#pseudoCoins > #subscriptionsContainer')!
 const subscriptionSectionHolder = subscriptionsContainer.querySelector<HTMLElement>('#sub-section-holder')!
 const manageSubscriptionHolder = subscriptionsContainer.querySelector<HTMLElement>('#manage-subscription-holder')!
 
-type Actions = 'manage' | 'upgrade' | 'downgrade' | 'cancel'
+const subscriptionPollDelays = [15_000, 30_000, 60_000, 120_000, 180_000, 240_000, 300_000]
+let subscriptionPollGeneration = 0
+
+const subscriptionKey = (sub: SubscriptionMetadata): string => JSON.stringify(sub)
+
+export const exponentialSubscriptionCheck = (
+  previousSubscription = getSubMetadata(),
+  attempt = 0,
+  generation = ++subscriptionPollGeneration
+): void => {
+  if (attempt === subscriptionPollDelays.length) return
+
+  setTimeout(() => {
+    if (generation !== subscriptionPollGeneration) return
+
+    handleLogin().then(() => {
+      if (subscriptionKey(getSubMetadata()) !== subscriptionKey(previousSubscription)) {
+        updateSubscriptionPage()
+        Notification(i18next.t('pseudoCoins.subscriptionUpdated'))
+      } else {
+        exponentialSubscriptionCheck(previousSubscription, attempt + 1, generation)
+      }
+    }).catch(console.error)
+  }, subscriptionPollDelays[attempt])
+}
+
+type Actions = 'manage' | 'upgrade' | 'downgrade'
 type RouteLinks = Record<Actions, string>
 
-const prodRouteLinks: Record<'stripe' | 'paypal' | 'steam', RouteLinks> = {
+const cancelSubscriptionLink = 'https://synergism.cc/api/v1/subscriptions/cancel'
+
+const prodRouteLinks: Record<'stripe' | 'paypal' | 'steam' | 'xsolla', RouteLinks> = {
   stripe: {
     manage: 'https://synergism.cc/stripe/manage-subscription',
     upgrade: 'https://synergism.cc/stripe/subscription/upgrade',
-    downgrade: 'https://synergism.cc/stripe/subscription/downgrade',
-    cancel: 'https://synergism.cc/stripe/subscription/cancel'
+    downgrade: 'https://synergism.cc/stripe/subscription/downgrade'
   },
   paypal: {
     manage: 'https://www.paypal.com/myaccount/autopay/',
     upgrade: 'https://synergism.cc/paypal/subscriptions/revise',
-    downgrade: 'https://synergism.cc/paypal/subscriptions/revise',
-    cancel: 'https://synergism.cc/paypal/subscriptions/cancel'
+    downgrade: 'https://synergism.cc/paypal/subscriptions/revise'
   },
   steam: {
     manage: 'https://store.steampowered.com/account/',
     upgrade: 'https://store.steampowered.com/account/',
-    downgrade: 'https://store.steampowered.com/account/',
-    cancel: 'https://store.steampowered.com/account/'
+    downgrade: 'https://store.steampowered.com/account/'
+  },
+  xsolla: {
+    upgrade: 'https://synergism.cc/xsolla/subscription/upgrade',
+    downgrade: 'https://synergism.cc/xsolla/subscription/downgrade',
+    manage: 'https://TODO'
   }
-}
-
-const devRouteLinks: typeof prodRouteLinks = {
-  stripe: {
-    manage: 'https://synergism.cc/stripe/test/manage-subscription',
-    upgrade: 'https://synergism.cc/stripe/test/subscription/upgrade',
-    downgrade: 'https://synergism.cc/stripe/test/subscription/downgrade',
-    cancel: 'https://synergism.cc/stripe/test/subscription/cancel'
-  },
-  paypal: {
-    manage: 'https://www.paypal.com/myaccount/autopay/',
-    upgrade: 'https://synergism.cc/paypal/subscriptions/revise',
-    downgrade: 'https://synergism.cc/paypal/subscriptions/revise',
-    cancel: 'https://synergism.cc/paypal/subscriptions/cancel'
-  },
-  steam: prodRouteLinks.steam
 }
 
 const formatter = Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD'
 })
+
+const formatSubscriptionPrice = (price: number) => {
+  return i18next.t('pseudoCoins.subscriptionPricePerMonth', {
+    price: formatter.format(price / 100)
+  })
+}
 
 async function changeSubscription (
   sub: Exclude<SubscriptionMetadata, null>,
@@ -73,23 +95,28 @@ async function changeSubscription (
     )
   }
 
+  if (sub.provider === 'apple' || sub.provider === 'google') {
+    bus.dispatchEvent(new SynEvent<undefined>('subscription:manage'))
+    return
+  }
+
   const confirm = (type === 'downgrade')
     ? await Confirm(
       `You are downgrading to ${newSubName}, which costs ${
-        formatter.format(newSubPrice / 100)
-      } per month. Downgrading takes effect immediately! Proceed?`
+        formatSubscriptionPrice(newSubPrice)
+      }. Downgrading takes effect immediately! Proceed?`
     )
     : await Confirm(
-      `You are upgrading to ${newSubName}, which costs ${
-        formatter.format(newSubPrice / 100)
-      } per month (an increase of ${formatter.format((newSubPrice - oldSubPrice) / 100)} per month). Proceed?`
+      `You are upgrading to ${newSubName}, which costs ${formatSubscriptionPrice(newSubPrice)} (an increase of ${
+        formatSubscriptionPrice(newSubPrice - oldSubPrice)
+      }). Proceed?`
     )
 
   if (!confirm) {
     return
   }
 
-  const apiLink = prod ? prodRouteLinks[sub.provider][type] : devRouteLinks[sub.provider][type]
+  const apiLink = prodRouteLinks[sub.provider][type]
   const url = new URL(apiLink)
   url.searchParams.set('product', productId)
 
@@ -110,21 +137,25 @@ async function changeSubscription (
   Notification(error)
 }
 
-async function manageSubscription (provider: SubscriptionProvider) {
+async function manageSubscription (provider: SubscriptionProvider | null) {
+  if (provider === null) {
+    bus.dispatchEvent(new SynEvent<undefined>('subscription:manage'))
+    return
+  }
+
   if (provider === 'patreon') {
     return Alert('You should not see this alert! Let Platonic know immediately.')
   }
 
-  const link = prod ? prodRouteLinks[provider].manage : devRouteLinks[provider].manage
+  if (provider === 'apple' || provider === 'google') {
+    bus.dispatchEvent(new SynEvent<undefined>('subscription:manage'))
+    return
+  }
 
-  location.href = link
+  location.href = prodRouteLinks[provider].manage
 }
 
 async function cancelSubscription (provider: SubscriptionProvider) {
-  if (provider === 'patreon') {
-    return Alert('You should not see this alert! Let Platonic know immediately.')
-  }
-
   const confirm = await Confirm(
     'Are you sure you want to cancel your subscription? You will keep the associated perks until your current Subscription expires.'
   )
@@ -133,9 +164,10 @@ async function cancelSubscription (provider: SubscriptionProvider) {
     return
   }
 
-  const link = prod ? prodRouteLinks[provider].cancel : devRouteLinks[provider].cancel
-  const url = new URL(link)
+  const url = new URL(cancelSubscriptionLink)
+  url.searchParams.set('provider', provider)
 
+  const previousSubscription = getSubMetadata()
   const response = await fetch(url, {
     method: 'POST'
   })
@@ -146,16 +178,20 @@ async function cancelSubscription (provider: SubscriptionProvider) {
     return
   }
 
+  await handleLogin()
   updateSubscriptionPage()
+  exponentialSubscriptionCheck(previousSubscription)
   return Alert(
     'Your subscription has been cancelled. You will keep your perks until the end of the current billing period.'
   )
 }
 
 function manageSubClickHandler (this: HTMLButtonElement) {
-  const provider = this.getAttribute('data-provider') as SubscriptionProvider
+  const provider = this.getAttribute('data-provider') as SubscriptionProvider | null
   if (this.classList.contains('subscriptionCancel')) {
-    cancelSubscription(provider)
+    const sub = getSubMetadata()
+    if (sub === null) return
+    cancelSubscription(sub.provider)
     return
   } else if (this.classList.contains('subscriptionWebsite')) {
     manageSubscription(provider)
@@ -184,6 +220,11 @@ function clickHandler (this: HTMLButtonElement) {
       changeSubscription(sub, productId, 'upgrade')
       return
     }
+  }
+
+  if (PLATFORM === 'mobile') {
+    bus.dispatchEvent(new SynEvent('subscription:order', { lookupKey: productId }))
+    return
   }
 
   addToCart(productId)
@@ -223,15 +264,21 @@ const createSubscriptionTierName = (product: SubscriptionProduct) => {
 }
 
 const noSubscriptionButton = (product: SubscriptionProduct) => {
-  if (platform === 'steam') {
+  if (PLATFORM === 'steam') {
     return `<button data-id="${product.id}" data-name="${product.name}" class="pseudoCoinButton steamSubscribeButton">
-      Subscribe with Steam - ${formatter.format(product.price / 100)} USD / mo
+      ${i18next.t('pseudoCoins.subscriptionSubscribeSteam', { price: formatSubscriptionPrice(product.price) })}
+    </button>`
+  }
+
+  if (PLATFORM === 'mobile') {
+    return `<button data-id="${product.id}" data-name="${product.name}" class="pseudoCoinButton">
+      ${i18next.t('pseudoCoins.subscriptionSubscribe', { price: formatSubscriptionPrice(product.price) })}
     </button>`
   }
 
   return `<div class="checkout-paypal" data-id="${product.id}"></div>
   <button data-id="${product.id}" data-name="${product.name}" class="pseudoCoinButton">
-    ${formatter.format(product.price / 100)} USD / mo
+    ${formatSubscriptionPrice(product.price)}
   </button>`
 }
 
@@ -255,14 +302,20 @@ const currentSubscriptionBox = (sub: Exclude<SubscriptionMetadata, null>) => {
 const upgradeButton = (product: SubscriptionProduct, currentSubTier: number) => {
   const currentPrice = subscriptionProducts.find((v) => v.tier === currentSubTier)?.price ?? 0
   return `<button data-id="${product.id}" data-name="${product.name}" data-upgrade class="pseudoCoinButton" style="background-color: green">
-    ↑ (+${formatter.format((product.price - currentPrice) / 100)} USD / mo)
+    ${
+    i18next.t('pseudoCoins.subscriptionUpgradePrice', {
+      price: formatSubscriptionPrice(product.price - currentPrice)
+    })
+  }
   </button>`
 }
 
 const createIndividualSubscriptionHTML = (product: SubscriptionProduct, currentSubTier: number) => {
   const sub = getSubMetadata()
   const notSubbed = sub === null
-  const subManageable = sub?.provider !== 'patreon' && sub?.provider !== 'steam'
+  const subManageable = PLATFORM === 'mobile'
+    ? sub?.provider === 'apple' || sub?.provider === 'google'
+    : sub?.provider === 'stripe' || sub?.provider === 'paypal' || sub?.provider === 'xsolla'
   const nameHTML = createSubscriptionTierName(product)
 
   if (product.tier < currentSubTier) {
@@ -294,7 +347,7 @@ const createIndividualSubscriptionHTML = (product: SubscriptionProduct, currentS
         ${currentSub}
       </section>
     `
-  } else if (product.tier > currentSubTier) {
+  } else {
     const noSubscription = notSubbed ? noSubscriptionButton(product) : ''
     const upgradeBtn = notSubbed || !subManageable ? '' : upgradeButton(product, currentSubTier)
 
@@ -319,39 +372,56 @@ const manageSubscriptionButtonVisibility = (sub: SubscriptionMetadata) => {
   const patreonManageForm = manageSubscriptionHolder.querySelector<HTMLElement>('#manage-patreon-sub')!
   const stripeManageForm = manageSubscriptionHolder.querySelector<HTMLElement>('#manage-stripe-sub')!
   const paypalManageForm = manageSubscriptionHolder.querySelector<HTMLElement>('#manage-paypal-sub')!
+  const mobileManageForm = manageSubscriptionHolder.querySelector<HTMLElement>('#manage-mobile-sub')!
+  const subscriptionCancelButton = manageSubscriptionHolder.querySelector<HTMLElement>('#subscription-cancel')!
 
-  const subscriptionCancelButtons = manageSubscriptionHolder.querySelectorAll<HTMLElement>('.subscriptionCancel')
-
-  if (platform === 'steam') {
-    manageSubscriptionHolder.classList.add('none')
-    return
+  if (PLATFORM === 'steam') {
+    patreonManageForm.style.display = 'none'
+    stripeManageForm.style.display = 'none'
+    paypalManageForm.style.display = 'none'
+    mobileManageForm.style.display = 'none'
+  } else if (PLATFORM === 'mobile') {
+    patreonManageForm.style.display = 'none'
+    stripeManageForm.style.display = 'none'
+    paypalManageForm.style.display = 'none'
+    mobileManageForm.style.display = sub?.provider === 'apple' || sub?.provider === 'google' ? 'flex' : 'none'
+  } else {
+    patreonManageForm.style.display = sub === null || sub.provider === 'patreon' ? 'flex' : 'none'
+    stripeManageForm.style.display = sub === null || sub.provider === 'stripe' ? 'flex' : 'none'
+    paypalManageForm.style.display = sub === null || sub.provider === 'paypal' ? 'flex' : 'none'
+    mobileManageForm.style.display = 'none'
   }
 
-  patreonManageForm.style.display = sub === null || sub.provider === 'patreon' ? 'flex' : 'none'
-  stripeManageForm.style.display = sub === null || sub.provider === 'stripe' ? 'flex' : 'none'
-  paypalManageForm.style.display = sub === null || sub.provider === 'paypal' ? 'flex' : 'none'
-
-  subscriptionCancelButtons.forEach((btn) => btn.style.display = sub === null ? 'none' : 'block')
+  subscriptionCancelButton.style.display =
+    sub?.provider === 'stripe' || sub?.provider === 'paypal' || sub?.provider === 'xsolla' || sub?.provider === 'steam'
+      ? 'block'
+      : 'none'
 }
 
 async function submitSubscriptionSteam (productId: string) {
-  assert(platform === 'steam')
+  if (PLATFORM !== 'steam') {
+    return
+  }
+
   const { submitSteamMicroTxn } = await import('../steam/microtxn')
 
   const fd = new FormData()
   fd.set(productId, '1')
   fd.set('tosAgree', 'on')
 
+  const previousSubscription = getSubMetadata()
   const success = await submitSteamMicroTxn(fd)
 
   if (success) {
     Notification('Subscription completed successfully!')
+    await handleLogin()
     updateSubscriptionPage()
+    exponentialSubscriptionCheck(previousSubscription)
   }
 }
 
 function initializeSteamSubscriptionButtons () {
-  assert(platform === 'steam')
+  assert(PLATFORM === 'steam')
   document.querySelectorAll<HTMLButtonElement>('.steamSubscribeButton').forEach((button) => {
     button.addEventListener('click', function(this: HTMLButtonElement) {
       const productId = this.getAttribute('data-id')!
@@ -366,6 +436,7 @@ const initializeSubscriptionPage = memoize(() => {
   manageSubscriptionButtonVisibility(sub)
 
   const tier = getSubMetadata()?.tier ?? 0
+  exponentialSubscriptionCheck()
   subscriptionSectionHolder.innerHTML = subscriptionProducts.map((product) =>
     createIndividualSubscriptionHTML(product, tier)
   ).join('')
@@ -385,9 +456,9 @@ const initializeSubscriptionPage = memoize(() => {
     }
   )
 
-  if (platform === 'steam') {
+  if (PLATFORM === 'steam') {
     initializeSteamSubscriptionButtons()
-  } else {
+  } else if (PLATFORM === 'browser') {
     initializePayPal_Subscription()
   }
 })
@@ -412,9 +483,9 @@ const updateSubscriptionPage = () => {
       }
     )
 
-  if (platform === 'steam') {
+  if (PLATFORM === 'steam') {
     initializeSteamSubscriptionButtons()
-  } else {
+  } else if (PLATFORM === 'browser') {
     initializePayPal_Subscription()
   }
 }
@@ -423,7 +494,7 @@ const updateSubscriptionPage = () => {
  * https://stackoverflow.com/a/69024269
  */
 export const initializePayPal_Subscription = async () => {
-  assert(platform === 'browser')
+  assert(PLATFORM === 'browser')
 
   const paypal = await loadScript({
     clientId: 'AS1HYTVcH3Kqt7IVgx7DkjgG8lPMZ5kyPWamSBNEowJ-AJPpANNTJKkB_mF0C4NmQxFuWQ9azGbqH2Gr',
@@ -448,6 +519,11 @@ export const initializePayPal_Subscription = async () => {
         label: 'paypal'
       },
 
+      async onClick (_data, actions) {
+        const authenticated = await requirePurchaseAuthentication()
+        return authenticated ? actions.resolve() : actions.reject()
+      },
+
       async createSubscription () {
         const response = await fetch(`https://synergism.cc/paypal/subscriptions/create?product=${id}`, {
           method: 'POST'
@@ -459,9 +535,11 @@ export const initializePayPal_Subscription = async () => {
       async onApprove (data) {
         console.log('subscription approved', data)
 
-        Alert(
-          'Please give us a few minutes to process your subscription (PayPal is slow). You will have to refresh the page to receive the bonuses! Thank you for supporting Synergism!'
+        await Alert(
+          'Subscription approved! Your bonuses will appear automatically once PayPal finishes processing it. Thank you for supporting Synergism!'
         )
+
+        exponentialSubscriptionCheck()
       },
 
       onError (error) {

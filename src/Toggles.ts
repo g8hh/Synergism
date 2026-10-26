@@ -1,25 +1,72 @@
 import i18next from 'i18next'
-import { awardUngroupedAchievement } from './Achievements'
+import {
+  awardUngroupedAchievement,
+  updateAllGroupedAchievementProgress,
+  updateAllProgressiveAchievementProgress,
+  updateAllUngroupedAchievementProgress
+} from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { type AutoChallengeStates, getChallengeConditions, resetChallengeSweep } from './Challenges'
-import { corruptionDisplay, corruptionLoadoutTableUpdate, type Corruptions } from './Corruptions'
-import { renderCaptcha } from './Login'
+import { storageGetItem, storageSetItem } from './events/storage-events'
 import { initializeMessages } from './Messages'
-import { researchOrderByCost, roombaResearchEnabled } from './Research'
-import { reset, resetrepeat } from './Reset'
+import { initializeOcteractUpgradeMap } from './Octeracts'
+import { researchOrderByCost, roombaResearchEnabled, setResearchRoombaHighlight } from './Research'
+import { applyChallengeInitialModifiers, reset } from './Reset'
 import { indexToRune } from './Runes'
 import { getShopUpgradeEffects } from './Shop'
-import { updateSingularityElevator, updateSingularityElevatorVisibility } from './singularity'
+import {
+  updateSingularityElevator,
+  updateSingularityElevatorVisibility,
+  updateSingularityPenalties,
+  updateSingularityPerks
+} from './singularity'
 import { format, player, resetCheck } from './Synergism'
-import { getActiveSubTab, subTabsInMainTab, Tabs } from './Tabs'
+import { subTabsInMainTab, Tabs } from './Tabs'
+import { updateBuildingAutomationButtons } from './tabs/buildings'
+import { updateTalismanInventory } from './Talismans'
+import { settingSymbols } from './Themes'
 import type { BuildingSubtab, BuyAmount, Player } from './types/Synergism'
-import { Alert, Confirm, Prompt, showCorruptionStatsLoadouts, updateChallengeDisplay } from './UpdateHTML'
-import { visualUpdateAmbrosia, visualUpdateAnts, visualUpdateCubes, visualUpdateOcteracts } from './UpdateVisuals'
+import { Alert, challengeExit, Confirm, createFitties, Prompt, updateChallengeDisplay } from './UpdateHTML'
 import { Globals as G } from './Variables'
 
 type ToggleBuy = 'coin' | 'crystal' | 'mythos' | 'particle' | 'offering' | 'tesseract'
 
 const buyAmountNames = ['one', 'ten', 'hundred', 'thousand', '10k', '100k']
+const MONOSPACE_FONT_STORAGE_KEY = 'monospaceFont'
+
+const applyMonospaceFont = (enabled: boolean) => {
+  document.documentElement.dataset.monospaceFont = `${enabled}`
+}
+
+export const initializeMonospaceFont = (enabledByDefault: boolean) => {
+  const storedSetting = storageGetItem(MONOSPACE_FONT_STORAGE_KEY)
+  const enabled = storedSetting === null ? enabledByDefault : storedSetting === 'true'
+
+  if (storedSetting === null) {
+    storageSetItem(MONOSPACE_FONT_STORAGE_KEY, `${enabled}`)
+  }
+
+  applyMonospaceFont(enabled)
+}
+
+export const settingMonospaceFont = () => {
+  const enabled = storageGetItem(MONOSPACE_FONT_STORAGE_KEY) === 'true'
+  DOMCacheGetOrSet('monospaceFont').textContent = enabled
+    ? i18next.t('settings.fonts.monospace')
+    : i18next.t('settings.fonts.default')
+}
+
+export const toggleMonospaceFont = async () => {
+  const confirmation = await Confirm(i18next.t('main.monospaceFontConfirm'))
+  if (!confirmation) {
+    return
+  }
+
+  const enabled = storageGetItem(MONOSPACE_FONT_STORAGE_KEY) !== 'true'
+  storageSetItem(MONOSPACE_FONT_STORAGE_KEY, `${enabled}`)
+  applyMonospaceFont(enabled)
+  settingMonospaceFont()
+}
 
 export const toggleSettings = (toggle: HTMLElement) => {
   const toggleId = toggle.getAttribute('toggleId') ?? 1
@@ -56,22 +103,23 @@ export const toggleSettings = (toggle: HTMLElement) => {
   }
 
   toggle.style.border = `2px solid ${player.toggles[+toggleId] ? 'green' : 'red'}`
+  updateBuildingAutomationButtons()
 }
 
 export const toggleChallenges = (i: number, auto = false) => {
   if (i >= 0 && i <= 5) {
-    player.currentChallenge.transcension = i
     reset('transcensionChallenge', false, 'enterChallenge')
-    if (!player.currentChallenge.reincarnation && !document.querySelector('.resetbtn.hover')) {
-      resetrepeat('transcensionChallenge')
+    applyChallengeInitialModifiers('transcensionChallenge', i)
+    if (i === 0) {
+      challengeExit('transcension')
+    } else {
+      player.currentChallenge.transcension = i
     }
   }
   if (i >= 6 && i <= 10) {
-    player.currentChallenge.reincarnation = i
     reset('reincarnationChallenge', false, 'enterChallenge')
-    if (!document.querySelector('.resetbtn.hover')) {
-      resetrepeat('reincarnationChallenge')
-    }
+    applyChallengeInitialModifiers('reincarnationChallenge', i)
+    player.currentChallenge.reincarnation = i
   }
   if (
     // To be honest I don't want to touch this shit in fear of breaking everything
@@ -99,8 +147,9 @@ export const toggleChallenges = (i: number, auto = false) => {
       })
       return
     } else {
-      player.currentChallenge.ascension = i
       reset('ascensionChallenge', false, 'enterChallenge')
+      applyChallengeInitialModifiers('ascensionChallenge', i)
+      player.currentChallenge.ascension = i
     }
   }
   updateChallengeDisplay()
@@ -143,7 +192,7 @@ export const toggleBuyAmount = (quantity: BuyAmount, type: ToggleBuy) => {
   }
 }
 
-type upgradeAutos = 'coin' | 'prestige' | 'transcend' | 'generators' | 'reincarnate'
+export type upgradeAutos = 'coin' | 'prestige' | 'transcend' | 'generators' | 'reincarnate'
 
 /**
  * Updates Auto Upgrade Border Colors if applicable, or updates the status of an upgrade toggle as optional.
@@ -207,25 +256,25 @@ export const setAutoResetModeTexts = () => {
 
 export const toggleAutoPrestigeMode = () => {
   const nextEnum = (player.resetToggleModes.prestige + 1) % NUM_TOGGLE_MODES
-  player.resetToggleModes.prestige = nextEnum as AutoResetModes
+  player.resetToggleModes.prestige = nextEnum
   DOMCacheGetOrSet('prestigeautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.prestige]()
 }
 
 export const toggleAutoTranscendMode = () => {
   const nextEnum = (player.resetToggleModes.transcend + 1) % NUM_TOGGLE_MODES
-  player.resetToggleModes.transcend = nextEnum as AutoResetModes
+  player.resetToggleModes.transcend = nextEnum
   DOMCacheGetOrSet('transcendautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.transcend]()
 }
 
 export const toggleAutoReincarnateMode = () => {
   const nextEnum = (player.resetToggleModes.reincarnation + 1) % NUM_TOGGLE_MODES
-  player.resetToggleModes.reincarnation = nextEnum as AutoResetModes
+  player.resetToggleModes.reincarnation = nextEnum
   DOMCacheGetOrSet('reincarnateautotoggle').textContent = autoResetTogglei18n[player.resetToggleModes.reincarnation]()
 }
 
 export const toggleAutoAscensionMode = () => {
   const nextEnum = (player.resetToggleModes.ascension + 1) % NUM_TOGGLE_MODES
-  player.resetToggleModes.ascension = nextEnum as AutoAscensionModes
+  player.resetToggleModes.ascension = nextEnum
   DOMCacheGetOrSet('tesseractautobuymode').textContent = autoAscensionTogglei18n[player.resetToggleModes.ascension]()
 }
 
@@ -287,6 +336,8 @@ export const toggleauto = () => {
       auto.style.border = '2px solid red'
     }
   }
+
+  updateBuildingAutomationButtons()
 }
 
 export const toggleResearchBuy = () => {
@@ -304,7 +355,7 @@ export const toggleAutoResearch = () => {
   if (player.autoResearchToggle || !getShopUpgradeEffects('obtainiumAuto', 'autoResearch')) {
     player.autoResearchToggle = false
     el.textContent = i18next.t('researches.automaticOff')
-    DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
+    setResearchRoombaHighlight(0)
     player.autoResearch = 0
   } else {
     player.autoResearchToggle = true
@@ -325,35 +376,41 @@ export const toggleAutoResearchMode = () => {
     player.autoResearchMode = 'cheapest'
     el.textContent = i18next.t('researches.autoModeCheapest')
   }
-  DOMCacheGetOrSet(`res${player.autoResearch || 1}`).classList.remove('researchRoomba')
+  setResearchRoombaHighlight(0)
 
   if (player.autoResearchToggle && roombaResearchEnabled() && player.autoResearchMode === 'cheapest') {
     player.autoResearch = researchOrderByCost[player.roombaResearchIndex]
   }
 }
 
-export const toggleAutoSacrifice = (index: string) => {
+export const toggleAutoSacrifice = (index: number) => {
   const el = DOMCacheGetOrSet('toggleautosacrifice')
-  const numIndex = Number(index)
-  if (numIndex === 0) {
+  const label = DOMCacheGetOrSet('toggleAutoSacrificeText')
+  if (index === 0) {
     if (player.autoSacrificeToggle) {
       player.autoSacrificeToggle = false
-      el.textContent = i18next.t('runes.blessings.autoRuneOff')
+      label.setAttribute('i18n', 'runes.blessings.autoRuneOff')
+      label.textContent = i18next.t('runes.blessings.autoRuneOff')
       el.style.border = '2px solid red'
       player.autoSacrifice = 0
     } else {
       player.autoSacrificeToggle = true
-      el.textContent = i18next.t('runes.blessings.autoRuneOn')
+      label.setAttribute('i18n', 'runes.blessings.autoRuneOn')
+      label.textContent = i18next.t('runes.blessings.autoRuneOn')
       el.style.border = '2px solid green'
     }
-  } else if (player.autoSacrificeToggle && getShopUpgradeEffects('offeringAuto', 'autoRune')) {
-    if (player.autoSacrifice === numIndex) {
+  } else if (
+    index <= G.MAX_AUTO_SACRIFICE_RUNE
+    && player.autoSacrificeToggle
+    && getShopUpgradeEffects('offeringAuto', 'autoRune')
+  ) {
+    if (player.autoSacrifice === index) {
       player.autoSacrifice = 0
     } else {
-      player.autoSacrifice = numIndex
+      player.autoSacrifice = index
     }
   }
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= G.MAX_AUTO_SACRIFICE_RUNE; i++) {
     DOMCacheGetOrSet(`${indexToRune[i]}Rune`).style.backgroundColor = player.autoSacrifice === i ? 'orange' : ''
   }
 }
@@ -407,6 +464,7 @@ export const toggleBuildingScreen = (input: string) => {
     DOMCacheGetOrSet(screenKey).style.display = 'none'
   }
   DOMCacheGetOrSet(screen[G.buildingSubTab].screen).style.display = 'flex'
+  createFitties()
   // player.subtabNumber = screen[G.buildingSubTab].subtabNumber
 }
 
@@ -424,12 +482,18 @@ export const toggleAchievementScreen = (indexStr: string) => {
       b.style.display = 'none'
     }
   }
+
+  awardUngroupedAchievement('participationTrophy')
+
+  updateAllGroupedAchievementProgress()
+  updateAllUngroupedAchievementProgress()
+  updateAllProgressiveAchievementProgress()
 }
 
 export const toggleRuneScreen = (indexStr: string) => {
   const index = Number(indexStr)
 
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const a = DOMCacheGetOrSet(`toggleRuneSubTab${i}`)
     const b = DOMCacheGetOrSet(`runeContainer${i}`)
     if (i === index) {
@@ -443,6 +507,7 @@ export const toggleRuneScreen = (indexStr: string) => {
 
   if (index === 2) {
     DOMCacheGetOrSet('offeringDetails').style.display = 'none'
+    updateTalismanInventory()
   } else {
     DOMCacheGetOrSet('offeringDetails').style.display = 'flex'
   }
@@ -492,7 +557,7 @@ export const toggleMaxPlat = () => {
 export const toggleSingularityScreen = (indexStr: string) => {
   const index = Number(indexStr)
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 6; i++) {
     const b = DOMCacheGetOrSet(`singularityContainer${i}`)
     if (i === index) {
       b.style.display = 'block'
@@ -502,13 +567,17 @@ export const toggleSingularityScreen = (indexStr: string) => {
   }
 
   if (index === 1) {
+    // These only need to be updated when the subtab is first opened.
     updateSingularityElevator()
     updateSingularityElevatorVisibility()
-  } else if (getActiveSubTab() === 4) {
-    visualUpdateOcteracts()
-  } else if (getActiveSubTab() === 5) {
-    visualUpdateAmbrosia()
+  } else if (index === 3) {
+    updateSingularityPenalties()
+    updateSingularityPerks()
+  } else if (index === 4) {
+    initializeOcteractUpgradeMap()
   }
+
+  createFitties()
 }
 
 interface ChadContributor {
@@ -572,8 +641,6 @@ export const setActiveSettingScreen = async (subtab: string) => {
       const err = e as Error
       credits.appendChild(document.createTextNode(err.toString()))
     }
-  } else if (subtab === 'accountSubTab') {
-    renderCaptcha()
   } else if (subtab === 'messagesSubTab') {
     initializeMessages()
   }
@@ -673,8 +740,6 @@ export const toggleCubeSubTab = (indexStr: string) => {
       // player.subtabNumber = j - 1
     }
   }
-
-  visualUpdateCubes()
 }
 
 export const updateAutoChallenge = (i: number) => {
@@ -740,7 +805,6 @@ const autoChallengeStateTexts: Record<AutoChallengeStates, () => string> = {
   START: () => i18next.t('challenges.modeStart'),
   CHALLENGE: () => i18next.t('challenges.modeChallenge'),
   ENTER: () => i18next.t('challenges.modeEnter'),
-  WAIT: () => i18next.t('challenges.modeWait'),
   COMPLETE: () => i18next.t('challenges.modeComplete')
 }
 
@@ -761,18 +825,6 @@ export const toggleAutoChallengeModeText = (mode: AutoChallengeStates) => {
   DOMCacheGetOrSet('autoChallengeType').textContent = autoChallengeStateTexts[mode]()
 }
 
-export enum AutoAscensionResetModes {
-  c10Completions = 0,
-  realAscensionTime = 1
-}
-
-const autoAscensionResetTogglei18n: Record<AutoAscensionResetModes, () => string> = {
-  [AutoAscensionResetModes.c10Completions]: () => i18next.t('corruptions.autoAscend.modeCompletions'),
-  [AutoAscensionResetModes.realAscensionTime]: () => i18next.t('corruptions.autoAscend.modeRealTime')
-}
-
-const NUM_ASCENSION_RESET_MODES = 2
-
 export const setAutoAscendResetActiveText = () => {
   const a = DOMCacheGetOrSet('ascensionAutoEnable')
   a.style.border = `2px solid ${player.autoAscend ? 'green' : 'red'}`
@@ -786,20 +838,8 @@ export const toggleAutoAscendResetActive = () => {
   setAutoAscendResetActiveText()
 }
 
-export const setAutoAscendResetModeText = () => {
-  DOMCacheGetOrSet('ascensionAutoToggle').textContent = autoAscensionResetTogglei18n[player.autoAscendMode]()
-}
-
-export const toggleAutoAscendResetMode = () => {
-  if (player.highestSingularityCount >= 25) {
-    const nextEnum = (player.autoAscendMode + 1) % NUM_ASCENSION_RESET_MODES
-    player.autoAscendMode = nextEnum as AutoAscensionResetModes
-    setAutoAscendResetModeText()
-  }
-}
-
 export const toggleautoopensCubes = (i: number) => {
-  if (player.highestSingularityCount >= 35) {
+  if (player.highestSingularityCount >= 10) {
     if (i === 1) {
       const oc = DOMCacheGetOrSet('openCubes')
       const oci = DOMCacheGetOrSet('cubeOpensInput')
@@ -892,18 +932,7 @@ export const toggleAutoTesseracts = (i: number) => {
   }
 
   player.autoTesseracts[i] = !player.autoTesseracts[i]
-}
-
-export const toggleCorruptionLevel = (corr: keyof Corruptions, value: number) => {
-  player.corruptions.next.incrementDecrementLevel(corr, value)
-  corruptionDisplay(corr)
-  corruptionLoadoutTableUpdate(true, 0)
-}
-
-export const toggleCorruptionLoadoutsStats = (statsStr: string) => {
-  const stats = statsStr === 'true'
-  player.corruptions.showStats = stats
-  showCorruptionStatsLoadouts()
+  updateBuildingAutomationButtons()
 }
 
 export const toggleAscStatPerSecond = (id: number) => {
@@ -964,6 +993,14 @@ export const toggleBlueberryLoadoutmode = () => {
 }
 
 export const confirmReply = (confirm = true) => {
+  if (DOMCacheGetOrSet('purchasePromptWrapper').style.display === 'block') {
+    ;(DOMCacheGetOrSet(confirm ? 'ok_purchasePrompt' : 'cancel_purchasePrompt') as HTMLButtonElement).click()
+    return
+  }
+  if (DOMCacheGetOrSet('infoAlertWrapper').style.display === 'block') {
+    ;(DOMCacheGetOrSet('ok_infoAlert') as HTMLButtonElement).click()
+    return
+  }
   if (DOMCacheGetOrSet('alertWrapper').style.display === 'block') {
     ;(DOMCacheGetOrSet('ok_alert') as HTMLButtonElement).click()
   }
@@ -983,14 +1020,16 @@ export const toggleStatSymbol = async () => {
   const confirmation = await Confirm(i18next.t('main.statSymbolConfirm'))
   if (!confirmation) {
     return
-  } else {
-    if (localStorage.getItem('statSymbols') === 'true') {
-      localStorage.setItem('statSymbols', 'false')
-    } else {
-      localStorage.setItem('statSymbols', 'true')
-    }
   }
-  location.reload()
+
+  const enabled = storageGetItem('statSymbols') !== 'true'
+  storageSetItem('statSymbols', `${enabled}`)
+
+  const { setStatSymbols } = await import('./Plugins/StatSymbols')
+  const { translateHTML } = await import('./i18n')
+  setStatSymbols(enabled)
+  translateHTML()
+  settingSymbols()
 }
 
 export const toggleAntsSubtab = (indexStr: string) => {
@@ -1005,6 +1044,4 @@ export const toggleAntsSubtab = (indexStr: string) => {
   const antTab = DOMCacheGetOrSet(`antSubtab${i}`)
   antTab.classList.add('flex')
   antTab.classList.remove('none')
-
-  visualUpdateAnts()
 }

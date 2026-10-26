@@ -1,18 +1,30 @@
 import i18next from 'i18next'
 import { DOMCacheGetOrSet } from './Cache/DOM'
+import { storageGetItem, storageRemoveItem, storageSetItem } from './events/storage-events'
 import { updateIconsFromSprites } from './SpriteSheets'
 import { player } from './Synergism'
 
-export const toggleTheme = (initial = false, themeNumber = 1, change = false) => {
+export enum Theme {
+  Dark = 1,
+  Darker = 2,
+  LighterDark = 3,
+  Light = 4,
+  Dracula = 5,
+  OLED = 6
+}
+
+export const themeValues = Object.values(Theme).filter((v): v is Theme => typeof v === 'number')
+
+export const toggleTheme = (initial = false, themeNumber: Theme = Theme.Dark, change = false) => {
   const themeButton = DOMCacheGetOrSet('theme')
   const body = document.body
 
   if (change) {
-    localStorage.setItem('theme', `${themeNumber}`)
+    storageSetItem('theme', `${themeNumber}`)
     body.style.setProperty('--transition', '750ms')
     body.style.setProperty('--transition-extra', '600ms')
   } else {
-    themeNumber = Number(localStorage.getItem('theme') ?? 1)
+    themeNumber = Number(storageGetItem('theme') ?? Theme.Dark)
   }
 
   /* Full reset for easy out of order change */
@@ -67,15 +79,13 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('platonicUpgradePics').style.borderColor = ''
     DOMCacheGetOrSet('actualShop').style.backgroundColor = ''
     DOMCacheGetOrSet('actualShop').style.borderColor = ''
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.backgroundColor = ''
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.borderColor = ''
+    DOMCacheGetOrSet('corruptionSubtabs').style.backgroundColor = ''
     DOMCacheGetOrSet('heptGrid').style.backgroundColor = ''
     DOMCacheGetOrSet('heptGrid').style.borderColor = ''
     DOMCacheGetOrSet('exportgame').style.backgroundColor = ''
     DOMCacheGetOrSet('importFileButton').style.backgroundColor = ''
     DOMCacheGetOrSet('switchTheme2').style.borderColor = 'darkslategray'
 
-    DOMCacheGetOrSet('corruptionDescription').style.color = 'darkviolet'
     DOMCacheGetOrSet('versionnumber').style.color = 'fuchsia'
     DOMCacheGetOrSet('singularitytab').style.color = 'red'
     DOMCacheGetOrSet('traitstab').style.color = 'red'
@@ -90,20 +100,19 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('notationTitle').style.color = 'pink'
     DOMCacheGetOrSet('hepteractWelcome').style.color = 'pink'
     DOMCacheGetOrSet('confirmationdisclaimer').style.color = 'plum'
-    DOMCacheGetOrSet('superiorIntellectRunePower').style.color = 'tomato'
     DOMCacheGetOrSet('hypercubeWelcome').style.color = '#ff004c' // Hypercube colors
     DOMCacheGetOrSet('hypercubeQuantity').style.color = '#ff004c'
     DOMCacheGetOrSet('hypercubeBlessingsTotal').style.color = '#ff004c'
   } else {
-    if (themeNumber === 4) {
+    if (themeNumber === Theme.Light) {
       DOMCacheGetOrSet('logo').setAttribute('src', 'Pictures/logoLight.png')
     }
   }
 
-  if (themeNumber === 1) {
-    localStorage.removeItem('theme')
+  if (themeNumber === Theme.Dark) {
+    storageRemoveItem('theme')
     themeButton.textContent = i18next.t('settings.themes.dark')
-  } else if (themeNumber === 2) { // 'Darker Mode'
+  } else if (themeNumber === Theme.Darker) { // 'Darker Mode'
     body.style.setProperty('--header-color', 'black')
     body.style.setProperty('--bg-color', '#0c0c0f')
     body.style.setProperty('--alert-color', '#040406')
@@ -126,13 +135,12 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     body.style.setProperty('--hepteract-bar-red', 'darkred')
     body.style.setProperty('--hepteract-bar-yellow', '#997a00')
     body.style.setProperty('--hepteract-bar-green', 'darkgreen')
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.borderColor = '#dd8f00'
     DOMCacheGetOrSet('actualPotionShop').style.borderColor = '#dd0'
     DOMCacheGetOrSet('exportgame').style.backgroundColor = 'black' // Special cases
     DOMCacheGetOrSet('importFileButton').style.backgroundColor = 'black'
 
     themeButton.textContent = i18next.t('settings.themes.darker')
-  } else if (themeNumber === 3) { // 'Lighter Dark Mode'
+  } else if (themeNumber === Theme.LighterDark) { // 'Lighter Dark Mode'
     body.style.setProperty('--header-color', '#18171c')
     body.style.setProperty('--bg-color', '#1c1b22')
     body.style.setProperty('--alert-color', '#141319')
@@ -150,7 +158,6 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     body.style.setProperty('--tab-color', '#101828')
     body.style.setProperty('--hoversing-color', '#005')
     body.style.setProperty('--hepteract-bar-empty', '#535064')
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.borderColor = '#ffa500'
     DOMCacheGetOrSet('actualPotionShop').style.borderColor = '#dd0'
     DOMCacheGetOrSet('actualShop').style.backgroundColor = '#0c0c0f' // Special cases
     DOMCacheGetOrSet('actualShop').style.borderColor = '#d487d4'
@@ -158,7 +165,7 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     body.style.setProperty('--maroon-text-color', '#a90000')
 
     themeButton.textContent = i18next.t('settings.themes.lighterDark')
-  } else if (themeNumber === 4) { // 'Light Mode'
+  } else if (themeNumber === Theme.Light) { // 'Light Mode'
     body.classList.add('textOutline')
     body.style.setProperty('--header-color', '#736e8d')
     body.style.setProperty('--bg-color', '#7c7891')
@@ -181,7 +188,6 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     body.style.setProperty('--hepteract-bar-red', '#ea1741')
     body.style.setProperty('--hepteract-bar-yellow', '#cc0')
     body.style.setProperty('--hepteract-bar-green', 'limegreen')
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.borderColor = '#dd8f00'
     DOMCacheGetOrSet('actualPotionShop').style.borderColor = '#dd0'
     DOMCacheGetOrSet('switchTheme2').style.borderColor = '#284242' // Special Cases
     body.style.setProperty('--green-text-color', 'limegreen')
@@ -194,7 +200,6 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     body.style.setProperty('--lightseagreen-text-color', 'limegreen')
     body.style.setProperty('--orangered-text-color', '#f74')
     body.style.setProperty('--gray-text-color', '#a5a5a5')
-    DOMCacheGetOrSet('corruptionDescription').style.color = '#d272ff'
     DOMCacheGetOrSet('antwelcome').style.color = '#b1b1b1'
     DOMCacheGetOrSet('versionnumber').style.color = '#ff5aff'
     DOMCacheGetOrSet('singularitytab').style.color = '#ff5252'
@@ -204,10 +209,9 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('hypercubeWelcome').style.color = '#f58'
     DOMCacheGetOrSet('hypercubeQuantity').style.color = '#f58'
     DOMCacheGetOrSet('hypercubeBlessingsTotal').style.color = '#f58'
-    DOMCacheGetOrSet('superiorIntellectRunePower').style.color = '#ff7158'
 
     themeButton.textContent = i18next.t('settings.themes.light')
-  } else if (themeNumber === 5) { // 'Dracula Mode'
+  } else if (themeNumber === Theme.Dracula) { // 'Dracula Mode'
     body.style.setProperty('--header-color', '#0a0a11')
     body.style.setProperty('--bg-color', '#131319')
     body.style.setProperty('--alert-color', '#2a1035')
@@ -251,12 +255,9 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('actualPotionShop').style.borderColor = '#04d481'
     DOMCacheGetOrSet('actualShop').style.backgroundColor = '#11111b'
     DOMCacheGetOrSet('actualShop').style.borderColor = '#038ba8'
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.backgroundColor = '#0a0a11'
-    DOMCacheGetOrSet('corruptionStatsLoadouts').style.borderColor = '#04d481'
+    DOMCacheGetOrSet('corruptionSubtabs').style.backgroundColor = '#0a0a11'
     DOMCacheGetOrSet('heptGrid').style.backgroundColor = '#11111b'
     DOMCacheGetOrSet('heptGrid').style.borderColor = '#9b7306'
-    DOMCacheGetOrSet('corruptionDescription').style.color = '#c205ff'
-    DOMCacheGetOrSet('corruptionTesseracts').style.color = '#c205ff'
     DOMCacheGetOrSet('confirmationToggleTitle').style.color = '#eb0000'
     DOMCacheGetOrSet('specialActionsTitle').style.color = '#eb0000'
     DOMCacheGetOrSet('themesTitle').style.color = '#eb0000'
@@ -267,6 +268,34 @@ export const toggleTheme = (initial = false, themeNumber = 1, change = false) =>
     DOMCacheGetOrSet('buildinghotkeys2').style.color = '#838383'
 
     themeButton.textContent = i18next.t('settings.themes.dracula')
+  } else if (themeNumber === Theme.OLED) { // 'OLED Mode'
+    body.style.setProperty('--header-color', '#000000')
+    body.style.setProperty('--bg-color', '#000000')
+    body.style.setProperty('--alert-color', '#000000')
+    body.style.setProperty('--history-lines', '#111118')
+    body.style.setProperty('--box-color', '#000000')
+    body.style.setProperty('--boxmain-bordercolor', '#d487d4')
+    body.style.setProperty('--button-color', '#050505')
+    body.style.setProperty('--hover-color', '#16161c')
+    body.style.setProperty('--purplebtn-color', '#5a005a')
+    body.style.setProperty('--buttonbuy-color', '#050505')
+    body.style.setProperty('--buildings-canbuy-color', '#20203a')
+    body.style.setProperty('--buildings-hover-color', '#2e2e4e')
+    body.style.setProperty('--blessings-canbuy-color', '#1c1c2e')
+    body.style.setProperty('--blessings-hover-color', '#28283f')
+    body.style.setProperty('--tab-color', '#000000')
+    body.style.setProperty('--singtab-color', '#000018')
+    body.style.setProperty('--hoversing-color', '#000064')
+    body.style.setProperty('--shoptab-color', '#5a005a')
+    body.style.setProperty('--hepteract-bar-empty', '#2e2e4e')
+    body.style.setProperty('--hepteract-bar-red', 'darkred')
+    body.style.setProperty('--hepteract-bar-yellow', '#997a00')
+    body.style.setProperty('--hepteract-bar-green', 'darkgreen')
+    DOMCacheGetOrSet('actualPotionShop').style.borderColor = '#dd0'
+    DOMCacheGetOrSet('exportgame').style.backgroundColor = '#000000' // Special cases
+    DOMCacheGetOrSet('importFileButton').style.backgroundColor = '#000000'
+
+    themeButton.textContent = i18next.t('settings.themes.oled')
   }
   if (change) {
     setTimeout(() => {
@@ -284,7 +313,7 @@ enum Notations {
 
 export const toggleAnnotation = (setting = true) => {
   const notationButton = DOMCacheGetOrSet('notation')
-  const current = player.notation
+  const current = player.notation as Notations
   let newNotation: Notations
 
   switch (current) {
@@ -309,7 +338,7 @@ export const toggleAnnotation = (setting = true) => {
 export const settingAnnotation = () => {
   const notationButton = DOMCacheGetOrSet('notation')
 
-  switch (player.notation) {
+  switch (player.notation as Notations) {
     case Notations.PURE_SCIENTIFIC:
       notationButton.textContent = i18next.t('settings.notation.pureScientific')
       break
@@ -324,7 +353,7 @@ export const settingAnnotation = () => {
 
 export const settingSymbols = () => {
   const symbolButton = DOMCacheGetOrSet('statSymbols')
-  const setting = localStorage.getItem('statSymbols')
+  const setting = storageGetItem('statSymbols')
   if (setting === 'true') {
     symbolButton.textContent = i18next.t('settings.statSymbols.enabled')
   } else {
@@ -354,7 +383,45 @@ export const toggleIconSet = (changeTo = player.iconSet) => {
   updateIconsFromSprites(IconSets[player.iconSet][0])
 }
 
-// If no image is found falls back to designated fallback, then Legacy, then MISSINGIMAGE.png
+const getIconSetFallbackOrder = () => {
+  const fallbackOrder: string[] = []
+  let iconSetIndex = player.iconSet
+
+  while (iconSetIndex >= 0 && iconSetIndex < IconSets.length) {
+    const [iconSetName, fallbackSetIndex] = IconSets[iconSetIndex]
+    if (fallbackOrder.includes(iconSetName)) {
+      break
+    }
+
+    fallbackOrder.push(iconSetName)
+    iconSetIndex = fallbackSetIndex
+  }
+
+  for (const [iconSetName] of IconSets) {
+    if (!fallbackOrder.includes(iconSetName)) {
+      fallbackOrder.push(iconSetName)
+    }
+  }
+
+  return fallbackOrder
+}
+
+const imgFallbacks = new Map<string, string>()
+
+export const resolveImgSrc = (src: string) => {
+  let resolved = new URL(src, document.baseURI).href
+  if (!imgFallbacks.has(resolved)) {
+    return src
+  }
+  let next = imgFallbacks.get(resolved)
+  while (next !== undefined && next !== resolved) {
+    resolved = next
+    next = imgFallbacks.get(resolved)
+  }
+  return resolved
+}
+
+// If no image is found, tries the designated fallback chain, then every remaining set, then MISSINGIMAGE.png
 // MISSINGIMAGE.png(s) will not be replaced except on a full page reload
 export function imgErrorHandler (evt: ErrorEvent | Event) {
   if (evt instanceof ErrorEvent) console.log('error: ', evt.error)
@@ -363,21 +430,19 @@ export function imgErrorHandler (evt: ErrorEvent | Event) {
     return
   }
   const whichImg = evt.target
-  const iconSetName = IconSets[player.iconSet][0]
-  const fallbackSetNum = IconSets[player.iconSet][1]
-  let fallbackSetName = 'Legacy'
-  if ((fallbackSetNum >= 0) && (fallbackSetNum < IconSets.length - 1)) {
-    fallbackSetName = IconSets[fallbackSetNum][0]
-  }
+  const failedSrc = whichImg.src
+  const fallbackOrder = getIconSetFallbackOrder()
+  const currentSetIndex = fallbackOrder.findIndex((iconSetName) => whichImg.src.includes(iconSetName))
+  const fallbackSetName = fallbackOrder[currentSetIndex + 1]
 
-  if (whichImg.src.includes('Legacy') || !(IconSetsRegex.exec(whichImg.src))) {
+  if (currentSetIndex === -1 || fallbackSetName === undefined) {
     // no image to fall back to
     whichImg.src = './Pictures/MISSINGIMAGE.png'
-  } else if (whichImg.src.includes(iconSetName)) {
-    // first fall back attempt
-    whichImg.src = whichImg.src.replace(IconSetsRegex, fallbackSetName)
   } else {
-    // fall back to Legacy
-    whichImg.src = whichImg.src.replace(IconSetsRegex, 'Legacy')
+    whichImg.src = whichImg.src.replace(IconSetsRegex, fallbackSetName)
+  }
+
+  if (whichImg.src !== failedSrc) {
+    imgFallbacks.set(failedSrc, whichImg.src)
   }
 }

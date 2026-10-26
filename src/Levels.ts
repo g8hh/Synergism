@@ -1,8 +1,12 @@
 import i18next from 'i18next'
 import { achievementLevel } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { resetTimeThreshold } from './Calculate'
 import { format, formatAsPercentIncrease, player } from './Synergism'
+import { CloseModal, MEDIUM_MODAL_UPDATE_TICK, Modal } from './UpdateHTML'
+import { isMobile, memoize } from './Utility'
+import { Globals as G } from './Variables'
+
+const MAX_LEVEL_PREVIEWS = 3
 
 type SynergismLevelReward =
   | 'quarks'
@@ -18,6 +22,8 @@ type SynergismLevelReward =
   | 'wowOcteracts'
   | 'ambrosiaLuck'
   | 'redAmbrosiaLuck'
+  | 'redAmbrosiaGeneration'
+  | 'purpleHoneyLuck'
 
 interface SynergismLevelRewardData {
   name: () => string
@@ -227,10 +233,94 @@ export const synergismLevelRewards: Record<SynergismLevelReward, SynergismLevelR
     minLevel: 260,
     defaultValue: 0,
     nameColor: 'red'
+  },
+  redAmbrosiaGeneration: {
+    name: () => i18next.t('achievements.levelRewards.redAmbrosiaGeneration.name'),
+    description: () => i18next.t('achievements.levelRewards.redAmbrosiaGeneration.description'),
+    effect: (lv: number) => 1 + 0.01 * (lv - 279),
+    effectDescription: () => {
+      const mult = getLevelReward('redAmbrosiaGeneration')
+      return i18next.t('achievements.levelRewards.redAmbrosiaGeneration.effect', {
+        percent: formatAsPercentIncrease(mult, 0)
+      })
+    },
+    minLevel: 280,
+    defaultValue: 1,
+    nameColor: 'red'
+  },
+  purpleHoneyLuck: {
+    name: () => i18next.t('achievements.levelRewards.purpleHoneyLuck.name'),
+    description: () => i18next.t('achievements.levelRewards.purpleHoneyLuck.description'),
+    effect: (lv: number) => (lv - 299),
+    effectDescription: () => {
+      const luck = getLevelReward('purpleHoneyLuck')
+      return i18next.t('achievements.levelRewards.purpleHoneyLuck.effect', {
+        luck: format(luck)
+      })
+    },
+    minLevel: 300,
+    defaultValue: 0,
+    nameColor: 'var(--purple-text-color)'
   }
 }
 
 const synergismLevelReward = Object.keys(synergismLevelRewards) as SynergismLevelReward[]
+const synergismLevelRewardsByLevel = [...synergismLevelReward]
+  .sort((a, b) => synergismLevelRewards[a].minLevel - synergismLevelRewards[b].minLevel)
+
+const createLevelDetailsModalHTML = (
+  imgSrc: string,
+  label: string,
+  titleColor: string,
+  detailsHTML: string,
+  isPreview = false
+) => {
+  return `<div class="achievementDetailsModal" data-modal-preserve="children">
+    <div class="achievementDetailsModalTitle" data-modal-preserve="children">
+      <img src="${imgSrc}" alt=""${isPreview ? ' class="synergismLevelPreview"' : ''}>
+      <span style="color:${titleColor}">${label}</span>
+    </div>
+    <div class="achievementDetailsModalInfo">${detailsHTML}</div>
+  </div>`
+}
+
+const registerLevelDetailsModal = (
+  img: HTMLImageElement,
+  detailsHTML: () => string,
+  borderColor: string,
+  titleColor: string
+) => {
+  if (!isMobile) {
+    img.addEventListener('mousemove', (event: MouseEvent) => {
+      Modal(detailsHTML, event.clientX, event.clientY, { borderColor })
+    })
+    img.addEventListener('focus', () => {
+      const rect = img.getBoundingClientRect()
+      Modal(detailsHTML, rect.x, rect.y + rect.height / 2, { borderColor })
+    })
+    img.addEventListener('mouseout', CloseModal)
+    img.addEventListener('blur', CloseModal)
+    return
+  }
+
+  img.addEventListener('click', (event: MouseEvent) => {
+    Modal(
+      () =>
+        createLevelDetailsModalHTML(
+          img.src,
+          img.alt,
+          titleColor,
+          detailsHTML(),
+          img.classList.contains('synergismLevelPreview')
+        ),
+      event.clientX,
+      event.clientY,
+      { borderColor },
+      MEDIUM_MODAL_UPDATE_TICK,
+      img
+    )
+  })
+}
 
 export const getLevelReward = (reward: SynergismLevelReward): number => {
   if (achievementLevel >= synergismLevelRewards[reward].minLevel) {
@@ -242,29 +332,34 @@ export const getLevelReward = (reward: SynergismLevelReward): number => {
 
 const getLevelRewardDescription = (reward: SynergismLevelReward) => {
   const name = synergismLevelRewards[reward].name()
-  const description = synergismLevelRewards[reward].description()
-  const effectDesc = synergismLevelRewards[reward].effectDescription()
-  const minimumLevel = synergismLevelRewards[reward].minLevel > 0
+  const minLevel = synergismLevelRewards[reward].minLevel
+  const minimumLevel = minLevel > 0
     ? i18next.t('achievements.levelRewards.minLevel', {
-      level: synergismLevelRewards[reward].minLevel
+      level: minLevel
     })
     : i18next.t('achievements.levelRewards.noLevelReq')
-
   const nameColor = synergismLevelRewards[reward].nameColor
 
-  DOMCacheGetOrSet('synergismLevelMultiLine').innerHTML = `
-        <span style="color:${nameColor}">${name}</span><br>
-        ${minimumLevel}<br>
-        ${description}<br>
-        ${effectDesc}
-    `
+  if (achievementLevel < minLevel) {
+    const levelsUntilUnlock = i18next.t('achievements.levelPreview.levelsUntilUnlock', {
+      count: minLevel - achievementLevel
+    })
+
+    return `<span style="color:${nameColor}">${name}</span><br>
+    ${minimumLevel}<br>
+    ${levelsUntilUnlock}`
+  }
+
+  const description = synergismLevelRewards[reward].description()
+  const effectDesc = synergismLevelRewards[reward].effectDescription()
+
+  return `<span style="color:${nameColor}">${name}</span><br>
+  ${minimumLevel}<br>
+  ${description}<br>
+  ${effectDesc}`
 }
 
-export const generateLevelRewardHTMLs = () => {
-  const alreadyGenerated = document.getElementsByClassName('synergismLevelRewardType').length > 0
-  if (alreadyGenerated) {
-    return
-  }
+export const generateLevelRewardHTMLs = memoize(() => {
   const rewardTable = DOMCacheGetOrSet('synergismLevelRewardsTable')
   for (const reward of synergismLevelReward) {
     const capitalizedName = reward.charAt(0).toUpperCase() + reward.slice(1)
@@ -277,16 +372,18 @@ export const generateLevelRewardHTMLs = () => {
     img.src = `Pictures/Achievements/Rewards/${capitalizedName}.png`
     img.alt = synergismLevelRewards[reward].name()
     img.style.cursor = 'pointer'
+    img.tabIndex = 0
 
-    const boundGetLevelRewardDescription = getLevelRewardDescription.bind(null, reward)
-
-    img.addEventListener('click', boundGetLevelRewardDescription)
-    img.addEventListener('mouseover', boundGetLevelRewardDescription)
-    img.addEventListener('focus', boundGetLevelRewardDescription)
+    registerLevelDetailsModal(
+      img,
+      () => getLevelRewardDescription(reward),
+      synergismLevelRewards[reward].nameColor,
+      synergismLevelRewards[reward].nameColor
+    )
     div.appendChild(img)
     rewardTable.appendChild(div)
   }
-}
+})
 
 type SynergismLevelMilestones =
   | 'offeringTimerScaling'
@@ -328,7 +425,7 @@ const synergismLevelMilestones: Record<SynergismLevelMilestones, SynergismLevelM
     defaultValue: 0,
     effectDescription: () => {
       const mult = getLevelMilestone('offeringTimerScaling') === 1
-        ? Math.max(1, player.prestigecounter / resetTimeThreshold())
+        ? Math.max(1, player.prestigecounter / G.GLOBAL_RESET_THRESHOLD)
         : 1
       return i18next.t('achievements.levelMilestones.offeringTimerScaling.effect', {
         mult: formatAsPercentIncrease(mult, 2)
@@ -643,7 +740,16 @@ const synergismLevelMilestones: Record<SynergismLevelMilestones, SynergismLevelM
   }
 }
 
-const synergismLevelMilestone = Object.keys(synergismLevelMilestones) as SynergismLevelMilestones[]
+const synergismLevelMilestone = (Object.keys(synergismLevelMilestones) as SynergismLevelMilestones[])
+  .sort((a, b) => synergismLevelMilestones[a].displayOrder - synergismLevelMilestones[b].displayOrder)
+
+const synergismLevelMilestonesByLevel = [...synergismLevelMilestone]
+  .sort((a, b) => {
+    const levelDifference = synergismLevelMilestones[a].levelReq - synergismLevelMilestones[b].levelReq
+    return levelDifference !== 0
+      ? levelDifference
+      : synergismLevelMilestones[a].displayOrder - synergismLevelMilestones[b].displayOrder
+  })
 
 export const getLevelMilestone = (milestone: SynergismLevelMilestones): number => {
   if (achievementLevel >= synergismLevelMilestones[milestone].levelReq) {
@@ -655,25 +761,31 @@ export const getLevelMilestone = (milestone: SynergismLevelMilestones): number =
 
 const getLevelMilestoneDescription = (milestone: SynergismLevelMilestones) => {
   const name = synergismLevelMilestones[milestone].name()
-  const description = synergismLevelMilestones[milestone].description()
-  const effectDesc = synergismLevelMilestones[milestone].effectDescription()
+  const levelReq = synergismLevelMilestones[milestone].levelReq
   const minimumLevel = i18next.t('achievements.levelRewards.minLevel', {
-    level: synergismLevelMilestones[milestone].levelReq
+    level: levelReq
   })
 
-  DOMCacheGetOrSet('synergismLevelMultiLine').innerHTML = `
-        <span style="color:lightblue">${name}</span><br>
-        ${minimumLevel}<br>
-        ${description}<br>
-        ${effectDesc}
-    `
+  if (achievementLevel < levelReq) {
+    const levelsUntilUnlock = i18next.t('achievements.levelPreview.levelsUntilUnlock', {
+      count: levelReq - achievementLevel
+    })
+
+    return `<span style="color:lightblue">${name}</span><br>
+    ${minimumLevel}<br>
+    ${levelsUntilUnlock}`
+  }
+
+  const description = synergismLevelMilestones[milestone].description()
+  const effectDesc = synergismLevelMilestones[milestone].effectDescription()
+
+  return `<span style="color:lightblue">${name}</span><br>
+  ${minimumLevel}<br>
+  ${description}<br>
+  ${effectDesc}`
 }
 
-export const generateLevelMilestoneHTMLS = () => {
-  const alreadyGenerated = document.getElementsByClassName('synergismLevelMilestoneType').length > 0
-  if (alreadyGenerated) {
-    return
-  }
+export const generateLevelMilestoneHTMLS = memoize(() => {
   const rewardTable = DOMCacheGetOrSet('synergismLevelMilestonesTable')
   for (const milestone of synergismLevelMilestone) {
     const capitalizedName = milestone.charAt(0).toUpperCase() + milestone.slice(1)
@@ -686,39 +798,62 @@ export const generateLevelMilestoneHTMLS = () => {
     img.src = `Pictures/Achievements/Milestones/${capitalizedName}.png`
     img.alt = synergismLevelMilestones[milestone].name()
     img.style.cursor = 'pointer'
+    img.tabIndex = 0
 
-    const boundGetLevelMilestoneDescription = getLevelMilestoneDescription.bind(null, milestone)
-
-    img.addEventListener('click', boundGetLevelMilestoneDescription)
-    img.addEventListener('mouseover', boundGetLevelMilestoneDescription)
-    img.addEventListener('focus', boundGetLevelMilestoneDescription)
+    registerLevelDetailsModal(img, getLevelMilestoneDescription.bind(null, milestone), 'lightblue', 'lightblue')
     div.appendChild(img)
     rewardTable.appendChild(div)
   }
 
   displayLevelStuff()
-}
+})
 
 export const displayLevelStuff = () => {
+  const unlockedRewards = synergismLevelReward
+    .filter((reward) => achievementLevel >= synergismLevelRewards[reward].minLevel)
+  const previewRewards = synergismLevelRewardsByLevel
+    .filter((reward) => achievementLevel < synergismLevelRewards[reward].minLevel)
+    .slice(0, MAX_LEVEL_PREVIEWS)
+  const previewRewardSet = new Set(previewRewards)
+  const rewardDisplayOrder = new Map(
+    [...unlockedRewards, ...previewRewards].map((reward, index) => [reward, index])
+  )
+
   for (const key of synergismLevelReward) {
     const capitalizedName = key.charAt(0).toUpperCase() + key.slice(1)
     const id = `synergismLevelReward${capitalizedName}`
     const element = DOMCacheGetOrSet(id)
-    if (achievementLevel >= synergismLevelRewards[key].minLevel) {
-      element.style.display = 'inline-block'
-    } else {
-      element.style.display = 'none'
+    const displayOrder = rewardDisplayOrder.get(key)
+    const shouldDisplay = displayOrder !== undefined
+    element.classList.toggle('synergismLevelPreview', previewRewardSet.has(key))
+    element.style.display = shouldDisplay ? 'inline-block' : 'none'
+    if (element.parentElement) {
+      element.parentElement.style.display = shouldDisplay ? 'inline-block' : 'none'
+      element.parentElement.style.order = displayOrder?.toString() ?? ''
     }
   }
+
+  const unlockedMilestones = synergismLevelMilestone
+    .filter((milestone) => achievementLevel >= synergismLevelMilestones[milestone].levelReq)
+  const previewMilestones = synergismLevelMilestonesByLevel
+    .filter((milestone) => achievementLevel < synergismLevelMilestones[milestone].levelReq)
+    .slice(0, MAX_LEVEL_PREVIEWS)
+  const previewMilestoneSet = new Set(previewMilestones)
+  const milestoneDisplayOrder = new Map(
+    [...unlockedMilestones, ...previewMilestones].map((milestone, index) => [milestone, index])
+  )
 
   for (const key of synergismLevelMilestone) {
     const capitalizedName = key.charAt(0).toUpperCase() + key.slice(1)
     const id = `synergismLevelMilestone${capitalizedName}`
     const element = DOMCacheGetOrSet(id)
-    if (achievementLevel >= synergismLevelMilestones[key].levelReq) {
-      element.style.display = 'inline-block'
-    } else {
-      element.style.display = 'none'
+    const displayOrder = milestoneDisplayOrder.get(key)
+    const shouldDisplay = displayOrder !== undefined
+    element.classList.toggle('synergismLevelPreview', previewMilestoneSet.has(key))
+    element.style.display = shouldDisplay ? 'inline-block' : 'none'
+    if (element.parentElement) {
+      element.parentElement.style.display = shouldDisplay ? 'inline-block' : 'none'
+      element.parentElement.style.order = displayOrder?.toString() ?? ''
     }
   }
 }

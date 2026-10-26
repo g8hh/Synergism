@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 
 export const messages = {
   join () {
@@ -57,9 +57,10 @@ export const messages = {
     })
   },
 
-  timeSkip (name: string, amount: number) {
+  timeSkip (name: string, id: string, amount: number) {
     return JSON.stringify({
       type: 'time-skip',
+      id,
       consumableName: name,
       amount
     })
@@ -104,6 +105,14 @@ export const messages = {
       type: 'lotus-active',
       remainingMs: remaining
     })
+  },
+
+  /* Received when the player's count of free Happy Hour Bells changes */
+  happyHourBells (amount: number) {
+    return JSON.stringify({
+      type: 'happy-hour-bells',
+      amount
+    })
   }
 }
 
@@ -114,21 +123,27 @@ export const messageSchema = z.preprocess(
         return JSON.parse(arg)
       } catch {
         ctx.addIssue({ code: 'custom', message: 'Received non-JSON message' })
-        return
+        return undefined
       }
     }
 
     ctx.addIssue({ code: 'custom', message: 'Received non-string message' })
+    return undefined
   },
   z.union([
     z.object({ type: z.literal('consume'), consumable: z.string() }),
     z.object({
+      type: z.literal('confirm'),
+      id: z.uuid(),
+      consumableId: z.string()
+    }),
+    z.object({
       type: z.union([z.literal('applied-tip'), z.literal('use-tips')]),
-      amount: z.number().int().nonnegative().safe()
+      amount: z.number().int().nonnegative()
     }),
     z.object({
       type: z.literal('applied-lotus'),
-      amount: z.number().int().min(0).safe()
+      amount: z.number().int().min(0)
     })
   ])
 )

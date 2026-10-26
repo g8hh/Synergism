@@ -3,13 +3,15 @@ import i18next from 'i18next'
 import { awardAchievementGroup } from './Achievements'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { calculateSalvageRuneEXPMultiplier } from './Calculate'
+import { challenge15CorruptionEffect } from './Corruptions'
 import { resetTiers } from './Reset'
 import { type RuneBlessingKeys, runeBlessings } from './RuneBlessings'
 import { type RuneKeys, runes } from './Runes'
+import { registerSpriteAlias, spritePlaceholder } from './SpriteSheets'
 import { format, formatAsPercentIncrease, player } from './Synergism'
 import { Tabs } from './Tabs'
-import { IconSets } from './Themes'
-import { assert } from './Utility'
+import { CloseModal, Modal } from './UpdateHTML'
+import { assert, isMobile, memoize } from './Utility'
 import { Globals as G } from './Variables'
 
 type RuneSpiritTypeMap = {
@@ -24,7 +26,6 @@ export type RuneSpiritKeys = keyof RuneSpiritTypeMap
 
 interface RuneSpiritData<K extends RuneSpiritKeys> {
   level: number
-  runeEXP: Decimal
   costCoefficient: Decimal
   levelsPerOOM: number
   effectiveLevelMult: () => number
@@ -34,10 +35,10 @@ interface RuneSpiritData<K extends RuneSpiritKeys> {
   effectsDescription: (n: number) => string
   name: () => string
   description: () => string
-  HTMLData: {
-    imgName: string
-  }
 }
+
+const spiritPowerPerPercent = 777777
+const prismSpiritDivisor = 7.777e7
 
 const otherSpiritMultipliers = () => {
   return (1 + (8 * player.researches[164]) / 100)
@@ -45,7 +46,7 @@ const otherSpiritMultipliers = () => {
     * (1 + 0.15 * Decimal.log(player.legendaryFragments.add(1), 10) * player.researches[189])
     * (1 + (2 * player.researches[194]) / 100)
     * G.challenge15Rewards.spiritBonus.value
-    * player.corruptions.used.totalCorruptionDifficultyMultiplier
+    * challenge15CorruptionEffect('spirit')
 }
 
 const spiritMultiplier = (key: RuneKeys) => {
@@ -59,11 +60,10 @@ const spiritMultiplier = (key: RuneKeys) => {
 export const runeSpirits: { [K in RuneSpiritKeys]: RuneSpiritData<K> } = {
   speed: {
     level: 0,
-    runeEXP: new Decimal(0),
     costCoefficient: new Decimal(1e45),
     levelsPerOOM: 2,
     effects: (level) => {
-      const globalSpeed = 1 + level / 1e9
+      const globalSpeed = 1 + level / spiritPowerPerPercent / 100
       return { globalSpeed }
     },
     effectsDescription: (level) => {
@@ -76,18 +76,14 @@ export const runeSpirits: { [K in RuneSpiritKeys]: RuneSpiritData<K> } = {
     runeEXPPerOffering: () => calculateSalvageRuneEXPMultiplier(),
     minimalResetTier: 'singularity',
     name: () => runes.speed.name(),
-    description: () => i18next.t('runes.spirits.speed.description'),
-    HTMLData: {
-      imgName: 'SpiritSpeed'
-    }
+    description: () => i18next.t('runes.spirits.speed.description')
   },
   duplication: {
     level: 0,
-    runeEXP: new Decimal(0),
     costCoefficient: new Decimal(1e52),
     levelsPerOOM: 2,
     effects: (level) => {
-      const wowCubes = 1 + level / 1e9
+      const wowCubes = 1 + level / spiritPowerPerPercent / 100
       return { wowCubes }
     },
     effectsDescription: (level) => {
@@ -100,18 +96,14 @@ export const runeSpirits: { [K in RuneSpiritKeys]: RuneSpiritData<K> } = {
     runeEXPPerOffering: () => calculateSalvageRuneEXPMultiplier(),
     minimalResetTier: 'singularity',
     name: () => runes.duplication.name(),
-    description: () => i18next.t('runes.spirits.duplication.description'),
-    HTMLData: {
-      imgName: 'SpiritDuplication'
-    }
+    description: () => i18next.t('runes.spirits.duplication.description')
   },
   prism: {
     level: 0,
-    runeEXP: new Decimal(0),
     costCoefficient: new Decimal(1e60),
     levelsPerOOM: 2,
     effects: (level) => {
-      const crystalCaps = level / 1e9
+      const crystalCaps = level / prismSpiritDivisor
       return { crystalCaps }
     },
     effectsDescription: (level) => {
@@ -124,18 +116,14 @@ export const runeSpirits: { [K in RuneSpiritKeys]: RuneSpiritData<K> } = {
     runeEXPPerOffering: () => calculateSalvageRuneEXPMultiplier(),
     minimalResetTier: 'singularity',
     name: () => runes.prism.name(),
-    description: () => i18next.t('runes.spirits.prism.description'),
-    HTMLData: {
-      imgName: 'SpiritPrism'
-    }
+    description: () => i18next.t('runes.spirits.prism.description')
   },
   thrift: {
     level: 0,
-    runeEXP: new Decimal(0),
     costCoefficient: new Decimal(1e72),
     levelsPerOOM: 2,
     effects: (level) => {
-      const offerings = 1 + level / 1e9
+      const offerings = 1 + level / spiritPowerPerPercent / 100
       return { offerings }
     },
     effectsDescription: (level) => {
@@ -148,18 +136,14 @@ export const runeSpirits: { [K in RuneSpiritKeys]: RuneSpiritData<K> } = {
     runeEXPPerOffering: () => calculateSalvageRuneEXPMultiplier(),
     minimalResetTier: 'singularity',
     name: () => runes.thrift.name(),
-    description: () => i18next.t('runes.spirits.thrift.description'),
-    HTMLData: {
-      imgName: 'SpiritThrift'
-    }
+    description: () => i18next.t('runes.spirits.thrift.description')
   },
   superiorIntellect: {
     level: 0,
-    runeEXP: new Decimal(0),
     costCoefficient: new Decimal(1e85),
     levelsPerOOM: 2,
     effects: (level) => {
-      const obtainium = 1 + level / 1e9
+      const obtainium = 1 + level / spiritPowerPerPercent / 100
       return { obtainium }
     },
     effectsDescription: (level) => {
@@ -172,10 +156,7 @@ export const runeSpirits: { [K in RuneSpiritKeys]: RuneSpiritData<K> } = {
     runeEXPPerOffering: () => calculateSalvageRuneEXPMultiplier(),
     minimalResetTier: 'singularity',
     name: () => runes.superiorIntellect.name(),
-    description: () => i18next.t('runes.spirits.superiorIntellect.description'),
-    HTMLData: {
-      imgName: 'SpiritSI'
-    }
+    description: () => i18next.t('runes.spirits.superiorIntellect.description')
   }
 }
 
@@ -200,7 +181,7 @@ const computeEXPToLevel = (spirit: RuneSpiritKeys, level: number) => {
 }
 
 const computeEXPLeftToLevel = (spirit: RuneSpiritKeys, level: number) => {
-  return Decimal.max(0, computeEXPToLevel(spirit, level).minus(runeSpirits[spirit].runeEXP))
+  return Decimal.max(0, computeEXPToLevel(spirit, level).minus(player.runeSpirits[spirit]))
 }
 
 export const buySpiritLevels = (spirit: RuneSpiritKeys, budget: Decimal) => {
@@ -220,9 +201,10 @@ export const buyAllSpiritLevels = (budget: Decimal) => {
     buySpiritLevels(key, Decimal.floor(budget.div(ratio)))
   }
 
-  if (player.offerings.lt(0)) {
+  const zero = new Decimal()
+  if (player.offerings.lt(zero)) {
     // TODO: Figure out why this fucking happens so often
-    player.offerings = new Decimal(0)
+    player.offerings = zero
   }
 }
 
@@ -234,10 +216,10 @@ const levelSpirit = (spirit: RuneSpiritKeys, timesLeveled: number, budget: Decim
   const offeringsRequired = Decimal.max(1, expRequired.div(runeEXPPerOffering).ceil())
 
   if (offeringsRequired.gt(budget)) {
-    runeSpirits[spirit].runeEXP = runeSpirits[spirit].runeEXP.add(budget.times(runeEXPPerOffering))
+    player.runeSpirits[spirit] = player.runeSpirits[spirit].add(budget.times(runeEXPPerOffering))
     budgetUsed = budget
   } else {
-    runeSpirits[spirit].runeEXP = computeEXPToLevel(spirit, runeSpirits[spirit].level + timesLeveled)
+    player.runeSpirits[spirit] = computeEXPToLevel(spirit, runeSpirits[spirit].level + timesLeveled)
     budgetUsed = offeringsRequired
   }
 
@@ -247,10 +229,10 @@ const levelSpirit = (spirit: RuneSpiritKeys, timesLeveled: number, budget: Decim
 const updateLevelsFromEXP = (spirit: RuneSpiritKeys) => {
   const levelsPerOOM = runeSpirits[spirit].levelsPerOOM
   const levels = Math.floor(
-    levelsPerOOM * Decimal.log10(runeSpirits[spirit].runeEXP.div(runeSpirits[spirit].costCoefficient).plus(1))
+    levelsPerOOM * Decimal.log10(player.runeSpirits[spirit].div(runeSpirits[spirit].costCoefficient).plus(1))
   )
   // Floating point imprecision fix
-  if (computeEXPLeftToLevel(spirit, levels + 1).eq(0)) {
+  if (computeEXPLeftToLevel(spirit, levels + 1).eq(new Decimal())) {
     runeSpirits[spirit].level = levels + 1
   } else {
     runeSpirits[spirit].level = levels
@@ -269,12 +251,12 @@ export const updateAllSpiritLevelsFromEXP = () => {
 
 // Gives levels to buy, total EXP to that level, and offerings required to reach that level
 const maxSpiritLevelPurchaseInformation = (spirit: RuneSpiritKeys, budget: Decimal) => {
-  if (budget.lt(0)) {
-    return { levels: 0, expRequired: new Decimal(0), offerings: new Decimal(0) }
+  if (budget.lt(new Decimal())) {
+    return { levels: 0, expRequired: new Decimal(), offerings: new Decimal() }
   }
 
   const runeEXPPerOffering = getRuneSpiritEXPPerOffering(spirit)
-  const totalEXPAvailable = budget.times(runeEXPPerOffering).add(runeSpirits[spirit].runeEXP)
+  const totalEXPAvailable = budget.times(runeEXPPerOffering).add(player.runeSpirits[spirit])
   const levelsPerOOM = runeSpirits[spirit].levelsPerOOM
   const costCoeff = runeSpirits[spirit].costCoefficient
 
@@ -292,7 +274,7 @@ const maxSpiritLevelPurchaseInformation = (spirit: RuneSpiritKeys, budget: Decim
     const nextLevelEXP = computeEXPToLevel(spirit, runeSpirits[spirit].level + 1)
     const offeringsRequired = Decimal.max(
       1,
-      nextLevelEXP.minus(runeSpirits[spirit].runeEXP).div(runeEXPPerOffering).ceil()
+      nextLevelEXP.minus(player.runeSpirits[spirit]).div(runeEXPPerOffering).ceil()
     )
     return { levels: 1, expRequired: nextLevelEXP, offerings: offeringsRequired }
   }
@@ -302,12 +284,12 @@ const maxSpiritLevelPurchaseInformation = (spirit: RuneSpiritKeys, budget: Decim
   // Need to be recomputed since offerings required is not necessarily equal to budget.
   const offeringsRequired = Decimal.max(
     1,
-    expRequired.minus(runeSpirits[spirit].runeEXP).div(runeEXPPerOffering).ceil()
+    expRequired.minus(player.runeSpirits[spirit]).div(runeEXPPerOffering).ceil()
   )
   return { levels: levelsGained, expRequired: expRequired, offerings: offeringsRequired }
 }
 
-export const updateRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
+export const updateWebRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
   assert(G.currentTab === Tabs.Runes, 'current tab is not Runes')
 
   DOMCacheGetOrSet(`${spirit}RuneSpiritLevel`).innerHTML = i18next.t('runes.spirits.spiritLevel', {
@@ -319,6 +301,44 @@ export const updateRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
     levelAmount: levels,
     offerings: format(offerings, 2, false)
   })
+}
+
+export const updateMobileRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
+  assert(G.currentTab === Tabs.Runes, 'current tab is not Runes')
+
+  // {rune}Rune, {rune}RuneLevel, {rune}RuneCoefficient, {rune}RuneIncreasePerLevel, {rune}RunePower, {rune}RuneEffects, {rune}RuneCost
+  DOMCacheGetOrSet(`${spirit}RuneSpiritLevel`).innerHTML = i18next.t('runes.spirits.spiritLevel', {
+    amount: format(runeSpirits[spirit].level, 0, true)
+  })
+  DOMCacheGetOrSet(`${spirit}RuneSpiritCoefficient`).textContent = i18next.t('runes.spirits.runeCoefficientText', {
+    val: format(runeSpirits[spirit].levelsPerOOM, 0, true)
+  })
+
+  DOMCacheGetOrSet(`${spirit}RuneSpiritIncreasePerLevel`).innerHTML = i18next.t('runes.perLevelIncrease', {
+    x: format(Math.pow(10, 1 / runeSpirits[spirit].levelsPerOOM), 4, false)
+  })
+
+  const spiritPower = getRuneSpiritPower(spirit)
+
+  DOMCacheGetOrSet(`${spirit}RuneSpiritPower`).innerHTML = i18next.t('runes.spirits.effectiveSpiritPower', {
+    power: format(spiritPower, 0, true)
+  })
+
+  DOMCacheGetOrSet(`${spirit}RuneSpiritEffects`).innerHTML = runeSpirits[spirit].effectsDescription(spiritPower)
+
+  const { levels, offerings } = maxSpiritLevelPurchaseInformation(spirit, player.offerings)
+  DOMCacheGetOrSet(`${spirit}RuneSpiritCost`).innerHTML = i18next.t('runes.TNL', {
+    levelAmount: format(levels, 0, true),
+    offerings: format(offerings, 0, true)
+  })
+}
+
+export const updateRuneSpiritHTML = (bless: RuneBlessingKeys) => {
+  if (isMobile) {
+    updateMobileRuneSpiritHTML(bless)
+  } else {
+    updateWebRuneSpiritHTML(bless)
+  }
 }
 
 export const focusedRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
@@ -339,8 +359,8 @@ export const focusedRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
     name: runes[spirit as RuneKeys].name()
   })
   const blessingPowerMultHTML = i18next.t('runes.spirits.blessingPowerMult', {
-    level: format(runeBlessings[spirit as RuneBlessingKeys].level, 0, true),
-    name: runeBlessings[spirit as RuneBlessingKeys].name()
+    level: format(runeBlessings[spirit].level, 0, true),
+    name: runeBlessings[spirit].name()
   })
   const otherPowerMultHTML = i18next.t('runes.spirits.otherPowerMult', {
     mult: format(otherSpiritMultipliers(), 2, true)
@@ -356,7 +376,7 @@ export const focusedRuneSpiritHTML = (spirit: RuneSpiritKeys) => {
   })
 
   const experienceHTML = i18next.t('runes.spirits.spiritEXP', {
-    exp: format(runeSpirits[spirit].runeEXP, 2, true),
+    exp: format(player.runeSpirits[spirit], 2, true),
     perEXP: format(getRuneSpiritEXPPerOffering(spirit), 2, true)
   })
 
@@ -378,12 +398,12 @@ export function resetRuneSpirits (tier: keyof typeof resetTiers) {
   for (const spirit of runeSpiritKeys) {
     if (resetTiers[tier] >= resetTiers[runeSpirits[spirit].minimalResetTier]) {
       runeSpirits[spirit].level = 0
-      runeSpirits[spirit].runeEXP = new Decimal(0)
+      player.runeSpirits[spirit] = new Decimal()
     }
   }
 }
 
-export const generateSpiritsHTML = () => {
+export const generateWebRuneSpiritsHTML = () => {
   const spiritRow = DOMCacheGetOrSet('runeSpirits')
 
   for (const key of runeSpiritKeys) {
@@ -398,6 +418,24 @@ export const generateSpiritsHTML = () => {
       `color-mix(in srgb, ${runes[key].runeHTMLStyle.borderColor} 50%, lightgoldenrodyellow 50%)`
     )
 
+    runesDiv.addEventListener(
+      'mousemove',
+      (e) => {
+        Modal(() => focusedRuneSpiritHTML(key), e.clientX, e.clientY, {
+          borderColor: runes[key].runeHTMLStyle.borderColor
+        })
+      }
+    )
+    runesDiv.addEventListener('focus', () => {
+      const element = DOMCacheGetOrSet(`${key}RuneSpirit`)
+      const elmRect = element.getBoundingClientRect()
+      Modal(() => focusedRuneSpiritHTML(key), elmRect.x, elmRect.y + elmRect.height / 2, {
+        borderColor: runes[key].runeHTMLStyle.borderColor
+      })
+    })
+
+    runesDiv.addEventListener('mouseout', CloseModal)
+
     const runeName = document.createElement('p')
     runeName.className = 'runeTypeElement'
     runeName.setAttribute('i18n', `runes.${key}.name`)
@@ -409,7 +447,7 @@ export const generateSpiritsHTML = () => {
     runeIcon.className = 'runeImage'
     runeIcon.id = `${key}RuneSpirit`
     runeIcon.alt = `${key} Rune`
-    runeIcon.src = `Pictures/${IconSets[player.iconSet][0]}/${runeSpirits[key].HTMLData.imgName}.png`
+    runeIcon.src = spritePlaceholder
     runeIcon.loading = 'lazy'
 
     runesDiv.appendChild(runeIcon)
@@ -432,9 +470,115 @@ export const generateSpiritsHTML = () => {
     sacrificeButton.id = `${key}RuneSpiritPurchase`
     sacrificeButton.setAttribute('i18n', 'general.spiritCapital')
     sacrificeButton.textContent = i18next.t('general.spiritCapital')
+    sacrificeButton.addEventListener(
+      'click',
+      () => buySpiritLevels(key, player.offerings)
+    )
 
     runesDiv.appendChild(sacrificeButton)
 
     spiritRow.appendChild(runesDiv)
   }
 }
+
+export const generateMobileRuneSpiritsHTML = () => {
+  const spiritRow = DOMCacheGetOrSet('runeSpirits')
+  for (const key of Object.keys(runeBlessings) as RuneSpiritKeys[]) {
+    // Create unlocked rune container
+    const runesDiv = document.createElement('div')
+    runesDiv.className = 'runeTypeMobile'
+    runesDiv.id = `${key}RuneSpiritContainer`
+    runesDiv.style.border = `2px solid ${runes[key].runeHTMLStyle.borderColor}`
+    runesDiv.style.borderRadius = '8px'
+    runesDiv.style.margin = '2px'
+
+    // Top of div lefthand (icon, name)
+    const topRow = document.createElement('div')
+    topRow.classList.add('runeIconAndName')
+
+    const runeIcon = document.createElement('img')
+    runeIcon.className = 'runeImage'
+    runeIcon.height = 32 // make smaller on mobile versions
+    runeIcon.width = 32
+    runeIcon.id = `${key}RuneSpirit`
+    runeIcon.alt = `${key} Rune`
+    runeIcon.src = spritePlaceholder
+    runeIcon.loading = 'lazy'
+
+    registerSpriteAlias(runeIcon.id, runeIcon.id, 32)
+
+    topRow.appendChild(runeIcon)
+
+    const runeName = document.createElement('p')
+    runeName.className = 'runeTypeElementMobile'
+    runeName.setAttribute('i18n', `runes.${key}.name`)
+    runeName.innerHTML = i18next.t(`runes.${key}.name`)
+    topRow.appendChild(runeName)
+
+    runesDiv.appendChild(topRow)
+
+    const level = document.createElement('p')
+    level.className = 'runeTypeElementMobile'
+    level.id = `${key}RuneSpiritLevel`
+    level.textContent = '0 [+0]'
+    level.style.color = 'white'
+    runesDiv.appendChild(level)
+
+    const coefficientText = document.createElement('p')
+    coefficientText.className = 'runeTypeElementMobile'
+    coefficientText.id = `${key}RuneSpiritCoefficient`
+    coefficientText.textContent = '1'
+    coefficientText.style.color = 'white'
+    runesDiv.appendChild(coefficientText)
+
+    const increasePerLevelText = document.createElement('p')
+    increasePerLevelText.className = 'runeTypeElementMobile'
+    increasePerLevelText.id = `${key}RuneSpiritIncreasePerLevel`
+    increasePerLevelText.textContent = '1'
+    increasePerLevelText.style.color = 'white'
+    runesDiv.appendChild(increasePerLevelText)
+
+    const runePower = document.createElement('p')
+    runePower.className = 'runeTypeElementMobile'
+    runePower.id = `${key}RuneSpiritPower`
+    runePower.textContent = '1'
+    runePower.style.color = 'white'
+    runesDiv.appendChild(runePower)
+
+    const runeEffects = document.createElement('p')
+    runeEffects.className = 'runeTypeElementMobile'
+    runeEffects.id = `${key}RuneSpiritEffects`
+    runeEffects.textContent = '1'
+    runeEffects.style.color = 'white'
+    runesDiv.appendChild(runeEffects)
+
+    const runeCost = document.createElement('p')
+    runeCost.className = 'runeTypeElementMobile'
+    runeCost.id = `${key}RuneSpiritCost`
+    runeCost.textContent = '1'
+    runeCost.style.color = 'white'
+    runesDiv.appendChild(runeCost)
+
+    const sacrificeButton = document.createElement('button')
+    sacrificeButton.className = 'runeTypeElementMobile'
+    sacrificeButton.id = `${key}RuneSpiritPurchase`
+    sacrificeButton.setAttribute('i18n', 'general.spiritCapital')
+    sacrificeButton.textContent = i18next.t('general.spiritCapital')
+    sacrificeButton.addEventListener(
+      'click',
+      () => buySpiritLevels(key, player.offerings)
+    )
+
+    runesDiv.appendChild(sacrificeButton)
+
+    spiritRow.appendChild(runesDiv)
+  }
+}
+
+export const generateSpiritsHTML = memoize(() => {
+  if (isMobile) {
+    generateMobileRuneSpiritsHTML()
+  } else {
+    generateWebRuneSpiritsHTML()
+  }
+})

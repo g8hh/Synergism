@@ -23,7 +23,7 @@ import { talismanItemRequiredELO } from '../../AntSacrifice/Rewards/TalismanCraf
 export const showLockedSacrifice = () => {
   const crumbs = player.ants.crumbsThisSacrifice
   DOMCacheGetOrSet('sacrificeLockedText').innerHTML = i18next.t('ants.altar.locked.crumbsMade', {
-    x: format(crumbs, 2, true, undefined, undefined, true)
+    x: format(crumbs, 2, true, false)
   })
 }
 
@@ -101,15 +101,19 @@ export const showSacrifice = () => {
     percentage: format((1 - calculateStageRebornSpeedMult()) * 100, 3, true)
   })
 
-  DOMCacheGetOrSet('antSacrificeOffering').textContent = `+${format(sacRewards.offerings)}`
-  DOMCacheGetOrSet('antSacrificeObtainium').textContent = `+${format(sacRewards.obtainium)}`
+  DOMCacheGetOrSet('antSacrificeOffering').textContent = `+${format(sacRewards.offerings, 0, false, false)}`
+  DOMCacheGetOrSet('antSacrificeObtainium').textContent = `+${format(sacRewards.obtainium, 0, false, false)}`
 
-  DOMCacheGetOrSet('lotusStatus').innerHTML = i18next.t('pseudoCoins.lotus.status', {
+  const lotusStatusHTML = i18next.t('pseudoCoins.lotus.status', {
     time: timeRemainingMinutes(getLotusTimeExpiresAt())
   })
-  DOMCacheGetOrSet('lotusOwnedAnt').innerHTML = i18next.t('pseudoCoins.lotus.owned', {
+  const lotusOwnedHTML = i18next.t('pseudoCoins.lotus.owned', {
     x: format(getOwnedLotus(), 0, true)
   })
+  DOMCacheGetOrSet('lotusStatus').innerHTML = lotusStatusHTML
+  DOMCacheGetOrSet('lotusStatusCollapsed').innerHTML = lotusStatusHTML
+  DOMCacheGetOrSet('lotusOwnedAnt').innerHTML = lotusOwnedHTML
+  DOMCacheGetOrSet('lotusOwnedAntCollapsed').innerHTML = lotusOwnedHTML
 
   if (player.challengecompletions[9] > 0) {
     // Helper function to update reward display and styling
@@ -124,7 +128,7 @@ export const showSacrifice = () => {
 
       if (effectiveELO >= requirement) {
         // Unlocked: show reward amount, remove locked styling
-        element.textContent = i18next.t('ants.itemReward', { x: format(reward) })
+        element.textContent = i18next.t('ants.itemReward', { x: format(reward, 0, false, false) })
         parentElement?.classList.remove('antSacrificeRewardLocked')
         const img = parentElement?.querySelector('img')
         img?.classList.remove('antSacrificeRewardImageLocked')

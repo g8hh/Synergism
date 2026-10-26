@@ -2,10 +2,12 @@ import { app, BrowserWindow, ipcMain, net, session, shell } from 'electron'
 import Store from 'electron-store'
 import windowStateKeeper from 'electron-window-state'
 import mimeTypes from 'mime-types'
+import { randomBytes, timingSafeEqual } from 'node:crypto'
 import fsp from 'node:fs/promises'
 import path from 'node:path'
+import { z } from 'zod'
+import { startDiscordRpc } from './lib/discord.ts'
 import { enableSteamOverlay, initializeSteam } from './lib/steam-ipc.ts'
-import './lib/discord.ts' // Discord RPC
 
 if (process.platform === 'darwin') {
   app.commandLine.appendSwitch('enable-gpu-rasterization')
@@ -20,9 +22,8 @@ if (process.platform === 'darwin') {
 
 // Single instance lock — on Windows/Linux, custom protocol URLs launch a new
 // instance. We grab the lock so the second instance can forward the URL to us.
-const gotTheLock = app.requestSingleInstanceLock()
-if (!gotTheLock) {
-  app.quit()
+if (!app.requestSingleInstanceLock()) {
+  process.exit(0)
 }
 
 app.setAsDefaultProtocolClient('synergism')
@@ -35,19 +36,74 @@ const settingsStore = new Store<{ zoomFactor: number }>({
 let mainWindow: BrowserWindow | null = null
 
 /**
+ * Pending nonce for the external auth flow. Generated whenever the app opens a
+ * login URL in the system browser; the backend echoes it back in the
+ * synergism:// callback so we can reject deep links this app did not initiate.
+ */
+let pendingAuthState: { value: string; expiresAt: number } | null = null
+
+const AUTH_STATE_TTL_MS = 15 * 60 * 1000
+
+/** Start a new external auth flow: store a fresh nonce and add it to the login URL. */
+function withAuthState (url: URL): string {
+  const state = randomBytes(32).toString('base64url')
+  pendingAuthState = { value: state, expiresAt: Date.now() + AUTH_STATE_TTL_MS }
+  url.searchParams.set('state', state)
+  return url.toString()
+}
+
+/**
+ * Validate the state echoed in a synergism:// callback against the pending
+ * nonce.
+ */
+function consumeAuthState (provided: string | null): boolean {
+  if (provided === null || pendingAuthState === null) {
+    return false
+  }
+
+  const { value, expiresAt } = pendingAuthState
+  if (Date.now() > expiresAt) {
+    pendingAuthState = null
+    return false
+  }
+
+  const providedBuf = Buffer.from(provided)
+  const expectedBuf = Buffer.from(value)
+  const matches = providedBuf.length === expectedBuf.length && timingSafeEqual(providedBuf, expectedBuf)
+
+  if (matches) {
+    pendingAuthState = null
+  }
+
+  return matches
+}
+
+/**
  * Handle a `synergism://` protocol callback URL.
- * Expected format: synergism://login-callback?token=<session_token>
+ * Expected format: synergism://login-callback?token=<session_token>&state=<nonce>
+ *
+ * The state must match the nonce generated when this app opened the external
+ * auth flow. Callbacks without a valid state are rejected: any website or app
+ * can forge a synergism:// link, so an unvalidated token would let an attacker
+ * fix this client into a session they control.
  */
 async function handleProtocolUrl (raw: string): Promise<void> {
   try {
     const url = new URL(raw)
 
     if (url.hostname === 'link-callback') {
-      mainWindow?.webContents.reload()
+      if (!consumeAuthState(url.searchParams.get('state'))) return
+
+      const code = url.searchParams.get('code')
+      if (!code) return
+
+      mainWindow?.webContents.send('auth:linkCode', code)
       return
     }
 
     if (url.hostname !== 'login-callback') return
+
+    if (!consumeAuthState(url.searchParams.get('state'))) return
 
     const token = url.searchParams.get('token')
     if (!token) return
@@ -63,9 +119,15 @@ async function handleProtocolUrl (raw: string): Promise<void> {
       expirationDate: Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60
     })
 
-    mainWindow?.webContents.reload()
+    mainWindow?.webContents.send('auth:changed')
   } catch {
     // Malformed URL — ignore silently
+  }
+}
+
+function openExternal (url: URL) {
+  if (url.protocol === 'https:' || url.protocol === 'http:' || url.protocol === 'mailto:') {
+    shell.openExternal(url.toString())
   }
 }
 
@@ -116,12 +178,12 @@ function createWindow (): void {
       const url = new URL(u)
       if (url.hostname !== 'synergism.cc') {
         event.preventDefault()
-        shell.openExternal(u)
+        openExternal(url)
       } else if (url.pathname.startsWith('/login')) {
         // OAuth login flows should go through the system browser so the
         // backend can redirect back via synergism:// protocol.
         event.preventDefault()
-        shell.openExternal(u)
+        shell.openExternal(withAuthState(url))
       }
     } catch {
       event.preventDefault()
@@ -129,8 +191,30 @@ function createWindow (): void {
   })
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url)
+    try {
+      const parsed = new URL(url)
+      if (parsed.hostname === 'synergism.cc' && parsed.pathname.startsWith('/login')) {
+        shell.openExternal(withAuthState(parsed))
+      } else {
+        openExternal(parsed)
+      }
+    } catch {
+    }
+
     return { action: 'deny' }
+  })
+
+  let lastRendererCrash = 0
+
+  mainWindow.webContents.on('render-process-gone', (_event, details) => {
+    console.error('Renderer process gone:', details)
+    if (details.reason === 'clean-exit') return
+
+    const now = Date.now()
+    if (now - lastRendererCrash > 30_000) {
+      mainWindow?.webContents.reload()
+    }
+    lastRendererCrash = now
   })
 
   mainWindow.on('closed', () => {
@@ -165,18 +249,20 @@ app.whenReady().then(async () => {
     const url = new URL(request.url)
 
     if (url.hostname === 'synergism.cc') {
-      let filePath = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\//, '')
-      filePath = path.join(distPath, filePath)
-
       try {
-        const data = await fsp.readFile(filePath)
-        const ext = path.extname(filePath)
+        const relativePath = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname.slice(1))
+        const filePath = path.resolve(distPath, relativePath)
 
-        return new Response(data, {
-          headers: {
-            'Content-Type': mimeTypes.contentType(ext) || 'application/octet-stream'
-          }
-        })
+        if (filePath.startsWith(distPath + path.sep)) {
+          const data = await fsp.readFile(filePath)
+          const ext = path.extname(filePath)
+
+          return new Response(data, {
+            headers: {
+              'Content-Type': mimeTypes.contentType(ext) || 'application/octet-stream'
+            }
+          })
+        }
       } catch {
       }
     }
@@ -203,11 +289,18 @@ if (initializeSteam()) {
   enableSteamOverlay()
 }
 
+startDiscordRpc()
+
 // Window control IPC handlers
-ipcMain.handle('window:setSize', (_, width: number, height: number) => {
+const windowDimensionSchema = z.number().int().positive()
+const zoomFactorSchema = z.number().min(0.5).max(3)
+
+ipcMain.handle('window:setSize', (_, width: unknown, height: unknown) => {
   if (!mainWindow) return
+  const parsedWidth = windowDimensionSchema.parse(width)
+  const parsedHeight = windowDimensionSchema.parse(height)
   if (mainWindow.isMaximized()) mainWindow.unmaximize()
-  mainWindow.setSize(width, height)
+  mainWindow.setSize(parsedWidth, parsedHeight)
   mainWindow.center()
 })
 
@@ -217,12 +310,17 @@ ipcMain.handle('window:getSize', () => {
   return { width, height }
 })
 
-ipcMain.handle('window:setZoomFactor', (_, factor: number) => {
+ipcMain.handle('window:setZoomFactor', (_, factor: unknown) => {
   if (!mainWindow) return
-  mainWindow.webContents.setZoomFactor(factor)
-  settingsStore.set('zoomFactor', factor)
+  const parsedFactor = zoomFactorSchema.parse(factor)
+  mainWindow.webContents.setZoomFactor(parsedFactor)
+  settingsStore.set('zoomFactor', parsedFactor)
 })
 
 ipcMain.handle('window:getZoomFactor', () => {
   return settingsStore.get('zoomFactor')
+})
+
+ipcMain.handle('auth:clearCookie', async () => {
+  await session.defaultSession.cookies.remove('https://synergism.cc', 'token')
 })

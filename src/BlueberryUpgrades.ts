@@ -1,16 +1,21 @@
 import i18next from 'i18next'
+import { calculateSingularityUpgradePurchase, type SingularityUpgradePurchaseOptions } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { calculateAmbrosiaLuck, calculateBlueberryInventory } from './Calculate'
 import { exportData, saveFilename } from './ImportExport'
 import { PCoinUpgradeEffects } from './PseudoCoinUpgrades'
 import { getQuarkBonus } from './Quark'
-import { getRedAmbrosiaUpgradeEffects } from './RedAmbrosiaUpgrades'
+import { getRedAmbrosiaUpgradeEffects, type RedAmbrosiaNames } from './RedAmbrosiaUpgrades'
 import { format, formatAsPercentIncrease, player } from './Synergism'
-import { Alert, Confirm, Prompt } from './UpdateHTML'
+import { Alert, Confirm, PurchasePrompt } from './UpdateHTML'
 import { assert, isMobile } from './Utility'
 
 export type BlueberryOpt = Partial<Record<AmbrosiaUpgradeNames, number>>
 export type BlueberryLoadoutMode = 'saveTree' | 'loadTree'
+
+const BASE_BLUEBERRY_LOADOUT_COUNT = 8
+export const MAX_BLUEBERRY_LOADOUT_COUNT = 16
+export const PURPLE_AMBROSIA_ENCHANTMENT_ACTION = 'purpleAmbrosiaEnchantment'
 
 type AmbrosiaUpgradeRewards = {
   ambrosiaTutorial: { quarks: number; cubes: number }
@@ -27,54 +32,91 @@ type AmbrosiaUpgradeRewards = {
   ambrosiaCubes2: { cubes: number }
   ambrosiaLuck2: { ambrosiaLuck: number }
   ambrosiaQuarks3: { quarks: number }
+  ambrosiaQuarks4: { quarks: number }
   ambrosiaCubes3: { cubes: number }
+  ambrosiaCubes4: { cubes: number }
+  ambrosiaFreeCubeUpgrades: { freeCubeUpgrades: number }
   ambrosiaLuck3: { ambrosiaLuck: number }
   ambrosiaLuck4: { ambrosiaLuckPercentage: number }
   ambrosiaPatreon: { blueberryGeneration: number }
-  ambrosiaObtainium1: { luckMult: number; obtainiumMult: number }
-  ambrosiaOffering1: { luckMult: number; offeringMult: number }
+  ambrosiaObtainium1: { obtainiumMult: number }
+  ambrosiaOffering1: { offeringMult: number }
   ambrosiaHyperflux: { hyperFlux: number }
   ambrosiaBaseOffering1: { offering: number }
   ambrosiaBaseObtainium1: { obtainium: number }
   ambrosiaBaseOffering2: { offering: number }
   ambrosiaBaseObtainium2: { obtainium: number }
+  ambrosiaFreeObtainiumUpgrades: { freeObtainiumUpgrades: number }
+  ambrosiaFreeOfferingUpgrades: { freeOfferingUpgrades: number }
   ambrosiaSingReduction1: { singularityReduction: number }
   ambrosiaInfiniteShopUpgrades1: { freeLevels: number }
   ambrosiaInfiniteShopUpgrades2: { freeLevels: number }
+  ambrosiaInfiniteShopUpgrades3: { freeLevels: number }
   ambrosiaSingReduction2: { singularityReduction: number }
   ambrosiaTalismanBonusRuneLevel: { talismanBonusRuneLevel: number }
   ambrosiaRuneOOMBonus: { runeOOMBonus: number; infiniteAscentOOMBonus: number }
+  ambrosiaBrickOfLead: {
+    barRequirementMult: number
+    additiveLuckMult: number
+    singularitySpeedMult: number
+    globalSpeedMult: number
+    ascensionSpeedMult: number
+  }
+  ambrosiaFreeQuarkUpgrades: { freeQuarkUpgrades: number }
+  ambrosiaFreeLuckUpgrades: { freeLuckUpgrades: number }
+  ambrosiaFreeGenerationUpgrades: { freeGenerationUpgrades: number }
+  ambrosiaFreeRedLuckUpgrades: { freeRedLuckUpgrades: number }
+  twoMind: { twoMindEnabled: number }
 }
 
 export type AmbrosiaUpgradeNames = keyof AmbrosiaUpgradeRewards
 
-type AmbrosiaUpgradeUnlockCriterion = 'Exalt1x1' | 'Exalt5x1'
+type AmbrosiaUpgradeUnlockCriterion = 'Exalt1x1' | 'Exalt5x1' | 'Exalt9x1'
 
-interface AmbrosiaUpgrade<T extends AmbrosiaUpgradeNames> {
+interface PurpleAmbrosiaEnchantmentBase {
+  costFormula: (level: number) => number
+}
+
+type PurpleAmbrosiaFreeLevelEnchantment = PurpleAmbrosiaEnchantmentBase & {
+  type: 'freeLevels'
+  maxLevel: number
+  freeLevels: (level: number) => number
+}
+
+type BlueberryCostReductionEnchantment = PurpleAmbrosiaEnchantmentBase & {
+  type: 'blueberryCostReduction'
+  maxLevel: 1
+}
+
+const defaultFreeLevels = (level: number) => level // identity, essentially used for all
+
+type PurpleAmbrosiaEnchantment = PurpleAmbrosiaFreeLevelEnchantment | BlueberryCostReductionEnchantment
+
+interface AmbrosiaUpgrade<
+  T extends AmbrosiaUpgradeNames,
+  K extends keyof AmbrosiaUpgradeRewards[T]
+> {
   name: () => string
   description: () => string
   level: number
   maxLevel: number
   costPerLevel: number
   costFormula: (level: number, baseCost: number) => number
-  effects: (n: number) => AmbrosiaUpgradeRewards[T]
-  effectsDescription: (n: number) => string
-  extraLevelCalc: () => number
-  ambrosiaInvested: number
-  blueberriesInvested: number
+  effects: (n: number, key: K) => AmbrosiaUpgradeRewards[T][K]
+  effectsDescription: () => string
+  redAmbrosiaUpgrade?: 'freeTutorialLevels' | 'freeLevelsRow2' | 'freeLevelsRow3' | 'freeLevelsRow4' | 'freeLevelsRow5'
   blueberryCost: number
   prerequisites: BlueberryOpt
   ignoreEXALT: boolean
   unlockCriterion: AmbrosiaUpgradeUnlockCriterion
+  purpleAmbrosiaEnchantment: PurpleAmbrosiaEnchantment
 }
 
 export const ambrosiaUpgrades: {
-  [K in AmbrosiaUpgradeNames]: AmbrosiaUpgrade<K>
+  [K in AmbrosiaUpgradeNames]: AmbrosiaUpgrade<K, keyof AmbrosiaUpgradeRewards[K]>
 } = {
   ambrosiaTutorial: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 10,
     costPerLevel: 1,
     blueberryCost: 0,
@@ -83,30 +125,34 @@ export const ambrosiaUpgrades: {
     costFormula: (level: number, baseCost: number): number => {
       return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
-    effects: (n: number) => {
-      const cubeAmount = 1 + 0.05 * n
-      const quarkAmount = 1 + 0.01 * n
-      return {
-        quarks: quarkAmount,
-        cubes: cubeAmount
+    effects: (n, key) => {
+      if (key === 'cubes') {
+        return 1 + 0.05 * n
+      } else {
+        return 1 + 0.01 * n // quarks
       }
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaTutorial', 'cubes')
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaTutorial', 'quarks')
       return i18next.t('ambrosia.data.ambrosiaTutorial.effect', {
-        cubeAmount: format(100 * (vals.cubes - 1), 0, true),
-        quarkAmount: format(100 * (vals.quarks - 1), 0, true)
+        cubeAmount: format(100 * (cubes - 1), 0, true),
+        quarkAmount: format(100 * (quarks - 1), 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeTutorialLevels').freeLevels,
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 5,
+      costFormula: (level: number) => level * (level + 1) / 2,
+      freeLevels: (level: number) => level
+    },
+    redAmbrosiaUpgrade: 'freeTutorialLevels',
     name: () => i18next.t('ambrosia.data.ambrosiaTutorial.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaTutorial.description'),
     unlockCriterion: 'Exalt1x1'
   },
   ambrosiaQuarks1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 1,
     blueberryCost: 0,
@@ -118,26 +164,27 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
     },
     effects: (n: number) => {
-      const quarkAmount = 1 + 0.01 * n
-      return {
-        quarks: quarkAmount
-      }
+      return 1 + 0.01 * n // quarks
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaQuarks1', 'quarks')
       return i18next.t('ambrosia.data.ambrosiaQuarks1.effect', {
-        amount: format(100 * (vals.quarks - 1), 0, true)
+        amount: format(100 * (quarks - 1), 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow2').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
     name: () => i18next.t('ambrosia.data.ambrosiaQuarks1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaQuarks1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 10,
+      costFormula: (level: number) => 5 * level * (level + 1) / 2,
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaCubes1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 1,
     blueberryCost: 0,
@@ -149,26 +196,27 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
     },
     effects: (n: number) => {
-      const cubeAmount = (1 + 0.05 * n) * Math.pow(1.1, Math.floor(n / 5))
-      return {
-        cubes: cubeAmount
-      }
+      return (1 + 0.05 * n) * Math.pow(1.1, Math.floor(n / 5)) // cubes
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaCubes1', 'cubes')
       return i18next.t('ambrosia.data.ambrosiaCubes1.effect', {
-        amount: format(100 * (vals.cubes - 1), 2, true)
+        amount: format(100 * (cubes - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow2').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
     name: () => i18next.t('ambrosia.data.ambrosiaCubes1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaCubes1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 10,
+      costFormula: (level: number) => 5 * level * (level + 1) / 2,
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaLuck1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 1,
     blueberryCost: 0,
@@ -180,26 +228,27 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
     },
     effects: (n: number) => {
-      const val = 2 * n + 12 * Math.floor(n / 10)
-      return {
-        ambrosiaLuck: val
-      }
+      return 2 * n + 12 * Math.floor(n / 10) // ambrosiaLuck
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const ambrosiaLuck = getAmbrosiaUpgradeEffects('ambrosiaLuck1', 'ambrosiaLuck')
       return i18next.t('ambrosia.data.ambrosiaLuck1.effect', {
-        amount: format(vals.ambrosiaLuck)
+        amount: format(ambrosiaLuck)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow2').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
     name: () => i18next.t('ambrosia.data.ambrosiaLuck1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaLuck1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 10,
+      costFormula: (level: number) => 5 * level * (level + 1) / 2,
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaQuarkCube1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 25,
     costPerLevel: 250,
     blueberryCost: 1,
@@ -213,28 +262,28 @@ export const ambrosiaUpgrades: {
     },
     effects: (n: number) => {
       const baseVal = 0.001 * n
-      const val = 1
+      return 1
         + baseVal
-          * Math.floor(Math.pow(Math.log10(Number(player.worlds) + 1) + 1, 2))
-      return {
-        cubes: val
-      }
+          * Math.floor(Math.pow(Math.log10(Number(player.worlds) + 1) + 1, 2)) // cubes
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaQuarkCube1', 'cubes')
       return i18next.t('ambrosia.data.ambrosiaQuarkCube1.effect', {
-        amount: format(100 * (vals.cubes - 1), 2, true)
+        amount: format(100 * (cubes - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow3').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
     name: () => i18next.t('ambrosia.data.ambrosiaQuarkCube1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaQuarkCube1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaLuckCube1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 25,
     costPerLevel: 250,
     blueberryCost: 1,
@@ -248,26 +297,26 @@ export const ambrosiaUpgrades: {
     },
     effects: (n: number) => {
       const baseVal = 0.0005 * n
-      const val = 1 + baseVal * calculateAmbrosiaLuck()
-      return {
-        cubes: val
-      }
+      return 1 + baseVal * calculateAmbrosiaLuck() // cubes
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaLuckCube1', 'cubes')
       return i18next.t('ambrosia.data.ambrosiaLuckCube1.effect', {
-        amount: format(100 * (vals.cubes - 1), 2, true)
+        amount: format(100 * (cubes - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow3').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
     name: () => i18next.t('ambrosia.data.ambrosiaLuckCube1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaLuckCube1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaCubeQuark1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 25,
     costPerLevel: 500,
     blueberryCost: 1,
@@ -281,7 +330,7 @@ export const ambrosiaUpgrades: {
     },
     effects: (n: number) => {
       const baseVal = 0.0001 * n
-      const val = 1
+      return 1
         + baseVal
           * (Math.floor(Math.log10(Number(player.wowCubes) + 1))
             + Math.floor(Math.log10(Number(player.wowTesseracts) + 1))
@@ -289,26 +338,26 @@ export const ambrosiaUpgrades: {
             + Math.floor(Math.log10(Number(player.wowPlatonicCubes) + 1))
             + Math.floor(Math.log10(player.wowAbyssals + 1))
             + Math.floor(Math.log10(player.wowOcteracts + 1))
-            + 6)
-      return {
-        quarks: val
-      }
+            + 6) // quarks
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaCubeQuark1', 'quarks')
       return i18next.t('ambrosia.data.ambrosiaCubeQuark1.effect', {
-        amount: format(100 * (vals.quarks - 1), 2, true)
+        amount: format(100 * (quarks - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow3').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
     name: () => i18next.t('ambrosia.data.ambrosiaCubeQuark1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaCubeQuark1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaLuckQuark1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 25,
     costPerLevel: 500,
     blueberryCost: 1,
@@ -327,26 +376,26 @@ export const ambrosiaUpgrades: {
         luck,
         Math.pow(1000, 0.5) * Math.pow(luck, 0.5)
       )
-      const val = 1 + baseVal * effectiveLuck
-      return {
-        quarks: val
-      }
+      return 1 + baseVal * effectiveLuck // quarks
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaLuckQuark1', 'quarks')
       return i18next.t('ambrosia.data.ambrosiaLuckQuark1.effect', {
-        amount: format(100 * (vals.quarks - 1), 2, true)
+        amount: format(100 * (quarks - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow3').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
     name: () => i18next.t('ambrosia.data.ambrosiaLuckQuark1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaLuckQuark1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaCubeLuck1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 25,
     costPerLevel: 100,
     blueberryCost: 1,
@@ -360,33 +409,33 @@ export const ambrosiaUpgrades: {
     },
     effects: (n: number) => {
       const baseVal = 0.02 * n
-      const val = baseVal
+      return baseVal
         * (Math.floor(Math.log10(Number(player.wowCubes) + 1))
           + Math.floor(Math.log10(Number(player.wowTesseracts) + 1))
           + Math.floor(Math.log10(Number(player.wowHypercubes) + 1))
           + Math.floor(Math.log10(Number(player.wowPlatonicCubes) + 1))
           + Math.floor(Math.log10(player.wowAbyssals + 1))
           + Math.floor(Math.log10(player.wowOcteracts + 1))
-          + 6)
-      return {
-        ambrosiaLuck: val
-      }
+          + 6) // ambrosiaLuck
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const ambrosiaLuck = getAmbrosiaUpgradeEffects('ambrosiaCubeLuck1', 'ambrosiaLuck')
       return i18next.t('ambrosia.data.ambrosiaCubeLuck1.effect', {
-        amount: format(vals.ambrosiaLuck, 2, true)
+        amount: format(ambrosiaLuck, 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow3').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
     name: () => i18next.t('ambrosia.data.ambrosiaCubeLuck1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaCubeLuck1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaQuarkLuck1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 25,
     costPerLevel: 100,
     blueberryCost: 1,
@@ -400,26 +449,26 @@ export const ambrosiaUpgrades: {
     },
     effects: (n: number) => {
       const baseVal = 0.02 * n
-      const val = baseVal * Math.floor(Math.pow(Math.log10(Number(player.worlds) + 1) + 1, 2))
-      return {
-        ambrosiaLuck: val
-      }
+      return baseVal * Math.floor(Math.pow(Math.log10(Number(player.worlds) + 1) + 1, 2)) // ambrosiaLuck
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const ambrosiaLuck = getAmbrosiaUpgradeEffects('ambrosiaQuarkLuck1', 'ambrosiaLuck')
       return i18next.t('ambrosia.data.ambrosiaQuarkLuck1.effect', {
-        amount: format(vals.ambrosiaLuck, 2, true)
+        amount: format(ambrosiaLuck, 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow3').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
     name: () => i18next.t('ambrosia.data.ambrosiaQuarkLuck1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaQuarkLuck1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaQuarks2: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 500,
     blueberryCost: 1,
@@ -431,30 +480,30 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
     effects: (n: number) => {
-      const quarkAmount = 1
+      return 1
         + (0.01
             + Math.floor(getAmbrosiaUpgradeEffectiveLevels('ambrosiaQuarks1') / 10)
               / 1000)
-          * n
-      return {
-        quarks: quarkAmount
-      }
+          * n // quarks
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaQuarks2', 'quarks')
       return i18next.t('ambrosia.data.ambrosiaQuarks2.effect', {
-        amount: format(100 * (vals.quarks - 1), 0, true)
+        amount: format(100 * (quarks - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
     name: () => i18next.t('ambrosia.data.ambrosiaQuarks2.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaQuarks2.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 400 * level
+    }
   },
   ambrosiaCubes2: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 500,
     blueberryCost: 1,
@@ -466,32 +515,32 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
     effects: (n: number) => {
-      const cubeAmount = (1
+      return (1
         + (0.1
             + 10
               * (Math.floor(getAmbrosiaUpgradeEffectiveLevels('ambrosiaCubes1') / 10)
                 / 1000))
           * n)
-        * Math.pow(1.15, Math.floor(n / 5))
-      return {
-        cubes: cubeAmount
-      }
+        * Math.pow(1.15, Math.floor(n / 5)) // cubes
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaCubes2', 'cubes')
       return i18next.t('ambrosia.data.ambrosiaCubes2.effect', {
-        amount: format(100 * (vals.cubes - 1), 2, true)
+        amount: format(100 * (cubes - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
     name: () => i18next.t('ambrosia.data.ambrosiaCubes2.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaCubes2.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 200 * level
+    }
   },
   ambrosiaLuck2: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 250,
     blueberryCost: 1,
@@ -503,29 +552,29 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
     effects: (n: number) => {
-      const val = (3
+      return (3
             + 0.3 * Math.floor(getAmbrosiaUpgradeEffectiveLevels('ambrosiaLuck1') / 10))
           * n
-        + 40 * Math.floor(n / 10)
-      return {
-        ambrosiaLuck: val
-      }
+        + 40 * Math.floor(n / 10) // ambrosiaLuck
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const ambrosiaLuck = getAmbrosiaUpgradeEffects('ambrosiaLuck2', 'ambrosiaLuck')
       return i18next.t('ambrosia.data.ambrosiaLuck2.effect', {
-        amount: format(vals.ambrosiaLuck, 1, true)
+        amount: format(ambrosiaLuck, 1, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
     name: () => i18next.t('ambrosia.data.ambrosiaLuck2.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaLuck2.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 500 * level
+    }
   },
   ambrosiaQuarks3: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 10,
     costPerLevel: 750000,
     blueberryCost: 3,
@@ -540,26 +589,57 @@ export const ambrosiaUpgrades: {
     effects: (n: number) => {
       const quark2Mult = 1 + getAmbrosiaUpgradeEffectiveLevels('ambrosiaQuarks2') / 100
       const quark3Base = 0.05 * n
-      const quarkAmount = 1 + quark3Base * quark2Mult
-      return {
-        quarks: quarkAmount
-      }
+      return 1 + quark3Base * quark2Mult // quarks
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaQuarks3', 'quarks')
       return i18next.t('ambrosia.data.ambrosiaQuarks3.effect', {
-        amount: format(100 * (vals.quarks - 1), 0, true)
+        amount: format(100 * (quarks - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow5').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
     name: () => i18next.t('ambrosia.data.ambrosiaQuarks3.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaQuarks3.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 1_200 * level
+    }
+  },
+  ambrosiaQuarks4: {
+    level: 0,
+    maxLevel: 100,
+    costPerLevel: 300_000,
+    blueberryCost: 5,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaQuarks3: 10
+    },
+    costFormula: (_level: number, baseCost: number): number => {
+      return baseCost
+    },
+    effects: (n: number) => {
+      return 1 + n / 100 // quarks
+    },
+    effectsDescription: function() {
+      const quarks = getAmbrosiaUpgradeEffects('ambrosiaQuarks4', 'quarks')
+      return i18next.t('ambrosia.data.ambrosiaQuarks4.effect', {
+        amount: formatAsPercentIncrease(quarks, 0)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
+    name: () => i18next.t('ambrosia.data.ambrosiaQuarks4.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaQuarks4.description'),
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 3_000 * level
+    }
   },
   ambrosiaCubes3: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 75000,
     blueberryCost: 3,
@@ -575,26 +655,89 @@ export const ambrosiaUpgrades: {
       const cube2Multi = 1 + 3 * getAmbrosiaUpgradeEffectiveLevels('ambrosiaCubes2') / 100
       const cube3Base = 0.2 * n
       const cube3Exponential = Math.pow(1.2, Math.floor(n / 5))
-      const cubeAmount = (1 + cube3Base * cube2Multi) * cube3Exponential
-      return {
-        cubes: cubeAmount
-      }
+      return (1 + cube3Base * cube2Multi) * cube3Exponential // cubes
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaCubes3', 'cubes')
       return i18next.t('ambrosia.data.ambrosiaCubes3.effect', {
-        amount: format(100 * (vals.cubes - 1), 2, true)
+        amount: format(100 * (cubes - 1), 2, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow5').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
     name: () => i18next.t('ambrosia.data.ambrosiaCubes3.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaCubes3.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 600 * level
+    }
+  },
+  ambrosiaCubes4: {
+    level: 0,
+    maxLevel: 50,
+    costPerLevel: 300_000,
+    blueberryCost: 5,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaCubes3: 100
+    },
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost + 20000 * level
+    },
+    effects: (n: number) => {
+      return (1 + n / 100) * Math.pow(1.3, Math.floor(n / 5)) // cubes
+    },
+    effectsDescription: function() {
+      const cubes = getAmbrosiaUpgradeEffects('ambrosiaCubes4', 'cubes')
+      return i18next.t('ambrosia.data.ambrosiaCubes4.effect', {
+        amount: formatAsPercentIncrease(cubes, 0)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
+    name: () => i18next.t('ambrosia.data.ambrosiaCubes4.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaCubes4.description'),
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 1500 * level
+    }
+  },
+  ambrosiaFreeCubeUpgrades: {
+    level: 0,
+    maxLevel: 30,
+    costPerLevel: 10000,
+    blueberryCost: 2,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaCubes2: 100
+    },
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
+    },
+    effects: (n: number) => {
+      return n // freeLevels
+    },
+    effectsDescription: function() {
+      const freeLevels = getAmbrosiaUpgradeEffects('ambrosiaFreeCubeUpgrades', 'freeCubeUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeCubeUpgrades.effect', {
+        amount: format(freeLevels, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow4',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeCubeUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeCubeUpgrades.description'),
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 15,
+      costFormula: (level: number) => 200 * level,
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaLuck3: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 50000,
     blueberryCost: 3,
@@ -607,56 +750,59 @@ export const ambrosiaUpgrades: {
       return baseCost // Level has no effect
     },
     effects: (n: number) => {
-      const perLevel = calculateBlueberryInventory()
-      return {
-        ambrosiaLuck: perLevel * n
-      }
+      return calculateBlueberryInventory() * n // ambrosiaLuck
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const ambrosiaLuck = getAmbrosiaUpgradeEffects('ambrosiaLuck3', 'ambrosiaLuck')
       return i18next.t('ambrosia.data.ambrosiaLuck3.effect', {
-        amount: format(vals.ambrosiaLuck, 0, true)
+        amount: format(ambrosiaLuck, 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow5').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
     name: () => i18next.t('ambrosia.data.ambrosiaLuck3.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaLuck3.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 1_500 * level
+    }
   },
   ambrosiaLuck4: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 50,
     costPerLevel: 250000,
     blueberryCost: 5,
     ignoreEXALT: false,
-    prerequisites: {},
+    prerequisites: {
+      ambrosiaLuck3: 100
+    },
     costFormula: (level, baseCost): number => {
       return baseCost + 20000 * level
     },
     effects: (n: number) => {
       const digits = Math.ceil(Math.log10(player.lifetimeRedAmbrosia + 1))
         + Math.ceil(Math.log10(player.lifetimeAmbrosia + 1))
-      return {
-        ambrosiaLuckPercentage: 1 / 10000 * digits * n
-      }
+      return digits * n / 10000 // ambrosiaLuckPercentage
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const ambrosiaLuckPercentage = getAmbrosiaUpgradeEffects('ambrosiaLuck4', 'ambrosiaLuckPercentage')
       return i18next.t('ambrosia.data.ambrosiaLuck4.effect', {
-        amount: formatAsPercentIncrease(1 + vals.ambrosiaLuckPercentage, 2)
+        amount: formatAsPercentIncrease(1 + ambrosiaLuckPercentage, 2)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow5').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
     name: () => i18next.t('ambrosia.data.ambrosiaLuck4.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaLuck4.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 3_750 * level
+    }
   },
   ambrosiaPatreon: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 1,
     costPerLevel: 1,
     blueberryCost: 0,
@@ -666,26 +812,26 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
     effects: (n: number) => {
-      const val = 1 + (n * getQuarkBonus()) / 100
-      return {
-        blueberryGeneration: val
-      }
+      return 1 + (n * getQuarkBonus()) / 100 // blueberryGeneration
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const blueberryGeneration = getAmbrosiaUpgradeEffects('ambrosiaPatreon', 'blueberryGeneration')
       return i18next.t('ambrosia.data.ambrosiaPatreon.effect', {
-        amount: format(100 * (vals.blueberryGeneration - 1), 0, true)
+        amount: format(100 * (blueberryGeneration - 1), 2, true)
       })
     },
-    extraLevelCalc: () => 0,
     name: () => i18next.t('ambrosia.data.ambrosiaPatreon.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaPatreon.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 1,
+      costFormula: (level: number) => 200 * level,
+      freeLevels: (level: number) => 0.02 * level
+    }
   },
   ambrosiaObtainium1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 2,
     costPerLevel: 50000,
     blueberryCost: 1,
@@ -694,28 +840,28 @@ export const ambrosiaUpgrades: {
     costFormula: (level: number, baseCost: number): number => {
       return baseCost * Math.pow(25, level)
     },
-    effects: (n: number) => {
+    effects: (n) => {
       const luck = calculateAmbrosiaLuck()
-      return {
-        luckMult: n,
-        obtainiumMult: n * luck
-      }
+      return 1 + n * luck / 1000 // obtainiumMult
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const obtainiumMult = getAmbrosiaUpgradeEffects('ambrosiaObtainium1', 'obtainiumMult')
       return i18next.t('ambrosia.data.ambrosiaObtainium1.effect', {
-        amount: format(vals.obtainiumMult / 10, 1, true)
+        amount: format((obtainiumMult - 1) * 100, 1, true)
       })
     },
-    extraLevelCalc: () => 0,
     name: () => i18next.t('ambrosia.data.ambrosiaObtainium1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaObtainium1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      freeLevels: defaultFreeLevels,
+      maxLevel: 1,
+      costFormula: (level: number) => 200 * level
+    }
   },
   ambrosiaOffering1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 2,
     costPerLevel: 50000,
     blueberryCost: 1,
@@ -726,26 +872,26 @@ export const ambrosiaUpgrades: {
     },
     effects: (n: number) => {
       const luck = calculateAmbrosiaLuck()
-      return {
-        luckMult: n,
-        offeringMult: n * luck
-      }
+      return 1 + n * luck / 1000 // offeringMult
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const offeringMult = getAmbrosiaUpgradeEffects('ambrosiaOffering1', 'offeringMult')
       return i18next.t('ambrosia.data.ambrosiaOffering1.effect', {
-        amount: format(vals.offeringMult / 10, 1, true)
+        amount: format((offeringMult - 1) * 100, 1, true)
       })
     },
-    extraLevelCalc: () => 0,
     name: () => i18next.t('ambrosia.data.ambrosiaOffering1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaOffering1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      freeLevels: defaultFreeLevels,
+      maxLevel: 1,
+      costFormula: (level: number) => 200 * level
+    }
   },
   ambrosiaHyperflux: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 7,
     costPerLevel: 33333,
     blueberryCost: 3,
@@ -755,150 +901,216 @@ export const ambrosiaUpgrades: {
       return (baseCost + 33333 * Math.min(4, level)) * Math.max(1, Math.pow(3, level - 4))
     },
     effects: (n: number) => {
-      const fourByFourBase = n
-      return {
-        hyperFlux: Math.pow(
-          1 + (1 / 100) * fourByFourBase,
-          player.platonicUpgrades[19]
-        )
-      }
+      return Math.pow(
+        1 + n / 100,
+        player.platonicUpgrades[19]
+      ) // hyperflux
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const hyperflux = getAmbrosiaUpgradeEffects('ambrosiaHyperflux', 'hyperFlux')
       return i18next.t('ambrosia.data.ambrosiaHyperflux.effect', {
-        amount: format(100 * (vals.hyperFlux - 1))
+        amount: format(100 * (hyperflux - 1), 2, true)
       })
     },
-    extraLevelCalc: () => 0,
     name: () => i18next.t('ambrosia.data.ambrosiaHyperflux.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaHyperflux.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 777 * level
+    }
   },
   ambrosiaBaseOffering1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 40,
     costPerLevel: 5,
-    blueberryCost: 1,
+    blueberryCost: 0,
     ignoreEXALT: false,
     prerequisites: {},
     costFormula: (level: number, baseCost: number): number => {
       return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
     },
     effects: (n: number) => {
-      return {
-        offering: n
-      }
+      return n // offering
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const offering = getAmbrosiaUpgradeEffects('ambrosiaBaseOffering1', 'offering')
       return i18next.t('ambrosia.data.ambrosiaBaseOffering1.effect', {
-        amount: format(vals.offering, 0, true)
+        amount: format(offering, 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow2').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
     name: () => i18next.t('ambrosia.data.ambrosiaBaseOffering1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaBaseOffering1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 40,
+      costFormula: (level: number) => Math.pow(level, 2),
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaBaseObtainium1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 20,
     costPerLevel: 40,
-    blueberryCost: 1,
+    blueberryCost: 0,
     ignoreEXALT: false,
     prerequisites: {},
     costFormula: (level: number, baseCost: number): number => {
       return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
     },
     effects: (n: number) => {
-      const val = n
-      return {
-        obtainium: val
-      }
+      return n // obtainium
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const obtainium = getAmbrosiaUpgradeEffects('ambrosiaBaseObtainium1', 'obtainium')
       return i18next.t('ambrosia.data.ambrosiaBaseObtainium1.effect', {
-        amount: format(vals.obtainium, 0, true)
+        amount: format(obtainium, 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow2').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
     name: () => i18next.t('ambrosia.data.ambrosiaBaseObtainium1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaBaseObtainium1.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 20,
+      costFormula: (level: number) => 3 * Math.pow(level, 2),
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaBaseOffering2: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 60,
     costPerLevel: 20,
+    blueberryCost: 1,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaBaseOffering1: 30
+    },
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
+    },
+    effects: (n: number) => {
+      return n // offering
+    },
+    effectsDescription: function() {
+      const offering = getAmbrosiaUpgradeEffects('ambrosiaBaseOffering2', 'offering')
+      return i18next.t('ambrosia.data.ambrosiaBaseOffering2.effect', {
+        amount: format(offering, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
+    name: () => i18next.t('ambrosia.data.ambrosiaBaseOffering2.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaBaseOffering2.description'),
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 500 * level
+    }
+  },
+  ambrosiaBaseObtainium2: {
+    level: 0,
+    maxLevel: 30,
+    costPerLevel: 160,
+    blueberryCost: 1,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaBaseObtainium1: 15
+    },
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
+    },
+    effects: (n: number) => {
+      return n // obtainium
+    },
+    effectsDescription: function() {
+      const obtainium = getAmbrosiaUpgradeEffects('ambrosiaBaseObtainium2', 'obtainium')
+      return i18next.t('ambrosia.data.ambrosiaBaseObtainium2.effect', {
+        amount: format(obtainium, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
+    name: () => i18next.t('ambrosia.data.ambrosiaBaseObtainium2.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaBaseObtainium2.description'),
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 500 * level
+    }
+  },
+  ambrosiaFreeObtainiumUpgrades: {
+    level: 0,
+    maxLevel: 50,
+    costPerLevel: 4000,
+    blueberryCost: 2,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaBaseObtainium1: 20,
+      ambrosiaBaseObtainium2: 30
+    },
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
+    },
+    effects: (n: number) => {
+      return n // freeLevels
+    },
+    effectsDescription: function() {
+      const freeLevels = getAmbrosiaUpgradeEffects('ambrosiaFreeObtainiumUpgrades', 'freeObtainiumUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeObtainiumUpgrades.effect', {
+        amount: format(freeLevels, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeObtainiumUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeObtainiumUpgrades.description'),
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 25,
+      costFormula: (level: number) => 100 * level,
+      freeLevels: defaultFreeLevels
+    }
+  },
+  ambrosiaFreeOfferingUpgrades: {
+    level: 0,
+    maxLevel: 50,
+    costPerLevel: 4000,
     blueberryCost: 2,
     ignoreEXALT: false,
     prerequisites: {
       ambrosiaBaseOffering1: 30,
-      ambrosiaBaseObtainium1: 10
+      ambrosiaBaseOffering2: 60
     },
     costFormula: (level: number, baseCost: number): number => {
-      return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
+      return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
     effects: (n: number) => {
-      const val = n
-      return {
-        offering: val
-      }
+      return n // freeLevels
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
-      return i18next.t('ambrosia.data.ambrosiaBaseOffering2.effect', {
-        amount: format(vals.offering, 0, true)
+    effectsDescription: function() {
+      const freeLevels = getAmbrosiaUpgradeEffects('ambrosiaFreeOfferingUpgrades', 'freeOfferingUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeOfferingUpgrades.effect', {
+        amount: format(freeLevels, 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
-    name: () => i18next.t('ambrosia.data.ambrosiaBaseOffering2.name'),
-    description: () => i18next.t('ambrosia.data.ambrosiaBaseOffering2.description'),
-    unlockCriterion: 'Exalt5x1'
-  },
-  ambrosiaBaseObtainium2: {
-    level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
-    maxLevel: 30,
-    costPerLevel: 160,
-    blueberryCost: 2,
-    ignoreEXALT: false,
-    prerequisites: {
-      ambrosiaBaseObtainium1: 15,
-      ambrosiaBaseOffering1: 20
-    },
-    costFormula: (level: number, baseCost: number): number => {
-      return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
-    },
-    effects: (n: number) => {
-      const val = n
-      return {
-        obtainium: val
-      }
-    },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
-      return i18next.t('ambrosia.data.ambrosiaBaseObtainium2.effect', {
-        amount: format(vals.obtainium, 0, true)
-      })
-    },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
-    name: () => i18next.t('ambrosia.data.ambrosiaBaseObtainium2.name'),
-    description: () => i18next.t('ambrosia.data.ambrosiaBaseObtainium2.description'),
-    unlockCriterion: 'Exalt5x1'
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeOfferingUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeOfferingUpgrades.description'),
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 25,
+      costFormula: (level: number) => 100 * level,
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaSingReduction1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 2,
     costPerLevel: 100000,
     blueberryCost: 2,
@@ -910,26 +1122,29 @@ export const ambrosiaUpgrades: {
       return baseCost * Math.pow(99, level)
     },
     effects: (n: number) => {
-      const val = (player.insideSingularityChallenge) ? 0 : n
-      return {
-        singularityReduction: val
+      if (player.insideSingularityChallenge) {
+        return 0
+      } else {
+        return n // singularityReduction
       }
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const singularityReduction = getAmbrosiaUpgradeEffects('ambrosiaSingReduction1', 'singularityReduction')
       return i18next.t('ambrosia.data.ambrosiaSingReduction1.effect', {
-        amount: format(vals.singularityReduction, 0, true)
+        amount: format(singularityReduction, 0, true)
       })
     },
-    extraLevelCalc: () => 0,
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 150 * level
+    },
     name: () => i18next.t('ambrosia.data.ambrosiaSingReduction1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaSingReduction1.description'),
     unlockCriterion: 'Exalt1x1'
   },
   ambrosiaInfiniteShopUpgrades1: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 20,
     costPerLevel: 25000,
     blueberryCost: 1,
@@ -943,60 +1158,90 @@ export const ambrosiaUpgrades: {
       return baseCost
     },
     effects: (n: number) => {
-      const val = n
-      return {
-        freeLevels: val
-      }
+      return n // freeLevels
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const freeLevels = getAmbrosiaUpgradeEffects('ambrosiaInfiniteShopUpgrades1', 'freeLevels')
       return i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades1.effect', {
-        amount: format(vals.freeLevels, 0, true)
+        amount: format(freeLevels, 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
     name: () => i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades1.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades1.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 800 * level
+    }
   },
   ambrosiaInfiniteShopUpgrades2: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 20,
     costPerLevel: 75000,
     blueberryCost: 2,
     ignoreEXALT: false,
     prerequisites: {
-      ambrosiaInfiniteShopUpgrades1: 20,
-      ambrosiaCubes2: 50,
-      ambrosiaBaseOffering2: 20,
-      ambrosiaBaseObtainium2: 10
+      ambrosiaInfiniteShopUpgrades1: 20
     },
     costFormula: (_level: number, baseCost: number): number => {
       return baseCost
     },
     effects: (n: number) => {
-      const val = n
-      return {
-        freeLevels: val
-      }
+      return n // freeLevels
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const freeLevels = getAmbrosiaUpgradeEffects('ambrosiaInfiniteShopUpgrades2', 'freeLevels')
       return i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades2.effect', {
-        amount: format(vals.freeLevels, 0, true)
+        amount: format(freeLevels, 0, true)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow5').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
     name: () => i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades2.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades2.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      freeLevels: defaultFreeLevels,
+      maxLevel: 8,
+      costFormula: (level: number) => 40 * level * (level + 1)
+    }
+  },
+  ambrosiaInfiniteShopUpgrades3: {
+    level: 0,
+    maxLevel: 20,
+    costPerLevel: 500_000,
+    blueberryCost: 3,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaInfiniteShopUpgrades2: 20
+    },
+    costFormula: (_level: number, baseCost: number): number => {
+      return baseCost
+    },
+    effects: (n: number) => {
+      return n // freeLevels
+    },
+    effectsDescription: function() {
+      const freeLevels = getAmbrosiaUpgradeEffects('ambrosiaInfiniteShopUpgrades3', 'freeLevels')
+      return i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades3.effect', {
+        amount: format(freeLevels, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
+    name: () => i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades3.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaInfiniteShopUpgrades3.description'),
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      freeLevels: defaultFreeLevels,
+      maxLevel: 8,
+      costFormula: (level: number) => 125 * level * (level + 1)
+    }
   },
   ambrosiaSingReduction2: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 2,
     costPerLevel: 1.25e7,
     blueberryCost: 4,
@@ -1006,26 +1251,29 @@ export const ambrosiaUpgrades: {
       return baseCost * Math.pow(3, level)
     },
     effects: (n: number) => {
-      const val = (player.insideSingularityChallenge) ? n : 0
-      return {
-        singularityReduction: val
-      }
+      if (player.insideSingularityChallenge) {
+        return n
+      } else {
+        return 0
+      } // singularityReduction
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const singularityReduction = getAmbrosiaUpgradeEffects('ambrosiaSingReduction2', 'singularityReduction')
       return i18next.t('ambrosia.data.ambrosiaSingReduction2.effect', {
-        amount: format(vals.singularityReduction, 0, true)
+        amount: format(singularityReduction, 0, true)
       })
     },
-    extraLevelCalc: () => 0,
     name: () => i18next.t('ambrosia.data.ambrosiaSingReduction2.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaSingReduction2.description'),
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 1500 * level
+    },
     unlockCriterion: 'Exalt5x1'
   },
   ambrosiaTalismanBonusRuneLevel: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 100,
     blueberryCost: 0,
@@ -1035,26 +1283,30 @@ export const ambrosiaUpgrades: {
       return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
     },
     effects: (n: number) => {
-      const val = n / 200
-      return {
-        talismanBonusRuneLevel: val
-      }
+      return n / 200 // talismanBonusRuneLevel
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const talismanBonusRuneLevel = getAmbrosiaUpgradeEffects(
+        'ambrosiaTalismanBonusRuneLevel',
+        'talismanBonusRuneLevel'
+      )
       return i18next.t('ambrosia.data.ambrosiaTalismanBonusRuneLevel.effect', {
-        amount: formatAsPercentIncrease(1 + vals.talismanBonusRuneLevel, 2)
+        amount: formatAsPercentIncrease(1 + talismanBonusRuneLevel, 2)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow2').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
     name: () => i18next.t('ambrosia.data.ambrosiaTalismanBonusRuneLevel.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaTalismanBonusRuneLevel.description'),
-    unlockCriterion: 'Exalt1x1'
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 20,
+      costFormula: (level: number) => 3 * level * (level + 1),
+      freeLevels: defaultFreeLevels
+    }
   },
   ambrosiaRuneOOMBonus: {
     level: 0,
-    ambrosiaInvested: 0,
-    blueberriesInvested: 0,
     maxLevel: 100,
     costPerLevel: 2500,
     blueberryCost: 0,
@@ -1063,58 +1315,344 @@ export const ambrosiaUpgrades: {
     costFormula: (level: number, baseCost: number): number => {
       return Math.ceil(baseCost * (Math.pow(level + 1, 1.5) - Math.pow(level, 1.5)))
     },
-    effects: (n: number) => {
-      const val = n
-      const val2 = n / 1000
-      return {
-        runeOOMBonus: val,
-        infiniteAscentOOMBonus: val2
+    effects: (n, key) => {
+      if (key === 'runeOOMBonus') {
+        return n
+      } else {
+        return n / 1000 // infiniteAscentOOMBonus
       }
     },
-    effectsDescription: function(n: number) {
-      const vals = this.effects(n)
+    effectsDescription: function() {
+      const runeOOMBonus = getAmbrosiaUpgradeEffects('ambrosiaRuneOOMBonus', 'runeOOMBonus')
+      const infiniteAscentOOMBonus = getAmbrosiaUpgradeEffects('ambrosiaRuneOOMBonus', 'infiniteAscentOOMBonus')
       return i18next.t('ambrosia.data.ambrosiaRuneOOMBonus.effect', {
-        amount: format(vals.runeOOMBonus, 0, false),
-        amount2: format(vals.infiniteAscentOOMBonus, 3, false)
+        amount: format(runeOOMBonus, 0, false),
+        amount2: format(infiniteAscentOOMBonus, 3, false)
       })
     },
-    extraLevelCalc: () => getRedAmbrosiaUpgradeEffects('freeLevelsRow4').freeLevels,
+    redAmbrosiaUpgrade: 'freeLevelsRow3',
     name: () => i18next.t('ambrosia.data.ambrosiaRuneOOMBonus.name'),
     description: () => i18next.t('ambrosia.data.ambrosiaRuneOOMBonus.description'),
-    unlockCriterion: 'Exalt5x1'
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 20,
+      costFormula: (level: number) => 3 * level * (level + 1),
+      freeLevels: defaultFreeLevels
+    }
+  },
+  ambrosiaBrickOfLead: {
+    level: 0,
+    maxLevel: 25,
+    costPerLevel: 10,
+    blueberryCost: 4,
+    ignoreEXALT: false,
+    prerequisites: {},
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
+    },
+    effects: (n, key) => {
+      if (key === 'barRequirementMult') {
+        return 1 / (1 - n / 50)
+      } else if (key === 'additiveLuckMult') {
+        return n / 50
+      } else {
+        return 1 - n / 100 // singularitySpeedMult, globalSpeedMult, ascensionSpeedMult
+      }
+    },
+    effectsDescription: function() {
+      const barRequirementMult = getAmbrosiaUpgradeEffects('ambrosiaBrickOfLead', 'barRequirementMult')
+      const luckMult = getAmbrosiaUpgradeEffects('ambrosiaBrickOfLead', 'additiveLuckMult')
+      const singularitySpeedMult = getAmbrosiaUpgradeEffects('ambrosiaBrickOfLead', 'singularitySpeedMult')
+      return i18next.t('ambrosia.data.ambrosiaBrickOfLead.effect', {
+        blueberryGen: format(barRequirementMult, 2, true),
+        luckMult: formatAsPercentIncrease(1 + luckMult, 0),
+        singularitySpeed: format(singularitySpeedMult, 2, true)
+      })
+    },
+    name: () => i18next.t('ambrosia.data.ambrosiaBrickOfLead.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaBrickOfLead.description'),
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 2000 * level
+    }
+  },
+  ambrosiaFreeLuckUpgrades: {
+    level: 0,
+    maxLevel: 25,
+    costPerLevel: 5000,
+    blueberryCost: 1,
+    ignoreEXALT: false,
+    prerequisites: {},
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
+    },
+    effects: (n: number) => {
+      return n // freeLuckUpgrades
+    },
+    effectsDescription: function() {
+      const levels = getAmbrosiaUpgradeEffects('ambrosiaFreeLuckUpgrades', 'freeLuckUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeLuckUpgrades.effect', {
+        amount: format(levels, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeLuckUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeLuckUpgrades.description'),
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 10,
+      costFormula: (level: number) => 12 * level * (level + 1),
+      freeLevels: defaultFreeLevels
+    }
+  },
+  ambrosiaFreeGenerationUpgrades: {
+    level: 0,
+    maxLevel: 5,
+    costPerLevel: 5000,
+    blueberryCost: 1,
+    ignoreEXALT: false,
+    prerequisites: {},
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(4, level + 1) - Math.pow(4, level))
+    },
+    effects: (n: number) => {
+      return n // freeGenerationUpgrades
+    },
+    effectsDescription: function() {
+      const levels = getAmbrosiaUpgradeEffects('ambrosiaFreeGenerationUpgrades', 'freeGenerationUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeGenerationUpgrades.effect', {
+        amount: format(levels, 1, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeGenerationUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeGenerationUpgrades.description'),
+    unlockCriterion: 'Exalt1x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 2,
+      costFormula: (level: number) => 100 * (Math.pow(10, level) - 1) / 9,
+      freeLevels: (level: number) => level
+    }
+  },
+  ambrosiaFreeRedLuckUpgrades: {
+    level: 0,
+    maxLevel: 40,
+    costPerLevel: 10000,
+    blueberryCost: 2,
+    ignoreEXALT: false,
+    prerequisites: {
+      ambrosiaFreeLuckUpgrades: 10
+    },
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 2) - Math.pow(level, 2))
+    },
+    effects: (n: number) => {
+      return n // freeRedLuckUpgrades
+    },
+    effectsDescription: function() {
+      const levels = getAmbrosiaUpgradeEffects('ambrosiaFreeRedLuckUpgrades', 'freeRedLuckUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeRedLuckUpgrades.effect', {
+        amount: format(levels, 0, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow2',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeRedLuckUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeRedLuckUpgrades.description'),
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'freeLevels',
+      maxLevel: 25,
+      costFormula: (level: number) => 15 * level * (level + 1),
+      freeLevels: defaultFreeLevels
+    }
+  },
+  ambrosiaFreeQuarkUpgrades: {
+    level: 0,
+    maxLevel: 10,
+    costPerLevel: 25000,
+    blueberryCost: 2,
+    ignoreEXALT: false,
+    prerequisites: {},
+    costFormula: (level: number, baseCost: number): number => {
+      return baseCost * (Math.pow(level + 1, 3) - Math.pow(level, 3))
+    },
+    effects: (n: number) => {
+      return n / 10 // freeQuarkUpgrades
+    },
+    effectsDescription: function() {
+      const levels = getAmbrosiaUpgradeEffects('ambrosiaFreeQuarkUpgrades', 'freeQuarkUpgrades')
+      return i18next.t('ambrosia.data.ambrosiaFreeQuarkUpgrades.effect', {
+        amount: format(levels, 1, true)
+      })
+    },
+    redAmbrosiaUpgrade: 'freeLevelsRow5',
+    name: () => i18next.t('ambrosia.data.ambrosiaFreeQuarkUpgrades.name'),
+    description: () => i18next.t('ambrosia.data.ambrosiaFreeQuarkUpgrades.description'),
+    unlockCriterion: 'Exalt5x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 2000 * level
+    }
+  },
+  twoMind: {
+    level: 0,
+    maxLevel: 1,
+    costPerLevel: 0,
+    blueberryCost: 8,
+    ignoreEXALT: false,
+    prerequisites: {},
+    costFormula: (_level: number, _baseCost: number): number => {
+      return 0
+    },
+    effects: (n: number) => {
+      return n // twoMindEnabled
+    },
+    effectsDescription: function() {
+      const enabled = getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')
+      if (enabled) {
+        return i18next.t('ambrosia.data.twoMind.effectEnabled')
+      }
+      return i18next.t('ambrosia.data.twoMind.effectDisabled')
+    },
+    name: () => i18next.t('ambrosia.data.twoMind.name'),
+    description: () => {
+      const intro = i18next.t('ambrosia.data.twoMind.description')
+      const ambMod = i18next.t('ambrosia.data.twoMind.descriptionAmbrosia')
+      const redAmbMod = i18next.t('ambrosia.data.twoMind.descriptionRedAmbrosia')
+      const purpleMod = i18next.t('ambrosia.data.twoMind.descriptionPurpleHoney')
+      const summary = i18next.t('ambrosia.data.twoMind.descriptionSummary')
+      const resetWarning = i18next.t('ambrosia.edit.twoMindReset')
+
+      return `${intro}<br>${ambMod}<br>${redAmbMod}<br>${purpleMod}<br>${summary}<br>${resetWarning}`
+    },
+    unlockCriterion: 'Exalt9x1',
+    purpleAmbrosiaEnchantment: {
+      type: 'blueberryCostReduction',
+      maxLevel: 1,
+      costFormula: (level: number) => 2222 * level
+    }
   }
+}
+
+export const ambrosiaUpgradeNames = Object.keys(ambrosiaUpgrades) as AmbrosiaUpgradeNames[]
+
+const isAmbrosiaUpgradeSuppressed = (upgradeKey: AmbrosiaUpgradeNames): boolean => {
+  const upgrade = ambrosiaUpgrades[upgradeKey]
+  if (upgrade.unlockCriterion === 'Exalt9x1' && !(player.singularityChallenges.taxmanLastStand.completions > 0)) {
+    return true
+  }
+
+  return (player.singularityChallenges.noAmbrosiaUpgrades.enabled
+    || player.singularityChallenges.sadisticPrequel.enabled)
+    && !upgrade.ignoreEXALT
+}
+
+const isAmbrosiaUpgradeActive = (upgradeKey: AmbrosiaUpgradeNames): boolean => {
+  return ambrosiaUpgrades[upgradeKey].level > 0 && !isAmbrosiaUpgradeSuppressed(upgradeKey)
+}
+
+export const getPurpleAmbrosiaEnchantmentLevel = (upgradeKey: AmbrosiaUpgradeNames): number => {
+  const enchantment = ambrosiaUpgrades[upgradeKey].purpleAmbrosiaEnchantment
+  const savedInvestment = player.ambrosiaUpgrades[upgradeKey].purpleAmbrosiaInvested ?? 0
+  const investment = Number.isFinite(savedInvestment) ? Math.max(0, savedInvestment) : 0
+
+  let low = 0
+  let high = enchantment.maxLevel
+
+  while (low < high) {
+    const middle = low + Math.ceil((high - low) / 2)
+    if (enchantment.costFormula(middle) <= investment) {
+      low = middle
+    } else {
+      high = middle - 1
+    }
+  }
+
+  return low
+}
+
+export const updatePurpleAmbrosiaEnchantmentBadge = (upgradeKey: AmbrosiaUpgradeNames): void => {
+  const enchantment = ambrosiaUpgrades[upgradeKey].purpleAmbrosiaEnchantment
+  const badge = DOMCacheGetOrSet(upgradeKey).querySelector('.purpleAmbrosiaEnchantmentIcon')
+  badge?.classList.toggle(
+    'purpleAmbrosiaEnchantmentIconMaxed',
+    getPurpleAmbrosiaEnchantmentLevel(upgradeKey) >= enchantment.maxLevel
+  )
+}
+
+export const getPurpleAmbrosiaFreeLevels = (upgradeKey: AmbrosiaUpgradeNames): number => {
+  const enchantment = ambrosiaUpgrades[upgradeKey].purpleAmbrosiaEnchantment
+  if (enchantment.type !== 'freeLevels' || !isAmbrosiaUpgradeActive(upgradeKey)) {
+    return 0
+  }
+
+  return enchantment.freeLevels(getPurpleAmbrosiaEnchantmentLevel(upgradeKey))
+}
+
+export const getAmbrosiaUpgradeBlueberryCost = (upgradeKey: AmbrosiaUpgradeNames): number => {
+  const upgrade = ambrosiaUpgrades[upgradeKey]
+  const enchantment = upgrade.purpleAmbrosiaEnchantment
+  const reduction = enchantment.type === 'blueberryCostReduction'
+    ? getPurpleAmbrosiaEnchantmentLevel(upgradeKey)
+    : 0
+
+  return Math.max(0, upgrade.blueberryCost - reduction)
+}
+
+const getPurpleAmbrosiaEnchantmentCostTNL = (upgradeKey: AmbrosiaUpgradeNames): number => {
+  const enchantment = ambrosiaUpgrades[upgradeKey].purpleAmbrosiaEnchantment
+  const level = getPurpleAmbrosiaEnchantmentLevel(upgradeKey)
+  if (level >= enchantment.maxLevel) {
+    return 0
+  }
+
+  return enchantment.costFormula(level + 1) - enchantment.costFormula(level)
 }
 
 export const blankAmbrosiaUpgradeObject: Record<
   AmbrosiaUpgradeNames,
-  { ambrosiaInvested: number; blueberriesInvested: number }
+  { ambrosiaInvested: number; blueberriesInvested: number; purpleAmbrosiaInvested?: number }
 > = Object.fromEntries(
-  Object.keys(ambrosiaUpgrades).map((key) => [
-    key as AmbrosiaUpgradeNames,
+  ambrosiaUpgradeNames.map((key) => [
+    key,
     {
       ambrosiaInvested: 0,
       blueberriesInvested: 0
     }
   ])
-) as Record<AmbrosiaUpgradeNames, { ambrosiaInvested: number; blueberriesInvested: number }>
+) as Record<
+  AmbrosiaUpgradeNames,
+  { ambrosiaInvested: number; blueberriesInvested: number; purpleAmbrosiaInvested?: number }
+>
 
 export const setAmbrosiaUpgradeLevels = () => {
-  for (const upgradeKey of Object.keys(ambrosiaUpgrades) as AmbrosiaUpgradeNames[]) {
-    const invested = ambrosiaUpgrades[upgradeKey].ambrosiaInvested
-    const upgradeCost = ambrosiaUpgrades[upgradeKey].costFormula
-    const perLevelCost = ambrosiaUpgrades[upgradeKey].costPerLevel
+  for (const upgradeKey of ambrosiaUpgradeNames) {
+    const upgrade = ambrosiaUpgrades[upgradeKey]
+    if (upgradeKey === 'twoMind') {
+      // This upgrade costs only Blueberries, so Ambrosia investment cannot indicate ownership.
+      upgrade.level = player.ambrosiaUpgrades.twoMind.blueberriesInvested > 0 ? 1 : 0
+      continue
+    }
+
+    const invested = player.ambrosiaUpgrades[upgradeKey].ambrosiaInvested
 
     let level = 0
     let budget = invested
 
-    let nextCost = upgradeCost(level, perLevelCost)
+    let nextCost = upgrade.costFormula(level, upgrade.costPerLevel)
 
     while (budget >= nextCost) {
       budget -= nextCost
       level += 1
-      nextCost = upgradeCost(level, perLevelCost)
+      nextCost = upgrade.costFormula(level, upgrade.costPerLevel)
 
-      if (level >= ambrosiaUpgrades[upgradeKey].maxLevel) {
+      if (level >= upgrade.maxLevel) {
         break
       }
     }
@@ -1126,29 +1664,59 @@ export const setAmbrosiaUpgradeLevels = () => {
       player.ambrosia += budget
     }
 
-    ambrosiaUpgrades[upgradeKey].level = level
-    ambrosiaUpgrades[upgradeKey].ambrosiaInvested = invested - budget
+    upgrade.level = level
   }
+}
+
+export const reconcilePurpleAmbrosiaEnchantments = () => {
+  for (const upgradeKey of ambrosiaUpgradeNames) {
+    const enchantment = ambrosiaUpgrades[upgradeKey].purpleAmbrosiaEnchantment
+    const state = player.ambrosiaUpgrades[upgradeKey]
+    const savedInvestment = state.purpleAmbrosiaInvested ?? 0
+    const investment = Number.isFinite(savedInvestment) ? Math.max(0, savedInvestment) : 0
+    const level = getPurpleAmbrosiaEnchantmentLevel(upgradeKey)
+    const canonicalInvestment = enchantment.costFormula(level)
+
+    if (investment > canonicalInvestment) {
+      player.purpleAmbrosia += investment - canonicalInvestment
+    }
+    state.purpleAmbrosiaInvested = canonicalInvestment
+    updatePurpleAmbrosiaEnchantmentBadge(upgradeKey)
+  }
+
+  player.spentBlueberries = 0
+  for (const upgradeKey of ambrosiaUpgradeNames) {
+    const state = player.ambrosiaUpgrades[upgradeKey]
+    if (ambrosiaUpgrades[upgradeKey].level > 0) {
+      const blueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+      state.blueberriesInvested = blueberryCost
+      player.spentBlueberries += blueberryCost
+    } else {
+      state.blueberriesInvested = 0
+    }
+  }
+}
+
+export const getRedAmbrosiaFreeLevels = (upgradeKey: AmbrosiaUpgradeNames): number => {
+  const redAmbrosiaUpgrade = ambrosiaUpgrades[upgradeKey].redAmbrosiaUpgrade
+  return redAmbrosiaUpgrade === undefined ? 0 : getRedAmbrosiaUpgradeEffects(redAmbrosiaUpgrade, 'freeLevels')
 }
 
 const getAmbrosiaUpgradeEffectiveLevels = (upgradeKey: AmbrosiaUpgradeNames): number => {
   const upgrade = ambrosiaUpgrades[upgradeKey]
-  return ((player.singularityChallenges.noAmbrosiaUpgrades.enabled
-      || player.singularityChallenges.sadisticPrequel.enabled) && !upgrade.ignoreEXALT)
-    ? 0
-    : upgrade.level + upgrade.extraLevelCalc()
+  if (isAmbrosiaUpgradeSuppressed(upgradeKey)) {
+    return 0
+  }
+
+  return upgrade.level + getRedAmbrosiaFreeLevels(upgradeKey) + getPurpleAmbrosiaFreeLevels(upgradeKey)
 }
 
-export const getAmbrosiaUpgradeEffects = <T extends AmbrosiaUpgradeNames>(
-  upgradeKey: T
-): AmbrosiaUpgradeRewards[T] => {
+export const getAmbrosiaUpgradeEffects = <T extends AmbrosiaUpgradeNames, K extends keyof AmbrosiaUpgradeRewards[T]>(
+  upgradeKey: T,
+  key: K
+): AmbrosiaUpgradeRewards[T][K] => {
   const effectiveLevels = getAmbrosiaUpgradeEffectiveLevels(upgradeKey)
-  return ambrosiaUpgrades[upgradeKey].effects(effectiveLevels)
-}
-
-const getAmbrosiaUpgradeEffectsDescription = (upgradeKey: AmbrosiaUpgradeNames): string => {
-  const effectiveLevels = getAmbrosiaUpgradeEffectiveLevels(upgradeKey)
-  return ambrosiaUpgrades[upgradeKey].effectsDescription(effectiveLevels)
+  return ambrosiaUpgrades[upgradeKey].effects(effectiveLevels, key) as AmbrosiaUpgradeRewards[T][K]
 }
 
 const getAmbrosiaUpgradeCostTNL = (upgradeKey: AmbrosiaUpgradeNames): number => {
@@ -1161,6 +1729,10 @@ const getAmbrosiaUpgradeCostTNL = (upgradeKey: AmbrosiaUpgradeNames): number => 
 
 const checkAmbrosiaUpgradePrerequisites = (upgradeKey: AmbrosiaUpgradeNames): boolean => {
   const upgrade = ambrosiaUpgrades[upgradeKey]
+  if (upgrade.unlockCriterion === 'Exalt9x1' && !(player.singularityChallenges.taxmanLastStand.completions > 0)) {
+    return false
+  }
+
   const prerequisites = upgrade.prerequisites
 
   for (const [prereq, val] of Object.entries(prerequisites)) {
@@ -1172,59 +1744,190 @@ const checkAmbrosiaUpgradePrerequisites = (upgradeKey: AmbrosiaUpgradeNames): bo
   return true
 }
 
+const getPurpleAmbrosiaEnchantmentEffectDescription = (
+  enchantment: PurpleAmbrosiaEnchantment,
+  level: number
+): string => {
+  const isMaxLevel = level >= enchantment.maxLevel
+
+  if (enchantment.type === 'freeLevels') {
+    if (isMaxLevel) {
+      return i18next.t('ambrosia.purpleAmbrosia.freeLevelsEffectMaxed', {
+        maxValue: format(enchantment.freeLevels(level), 2, true)
+      })
+    }
+
+    return i18next.t('ambrosia.purpleAmbrosia.freeLevelsEffectNotMaxed', {
+      oldValue: format(enchantment.freeLevels(level), 2, true),
+      newValue: format(enchantment.freeLevels(level + 1), 2, true)
+    })
+  }
+
+  if (isMaxLevel) {
+    return i18next.t('ambrosia.purpleAmbrosia.blueberryCostReductionEffectMaxed', {
+      maxValue: format(level, 0, true)
+    })
+  }
+
+  return i18next.t('ambrosia.purpleAmbrosia.blueberryCostReductionEffectNotMaxed', {
+    oldValue: format(level, 0, true),
+    newValue: format(level + 1, 0, true)
+  })
+}
+
+const purpleAmbrosiaEnchantmentToString = (upgradeKey: AmbrosiaUpgradeNames): string => {
+  if (player.singularityChallenges.taxmanLastStand.completions < 1) {
+    return ''
+  }
+
+  const enchantment = ambrosiaUpgrades[upgradeKey].purpleAmbrosiaEnchantment
+  const level = getPurpleAmbrosiaEnchantmentLevel(upgradeKey)
+  const isMaxLevel = level >= enchantment.maxLevel
+  const levelColor = isMaxLevel ? 'plum' : 'white'
+  const enchantmentIconClass = enchantment.type === 'blueberryCostReduction'
+    ? ' class="purpleAmbrosiaEnchantmentIconType2"'
+    : ''
+  const effectDescription = getPurpleAmbrosiaEnchantmentEffectDescription(enchantment, level)
+  const activeRequirementHTML = enchantment.type === 'freeLevels'
+    ? `<br><span style="color:gray">${i18next.t('ambrosia.purpleAmbrosia.activeRequirement')}</span>`
+    : ''
+  const costHTML = isMaxLevel
+    ? ''
+    : `${
+      i18next.t('ambrosia.purpleAmbrosia.cost', {
+        amount: format(getPurpleAmbrosiaEnchantmentCostTNL(upgradeKey), 0, true)
+      })
+    }<br>`
+  const spent = player.ambrosiaUpgrades[upgradeKey].purpleAmbrosiaInvested ?? 0
+  const buyControlHTML = isMaxLevel
+    ? ''
+    : isMobile
+    ? `<button class="modalBtnBuy" data-modal-action="${PURPLE_AMBROSIA_ENCHANTMENT_ACTION}">${
+      i18next.t('ambrosia.purpleAmbrosia.buy')
+    }</button>`
+    : `<span style="color:lightgray">${i18next.t('ambrosia.purpleAmbrosia.desktopBuy')}</span>`
+
+  return `<div class="purpleAmbrosiaEnchantmentModal">
+    <div class="purpleAmbrosiaEnchantmentTitle">
+      <img${enchantmentIconClass} src="Pictures/PurpleAmbrosia/PurpleAmbrosia.png" alt="">
+      <span>${i18next.t('ambrosia.purpleAmbrosia.enchantment')}</span>
+    </div>
+    <span style="color:${levelColor}">${
+    i18next.t('ambrosia.purpleAmbrosia.level', {
+      level: format(level, 0, true),
+      maxLevel: format(enchantment.maxLevel, 0, true)
+    })
+  }</span><br>
+    <span style="color:white">${effectDescription}</span>${activeRequirementHTML}<br>
+    ${costHTML}
+    ${
+    i18next.t('ambrosia.purpleAmbrosia.spent', {
+      curr: format(spent, 0, true),
+      max: format(enchantment.costFormula(enchantment.maxLevel), 0, true)
+    })
+  }<br>
+    ${buyControlHTML}
+  </div>`
+}
+
+const getAmbrosiaUpgradeNameHTML = (upgradeKey: AmbrosiaUpgradeNames): string => {
+  const activeStatus = isAmbrosiaUpgradeActive(upgradeKey)
+    ? i18next.t('ambrosia.moduleActive')
+    : i18next.t('ambrosia.moduleInactive')
+
+  return `<span style="color: gold">${ambrosiaUpgrades[upgradeKey].name()}</span> ${activeStatus}`
+}
+
+const ambrosiaUpgradePrerequisitesHTML = (upgradeKey: AmbrosiaUpgradeNames): string => {
+  const prerequisites = Object.entries(ambrosiaUpgrades[upgradeKey].prerequisites)
+  if (prerequisites.length === 0) return ''
+
+  const connectorColors: string[] = []
+  const entries = prerequisites.map(([prerequisite, required]) => {
+    const key = prerequisite as AmbrosiaUpgradeNames
+    // Use the purchased level checked when buying; bonus levels do not count.
+    const current = ambrosiaUpgrades[key].level
+    const met = current >= required
+    connectorColors.push(met ? 'var(--lime-text-color)' : 'red')
+    const icon = DOMCacheGetOrSet(key).querySelector('img') as HTMLImageElement
+    const name = ambrosiaUpgrades[key].name()
+    const levels = i18next.t('ambrosia.prerequisiteDetails.levels', {
+      current: format(current, 0, true),
+      required: format(required, 0, true)
+    })
+
+    return `<span class="ambrosiaPrerequisite${met ? ' ambrosiaPrerequisiteMet' : ''}" role="listitem">
+      <img src="${icon.src}" alt="" width="24" height="24">
+      <span class="ambrosiaPrerequisiteDetails">
+        <span class="ambrosiaPrerequisiteName">${name}</span>
+        <span class="ambrosiaPrerequisiteLevels">${levels}</span>
+      </span>
+    </span>`
+  }).join('')
+
+  const connectorStyles = connectorColors.map((color, index) => `--ambrosia-prerequisite-${index + 1}-color: ${color}`)
+    .join('; ')
+  const targetIcon = document.createElement('img')
+  targetIcon.src = (DOMCacheGetOrSet(upgradeKey).querySelector('img') as HTMLImageElement).src
+  targetIcon.alt = ambrosiaUpgrades[upgradeKey].name()
+  targetIcon.width = 32
+  targetIcon.height = 32
+
+  return `<span class="ambrosiaPrerequisites">
+    <span class="ambrosiaPrerequisiteHeading">${i18next.t('ambrosia.prerequisiteDetails.heading')}</span>
+    <span class="ambrosiaDependencyGraph" data-prerequisite-count="${prerequisites.length}"
+      style="${connectorStyles}">
+      <span class="ambrosiaPrerequisiteList" role="list">${entries}</span>
+      <span class="ambrosiaDependencyArrow" aria-hidden="true"></span>
+      <span class="ambrosiaDependencyTarget">${targetIcon.outerHTML}</span>
+    </span>
+  </span>`
+}
+
 export const ambrosiaUpgradeToString = (upgradeKey: AmbrosiaUpgradeNames): string => {
   const upgrade = ambrosiaUpgrades[upgradeKey]
   const costNextLevel = getAmbrosiaUpgradeCostTNL(upgradeKey)
-  const maxLevel = upgrade.maxLevel === -1 ? '' : `/${format(upgrade.maxLevel, 0, true)}`
+  const maxLevel = `/${format(upgrade.maxLevel, 0, true)}`
   const isMaxLevel = upgrade.maxLevel === upgrade.level
   const color = isMaxLevel ? 'plum' : 'white'
 
-  const extraLevels = upgrade.extraLevelCalc()
-  const freeLevelInfo = extraLevels > 0
-    ? `<span style="color: pink"> [+${format(extraLevels, 0, true)}]</span>`
+  const redAmbrosiaFreeLevels = getRedAmbrosiaFreeLevels(upgradeKey)
+  const redAmbrosiaFreeLevelInfo = redAmbrosiaFreeLevels > 0
+    ? `<span style="color: pink"> [+${format(redAmbrosiaFreeLevels, 0, true)}]</span>`
+    : ''
+  const purpleAmbrosiaFreeLevels = getPurpleAmbrosiaFreeLevels(upgradeKey)
+  const purpleAmbrosiaFreeLevelInfo = purpleAmbrosiaFreeLevels > 0
+    ? `<span style="color: var(--purple-text-color)"> [+${format(purpleAmbrosiaFreeLevels, 2, true)}]</span>`
     : ''
 
-  let preReqText: string | undefined
+  const effectsDescription = upgrade.effectsDescription()
 
-  if (Object.keys(upgrade.prerequisites).length > 0) {
-    preReqText = String(i18next.t('ambrosia.prerequisite'))
-    for (const [prereq, val] of Object.entries(upgrade.prerequisites)) {
-      const k = prereq as AmbrosiaUpgradeNames
-      const ambrosiaNameColor = ambrosiaUpgrades[k].level >= val ? 'green' : 'red'
-      const met = ambrosiaUpgrades[k].level >= val
-        ? ''
-        : i18next.t('ambrosia.prereqNotMet')
-      preReqText = `${preReqText}<span style="color:${ambrosiaNameColor}"> ${
-        ambrosiaUpgrades[k].name()
-      } lv.${val} ${met}</span> |`
-    }
-
-    preReqText = preReqText.slice(0, -1)
-  }
-
-  const effectsDescription = getAmbrosiaUpgradeEffectsDescription(upgradeKey)
-
-  const nameHTML = `<span style="color: gold">${upgrade.name()}</span>`
+  const nameHTML = getAmbrosiaUpgradeNameHTML(upgradeKey)
   const levelHTML = `<span style="color: ${color}"> ${i18next.t('general.level')} ${
     format(upgrade.level, 0, true)
-  }${maxLevel}${freeLevelInfo}</span>`
-  const preReqHTML = preReqText ? `${preReqText}<br>` : ''
+  }${maxLevel}${redAmbrosiaFreeLevelInfo}${purpleAmbrosiaFreeLevelInfo}</span>`
+  const preReqHTML = ambrosiaUpgradePrerequisitesHTML(upgradeKey)
   const descriptionHTML = `<span style="color: lightblue">${upgrade.description()}</span>`
   const effectsHTML = `<span style="color: gold">${effectsDescription}</span>`
   const costNextLevelHTML = i18next.t('ambrosia.ambrosiaCost', {
     amount: format(costNextLevel, 0, true)
   })
-  const blueberryCostHTML = `${
-    i18next.t('ambrosia.blueberryCost')
-  } <span style="color:blue">${upgrade.blueberryCost}</span>`
+  const blueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+  const hasPurchasedBlueberryCostReduction = upgrade.purpleAmbrosiaEnchantment.type === 'blueberryCostReduction'
+    && getPurpleAmbrosiaEnchantmentLevel(upgradeKey) > 0
+  const blueberryCostAmountHTML = hasPurchasedBlueberryCostReduction
+    ? `<span style="color:gray;text-decoration:line-through">${upgrade.blueberryCost}</span> <span style="color:var(--blueberry-text-color)">${blueberryCost}</span>`
+    : `<span style="color:var(--blueberry-text-color)">${blueberryCost}</span>`
+  const blueberryCostHTML = `${i18next.t('ambrosia.blueberryCost')} ${blueberryCostAmountHTML}`
   const spentAmbrosiaHTML = `${i18next.t('general.spent')} ${
     i18next.t('ambrosia.ambrosia')
-  }: <span style="color:orange">${format(upgrade.ambrosiaInvested, 0, true)}</span>`
+  }: <span style="color:orange">${format(player.ambrosiaUpgrades[upgradeKey].ambrosiaInvested, 0, true)}</span>`
   const ignoreEXALTHTML = upgrade.ignoreEXALT
     ? `<br><span style="color: orchid"> ${i18next.t('ambrosia.ignoreEXALT')}</span>`
     : ''
+  const purpleAmbrosiaEnchantmentHTML = purpleAmbrosiaEnchantmentToString(upgradeKey)
 
-  return `${nameHTML}<br>${levelHTML}<br>${preReqHTML}${descriptionHTML}<br>${effectsHTML}<br>${costNextLevelHTML}<br>${blueberryCostHTML}<br>${spentAmbrosiaHTML}${ignoreEXALTHTML}`
+  return `${nameHTML}<br>${levelHTML}<br>${preReqHTML}${descriptionHTML}<br>${effectsHTML}<br>${costNextLevelHTML}<br>${blueberryCostHTML}<br>${spentAmbrosiaHTML}${ignoreEXALTHTML}${purpleAmbrosiaEnchantmentHTML}`
 }
 
 export const updateMobileAmbrosiaHTML = (k: AmbrosiaUpgradeNames) => {
@@ -1239,17 +1942,11 @@ export const updateMobileAmbrosiaHTML = (k: AmbrosiaUpgradeNames) => {
 
     buyOne.classList.add('modalBtnBuy')
     buyOne.textContent = i18next.t('general.buyOne')
-    buyOne.addEventListener('click', (event: MouseEvent) => {
-      buyAmbrosiaUpgradeLevel(k, event, false)
-      updateMobileAmbrosiaHTML(k)
-    })
+    buyOne.dataset.modalAction = 'one'
 
     buyMax.classList.add('modalBtnBuy')
     buyMax.textContent = i18next.t('general.buyMax')
-    buyMax.addEventListener('click', (event: MouseEvent) => {
-      buyAmbrosiaUpgradeLevel(k, event, true)
-      updateMobileAmbrosiaHTML(k)
-    })
+    buyMax.dataset.modalAction = 'max'
 
     buttonDiv.appendChild(buyOne)
     buttonDiv.appendChild(buyMax)
@@ -1263,105 +1960,393 @@ export const buyAmbrosiaUpgradeLevel = async (
   buyMax = false
 ): Promise<void> => {
   const upgrade = ambrosiaUpgrades[upgradeKey]
-  let purchased = 0
-  let maxPurchasable = 1
-  let ambrosiaBudget = player.ambrosia
 
   if (!checkAmbrosiaUpgradePrerequisites(upgradeKey)) {
     return Alert(i18next.t('ambrosia.prereqNotMetAlert'))
   }
 
-  if (event.shiftKey || buyMax) {
-    maxPurchasable = 1000000
-    const buy = Number(
-      await Prompt(
-        i18next.t('ambrosia.ambrosiaBuyPrompt', {
-          amount: format(player.ambrosia, 0, true)
-        })
-      )
-    )
-
-    if (isNaN(buy) || !isFinite(buy) || !Number.isInteger(buy)) {
-      // nan + Infinity checks
-      return Alert(i18next.t('general.validation.finite'))
-    }
-
-    if (buy === -1) {
-      ambrosiaBudget = player.ambrosia
-    } else if (buy <= 0) {
-      return Alert(i18next.t('octeract.buyLevel.cancelPurchase'))
-    } else {
-      ambrosiaBudget = buy
-    }
-    ambrosiaBudget = Math.min(player.ambrosia, ambrosiaBudget)
-  }
-
-  if (upgrade.maxLevel > 0) {
-    maxPurchasable = Math.min(maxPurchasable, upgrade.maxLevel - upgrade.level)
-  }
-
-  if (maxPurchasable === 0) {
+  if (upgrade.level >= upgrade.maxLevel) {
     return Alert(i18next.t('octeract.buyLevel.alreadyMax'))
   }
 
-  while (maxPurchasable > 0) {
-    const cost = getAmbrosiaUpgradeCostTNL(upgradeKey)
-    if (player.ambrosia < cost || ambrosiaBudget < cost) {
-      break
-    } else {
-      if (upgrade.level === 0) {
-        const availableBlueberries = calculateBlueberryInventory() - player.spentBlueberries
-        if (availableBlueberries < upgrade.blueberryCost) {
-          return Alert(i18next.t('ambrosia.notEnoughBlueberries'))
-        } else {
-          player.spentBlueberries += upgrade.blueberryCost
-          upgrade.blueberriesInvested = upgrade.blueberryCost
-        }
-      }
-      player.ambrosia -= cost
-      ambrosiaBudget -= cost
-      upgrade.ambrosiaInvested += cost
-      upgrade.level += 1
-      purchased += 1
-      maxPurchasable -= 1
-    }
+  if (
+    upgrade.level === 0
+    && calculateBlueberryInventory() - player.spentBlueberries < getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+  ) {
+    return Alert(i18next.t('ambrosia.notEnoughBlueberries'))
   }
 
-  if (purchased === 0) {
+  const options: SingularityUpgradePurchaseOptions = {
+    getMaxLevels: () => {
+      if (
+        !checkAmbrosiaUpgradePrerequisites(upgradeKey)
+        || (upgrade.level === 0
+          && calculateBlueberryInventory() - player.spentBlueberries < getAmbrosiaUpgradeBlueberryCost(upgradeKey))
+      ) {
+        return 0
+      }
+      return Math.max(0, upgrade.maxLevel - upgrade.level)
+    },
+    getBalance: () => player.ambrosia,
+    getCost: (levels) => getAmbrosiaUpgradeCostBetween(upgradeKey, upgrade.level, upgrade.level + levels)
+  }
+  const purchase = event.shiftKey || buyMax
+    ? await PurchasePrompt({
+      ...options,
+      title: upgrade.name(),
+      getLevel: () => upgrade.level,
+      getMaxLevel: () => upgrade.maxLevel,
+      resource: 'ambrosia'
+    })
+    : calculateSingularityUpgradePurchase(options, 1, 'levels')
+
+  if (purchase === null) {
+    return
+  }
+
+  if (!checkAmbrosiaUpgradePrerequisites(upgradeKey)) {
+    return Alert(i18next.t('ambrosia.prereqNotMetAlert'))
+  }
+
+  if (
+    upgrade.level === 0
+    && calculateBlueberryInventory() - player.spentBlueberries < getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+  ) {
+    return Alert(i18next.t('ambrosia.notEnoughBlueberries'))
+  }
+
+  const currentPurchase = calculateSingularityUpgradePurchase(options, purchase.levels, 'levels')
+  if (
+    currentPurchase === null || purchase.levels === 0
+    || currentPurchase.levels !== purchase.levels || currentPurchase.cost !== purchase.cost
+  ) {
     return Alert(i18next.t('octeract.buyLevel.cannotAfford'))
   }
-  if (purchased > 1) {
+
+  if (upgrade.level === 0) {
+    const blueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+    player.spentBlueberries += blueberryCost
+    player.ambrosiaUpgrades[upgradeKey].blueberriesInvested = blueberryCost
+  }
+  player.ambrosia -= purchase.cost
+  player.ambrosiaUpgrades[upgradeKey].ambrosiaInvested += purchase.cost
+  upgrade.level += purchase.levels
+
+  if (upgradeKey === 'twoMind') {
+    resetAmbrosiaBarProgress()
+  }
+
+  if (purchase.levels > 1) {
     return Alert(
-      i18next.t('octeract.buyLevel.multiBuy', { n: format(purchased) })
+      i18next.t('octeract.buyLevel.multiBuy', { n: format(purchase.levels) })
     )
   }
 }
 
-export const displayProperLoadoutCount = () => {
-  const loadoutCount = 8 + PCoinUpgradeEffects.AMBROSIA_LOADOUT_SLOT_QOL
-  assert(loadoutCount <= 16, 'Yeah. Nice try.')
+export const buyPurpleAmbrosiaEnchantmentLevel = async (
+  upgradeKey: AmbrosiaUpgradeNames
+): Promise<void> => {
+  if (player.singularityChallenges.taxmanLastStand.completions < 1) {
+    return
+  }
 
-  for (let i = 1; i <= 16; i++) {
+  const upgrade = ambrosiaUpgrades[upgradeKey]
+  const enchantment = upgrade.purpleAmbrosiaEnchantment
+  const level = getPurpleAmbrosiaEnchantmentLevel(upgradeKey)
+  if (level >= enchantment.maxLevel) {
+    return Alert(i18next.t('ambrosia.purpleAmbrosia.alreadyMaxed'))
+  }
+
+  const currentInvestment = enchantment.costFormula(level)
+  const nextInvestment = enchantment.costFormula(level + 1)
+  const cost = nextInvestment - currentInvestment
+  assert(cost >= 0, `Purple Ambrosia enchantment cost cannot decrease: ${upgradeKey}`)
+
+  if (player.purpleAmbrosia < cost) {
+    return Alert(i18next.t('ambrosia.purpleAmbrosia.notEnough'))
+  }
+
+  player.purpleAmbrosia -= cost
+  player.ambrosiaUpgrades[upgradeKey].purpleAmbrosiaInvested = nextInvestment
+
+  if (enchantment.type === 'blueberryCostReduction' && upgrade.level > 0) {
+    const state = player.ambrosiaUpgrades[upgradeKey]
+    const newBlueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+    const refund = Math.max(0, state.blueberriesInvested - newBlueberryCost)
+    state.blueberriesInvested = newBlueberryCost
+    player.spentBlueberries -= refund
+  }
+
+  updatePurpleAmbrosiaEnchantmentBadge(upgradeKey)
+}
+
+const ambrosiaEditDeltas = [-10, -1, 1, 10]
+
+let ambrosiaEditMode = false
+let ambrosiaEditTarget: AmbrosiaUpgradeNames | null = null
+let ambrosiaEditLevel = 0
+
+export const isAmbrosiaEditMode = () => ambrosiaEditMode
+
+export const setAmbrosiaEditMode = (state: boolean) => {
+  ambrosiaEditMode = state
+  ambrosiaEditTarget = null
+
+  DOMCacheGetOrSet('blueberryUpgradeContainer').classList.toggle('ambrosiaEditing', state)
+
+  const button = DOMCacheGetOrSet('ambrosiaEditLevels')
+  button.classList.toggle('ambrosiaEditingToggled', state)
+  button.innerHTML = state ? i18next.t('ambrosia.edit.exit') : i18next.t('ambrosia.edit.enter')
+}
+
+export const toggleAmbrosiaEditMode = () => setAmbrosiaEditMode(!ambrosiaEditMode)
+
+const getAmbrosiaUpgradeCostBetween = (upgradeKey: AmbrosiaUpgradeNames, from: number, to: number) => {
+  const { costFormula, costPerLevel } = ambrosiaUpgrades[upgradeKey]
+  let cost = 0
+
+  for (let i = Math.min(from, to); i < Math.max(from, to); i++) {
+    cost += costFormula(i, costPerLevel)
+  }
+
+  return to < from ? -cost : cost
+}
+
+const getAmbrosiaEditFloor = (upgradeKey: AmbrosiaUpgradeNames) => {
+  let level = 0
+  let blocker: AmbrosiaUpgradeNames | null = null
+
+  for (const key of ambrosiaUpgradeNames) {
+    if (ambrosiaUpgrades[key].level === 0) continue
+
+    const required = ambrosiaUpgrades[key].prerequisites[upgradeKey]
+    if (required !== undefined && required > level) {
+      level = required
+      blocker = key
+    }
+  }
+
+  return { level, blocker }
+}
+
+const getAmbrosiaEditCeiling = (upgradeKey: AmbrosiaUpgradeNames) => {
+  const upgrade = ambrosiaUpgrades[upgradeKey]
+  const blueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+
+  if (!checkAmbrosiaUpgradePrerequisites(upgradeKey)) {
+    return upgrade.level
+  }
+
+  if (upgrade.level === 0 && calculateBlueberryInventory() - player.spentBlueberries < blueberryCost) {
+    return 0
+  }
+
+  let level = upgrade.level
+  let spent = 0
+
+  while (level < upgrade.maxLevel) {
+    const nextCost = upgrade.costFormula(level, upgrade.costPerLevel)
+    if (spent + nextCost > player.ambrosia) break
+
+    spent += nextCost
+    level += 1
+  }
+
+  return level
+}
+
+const getAmbrosiaEditPendingLevel = (upgradeKey: AmbrosiaUpgradeNames) => {
+  return ambrosiaEditTarget === upgradeKey ? ambrosiaEditLevel : ambrosiaUpgrades[upgradeKey].level
+}
+
+export const beginAmbrosiaEdit = (upgradeKey: AmbrosiaUpgradeNames) => {
+  ambrosiaEditTarget = upgradeKey
+  ambrosiaEditLevel = ambrosiaUpgrades[upgradeKey].level
+}
+
+export const ambrosiaEditToString = (upgradeKey: AmbrosiaUpgradeNames) => {
+  const upgrade = ambrosiaUpgrades[upgradeKey]
+  const blueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+  const floor = getAmbrosiaEditFloor(upgradeKey)
+  const ceiling = getAmbrosiaEditCeiling(upgradeKey)
+  const pending = getAmbrosiaEditPendingLevel(upgradeKey)
+  const difference = getAmbrosiaUpgradeCostBetween(upgradeKey, upgrade.level, pending)
+
+  const nameHTML = getAmbrosiaUpgradeNameHTML(upgradeKey)
+  const levelHTML = pending === upgrade.level
+    ? i18next.t('ambrosia.edit.level', {
+      level: format(upgrade.level, 0, true),
+      max: format(upgrade.maxLevel, 0, true)
+    })
+    : i18next.t('ambrosia.edit.levelChange', {
+      from: format(upgrade.level, 0, true),
+      to: format(pending, 0, true),
+      max: format(upgrade.maxLevel, 0, true)
+    })
+
+  let costHTML: string
+  if (difference > 0) {
+    costHTML = i18next.t('ambrosia.edit.cost', { amount: format(difference, 0, true) })
+  } else if (difference < 0) {
+    costHTML = i18next.t('ambrosia.edit.refund', { amount: format(-difference, 0, true) })
+  } else {
+    costHTML = i18next.t('ambrosia.edit.noChange')
+  }
+
+  let blueberryHTML = ''
+  if (blueberryCost > 0 && upgrade.level === 0 && pending > 0) {
+    blueberryHTML = `<br>${i18next.t('ambrosia.edit.blueberryCharge', { amount: format(blueberryCost, 0, true) })}`
+  } else if (player.ambrosiaUpgrades[upgradeKey].blueberriesInvested > 0 && pending === 0) {
+    blueberryHTML = `<br>${
+      i18next.t('ambrosia.edit.blueberryRefund', {
+        amount: format(player.ambrosiaUpgrades[upgradeKey].blueberriesInvested, 0, true)
+      })
+    }`
+  }
+
+  let noticeHTML = ''
+  if (floor.blocker !== null) {
+    noticeHTML = `<br>${
+      i18next.t('ambrosia.edit.lockedBy', {
+        level: format(floor.level, 0, true),
+        name: ambrosiaUpgrades[floor.blocker].name()
+      })
+    }`
+  }
+  if (!checkAmbrosiaUpgradePrerequisites(upgradeKey)) {
+    noticeHTML = `${noticeHTML}<br>${i18next.t('ambrosia.edit.prereqBlocked')}`
+  }
+  if (upgradeKey === 'twoMind') {
+    noticeHTML = `${noticeHTML}<br>${i18next.t('ambrosia.edit.twoMindReset')}`
+  }
+
+  const stepButtons = ambrosiaEditDeltas.map((delta) => {
+    const target = Math.min(ceiling, Math.max(floor.level, pending + delta))
+    const label = delta > 0 ? `+${delta}` : String(delta)
+    return `<button class="modalBtnBuy" data-modal-action="${delta}"${
+      target === pending ? ' disabled' : ''
+    }>${label}</button>`
+  }).join('')
+
+  const maxButton = `<button class="modalBtnBuy" data-modal-action="max"${ceiling === pending ? ' disabled' : ''}>${
+    i18next.t('ambrosia.edit.max')
+  }</button>`
+
+  const commitButtons = `<button class="modalBtnBuy ambrosiaEditSave" data-modal-action="save"${
+    pending === upgrade.level ? ' disabled' : ''
+  }>${
+    i18next.t('ambrosia.edit.save')
+  }</button><button class="modalBtnBuy ambrosiaEditDiscard" data-modal-action="discard">${
+    i18next.t('ambrosia.edit.discard')
+  }</button>`
+
+  return `<div class="ambrosiaEditModal"><div>${nameHTML}<br>${levelHTML}<br>${costHTML}${blueberryHTML}${noticeHTML}</div><div class="modalButtonRow">${stepButtons}${maxButton}</div><div class="modalButtonRow">${commitButtons}</div></div>`
+}
+
+const resetAmbrosiaBarProgress = () => {
+  player.blueberryTime = 0
+  player.redAmbrosiaTime = 0
+  player.purpleHoneyProgress = 0
+}
+
+const applyAmbrosiaEdit = (upgradeKey: AmbrosiaUpgradeNames) => {
+  const upgrade = ambrosiaUpgrades[upgradeKey]
+  const blueberryCost = getAmbrosiaUpgradeBlueberryCost(upgradeKey)
+  const pending = getAmbrosiaEditPendingLevel(upgradeKey)
+
+  if (pending === upgrade.level) {
+    return
+  }
+
+  if (pending < getAmbrosiaEditFloor(upgradeKey).level || pending > getAmbrosiaEditCeiling(upgradeKey)) {
+    void Alert(i18next.t('ambrosia.edit.invalid'))
+    return
+  }
+
+  if (upgrade.level === 0) {
+    player.spentBlueberries += blueberryCost
+    player.ambrosiaUpgrades[upgradeKey].blueberriesInvested = blueberryCost
+  } else if (pending === 0) {
+    player.spentBlueberries -= player.ambrosiaUpgrades[upgradeKey].blueberriesInvested
+    player.ambrosiaUpgrades[upgradeKey].blueberriesInvested = 0
+  }
+
+  const cost = getAmbrosiaUpgradeCostBetween(upgradeKey, upgrade.level, pending)
+  player.ambrosia -= cost
+  player.ambrosiaUpgrades[upgradeKey].ambrosiaInvested += cost
+  if (pending < upgrade.level || upgradeKey === 'twoMind') {
+    resetAmbrosiaBarProgress()
+  }
+  upgrade.level = pending
+}
+
+export const ambrosiaEditAction = (upgradeKey: AmbrosiaUpgradeNames, action: string | undefined) => {
+  if (action === 'discard') {
+    ambrosiaEditTarget = null
+    return true
+  }
+
+  if (action === 'save') {
+    applyAmbrosiaEdit(upgradeKey)
+    ambrosiaEditTarget = null
+    return true
+  }
+
+  if (action === undefined) {
+    return false
+  }
+
+  const floor = getAmbrosiaEditFloor(upgradeKey).level
+  const ceiling = getAmbrosiaEditCeiling(upgradeKey)
+  const pending = getAmbrosiaEditPendingLevel(upgradeKey)
+  const delta = Number(action)
+
+  if (action !== 'max' && !ambrosiaEditDeltas.includes(delta)) {
+    return false
+  }
+
+  ambrosiaEditTarget = upgradeKey
+  ambrosiaEditLevel = action === 'max' ? ceiling : Math.min(ceiling, Math.max(floor, pending + delta))
+
+  return false
+}
+
+export const getUnlockedBlueberryLoadoutCount = () => {
+  const loadoutCount = BASE_BLUEBERRY_LOADOUT_COUNT + PCoinUpgradeEffects.AMBROSIA_LOADOUT_SLOT_QOL
+  assert(loadoutCount <= MAX_BLUEBERRY_LOADOUT_COUNT, 'Yeah. Nice try.')
+  return loadoutCount
+}
+
+export const displayProperLoadoutCount = () => {
+  const loadoutCount = getUnlockedBlueberryLoadoutCount()
+
+  for (let i = 1; i <= MAX_BLUEBERRY_LOADOUT_COUNT; i++) {
     const elm = DOMCacheGetOrSet(`blueberryLoadout${i}`)
     if (i <= loadoutCount) {
       elm.style.display = 'flex'
+      elm.removeAttribute('disabled')
     } else {
       elm.style.display = 'none'
+      elm.setAttribute('disabled', '')
     }
   }
 }
 
 export const resetBlueberryTree = (giveAlert = true) => {
-  for (const k of Object.keys(ambrosiaUpgrades) as AmbrosiaUpgradeNames[]) {
+  ambrosiaEditTarget = null
+
+  for (const k of ambrosiaUpgradeNames) {
     ambrosiaUpgrades[k].level = 0
-    ambrosiaUpgrades[k].ambrosiaInvested = 0
-    ambrosiaUpgrades[k].blueberriesInvested = 0
     player.ambrosiaUpgrades[k].ambrosiaInvested = 0
     player.ambrosiaUpgrades[k].blueberriesInvested = 0
   }
   player.ambrosia = player.lifetimeAmbrosia
   player.spentBlueberries = 0
-  if (giveAlert) return Alert(i18next.t('ambrosia.refund'))
+  resetAmbrosiaBarProgress()
+  if (giveAlert) {
+    void Alert(i18next.t('ambrosia.refund'))
+    return
+  }
 }
 
 const validateBlueberryTree = (modules: BlueberryOpt) => {
@@ -1408,6 +2393,9 @@ const validateBlueberryTree = (modules: BlueberryOpt) => {
       if (unlockCriterion === 'Exalt5x1' && !(player.singularityChallenges.noAmbrosiaUpgrades.completions > 0)) {
         meetsUnlockConditions = false
       }
+      if (unlockCriterion === 'Exalt9x1' && !(player.singularityChallenges.taxmanLastStand.completions > 0)) {
+        meetsUnlockConditions = false
+      }
     }
 
     // Check prereq for this specific module
@@ -1427,7 +2415,7 @@ const validateBlueberryTree = (modules: BlueberryOpt) => {
 
     // Check blueberry costs
     if (effectiveVal > 0) {
-      spentBlueberries += ambrosiaUpgrades[k].blueberryCost
+      spentBlueberries += getAmbrosiaUpgradeBlueberryCost(k)
     }
 
     // Check ambrosia costs
@@ -1472,12 +2460,12 @@ export const exportBlueberryTree = () => {
   void exportData(save, name)
 }
 
-const createBlueberryTree = (modules: BlueberryOpt) => {
+const createBlueberryTree = (modules: BlueberryOpt, giveAlert = true) => {
   // Check to see if tree being created is valid.
   const isPossible = validateBlueberryTree(modules)
   if (!isPossible) {
     void Alert(i18next.t('ambrosia.importTree.failure'))
-    return
+    return false
   }
 
   // If valid, we will create the tree.
@@ -1489,43 +2477,99 @@ const createBlueberryTree = (modules: BlueberryOpt) => {
 
   for (const [key, val] of Object.entries(actualModules)) {
     const k = key as AmbrosiaUpgradeNames
-    const { costFormula, costPerLevel, blueberryCost } = ambrosiaUpgrades[k]
+    const { costFormula, costPerLevel } = ambrosiaUpgrades[k]
+    const blueberryCost = getAmbrosiaUpgradeBlueberryCost(k)
 
     if (val > 0) {
-      ambrosiaUpgrades[k].blueberriesInvested = blueberryCost
+      player.ambrosiaUpgrades[k].blueberriesInvested = blueberryCost
       player.spentBlueberries += blueberryCost
       let tempCost = 0
       for (let i = 0; i < val; i++) {
         tempCost += costFormula(i, costPerLevel)
       }
       player.ambrosia -= tempCost
-      ambrosiaUpgrades[k].ambrosiaInvested = tempCost
+      player.ambrosiaUpgrades[k].ambrosiaInvested = tempCost
       ambrosiaUpgrades[k].level = val
     }
   }
-  void Alert(i18next.t('ambrosia.importTree.success'))
+  if (giveAlert) {
+    void Alert(i18next.t('ambrosia.importTree.success'))
+  }
+  return true
 }
 
 export const importBlueberryTree = (input: string | null) => {
   if (typeof input !== 'string') {
-    return Alert(i18next.t('importexport.unableImport'))
+    void Alert(i18next.t('importexport.unableImport', { reason: 'No input' }))
+    return
   } else {
     try {
       const modules = JSON.parse(input) as BlueberryOpt
       createBlueberryTree(modules)
-      createLoadoutDescription(0, modules)
     } catch {
-      return Alert(i18next.t('ambrosia.importTree.error'))
+      Alert(i18next.t('ambrosia.importTree.error'))
+      return
     }
   }
 }
 
+export let lastBlueberryLoadout = 0
+
+export const setLastBlueberryLoadout = (n: number) => {
+  lastBlueberryLoadout = n
+  DOMCacheGetOrSet('blueberryQuickSave').innerHTML = n === 0
+    ? i18next.t('ambrosia.loadouts.quickSaveEmpty')
+    : i18next.t('ambrosia.loadouts.quickSave', { n })
+
+  for (let i = 1; i <= 16; i++) {
+    DOMCacheGetOrSet(`blueberryLoadout${i}`).classList.toggle('activeBlueberryLoadout', i === n)
+  }
+}
+
+export const quickSaveBlueberryTree = async () => {
+  if (lastBlueberryLoadout === 0) {
+    return Alert(i18next.t('ambrosia.loadouts.quickSaveNone'))
+  }
+
+  await saveBlueberryTree(
+    lastBlueberryLoadout,
+    player.blueberryLoadouts[lastBlueberryLoadout] ?? {}
+  )
+}
+
 export const loadoutHandler = (n: number, modules: BlueberryOpt) => {
+  if (!Number.isInteger(n) || n < 1 || n > getUnlockedBlueberryLoadoutCount()) {
+    return
+  }
+
   if (player.blueberryLoadoutMode === 'saveTree') {
     saveBlueberryTree(n, modules)
   }
   if (player.blueberryLoadoutMode === 'loadTree') {
-    createBlueberryTree(modules)
+    if (createBlueberryTree(modules)) {
+      setLastBlueberryLoadout(n)
+    }
+  }
+}
+
+export const loadBlueberryLoadout = (n: number) => {
+  if (createBlueberryTree(player.blueberryLoadouts[n] ?? { ambrosiaTutorial: 0 }, false)) {
+    setLastBlueberryLoadout(n)
+  }
+}
+
+const isBlueberryTreeLoaded = (modules: BlueberryOpt) =>
+  ambrosiaUpgradeNames.every((k) =>
+    Math.min(modules[k] ?? 0, ambrosiaUpgrades[k].maxLevel) === ambrosiaUpgrades[k].level
+  )
+
+export const autoLoadBlueberryLoadout = (n: number) => {
+  if (n > getUnlockedBlueberryLoadoutCount()) {
+    return
+  }
+  const modules = player.blueberryLoadouts[n] ?? {}
+  if (isBlueberryTreeLoaded(modules) || (validateBlueberryTree(modules) && createBlueberryTree(modules, false))) {
+    setLastBlueberryLoadout(n)
   }
 }
 
@@ -1539,46 +2583,14 @@ const saveBlueberryTree = async (
   }
 
   player.blueberryLoadouts[input] = getBlueberryTree()
-  createLoadoutDescription(input, player.blueberryLoadouts[input])
-}
-
-export const createLoadoutDescription = (
-  input: number,
-  modules: BlueberryOpt
-) => {
-  let str = ''
-  for (const [key, val] of Object.entries(modules)) {
-    /*
-     * If the entry (saved purchase level) for an upgrade is 0, undefined, or null, we skip it.
-     * If 0 - it existed when the loadout was saved; it's just unpurchased
-     * If undefined - it's new, so it's unpurchased - the user couldn't have saved it to a loadout yet
-     * I don't think anything sets an upgrade to null... but we may as well skip then too.
-     */
-    if (!val) continue
-
-    const k = key as AmbrosiaUpgradeNames
-    const name = ambrosiaUpgrades[k].name()
-    str = `${str}<span style="color:orange">${name}</span> <span style="color:yellow">lv${val}</span> | `
-  }
-
-  if (Object.keys(modules).length === 0) {
-    str = i18next.t('ambrosia.loadouts.none')
-  }
-
-  let loadoutTitle = `${i18next.t('ambrosia.loadouts.loadout')} ${input}`
-  if (input === 0) {
-    loadoutTitle = i18next.t('ambrosia.loadouts.imported')
-  }
-  DOMCacheGetOrSet('singularityAmbrosiaMultiline').innerHTML = ` ${loadoutTitle}
-  ${str}`
+  setLastBlueberryLoadout(input)
 }
 
 export const updateBlueberryLoadoutCount = () => {
-  const maxLoadouts = 16
   const loadoutCount = Object.keys(player.blueberryLoadouts).length
 
-  if (loadoutCount < maxLoadouts) {
-    for (let i = loadoutCount + 1; i <= maxLoadouts; i++) {
+  if (loadoutCount < MAX_BLUEBERRY_LOADOUT_COUNT) {
+    for (let i = loadoutCount + 1; i <= MAX_BLUEBERRY_LOADOUT_COUNT; i++) {
       player.blueberryLoadouts[i] = {}
     }
   }
@@ -1588,35 +2600,44 @@ export const highlightPrerequisites = (k: AmbrosiaUpgradeNames) => {
   const preReq = ambrosiaUpgrades[k].prerequisites
   if (preReq === undefined) return
 
-  for (const key of Object.keys(ambrosiaUpgrades)) {
-    const k2 = key as AmbrosiaUpgradeNames
-    const elm = DOMCacheGetOrSet(k2)
+  for (const key of ambrosiaUpgradeNames) {
+    const elm = DOMCacheGetOrSet(key)
     const img = elm.querySelector('img') as HTMLImageElement
-    if (preReq[k2] !== undefined) {
-      img.classList.add('blueberryPrereq')
-    } else {
-      img.classList.remove('blueberryPrereq')
-    }
+    const requiredLevel = preReq[key]
+    img.classList.toggle('blueberryPrereq', requiredLevel !== undefined)
+    img.classList.toggle(
+      'blueberryPrereqMet',
+      requiredLevel !== undefined && ambrosiaUpgrades[key].level >= requiredLevel
+    )
+  }
+}
+
+export const highlightRedAmbrosiaTargets = (upgradeKey: RedAmbrosiaNames) => {
+  for (const [key, upgrade] of Object.entries(ambrosiaUpgrades)) {
+    const img = DOMCacheGetOrSet(key).querySelector('img') as HTMLImageElement
+    img.classList.toggle('redAmbrosiaTarget', upgrade.redAmbrosiaUpgrade === upgradeKey)
   }
 }
 
 export const resetHighlights = () => {
-  for (const key of Object.keys(ambrosiaUpgrades)) {
-    const k = key as AmbrosiaUpgradeNames
-    const elm = DOMCacheGetOrSet(k)
+  for (const key of ambrosiaUpgradeNames) {
+    const elm = DOMCacheGetOrSet(key)
     const img = elm.querySelector('img') as HTMLImageElement
-    img.classList.remove('blueberryPrereq')
+    img.classList.remove('blueberryPrereq', 'blueberryPrereqMet', 'redAmbrosiaTarget')
   }
 }
 
 export const displayOnlyLoadout = (loadout: BlueberryOpt) => {
   const loadoutKeys = Object.keys(loadout)
 
-  for (const key of Object.keys(ambrosiaUpgrades)) {
-    const k = key as AmbrosiaUpgradeNames
-    const elm = DOMCacheGetOrSet(k)
+  for (const key of ambrosiaUpgradeNames) {
+    const elm = DOMCacheGetOrSet(key)
     const img = elm.querySelector('img') as HTMLImageElement
-    const level = loadout[k] || 0 // Get the level from the loadout, default to 0 if not present
+    const level = loadout[key] || 0 // Get the level from the loadout, default to 0 if not present
+    const isInLoadout = level > 0 && loadoutKeys.includes(key)
+    const enchantmentIcon = elm.querySelector('.purpleAmbrosiaEnchantmentIcon')
+
+    enchantmentIcon?.classList.toggle('purpleAmbrosiaEnchantmentIconLoadoutHidden', !isInLoadout)
 
     let levelOverlay = elm.querySelector('.level-overlay') as HTMLDivElement
     if (!levelOverlay) {
@@ -1626,10 +2647,10 @@ export const displayOnlyLoadout = (loadout: BlueberryOpt) => {
       elm.appendChild(levelOverlay) // Append to the element
     }
 
-    if (loadoutKeys.includes(k) && level > 0) {
+    if (isInLoadout) {
       img.classList.add('dimmed') // Apply the dimmed class
       levelOverlay.textContent = String(level) // Set the level text
-      if (level === ambrosiaUpgrades[k].maxLevel) {
+      if (level === ambrosiaUpgrades[key].maxLevel) {
         levelOverlay.classList.add('maxBlueberryLevel')
       }
     } else {
@@ -1640,12 +2661,13 @@ export const displayOnlyLoadout = (loadout: BlueberryOpt) => {
 }
 
 export const resetLoadoutOnlyDisplay = () => {
-  for (const key of Object.keys(ambrosiaUpgrades)) {
-    const k = key as AmbrosiaUpgradeNames
-    const elm = DOMCacheGetOrSet(k)
+  for (const key of ambrosiaUpgradeNames) {
+    const elm = DOMCacheGetOrSet(key)
     const img = elm.querySelector('img') as HTMLImageElement
     img.classList.remove('dimmed') // Remove the dimmed class
     img.classList.remove('superDimmed') // Remove the superDimmed class
+    elm.querySelector('.purpleAmbrosiaEnchantmentIcon')
+      ?.classList.remove('purpleAmbrosiaEnchantmentIconLoadoutHidden')
 
     // Remove the level overlay if it exists
     const levelOverlay = elm.querySelector('.level-overlay')
@@ -1660,3 +2682,12 @@ export const displayLevelsBlueberry = () => {
   const curr = getBlueberryTree()
   displayOnlyLoadout(curr)
 }
+
+export const maxPurpleEnchantmentAP = 5 * ambrosiaUpgradeNames.length
+
+export const calculatePurpleEnchantmentAP = () =>
+  ambrosiaUpgradeNames.reduce((sum, key) => {
+    const enchantment = ambrosiaUpgrades[key].purpleAmbrosiaEnchantment
+    const invested = player.ambrosiaUpgrades[key].purpleAmbrosiaInvested ?? 0
+    return sum + (invested >= enchantment.costFormula(enchantment.maxLevel) ? 5 : 0)
+  }, 0)

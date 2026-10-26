@@ -4,6 +4,7 @@ import { sleep } from './util/util'
 
 const consumable = ws.link('wss://synergism.cc/consumables/connect')
 let tips = 1000
+let happyHourBells = 2
 const lotus = {
   inventory: 0,
   used: 0,
@@ -12,14 +13,23 @@ const lotus = {
   timer: 0
 }
 
-export const consumeHandlers = [
+export const createConsumeHandlers = (purchaseConsumable: (internalName: string) => boolean) => [
   consumable.addEventListener('connection', ({ client }) => {
+    const pendingTimeSkips = new Map<string, string>()
+
     console.log('connected', client.url)
 
     client.send(messages.join())
-    sleep(1000).then(() => client.send(messages.infoAll([], [], tips)))
+    sleep(1000).then(() =>
+      client.send(messages.infoAll([], [{ type: 'HAPPY_HOUR_BELL', amount: happyHourBells, used: 0 }], tips))
+    )
 
     client.addEventListener('message', ({ data: body }) => {
+      if (body === 'ping') {
+        client.send('pong')
+        return
+      }
+
       const { success, data } = messageSchema.safeParse(body)
 
       if (!success) {
@@ -30,14 +40,24 @@ export const consumeHandlers = [
 
       switch (data.type) {
         case 'consume': {
+          if (data.consumable === 'HAPPY_HOUR_BELL' && happyHourBells > 0) {
+            happyHourBells--
+            client.send(messages.happyHourBells(happyHourBells))
+          } else if (!purchaseConsumable(data.consumable)) {
+            client.send(messages.warn('Consumable not found or you cannot afford it.'))
+            return
+          }
+
           if (data.consumable.includes('TIMESKIP')) {
+            const id = crypto.randomUUID()
             const length = data.consumable.includes('SMALL')
               ? 360
               : data.consumable.includes('LARGE')
               ? 720
               : 1440 // jumbo
 
-            sleep(2500).then(() => client.send(messages.timeSkip(data.consumable, length)))
+            pendingTimeSkips.set(id, data.consumable)
+            sleep(2500).then(() => client.send(messages.timeSkip(data.consumable, id, length)))
           } else if (data.consumable.includes('LOTUS')) {
             const amount = data.consumable.includes('SINGLE')
               ? 1
@@ -55,6 +75,16 @@ export const consumeHandlers = [
             })
           }
 
+          return
+        }
+        case 'confirm': {
+          if (pendingTimeSkips.get(data.id) !== data.consumableId) {
+            client.send(messages.error('No consumable found with that id'))
+            return
+          }
+
+          pendingTimeSkips.delete(data.id)
+          client.send(messages.thanks())
           return
         }
         case 'applied-tip': {
@@ -81,7 +111,7 @@ export const consumeHandlers = [
             clearTimeout(lotus.timer)
           }
 
-          lotus.timer = +setTimeout(() => {
+          lotus.timer = setTimeout(() => {
             lotus.active -= data.amount
             client.send(messages.lotusEnded())
           }, lotus.activeUntil - Date.now())

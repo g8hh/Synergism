@@ -1,6 +1,6 @@
 import { type FUNDING_SOURCE, loadScript } from '@paypal/paypal-js'
 import i18next from 'i18next'
-import { isSynergismCC, platform, prod } from '../Config'
+import { isSynergismCC } from '../Config'
 import { Alert, Notification } from '../UpdateHTML'
 import { assert, memoize } from '../Utility'
 import { products, subscriptionProducts } from './CartTab'
@@ -13,6 +13,7 @@ import {
   getQuantity,
   removeFromCart
 } from './CartUtil'
+import { requirePurchaseAuthentication } from './PurchaseAuth'
 import { initializePayPal_Subscription } from './SubscriptionsSubtab'
 import { updatePseudoCoins } from './UpgradesSubtab'
 
@@ -20,7 +21,7 @@ const tab = document.querySelector<HTMLElement>('#pseudoCoins > #cartContainer')
 const form = tab.querySelector('div.cartList')!
 
 const checkoutStripe = form.querySelector<HTMLElement>('button#checkout')
-const checkoutNowPayments = form.querySelector<HTMLElement>('button#checkout-nowpayments')
+const checkoutXsolla = form.querySelector<HTMLElement>('button#checkout-xsolla')
 const tosSection = form.querySelector('section#tosSection')!
 const radioTOSAgree = form.querySelector<HTMLInputElement>('section > input[type="radio"]')!
 const totalCost = form.querySelector('p#totalCost')
@@ -49,7 +50,7 @@ const initializeCheckoutTab = memoize(() => {
   async function submitCheckout (e: MouseEvent) {
     if (!radioTOSAgree.checked) {
       e.preventDefault()
-      Notification('You must accept the terms of service first!')
+      Notification(i18next.t('tabs.pseudocoins.agreeTOS'))
       return
     }
 
@@ -62,21 +63,24 @@ const initializeCheckoutTab = memoize(() => {
     fd.set('tosAgree', radioTOSAgree.checked ? 'on' : 'off')
 
     checkoutStripe?.setAttribute('disabled', '')
-    checkoutNowPayments?.setAttribute('disabled', '')
+    checkoutXsolla?.setAttribute('disabled', '')
 
     function reset () {
       checkoutStripe?.removeAttribute('disabled')
-      checkoutNowPayments?.removeAttribute('disabled')
+      checkoutXsolla?.removeAttribute('disabled')
+    }
+
+    if (!await requirePurchaseAuthentication()) {
+      reset()
+      return
     }
 
     let url: string
 
     if (e.target === checkoutStripe) {
-      url = !prod
-        ? 'https://synergism.cc/stripe/test/create-checkout-session'
-        : 'https://synergism.cc/stripe/create-checkout-session'
-    } else if (e.target === checkoutNowPayments) {
-      url = 'https://synergism.cc/now-payments/checkout'
+      url = 'https://synergism.cc/stripe/create-checkout-session'
+    } else if (e.target === checkoutXsolla) {
+      url = 'https://synergism.cc/xsolla/create-token'
     } else {
       Notification('You clicked on something that I don\'t know.')
       reset()
@@ -107,6 +111,10 @@ const initializeCheckoutTab = memoize(() => {
   }
 
   async function submitCheckoutSteam (_e: MouseEvent) {
+    if (PLATFORM !== 'steam') {
+      return
+    }
+
     const { submitSteamMicroTxn } = await import('../steam/microtxn')
 
     const fd = new FormData()
@@ -133,15 +141,15 @@ const initializeCheckoutTab = memoize(() => {
     tosSection.classList.remove('rainbow-border-highlight')
   })
 
-  if (platform !== 'steam') {
+  if (PLATFORM !== 'steam') {
     checkoutStripe?.addEventListener('click', submitCheckout)
-    checkoutNowPayments?.addEventListener('click', submitCheckout)
+    checkoutXsolla?.addEventListener('click', submitCheckout)
 
     initializePayPal_OneTime('#checkout-paypal')
   } else {
     const checkoutButtonsContainer = tab.querySelector('#checkout-buttons')!
 
-    // Hide Stripe/PayPal/NowPayments checkout buttons
+    // Hide Stripe/PayPal/Xsolla checkout buttons
     checkoutButtonsContainer.querySelectorAll('*').forEach((el) => el.classList.add('none'))
 
     // Add Steam checkout button
@@ -237,7 +245,7 @@ const updateTotalPriceInCart = () => {
  * https://stackoverflow.com/a/69024269
  */
 async function initializePayPal_OneTime (selector: string | HTMLElement) {
-  assert(platform !== 'steam', 'Cannot use PayPal on steam')
+  assert(PLATFORM !== 'steam', 'Cannot use PayPal on steam')
 
   const paypal = await loadScript({
     clientId: 'AS1HYTVcH3Kqt7IVgx7DkjgG8lPMZ5kyPWamSBNEowJ-AJPpANNTJKkB_mF0C4NmQxFuWQ9azGbqH2Gr',
@@ -252,6 +260,17 @@ async function initializePayPal_OneTime (selector: string | HTMLElement) {
       layout: 'vertical',
       color: 'gold',
       label: 'paypal'
+    },
+
+    async onClick (_data, actions) {
+      if (!radioTOSAgree.checked) {
+        tosSection.classList.add('rainbow-border-highlight')
+        Notification(i18next.t('tabs.pseudocoins.agreeTOS'))
+        return actions.reject()
+      }
+
+      const authenticated = await requirePurchaseAuthentication()
+      return authenticated ? actions.resolve() : actions.reject()
     },
 
     async createOrder () {
@@ -373,7 +392,6 @@ async function exponentialPseudoCoinBalanceCheck () {
   const delays = [15_000, 30_000, 60_000, 120_000, 180_000, 240_000, 300_000]
   const lastCoinAmount = await updatePseudoCoins()
 
-  /* eslint-disable no-await-in-loop */
   for (const delay of delays) {
     await sleep(delay)
 
@@ -381,5 +399,4 @@ async function exponentialPseudoCoinBalanceCheck () {
       break
     }
   }
-  /* eslint-enable no-await-in-loop */
 }

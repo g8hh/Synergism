@@ -1,12 +1,9 @@
-import { additiveAntELOMultStats, antELOStats } from '../../../../../../../Statistics'
+import { additiveAntELOMultStats, antELOStats, calculateTotalStat } from '../../../../../../../Statistics'
 
-export const calculateBaseAntELO = () => {
-  return antELOStats.reduce((a, b) => a + b.stat(), 0)
-}
+export const calculateBaseAntELO = () => calculateTotalStat(antELOStats)
+export const minimumELOMult = 0.01
 
-export const calculateELOMult = () => {
-  return additiveAntELOMultStats.reduce((a, b) => a + b.stat(), 0)
-}
+export const calculateELOMult = () => Math.max(minimumELOMult, calculateTotalStat(additiveAntELOMultStats))
 
 export const calculateEffectiveAntELO = () => {
   const baseELO = calculateBaseAntELO()

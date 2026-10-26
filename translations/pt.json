@@ -6,7 +6,7 @@
         "gameSaved": "Game saved successfully!"
     },
     "save": {
-        "loadFailed": "Unable to load save.",
+        "loadFailed": "Unable to load save. {{reason}}",
         "saveToClipboard": "Are you sure you want to enable copy save to clipboard?"
     },
     "achievements": {
@@ -1252,7 +1252,6 @@
         "consume": "CONSUME",
         "buyYerPotions": "Buy Yer' Potions!",
         "header": "Welcome to the Quark Shop. You can't believe what's in stock!",
-        "youHaveQuarks": "You have {{x}} Quarks!",
         "cannotRefund": "This item CANNOT be refunded! Take caution.",
         "resetPermShop": "Reset Perm Shop [Cost: 15 Quarks]",
         "shopConfirmationOn": "Shop Confirmations: ON",
@@ -1342,7 +1341,6 @@
         "perks": {
             "levelInfo": "Level {{level}} - (Singularity {{singularity}})",
             "improvedIn": "An existing Perk will be improved in Singularity {{sing}}",
-            "unlockedIn": "You will unlock a whole new Perk in Singularity {{sing}}",
             "header": "The highest Singularity you've reached is the <span style=\"color: gold\">{{ord}} Singularity.</span><br/>Here is the list of perks you have acquired to compensate the penalties",
             "description":"(Hover for more details. Perks in <span style=\"color: gold\">gold text</span> were added or improved in this Singularity)",
 "welcometoSingularity": {
@@ -1592,8 +1590,8 @@
             "cookies5": {
                 "name": "Cookie Recipes V (WIP)",
                 "description": "The worst atrocity a man can commit is witnessing, without anguish, the suffering of others.",
-                "effectHave": "You have paid witness to the suffering of the masses.",
-                "effectHaveNot": "You have not paid witness to the suffering of the masses."
+                "effectHave": "You have borne witness to the suffering of the masses.",
+                "effectHaveNot": "You have not borne witness to the suffering of the masses."
             },
             "ascensions": {
                 "name": "Improved Ascension Gain",
@@ -2347,12 +2345,6 @@
         "spiritBonus": "However, it also multiplies Rune Spirit Effects by <<wheat|{{multiplier}}>>.",
         "corruptionBank": "You have <<var(--crimson-text-color)|{{number}}>> Wow! Cubes in the Ascension bank. Gain more by finishing Challenges! Ascend to redeem them.",
         "corruptionScore": "Your Ascension Score is <<goldenrod|{{ascScore}}>></span> (base) * <<var(--crimson-text-color)|{{corrMult}}>> (Corruption mult) * <<var(--orchid-text-color)|{{bonusMult}}>> (Bonus mult) = <<var(--darkorchid-text-color)|{{totalScore}}>>",
-        "ascensionCount": "If you Ascend now, <<darkorange|{{ascCount}}>> will be added to your ascension count.",
-        "corruptionCubes": "If you Ascend now, you will gain <<yellow|{{cubeAmount}}>> Wow! Cubes.",
-        "corruptionTesseracts": "If you Ascend now, you will gain <<orange|{{tesseractAmount}}>> Wow! Tesseracts. [<<var(--orange-text-color)|Get more if Score >100,000>>]",
-        "corruptionHypercubes": "If you Ascend now, you will gain <<var(--crimson-text-color)|{{hypercubeAmount}}>> Wow! Hypercubes. [<<var(--red-text-color)|Req Score: >1,000,000,000>>]",
-        "corruptionPlatonics": "If you Ascend now, you will gain <<orchid|{{platonicAmount}}>> PLATONIC CUBES. [<<var(--orchid-text-color)|Req Score: >2,666,000,000,000>>]",
-        "corruptionHepteracts": "If you Ascend now, you will gain <<mediumpurple|{{hepteractAmount}}>> HEPTERACTS. [<<mediumpurple|Req Score: >1.666e17>>]",
         "autoAscend": {
             "c10Completions": "Ascend when you've completed Sadistic Challenge I a total of <<var(--violet-text-color)|{{input}}>> times, Currently <<gold|{{completions}}>>",
             "realTime": "Ascend when the timer is at least <<var(--violet-text-color)|{{input}}>> seconds (Real-time), Currently <<gold|{{time}}>>",
@@ -2383,15 +2375,14 @@
             "finishTranscension": "If you are unable to finish a Transcension challenge, press the hotkey listed above OR click on the red Challenge \"C\" button on the reset buttons on top.",
             "leaveReincarnation": "To leave a reincarnation challenge, press the grey Challenge \"C\" instead!"
         },
-        "research": "Welcome to the future! Obtainium is gained through <<var(--green-text-color);|Reincarnations>>. I'd recommend studying the <<limegreen;|green-bordered>> researches first. The <<var(--crimson-text-color);|red-bordered>> researches are never reset whereas the <<white;|white-bordered>> researches will reset upon the next reset tier!",
-        "shop": "Hover over each portion of the shop to see what each upgrade does!"
+        "research": "Welcome to the future! Obtainium is gained through <<var(--green-text-color);|Reincarnations>>. I'd recommend studying the <<limegreen;|green-bordered>> researches first. The <<var(--crimson-text-color);|red-bordered>> researches are never reset whereas the <<white;|white-bordered>> researches will reset upon the next reset tier!"
     },
     "buildings": {
         "taxWarning": "Your tax also caps your Coin gain at {{gain}}/s.",
         "acceleratorPower": "Acceleration Power: {{power}}% || Acceleration Multiplier: {{mult}}x",
         "multiplierPower": "Multiplier Power: {{power}}x || Multiplier: {{mult}}x",
         "acceleratorBoost": "Reset Diamonds and Prestige Upgrades, but add {{amount}}% Acceleration Power and 5 free Accelerators.",
-        "coinsPerSecond": "Coins/Sec: {{coins}} [{{percent}}%]",
+        "coinsPerSecond": "Coins/Sec: {{coins}}",
         "costCoins": "Cost: {{coins}} coins.",
         "costDiamonds": "Cost: {{diamonds}} Diamonds.",
         "names": {
@@ -3098,7 +3089,7 @@
         "reloadDeletePrompt": "The next confirmation is to delete the save data\nIf you do not want to delete it, cancel it",
         "resetPrompt": "Answer the question to confirm you'd like to reset: what is {{a}}+{{b}}? (Hint: {{sum}})",
         "wrongAnswer": "Answer was wrong, not resetting!",
-        "unableImport": "Unable to import this file!",
+        "unableImport": "Unable to import this file! {{reason}}",
         "loadTestInLive": "You are attempting to load a testing file in a non-testing version!",
         "promocodePrompt": "Got a code? Great! Enter it in (CaSe SeNsItIvE). \n [Note to viewer: this is for events and certain always-active codes. \n May I suggest you type in \"synergism2021\" or \"Khafra\" perchance?]",
         "comeBackSoon": "Alright, come back soon!",

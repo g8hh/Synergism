@@ -6,7 +6,7 @@
         "gameSaved": ""
     },
     "save": {
-        "loadFailed": "Não foi possível carregar o arquivo.",
+        "loadFailed": "Não foi possível carregar o arquivo. {{reason}}",
         "saveToClipboard": ""
     },
     "achievements": {
@@ -1252,7 +1252,6 @@
         "consume": "",
         "buyYerPotions": "",
         "header": "",
-        "youHaveQuarks": "",
         "cannotRefund": "",
         "resetPermShop": "",
         "shopConfirmationOn": "",
@@ -1342,7 +1341,6 @@
         "perks": {
             "levelInfo": "",
             "improvedIn": "",
-            "unlockedIn": "",
             "header": "",
             "description":"",
             "welcometoSingularity": {
@@ -2343,12 +2341,6 @@
         "spiritBonus": "",
         "corruptionBank": "",
         "corruptionScore": "",
-        "ascensionCount": "",
-        "corruptionCubes": "",
-        "corruptionTesseracts": "",
-        "corruptionHypercubes": "",
-        "corruptionPlatonics": "",
-        "corruptionHepteracts": "",
         "autoAscend": {
             "c10Completions": "",
             "realTime": "",

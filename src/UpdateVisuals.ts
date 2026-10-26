@@ -1,9 +1,14 @@
 import Decimal from 'break_infinity.js'
 import i18next from 'i18next'
 import { achievementLevel, achievementPoints, getAchievementReward, toNextAchievementLevelEXP } from './Achievements'
+import { updateAutoAscendStatus } from './AutoAscensionUI'
+import { calculatePurpleEnchantmentAP, getAmbrosiaUpgradeEffects, maxPurpleEnchantmentAP } from './BlueberryUpgrades'
+import { getAccelMultScalingThreshold, getBuildingCost, getBuildingScalingThreshold } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
-  CalcCorruptionStuff,
+  buildingConstructionSoftcap,
+  calculateAcceleratorsPerBoost,
+  calculateAccelMultConstructionEffect,
   calculateActualAntSpeedMult,
   calculateAmbrosiaAdditiveLuckMult,
   calculateAmbrosiaCubeMult,
@@ -11,31 +16,52 @@ import {
   calculateAmbrosiaLuck,
   calculateAmbrosiaLuckRaw,
   calculateAmbrosiaQuarkMult,
-  calculateAscensionCount,
+  calculateAmbrosiaRewardLuck,
   calculateBlueberryInventory,
+  calculateBuildingConstruction,
   calculateCookieUpgrade29Luck,
+  calculateCubeBank,
   calculateCubeQuarkMultiplier,
-  calculateNumberOfThresholds,
+  calculateEfficientBlueberryPurpleEfficiency,
+  calculateEncabulatorSpeed,
   calculateOcteractMultiplier,
+  calculatePurpleHoneyConversionFactor,
+  calculatePurpleHoneyExtractionMultiplier,
+  calculatePurpleHoneyLuck,
+  calculatePurpleHoneyPerExtraction,
+  calculatePurpleHoneyRewardLuck,
+  calculatePurpleOverflowResolution,
+  calculatePurpleReactantCapacity,
+  calculatePurpleReactantConversion,
+  calculatePurpleReactantRecipe,
+  calculatePurpleReactantRouting,
   calculateRedAmbrosiaCubes,
   calculateRedAmbrosiaGenerationSpeed,
   calculateRedAmbrosiaLuck,
   calculateRedAmbrosiaObtainium,
   calculateRedAmbrosiaOffering,
+  calculateRedAmbrosiaReactantCapacity,
+  calculateRedAmbrosiaRewardLuck,
   calculateRequiredBlueberryTime,
   calculateRequiredRedAmbrosiaTime,
   calculateResearchAutomaticObtainium,
   calculateSalvageRuneEXPMultiplier,
-  calculateSummationNonLinear,
-  calculateToNextThreshold,
   calculateTotalOcteractCubeBonus,
   calculateTotalOcteractObtainiumBonus,
   calculateTotalOcteractOfferingBonus,
   calculateTotalOcteractQuarkBonus,
-  calculateTotalSalvage
+  calculateTotalSalvage,
+  freeAccelMultHardcap
 } from './Calculate'
-import { CalcECC, challengeDisplay, timeSinceLastStateChange } from './Challenges'
-import { testing, version } from './Config'
+import { challengeDisplay, timeSinceLastStateChange } from './Challenges'
+import { version } from './Config'
+import {
+  activeCorruptionLevel,
+  type CorruptionCubeType,
+  corruptionEffect,
+  corruptionEffectsUpdate,
+  corruptionLevelScoreUpdate
+} from './Corruptions'
 import {
   calculateAcceleratorCubeBlessing,
   calculateAntELOCubeBlessing,
@@ -46,8 +72,7 @@ import {
   calculateObtainiumCubeBlessing,
   calculateOfferingCubeBlessing,
   calculateRuneEffectivenessCubeBlessing,
-  calculateSalvageCubeBlessing,
-  type IMultiBuy
+  calculateSalvageCubeBlessing
 } from './Cubes'
 import { BuffType, consumableEventBuff, eventBuffType, getEvent, getEventBuff } from './Event'
 import { calculateBaseAntsToBeGenerated } from './Features/Ants/AntProducers/lib/calculate-production'
@@ -58,6 +83,7 @@ import { updateLeaderboardUI } from './Features/Ants/HTML/updates/leaderboard'
 import { showLockedSacrifice, showSacrifice } from './Features/Ants/HTML/updates/sacrifice'
 import { autoAntSacrificeModeDescHTML } from './Features/Ants/HTML/updates/toggles/sacrifice-mode'
 import { AntProducers } from './Features/Ants/structs/structs'
+import { updateBlueberryLoadoutIcons } from './HeaderModules'
 import { getFinalHepteractCap, type HepteractKeys, hepteractKeys, hepteracts } from './Hepteracts'
 import {
   calculateAcceleratorHypercubeBlessing,
@@ -71,11 +97,19 @@ import {
   calculateRuneEffectivenessHypercubeBlessing,
   calculateSalvageHypercubeBlessing
 } from './Hypercubes'
+import { promocodesInfoText } from './ImportExport'
 import { allDurableConsumables, type PseudoCoinConsumableNames } from './Login'
-import { getOcteractUpgradeCostTNL, type OcteractDataKeys, octeractUpgrades } from './Octeracts'
 import {
-  calculateAscensionScorePlatonicBlessing,
+  calculateOcteractUpgradeAP,
+  getOcteractUpgradeCostTNL,
+  maxOcteractUpgradeAP,
+  octeractUpgradeNames,
+  octeractUpgrades,
+  updateOcteractUpgradeVisibility
+} from './Octeracts'
+import {
   calculateCubeMultiplierPlatonicBlessing,
+  calculateCubePlatonicBlessing,
   calculateGlobalSpeedPlatonicBlessing,
   calculateHypercubeBlessingMultiplierPlatonicBlessing,
   calculateHypercubeMultiplierPlatonicBlessing,
@@ -83,22 +117,39 @@ import {
   calculateTaxPlatonicBlessing,
   calculateTesseractMultiplierPlatonicBlessing
 } from './PlatonicCubes'
-import { PCoinUpgrades } from './PseudoCoinUpgrades'
+import {
+  calculatePurpleReactorAP,
+  getPurpleReactorUpgradeEffects,
+  maxPurpleReactorAP,
+  purpleReactorUpgrades
+} from './Purple'
+import {
+  calculatePurpleAmbrosiaUpgradeAP,
+  getPurpleAmbrosiaUpgradeEffects,
+  maxPurpleAmbrosiaUpgradeAP
+} from './PurpleAmbrosiaUpgrades'
+import { PURPLE_REACTOR_TICK_INTERVAL } from './PurpleReactor'
+import { updatePurpleUpgradeTab } from './PurpleUpgradeTab'
 import { getQuarkBonus, quarkHandler } from './Quark'
+import { calculateRedAmbrosiaUpgradeAP, maxRedAmbrosiaUpgradeAP } from './RedAmbrosiaUpgrades'
 import { runeBlessingKeys, updateRuneBlessingHTML } from './RuneBlessings'
 import { type RuneKeys, updateRuneHTML } from './Runes'
 import { runeSpiritKeys, updateRuneSpiritHTML } from './RuneSpirits'
-import { getShopCosts, getShopUpgradeEffects, type ShopUpgradeNames, shopUpgrades, shopUpgradeTypes } from './Shop'
+import { getShopCosts, getShopUpgradeEffects, shopUpgradeNames, shopUpgrades, shopUpgradeTypes } from './Shop'
+import { updateShopTab } from './ShopTab'
 import {
+  calculateGQUpgradeAP,
   computeGQUpgradeFreeLevelSoftcap,
-  computeGQUpgradeMaxLevel,
   getGoldenQuarkCost,
   getGQUpgradeCostTNL,
   getGQUpgradeEffect,
+  goldenQuarkUpgradeNames,
   goldenQuarkUpgrades,
-  type SingularityDataKeys
+  maxGoldenQuarkUpgradeAP,
+  updateGoldenQuarkUpgradeVisibility
 } from './singularity'
-import { loadStatisticsUpdate } from './Statistics'
+import { getSingularityChallengeEffect } from './SingularityChallenges'
+import { loadStatisticsUpdate, updateDisplayC15Rewards } from './Statistics'
 import {
   calculateBuildingPower,
   calculateBuildingPowerCoinMultiplier,
@@ -110,8 +161,18 @@ import {
   formatTimeShort,
   player
 } from './Synergism'
+import { updateSynthesis } from './Synthesis'
 import { getActiveSubTab, Tabs } from './Tabs'
-import { getTalismanLevelCap, type TalismanKeys, talismans, updateAllTalismanHTML } from './Talismans'
+import { getBuildingCostElement } from './tabs/buildings'
+import {
+  getTalismanLevelCap,
+  talismanCraftItems,
+  talismanKeys,
+  talismans,
+  updateAllTalismanHTML,
+  updateMobileTalismanInventoryPurchaseInfo,
+  updateTalismanInventory
+} from './Talismans'
 import {
   calculateAcceleratorTesseractBlessing,
   calculateAntELOTesseractBlessing,
@@ -124,11 +185,21 @@ import {
   calculateRuneEffectivenessTesseractBlessing,
   calculateSalvageTesseractBlessing
 } from './Tesseracts'
-import { AutoAscensionModes, AutoAscensionResetModes, AutoResetModes } from './Toggles'
+import { AutoAscensionModes, AutoResetModes } from './Toggles'
 import type { OneToFive, ZeroToFour } from './types/Synergism'
 import { updateChallengeDisplay } from './UpdateHTML'
-import { sumContents, timeRemainingHours } from './Utility'
+import { updateMobileUpgradeDescription } from './Upgrades'
+import { isMobile, sumContents, timeRemainingHours } from './Utility'
 import { Globals as G } from './Variables'
+
+const highScoringStatueCubes: CorruptionCubeType[] = [
+  'cubes',
+  'tesseracts',
+  'hypercubes',
+  'platonics',
+  'hepteracts',
+  'octeracts'
+]
 
 const coinUpper = [
   'produceFirst',
@@ -144,6 +215,180 @@ const coinNames = [
   'coinMints',
   'alchemies'
 ]
+const updateProgressBarAccessibility = (elementId: string, progress: number, valueText: string) => {
+  const progressBar = DOMCacheGetOrSet(elementId)
+  progressBar.setAttribute('aria-valuenow', String(Math.round(progress * 100) / 100))
+  progressBar.setAttribute('aria-valuetext', valueText)
+}
+
+const updateInnerHTMLIfChanged = (elementId: string, html: string) => {
+  const element = DOMCacheGetOrSet(elementId)
+  if (element.innerHTML !== html) {
+    element.innerHTML = html
+  }
+}
+
+const updateTextContentIfChanged = (elementId: string, text: string) => {
+  const element = DOMCacheGetOrSet(elementId)
+  if (element.textContent !== text) {
+    element.textContent = text
+  }
+}
+
+const updateAmbrosiaLedgerBalance = (elementId: string, current: number, total: number, blueberries = false) => {
+  const element = DOMCacheGetOrSet(elementId)
+  const amounts = {
+    current: format(current, 0, true),
+    total: format(total, 0, true)
+  }
+  updateInnerHTMLIfChanged(elementId, i18next.t('ambrosia.ledger.balance', amounts))
+  const description = i18next.t(
+    blueberries ? 'ambrosia.ledger.blueberryBalanceDescription' : 'ambrosia.ledger.balanceDescription',
+    amounts
+  )
+  element.title = description
+  element.setAttribute('aria-label', description)
+  element.classList.toggle('ambrosiaLedgerEmpty', blueberries && current === 0)
+}
+
+const updateAmbrosiaUpgradeCurrency = (elementId: string, amount: number, descriptionKey: string) => {
+  const formatted = format(amount, 0, true)
+  const element = DOMCacheGetOrSet(elementId)
+  DOMCacheGetOrSet(`${elementId}Amount`).textContent = formatted
+  const description = i18next.t(descriptionKey, { amount: formatted })
+  element.title = description
+  element.setAttribute('aria-label', description)
+}
+
+const updatePurpleReactantSlider = (sliderId: string, outputId: string, percentage: number) => {
+  const normalizedPercentage = Math.min(100, Math.round(percentage))
+  const slider = DOMCacheGetOrSet(sliderId) as HTMLInputElement
+  const percentageText = i18next.t('purpleReactor.reactantRoutingPercentage', {
+    percentage: format(normalizedPercentage, 0, true)
+  })
+
+  slider.value = String(normalizedPercentage)
+  slider.style.setProperty('--routing-percentage', `${normalizedPercentage}%`)
+  slider.setAttribute(
+    'aria-valuetext',
+    i18next.t('purpleReactor.reactantRoutingPercentageAria', {
+      percentage: format(normalizedPercentage, 0, true)
+    })
+  )
+  DOMCacheGetOrSet(outputId).textContent = percentageText
+}
+
+const normalizePurpleReactantNetRate = (netRate: number, capacity: number) => {
+  const roundingTolerance = 16 * Number.EPSILON * capacity
+  return Math.abs(netRate) <= roundingTolerance ? 0 : netRate
+}
+
+const isPurpleReactantAtCapacity = (barPoints: number, capacity: number) => {
+  const roundingTolerance = 16 * Number.EPSILON * capacity
+  return capacity > 0 && barPoints >= capacity - roundingTolerance
+}
+
+const calculatePurpleReactorDisplay = (
+  ambrosiaProductionPerSecond: number,
+  redAmbrosiaProductionPerSecond: number
+) => {
+  const ambrosiaCapacity = calculatePurpleReactantCapacity()
+  const redAmbrosiaCapacity = calculateRedAmbrosiaReactantCapacity()
+  const storedAmbrosiaBarPoints = player.purpleReactor.storedAmbrosiaBarPoints
+  const storedRedAmbrosiaBarPoints = player.purpleReactor.storedRedAmbrosiaBarPoints
+
+  // Preview the same tick as the simulation: route both inputs, run the main reaction,
+  // then react held excess against the remaining stock. A balance is an amount, so
+  // convert the tick's spending to a rate only after the whole tick is resolved.
+  const ambrosiaRouting = calculatePurpleReactantRouting(
+    ambrosiaProductionPerSecond,
+    player.purpleReactor.ambrosiaBarPointPercentage,
+    storedAmbrosiaBarPoints,
+    ambrosiaCapacity,
+    PURPLE_REACTOR_TICK_INTERVAL
+  )
+  const redAmbrosiaRouting = calculatePurpleReactantRouting(
+    redAmbrosiaProductionPerSecond,
+    player.purpleReactor.redAmbrosiaBarPointPercentage,
+    storedRedAmbrosiaBarPoints,
+    redAmbrosiaCapacity,
+    PURPLE_REACTOR_TICK_INTERVAL
+  )
+  const reaction = calculatePurpleReactantConversion(
+    ambrosiaRouting.storedBarPoints,
+    redAmbrosiaRouting.storedBarPoints,
+    ambrosiaCapacity * calculateEncabulatorSpeed() / 100 / 3600 * PURPLE_REACTOR_TICK_INTERVAL
+  )
+  const overflow = calculatePurpleOverflowResolution(
+    ambrosiaRouting.excessBarPoints,
+    redAmbrosiaRouting.excessBarPoints,
+    Math.max(0, ambrosiaRouting.storedBarPoints - reaction.ambrosiaBarPointsSpent),
+    Math.max(0, redAmbrosiaRouting.storedBarPoints - reaction.redAmbrosiaBarPointsSpent)
+  )
+  const ambrosiaSpent = reaction.ambrosiaBarPointsSpent + overflow.storedAmbrosiaBarPointsSpent
+  const redAmbrosiaSpent = reaction.redAmbrosiaBarPointsSpent + overflow.storedRedAmbrosiaBarPointsSpent
+
+  return {
+    ambrosia: {
+      reserveRate: ambrosiaRouting.reservedBarPoints / PURPLE_REACTOR_TICK_INTERVAL,
+      regularRate: (ambrosiaRouting.regularBarPoints + overflow.ambrosiaRefundBarPoints)
+        / PURPLE_REACTOR_TICK_INTERVAL,
+      overflowRate: overflow.ambrosiaOverflowBarPoints / PURPLE_REACTOR_TICK_INTERVAL,
+      spentRate: ambrosiaSpent / PURPLE_REACTOR_TICK_INTERVAL,
+      atCapacity: storedAmbrosiaBarPoints > 0
+        && isPurpleReactantAtCapacity(ambrosiaRouting.storedBarPoints, ambrosiaCapacity)
+        && normalizePurpleReactantNetRate(
+            ambrosiaRouting.storedBarPoints - ambrosiaSpent - storedAmbrosiaBarPoints,
+            ambrosiaCapacity
+          ) >= 0
+    },
+    redAmbrosia: {
+      reserveRate: redAmbrosiaRouting.reservedBarPoints / PURPLE_REACTOR_TICK_INTERVAL,
+      regularRate: (redAmbrosiaRouting.regularBarPoints + overflow.redAmbrosiaRefundBarPoints)
+        / PURPLE_REACTOR_TICK_INTERVAL,
+      overflowRate: overflow.redAmbrosiaOverflowBarPoints / PURPLE_REACTOR_TICK_INTERVAL,
+      spentRate: redAmbrosiaSpent / PURPLE_REACTOR_TICK_INTERVAL,
+      atCapacity: storedRedAmbrosiaBarPoints > 0
+        && isPurpleReactantAtCapacity(redAmbrosiaRouting.storedBarPoints, redAmbrosiaCapacity)
+        && normalizePurpleReactantNetRate(
+            redAmbrosiaRouting.storedBarPoints - redAmbrosiaSpent - storedRedAmbrosiaBarPoints,
+            redAmbrosiaCapacity
+          ) >= 0
+    },
+    purpleBarPointsPerSecond: reaction.purpleBarPointsGained / PURPLE_REACTOR_TICK_INTERVAL,
+    overflowPurpleBarPointsPerSecond: overflow.purpleBarPointsGained / PURPLE_REACTOR_TICK_INTERVAL
+  }
+}
+
+const formatPurpleReactantNetRate = (netRate: number) => {
+  if (netRate > 0) {
+    return i18next.t('purpleReactor.reactantNetRatePositive', { amount: format(netRate, 2, true) })
+  }
+
+  if (netRate < 0) {
+    return i18next.t('purpleReactor.reactantNetRateNegative', { amount: format(-netRate, 2, true) })
+  }
+
+  return i18next.t('purpleReactor.reactantNetRateZero')
+}
+
+export const animatePurpleHoneyGain = (amount: number) => {
+  if (G.currentTab !== Tabs.Singularity || getActiveSubTab() !== 5) {
+    return
+  }
+
+  const gain = document.createElement('span')
+  gain.classList.add('purpleHoneyGain')
+  gain.textContent = i18next.t('purpleReactor.purpleHoneyGain', {
+    amount: format(amount, 2, true)
+  })
+  const removeGain = () => gain.remove()
+  gain.addEventListener('animationend', removeGain, { once: true })
+
+  DOMCacheGetOrSet('purpleHoneyGainContainer').appendChild(gain)
+  requestAnimationFrame(() => gain.classList.add('purpleHoneyGainAnimating'))
+  setTimeout(removeGain, 1000)
+}
 
 const diamondUpper = [
   'produceFirstDiamonds',
@@ -202,6 +447,42 @@ const particlePerSecNames = ['atoms', 'protons', 'elements', 'pulsars', 'quasars
 const tesseractNames = ['dot', 'vector', 'threeSpace', 'bentTime', 'hilbertSpace']
 const tesseractPerSecNames = ['constant', 'dot', 'vector', 'threeSpace', 'bentTime']
 
+const updateConstructionTexts = (type: keyof typeof buildingConstructionSoftcap) => {
+  const construction = calculateBuildingConstruction(type)
+  DOMCacheGetOrSet(`${type}Construction`).innerHTML = i18next.t('buildings.construction', {
+    amount: format(construction, 3, true)
+  })
+  DOMCacheGetOrSet(`${type}ConstructionBonus`).innerHTML = i18next.t('buildings.constructionBonus', {
+    amount: format(buildingConstructionSoftcap[type], 0, true)
+  })
+
+  const threshold = getBuildingScalingThreshold(type)
+  DOMCacheGetOrSet(`${type}Hyperscaling`).innerHTML = i18next.t('buildings.hyperscaling', {
+    threshold: format(threshold, 3, true)
+  })
+  return threshold
+}
+
+const viscosityEffectiveText = (viscosity: number, bought: number, free: number) => {
+  if (viscosity <= 1) {
+    return ''
+  }
+  return `<br>${
+    i18next.t('buildings.names.viscosityEffective', {
+      amount: format(bought, 2, true, false),
+      gain: format(free, 2, true, false),
+      viscosity: format(viscosity, 2, true)
+    })
+  }`
+}
+
+const freeAccelMultHardcapText = (free: number) => {
+  if (free < freeAccelMultHardcap) {
+    return ''
+  }
+  return `<br>${i18next.t('buildings.names.freeHardcap', { cap: format(freeAccelMultHardcap) })}`
+}
+
 export const visualUpdateBuildings = () => {
   if (G.currentTab !== Tabs.Buildings) {
     return
@@ -209,22 +490,25 @@ export const visualUpdateBuildings = () => {
 
   // When you're in Building --> Coin, update these.
   if (G.buildingSubTab === 'coin') {
-    let totalProductionDivisor = new Decimal(G.produceTotal)
-    if (totalProductionDivisor.equals(0)) {
-      totalProductionDivisor = new Decimal(1)
-    }
-
     DOMCacheGetOrSet('coinInformation').innerHTML = i18next.t('buildings.coinInformation', {
-      coins: format(player.coins, 2, false),
+      coins: format(player.coins, 0, false, false),
       coinsPerSecond: format(
         Decimal.min(
           G.producePerSecond.dividedBy(G.taxdivisor),
           Decimal.pow(10, G.maxexponent - Decimal.log(G.taxdivisorcheck, 10))
         ),
-        0,
+        2,
+        false,
         false
       ),
-      totalGenerated: format(player.coinsTotal, 0, true)
+      totalGenerated: format(player.coinsTotal, 0, false, false)
+    })
+    const coinConstruction = updateConstructionTexts('coin')
+    DOMCacheGetOrSet('accelMultConstruction').innerHTML = i18next.t('buildings.accelMultConstruction', {
+      amount: format(calculateAccelMultConstructionEffect('accelerator'), 3, true),
+      accelerators: format(getAccelMultScalingThreshold('accelerator'), 0, true),
+      multipliers: format(getAccelMultScalingThreshold('multiplier'), 0, true),
+      boosts: format(getAccelMultScalingThreshold('acceleratorBoost'), 0, true)
     })
 
     let vanityIndex = 0
@@ -243,72 +527,80 @@ export const visualUpdateBuildings = () => {
       const place = G[coinUpper[i - 1]]
       const ith = G.ordinals[(i - 1) as ZeroToFour]
 
-      DOMCacheGetOrSet(`buildtext${2 * i - 1}`).textContent = i18next.t(
+      const nameElement = DOMCacheGetOrSet(`buildtext${2 * i - 1}`)
+      nameElement.style.color = player[`${ith}OwnedCoin` as const] > coinConstruction ? 'red' : ''
+      nameElement.textContent = i18next.t(
         `buildings.names.${coinNames[i - 1]}`,
         {
-          amount: format(player[`${ith}OwnedCoin` as const], 0, true),
-          gain: format(player[`${ith}GeneratedCoin` as const])
+          amount: format(player[`${ith}OwnedCoin` as const], 0, true, false),
+          gain: format(player[`${ith}GeneratedCoin` as const], 0, false, false)
         }
       )
 
-      DOMCacheGetOrSet(`buycoin${i}`).textContent = i18next.t(
+      getBuildingCostElement(`buycoin${i}`).textContent = i18next.t(
         'buildings.costCoins',
         {
-          coins: format(player[`${ith}CostCoin` as const])
+          coins: format(getBuildingCost('coin', (i - 1) as ZeroToFour), 0, false, false)
         }
       )
-
-      const percentage = Decimal.fromMantissaExponent(
-        place.mantissa / totalProductionDivisor.mantissa,
-        place.exponent - totalProductionDivisor.exponent
-      ).times(100)
 
       DOMCacheGetOrSet(`buildtext${2 * i}`).textContent = i18next.t(
         'buildings.coinsPerSecond',
         {
-          coins: format(place.dividedBy(G.taxdivisor).times(40), 0),
-          percent: format(percentage, 2)
+          coins: format(place.dividedBy(G.taxdivisor).times(40), 2, false, false)
         }
       )
     }
 
-    DOMCacheGetOrSet('buildtext11').textContent = i18next.t(
+    const acceleratorElement = DOMCacheGetOrSet('buildtext11')
+    acceleratorElement.style.color = player.acceleratorBought > getAccelMultScalingThreshold('accelerator') ? 'red' : ''
+    const viscosity = corruptionEffect(activeCorruptionLevel(), 'viscosity')
+    acceleratorElement.innerHTML = i18next.t(
       'buildings.names.accelerators',
       {
-        amount: format(player.acceleratorBought, 0, true),
-        gain: format(G.freeAccelerator, 0, true)
+        amount: format(player.acceleratorBought, 0, true, false),
+        gain: format(G.freeAccelerator, 0, true, false)
       }
-    )
+    ) + viscosityEffectiveText(viscosity, G.totalAccelerator - G.effectiveFreeAccelerator, G.effectiveFreeAccelerator)
+      + freeAccelMultHardcapText(G.effectiveFreeAccelerator)
 
-    DOMCacheGetOrSet('buildtext12').textContent = i18next.t(
+    DOMCacheGetOrSet('buildtext12').innerHTML = i18next.t(
       'buildings.acceleratorPower',
       {
-        power: format((G.acceleratorPower - 1) * 100, 2),
-        mult: format(G.acceleratorEffect, 2)
+        power: format((G.acceleratorPower - 1) * 100, 2, false, false),
+        mult: format(G.acceleratorEffect, 2, false, false)
       }
     )
 
-    DOMCacheGetOrSet('buildtext13').textContent = i18next.t(
+    const multiplierElement = DOMCacheGetOrSet('buildtext13')
+    multiplierElement.style.color = player.multiplierBought > getAccelMultScalingThreshold('multiplier') ? 'red' : ''
+    multiplierElement.innerHTML = i18next.t(
       'buildings.names.multipliers',
       {
-        amount: format(player.multiplierBought, 0, true),
-        gain: format(G.freeMultiplier, 0, true)
+        amount: format(player.multiplierBought, 0, true, false),
+        gain: format(G.freeMultiplier, 0, true, false)
       }
-    )
+    ) + viscosityEffectiveText(viscosity, G.totalMultiplier - G.effectiveFreeMultiplier, G.effectiveFreeMultiplier)
+      + freeAccelMultHardcapText(G.effectiveFreeMultiplier)
 
-    DOMCacheGetOrSet('buildtext14').textContent = i18next.t(
+    DOMCacheGetOrSet('buildtext14').innerHTML = i18next.t(
       'buildings.multiplierPower',
       {
-        power: format(G.multiplierPower, 2),
-        mult: format(G.multiplierEffect, 2)
+        power: format(G.multiplierPower, 2, false, false),
+        mult: format(G.multiplierEffect, 2, false, false)
       }
     )
 
-    DOMCacheGetOrSet('buildtext15').textContent = i18next.t(
+    const acceleratorBoostElement = DOMCacheGetOrSet('buildtext15')
+    acceleratorBoostElement.style.color =
+      player.acceleratorBoostBought > getAccelMultScalingThreshold('acceleratorBoost')
+        ? 'red'
+        : ''
+    acceleratorBoostElement.textContent = i18next.t(
       'buildings.names.acceleratorBoost',
       {
-        amount: format(player.acceleratorBoostBought, 0, true),
-        gain: format(G.freeAcceleratorBoost, 0, false)
+        amount: format(player.acceleratorBoostBought, 0, true, false),
+        gain: format(G.freeAcceleratorBoost, 0, false, false)
       }
     )
 
@@ -316,53 +608,50 @@ export const visualUpdateBuildings = () => {
       'buildings.acceleratorBoost',
       {
         amount: format(
-          100 * (0.01 * G.tuSevenMulti * (1 + CalcECC('transcend', player.challengecompletions[2]) / 20)),
-          2
+          (player.upgrades[46] > 0.5 ? 1.05 : 1) * (1 + player.challengecompletions[2] / 20),
+          2,
+          false,
+          false
         ),
-        accelsPerBoost: format(
-          5
-            + 2 * player.researches[18]
-            + 2 * player.researches[19]
-            + 3 * player.researches[20]
-            + (calculateAcceleratorCubeBlessing()),
-          0,
-          true
-        )
+        accelsPerBoost: format(calculateAcceleratorsPerBoost(), 0, true, false)
       }
     )
 
-    DOMCacheGetOrSet('buyaccelerator').textContent = i18next.t(
+    getBuildingCostElement('buyaccelerator').textContent = i18next.t(
       'buildings.costCoins',
       {
-        coins: format(player.acceleratorCost)
+        coins: format(getBuildingCost('accelerator'), 0, false, false)
       }
     )
-    DOMCacheGetOrSet('buymultiplier').textContent = i18next.t(
+    getBuildingCostElement('buymultiplier').textContent = i18next.t(
       'buildings.costCoins',
       {
-        coins: format(player.multiplierCost)
+        coins: format(getBuildingCost('multiplier'), 0, false, false)
       }
     )
-    DOMCacheGetOrSet('buyacceleratorboost').textContent = i18next.t(
+    getBuildingCostElement('buyacceleratorboost').textContent = i18next.t(
       'buildings.costDiamonds',
       {
-        diamonds: format(player.acceleratorBoostCost)
+        diamonds: format(getBuildingCost('acceleratorBoost'), 0, false, false)
       }
     )
 
     // update the tax text
     let warning = ''
-    if (player.reincarnationCount > 0.5) {
+    if (player.reincarnationCount > 0) {
       warning = i18next.t('buildings.taxWarning', {
         gain: format(
-          Decimal.pow(10, G.maxexponent - Decimal.log(G.taxdivisorcheck, 10))
+          Decimal.pow(10, G.maxexponent - Decimal.log(G.taxdivisorcheck, 10)),
+          2,
+          false,
+          false
         )
       })
     }
-    DOMCacheGetOrSet('taxinfo').textContent = i18next.t(
+    DOMCacheGetOrSet('taxinfo').innerHTML = i18next.t(
       'buildings.excessiveWealth',
       {
-        div: format(G.taxdivisor, 2),
+        div: format(G.taxdivisor, 2, false, false),
         warning
       }
     )
@@ -372,35 +661,38 @@ export const visualUpdateBuildings = () => {
     DOMCacheGetOrSet('prestigeshardinfo').innerHTML = i18next.t(
       'buildings.crystalMult',
       {
-        crystals: format(player.prestigeShards, 2),
-        gain: format(crystalCoinMult, 2),
-        exponent: format(crystalExponent, 2, true)
+        crystals: format(player.prestigeShards, 2, false, false),
+        gain: format(crystalCoinMult, 2, false, false),
+        exponent: format(crystalExponent, 2, true, false)
       }
     )
+    const diamondConstruction = updateConstructionTexts('diamond')
 
     for (let i = 1; i <= 5; i++) {
       const place = G[diamondUpper[i - 1]]
       const ith = G.ordinals[(i - 1) as ZeroToFour]
 
-      DOMCacheGetOrSet(`prestigetext${2 * i - 1}`).textContent = i18next.t(
+      const nameElement = DOMCacheGetOrSet(`prestigetext${2 * i - 1}`)
+      nameElement.style.color = player[`${ith}OwnedDiamonds` as const] > diamondConstruction ? 'red' : ''
+      nameElement.textContent = i18next.t(
         `buildings.names.${diamondNames[i - 1]}`,
         {
-          amount: format(player[`${ith}OwnedDiamonds` as const], 0, true),
-          gain: format(player[`${ith}GeneratedDiamonds` as const], 2)
+          amount: format(player[`${ith}OwnedDiamonds` as const], 0, true, false),
+          gain: format(player[`${ith}GeneratedDiamonds` as const], 2, false, false)
         }
       )
 
       DOMCacheGetOrSet(`prestigetext${2 * i}`).textContent = i18next.t(
         `buildings.per.${diamondPerSecNames[i - 1]}`,
         {
-          amount: format(place.times(40), 2)
+          amount: format(place.times(40), 2, false, false)
         }
       )
 
-      DOMCacheGetOrSet(`buydiamond${i}`).textContent = i18next.t(
+      getBuildingCostElement(`buydiamond${i}`).textContent = i18next.t(
         'buildings.costDiamonds',
         {
-          diamonds: format(player[`${ith}CostDiamonds` as const], 2)
+          diamonds: format(getBuildingCost('diamond', (i - 1) as ZeroToFour), 2, false, false)
         }
       )
     }
@@ -414,10 +706,11 @@ export const visualUpdateBuildings = () => {
       DOMCacheGetOrSet('autoprestige').textContent = i18next.t(
         'buildings.autoPrestige',
         {
+          // TODO: make separate i18n for 'Prestige', 'Transcend', etc.
           name: 'Diamonds',
           action: 'Prestige',
-          factor: format(Decimal.pow(10, player.prestigeamount)),
-          mult: format(p)
+          factor: format(Decimal.pow(10, player.prestigeamount), 0, false, false),
+          mult: format(p, 0, false, false)
         }
       )
     } else if (player.resetToggleModes.prestige === AutoResetModes.time) {
@@ -425,8 +718,8 @@ export const visualUpdateBuildings = () => {
         'buildings.autoReincarnate',
         {
           name: 'Prestige',
-          amount: player.prestigeamount,
-          timer: format(G.autoResetTimers.prestige, 1)
+          amount: format(player.prestigeamount, 0, false, false),
+          timer: format(G.autoResetTimers.prestige, 1, false, false)
         }
       )
     }
@@ -434,34 +727,37 @@ export const visualUpdateBuildings = () => {
     DOMCacheGetOrSet('transcendshardinfo').textContent = i18next.t(
       'buildings.mythosYouHave',
       {
-        shards: format(player.transcendShards, 2),
-        mult: format(G.totalMultiplierBoost, 0, true)
+        shards: format(player.transcendShards, 2, false, false),
+        mult: format(G.totalMultiplierBoost, 0, true, false)
       }
     )
+    const mythosConstruction = updateConstructionTexts('mythos')
 
     for (let i = 1; i <= 5; i++) {
       const place = G[mythosUpper[i - 1]]
       const ith = G.ordinals[(i - 1) as ZeroToFour]
 
-      DOMCacheGetOrSet(`transcendtext${2 * i - 1}`).textContent = i18next.t(
+      const nameElement = DOMCacheGetOrSet(`transcendtext${2 * i - 1}`)
+      nameElement.style.color = player[`${ith}OwnedMythos` as const] > mythosConstruction ? 'red' : ''
+      nameElement.textContent = i18next.t(
         `buildings.names.${mythosNames[i - 1]}`,
         {
-          amount: format(player[`${ith}OwnedMythos` as const], 0, true),
-          gain: format(player[`${ith}GeneratedMythos` as const], 2)
+          amount: format(player[`${ith}OwnedMythos` as const], 0, true, false),
+          gain: format(player[`${ith}GeneratedMythos` as const], 2, false, false)
         }
       )
 
       DOMCacheGetOrSet(`transcendtext${2 * i}`).textContent = i18next.t(
         `buildings.per.${mythosPerSecNames[i - 1]}`,
         {
-          amount: format(place.times(40), 2)
+          amount: format(place.times(40), 2, false, false)
         }
       )
 
-      DOMCacheGetOrSet(`buymythos${i}`).textContent = i18next.t(
+      getBuildingCostElement(`buymythos${i}`).textContent = i18next.t(
         'buildings.costMythos',
         {
-          mythos: format(player[`${ith}CostMythos` as const], 2)
+          mythos: format(getBuildingCost('mythos', (i - 1) as ZeroToFour), 2, false, false)
         }
       )
     }
@@ -471,53 +767,57 @@ export const visualUpdateBuildings = () => {
         'buildings.autoPrestige',
         {
           name: 'Mythos',
-          action: 'Prestige',
-          factor: format(Decimal.pow(10, player.transcendamount)),
+          action: 'Transcend',
+          factor: format(Decimal.pow(10, player.transcendamount), 0, false, false),
           mult: format(
             Decimal.pow(
               10,
               Decimal.log(G.transcendPointGain.add(1), 10)
                 - Decimal.log(player.transcendPoints.add(1), 10)
             ),
-            2
+            2,
+            false,
+            false
           )
         }
       )
     }
     if (player.resetToggleModes.transcend === AutoResetModes.time) {
-      // TODO(@KhafraDev): i18n this
-      DOMCacheGetOrSet(
-        'autotranscend'
-      ).textContent =
-        `Transcend when the autotimer is at least ${player.transcendamount} real-life seconds. [Toggle number above]. Current timer: ${
-          format(
-            G.autoResetTimers.transcension,
-            1
-          )
-        }s.`
+      DOMCacheGetOrSet('autotranscend').textContent = i18next.t(
+        'buildings.autoReincarnate',
+        {
+          name: 'Transcend',
+          amount: format(player.transcendamount, 0, false, false),
+          timer: format(G.autoResetTimers.transcension, 1, false, false)
+        }
+      )
     }
   } else if (G.buildingSubTab === 'particle') {
+    const particleConstruction = updateConstructionTexts('particle')
+
     for (let i = 1; i <= 5; i++) {
       const ith = G.ordinals[(i - 1) as ZeroToFour]
       const place = G[`produce${particleUpper[i - 1]}` as const]
 
-      DOMCacheGetOrSet(`reincarnationtext${i}`).textContent = i18next.t(
+      const nameElement = DOMCacheGetOrSet(`reincarnationtext${i}`)
+      nameElement.style.color = player[`${ith}OwnedParticles` as const] > particleConstruction ? 'red' : ''
+      nameElement.textContent = i18next.t(
         `buildings.names.${particleNames[i - 1]}`,
         {
-          amount: format(player[`${ith}OwnedParticles` as const], 0, true),
-          gain: format(player[`${ith}GeneratedParticles` as const], 2)
+          amount: format(player[`${ith}OwnedParticles` as const], 0, true, false),
+          gain: format(player[`${ith}GeneratedParticles` as const], 2, false, false)
         }
       )
       DOMCacheGetOrSet(`reincarnationtext${i + 5}`).textContent = i18next.t(
         `buildings.per.${particlePerSecNames[i - 1]}`,
         {
-          amount: format(place.times(40), 2)
+          amount: format(place.times(40), 2, false, false)
         }
       )
-      DOMCacheGetOrSet(`buyparticles${i}`).textContent = i18next.t(
+      getBuildingCostElement(`buyparticles${i}`).textContent = i18next.t(
         'buildings.costParticles',
         {
-          particles: format(player[`${ith}CostParticles` as const], 2)
+          particles: format(getBuildingCost('particle', (i - 1) as ZeroToFour), 2, false, false)
         }
       )
     }
@@ -528,23 +828,23 @@ export const visualUpdateBuildings = () => {
     DOMCacheGetOrSet('reincarnationshardinfo').innerHTML = i18next.t(
       'buildings.atomsYouHave',
       {
-        atoms: format(player.reincarnationShards, 2),
-        power: format(buildingPower, 4, true),
-        mult: format(buildingPowerMult, 2, true)
+        atoms: format(player.reincarnationShards, 2, false, false),
+        power: format(buildingPower, 4, true, false),
+        mult: format(buildingPowerMult, 2, true, false)
       }
     )
 
     DOMCacheGetOrSet('reincarnationCrystalInfo').textContent = i18next.t(
       'buildings.thanksR2x14',
       {
-        mult: format(Decimal.pow(buildingPowerMult, 1 / 50), 3, false)
+        mult: format(Decimal.pow(buildingPowerMult, 1 / 50), 3, false, false)
       }
     )
 
     DOMCacheGetOrSet('reincarnationMythosInfo').textContent = i18next.t(
       'buildings.thanksR2x15',
       {
-        mult: format(Decimal.pow(buildingPowerMult, 1 / 250), 3, false)
+        mult: format(Decimal.pow(buildingPowerMult, 1 / 250), 3, false, false)
       }
     )
 
@@ -554,14 +854,16 @@ export const visualUpdateBuildings = () => {
         {
           name: 'Particles',
           action: 'Reincarnate',
-          factor: format(Decimal.pow(10, player.reincarnationamount)),
+          factor: format(Decimal.pow(10, player.reincarnationamount), 0, false, false),
           mult: format(
             Decimal.pow(
               10,
               Decimal.log(G.reincarnationPointGain.add(1), 10)
                 - Decimal.log(player.reincarnationPoints.add(1), 10)
             ),
-            2
+            2,
+            false,
+            false
           )
         }
       )
@@ -570,8 +872,8 @@ export const visualUpdateBuildings = () => {
         'buildings.autoReincarnate',
         {
           name: 'Reincarnate',
-          amount: player.reincarnationamount,
-          timer: format(G.autoResetTimers.reincarnation, 1)
+          amount: format(player.reincarnationamount, 0, false, false),
+          timer: format(G.autoResetTimers.reincarnation, 1, false, false)
         }
       )
     }
@@ -582,8 +884,8 @@ export const visualUpdateBuildings = () => {
       DOMCacheGetOrSet(`ascendText${i}`).textContent = i18next.t(
         `buildings.names.${tesseractNames[i - 1]}`,
         {
-          amount: format(player[ascendBuildingI].owned, 0, true),
-          gain: format(player[ascendBuildingI].generated, 2)
+          amount: format(player[ascendBuildingI].owned, 0, true, false),
+          gain: format(player[ascendBuildingI].generated, 2, false, false)
         }
       )
 
@@ -594,15 +896,17 @@ export const visualUpdateBuildings = () => {
             (G.ascendBuildingProduction as Record<string, Decimal>)[
               G.ordinals[i - 1]
             ],
-            2
+            2,
+            false,
+            false
           )
         }
       )
 
-      DOMCacheGetOrSet(`buyTesseracts${i}`).textContent = i18next.t(
+      getBuildingCostElement(`buyTesseracts${i}`).textContent = i18next.t(
         'buildings.costTesseracts',
         {
-          tesseracts: format(player[ascendBuildingI].cost, 0)
+          tesseracts: format(player[ascendBuildingI].cost, 0, false, false)
         }
       )
     }
@@ -610,14 +914,14 @@ export const visualUpdateBuildings = () => {
     DOMCacheGetOrSet('tesseractInfo').textContent = i18next.t(
       'buildings.tesseractsYouHave',
       {
-        tesseracts: format(player.wowTesseracts.valueOf())
+        tesseracts: format(player.wowTesseracts.valueOf(), 0, false, false)
       }
     )
 
     DOMCacheGetOrSet('ascendShardInfo').textContent = i18next.t(
       'buildings.constantYouHave',
       {
-        const: format(player.ascendShards, 2),
+        const: format(player.ascendShards, 2, false, false),
         amount: format(
           Math.pow(
             Decimal.log(player.ascendShards.add(1), 10) + 1,
@@ -630,7 +934,8 @@ export const visualUpdateBuildings = () => {
               + calculateTaxPlatonicBlessing()
           ),
           4,
-          true
+          true,
+          false
         )
       }
     )
@@ -639,21 +944,27 @@ export const visualUpdateBuildings = () => {
       DOMCacheGetOrSet('autotessbuyeramount').textContent = i18next.t(
         'buildings.autoTesseract',
         {
-          tesseracts: format(player.tesseractAutoBuyerAmount)
+          tesseracts: format(player.tesseractAutoBuyerAmount, 0, false, false)
         }
       )
     } else if (player.resetToggleModes.ascension === AutoAscensionModes.percentage) {
       DOMCacheGetOrSet('autotessbuyeramount').textContent = i18next.t(
         'buildings.autoAscensionTesseract',
         {
-          percent: format(Math.min(100, player.tesseractAutoBuyerAmount))
+          percent: format(Math.min(100, player.tesseractAutoBuyerAmount), 0, false, false)
         }
       )
     }
   }
 }
 
-export const visualUpdateUpgrades = () => {}
+export const visualUpdateUpgrades = () => {
+  if (isMobile) {
+    for (let upgId = 1; upgId <= 125; upgId++) {
+      updateMobileUpgradeDescription(upgId)
+    }
+  }
+}
 
 export const visualUpdateAchievements = () => {
   if (G.currentTab !== Tabs.Achievements) {
@@ -662,12 +973,18 @@ export const visualUpdateAchievements = () => {
 
   const tnl = toNextAchievementLevelEXP()
 
-  DOMCacheGetOrSet('achievementprogress').textContent = i18next.t('achievements.achievementPoints', {
-    x: format(achievementPoints, 0, true)
-  })
-  DOMCacheGetOrSet('achievementQuarkBonus').innerHTML = i18next.t('achievements.achievementLevel', {
-    level: format(achievementLevel)
-  })
+  DOMCacheGetOrSet('achievementprogress').textContent = i18next.t(
+    isMobile ? 'achievements.achievementPointsMobile' : 'achievements.achievementPoints',
+    {
+      x: format(achievementPoints, 0, true)
+    }
+  )
+  DOMCacheGetOrSet('achievementQuarkBonus').innerHTML = i18next.t(
+    isMobile ? 'achievements.achievementLevelMobile' : 'achievements.achievementLevel',
+    {
+      level: format(achievementLevel)
+    }
+  )
   DOMCacheGetOrSet('achievementTNLText').innerHTML = i18next.t('achievements.achievementToNextLevel', {
     level: format(achievementLevel + 1),
     AP: format(tnl, 0, true)
@@ -684,7 +1001,7 @@ const updateOfferingAndSalvageText = () => {
   DOMCacheGetOrSet('offeringCount').textContent = i18next.t(
     'runes.offeringsYouHave',
     {
-      offerings: format(player.offerings, 0, true)
+      offerings: format(player.offerings, 0, true, false)
     }
   )
 
@@ -723,11 +1040,19 @@ export const visualUpdateRunes = () => {
   }
 
   if (getActiveSubTab() === 1) {
-    for (const t of Object.keys(talismans) as TalismanKeys[]) {
-      DOMCacheGetOrSet(`${t}TalismanLevel`).textContent = i18next.t('runes.talismans.level', {
-        x: format(talismans[t].level, 0, true),
-        y: format(getTalismanLevelCap(t), 0, true)
-      })
+    updateTalismanInventory()
+    for (const t of talismanKeys) {
+      if (isMobile) {
+        for (const item of talismanCraftItems) {
+          updateMobileTalismanInventoryPurchaseInfo(item)
+        }
+      } else {
+        // We already update this on mobile, no need for additional updates
+        DOMCacheGetOrSet(`${t}TalismanLevel`).textContent = i18next.t('runes.talismans.level', {
+          x: format(talismans[t].level, 0, true),
+          y: format(getTalismanLevelCap(t), 0, true)
+        })
+      }
     }
     updateAllTalismanHTML()
   } else if (getActiveSubTab() === 2) {
@@ -735,8 +1060,6 @@ export const visualUpdateRunes = () => {
     for (const bless of runeBlessingKeys) {
       updateRuneBlessingHTML(bless)
     }
-  } else if (getActiveSubTab() === 3) {
-    updateOfferingAndSalvageText()
     for (const spirit of runeSpiritKeys) {
       updateRuneSpiritHTML(spirit)
     }
@@ -755,7 +1078,7 @@ export const visualUpdateChallenges = () => {
     DOMCacheGetOrSet('autoIncrementerAmount').innerHTML = i18next.t(
       'challenges.autoTimer',
       {
-        time: format(timeSinceLastStateChange, 2)
+        time: format(timeSinceLastStateChange, 2, false, false)
       }
     )
   }
@@ -773,7 +1096,8 @@ export const visualUpdateResearch = () => {
         x: format(
           calculateResearchAutomaticObtainium(1),
           3,
-          true
+          true,
+          false
         )
       }
     )
@@ -789,14 +1113,14 @@ export const visualUpdateAnts = () => {
   DOMCacheGetOrSet('crumbcount').textContent = i18next.t(
     'ants.galacticCrumbCount',
     {
-      x: format(player.ants.crumbs, 2, true, undefined, undefined, true)
+      x: format(player.ants.crumbs, 2, true, false)
     }
   )
 
   DOMCacheGetOrSet('crumbsPerSecond').textContent = i18next.t(
     'ants.crumbsPerSecond',
     {
-      x: format(firstTierProduction, 2, true, undefined, undefined, true)
+      x: format(firstTierProduction, 2, true, false)
     }
   )
   DOMCacheGetOrSet('crumbCoinMultiplier').textContent = i18next.t(
@@ -808,14 +1132,14 @@ export const visualUpdateAnts = () => {
 
   autoAntSacrificeModeDescHTML(player.ants.toggles.autoSacrificeMode)
   DOMCacheGetOrSet('sacrificeSecondsElapsed').innerHTML = i18next.t('ants.timeElapsed', {
-    x: format(player.antSacrificeTimerReal, 2, true)
+    x: format(player.antSacrificeTimerReal, 2, true, false)
   })
 
   if (player.ants.crumbsThisSacrifice.gte(MINIMUM_CRUMBS_FOR_SACRIFICE)) {
     DOMCacheGetOrSet('antSacrificeRequired').innerHTML = i18next.t('ants.altar.sacrificeReady.unlocked')
   } else {
     DOMCacheGetOrSet('antSacrificeRequired').innerHTML = i18next.t('ants.altar.sacrificeReady.locked', {
-      x: format(player.ants.crumbsThisSacrifice, 0, true),
+      x: format(player.ants.crumbsThisSacrifice, 0, true, false),
       y: format(MINIMUM_CRUMBS_FOR_SACRIFICE, 0, true)
     })
   }
@@ -857,37 +1181,29 @@ export const visualUpdateCubes = () => {
   const platonicMult = 1.5
 
   const toNextQuark: cubeNames = {
-    cube: Number(
-      player.wowCubes.checkCubesToNextQuark(
-        5,
-        cubeMult,
-        player.cubeQuarkDaily,
-        player.cubeOpenedDaily
-      )
+    cube: player.wowCubes.checkCubesToNextQuark(
+      5,
+      cubeMult,
+      player.cubeQuarkDaily,
+      player.cubeOpenedDaily
     ),
-    tesseract: Number(
-      player.wowTesseracts.checkCubesToNextQuark(
-        7,
-        tesseractMult,
-        player.tesseractQuarkDaily,
-        player.tesseractOpenedDaily
-      )
+    tesseract: player.wowTesseracts.checkCubesToNextQuark(
+      7,
+      tesseractMult,
+      player.tesseractQuarkDaily,
+      player.tesseractOpenedDaily
     ),
-    hypercube: Number(
-      player.wowHypercubes.checkCubesToNextQuark(
-        10,
-        hypercubeMult,
-        player.hypercubeQuarkDaily,
-        player.hypercubeOpenedDaily
-      )
+    hypercube: player.wowHypercubes.checkCubesToNextQuark(
+      10,
+      hypercubeMult,
+      player.hypercubeQuarkDaily,
+      player.hypercubeOpenedDaily
     ),
-    platonicCube: Number(
-      player.wowPlatonicCubes.checkCubesToNextQuark(
-        15,
-        platonicMult,
-        player.platonicCubeQuarkDaily,
-        player.platonicCubeOpenedDaily
-      )
+    platonicCube: player.wowPlatonicCubes.checkCubesToNextQuark(
+      15,
+      platonicMult,
+      player.platonicCubeQuarkDaily,
+      player.platonicCubeOpenedDaily
     )
   }
 
@@ -954,7 +1270,7 @@ export const visualUpdateCubes = () => {
         'wowCubes.cubes.items.3',
         {
           amount: format(player.cubeBlessings.offering, 0, true),
-          bonus: formatAsPercentIncrease(calculateOfferingCubeBlessing(), 2)
+          bonus: formatDecimalAsPercentIncrease(calculateOfferingCubeBlessing(), 2)
         }
       )
 
@@ -970,7 +1286,7 @@ export const visualUpdateCubes = () => {
         'wowCubes.cubes.items.5',
         {
           amount: format(player.cubeBlessings.obtainium, 0, true),
-          bonus: formatAsPercentIncrease(calculateObtainiumCubeBlessing(), 2)
+          bonus: formatDecimalAsPercentIncrease(calculateObtainiumCubeBlessing(), 2)
         }
       )
 
@@ -1309,13 +1625,18 @@ export const visualUpdateCubes = () => {
         }
       )
 
-      DOMCacheGetOrSet('platonicAscensionScoreBonus').innerHTML = i18next.t(
-        'wowCubes.platonics.items.7',
-        {
-          amount: format(player.platonicBlessings.scoreBonus, 0, true),
-          bonus: formatAsPercentIncrease(calculateAscensionScorePlatonicBlessing(), 2)
-        }
+      const statueCubes = highScoringStatueCubes.filter((cube) =>
+        (cube !== 'hepteracts' || G.challenge15Rewards.hepteractsUnlocked.value >= 1)
+        && (cube !== 'octeracts' || getGQUpgradeEffect('octeractUnlock', 'unlocked'))
       )
+      const statueBonuses = statueCubes.map((cube) =>
+        i18next.t(`wowCubes.platonics.highScoringStatue.${cube}`, {
+          bonus: format(calculateCubePlatonicBlessing(cube), 2, true)
+        })
+      )
+      DOMCacheGetOrSet('platonicAscensionScoreBonus').innerHTML = `${
+        i18next.t('wowCubes.platonics.items.7', { amount: format(player.platonicBlessings.scoreBonus, 0, true) })
+      } ${statueBonuses.map((bonus) => `<span class="statueBonus">${bonus}</span>`).join(', ')}`
 
       DOMCacheGetOrSet('platonicGlobalSpeedBonus').innerHTML = i18next.t(
         'wowCubes.platonics.items.8',
@@ -1343,6 +1664,7 @@ export const visualUpdateCubes = () => {
       } Wow! Cubes =)`
       break
     case 5:
+      updateDisplayC15Rewards()
       break
     case 6:
       DOMCacheGetOrSet('hepteractQuantity').innerHTML = i18next.t(
@@ -1394,7 +1716,7 @@ const UpdateHeptGridValues = (hept: HepteractKeys) => {
     barEl.style.width = '100%'
     barEl.style.backgroundColor = 'var(--hepteract-bar-red)'
   } else {
-    const balance = hepteracts[hept].BAL
+    const balance = player.hepteracts[hept].BAL
     const cap = getFinalHepteractCap(hept)
     const barWidth = Math.round((balance / cap) * 100)
 
@@ -1418,91 +1740,20 @@ export const visualUpdateCorruptions = () => {
     return
   }
 
-  const ascensionRewards = CalcCorruptionStuff()
-  const ascCount = calculateAscensionCount()
-
-  const autoAscendDOM = DOMCacheGetOrSet('autoAscend')
-  if (player.autoAscendMode === AutoAscensionResetModes.c10Completions) {
-    autoAscendDOM.innerHTML = i18next.t('corruptions.autoAscend.c10Completions', {
-      input: format(player.autoAscendThreshold),
-      completions: format(player.challengecompletions[10])
-    })
-  } else if (player.autoAscendMode === AutoAscensionResetModes.realAscensionTime) {
-    autoAscendDOM.innerHTML = i18next.t('corruptions.autoAscend.realTime', {
-      input: format(player.autoAscendThreshold),
-      time: format(player.ascensionCounterRealReal)
-    })
+  if (getActiveSubTab() === 2) {
+    updateAutoAscendStatus()
   }
 
-  DOMCacheGetOrSet('corruptionScore').innerHTML = i18next.t(
-    'corruptions.corruptionScore',
-    {
-      ascScore: format(ascensionRewards.baseScore, 1, true),
-      corrMult: format(ascensionRewards.corruptionMultiplier, 1, true),
-      bonusMult: format(ascensionRewards.bonusMultiplier, 2, true),
-      totalScore: format(ascensionRewards.effectiveScore, 1, true)
-    }
-  )
-
-  if (ascensionRewards.effectiveScore > 1e23) {
-    DOMCacheGetOrSet('corruptionScoreDR').style.visibility = 'visible'
-  } else {
-    DOMCacheGetOrSet('corruptionScoreDR').style.visibility = 'hidden'
+  if (getActiveSubTab() !== 0) {
+    return
   }
 
-  DOMCacheGetOrSet('corruptionCubes').innerHTML = i18next.t(
-    'corruptions.corruptionCubes',
-    {
-      cubeAmount: format(ascensionRewards.wowCubes, 0, true)
-    }
-  )
-  DOMCacheGetOrSet('corruptionTesseracts').innerHTML = i18next.t(
-    'corruptions.corruptionTesseracts',
-    {
-      tesseractAmount: format(ascensionRewards.wowTesseracts, 0, true)
-    }
-  )
-  DOMCacheGetOrSet('corruptionHypercubes').innerHTML = i18next.t(
-    'corruptions.corruptionHypercubes',
-    {
-      hypercubeAmount: format(ascensionRewards.wowHypercubes, 0, true)
-    }
-  )
-  DOMCacheGetOrSet('corruptionPlatonicCubes').innerHTML = i18next.t(
-    'corruptions.corruptionPlatonics',
-    {
-      platonicAmount: format(ascensionRewards.wowPlatonicCubes, 0, true)
-    }
-  )
-  DOMCacheGetOrSet('corruptionHepteracts').innerHTML = i18next.t(
-    'corruptions.corruptionHepteracts',
-    {
-      hepteractAmount: format(ascensionRewards.wowHepteracts, 0, true)
-    }
-  )
-  DOMCacheGetOrSet('corruptionMultiplierTotal').textContent = i18next.t('corruptions.totalScoreMultiplier', {
-    curr: format(player.corruptions.used.totalCorruptionAscensionMultiplier, 2, true),
-    next: format(player.corruptions.next.totalCorruptionAscensionMultiplier, 2, true)
-  })
-  DOMCacheGetOrSet('corruptionDifficultyTotal').textContent = i18next.t('corruptions.totalDifficulty', {
-    curr: format(player.corruptions.used.totalCorruptionDifficultyScore, 2, true),
-    next: format(player.corruptions.next.totalCorruptionDifficultyScore, 2, true)
-  })
-  DOMCacheGetOrSet('corruptionSpiritTotal').textContent = i18next.t('corruptions.totalSpiritContribution', {
-    curr: formatAsPercentIncrease(player.corruptions.used.totalCorruptionDifficultyMultiplier),
-    next: formatAsPercentIncrease(player.corruptions.next.totalCorruptionDifficultyMultiplier)
+  DOMCacheGetOrSet('corruptionCubeBank').innerHTML = i18next.t('corruptions.cubeBank', {
+    value: format(calculateCubeBank(), 1, true)
   })
 
-  DOMCacheGetOrSet('corruptionAscensionCount').style.display = ascCount > 1 ? 'block' : 'none'
-
-  if (ascCount > 1) {
-    DOMCacheGetOrSet('corruptionAscensionCount').innerHTML = i18next.t(
-      'corruptions.ascensionCount',
-      {
-        ascCount: format(calculateAscensionCount())
-      }
-    )
-  }
+  corruptionEffectsUpdate()
+  corruptionLevelScoreUpdate()
 }
 
 export const visualUpdateSettings = () => {
@@ -1534,7 +1785,9 @@ export const visualUpdateSettings = () => {
         x: format(
           3600 / quarkData.perHour
             - (player.quarkstimer % (3600.00001 / quarkData.perHour)),
-          2
+          2,
+          false,
+          false
         ),
         // eslint-disable-next-line number-arg-out-of-range
         y: player.worlds.toString(1)
@@ -1555,14 +1808,17 @@ export const visualUpdateSettings = () => {
           3600
               / Math.max(
                 1,
-                getGQUpgradeEffect('goldenQuarks3')
+                getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour')
               )
             - (player.goldenQuarksTimer
               % (3600.00001
                 / Math.max(
                   1,
-                  getGQUpgradeEffect('goldenQuarks3')
-                )))
+                  getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour')
+                ))),
+          0,
+          false,
+          false
         ),
         y: format(goldenQuarkMultiplier, 2, true)
       }
@@ -1574,7 +1830,7 @@ export const visualUpdateSettings = () => {
         x: format(
           Math.floor(
             (player.goldenQuarksTimer
-              * getGQUpgradeEffect('goldenQuarks3'))
+              * getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour'))
               / 3600
           ) * goldenQuarkMultiplier,
           2
@@ -1582,12 +1838,19 @@ export const visualUpdateSettings = () => {
         y: format(
           Math.floor(
             168
-              * getGQUpgradeEffect('goldenQuarks3')
+              * getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour')
               * goldenQuarkMultiplier
-          )
+          ),
+          2
         )
       }
     )
+
+    if (isMobile) {
+      DOMCacheGetOrSet('promocodeStatus').textContent = `${promocodesInfoText('daily')}\n${
+        promocodesInfoText('add')
+      }\n${promocodesInfoText('time')}`
+    }
   } else if (getActiveSubTab() === 3) {
     loadStatisticsUpdate()
   }
@@ -1597,68 +1860,62 @@ export const visualUpdateSingularity = () => {
   if (G.currentTab !== Tabs.Singularity) {
     return
   }
-  if (getActiveSubTab() === 1) {
+
+  const activeSubTab = getActiveSubTab()
+
+  if (activeSubTab === 1) {
     DOMCacheGetOrSet('goldenQuarkamount').textContent = i18next.t(
       'singularity.goldenQuarkAmount',
       {
-        goldenQuarks: format(player.goldenQuarks, 0, true)
+        goldenQuarks: format(player.goldenQuarks, 0, true, false)
       }
     )
+    updateInnerHTMLIfChanged(
+      'goldenQuarkUpgradeAP',
+      i18next.t('singularity.goldenQuarkUpgradeAP', {
+        current: format(calculateGQUpgradeAP(), 0, true),
+        max: format(maxGoldenQuarkUpgradeAP, 0, true)
+      })
+    )
 
-    const keys = Object.keys(goldenQuarkUpgrades) as SingularityDataKeys[]
-    const val = G.shopEnhanceVision
-
-    for (const key of keys) {
+    for (const key of goldenQuarkUpgradeNames) {
       if (key === 'offeringAutomatic') {
         continue
       }
       const singItem = goldenQuarkUpgrades[key]
       const el = DOMCacheGetOrSet(key)
-      if (
-        singItem.maxLevel !== -1
-        && singItem.level >= computeGQUpgradeMaxLevel(key)
-      ) {
-        el.style.filter = val ? 'brightness(.9)' : 'none'
-      } else if (
-        getGQUpgradeCostTNL(key) > player.goldenQuarks
-        || player.highestSingularityCount < singItem.minimumSingularity
-      ) {
-        el.style.filter = val ? 'grayscale(.9) brightness(.8)' : 'none'
-      } else if (
-        singItem.maxLevel === -1
-        || singItem.level < computeGQUpgradeMaxLevel(key)
-      ) {
-        if (computeGQUpgradeFreeLevelSoftcap(key) > singItem.level) {
-          el.style.filter = val ? 'blur(1px) invert(.9) saturate(200)' : 'none'
-        } else {
-          el.style.filter = val ? 'invert(.9) brightness(1.1)' : 'none'
-        }
-      }
-    }
-  } else if (getActiveSubTab() === 3) {
-    const keys = Object.keys(octeractUpgrades) as OcteractDataKeys[]
-    const val = G.shopEnhanceVision
 
-    for (const key of keys) {
+      const isMaxed = updateGoldenQuarkUpgradeVisibility(key, el)
+      const isUnlocked = player.highestSingularityCount >= singItem.minimumSingularity
+      const isAffordable = !isMaxed && isUnlocked && getGQUpgradeCostTNL(key) <= player.goldenQuarks
+      const isSoftcapped = computeGQUpgradeFreeLevelSoftcap(key) > goldenQuarkUpgrades[key].level
+
+      el.classList.toggle('singularityUpgradeAffordable', isAffordable)
+      el.classList.toggle('singularityUpgradeMaxed', isMaxed)
+      el.classList.toggle('singularityUpgradeSoftcap', isSoftcapped)
+    }
+  } else if (activeSubTab === 3) {
+    visualUpdateOcteracts()
+
+    for (const key of octeractUpgradeNames) {
       const octItem = octeractUpgrades[key]
       const el = DOMCacheGetOrSet(key)
-      if (octItem.maxLevel !== -1 && octItem.level >= octItem.maxLevel) {
-        el.style.filter = val ? 'brightness(.9)' : 'none'
-      } else if (getOcteractUpgradeCostTNL(key) > player.wowOcteracts) {
-        el.style.filter = val ? 'grayscale(.9) brightness(.8)' : 'none'
-      } else if (octItem.maxLevel === -1 || octItem.level < octItem.maxLevel) {
-        if (octItem.freeLevel > octItem.level) {
-          el.style.filter = val ? 'blur(2px) invert(.9) saturate(200)' : 'none'
-        } else {
-          el.style.filter = val ? 'invert(.9) brightness(1.1)' : 'none'
-        }
-      }
-    }
-  }
-}
+      el.dataset.octeractLevel = format(octItem.level)
 
-export const shopMouseover = (value: boolean) => {
-  G.shopEnhanceVision = value
+      const isMaxed = updateOcteractUpgradeVisibility(key, el)
+      const isAffordable = !isMaxed && getOcteractUpgradeCostTNL(key) <= player.wowOcteracts
+      const isSoftcapped = player.octUpgrades[key].freeLevel > octeractUpgrades[key].level
+
+      el.classList.toggle('octeractUpgradeAffordable', isAffordable)
+      el.classList.toggle('octeractUpgradeMaxed', isMaxed)
+      el.classList.toggle('octeractUpgradeFreeLevels', player.octUpgrades[key].freeLevel > 0)
+      el.classList.toggle('octeractUpgradeSoftcap', isSoftcapped)
+    }
+  } else if (activeSubTab === 4) {
+    visualUpdateAmbrosia()
+  } else if (activeSubTab === 5) {
+    visualUpdatePurple()
+  }
 }
 
 export const visualUpdateOcteracts = () => {
@@ -1666,8 +1923,15 @@ export const visualUpdateOcteracts = () => {
     return
   }
   DOMCacheGetOrSet('octeractAmount').innerHTML = i18next.t('octeract.amount', {
-    octeracts: format(player.wowOcteracts, 2, true, true, true)
+    octeracts: format(player.wowOcteracts, 2, true, false)
   })
+  updateInnerHTMLIfChanged(
+    'octeractUpgradeAP',
+    i18next.t('octeract.octeractUpgradeAP', {
+      current: format(calculateOcteractUpgradeAP(), 0, true),
+      max: format(maxOcteractUpgradeAP, 0, true)
+    })
+  )
 
   const perSecond = calculateOcteractMultiplier()
 
@@ -1693,37 +1957,178 @@ export const visualUpdateOcteracts = () => {
   DOMCacheGetOrSet('totalOcteractAmount').innerHTML = i18next.t(
     'octeract.totalGenerated',
     {
-      octeracts: format(player.totalWowOcteracts, 2, true, true, true)
+      octeracts: format(player.totalWowOcteracts, 2, true, false)
     }
   )
-  DOMCacheGetOrSet('totalOcteractCubeBonus').style.display = cTOCB >= 0.001 ? 'block' : 'none'
-  DOMCacheGetOrSet('totalOcteractQuarkBonus').style.display = cTOQB >= 0.001 ? 'block' : 'none'
-  DOMCacheGetOrSet('totalOcteractOfferingBonus').style.display = cTOOB >= 0.001 ? 'block' : 'none'
-  DOMCacheGetOrSet('totalOcteractObtainiumBonus').style.display = cTOOOB >= 0.001 ? 'block' : 'none'
+  DOMCacheGetOrSet('totalOcteractCubeBonus').style.display = cTOCB >= 0.001 ? '' : 'none'
+  DOMCacheGetOrSet('totalOcteractQuarkBonus').style.display = cTOQB >= 0.001 ? '' : 'none'
+  DOMCacheGetOrSet('totalOcteractOfferingBonus').style.display = cTOOB >= 0.001 ? '' : 'none'
+  DOMCacheGetOrSet('totalOcteractObtainiumBonus').style.display = cTOOOB >= 0.001 ? '' : 'none'
   DOMCacheGetOrSet('totalOcteractCubeBonus').innerHTML = i18next.t(
     'octeract.generatedCubeBonus',
     {
-      cubeBonus: format(cTOCB, 3, true)
+      cubeBonus: format(cTOCB, 3, true, false)
     }
   )
   DOMCacheGetOrSet('totalOcteractQuarkBonus').innerHTML = i18next.t(
     'octeract.generatedQuarkBonus',
     {
-      quarkBonus: format(cTOQB, 3, true)
+      quarkBonus: format(cTOQB, 3, true, false)
     }
   )
   DOMCacheGetOrSet('totalOcteractOfferingBonus').innerHTML = i18next.t(
     'octeract.generatedOfferingBonus',
     {
-      offeringBonus: format(cTOOB, 3, true)
+      offeringBonus: format(cTOOB, 3, true, false)
     }
   )
   DOMCacheGetOrSet('totalOcteractObtainiumBonus').innerHTML = i18next.t(
     'octeract.generatedObtainiumBonus',
     {
-      obtainiumBonus: format(cTOOOB, 3, true)
+      obtainiumBonus: format(cTOOOB, 3, true, false)
     }
   )
+}
+
+const ambrosiaFillReward = (luck: number) => ({
+  guaranteed: Math.floor(luck / 100),
+  chance: luck - 100 * Math.floor(luck / 100)
+})
+
+// Shows a range when the luck remainder gives a chance of one more on fill.
+const ambrosiaFillGainText = (guaranteed: number, chance: number) =>
+  chance > 0
+    ? i18next.t('ambrosia.ledger.fillGainRange', {
+      min: format(guaranteed, 0, true),
+      max: format(guaranteed + 1, 0, true)
+    })
+    : i18next.t('ambrosia.ledger.fillGain', { amount: format(guaranteed, 0, true) })
+
+const ambrosiaDetailsList = (lines: string[]) =>
+  `<div class="ambrosiaDetailsList">${
+    (lines.length > 0 ? lines : [i18next.t('ambrosia.ledger.noBonuses')])
+      .map((line) => `<p>${line}</p>`)
+      .join('')
+  }</div>`
+
+export const ambrosiaBonusesHTML = () => {
+  const lines = [
+    i18next.t('ambrosia.generatedCubeBonus', {
+      cubeBonus: formatAsPercentIncrease(
+        calculateAmbrosiaCubeMult()
+          * getShopUpgradeEffects('shopCashGrabUltra', 'cubesMult')
+          * getShopUpgradeEffects('shopEXUltra', 'cubeMult'),
+        2
+      )
+    }),
+    i18next.t('ambrosia.generatedQuarkBonus', {
+      quarkBonus: formatAsPercentIncrease(
+        calculateAmbrosiaQuarkMult() * getShopUpgradeEffects('shopCashGrabUltra', 'quarkMult'),
+        2
+      )
+    })
+  ]
+  if (player.shopUpgrades.shopEXUltra > 0) {
+    lines.push(
+      i18next.t('ambrosia.generatedOfferingBonus', {
+        offeringBonus: formatAsPercentIncrease(getShopUpgradeEffects('shopEXUltra', 'offeringMult'), 2)
+      }),
+      i18next.t('ambrosia.generatedObtainiumBonus', {
+        obtainiumBonus: formatAsPercentIncrease(getShopUpgradeEffects('shopEXUltra', 'obtainiumMult'), 2)
+      })
+    )
+  }
+  if (player.shopUpgrades.shopCashGrabUltra > 0) {
+    lines.push(
+      i18next.t('ambrosia.ledger.barBonus', {
+        percent: formatAsPercentIncrease(getShopUpgradeEffects('shopCashGrabUltra', 'ambrosiaGenerationMult'), 2)
+      })
+    )
+  }
+  return ambrosiaDetailsList(lines)
+}
+
+export const redAmbrosiaBonusesHTML = () => {
+  const lines: string[] = []
+  if (player.redAmbrosiaUpgrades.redAmbrosiaCube > 0) {
+    lines.push(
+      i18next.t('ambrosia.generatedCubeBonus', { cubeBonus: formatAsPercentIncrease(calculateRedAmbrosiaCubes(), 2) })
+    )
+  }
+  if (player.redAmbrosiaUpgrades.redAmbrosiaOffering > 0) {
+    lines.push(
+      i18next.t('ambrosia.generatedOfferingBonus', {
+        offeringBonus: formatAsPercentIncrease(calculateRedAmbrosiaOffering(), 2)
+      })
+    )
+  }
+  if (player.redAmbrosiaUpgrades.redAmbrosiaObtainium > 0) {
+    lines.push(
+      i18next.t('ambrosia.generatedObtainiumBonus', {
+        obtainiumBonus: formatAsPercentIncrease(calculateRedAmbrosiaObtainium(), 2)
+      })
+    )
+  }
+  if (player.cubeUpgrades[79] > 0) {
+    lines.push(i18next.t('ambrosia.generatedLuckBonus', { luckBonus: format(calculateCookieUpgrade29Luck(), 2, true) }))
+  }
+  return ambrosiaDetailsList(lines)
+}
+
+export const purpleAmbrosiaBonusesHTML = () => {
+  const lines: string[] = []
+  if (player.purpleAmbrosiaUpgrades.virgo > 0) {
+    lines.push(
+      i18next.t('ambrosia.ledger.virgoBonus', {
+        salvage: format(getPurpleAmbrosiaUpgradeEffects('virgo', 'assignedBlueberrySalvage'), 0, true)
+      })
+    )
+  }
+  if (player.highestSingularityCount >= 283) {
+    lines.push(
+      i18next.t('ambrosia.ledger.honeyBonus', {
+        honey: format(calculateEfficientBlueberryPurpleEfficiency(), 2, true)
+      })
+    )
+  }
+  if (player.purpleAmbrosiaUpgrades.leo > 0) {
+    const availableBlueberries = calculateBlueberryInventory() - player.spentBlueberries
+    lines.push(
+      availableBlueberries >= 5
+        ? i18next.t('ambrosia.ledger.leoBonus', {
+          luck: format(getPurpleAmbrosiaUpgradeEffects('leo', 'unassignedBlueberyLuck'), 0, true)
+        })
+        : i18next.t('ambrosia.ledger.leoInactive')
+    )
+  }
+  return ambrosiaDetailsList(lines)
+}
+
+export const ambrosiaLuckHTML = () => {
+  const { guaranteed, chance } = ambrosiaFillReward(calculateAmbrosiaRewardLuck())
+  const bonusAmbrosia = getSingularityChallengeEffect('noAmbrosiaUpgrades', 'bonusAmbrosia')
+  const lines = [
+    i18next.t('ambrosia.ledger.perFill', {
+      guaranteed: format(guaranteed + bonusAmbrosia, 0, true),
+      extraChance: format(chance, 0, true)
+    }),
+    i18next.t('ambrosia.ledger.luckExplanation')
+  ]
+  if (bonusAmbrosia > 0) {
+    lines.push(i18next.t('ambrosia.ledger.noAmbrosiaUpgradesBonus', { amount: format(bonusAmbrosia, 0, true) }))
+  }
+  return ambrosiaDetailsList(lines)
+}
+
+export const redAmbrosiaLuckHTML = () => {
+  const { guaranteed, chance } = ambrosiaFillReward(calculateRedAmbrosiaRewardLuck())
+  return ambrosiaDetailsList([
+    i18next.t('ambrosia.ledger.redPerFill', {
+      guaranteed: format(guaranteed, 0, true),
+      extraChance: format(chance, 0, true)
+    }),
+    i18next.t('ambrosia.ledger.redLuckExplanation')
+  ])
 }
 
 export const visualUpdateAmbrosia = () => {
@@ -1731,166 +2136,498 @@ export const visualUpdateAmbrosia = () => {
     return
   }
 
-  const luck = calculateAmbrosiaLuck()
-  const baseLuck = calculateAmbrosiaLuckRaw()
-  const luckBonusPercent = 100 * (calculateAmbrosiaAdditiveLuckMult() - 1)
-  const guaranteed = Math.floor(luck / 100)
-  const chance = luck - 100 * Math.floor(luck / 100)
+  const redUnlocked = player.singularityChallenges.noAmbrosiaUpgrades.completions > 0
+  const purpleUnlocked = player.singularityChallenges.taxmanLastStand.completions > 0
+  DOMCacheGetOrSet('redAmbrosiaDisplay').hidden = !redUnlocked
+  DOMCacheGetOrSet('pixelProgressBar').hidden = !redUnlocked
+  DOMCacheGetOrSet('ambrosiaUpgradeRedAmbrosia').hidden = !redUnlocked
+  DOMCacheGetOrSet('ambrosiaUpgradePurpleAmbrosia').hidden = !purpleUnlocked
+  DOMCacheGetOrSet('purpleAmbrosiaDisplay').hidden = !purpleUnlocked
+  DOMCacheGetOrSet('ambrosiaUpgradeAP').hidden = !redUnlocked
+  if (redUnlocked) {
+    const purpleAP = purpleUnlocked ? calculatePurpleAmbrosiaUpgradeAP() + calculatePurpleEnchantmentAP() : 0
+    const maxPurpleAP = purpleUnlocked ? maxPurpleAmbrosiaUpgradeAP + maxPurpleEnchantmentAP : 0
+    updateInnerHTMLIfChanged(
+      'ambrosiaUpgradeAP',
+      i18next.t('ambrosia.upgradeAP', {
+        current: format(calculateRedAmbrosiaUpgradeAP() + purpleAP, 0, true),
+        max: format(maxRedAmbrosiaUpgradeAP + maxPurpleAP, 0, true)
+      })
+    )
+  }
 
-  const luckRed = calculateRedAmbrosiaLuck()
-  const guaranteedRed = Math.floor(luckRed / 100)
-  const chanceRed = luckRed - 100 * Math.floor(luckRed / 100)
+  const twoMindEnabled = getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')
+  const luck = calculateAmbrosiaRewardLuck()
+  const luckRed = calculateRedAmbrosiaRewardLuck()
+  const fillReward = ambrosiaFillReward(luck)
+  const fillRewardRed = ambrosiaFillReward(luckRed)
 
   const requiredTime = calculateRequiredBlueberryTime()
   const requiredTimeRed = calculateRequiredRedAmbrosiaTime()
-
   const totalBlueberries = calculateBlueberryInventory()
   const availableBlueberries = totalBlueberries - player.spentBlueberries
 
   const totalTimePerSecond = calculateAmbrosiaGenerationSpeed()
   const totalTimePerSecondRed = calculateRedAmbrosiaGenerationSpeed()
-  const barWidth = 100 * Math.min(1, player.blueberryTime / requiredTime)
-  const pixelBarWidth = 100 * Math.min(1, player.redAmbrosiaTime / requiredTimeRed)
+  const ambrosiaProgress = Math.min(1, player.blueberryTime / requiredTime)
+  const redAmbrosiaProgress = Math.min(1, player.redAmbrosiaTime / requiredTimeRed)
+  const {
+    ambrosia: ambrosiaRouting,
+    redAmbrosia: redAmbrosiaRouting
+  } = calculatePurpleReactorDisplay(
+    player.singularityChallenges.noSingularityUpgrades.completions > 0 ? totalTimePerSecond : 0,
+    player.singularityChallenges.noAmbrosiaUpgrades.completions > 0 ? totalTimePerSecondRed : 0
+  )
 
-  const ambCubeBonus = calculateAmbrosiaCubeMult()
-  const ambQuarkBonus = calculateAmbrosiaQuarkMult()
-  const redAmbCubeBonus = calculateRedAmbrosiaCubes()
-  const redAmbObtBonus = calculateRedAmbrosiaObtainium()
-  const redAmbOffBonus = calculateRedAmbrosiaOffering()
-  const redAmbLuckBonus = calculateCookieUpgrade29Luck()
-
-  DOMCacheGetOrSet('ambrosiaProgress').style.width = `${barWidth}%`
+  DOMCacheGetOrSet('ambrosiaProgress').style.setProperty('--progress-fill', `${ambrosiaProgress}`)
+  let ambrosiaProgressDescription: string
+  let redAmbrosiaProgressDescription: string
 
   if (player.singularityChallenges.noSingularityUpgrades.completions > 0) {
-    DOMCacheGetOrSet('ambrosiaProgressText').textContent = `${format(player.blueberryTime, 0, true)} / ${
-      format(requiredTime, 0, true)
-    } [+${format(totalTimePerSecond, 0, true)}/s]`
+    DOMCacheGetOrSet('ambrosiaProgressText').textContent = i18next.t('ambrosia.ledger.progress', {
+      current: format(player.blueberryTime, 0, true),
+      required: format(requiredTime, 0, true),
+      rate: format(ambrosiaRouting.regularRate, 0, true)
+    })
+    DOMCacheGetOrSet('ambrosiaProgressGain').textContent = ambrosiaFillGainText(
+      fillReward.guaranteed + getSingularityChallengeEffect('noAmbrosiaUpgrades', 'bonusAmbrosia'),
+      fillReward.chance
+    )
+    ambrosiaProgressDescription = i18next.t('ambrosia.ledger.progressPoints', {
+      current: format(player.blueberryTime, 0, true, false),
+      required: format(requiredTime, 0, true),
+      rate: format(ambrosiaRouting.regularRate, 0, true)
+    })
   } else {
-    DOMCacheGetOrSet('ambrosiaProgressText').textContent = i18next.t('ambrosia.notUnlocked')
+    DOMCacheGetOrSet('ambrosiaProgressText').textContent = i18next.t('ambrosia.ledger.generationLocked')
+    DOMCacheGetOrSet('ambrosiaProgressGain').textContent = ''
+    ambrosiaProgressDescription = i18next.t('ambrosia.notUnlocked')
   }
 
-  DOMCacheGetOrSet('pixelProgress').style.width = `${pixelBarWidth}%`
+  DOMCacheGetOrSet('pixelProgress').style.setProperty('--progress-fill', `${redAmbrosiaProgress}`)
 
-  if (player.singularityChallenges.noAmbrosiaUpgrades.completions > 0) {
-    DOMCacheGetOrSet('pixelProgressText').textContent = `${format(player.redAmbrosiaTime, 0, true)} / ${
-      format(requiredTimeRed, 0, true)
-    } [+${format(totalTimePerSecondRed, 2, true)}/s]`
+  if (redUnlocked) {
+    DOMCacheGetOrSet('pixelProgressText').textContent = i18next.t('ambrosia.ledger.progress', {
+      current: format(player.redAmbrosiaTime, 0, true),
+      required: format(requiredTimeRed, 0, true),
+      rate: format(redAmbrosiaRouting.regularRate, 2, true)
+    })
+    DOMCacheGetOrSet('pixelProgressGain').textContent = ambrosiaFillGainText(
+      fillRewardRed.guaranteed,
+      fillRewardRed.chance
+    )
+    redAmbrosiaProgressDescription = i18next.t('ambrosia.ledger.progressPoints', {
+      current: format(player.redAmbrosiaTime, 0, true, false),
+      required: format(requiredTimeRed, 0, true),
+      rate: format(redAmbrosiaRouting.regularRate, 2, true)
+    })
   } else {
-    DOMCacheGetOrSet('pixelProgressText').textContent = i18next.t('redAmbrosia.notUnlocked')
+    DOMCacheGetOrSet('pixelProgressText').textContent = i18next.t('ambrosia.ledger.generationLocked')
+    DOMCacheGetOrSet('pixelProgressGain').textContent = ''
+    redAmbrosiaProgressDescription = i18next.t('redAmbrosia.notUnlocked')
   }
-  const extraLuckHTML = luckBonusPercent > 0.01
-    ? `[<span style='color: var(--amber-text-color)'>☘${
-      format(
-        baseLuck,
-        0,
-        true
-      )
-    } +${format(luckBonusPercent, 2, true)}%</span>]`
-    : ''
+  updateProgressBarAccessibility(
+    'ambrosiaProgressBar',
+    ambrosiaProgress * 100,
+    ambrosiaProgressDescription
+  )
+  updateProgressBarAccessibility(
+    'pixelProgressBar',
+    redAmbrosiaProgress * 100,
+    redAmbrosiaProgressDescription
+  )
 
-  DOMCacheGetOrSet('ambrosiaAmount').innerHTML = i18next.t('ambrosia.amount', {
-    ambrosia: format(player.ambrosia, 0, true),
-    lifetimeAmbrosia: format(player.lifetimeAmbrosia, 0, true)
+  updateAmbrosiaLedgerBalance('ambrosiaAmount', player.ambrosia, player.lifetimeAmbrosia)
+  updateAmbrosiaLedgerBalance('redAmbrosiaAmount', player.redAmbrosia, player.lifetimeRedAmbrosia)
+  updateAmbrosiaLedgerBalance('purpleAmbrosiaAmount', player.purpleAmbrosia, player.lifetimePurpleAmbrosia)
+  updateAmbrosiaLedgerBalance('blueberryAmount', availableBlueberries, totalBlueberries, true)
+  updateAmbrosiaUpgradeCurrency('ambrosiaUpgradeAmbrosia', player.ambrosia, 'ambrosia.ledger.upgradeAmbrosia')
+  updateAmbrosiaUpgradeCurrency('ambrosiaUpgradeRedAmbrosia', player.redAmbrosia, 'ambrosia.ledger.upgradeRedAmbrosia')
+  updateAmbrosiaUpgradeCurrency(
+    'ambrosiaUpgradePurpleAmbrosia',
+    player.purpleAmbrosia,
+    'ambrosia.ledger.upgradePurpleAmbrosia'
+  )
+
+  updateInnerHTMLIfChanged('ambrosiaLuck', i18next.t('ambrosia.ledger.luck', { luck: format(luck, 0, true) }))
+  updateInnerHTMLIfChanged(
+    'ambrosiaLuckModifiers',
+    twoMindEnabled
+      ? i18next.t('ambrosia.ledger.twoMindModifier', {
+        unmodifiedLuck: format(calculateAmbrosiaLuck(), 0, true)
+      })
+      : i18next.t('ambrosia.ledger.luckModifiers', {
+        base: format(calculateAmbrosiaLuckRaw(), 0, true),
+        percent: format(100 * (calculateAmbrosiaAdditiveLuckMult() - 1), 2, true)
+      })
+  )
+
+  updateInnerHTMLIfChanged('redAmbrosiaLuck', i18next.t('ambrosia.ledger.redLuck', { luck: format(luckRed, 0, true) }))
+  DOMCacheGetOrSet('redAmbrosiaLuckModifiers').hidden = !twoMindEnabled
+  if (twoMindEnabled) {
+    updateInnerHTMLIfChanged(
+      'redAmbrosiaLuckModifiers',
+      i18next.t('ambrosia.ledger.redTwoMindModifier', {
+        unmodifiedLuck: format(calculateRedAmbrosiaLuck(), 0, true)
+      })
+    )
+  }
+
+  updateBlueberryLoadoutIcons()
+}
+
+export const visualUpdatePurple = () => {
+  if (G.currentTab !== Tabs.Singularity) {
+    return
+  }
+
+  const ambrosiaBarPoints = player.purpleReactor.storedAmbrosiaBarPoints
+  const redAmbrosiaBarPoints = player.purpleReactor.storedRedAmbrosiaBarPoints
+
+  const ambrosiaReactantCapacity = calculatePurpleReactantCapacity()
+  const redAmbrosiaReactantCapacity = calculateRedAmbrosiaReactantCapacity()
+
+  const conversionFactor = calculatePurpleHoneyConversionFactor()
+  const purpleHoneyPerExtraction = calculatePurpleHoneyPerExtraction()
+  const purpleHoneyLuck = calculatePurpleHoneyRewardLuck()
+  const { guaranteedMultiplier, bonusMultiplierChance } = calculatePurpleHoneyExtractionMultiplier(purpleHoneyLuck)
+  const encabulatorSpeed = calculateEncabulatorSpeed()
+  const purpleReactorAP = calculatePurpleReactorAP()
+  const libraUnlocked = getPurpleAmbrosiaUpgradeEffects('libra', 'overcapToggleUnlocked')
+  DOMCacheGetOrSet('purpleReactantOvercapControls').hidden = !libraUnlocked
+  DOMCacheGetOrSet('purpleReactantOvercapControls').title = i18next.t('purpleReactor.overflowExplanation')
+  const overcapToggle = DOMCacheGetOrSet('encabulatorOvercapToggle') as HTMLInputElement
+  overcapToggle.disabled = !libraUnlocked
+  overcapToggle.checked = player.encabulatorOvercapToggle
+  const reaction = calculatePurpleReactantRecipe()
+  updateInnerHTMLIfChanged(
+    'purpleReactorRecipeValue',
+    i18next.t('purpleReactor.header.reaction', {
+      ambrosia: format(reaction.ambrosiaBarPoints, 0, true),
+      redAmbrosia: format(reaction.redAmbrosiaBarPoints, 0, true),
+      purple: format(reaction.purpleBarPoints, 0, true)
+    })
+  )
+
+  updateInnerHTMLIfChanged(
+    'purpleReactorAriesModifier',
+    i18next.t('purpleReactor.header.ariesModifier', {
+      percent: formatAsPercentIncrease(getPurpleAmbrosiaUpgradeEffects('aries', 'universalBarPointMult'), 2)
+    })
+  )
+  updateInnerHTMLIfChanged(
+    'purpleReactorScorpioModifier',
+    i18next.t('purpleReactor.header.scorpioModifier', {
+      percent: formatAsPercentIncrease(getPurpleAmbrosiaUpgradeEffects('scorpio', 'purpleReactorConversionMult'), 0)
+    })
+  )
+
+  const purpleBarPointsOnFill = getPurpleAmbrosiaUpgradeEffects('cancer', 'purpleBarPointsOnFill')
+  DOMCacheGetOrSet('purpleHoneyCancerBonus').hidden = purpleBarPointsOnFill === 0
+  updateInnerHTMLIfChanged(
+    'purpleHoneyCancerBonus',
+    i18next.t('purpleAmbrosia.cancerBarFillBonus', {
+      points: format(purpleBarPointsOnFill, 2, true)
+    })
+  )
+
+  const ambrosiaBarPointsRequestedPerSecond = ambrosiaReactantCapacity
+    * encabulatorSpeed
+    / 100
+    / 3600
+  const ambrosiaProductionPerSecond = player.singularityChallenges.noSingularityUpgrades.completions > 0
+    ? calculateAmbrosiaGenerationSpeed()
+    : 0
+  const redAmbrosiaProductionPerSecond = player.singularityChallenges.noAmbrosiaUpgrades.completions > 0
+    ? calculateRedAmbrosiaGenerationSpeed()
+    : 0
+  const {
+    ambrosiaBarPointsSpent: maximumAmbrosiaReactantDissolutionRate,
+    redAmbrosiaBarPointsSpent: maximumRedAmbrosiaReactantDissolutionRate
+  } = calculatePurpleReactantConversion(
+    ambrosiaReactantCapacity / PURPLE_REACTOR_TICK_INTERVAL,
+    redAmbrosiaReactantCapacity / PURPLE_REACTOR_TICK_INTERVAL,
+    ambrosiaBarPointsRequestedPerSecond
+  )
+
+  const purpleHoneyProgress = player.purpleHoneyProgress
+
+  const {
+    ambrosia: ambrosiaReactantDisplay,
+    redAmbrosia: redAmbrosiaReactantDisplay,
+    purpleBarPointsPerSecond: purpleHoneyProgressPerSecond,
+    overflowPurpleBarPointsPerSecond: purpleOverflowPerSecond
+  } = calculatePurpleReactorDisplay(
+    ambrosiaProductionPerSecond,
+    redAmbrosiaProductionPerSecond
+  )
+  const totalPurpleBarPointsPerSecond = purpleHoneyProgressPerSecond + purpleOverflowPerSecond
+  DOMCacheGetOrSet('purpleHoneyLibraBonus').hidden = !libraUnlocked
+  DOMCacheGetOrSet('purpleHoneyLibraBonus').textContent = i18next.t('purpleReactor.purpleHoneyOverflowRate', {
+    rate: format(purpleOverflowPerSecond, 2, true)
   })
 
-  DOMCacheGetOrSet('ambrosiaCubeBonus').style.display = ambCubeBonus > 1 ? 'block' : 'none'
-  DOMCacheGetOrSet('ambrosiaQuarkBonus').style.display = ambQuarkBonus > 1 ? 'block' : 'none'
-
-  DOMCacheGetOrSet('ambrosiaCubeBonus').innerHTML = i18next.t(
-    'ambrosia.generatedCubeBonus',
-    {
-      cubeBonus: formatAsPercentIncrease(ambCubeBonus, 2)
-    }
+  const ambrosiaBarPointReserveRate = ambrosiaReactantDisplay.reserveRate
+  const redAmbrosiaBarPointReserveRate = redAmbrosiaReactantDisplay.reserveRate
+  const ambrosiaBarPointNetRate = normalizePurpleReactantNetRate(
+    ambrosiaBarPointReserveRate - ambrosiaReactantDisplay.spentRate,
+    ambrosiaReactantCapacity
   )
-  DOMCacheGetOrSet('ambrosiaQuarkBonus').innerHTML = i18next.t(
-    'ambrosia.generatedQuarkBonus',
-    {
-      quarkBonus: formatAsPercentIncrease(ambQuarkBonus, 2)
-    }
+  const redAmbrosiaBarPointNetRate = normalizePurpleReactantNetRate(
+    redAmbrosiaBarPointReserveRate - redAmbrosiaReactantDisplay.spentRate,
+    redAmbrosiaReactantCapacity
   )
 
-  DOMCacheGetOrSet('redAmbrosiaAmount').innerHTML = i18next.t('redAmbrosia.amount', {
-    redAmbrosia: format(player.redAmbrosia, 0, true),
-    lifetimeRedAmbrosia: format(player.lifetimeRedAmbrosia, 0, true)
+  const ambrosiaAtCapacity = ambrosiaReactantDisplay.atCapacity
+  const redAmbrosiaAtCapacity = redAmbrosiaReactantDisplay.atCapacity
+  const displayedAmbrosiaBarPoints = ambrosiaAtCapacity ? ambrosiaReactantCapacity : ambrosiaBarPoints
+  const displayedRedAmbrosiaBarPoints = redAmbrosiaAtCapacity ? redAmbrosiaReactantCapacity : redAmbrosiaBarPoints
+  const ambrosiaProgress = ambrosiaReactantCapacity > 0
+    ? Math.min(100, 100 * displayedAmbrosiaBarPoints / ambrosiaReactantCapacity)
+    : 0
+  const redAmbrosiaProgress = redAmbrosiaReactantCapacity > 0
+    ? Math.min(100, 100 * displayedRedAmbrosiaBarPoints / redAmbrosiaReactantCapacity)
+    : 0
+  const purpleHoneyProgressPercentage = conversionFactor > 0
+    ? Math.min(100, 100 * purpleHoneyProgress / conversionFactor)
+    : 0
+  const purpleHoneyProgressText = i18next.t('purpleReactor.purpleHoneyProgress', {
+    current: format(purpleHoneyProgress, 2, true),
+    conversion: format(conversionFactor, 2, true)
   })
+  const formattedAmbrosiaBarPoints = format(displayedAmbrosiaBarPoints, 2, true)
+  const formattedRedAmbrosiaBarPoints = format(displayedRedAmbrosiaBarPoints, 2, true)
+  const formattedAmbrosiaReactantCapacity = format(ambrosiaReactantCapacity, 2, true)
+  const formattedRedAmbrosiaReactantCapacity = format(redAmbrosiaReactantCapacity, 2, true)
+  const ambrosiaProgressText = i18next.t('purpleReactor.reactantTankProgress', {
+    stored: formattedAmbrosiaBarPoints,
+    capacity: formattedAmbrosiaReactantCapacity
+  })
+  const redAmbrosiaProgressText = i18next.t('purpleReactor.reactantTankProgress', {
+    stored: formattedRedAmbrosiaBarPoints,
+    capacity: formattedRedAmbrosiaReactantCapacity
+  })
+  const ambrosiaProgressAriaText = i18next.t('purpleReactor.reactantTankProgressAria', {
+    stored: formattedAmbrosiaBarPoints,
+    capacity: formattedAmbrosiaReactantCapacity,
+    percentage: format(ambrosiaProgress, 2, true)
+  })
+  const redAmbrosiaProgressAriaText = i18next.t('purpleReactor.reactantTankProgressAria', {
+    stored: formattedRedAmbrosiaBarPoints,
+    capacity: formattedRedAmbrosiaReactantCapacity,
+    percentage: format(redAmbrosiaProgress, 2, true)
+  })
+  const reactorActive = totalPurpleBarPointsPerSecond > 0
 
-  DOMCacheGetOrSet('redAmbrosiaCubeBonus').style.display = redAmbCubeBonus > 1 ? 'block' : 'none'
-  DOMCacheGetOrSet('redAmbrosiaObtainiumBonus').style.display = redAmbObtBonus > 1 ? 'block' : 'none'
-  DOMCacheGetOrSet('redAmbrosiaOfferingBonus').style.display = redAmbOffBonus > 1 ? 'block' : 'none'
-  DOMCacheGetOrSet('redAmbrosiaLuckBonus').style.display = redAmbLuckBonus > 0 ? 'block' : 'none'
-
-  DOMCacheGetOrSet('redAmbrosiaCubeBonus').innerHTML = i18next.t(
-    'ambrosia.generatedCubeBonus',
-    {
-      cubeBonus: formatAsPercentIncrease(redAmbCubeBonus, 2)
-    }
+  updateInnerHTMLIfChanged(
+    'purpleUpgradeAP',
+    i18next.t('purpleReactor.purpleUpgradeAP', {
+      current: format(purpleReactorAP, 0, true),
+      max: format(maxPurpleReactorAP, 0, true)
+    })
   )
-
-  DOMCacheGetOrSet('redAmbrosiaObtainiumBonus').innerHTML = i18next.t(
-    'ambrosia.generatedObtainiumBonus',
-    {
-      obtainiumBonus: formatAsPercentIncrease(redAmbObtBonus, 2)
-    }
+  updateInnerHTMLIfChanged(
+    'purpleHoneyAmount',
+    i18next.t('purpleReactor.purpleHoneyAmount', {
+      amount: format(player.purpleReactor.purpleHoney, 2, true),
+      lifetimeAmount: format(player.purpleReactor.lifetimePurpleHoney, 2, true)
+    })
   )
-
-  DOMCacheGetOrSet('redAmbrosiaOfferingBonus').innerHTML = i18next.t(
-    'ambrosia.generatedOfferingBonus',
-    {
-      offeringBonus: formatAsPercentIncrease(redAmbOffBonus, 2)
-    }
+  updateInnerHTMLIfChanged(
+    'highestPurpleHoney',
+    i18next.t('purpleReactor.highestPurpleHoney', {
+      amount: format(player.stats.highestPurpleHoney, 2, true)
+    })
   )
-
-  DOMCacheGetOrSet('redAmbrosiaLuckBonus').innerHTML = i18next.t(
-    'ambrosia.generatedLuckBonus',
-    {
-      luckBonus: format(redAmbLuckBonus, 2, true)
-    }
+  const highestPurpleHoneyModifierLines = [
+    [
+      purpleReactorUpgrades.lifetimeHoneyQuarks.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyQuarks', {
+          amount: formatAsPercentIncrease(getPurpleReactorUpgradeEffects('lifetimeHoneyQuarks', 'quarkMultiplier'), 2)
+        })
+        : null,
+      purpleReactorUpgrades.lifetimeHoneyGlobalSpeed.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyGlobalSpeed', {
+          amount: formatAsPercentIncrease(
+            getPurpleReactorUpgradeEffects('lifetimeHoneyGlobalSpeed', 'globalSpeedMultiplier'),
+            2
+          )
+        })
+        : null,
+      purpleReactorUpgrades.lifetimeHoneyAscensionSpeed.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyAscensionSpeed', {
+          amount: formatAsPercentIncrease(
+            getPurpleReactorUpgradeEffects('lifetimeHoneyAscensionSpeed', 'ascensionSpeedMultiplier'),
+            2
+          )
+        })
+        : null
+    ].filter((modifier): modifier is string => modifier !== null).join(' · '),
+    [
+      purpleReactorUpgrades.lifetimeHoneyAmbrosia.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyAmbrosia', {
+          amount: formatAsPercentIncrease(
+            getPurpleReactorUpgradeEffects('lifetimeHoneyAmbrosia', 'ambrosiaGenerationSpeed'),
+            2
+          )
+        })
+        : null,
+      purpleReactorUpgrades.lifetimeHoneyRedAmbrosia.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyRedAmbrosia', {
+          amount: formatAsPercentIncrease(
+            getPurpleReactorUpgradeEffects('lifetimeHoneyRedAmbrosia', 'redAmbrosiaGenerationSpeed'),
+            2
+          )
+        })
+        : null
+    ].filter((modifier): modifier is string => modifier !== null).join(' · '),
+    [
+      purpleReactorUpgrades.lifetimeHoneyAntELO.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyAntELO', {
+          amount: formatAsPercentIncrease(
+            1 + getPurpleReactorUpgradeEffects('lifetimeHoneyAntELO', 'additiveAntELOPercent'),
+            3
+          )
+        })
+        : null,
+      purpleReactorUpgrades.lifetimeHoneyRebornELOSpeed.level > 0
+        ? i18next.t('purpleReactor.lifetimePurpleHoneyRebornELOSpeed', {
+          amount: formatAsPercentIncrease(
+            getPurpleReactorUpgradeEffects('lifetimeHoneyRebornELOSpeed', 'rebornELOSpeedMult'),
+            2
+          )
+        })
+        : null
+    ].filter((modifier): modifier is string => modifier !== null).join(' · ')
+  ].filter((line) => line.length > 0)
+  updateInnerHTMLIfChanged(
+    'highestPurpleHoneyModifiers',
+    highestPurpleHoneyModifierLines.length === 0
+      ? ''
+      : `↳ ${highestPurpleHoneyModifierLines.join('<br>&nbsp;&nbsp;')}`
   )
-
-  DOMCacheGetOrSet('blueberryAmount').innerHTML = i18next.t(
-    'ambrosia.blueberryAmount',
-    {
-      unspentBlueberries: format(availableBlueberries, 0, true),
-      blueberries: format(totalBlueberries, 0, true)
-    }
+  updateInnerHTMLIfChanged(
+    'purpleHoneyGeneration',
+    i18next.t(
+      'purpleReactor.purpleHoneyBaseYield',
+      { amount: format(purpleHoneyPerExtraction, 2, true) }
+    )
   )
-
-  DOMCacheGetOrSet('ambrosiaAmountPerGeneration').innerHTML = i18next.t(
-    'ambrosia.perGen',
-    {
-      guaranteed: format(guaranteed, 0, true),
-      extraChance: format(chance, 0, true),
-      ambrosiaLuck: format(luck, 0, true),
-      extra: extraLuckHTML
-    }
-  )
-
-  DOMCacheGetOrSet('redAmbrosiaAmountPerGeneration').innerHTML = i18next.t(
-    'redAmbrosia.perGen',
-    {
-      guaranteed: format(guaranteedRed, 0, true),
-      extraChance: format(chanceRed, 0, true),
-      ambrosiaLuck: format(luckRed, 0, true)
-    }
-  )
-
-  if (player.cubeUpgrades[76] > 0) {
-    DOMCacheGetOrSet('ambrosiaThresholdInfo').innerHTML = i18next.t(
-      'ambrosia.cubeUpgradeThresholds',
+  updateInnerHTMLIfChanged(
+    'purpleHoneyLuck',
+    i18next.t(
+      getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')
+        ? 'purpleReactor.purpleHoneyLuckTwoMind'
+        : 'purpleReactor.purpleHoneyLuck',
       {
-        threshold: calculateNumberOfThresholds(),
-        toNext: format(calculateToNextThreshold(), 0, true),
-        percent: player.cubeUpgrades[76] * calculateNumberOfThresholds()
+        luck: format(purpleHoneyLuck, 2, true),
+        unmodifiedLuck: format(calculatePurpleHoneyLuck(), 2, true)
       }
     )
-  } else {
-    DOMCacheGetOrSet('ambrosiaThresholdInfo').innerHTML = i18next.t(
-      'ambrosia.timeThresholds',
+  )
+  updateInnerHTMLIfChanged(
+    'purpleHoneyExtractionMultiplier',
+    i18next.t(
+      'purpleReactor.purpleHoneyExtractionMultiplier',
       {
-        threshold: calculateNumberOfThresholds(),
-        toNext: format(calculateToNextThreshold(), 0, true)
+        multiplier: `${format(guaranteedMultiplier, 0, true)}x`,
+        chance: format(100 * bonusMultiplierChance, 2, true)
       }
     )
+  )
+
+  updateInnerHTMLIfChanged(
+    'purpleReactorSpeed',
+    i18next.t(
+      'purpleReactor.header.speed',
+      { speed: format(encabulatorSpeed, 2, true) }
+    )
+  )
+  updateInnerHTMLIfChanged(
+    'purpleReactorMaximumDraw',
+    i18next.t('purpleReactor.header.maximumDraw', {
+      ambrosia: format(maximumAmbrosiaReactantDissolutionRate, 2, true),
+      redAmbrosia: format(maximumRedAmbrosiaReactantDissolutionRate, 2, true)
+    })
+  )
+
+  const reactorContainer = DOMCacheGetOrSet('purpleReactantContainers')
+  reactorContainer.classList.toggle('purpleReactorActive', reactorActive)
+
+  DOMCacheGetOrSet('purpleHoneyProgressFill').style.setProperty(
+    '--progress-fill',
+    `${purpleHoneyProgressPercentage / 100}`
+  )
+  DOMCacheGetOrSet('purpleHoneyProgressText').textContent = purpleHoneyProgressText
+  DOMCacheGetOrSet('purpleHoneyProgressRate').textContent = i18next.t(
+    'purpleReactor.purpleHoneyProgressRate',
+    { rate: format(totalPurpleBarPointsPerSecond, 2, true) }
+  )
+  updateProgressBarAccessibility('purpleHoneyProgressBar', purpleHoneyProgressPercentage, purpleHoneyProgressText)
+
+  DOMCacheGetOrSet('ambrosiaContainerProgress').style.transform = `scaleX(${ambrosiaProgress / 100})`
+  DOMCacheGetOrSet('ambrosiaContainerProgressText').textContent = ambrosiaProgressText
+  DOMCacheGetOrSet('ambrosiaReactantNetRate').textContent = formatPurpleReactantNetRate(ambrosiaBarPointNetRate)
+  updateInnerHTMLIfChanged(
+    'ambrosiaReactantRoutedRate',
+    i18next.t(
+      'purpleReactor.reactantRoutedRate',
+      { amount: format(ambrosiaBarPointReserveRate, 2, true) }
+    )
+  )
+  updateInnerHTMLIfChanged(
+    'ambrosiaReactantSpentRate',
+    i18next.t(
+      'purpleReactor.reactantSpentRate',
+      { amount: format(ambrosiaReactantDisplay.spentRate, 2, true) }
+    )
+  )
+  DOMCacheGetOrSet('ambrosiaReactantOverflowRate').hidden = !libraUnlocked
+  updateInnerHTMLIfChanged(
+    'ambrosiaReactantOverflowRate',
+    i18next.t('purpleReactor.reactantOverflowRate', { amount: format(ambrosiaReactantDisplay.overflowRate, 2, true) })
+  )
+  updateProgressBarAccessibility('ambrosiaContainerProgressBar', ambrosiaProgress, ambrosiaProgressAriaText)
+
+  DOMCacheGetOrSet('redAmbrosiaContainerProgress').style.transform = `scaleX(${redAmbrosiaProgress / 100})`
+  DOMCacheGetOrSet('redAmbrosiaContainerProgressText').textContent = redAmbrosiaProgressText
+  DOMCacheGetOrSet('redAmbrosiaReactantNetRate').textContent = formatPurpleReactantNetRate(redAmbrosiaBarPointNetRate)
+  updateInnerHTMLIfChanged(
+    'redAmbrosiaReactantRoutedRate',
+    i18next.t(
+      'purpleReactor.reactantRoutedRate',
+      { amount: format(redAmbrosiaBarPointReserveRate, 2, true) }
+    )
+  )
+  updateInnerHTMLIfChanged(
+    'redAmbrosiaReactantSpentRate',
+    i18next.t(
+      'purpleReactor.reactantSpentRate',
+      { amount: format(redAmbrosiaReactantDisplay.spentRate, 2, true) }
+    )
+  )
+  DOMCacheGetOrSet('redAmbrosiaReactantOverflowRate').hidden = !libraUnlocked
+  updateInnerHTMLIfChanged(
+    'redAmbrosiaReactantOverflowRate',
+    i18next.t('purpleReactor.reactantOverflowRate', {
+      amount: format(redAmbrosiaReactantDisplay.overflowRate, 2, true)
+    })
+  )
+  updateProgressBarAccessibility('redAmbrosiaContainerProgressBar', redAmbrosiaProgress, redAmbrosiaProgressAriaText)
+
+  updatePurpleReactantSlider(
+    'ambrosiaBarPointPercentageSlider',
+    'ambrosiaBarPointPercentageValue',
+    player.purpleReactor.ambrosiaBarPointPercentage
+  )
+  updatePurpleReactantSlider(
+    'redAmbrosiaBarPointPercentageSlider',
+    'redAmbrosiaBarPointPercentageValue',
+    player.purpleReactor.redAmbrosiaBarPointPercentage
+  )
+  if (getActiveSubTab() === 5) {
+    updatePurpleUpgradeTab()
+    updateSynthesis()
   }
 }
 
@@ -1898,24 +2635,12 @@ export const visualUpdateShop = () => {
   if (G.currentTab !== Tabs.Shop) {
     return
   }
-  DOMCacheGetOrSet('quarkamount').textContent = i18next.t(
-    'shop.youHaveQuarks',
-    { x: format(player.worlds.valueOf(), 0, true) }
-  )
-  DOMCacheGetOrSet('offeringpotionowned').textContent = format(
-    player.shopUpgrades.offeringPotion,
-    0,
-    false
-  )
-  DOMCacheGetOrSet('obtainiumpotionowned').textContent = format(
-    player.shopUpgrades.obtainiumPotion,
-    0,
-    false
-  )
+
+  updateTextContentIfChanged('offeringpotionowned', format(player.shopUpgrades.offeringPotion, 0, false))
+  updateTextContentIfChanged('obtainiumpotionowned', format(player.shopUpgrades.obtainiumPotion, 0, false))
 
   // Create Keys with the correct type
-  const keys = Object.keys(player.shopUpgrades) as ShopUpgradeNames[]
-  for (const key of keys) {
+  for (const key of shopUpgradeNames) {
     // Create a copy of shopItem instead of accessing many times
     const shopItem = shopUpgrades[key]
 
@@ -1924,13 +2649,13 @@ export const visualUpdateShop = () => {
         Math.floor(Number(player.worlds) / getShopCosts(key)),
         shopItem.maxLevel - player.shopUpgrades[key]
       )
-      const el = DOMCacheGetOrSet(`buy${key.toLowerCase()}`)
+      let label: string
       switch (player.shopBuyMaxToggle) {
         case false:
-          el.textContent = 'BUY: 100 Quarks Each'
+          label = 'BUY: 100 Quarks Each'
           break
         case 'TEN':
-          el.textContent = `+${Math.min(10, maxBuyablePotions)} for ${
+          label = `+${Math.min(10, maxBuyablePotions)} for ${
             format(
               getShopCosts(key) * Math.min(10, maxBuyablePotions),
               0,
@@ -1939,122 +2664,29 @@ export const visualUpdateShop = () => {
           } Quarks`
           break
         default:
-          el.textContent = `+${format(maxBuyablePotions, 0)} for ${
+          label = `+${format(maxBuyablePotions, 0)} for ${
             format(
               getShopCosts(key) * maxBuyablePotions
             )
           } Quarks`
       }
-    }
-
-    if (shopItem.type === shopUpgradeTypes.UPGRADE) {
-      if (
-        player.shopHideToggle
-        && player.shopUpgrades[key] >= shopItem.maxLevel
-      ) {
-        DOMCacheGetOrSet(`${key}Hide`).style.display = 'none'
-        continue
-      } else {
-        DOMCacheGetOrSet(`${key}Hide`).style.display = shopItem.isUnlocked() || testing
-          ? 'block'
-          : 'none'
-
-        if (!shopItem.isUnlocked() && testing) {
-          DOMCacheGetOrSet(`${key}Hide`).style.backgroundColor = 'red'
-        }
-      }
-      // Case: If max level is 1, then it can be considered a boolean "bought" or "not bought" item
-      if (shopItem.maxLevel === 1) {
-        const upgradeDom = DOMCacheGetOrSet(`${key}Level`)
-        if (player.shopUpgrades[key] === shopItem.maxLevel) {
-          upgradeDom.textContent = i18next.t('shop.bought')
-          upgradeDom.style.color = 'gold'
-        } else {
-          upgradeDom.textContent = i18next.t('shop.notBought')
-          upgradeDom.style.color = 'white'
-        }
-
-        if (key === 'shopTalisman' && PCoinUpgrades.INSTANT_UNLOCK_1 > 0) {
-          upgradeDom.textContent = i18next.t('shop.bought')
-          upgradeDom.style.color = 'orchid'
-        }
-        if (key === 'infiniteAscent' && PCoinUpgrades.INSTANT_UNLOCK_2 > 0) {
-          upgradeDom.textContent = i18next.t('shop.bought')
-          upgradeDom.style.color = 'orchid'
-        }
-      } else {
-        // Case: max level greater than 1, treat it as a fraction out of max level
-        const upgradeDom = DOMCacheGetOrSet(`${key}Level`)
-        upgradeDom.textContent = i18next.t('shop.level', {
-          x: format(player.shopUpgrades[key]),
-          y: format(shopItem.maxLevel)
-        })
-
-        if (player.shopUpgrades[key] === shopItem.maxLevel) {
-          upgradeDom.style.color = 'gold'
-        } else {
-          upgradeDom.style.color = 'white'
-        }
-      }
-      // Handles Button - max level needs no price indicator, otherwise it's necessary
-
-      const buyMaxAmount = shopItem.maxLevel - player.shopUpgrades[key]
-      let buyData: IMultiBuy
-
-      switch (player.shopBuyMaxToggle) {
-        case false:
-          DOMCacheGetOrSet(`${key}Button`).textContent = player.shopUpgrades[key] >= shopItem.maxLevel
-            ? i18next.t('shop.maxed')
-            : i18next.t('shop.upgradeFor', { x: format(getShopCosts(key)) })
-          break
-        case 'TEN':
-          buyData = calculateSummationNonLinear(
-            player.shopUpgrades[key],
-            shopItem.price,
-            +player.worlds,
-            shopItem.priceIncrease / shopItem.price,
-            Math.min(10, buyMaxAmount)
-          )
-          DOMCacheGetOrSet(`${key}Button`).textContent = player.shopUpgrades[key] >= shopItem.maxLevel
-            ? i18next.t('shop.maxed')
-            : i18next.t('shop.plusForQuarks', {
-              x: format(
-                buyData.levelCanBuy - player.shopUpgrades[key],
-                0,
-                true
-              ),
-              y: format(buyData.cost)
-            })
-          break
-        default:
-          buyData = calculateSummationNonLinear(
-            player.shopUpgrades[key],
-            shopItem.price,
-            +player.worlds,
-            shopItem.priceIncrease / shopItem.price,
-            buyMaxAmount
-          )
-          DOMCacheGetOrSet(`${key}Button`).textContent = player.shopUpgrades[key] >= shopItem.maxLevel
-            ? i18next.t('shop.maxed')
-            : i18next.t('shop.plusForQuarks', {
-              x: format(
-                buyData.levelCanBuy - player.shopUpgrades[key],
-                0,
-                true
-              ),
-              y: format(buyData.cost)
-            })
-      }
+      updateTextContentIfChanged(`buy${key.toLowerCase()}`, label)
     }
   }
 
-  DOMCacheGetOrSet('buySingularityQuarksAmount').textContent = player.goldenQuarks < 1000
-    ? i18next.t('shop.singularityQuarkAmount', { amount: format(player.goldenQuarks) })
-    : format(player.goldenQuarks)
+  updateShopTab()
 
-  DOMCacheGetOrSet('buySingularityQuarksButton').textContent = i18next.t('shop.singularityQuarkCost', {
-    cost: format(getGoldenQuarkCost().cost)
-  })
+  updateTextContentIfChanged(
+    'buySingularityQuarksAmount',
+    player.goldenQuarks < 1000
+      ? i18next.t('shop.singularityQuarkAmount', { amount: format(player.goldenQuarks) })
+      : format(player.goldenQuarks, 0, false, false)
+  )
+
+  updateTextContentIfChanged(
+    'buySingularityQuarksButton',
+    i18next.t('shop.singularityQuarkCost', { cost: format(getGoldenQuarkCost().cost) })
+  )
 }
 
 const constructConsumableTimes = (p: PseudoCoinConsumableNames) => {
@@ -2069,10 +2701,10 @@ export const visualUpdateEvent = () => {
   const event = getEvent()
   if (event !== null) {
     const eventEnd = new Date(event.end)
-    DOMCacheGetOrSet('globalEventTimer').textContent = i18next.t('pseudoCoins.consumables.globalEventSome', {
+    DOMCacheGetOrSet('globalEventTimer').innerHTML = i18next.t('pseudoCoins.consumables.globalEventSome', {
       time: timeRemainingHours(eventEnd)
     })
-    DOMCacheGetOrSet('globalEventName').textContent = i18next.t('pseudoCoins.consumables.globalEventActive', {
+    DOMCacheGetOrSet('globalEventName').innerHTML = i18next.t('pseudoCoins.consumables.globalEventActive', {
       events: `(${event.name.length}) - ${event.name.join(', ')}`
     })
 
@@ -2123,5 +2755,3 @@ export const visualUpdateEvent = () => {
 }
 
 export const visualUpdatePurchase = () => {}
-
-export const visualUpdateCampaign = () => {}

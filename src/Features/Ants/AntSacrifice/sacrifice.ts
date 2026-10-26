@@ -3,8 +3,8 @@ import { awardAchievementGroup, awardUngroupedAchievement } from '../../../Achie
 import { resetHistoryAdd, type ResetHistoryEntryAntSacrifice } from '../../../History'
 import { AntSacrificeTiers } from '../../../Reset'
 import { player } from '../../../Synergism'
-import { updateTalismanInventory } from '../../../Talismans'
 import { Confirm } from '../../../UpdateHTML'
+import { Globals as G } from '../../../Variables'
 import { resetAnts } from '../player/reset'
 import { hasEnoughCrumbsForSacrifice, sacrificeOffCooldown } from './constants'
 import { antSacrificeRewards } from './Rewards/calculate-rewards'
@@ -59,6 +59,9 @@ export const sacrificeAnts = () => {
 
   if (player.challengecompletions[9] > 0) {
     player.talismanShards = player.talismanShards.add(sacRewards.talismanCraftItems.shard)
+    player.stats.talismanShardsThisAscension = player.stats.talismanShardsThisAscension.add(
+      sacRewards.talismanCraftItems.shard
+    )
     player.commonFragments = player.commonFragments.add(sacRewards.talismanCraftItems.commonFragment)
     player.uncommonFragments = player.uncommonFragments.add(sacRewards.talismanCraftItems.uncommonFragment)
     player.rareFragments = player.rareFragments.add(sacRewards.talismanCraftItems.rareFragment)
@@ -69,13 +72,12 @@ export const sacrificeAnts = () => {
   awardAchievementGroup('sacMult')
   // Now we're safe to reset the ants.
   resetAnts(AntSacrificeTiers.sacrifice)
-  updateTalismanInventory()
   resetHistoryAdd('ants', historyEntry)
 
-  if (player.mythicalFragments.gte(1e25)) {
+  if (player.mythicalFragments.gte(G.d1e25)) {
     awardUngroupedAchievement('seeingRed')
   }
-  if (player.mythicalFragments.gte(1e11) && player.currentChallenge.ascension === 14) {
+  if (player.currentChallenge.ascension === 14 && player.mythicalFragments.gte(G.d1e11)) {
     awardUngroupedAchievement('seeingRedNoBlue')
   }
 }

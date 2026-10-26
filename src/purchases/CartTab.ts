@@ -1,13 +1,12 @@
-import { prod } from '../Config'
+import { DOMCacheGetOrSet } from '../Cache/DOM'
 import { changeSubTab, getActiveSubTab, Tabs } from '../Tabs'
 import { assert, createDeferredPromise, type DeferredPromise, memoize, retry } from '../Utility'
 import { setEmptyProductMap } from './CartUtil'
 import { clearCheckoutTab, toggleCheckoutTab } from './CheckoutTab'
 import { clearConsumablesTab, toggleConsumablesTab } from './ConsumablesTab'
-import { clearMerchSubtab, toggleMerchSubtab } from './MerchTab'
 import { clearProductPage, toggleProductPage } from './ProductSubtab'
 import { clearSubscriptionPage, toggleSubscriptionPage } from './SubscriptionsSubtab'
-import { clearUpgradeSubtab, toggleUpgradeSubtab, type UpgradesResponse } from './UpgradesSubtab'
+import { clearUpgradeSubtab, toggleUpgradeSubtab, updatePseudoCoins, type UpgradesResponse } from './UpgradesSubtab'
 
 interface BaseProduct {
   name: string
@@ -40,8 +39,7 @@ const cartSubTabs = {
   Subscriptions: 1,
   Upgrades: 2,
   Consumables: 3,
-  Checkout: 4,
-  Merch: 5
+  Checkout: 4
 } as const
 
 const tab = document.getElementById('pseudoCoins')!
@@ -67,9 +65,10 @@ export class CartTab {
       return CartTab.#productsFetch.promise
     }
 
-    CartTab.#productsFetch = createDeferredPromise()
+    const productsFetch = createDeferredPromise<undefined>()
+    CartTab.#productsFetch = productsFetch
 
-    const url = !prod ? 'https://synergism.cc/stripe/test/products' : 'https://synergism.cc/stripe/products'
+    const url = 'https://synergism.cc/stripe/products'
 
     // TODO: move this fetch to the products page.
     fetch(url)
@@ -82,11 +81,14 @@ export class CartTab {
 
         // The Subscriptions do not naturally sort themselves by price
         subscriptionProducts.sort((a, b) => a.price - b.price)
-        CartTab.#productsFetch?.resolve(undefined)
+        productsFetch.resolve(undefined)
       })
-      .catch((e) => CartTab.#productsFetch!.reject(e))
+      .catch((e: Error) => {
+        CartTab.#productsFetch = undefined
+        productsFetch.reject(e)
+      })
 
-    return CartTab.#productsFetch.promise
+    return productsFetch.promise
   }
 
   static fetchUpgrades () {
@@ -114,14 +116,8 @@ export class CartTab {
     return CartTab.#upgradesFetch.promise
   }
 
-  static applySubtabListeners () {
-    for (const [page, element] of yieldQuerySelectorAll('.subtabSwitcher button')) {
-      element.addEventListener('click', changeSubTab.bind(null, Tabs.Purchase, { page }))
-    }
-  }
-
   #updateSubtabs () {
-    for (const [index, element] of yieldQuerySelectorAll('.subtabSwitcher button')) {
+    for (const [index, element] of yieldQuerySelectorAll('.subtabSwitcher [id^="cartSubTab"]')) {
       if (getActiveSubTab() === index) {
         element.classList.add('active-subtab')
       } else {
@@ -133,7 +129,6 @@ export class CartTab {
     clearSubscriptionPage()
     clearUpgradeSubtab()
     clearCheckoutTab()
-    clearMerchSubtab()
     clearConsumablesTab()
 
     switch (getActiveSubTab()) {
@@ -168,16 +163,20 @@ export class CartTab {
           }
         })
         break
-      case cartSubTabs.Merch:
-        toggleMerchSubtab()
-        break
     }
   }
 }
 
 const onInit = memoize(() => {
+  const refreshBalance = DOMCacheGetOrSet('refreshPseudoCoinBalance') as HTMLButtonElement
+  refreshBalance.addEventListener('click', async () => {
+    refreshBalance.disabled = true
+    await updatePseudoCoins().catch(console.error)
+    refreshBalance.disabled = false
+  })
+
   CartTab.fetchProducts()
-  CartTab.applySubtabListeners()
+  updatePseudoCoins().catch(console.error)
 
   changeSubTab(Tabs.Purchase, { page: 0 })
 })
@@ -186,6 +185,6 @@ export const initializeCart = () => {
   onInit()
 
   // TODO(@KhafraDev):
-  // eslint-disable-next-line no-new:
+  // eslint-disable-next-line no-new
   new CartTab()
 }

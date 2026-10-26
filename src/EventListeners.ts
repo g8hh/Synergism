@@ -1,37 +1,50 @@
 import i18next from 'i18next'
 import { displayAchievementProgress, resetAchievementProgressDisplay } from './Achievements'
+import { initializeAmbrosiaLedgerModals, initializeAmbrosiaUpgradeLayout } from './AmbrosiaUI'
 import {
-  type AmbrosiaUpgradeNames,
+  ambrosiaEditAction,
+  ambrosiaEditToString,
+  ambrosiaUpgradeNames,
   ambrosiaUpgrades,
   ambrosiaUpgradeToString,
+  beginAmbrosiaEdit,
   buyAmbrosiaUpgradeLevel,
-  createLoadoutDescription,
+  buyPurpleAmbrosiaEnchantmentLevel,
   displayLevelsBlueberry,
   displayOnlyLoadout,
   exportBlueberryTree,
   highlightPrerequisites,
+  highlightRedAmbrosiaTargets,
   importBlueberryTree,
+  isAmbrosiaEditMode,
   loadoutHandler,
+  PURPLE_AMBROSIA_ENCHANTMENT_ACTION,
+  quickSaveBlueberryTree,
   resetBlueberryTree,
   resetHighlights,
   resetLoadoutOnlyDisplay,
-  updateMobileAmbrosiaHTML
+  setAmbrosiaEditMode,
+  toggleAmbrosiaEditMode,
+  updatePurpleAmbrosiaEnchantmentBadge
 } from './BlueberryUpgrades'
-import {
-  boostAccelerator,
-  buyAccelerator,
-  buyCrystalUpgrades,
-  buyMultiplier,
-  buyParticleBuilding,
-  buyProducer,
-  buyTesseractBuilding
-} from './Buy'
+import { boostAccelerator, buyBuilding, buyCrystalUpgrades, buyTesseractBuilding } from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import { exitOffline, forcedDailyReset, timeWarp } from './Calculate'
-import { challengeDisplay, toggleRetryChallenges } from './Challenges'
-import { testing } from './Config'
-import { corruptionCleanseConfirm, corruptionDisplay } from './Corruptions'
-import { buyCubeUpgrades, cubeUpgradeDesc } from './Cubes'
+import { setChallengeFocus, toggleRetryChallenges } from './Challenges'
+import {
+  changeNextCorruptionLevel,
+  cleanseCorruptions,
+  corruptionCleanseConfirm,
+  maxNextCorruptionLevel,
+  registerCorruptionDetailsModal,
+  resetCorruptionProgress,
+  setNextCorruptionLevel,
+  toggleCorruptionAutoIncrease,
+  toggleCorruptionCleanseToHighest
+} from './Corruptions'
+import { buyCubeUpgrades, cubeUpgradeDesc, cubeUpgradeModalHTML } from './Cubes'
+import { eventPageMessageHandler } from './Event'
+import { storageGetItem, storageRemoveItem, storageSetItem } from './events/storage-events'
 import { buyAllAntMasteries, buyAntMastery } from './Features/Ants/AntMasteries/lib/buy-mastery'
 import { antProducerData } from './Features/Ants/AntProducers/data/data'
 import { buyAllAntProducers, buyAntProducers } from './Features/Ants/AntProducers/lib/buy-producer'
@@ -46,6 +59,7 @@ import { antProducerHTML } from './Features/Ants/HTML/modals/producer-modal'
 import { antUpgradeHTML } from './Features/Ants/HTML/modals/upgrade-modal'
 import { toggleRebornELOInfo } from './Features/Ants/HTML/updates/elo-info'
 import { toggleLeaderboardMode } from './Features/Ants/HTML/updates/leaderboard'
+import { toggleLotusSection } from './Features/Ants/HTML/updates/lotus-section'
 import {
   updateAlwaysSacrificeMaxRebornELOToggle,
   updateOnlySacrificeMaxRebornELOToggle
@@ -62,6 +76,7 @@ import { toggleAutobuyAntProducer } from './Features/Ants/toggles/autobuy-produc
 import { toggleAutobuyAntUpgrade } from './Features/Ants/toggles/autobuy-upgrade'
 import { toggleMaxBuyAntProducer } from './Features/Ants/toggles/max-producer-buy'
 import { toggleMaxBuyAntUpgrade } from './Features/Ants/toggles/max-upgrade-buy'
+import { registerHeaderLayoutEditing } from './HeaderModules'
 import {
   craftHepteracts,
   expandHepteracts,
@@ -75,9 +90,10 @@ import {
   tradeHepteractToOverfluxOrb
 } from './Hepteracts'
 import { resetHistoryTogglePerSecond } from './History'
-import { resetHotkeys } from './Hotkeys'
+import { registerMobileHotkeyPanel, resetHotkeys } from './Hotkeys'
 import {
   addCodeAvailableUses,
+  exportStoredSave,
   exportSynergism,
   importData,
   importSynergism,
@@ -91,79 +107,83 @@ import {
 import { exitFastForward, getLotusTimeExpiresAt, getOwnedLotus, getTips, sendToWebsocket, setTips } from './Login'
 import {
   buyOcteractUpgradeLevel,
-  type OcteractDataKeys,
-  octeractUpgrades,
-  updateMobileOcteractHTML,
+  octeractUpgradeNames,
+  showOcteractFreeUpgradeInfo,
+  toggleMaxedOcteractUpgrades,
   upgradeOcteractToString
 } from './Octeracts'
-import { buyPlatonicUpgrades, createPlatonicDescription } from './Platonic'
+import { buyPlatonicUpgrades, createPlatonicDescription, platonicUpgradeModalHTML } from './Platonic'
+import {
+  buyPurpleAmbrosiaUpgradeLevel,
+  displayPurpleAmbrosiaLevels,
+  getPurpleAmbrosiaUpgradeEffects,
+  purpleAmbrosiaUpgradeNames,
+  purpleAmbrosiaUpgradeToString,
+  resetPurpleAmbrosiaDisplay
+} from './PurpleAmbrosiaUpgrades'
+import { getPurpleReactorPopupMode, setPurpleReactorPopupMode } from './PurpleUpgradeTab'
 import {
   buyRedAmbrosiaUpgradeLevel,
   displayRedAmbrosiaLevels,
   redAmbrosiaUpgradeToString,
-  resetRedAmbrosiaDisplay,
-  updateMobileRedAmbrosiaHTML
+  resetRedAmbrosiaDisplay
 } from './RedAmbrosiaUpgrades'
-import { buyResearch, researchDescriptions, updateResearchAuto } from './Research'
-import { resetrepeat, updateAutoCubesOpens, updateAutoReset, updateTesseractAutoBuyAmount } from './Reset'
-import { buyAllBlessingLevels, buyBlessingLevels, focusedRuneBlessingHTML, runeBlessingKeys } from './RuneBlessings'
-import { focusedRuneHTML, focusedRuneLockedHTML, type RuneKeys, runes, runeToIndex, sacrificeOfferings } from './Runes'
-import { buyAllSpiritLevels, buySpiritLevels, focusedRuneSpiritHTML, runeSpiritKeys } from './RuneSpirits'
-import type { ShopUpgradeNames } from './Shop'
 import {
-  buyShopUpgrades,
-  createShopHTML,
-  resetShopUpgrades,
-  shopDescriptions,
-  shopUpgrades,
-  shopUpgradeTypes,
-  useConsumablePrompt
-} from './Shop'
+  buyResearch,
+  researchDescriptions,
+  researchModalHTML,
+  toggleMaxedResearches,
+  updateResearchAuto
+} from './Research'
+import { getResetDetails, updateAutoCubesOpens, updateAutoReset, updateTesseractAutoBuyAmount } from './Reset'
+import { buyAllBlessingLevels } from './RuneBlessings'
+import { runes } from './Runes'
+import { buyAllSpiritLevels } from './RuneSpirits'
+import { buyShopUpgrades, shopUpgrades, useConsumablePrompt } from './Shop'
 import {
+  addSingularityPerkToTree,
   buyGoldenQuarks,
   buyGQUpgradeLevel,
   calculateMaxSingularityLookahead,
-  getLastUpgradeInfo,
-  goldenQuarkUpgrades,
-  type SingularityDataKeys,
+  goldenQuarkUpgradeNames,
+  initializeSingularityPerkTree,
+  showFreeUpgradeInfo,
+  singularityPerkModalHTML,
   singularityPerks,
   teleportToSingularity,
-  updateMobileGQHTML,
+  toggleMaxedGoldenQuarkUpgrades,
   updateSingularityElevator,
   upgradeGQToString
 } from './singularity'
 import type { SingularityChallengeDataKeys } from './SingularityChallenges'
+import { registerSpriteAlias, updateIconsFromSprites } from './SpriteSheets'
 import { displayStats } from './Statistics'
 import { generateExportSummary } from './Summary'
 import { player, resetCheck, saveSynergy } from './Synergism'
-import { changeSubTab, changeTab, Tabs } from './Tabs'
 import {
-  buyAllTalismanResources,
-  buyTalismanLevel,
-  buyTalismanLevelToMax,
-  buyTalismanLevelToRarityIncrease,
-  buyTalismanResources,
-  type TalismanKeys,
-  talismanRarityInfo,
-  talismans,
-  talismanToStringHTML,
-  toggleTalismanBuy,
-  updateTalismanCostDisplay,
-  updateTalismanCostHTML
-} from './Talismans'
-import { IconSets, imgErrorHandler, toggleAnnotation, toggleIconSet, toggleTheme } from './Themes'
+  buySynthesisUpgrade,
+  craftFromSynthesis,
+  getSynthesisUpgradePurchaseButtonID,
+  setSynthesisAutomationEnabled,
+  synthesisCraftButtons,
+  synthesisUpgradeNames,
+  synthesisUpgradePurchaseAmounts,
+  unlockSynthesisAutomation,
+  updateSynthesis
+} from './Synthesis'
+import { changeSubTab, changeTab, registerSubTabSwitches, Tabs } from './Tabs'
+import { toggleAllBuildingAutomation, toggleAutomatedBuildingVisibility } from './tabs/buildings'
+import { IconSets, imgErrorHandler, themeValues, toggleAnnotation, toggleIconSet, toggleTheme } from './Themes'
 import {
   autoCubeUpgradesToggle,
   autoPlatonicUpgradesToggle,
   toggleAscStatPerSecond,
+  toggleauto,
   toggleAutoAscendResetActive,
-  toggleAutoAscendResetMode,
   toggleAutoAscensionMode,
-  toggleAutoBuyFragment,
   toggleautobuytesseract,
   toggleAutoChallengeRun,
   toggleAutoChallengesIgnore,
-  toggleautofortify,
   toggleautoopensCubes,
   toggleAutoPrestigeMode,
   toggleAutoReincarnateMode,
@@ -180,41 +200,694 @@ import {
   toggleHideShop,
   toggleMaxBuyCube,
   toggleMaxPlat,
+  toggleMonospaceFont,
   toggleResearchBuy,
   toggleSettings,
   toggleShopConfirmation,
-  toggleShops,
   toggleStatSymbol,
   updateAutoChallenge,
   updateRuneBlessingBuyAmount
 } from './Toggles'
-import type { FirstToEighth, FirstToFifth, OneToFive, Player } from './types/Synergism'
-import { Alert, CloseModal, Confirm, MEDIUM_MODAL_UPDATE_TICK, Modal, openIframeOverlay, Prompt } from './UpdateHTML'
-import { shopMouseover } from './UpdateVisuals'
+import type { OneToFive, Player, resetNames, ZeroToFour } from './types/Synergism'
 import {
+  Alert,
+  CloseModal,
+  Confirm,
+  createFitties,
+  MEDIUM_MODAL_UPDATE_TICK,
+  Modal,
+  openIframeOverlay,
+  Prompt
+} from './UpdateHTML'
+import { visualUpdatePurple } from './UpdateVisuals'
+import {
+  buyAllUpgrades,
   buyConstantUpgrades,
-  categoryUpgrades,
-  clickUpgrades,
   constantUpgradeDescriptions,
+  constantUpgradeHTML,
   crystalupgradedescriptions,
-  upgradedescriptions
+  crystalUpgradeHTML,
+  togglePurchasedUpgrades
 } from './Upgrades'
 import { isMobile } from './Utility'
 import { Globals as G } from './Variables'
 
-export const generateEventHandlers = () => {
-  const ordinals = [
-    'first',
-    'second',
-    'third',
-    'fourth',
-    'fifth',
-    'sixth',
-    'seventh',
-    'eighth'
-  ] satisfies FirstToEighth[]
+type PurchasableModalOptions = {
+  element: HTMLElement
+  html: () => string
+  style: Partial<CSSStyleDeclaration>
+  buy: (event: MouseEvent, action?: string) => void | Promise<void>
+  mobileButtons?: Array<{ action: string; label: string }>
+  updateInterval?: number
+  onOpen?: () => void
+  onClose?: () => void
+  disabled?: () => boolean
+}
 
-  if (testing) {
+type MobileSubTabIconConfig = {
+  wrapperSelector: string
+  icons: Record<string, string>
+  remainingControlsLayout?: 'inline' | 'fullRow'
+}
+
+const MOBILE_HEADER_EXPANDED_STORAGE_VALUE = 'expanded'
+const mobileSubTabIconContainerIDs = new Set(['switchSettingSubTab10'])
+
+const mobileSubTabIconConfigs: MobileSubTabIconConfig[] = [
+  {
+    wrapperSelector: '#buildings > .subTabWrapper',
+    icons: {
+      switchToCoinBuilding: 'Pictures/Subtab Icons/Buildings/Coin.png',
+      switchToDiamondBuilding: 'Pictures/Subtab Icons/Buildings/Diamond.png',
+      switchToMythosBuilding: 'Pictures/Subtab Icons/Buildings/Mythos.png',
+      switchToParticleBuilding: 'Pictures/Subtab Icons/Buildings/Particle.png',
+      switchToTesseractBuilding: 'Pictures/Subtab Icons/Buildings/Tesseract.png'
+    }
+  },
+  {
+    wrapperSelector: '#runesToggle',
+    icons: {
+      toggleRuneSubTab1: 'Pictures/Subtab Icons/Runes/Runes.png',
+      toggleRuneSubTab2: 'Pictures/Subtab Icons/Runes/Talismans.png',
+      toggleRuneSubTab3: 'Pictures/Subtab Icons/Runes/Blessings.png'
+    }
+  },
+  {
+    wrapperSelector: '#achievementsToggle',
+    icons: {
+      toggleAchievementSubTab1: 'Pictures/Subtab Icons/Achievements/Achievements.png',
+      toggleAchievementSubTab2: 'Pictures/Subtab Icons/Achievements/Levels.png'
+    }
+  },
+  {
+    wrapperSelector: '#challengesTabsToggle',
+    icons: {
+      toggleChallengesSubTab1: 'Pictures/Subtab Icons/Challenges/Challenge.png',
+      toggleChallengesSubTab2: 'Pictures/Subtab Icons/Challenges/Exalt.png'
+    }
+  },
+  {
+    wrapperSelector: '#antSubtabs',
+    icons: {
+      toggleAntSubtab1: 'Pictures/Subtab Icons/Anthill/Anthill.png',
+      toggleAntSubtab2: 'Pictures/Subtab Icons/Anthill/Altar.png',
+      toggleAntSubtab3: 'Pictures/Subtab Icons/Anthill/QuarkCorner.png'
+    }
+  },
+  {
+    wrapperSelector: '#wowCubeSidebarButtons',
+    icons: {
+      switchCubeSubTab1: 'Pictures/Subtab Icons/Wow! Cubes/CubeTributes.png',
+      switchCubeSubTab2: 'Pictures/Subtab Icons/Wow! Cubes/TesseractGifts.png',
+      switchCubeSubTab3: 'Pictures/Subtab Icons/Wow! Cubes/HypercubeBenedictions.png',
+      switchCubeSubTab4: 'Pictures/Subtab Icons/Wow! Cubes/PlatonicStatues.png',
+      switchCubeSubTab5: 'Pictures/Subtab Icons/Wow! Cubes/CubeUpgrades.png',
+      switchCubeSubTab6: 'Pictures/Subtab Icons/Wow! Cubes/PlatonicUpgrades.png',
+      switchCubeSubTab7: 'Pictures/Subtab Icons/Wow! Cubes/HepteractForge.png'
+    }
+  },
+  {
+    wrapperSelector: '#singularityTabsToggle',
+    icons: {
+      toggleSingularitySubTab1: 'Pictures/Subtab Icons/Singularity/Elevator.png',
+      toggleSingularitySubTab2: 'Pictures/Subtab Icons/Singularity/GoldenQuarkUpgrades.png',
+      toggleSingularitySubTab3: 'Pictures/Subtab Icons/Singularity/SingularityPerks.png',
+      toggleSingularitySubTab4: 'Pictures/Subtab Icons/Singularity/Octeracts.png',
+      toggleSingularitySubTab5: 'Pictures/Subtab Icons/Singularity/Ambrosia.png',
+      toggleSingularitySubTab6: 'Pictures/Subtab Icons/Singularity/Purple.png'
+    }
+  },
+  {
+    wrapperSelector: '#settings > .subtabSwitcher',
+    remainingControlsLayout: 'fullRow',
+    icons: {
+      switchSettingSubTab1: 'Pictures/Subtab Icons/Settings/Settings.png',
+      switchSettingSubTab2: 'Pictures/Subtab Icons/Settings/Languages.png',
+      switchSettingSubTab3: 'Pictures/Subtab Icons/Settings/Credits.png',
+      switchSettingSubTab4: 'Pictures/Subtab Icons/Settings/StatsForNerds.png',
+      switchSettingSubTab5: 'Pictures/Subtab Icons/Settings/ResetHistory.png',
+      switchSettingSubTab6: 'Pictures/Subtab Icons/Settings/AscendHistory.png',
+      switchSettingSubTab7: 'Pictures/Subtab Icons/Settings/SingularityHistory.png',
+      switchSettingSubTab8: 'Pictures/Subtab Icons/Settings/Hotkeys.png',
+      switchSettingSubTab9: 'Pictures/Subtab Icons/Settings/Account.png',
+      switchSettingSubTab10: 'Pictures/Default/Notifications.png'
+    }
+  },
+  {
+    wrapperSelector: '#pseudoCoins > .subtabSwitcher',
+    icons: {
+      cartSubTab1: 'Pictures/Subtab Icons/PseudoCoins/PseudoCoins.png',
+      cartSubTab2: 'Pictures/Subtab Icons/PseudoCoins/Subscriptions.png',
+      cartSubTab3: 'Pictures/Subtab Icons/PseudoCoins/Upgrades.png',
+      cartSubTab4: 'Pictures/Subtab Icons/PseudoCoins/Consumables.png',
+      cartSubTab5: 'Pictures/Subtab Icons/PseudoCoins/Checkout.png'
+    }
+  }
+]
+
+const mobileStatsIconConfig: Record<string, string> = {
+  kMisc: 'Pictures/Stats for Nerds Icons/Categories/Miscellaneous.png',
+  kBaseOffering: 'Pictures/Stats for Nerds Icons/Categories/BaseOfferings.png',
+  kOfferingMult: 'Pictures/Stats for Nerds Icons/Categories/OfferingMultiplier.png',
+  kRuneEffectMult: 'Pictures/Stats for Nerds Icons/Categories/RunePower.png',
+  kSalvage: 'Pictures/Stats for Nerds Icons/Categories/Salvage.png',
+  kConstruction: 'Pictures/Runes/Thrift.png',
+  kFreeAccelMult: 'Pictures/Runes/Speed.png',
+  kBaseObtainium: 'Pictures/Stats for Nerds Icons/Categories/BaseObtainium.png',
+  kObtIgnoreDR: 'Pictures/Stats for Nerds Icons/Categories/ImmaculateObtainium.png',
+  kObtMult: 'Pictures/Stats for Nerds Icons/Categories/ObtainiumMultiplier.png',
+  kQuarkMult: 'Pictures/Stats for Nerds Icons/Categories/QuarkMultiplier.png',
+  kGSpeedMultIgnoreDR: 'Pictures/Stats for Nerds Icons/Categories/GlobalSpeedImmaculate.png',
+  kGSpeedMult: 'Pictures/Stats for Nerds Icons/Categories/GlobalSpeedMultiplier.png',
+  kAntSpeedMult: 'Pictures/Stats for Nerds Icons/Categories/AntSpeedMultiplier.png',
+  kAntSacrificeMult: 'Pictures/Stats for Nerds Icons/Categories/AntSacrificeMultiplier.png',
+  kAntELO: 'Pictures/Stats for Nerds Icons/Categories/AntELO.png',
+  kAdditiveAntELOMult: 'Pictures/Stats for Nerds Icons/Categories/AntELOMult.png',
+  kRebornELOCreationSpeedMult: 'Pictures/Stats for Nerds Icons/Categories/RebornELOCreation.png',
+  kTalismanRuneBonusMult: 'Pictures/Stats for Nerds Icons/Categories/TalismanPower.png',
+  kASCMult: 'Pictures/Stats for Nerds Icons/Categories/AscensionSpeedMultiplier.png',
+  kACountMult: 'Pictures/Stats for Nerds Icons/Categories/AscensionCountMultiplier.png',
+  kFreeCorruptionLevels: 'Pictures/Stats for Nerds Icons/Categories/AscensionCountMultiplier.png',
+  kCubeBank: 'Pictures/Stats for Nerds Icons/Categories/GlobalCubeMultiplier.png',
+  kGlobalCubeMult: 'Pictures/Stats for Nerds Icons/Categories/GlobalCubeMultiplier.png',
+  kCubeMult: 'Pictures/Stats for Nerds Icons/Categories/CubeMultiplier.png',
+  kTessMult: 'Pictures/Stats for Nerds Icons/Categories/TesseractMultiplier.png',
+  kHypercubeMult: 'Pictures/Stats for Nerds Icons/Categories/HypercubeMultiplier.png',
+  kPlatMult: 'Pictures/Stats for Nerds Icons/Categories/PlatonicCubeMultiplier.png',
+  kHeptMult: 'Pictures/Stats for Nerds Icons/Categories/HepteractMultiplier.png',
+  kOrbPowderMult: 'Pictures/img_transparent.png',
+  kGQMult: 'Pictures/Stats for Nerds Icons/Categories/GoldenQuarkMultiplier.png',
+  kGQCost: 'Pictures/Stats for Nerds Icons/Categories/GoldenQuarkCostMultiplier.png',
+  kAddStats: 'Pictures/Stats for Nerds Icons/Categories/AddCodeStats.png',
+  kOctMult: 'Pictures/Stats for Nerds Icons/Categories/OcteractMultiplier.png',
+  kAmbrosiaAdditiveLuckMult: 'Pictures/Stats for Nerds Icons/Categories/AmbrosiaLuckMult.png',
+  kAmbrosiaLuck: 'Pictures/Stats for Nerds Icons/Categories/AmbrosiaLuck.png',
+  kAmbrosiaBlueberries: 'Pictures/Stats for Nerds Icons/Categories/BlueberryInventory.png',
+  kAmbrosiaGenMult: 'Pictures/Stats for Nerds Icons/Categories/AmbrosiaBarPoints.png',
+  kLuckConversion: 'Pictures/Stats for Nerds Icons/Categories/LuckConversion.png',
+  kRedAmbrosiaLuck: 'Pictures/Stats for Nerds Icons/Categories/RedLuck.png',
+  kRedAmbrosiaGenMult: 'Pictures/Stats for Nerds Icons/Categories/RedBarPoints.png',
+  kShopVouchers: 'Pictures/Stats for Nerds Icons/Categories/ShopVouchers.png',
+  kCoins: 'Pictures/Default/Coin.png',
+  kTaxes: 'Pictures/Default/perktaxReduction.png',
+  kPurpleHoneyEfficiency: 'Pictures/PurpleAmbrosia/Purple Upgrades/PurplePurpleEfficiency1.png',
+  kPurpleHalfLife: 'Pictures/PurpleAmbrosia/Purple Upgrades/PurpleHalfLife1.png',
+  kPurpleReactantCapacity: 'Pictures/PurpleAmbrosia/Purple Upgrades/PurplePurpleCapacityExpander1.png',
+  kPurpleHoneyLuck: 'Pictures/PurpleAmbrosia/Purple Upgrades/PurplePurpleHoneyLuck1.png',
+  kPurpleHoneyProgressRequirement: 'Pictures/PurpleAmbrosia/Purple Upgrades/PurplePurpleHoneyRequirementReduction1.png'
+}
+
+const getSubTabI18nKey = (button: HTMLButtonElement) =>
+  button.getAttribute('i18n') ?? button.querySelector<HTMLElement>('[i18n]')?.getAttribute('i18n') ?? null
+
+const termsOfServiceUrl = 'https://synergism.cc/terms-of-service'
+const privacyPolicyUrl = 'https://synergism.cc/privacy-policy'
+const shopPotionKeys = ['offeringPotion', 'obtainiumPotion'] as const
+const corruptionLevelSteps = [
+  ['corruptionLevelDown10', -10],
+  ['corruptionLevelDown1', -1],
+  ['corruptionLevelUp1', 1],
+  ['corruptionLevelUp10', 10]
+] as const
+
+const registerIframeOverlayLink = (id: string, url: string) => {
+  DOMCacheGetOrSet(id).addEventListener('click', (event) => {
+    event.preventDefault()
+    openIframeOverlay(url)
+  })
+}
+
+const defaultModalBuyButtons = () => [
+  { action: 'one', label: i18next.t('general.buyOne') },
+  { action: 'max', label: i18next.t('general.buyMax') }
+]
+
+const modalBuyButtonsHTML = (buttons = defaultModalBuyButtons()) =>
+  `<br><br><div class="modalButtonRow">${
+    buttons.map(({ action, label }) => `<button class="modalBtnBuy" data-modal-action="${action}">${label}</button>`)
+      .join('')
+  }</div>`
+
+const resetDetailsModalHTML = (input: resetNames, element: HTMLElement, label: string) => {
+  const details = getResetDetails(input)
+  const rewards = details.rewards.map(({ src, text }) =>
+    `<span class="resetModalReward" data-modal-preserve="children"><img src="${src}">${text}</span>`
+  ).join('')
+
+  return `<div class="resetModal" data-modal-preserve="children">
+    <div class="resetModalTitle" data-modal-preserve="children">
+      <img src="${(element as HTMLImageElement).src}" alt="">
+      <span>${label}</span>
+    </div>
+    ${rewards ? `<div class="resetModalRewards" data-modal-preserve="children">${rewards}</div>` : ''}
+    <div class="resetModalInfo" style="color: ${details.infoColor}">${details.infoText}</div>
+  </div>`
+}
+
+const registerPurchasableModal = ({
+  element,
+  html,
+  style,
+  buy,
+  mobileButtons,
+  updateInterval,
+  onOpen,
+  onClose,
+  disabled
+}: PurchasableModalOptions) => {
+  const showDesktopModal = (x: number, y: number) => {
+    Modal(html, x, y, style, updateInterval, { targetElement: element, onClose })
+    onOpen?.()
+  }
+
+  const showMobileModal = (event: MouseEvent) => {
+    Modal(
+      () => `${html()}${modalBuyButtonsHTML(mobileButtons)}`,
+      event.clientX,
+      event.clientY,
+      style,
+      updateInterval,
+      {
+        targetElement: element,
+        onClose,
+        buttonClick: (button, buttonEvent) => {
+          void buy(buttonEvent, button.dataset.modalAction)
+        }
+      }
+    )
+    onOpen?.()
+  }
+
+  if (isMobile) {
+    element.addEventListener('click', (event) => {
+      if (disabled?.()) return
+      showMobileModal(event)
+    })
+    return
+  }
+
+  element.addEventListener('mousemove', (event) => {
+    if (disabled?.()) return
+    showDesktopModal(event.clientX, event.clientY)
+  })
+  element.addEventListener('focus', () => {
+    if (disabled?.()) return
+    const elmRect = element.getBoundingClientRect()
+    showDesktopModal(elmRect.x, elmRect.y + elmRect.height / 2)
+  })
+  element.addEventListener('mouseout', () => {
+    if (disabled?.()) return
+    CloseModal()
+  })
+  element.addEventListener('blur', () => {
+    if (disabled?.()) return
+    CloseModal()
+  })
+  element.addEventListener('click', (event) => {
+    if (disabled?.()) return
+    void buy(event)
+    showDesktopModal(event.clientX, event.clientY)
+  })
+}
+
+const createMobileIcon = (sourceButton: HTMLButtonElement, src: string, className: string) => {
+  const icon = document.createElement('img')
+
+  for (const attribute of sourceButton.attributes) {
+    icon.setAttribute(attribute.name, attribute.value)
+  }
+
+  icon.classList.add(className)
+  icon.src = src
+  icon.loading = 'lazy'
+  icon.width = 32
+  icon.height = 32
+  icon.role = 'button'
+  icon.tabIndex = 0
+
+  const i18nKey = getSubTabI18nKey(sourceButton)
+  if (i18nKey !== null) {
+    const label = i18next.t(i18nKey)
+    icon.setAttribute('i18n', i18nKey)
+    icon.alt = label
+    icon.title = label
+    icon.setAttribute('aria-label', label)
+  } else {
+    const label = sourceButton.textContent?.trim()
+    if (label !== undefined && label.length > 0) {
+      icon.alt = label
+      icon.title = label
+      icon.setAttribute('aria-label', label)
+    }
+  }
+
+  icon.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return
+    }
+
+    event.preventDefault()
+    icon.click()
+  })
+
+  return icon
+}
+
+const createMobileIconContainer = (sourceButton: HTMLButtonElement, icon: HTMLImageElement) => {
+  const container = document.createElement('span')
+
+  for (const attribute of sourceButton.attributes) {
+    container.setAttribute(attribute.name, attribute.value)
+  }
+
+  container.removeAttribute('style')
+  container.removeAttribute('i18n')
+  container.classList.remove('active-subtab')
+  container.classList.add('mobileSubTabIconContainer')
+  container.role = 'button'
+  container.tabIndex = 0
+
+  const i18nKey = getSubTabI18nKey(sourceButton)
+  if (i18nKey !== null) {
+    const label = i18next.t(i18nKey)
+    container.title = label
+    container.setAttribute('aria-label', label)
+    container.setAttribute('i18n-aria-label', i18nKey)
+  }
+
+  icon.removeAttribute('id')
+  icon.removeAttribute('style')
+  icon.removeAttribute('role')
+  icon.removeAttribute('tabindex')
+  icon.removeAttribute('i18n-aria-label')
+  icon.classList.remove('active-subtab')
+
+  container.appendChild(icon)
+  container.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return
+    }
+
+    event.preventDefault()
+    container.click()
+  })
+
+  return container
+}
+
+const registerMobileSubTabIcons = () => {
+  if (!isMobile) {
+    return
+  }
+
+  for (const { wrapperSelector, icons, remainingControlsLayout = 'inline' } of mobileSubTabIconConfigs) {
+    const wrapper = document.querySelector<HTMLElement>(wrapperSelector)
+    if (wrapper === null) {
+      continue
+    }
+
+    wrapper.classList.add('mobileIconSubTabWrapper')
+
+    for (const [buttonID, src] of Object.entries(icons)) {
+      const sourceButton = wrapper.querySelector<HTMLButtonElement>(`button#${buttonID}`)
+      if (sourceButton === null) {
+        continue
+      }
+
+      const icon = createMobileIcon(sourceButton, src, 'mobileSubTabIcon')
+      const existingIconContainer = sourceButton.parentElement?.parentElement === wrapper
+        ? sourceButton.parentElement
+        : null
+
+      if (existingIconContainer !== null) {
+        icon.removeAttribute('style')
+        existingIconContainer.classList.add('mobileSubTabIconContainer')
+        sourceButton.replaceWith(icon)
+        continue
+      }
+
+      sourceButton.replaceWith(
+        mobileSubTabIconContainerIDs.has(buttonID)
+          ? createMobileIconContainer(sourceButton, icon)
+          : icon
+      )
+    }
+
+    if (wrapper.querySelector(':scope > :not(.mobileSubTabIcon, .mobileSubTabIconContainer)') !== null) {
+      wrapper.classList.add(
+        remainingControlsLayout === 'inline'
+          ? 'mobileIconSubTabWrapperWithInlineControl'
+          : 'mobileIconSubTabWrapperWithFullRowControl'
+      )
+    }
+  }
+}
+
+const registerMobileStatsIcons = () => {
+  if (!isMobile) {
+    return
+  }
+
+  const wrapper = DOMCacheGetOrSet('statsForNerds')
+  for (const [buttonID, src] of Object.entries(mobileStatsIconConfig)) {
+    const sourceButton = wrapper.querySelector<HTMLButtonElement>(`button#${buttonID}`)
+    if (sourceButton === null) {
+      continue
+    }
+
+    const icon = createMobileIcon(sourceButton, src, 'mobileStatsNerdsIcon')
+    icon.style.backgroundColor = ''
+    sourceButton.replaceWith(icon)
+  }
+
+  registerSpriteAlias('overfluxPowderImage', 'kOrbPowderMult', 32)
+  updateIconsFromSprites(IconSets[player.iconSet][0])
+}
+
+const getMobileHeaderContentMaxHeight = (content: HTMLElement) => {
+  return Math.max(0, content.scrollHeight)
+}
+
+const clampMobileHeaderContentHeight = (height: number, maxHeight: number) => {
+  return Math.round(Math.max(0, Math.min(height, maxHeight)))
+}
+
+const updateMobileHeaderResizeHandleValue = (handle: HTMLElement, height: number, maxHeight: number) => {
+  handle.setAttribute('aria-valuemin', '0')
+  handle.setAttribute('aria-valuemax', `${Math.round(maxHeight)}`)
+  handle.setAttribute('aria-valuenow', `${Math.round(height)}`)
+}
+
+const setMobileHeaderContentHeight = (
+  content: HTMLElement,
+  handle: HTMLElement,
+  height: number,
+  persist: boolean
+) => {
+  const maxHeight = getMobileHeaderContentMaxHeight(content)
+  const nextHeight = clampMobileHeaderContentHeight(height, maxHeight)
+
+  if (nextHeight >= maxHeight) {
+    content.style.removeProperty('--mobile-header-content-height')
+  } else {
+    content.style.setProperty('--mobile-header-content-height', `${nextHeight}px`)
+  }
+
+  updateMobileHeaderResizeHandleValue(handle, nextHeight, maxHeight)
+
+  if (persist) {
+    storageSetItem(
+      'mobileHeaderContentHeight',
+      nextHeight >= maxHeight ? MOBILE_HEADER_EXPANDED_STORAGE_VALUE : `${nextHeight}`
+    )
+  }
+
+  requestAnimationFrame(updateMobileSubTabLayout)
+}
+
+const registerMobileHeaderResize = () => {
+  if (!isMobile) {
+    return
+  }
+
+  const content = DOMCacheGetOrSet('mobileHeaderContent')
+  const handle = DOMCacheGetOrSet('mobileHeaderResizeHandle')
+  const storedHeight = storageGetItem('mobileHeaderContentHeight')
+  let storedHeightApplied = false
+
+  if (storedHeight !== null && storedHeight !== 'mobileHeaderContentHeight') {
+    const parsedHeight = Number.parseInt(storedHeight, 10)
+    if (Number.isFinite(parsedHeight)) {
+      setMobileHeaderContentHeight(content, handle, parsedHeight, false)
+      storedHeightApplied = true
+    }
+  }
+
+  if (!storedHeightApplied) {
+    updateMobileHeaderResizeHandleValue(
+      handle,
+      content.getBoundingClientRect().height,
+      getMobileHeaderContentMaxHeight(content)
+    )
+  }
+
+  let activePointerId: number | null = null
+  let dragStartY = 0
+  let dragStartHeight = 0
+
+  handle.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return
+    }
+
+    activePointerId = event.pointerId
+    dragStartY = event.clientY
+    dragStartHeight = content.getBoundingClientRect().height
+    handle.setPointerCapture(event.pointerId)
+    document.body.classList.add('mobileHeaderIsResizing')
+    event.preventDefault()
+  })
+
+  handle.addEventListener('pointermove', (event) => {
+    if (event.pointerId !== activePointerId) {
+      return
+    }
+
+    setMobileHeaderContentHeight(content, handle, dragStartHeight + event.clientY - dragStartY, false)
+    event.preventDefault()
+  })
+
+  const finishDragging = (event: PointerEvent) => {
+    if (event.pointerId !== activePointerId) {
+      return
+    }
+
+    activePointerId = null
+    document.body.classList.remove('mobileHeaderIsResizing')
+
+    if (handle.hasPointerCapture(event.pointerId)) {
+      handle.releasePointerCapture(event.pointerId)
+    }
+
+    setMobileHeaderContentHeight(content, handle, content.getBoundingClientRect().height, true)
+  }
+
+  handle.addEventListener('pointerup', finishDragging)
+  handle.addEventListener('pointercancel', finishDragging)
+}
+
+const updateMobileSubTabLayout = () => {
+  if (!isMobile) {
+    return
+  }
+
+  const main = document.querySelector<HTMLElement>('main')
+  const mainHeader = DOMCacheGetOrSet('mainHeader')
+  if (main === null) {
+    return
+  }
+
+  const activeMainPanel = Array.from(main.children)
+    .find((child): child is HTMLElement => child instanceof HTMLElement && getComputedStyle(child).display !== 'none')
+  const activeSubTabWrapper = activeMainPanel?.querySelector<HTMLElement>('.subTabWrapper')
+  const subTabHeight = activeSubTabWrapper != null && getComputedStyle(activeSubTabWrapper).display !== 'none'
+    ? activeSubTabWrapper.getBoundingClientRect().height
+    : 0
+
+  document.body.style.setProperty('--mobile-subtab-height', `${subTabHeight}px`)
+  document.body.style.setProperty('--mobile-subtab-top', `${mainHeader.getBoundingClientRect().bottom}px`)
+}
+
+const registerMobileSubTabLayout = () => {
+  if (!isMobile) {
+    return
+  }
+
+  const update = () => requestAnimationFrame(updateMobileSubTabLayout)
+  const resizeObserver = new ResizeObserver(update)
+  resizeObserver.observe(DOMCacheGetOrSet('mainHeader'))
+  document.querySelectorAll<HTMLElement>('.subTabWrapper').forEach((element) => resizeObserver.observe(element))
+
+  window.addEventListener('resize', update)
+  update()
+}
+
+const buyAntUpgrades = () => buyAllAntUpgrades(player.ants.toggles.maxBuyUpgrades)
+
+const buyAntProducersAndMasteries = () => {
+  buyAllAntProducers(player.ants.toggles.maxBuyProducers)
+  buyAllAntMasteries()
+}
+
+const useLotus = () => {
+  const timeNow = Date.now()
+  const lotusTime = getLotusTimeExpiresAt()
+  let extraHTML = ''
+  if (lotusTime !== undefined && timeNow < lotusTime) {
+    extraHTML = i18next.t('pseudoCoins.lotus.useConfirmMulti')
+  }
+  Confirm(`${i18next.t('pseudoCoins.lotus.useConfirm')} ${extraHTML}`)
+    .then((bool) => {
+      if (!bool) {
+        return
+      }
+
+      if (getOwnedLotus() < 1) {
+        void Alert(i18next.t('pseudoCoins.lotus.noLotus'))
+        return
+      }
+
+      sendToWebsocket(
+        JSON.stringify({
+          type: 'applied-lotus',
+          amount: 1
+        })
+      )
+    })
+}
+
+const saveStringHTML = () =>
+  [
+    i18next.t('settings.saveString.version'),
+    i18next.t('settings.saveString.time'),
+    i18next.t('settings.saveString.year'),
+    i18next.t('settings.saveString.day'),
+    i18next.t('settings.saveString.min'),
+    i18next.t('settings.saveString.period'),
+    i18next.t('settings.saveString.date'),
+    i18next.t('settings.saveString.times'),
+    i18next.t('settings.saveString.sing'),
+    i18next.t('settings.saveString.quarks'),
+    i18next.t('settings.saveString.gq'),
+    i18next.t('settings.saveString.stage')
+  ].join('<br>')
+
+const setPurpleReactantPercentage = (
+  reactant: 'ambrosia' | 'redAmbrosia',
+  percentage: number
+) => {
+  if (reactant === 'ambrosia') {
+    player.purpleReactor.ambrosiaBarPointPercentage = percentage
+  } else {
+    player.purpleReactor.redAmbrosiaBarPointPercentage = percentage
+  }
+}
+
+function visitConsumableTab () {
+  changeTab(Tabs.Purchase)
+  changeSubTab(Tabs.Purchase, { page: 3 })
+}
+
+export const generateEventHandlers = () => {
+  registerMobileSubTabIcons()
+  registerMobileStatsIcons()
+  registerMobileHotkeyPanel()
+  registerMobileHeaderResize()
+  registerHeaderLayoutEditing()
+  registerSubTabSwitches()
+  registerMobileSubTabLayout()
+
+  if (TESTING) {
     const warp = document.createElement('button')
     const dayReset = document.createElement('button')
     warp.textContent = 'Click here to warp time! [TESTING ONLY]'
@@ -233,6 +906,15 @@ export const generateEventHandlers = () => {
     const consumables = DOMCacheGetOrSet('actualConsumables')
     consumables.appendChild(warp)
     consumables.appendChild(dayReset)
+
+    const corruptionReset = document.createElement('button')
+    corruptionReset.textContent = i18next.t('corruptions.resetProgress.button')
+    corruptionReset.setAttribute(
+      'style',
+      'width: auto; height: 30px; border: 2px solid crimson;'
+    )
+    corruptionReset.addEventListener('click', () => resetCorruptionProgress())
+    DOMCacheGetOrSet('corruptionDisplays').after(corruptionReset)
   }
   // Offline Button
   DOMCacheGetOrSet('exitOffline').addEventListener('click', () => exitOffline())
@@ -251,19 +933,86 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('ascHepteractStats').addEventListener('click', () => toggleAscStatPerSecond(5))
   DOMCacheGetOrSet('ascTimeTakenStats').addEventListener('click', () => toggleAscStatPerSecond(6))
   // Part 1: Reset Tiers
-  // Onmouseover Events
-  DOMCacheGetOrSet('prestigebtn').addEventListener('mouseover', () => resetrepeat('prestige'))
-  DOMCacheGetOrSet('transcendbtn').addEventListener('mouseover', () => resetrepeat('transcension'))
-  DOMCacheGetOrSet('reincarnatebtn').addEventListener('mouseover', () => resetrepeat('reincarnation'))
-  DOMCacheGetOrSet('acceleratorboostbtn').addEventListener('mouseover', () => resetrepeat('acceleratorBoost'))
-  DOMCacheGetOrSet('challengebtn').addEventListener('mouseover', () => resetrepeat('transcensionChallenge'))
-  DOMCacheGetOrSet('reincarnatechallengebtn').addEventListener(
-    'mouseover',
-    () => resetrepeat('reincarnationChallenge')
-  )
-  DOMCacheGetOrSet('ascendChallengeBtn').addEventListener('mouseover', () => resetrepeat('ascensionChallenge'))
-  DOMCacheGetOrSet('ascendbtn').addEventListener('mouseover', () => resetrepeat('ascension'))
-  DOMCacheGetOrSet('singularitybtn').addEventListener('mouseover', () => resetrepeat('singularity'))
+  const resetButtons = [
+    {
+      id: 'prestigebtn',
+      input: 'prestige',
+      label: i18next.t('reset.buttonLabels.prestige'),
+      action: () => resetCheck('prestige'),
+      borderColor: 'cyan'
+    },
+    {
+      id: 'transcendbtn',
+      input: 'transcension',
+      label: i18next.t('reset.buttonLabels.transcension'),
+      action: () => resetCheck('transcension'),
+      borderColor: 'orchid'
+    },
+    {
+      id: 'reincarnatebtn',
+      input: 'reincarnation',
+      label: i18next.t('reset.buttonLabels.reincarnation'),
+      action: () => resetCheck('reincarnation'),
+      borderColor: 'green'
+    },
+    {
+      id: 'challengebtn',
+      input: 'transcensionChallenge',
+      label: i18next.t('reset.buttonLabels.transcensionChallenge'),
+      action: () => resetCheck('transcensionChallenge', undefined, true),
+      borderColor: 'orchid'
+    },
+    {
+      id: 'reincarnatechallengebtn',
+      input: 'reincarnationChallenge',
+      label: i18next.t('reset.buttonLabels.reincarnationChallenge'),
+      action: () => resetCheck('reincarnationChallenge', undefined, true),
+      borderColor: 'green'
+    },
+    {
+      id: 'ascendChallengeBtn',
+      input: 'ascensionChallenge',
+      label: i18next.t('reset.buttonLabels.ascensionChallenge'),
+      action: () => resetCheck('ascensionChallenge'),
+      borderColor: 'orange'
+    },
+    {
+      id: 'ascendbtn',
+      input: 'ascension',
+      label: i18next.t('reset.buttonLabels.ascension'),
+      action: () => resetCheck('ascension'),
+      borderColor: 'orange'
+    },
+    {
+      id: 'singularitybtn',
+      input: 'singularity',
+      label: i18next.t('reset.buttonLabels.singularity'),
+      action: () => resetCheck('singularity'),
+      borderColor: 'lightgoldenrodyellow'
+    }
+  ] satisfies Array<
+    { id: string; input: resetNames; label: string; action: () => void | Promise<void>; borderColor: string }
+  >
+
+  for (const reset of resetButtons) {
+    const element = DOMCacheGetOrSet(reset.id)
+    registerPurchasableModal({
+      element,
+      html: () => resetDetailsModalHTML(reset.input, element, reset.label),
+      style: { borderColor: reset.borderColor },
+      buy: async (_, modalAction) => {
+        if (isMobile && modalAction !== 'reset') {
+          return
+        }
+        if (isMobile) {
+          CloseModal()
+        }
+        await reset.action()
+      },
+      mobileButtons: [{ action: 'reset', label: reset.label }],
+      updateInterval: MEDIUM_MODAL_UPDATE_TICK
+    })
+  }
 
   for (const resetButton of document.getElementsByClassName('resetbtn')) {
     function onFocusMouseover () {
@@ -272,12 +1021,6 @@ export const generateEventHandlers = () => {
 
     function onBlurMouseout () {
       resetButton.classList.remove('hover')
-
-      if (player.currentChallenge.reincarnation) {
-        resetrepeat('reincarnationChallenge')
-      } else if (player.currentChallenge.transcension) {
-        resetrepeat('transcensionChallenge')
-      }
     }
 
     resetButton.addEventListener('mouseover', onFocusMouseover)
@@ -287,28 +1030,7 @@ export const generateEventHandlers = () => {
     resetButton.addEventListener('blur', onBlurMouseout)
   }
 
-  // Onclick Events (this is particularly bad)
-  DOMCacheGetOrSet('prestigebtn').addEventListener('click', () => resetCheck('prestige'))
-  DOMCacheGetOrSet('transcendbtn').addEventListener('click', () => resetCheck('transcension'))
-  DOMCacheGetOrSet('reincarnatebtn').addEventListener('click', () => resetCheck('reincarnation'))
-  DOMCacheGetOrSet('acceleratorboostbtn').addEventListener('click', () => boostAccelerator())
-  DOMCacheGetOrSet('challengebtn').addEventListener('click', () => resetCheck('transcensionChallenge', undefined, true))
-  DOMCacheGetOrSet('reincarnatechallengebtn').addEventListener(
-    'click',
-    () => resetCheck('reincarnationChallenge', undefined, true)
-  )
-  DOMCacheGetOrSet('ascendChallengeBtn').addEventListener('click', () => resetCheck('ascensionChallenge'))
-  DOMCacheGetOrSet('ascendbtn').addEventListener('click', () => resetCheck('ascension'))
-  DOMCacheGetOrSet('singularitybtn').addEventListener('click', () => resetCheck('singularity'))
-
   // BUILDINGS TAB
-  // Part 1: Upper portion (Subtab toggle)
-  const buildingTypes = ['Coin', 'Diamond', 'Mythos', 'Particle', 'Tesseract']
-  for (let index = 0; index < buildingTypes.length; index++) {
-    DOMCacheGetOrSet(
-      `switchTo${buildingTypes[index]}Building`
-    ).addEventListener('click', () => changeSubTab(Tabs.Buildings, { page: index }))
-  }
   // Part 2: Building Amount Toggles
   const buildingTypesAlternate = [
     'coin',
@@ -333,39 +1055,39 @@ export const generateEventHandlers = () => {
   }
   // Part 3: Building Purchasers + Upgrades
   // Accelerator, Multiplier, Accelerator Boost
-  DOMCacheGetOrSet('buyaccelerator').addEventListener('click', () => buyAccelerator())
-  DOMCacheGetOrSet('buymultiplier').addEventListener('click', () => buyMultiplier())
+  DOMCacheGetOrSet('buyaccelerator').addEventListener('click', () => buyBuilding('accelerator'))
+  DOMCacheGetOrSet('buymultiplier').addEventListener('click', () => buyBuilding('multiplier'))
   DOMCacheGetOrSet('buyacceleratorboost').addEventListener('click', () => boostAccelerator())
 
   // Coin, Diamond and Mythos Buildings
-  const buildingTypesAlternate2 = ['coin', 'diamond', 'mythos']
-  const buildingTypesAlternate3 = ['Coin', 'Diamonds', 'Mythos'] as const // TODO: A cleaner way to implement this dumb shit
-  for (let index = 0; index < 3; index++) {
+  const buildingTypesAlternate2 = ['coin', 'diamond', 'mythos'] as const
+  buildingTypesAlternate2.forEach((type) => {
     for (let index2 = 1; index2 <= 5; index2++) {
-      DOMCacheGetOrSet(
-        `buy${buildingTypesAlternate2[index]}${index2}`
-      ).addEventListener('pointerdown', () =>
-        buyProducer(
-          ordinals[index2 - 1] as FirstToFifth,
-          buildingTypesAlternate3[index],
-          index === 0 ? index2 : (index2 * (index2 + 1)) / 2
-        ))
+      DOMCacheGetOrSet(`buy${type}${index2}`)
+        .addEventListener('pointerdown', () => buyBuilding(type, undefined, index2 - 1 as ZeroToFour))
     }
-  }
+  })
 
-  // Crystal Upgrades (Mouseover and Onclick)
+  // Crystal Upgrades
   for (let index = 1; index <= 5; index++) {
     const buyUpgrade = DOMCacheGetOrSet(`buycrystalupgrade${index}`)
-    buyUpgrade.addEventListener('mouseover', () => crystalupgradedescriptions(index))
-    buyUpgrade.addEventListener('focus', () => crystalupgradedescriptions(index))
-    buyUpgrade.addEventListener('click', () => buyCrystalUpgrades(index))
+    registerPurchasableModal({
+      element: buyUpgrade,
+      html: () => crystalUpgradeHTML(index),
+      style: { borderColor: 'cyan' },
+      buy: () => {
+        buyCrystalUpgrades(index)
+        crystalupgradedescriptions(index)
+      },
+      mobileButtons: [{ action: 'buy', label: i18next.t('general.buyOne') }]
+    })
   }
 
   // Particle Buildings
   for (let index = 0; index < 5; index++) {
     DOMCacheGetOrSet(`buyparticles${index + 1}`).addEventListener(
       'click',
-      () => buyParticleBuilding((index + 1) as OneToFive)
+      () => buyBuilding('particle', undefined, index as ZeroToFour)
     )
   }
 
@@ -384,15 +1106,37 @@ export const generateEventHandlers = () => {
   // Constant Upgrades
   for (let index = 0; index < 10; index++) {
     const buyConstantUpgrade = DOMCacheGetOrSet(`buyConstantUpgrade${index + 1}`)
-    buyConstantUpgrade.addEventListener('mouseover', () => constantUpgradeDescriptions(index + 1))
-    buyConstantUpgrade.addEventListener('focus', () => constantUpgradeDescriptions(index + 1))
-    buyConstantUpgrade.addEventListener('click', () => buyConstantUpgrades(index + 1))
+    registerPurchasableModal({
+      element: buyConstantUpgrade,
+      html: () => constantUpgradeHTML(index + 1),
+      style: { borderColor: 'gold' },
+      buy: () => {
+        buyConstantUpgrades(index + 1)
+        constantUpgradeDescriptions(index + 1)
+      },
+      mobileButtons: [{ action: 'buy', label: i18next.t('general.buyOne') }]
+    })
   }
 
   // Part 4: Toggles
   // I'm just addressing all global toggles here
   const toggles = document.querySelectorAll<HTMLElement>('.auto[toggleid]')
   toggles.forEach((b) => b.addEventListener('click', () => toggleSettings(b)))
+  const buildingAutomationToggles = document.querySelectorAll<HTMLButtonElement>('.buildingAutomationToggle')
+  buildingAutomationToggles.forEach((button) =>
+    button.addEventListener('click', () => {
+      toggleAllBuildingAutomation(button)
+      toggleauto()
+    })
+  )
+  const automatedBuildingVisibilityToggles = document.querySelectorAll<HTMLButtonElement>(
+    '.automatedBuildingVisibilityToggle'
+  )
+  automatedBuildingVisibilityToggles.forEach((button) =>
+    button.addEventListener('click', () => {
+      toggleAutomatedBuildingVisibility(button)
+    })
+  )
   // Toggles auto reset type (between TIME and AMOUNT for 3 first Tiers, and between PERCENTAGE and AMOUNT for Tesseracts)
   DOMCacheGetOrSet('prestigeautotoggle').addEventListener('click', () => toggleAutoPrestigeMode())
   DOMCacheGetOrSet('transcendautotoggle').addEventListener('click', () => toggleAutoTranscendMode())
@@ -402,7 +1146,6 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('prestigeamount').addEventListener('blur', () => updateAutoReset(1))
   DOMCacheGetOrSet('transcendamount').addEventListener('blur', () => updateAutoReset(2))
   DOMCacheGetOrSet('reincarnationamount').addEventListener('blur', () => updateAutoReset(3))
-  DOMCacheGetOrSet('ascensionAmount').addEventListener('blur', () => updateAutoReset(4))
   DOMCacheGetOrSet('autoAntSacrificeAmount').addEventListener('blur', () => updateAutoReset(5))
   // Tesseract-specific of the above. I don't know why I didn't standardize names here.
   DOMCacheGetOrSet('tesseractautobuytoggle').addEventListener('click', () => toggleautobuytesseract())
@@ -419,28 +1162,8 @@ export const generateEventHandlers = () => {
 
   // UPGRADES TAB
   // For all upgrades in the Upgrades Tab (125) count, we have the same mouseover event. So we'll work on those first.
-  for (let index = 1; index <= 125; index++) {
-    // Onmouseover events ()
-    const upgrade = DOMCacheGetOrSet(`upg${index}`)
-    upgrade.addEventListener('mouseover', () => upgradedescriptions(index))
-    upgrade.addEventListener('focus', () => upgradedescriptions(index))
-  }
-
-  // Generates all upgrade button events
-  for (let index = 1; index <= 125; index++) {
-    DOMCacheGetOrSet(`upg${index}`).addEventListener('click', () => clickUpgrades(index, false))
-  }
-
-  for (let index = 1; index <= 6; index++) {
-    DOMCacheGetOrSet(`upgrades${index}`).addEventListener('click', () => categoryUpgrades(index, false))
-  }
-
-  // Next part: Shop-specific toggles
-  DOMCacheGetOrSet('coinAutoUpgrade').addEventListener('click', () => toggleShops('coin'))
-  DOMCacheGetOrSet('prestigeAutoUpgrade').addEventListener('click', () => toggleShops('prestige'))
-  DOMCacheGetOrSet('transcendAutoUpgrade').addEventListener('click', () => toggleShops('transcend'))
-  DOMCacheGetOrSet('generatorsAutoUpgrade').addEventListener('click', () => toggleShops('generators'))
-  DOMCacheGetOrSet('reincarnateAutoUpgrade').addEventListener('click', () => toggleShops('reincarnate'))
+  DOMCacheGetOrSet('buyAllUpgrades').addEventListener('click', () => buyAllUpgrades(false))
+  DOMCacheGetOrSet('togglePurchasedUpgrades').addEventListener('click', togglePurchasedUpgrades)
 
   // ACHIEVEMENTS TAB
   // TODO: Remove 1 indexing
@@ -450,222 +1173,31 @@ export const generateEventHandlers = () => {
     achievement.addEventListener('mouseover', () => achievementdescriptions(index))
     achievement.addEventListener('focus', () => achievementdescriptions(index))
   }*/
-  DOMCacheGetOrSet('showAchievementProgress').addEventListener('mouseover', () => displayAchievementProgress())
-  DOMCacheGetOrSet('showAchievementProgress').addEventListener('focus', () => displayAchievementProgress())
-  DOMCacheGetOrSet('showAchievementProgress').addEventListener('mouseout', () => resetAchievementProgressDisplay())
-  DOMCacheGetOrSet('showAchievementProgress').addEventListener('blur', () => resetAchievementProgressDisplay())
 
-  for (let index = 0; index < 2; index++) {
-    DOMCacheGetOrSet(`toggleAchievementSubTab${index + 1}`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.Achievements, { page: index })
-    )
+  const achievementProgress = DOMCacheGetOrSet('showAchievementProgress')
+
+  if (isMobile) {
+    achievementProgress.addEventListener('click', function(this: HTMLElement) {
+      const toggled = this.toggleAttribute('show-progress')
+      if (!toggled) {
+        resetAchievementProgressDisplay()
+      } else {
+        displayAchievementProgress()
+      }
+    })
+  } else {
+    achievementProgress.addEventListener('mouseover', () => displayAchievementProgress())
+    achievementProgress.addEventListener('focus', () => displayAchievementProgress())
+    achievementProgress.addEventListener('mouseout', () => resetAchievementProgressDisplay())
+    achievementProgress.addEventListener('blur', () => resetAchievementProgressDisplay())
   }
 
   // RUNES TAB [And all corresponding subtabs]
   // Part 0: Upper UI portion
   // Auto sacrifice toggle button
-  DOMCacheGetOrSet('toggleautosacrifice').addEventListener('click', () => toggleAutoSacrifice('0'))
-  // Toggle subtabs of Runes tab
-  for (let index = 0; index < 4; index++) {
-    DOMCacheGetOrSet(`toggleRuneSubTab${index + 1}`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.Runes, { page: index })
-    )
-  }
+  DOMCacheGetOrSet('toggleautosacrifice').addEventListener('click', () => toggleAutoSacrifice(0))
 
-  // Part 1: Runes Subtab
-
-  const runeStats = Object.keys(
-    runes
-  ) as RuneKeys[]
-  for (const key of runeStats) {
-    const rune = DOMCacheGetOrSet(`${key}RuneContainer`)
-    rune.addEventListener(
-      'mousemove',
-      (e) => {
-        Modal(() => focusedRuneHTML(key), e.clientX, e.clientY, { borderColor: runes[key].runeHTMLStyle.borderColor })
-      }
-    )
-    rune.addEventListener('focus', () => {
-      const element = DOMCacheGetOrSet(`${key}Rune`)
-      const elmRect = element.getBoundingClientRect()
-      Modal(() => focusedRuneHTML(key), elmRect.x, elmRect.y + elmRect.height / 2, {
-        borderColor: runes[key].runeHTMLStyle.borderColor
-      })
-    })
-    rune.addEventListener('mouseout', CloseModal)
-
-    const runeIcon = DOMCacheGetOrSet(`${key}Rune`)
-    runeIcon.addEventListener('click', () => toggleAutoSacrifice(runeToIndex[key]))
-
-    const activateRune = DOMCacheGetOrSet(`${key}RuneSacrifice`)
-    /*activateRune.addEventListener('mouseover', () => updateFocusedRuneHTML(key))
-    activateRune.addEventListener('focus', () => updateFocusedRuneHTML(key))*/
-    activateRune.addEventListener('click', () => sacrificeOfferings(key, player.offerings, false))
-
-    // Add event listeners for locked rune containers
-    const lockedRune = DOMCacheGetOrSet(`${key}RuneLocked`)
-    lockedRune.addEventListener(
-      'mousemove',
-      (e) => {
-        Modal(() => focusedRuneLockedHTML(key), e.clientX, e.clientY, { borderColor: 'gray' })
-      }
-    )
-    lockedRune.addEventListener('focus', () => {
-      const element = DOMCacheGetOrSet(`${key}RuneLockedContainer`)
-      const elmRect = element.getBoundingClientRect()
-      Modal(() => focusedRuneLockedHTML(key), elmRect.x, elmRect.y + elmRect.height / 2, {
-        borderColor: 'gray'
-      })
-    })
-    lockedRune.addEventListener('mouseout', CloseModal)
-  }
-
-  // Part 2: Talismans Subtab
-  const talismanBuyPercents = [10, 25, 50, 100]
-  const talismanBuyPercentsOrd = ['Ten', 'TwentyFive', 'Fifty', 'Hundred']
-
-  for (let index = 0; index < talismanBuyPercents.length; index++) {
-    DOMCacheGetOrSet(
-      `talisman${talismanBuyPercentsOrd[index]}`
-    ).addEventListener('click', () => toggleTalismanBuy(talismanBuyPercents[index]))
-  }
-
-  DOMCacheGetOrSet('toggleautoBuyFragments').addEventListener('click', () => toggleAutoBuyFragment())
-  DOMCacheGetOrSet('toggleautofortify').addEventListener('click', () => toggleautofortify())
-
-  // Talisman Fragments/Shards
-  const talismanItemNames = [
-    'shard',
-    'commonFragment',
-    'uncommonFragment',
-    'rareFragment',
-    'epicFragment',
-    'legendaryFragment',
-    'mythicalFragment'
-  ] as const
-  for (let index = 0; index < talismanItemNames.length; index++) {
-    const buyTalisman = DOMCacheGetOrSet(`buyTalismanItem${index + 1}`)
-    buyTalisman.addEventListener('mouseover', () => {
-      const obtainiumBudget = player.obtainium.mul(player.buyTalismanShardPercent / 100)
-      const offeringBudget = player.offerings.mul(player.buyTalismanShardPercent / 100)
-      updateTalismanCostDisplay(talismanItemNames[index], obtainiumBudget, offeringBudget)
-    })
-    buyTalisman.addEventListener('focus', () => {
-      const obtainiumBudget = player.obtainium.mul(player.buyTalismanShardPercent / 100)
-      const offeringBudget = player.offerings.mul(player.buyTalismanShardPercent / 100)
-      updateTalismanCostDisplay(talismanItemNames[index], obtainiumBudget, offeringBudget)
-    })
-    buyTalisman.addEventListener('click', () => {
-      const obtainiumBudget = player.obtainium.mul(player.buyTalismanShardPercent / 100)
-      const offeringBudget = player.offerings.mul(player.buyTalismanShardPercent / 100)
-      buyTalismanResources(talismanItemNames[index], obtainiumBudget, offeringBudget)
-    })
-  }
-
-  const buyTalismanAll = DOMCacheGetOrSet('buyTalismanAll')
-  buyTalismanAll.addEventListener('mouseover', () => {
-    const obtainiumBudget = player.obtainium.mul(player.buyTalismanShardPercent / 100)
-    const offeringBudget = player.offerings.mul(player.buyTalismanShardPercent / 100)
-    updateTalismanCostDisplay(null, obtainiumBudget, offeringBudget)
-  })
-  buyTalismanAll.addEventListener('focus', () => {
-    const obtainiumBudget = player.obtainium.mul(player.buyTalismanShardPercent / 100)
-    const offeringBudget = player.offerings.mul(player.buyTalismanShardPercent / 100)
-    updateTalismanCostDisplay(null, obtainiumBudget, offeringBudget)
-  })
-  buyTalismanAll.addEventListener('click', () => buyAllTalismanResources())
-
-  const talismanStats = Object.keys(
-    talismans
-  ) as TalismanKeys[]
-  for (const key of talismanStats) {
-    DOMCacheGetOrSet(`${key}Talisman`).addEventListener(
-      'mouseover',
-      () => {
-        talismanToStringHTML(key)
-        talismanRarityInfo(key)
-      }
-    )
-    DOMCacheGetOrSet(`level${key}Once`).addEventListener(
-      'click',
-      () => buyTalismanLevel(key)
-    )
-    DOMCacheGetOrSet(`level${key}Once`).addEventListener(
-      'mouseover',
-      () => updateTalismanCostHTML(key)
-    )
-    DOMCacheGetOrSet(`level${key}ToRarityIncrease`).addEventListener(
-      'click',
-      () => buyTalismanLevelToRarityIncrease(key)
-    )
-    DOMCacheGetOrSet(`level${key}ToRarityIncrease`).addEventListener(
-      'mouseover',
-      () => updateTalismanCostHTML(key)
-    )
-    DOMCacheGetOrSet(`level${key}ToMax`).addEventListener(
-      'click',
-      () => buyTalismanLevelToMax(key)
-    )
-    DOMCacheGetOrSet(`level${key}ToMax`).addEventListener(
-      'mouseover',
-      () => updateTalismanCostHTML(key)
-    )
-  }
-
-  // Part 3: Blessings and Spirits
-
-  for (const key of runeBlessingKeys) {
-    const runeBlessing = DOMCacheGetOrSet(`${key}RuneBlessingContainer`)
-    runeBlessing.addEventListener(
-      'mousemove',
-      (e) => {
-        Modal(() => focusedRuneBlessingHTML(key), e.clientX, e.clientY, {
-          borderColor: runes[key].runeHTMLStyle.borderColor
-        })
-      }
-    )
-    runeBlessing.addEventListener('focus', () => {
-      const element = DOMCacheGetOrSet(`${key}RuneBlessing`)
-      const elmRect = element.getBoundingClientRect()
-      Modal(() => focusedRuneBlessingHTML(key), elmRect.x, elmRect.y + elmRect.height / 2, {
-        borderColor: runes[key].runeHTMLStyle.borderColor
-      })
-    })
-    runeBlessing.addEventListener('mouseout', CloseModal)
-
-    DOMCacheGetOrSet(`${key}RuneBlessingPurchase`).addEventListener(
-      'click',
-      () => buyBlessingLevels(key, player.offerings)
-    )
-  }
-
-  for (const key of runeSpiritKeys) {
-    const runeSpirit = DOMCacheGetOrSet(`${key}RuneSpiritContainer`)
-    runeSpirit.addEventListener(
-      'mousemove',
-      (e) => {
-        Modal(() => focusedRuneSpiritHTML(key), e.clientX, e.clientY, {
-          borderColor: runes[key].runeHTMLStyle.borderColor
-        })
-      }
-    )
-    runeSpirit.addEventListener('focus', () => {
-      const element = DOMCacheGetOrSet(`${key}RuneSpirit`)
-      const elmRect = element.getBoundingClientRect()
-      Modal(() => focusedRuneSpiritHTML(key), elmRect.x, elmRect.y + elmRect.height / 2, {
-        borderColor: runes[key].runeHTMLStyle.borderColor
-      })
-    })
-
-    runeSpirit.addEventListener('mouseout', CloseModal)
-
-    DOMCacheGetOrSet(`${key}RuneSpiritPurchase`).addEventListener(
-      'click',
-      () => buySpiritLevels(key, player.offerings)
-    )
-  }
+  // RUNES TAB
 
   DOMCacheGetOrSet('buyRuneBlessingInput').addEventListener('blur', () => updateRuneBlessingBuyAmount(1))
   DOMCacheGetOrSet('buyRuneSpiritInput').addEventListener('blur', () => updateRuneBlessingBuyAmount(2))
@@ -677,11 +1209,11 @@ export const generateEventHandlers = () => {
   // Part 1: Challenges
   // Challenge 1-15 buttons
   for (let index = 0; index < 15; index++) {
-    DOMCacheGetOrSet(`challenge${index + 1}`).addEventListener('click', () => challengeDisplay(index + 1))
+    DOMCacheGetOrSet(`challenge${index + 1}`).addEventListener('click', () => setChallengeFocus(index + 1))
     DOMCacheGetOrSet(`challenge${index + 1}`).addEventListener(
       'dblclick',
       () => {
-        challengeDisplay(index + 1)
+        setChallengeFocus(index + 1)
         toggleChallenges(G.triggerChallenge, false)
       }
     )
@@ -715,26 +1247,44 @@ export const generateEventHandlers = () => {
     }
   )
 
-  for (let index = 0; index < 2; index++) {
-    DOMCacheGetOrSet(`toggleChallengesSubTab${index + 1}`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.Challenges, { page: index })
-    )
-  }
-
   // RESEARCH TAB
   // Part 1: Researches
   // There are 200 researches, ideally in rewrite 200 would instead be length of research list/array
   for (let index = 1; index <= 200; index++) {
     const research = DOMCacheGetOrSet(`res${index}`)
-    research.addEventListener('click', () => {
-      const auto = false
-      const hover = false
-      buyResearch(index, auto, hover)
+    const buySelectedResearch = (buyMaxOverride?: boolean) => {
+      buyResearch(index, false, false, buyMaxOverride)
       if (player.autoResearchMode === 'manual' && player.autoResearchToggle) {
         updateResearchAuto(index)
       }
-    })
+    }
+
+    if (isMobile) {
+      const updateDescription = researchDescriptions.bind(null, index)
+
+      research.addEventListener('click', (event) => {
+        updateDescription()
+        let buyMaxOverride: boolean | undefined
+
+        Modal(
+          () => `${researchModalHTML(index, false, buyMaxOverride)}${modalBuyButtonsHTML()}`,
+          event.clientX,
+          event.clientY,
+          { borderColor: 'limegreen' },
+          MEDIUM_MODAL_UPDATE_TICK,
+          {
+            targetElement: research,
+            buttonClick: (button) => {
+              buyMaxOverride = button.dataset.modalAction === 'max'
+              buySelectedResearch(buyMaxOverride)
+            }
+          }
+        )
+      })
+      continue
+    }
+
+    research.addEventListener('click', () => buySelectedResearch())
     research.addEventListener('mouseover', () => {
       if (player.toggles[38] && player.highestSingularityCount > 0) {
         const auto = false
@@ -757,81 +1307,46 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('toggleresearchbuy').addEventListener('click', () => toggleResearchBuy())
   DOMCacheGetOrSet('toggleautoresearch').addEventListener('click', () => toggleAutoResearch())
   DOMCacheGetOrSet('toggleautoresearchmode').addEventListener('click', () => toggleAutoResearchMode())
+  DOMCacheGetOrSet('toggleMaxedResearches').addEventListener('click', toggleMaxedResearches)
 
-  for (let index = 0; index < 3; index++) {
-    DOMCacheGetOrSet(`toggleAntSubtab${index + 1}`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.AntHill, { page: index })
-    )
+  const buyAllAntUpgradesButton = DOMCacheGetOrSet('buyAllAntUpgrades')
+  const buyAllAntProducersButton = DOMCacheGetOrSet('buyAllAntProducers')
+
+  // Keep the existing modal behavior for browser builds, including browsers on mobile devices.
+  if (PLATFORM === 'mobile') {
+    buyAllAntUpgradesButton.addEventListener('click', buyAntUpgrades)
+    buyAllAntProducersButton.addEventListener('click', buyAntProducersAndMasteries)
+  } else {
+    registerPurchasableModal({
+      element: buyAllAntUpgradesButton,
+      html: allAntUpgradeHTML,
+      style: { borderColor: 'crimson' },
+      buy: buyAntUpgrades,
+      mobileButtons: [{ action: 'buyAll', label: i18next.t('ants.buyAllUpgrades') }],
+      updateInterval: MEDIUM_MODAL_UPDATE_TICK
+    })
+    registerPurchasableModal({
+      element: buyAllAntProducersButton,
+      html: allAntProducerHTML,
+      style: { borderColor: 'gold' },
+      buy: buyAntProducersAndMasteries,
+      mobileButtons: [{ action: 'buyAll', label: i18next.t('ants.buyAllProducers') }],
+      updateInterval: MEDIUM_MODAL_UPDATE_TICK
+    })
   }
-
-  DOMCacheGetOrSet('buyAllAntUpgrades').addEventListener('click', (e: MouseEvent) => {
-    buyAllAntUpgrades(player.ants.toggles.maxBuyUpgrades)
-    Modal(
-      allAntUpgradeHTML,
-      e.clientX,
-      e.clientY,
-      { borderColor: 'crimson' },
-      MEDIUM_MODAL_UPDATE_TICK,
-      e.currentTarget as HTMLElement
-    )
-  })
-  DOMCacheGetOrSet('buyAllAntProducers').addEventListener('click', (e: MouseEvent) => {
-    buyAllAntProducers(player.ants.toggles.maxBuyProducers)
-    buyAllAntMasteries()
-    Modal(
-      allAntProducerHTML,
-      e.clientX,
-      e.clientY,
-      { borderColor: 'gold' },
-      MEDIUM_MODAL_UPDATE_TICK,
-      e.currentTarget as HTMLElement
-    )
-  })
-
-  DOMCacheGetOrSet('buyAllAntProducers').addEventListener('mousemove', (e: MouseEvent) => {
-    Modal(allAntProducerHTML, e.clientX, e.clientY, { borderColor: 'gold' }, MEDIUM_MODAL_UPDATE_TICK)
-  })
-
-  DOMCacheGetOrSet('buyAllAntProducers').addEventListener('mouseout', () => CloseModal())
-
-  DOMCacheGetOrSet('buyAllAntUpgrades').addEventListener('mousemove', (e: MouseEvent) => {
-    Modal(allAntUpgradeHTML, e.clientX, e.clientY, { borderColor: 'crimson' }, MEDIUM_MODAL_UPDATE_TICK)
-  })
-
-  DOMCacheGetOrSet('buyAllAntUpgrades').addEventListener('mouseout', () => CloseModal())
 
   for (let ant = AntProducers.Workers; ant <= LAST_ANT_PRODUCER; ant++) {
     const antTier = DOMCacheGetOrSet(`anttier${ant + 1}`)
     antTier.style.setProperty('--glow-color', antProducerData[ant].color)
-    antTier.addEventListener(
-      'mousemove',
-      (e: MouseEvent) =>
-        Modal(() => antProducerHTML(ant), e.clientX, e.clientY, { borderColor: antProducerData[ant].color })
-    )
-
-    // TODO: When we have event listeners for Focus on modals, clicking on the element in question
-    // will set the Modal's positioning to be dependent on the element, which causes a jank
-    // "Teleport" of the modal for a frame until it's set back to the mouse position.
-    // Fix is urgently needed for accessibility.
-    /*antTier.addEventListener('focus', () => {
-      const elmRect = antTier.getBoundingClientRect()
-      Modal(() => antProducerHTML(ant), elmRect.x, elmRect.y + elmRect.height / 2, {
-        borderColor: antProducerData[ant].color
-      })
-    })*/
-    antTier.addEventListener('mouseout', () => CloseModal())
-    // antTier.addEventListener('blur', () => CloseModal())
-    antTier.addEventListener('click', (event) => {
-      buyAntProducers(ant, player.ants.toggles.maxBuyProducers)
-      Modal(
-        () => antProducerHTML(ant),
-        event.clientX,
-        event.clientY,
-        { borderColor: antProducerData[ant].color },
-        undefined,
-        event.currentTarget as HTMLElement
-      )
+    registerPurchasableModal({
+      element: antTier,
+      html: () => antProducerHTML(ant),
+      style: { borderColor: antProducerData[ant].color },
+      buy: (_event, action) =>
+        buyAntProducers(
+          ant,
+          action === 'max' || (action === undefined && player.ants.toggles.maxBuyProducers)
+        )
     })
 
     const antMastery = DOMCacheGetOrSet(`antMastery${ant + 1}`)
@@ -840,26 +1355,12 @@ export const generateEventHandlers = () => {
       '--glow-color',
       blendedColor
     )
-    antMastery.addEventListener(
-      'mousemove',
-      (e: MouseEvent) => Modal(() => antMasteryHTML(ant), e.clientX, e.clientY, { borderColor: blendedColor })
-    )
-    /*antMastery.addEventListener('focus', () => {
-      const elmRect = antMastery.getBoundingClientRect()
-      Modal(() => antMasteryHTML(ant), elmRect.x, elmRect.y + elmRect.height / 2, { borderColor: blendedColor })
-    })*/
-    antMastery.addEventListener('mouseout', () => CloseModal())
-    // antMastery.addEventListener('blur', () => CloseModal())
-    antMastery.addEventListener('click', (event) => {
-      buyAntMastery(ant)
-      Modal(
-        () => antMasteryHTML(ant),
-        event.clientX,
-        event.clientY,
-        { borderColor: blendedColor },
-        undefined,
-        event.currentTarget as HTMLElement
-      )
+    registerPurchasableModal({
+      element: antMastery,
+      html: () => antMasteryHTML(ant),
+      style: { borderColor: blendedColor },
+      buy: () => buyAntMastery(ant),
+      mobileButtons: [{ action: 'buy', label: i18next.t('general.upgrade') }]
     })
   }
   // Part 2: Ant Upgrades
@@ -871,26 +1372,12 @@ export const generateEventHandlers = () => {
       `color-mix(in srgb, ${antUpgradeData[upgrade].antUpgradeHTML.color} 75%, crimson 25%)`
     )
 
-    antUpgrade.addEventListener(
-      'mousemove',
-      (e: MouseEvent) => Modal(() => antUpgradeHTML(upgrade), e.clientX, e.clientY, { borderColor: 'burlywood' })
-    )
-    /*antUpgrade.addEventListener('focus', () => {
-      const elmRect = antUpgrade.getBoundingClientRect()
-      Modal(() => antUpgradeHTML(upgrade), elmRect.x, elmRect.y + elmRect.height / 2, { borderColor: 'burlywood' })
-    })*/
-    antUpgrade.addEventListener('mouseout', () => CloseModal())
-    // antUpgrade.addEventListener('blur', () => CloseModal())
-    antUpgrade.addEventListener('click', (event) => {
-      buyAntUpgrade(upgrade, player.ants.toggles.maxBuyUpgrades)
-      Modal(
-        () => antUpgradeHTML(upgrade),
-        event.clientX,
-        event.clientY,
-        { borderColor: 'burlywood' },
-        undefined,
-        event.currentTarget as HTMLElement
-      )
+    registerPurchasableModal({
+      element: antUpgrade,
+      html: () => antUpgradeHTML(upgrade),
+      style: { borderColor: 'burlywood' },
+      buy: () => buyAntUpgrade(upgrade, player.ants.toggles.maxBuyUpgrades),
+      mobileButtons: [{ action: 'buy', label: i18next.t('general.upgrade') }]
     })
   }
   // Part 3: Sacrifice
@@ -910,43 +1397,20 @@ export const generateEventHandlers = () => {
     updateOnlySacrificeMaxRebornELOToggle(player.ants.toggles.onlySacrificeMaxRebornELO)
   })
 
-  document.getElementById('use-lotus')?.addEventListener('click', () => {
-    const timeNow = Date.now()
-    const lotusTime = getLotusTimeExpiresAt()
-    let extraHTML = ''
-    if (lotusTime !== undefined && timeNow < lotusTime) {
-      extraHTML = i18next.t('pseudoCoins.lotus.useConfirmMulti')
-    }
-    Confirm(`${i18next.t('pseudoCoins.lotus.useConfirm')} ${extraHTML}`)
-      .then((bool) => {
-        if (!bool) {
-          return
-        }
-
-        if (getOwnedLotus() < 1) {
-          return Alert(i18next.t('pseudoCoins.lotus.noLotus'))
-        }
-
-        sendToWebsocket(
-          JSON.stringify({
-            type: 'applied-lotus',
-            amount: 1
-          })
-        )
-      })
-  })
+  DOMCacheGetOrSet('use-lotus').addEventListener('click', useLotus)
+  DOMCacheGetOrSet('use-lotus-collapsed').addEventListener('click', useLotus)
 
   // Part 3.5: Leaderboard
   DOMCacheGetOrSet('antLeaderboardToggle').addEventListener('click', () => toggleLeaderboardMode())
   DOMCacheGetOrSet('antLeaderboardValueAmount').addEventListener('mousemove', (e: MouseEvent) => {
     Modal(() => antCornerStageHTML(), e.clientX, e.clientY, { borderColor: 'orange' })
   })
-  DOMCacheGetOrSet('antLeaderboardValueAmount').addEventListener('mouseout', () => CloseModal())
+  DOMCacheGetOrSet('antLeaderboardValueAmount').addEventListener('mouseleave', () => CloseModal())
 
   DOMCacheGetOrSet('antLeaderboardQuarkValueAmount').addEventListener('mousemove', (e: MouseEvent) => {
     Modal(() => antCornerQuarkHTML(), e.clientX, e.clientY, { borderColor: 'cyan' })
   })
-  DOMCacheGetOrSet('antLeaderboardQuarkValueAmount').addEventListener('mouseout', () => CloseModal())
+  DOMCacheGetOrSet('antLeaderboardQuarkValueAmount').addEventListener('mouseleave', () => CloseModal())
 
   // Part 4: QoL Buttons
   DOMCacheGetOrSet('toggleBuyAntProducerMax').addEventListener('click', () => toggleMaxBuyAntProducer())
@@ -958,20 +1422,65 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('autoSacrificeAntMode').addEventListener('click', () => toggleAutoAntSacrificeMode())
 
   // WOW! Cubes Tab
-  // Part 0: Subtab UI
-  for (let index = 0; index < 7; index++) {
-    DOMCacheGetOrSet(`switchCubeSubTab${index + 1}`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.WowCubes, { page: index })
+  // Part 1: Cube Upgrades
+  const cubeUpgradeModalStyle = { borderColor: 'gold' }
+  const desktopCubeUpgradeModal = (index: number, cubeUpgrade: HTMLElement, x: number, y: number) => {
+    cubeUpgradeDesc(index)
+    const image = cubeUpgrade.querySelector('img')
+
+    Modal(
+      () => cubeUpgradeModalHTML(index, player.cubeUpgradesBuyMaxToggle, image?.style.cssText),
+      x,
+      y,
+      cubeUpgradeModalStyle,
+      MEDIUM_MODAL_UPDATE_TICK,
+      cubeUpgrade
     )
   }
 
-  // Part 1: Cube Upgrades
+  const mobileCubeUpgradeModal = (index: number, cubeUpgrade: HTMLElement, event: MouseEvent) => {
+    cubeUpgradeDesc(index)
+    let buyMaxOverride = player.cubeUpgradesBuyMaxToggle
+    const image = cubeUpgrade.querySelector('img')
+
+    Modal(
+      () => `${cubeUpgradeModalHTML(index, buyMaxOverride, image?.style.cssText)}${modalBuyButtonsHTML()}`,
+      event.clientX,
+      event.clientY,
+      cubeUpgradeModalStyle,
+      MEDIUM_MODAL_UPDATE_TICK,
+      {
+        targetElement: cubeUpgrade,
+        buttonClick: (button) => {
+          buyMaxOverride = button.dataset.modalAction === 'max'
+          buyCubeUpgrades(index, buyMaxOverride)
+        }
+      }
+    )
+  }
+
   for (let index = 1; index < player.cubeUpgrades.length; index++) {
     const cubeUpgrade = DOMCacheGetOrSet(`cubeUpg${index}`)
-    cubeUpgrade.addEventListener('mouseover', () => cubeUpgradeDesc(index))
-    cubeUpgrade.addEventListener('focus', () => cubeUpgradeDesc(index))
-    cubeUpgrade.addEventListener('click', () => buyCubeUpgrades(index))
+    cubeUpgrade.setAttribute('aria-haspopup', 'dialog')
+
+    if (isMobile) {
+      cubeUpgrade.addEventListener('click', (event) => mobileCubeUpgradeModal(index, cubeUpgrade, event))
+      continue
+    }
+
+    cubeUpgrade.addEventListener('mousemove', (event) => {
+      desktopCubeUpgradeModal(index, cubeUpgrade, event.clientX, event.clientY)
+    })
+    cubeUpgrade.addEventListener('focus', () => {
+      const elmRect = cubeUpgrade.getBoundingClientRect()
+      desktopCubeUpgradeModal(index, cubeUpgrade, elmRect.x, elmRect.y + elmRect.height / 2)
+    })
+    cubeUpgrade.addEventListener('mouseout', CloseModal)
+    cubeUpgrade.addEventListener('blur', CloseModal)
+    cubeUpgrade.addEventListener('click', (event) => {
+      buyCubeUpgrades(index)
+      desktopCubeUpgradeModal(index, cubeUpgrade, event.clientX, event.clientY)
+    })
   }
 
   // Toggle
@@ -1040,8 +1549,30 @@ export const generateEventHandlers = () => {
     'platonicUpgradeImage'
   )
   for (let index = 0; index < platonicUpgrades.length; index++) {
-    platonicUpgrades[index].addEventListener('mouseover', () => createPlatonicDescription(index + 1))
-    platonicUpgrades[index].addEventListener('click', () => buyPlatonicUpgrades(index + 1))
+    const platonicUpgrade = platonicUpgrades[index] as HTMLImageElement
+    const upgradeIndex = index + 1
+
+    if (isMobile) {
+      platonicUpgrade.addEventListener('click', () => createPlatonicDescription(upgradeIndex))
+      registerPurchasableModal({
+        element: platonicUpgrade,
+        html: () => platonicUpgradeModalHTML(upgradeIndex, platonicUpgrade.style.cssText),
+        style: { borderColor: 'orchid' },
+        buy: () => {
+          buyPlatonicUpgrades(upgradeIndex)
+        },
+        mobileButtons: [
+          {
+            action: 'buy',
+            label: i18next.t('wowCubes.platonicUpgrades.descriptionBox.buyButton')
+          }
+        ],
+        updateInterval: MEDIUM_MODAL_UPDATE_TICK
+      })
+    } else {
+      platonicUpgrade.addEventListener('mouseover', () => createPlatonicDescription(upgradeIndex))
+      platonicUpgrade.addEventListener('click', () => buyPlatonicUpgrades(upgradeIndex))
+    }
   }
   DOMCacheGetOrSet('toggleAutoPlatonicUpgrades').addEventListener('click', () => autoPlatonicUpgradesToggle())
 
@@ -1079,34 +1610,29 @@ export const generateEventHandlers = () => {
   )
 
   // CORRUPTION TAB
-  // Part 0: Subtabs
-  DOMCacheGetOrSet('corrStatsBtn').addEventListener('click', () => changeSubTab(Tabs.Corruption, { page: 0 }))
-  DOMCacheGetOrSet('corrLoadoutsBtn').addEventListener('click', () => changeSubTab(Tabs.Corruption, { page: 1 }))
-
   // Part 1: Displays
-  DOMCacheGetOrSet('corruptionDisplays').addEventListener('click', () => corruptionDisplay('exit'))
+  registerCorruptionDetailsModal(DOMCacheGetOrSet('corruptionExitIcon'), 'exit')
   DOMCacheGetOrSet('corruptionCleanse').addEventListener('click', () => corruptionCleanseConfirm())
-  DOMCacheGetOrSet('corruptionCleanseConfirm').addEventListener('click', () => {
-    player.corruptions.used.resetCorruptions()
-    player.corruptions.next.resetCorruptions()
+  DOMCacheGetOrSet('corruptionCleanseConfirm').addEventListener('click', () => cleanseCorruptions())
+  DOMCacheGetOrSet('corruptionAutoIncreaseToggle').addEventListener('change', () => toggleCorruptionAutoIncrease())
+  DOMCacheGetOrSet('corruptionCleanseToHighestToggle').addEventListener(
+    'change',
+    () => toggleCorruptionCleanseToHighest()
+  )
+  for (const [id, delta] of corruptionLevelSteps) {
+    DOMCacheGetOrSet(id).addEventListener('click', () => changeNextCorruptionLevel(delta))
+  }
+  DOMCacheGetOrSet('corruptionLevelMin').addEventListener('click', () => setNextCorruptionLevel(0))
+  DOMCacheGetOrSet('corruptionLevelMax').addEventListener('click', () => maxNextCorruptionLevel())
+  DOMCacheGetOrSet('corruptionLevelInput').addEventListener('change', (event) => {
+    setNextCorruptionLevel(Number((event.target as HTMLInputElement).value))
   })
 
   // Extra toggle
   DOMCacheGetOrSet('ascensionAutoEnable').addEventListener('click', () => toggleAutoAscendResetActive())
-  DOMCacheGetOrSet('ascensionAutoToggle').addEventListener('click', () => toggleAutoAscendResetMode())
 
   // SETTNGS TAB
-  // Part 0: Subtabs
-  const settingSubTabs = document.querySelectorAll('[id^="switchSettingSubTab"]')
-
-  for (let subTabIndex = 0; subTabIndex < settingSubTabs.length; subTabIndex++) {
-    settingSubTabs.item(subTabIndex).addEventListener(
-      'click',
-      changeSubTab.bind(null, Tabs.Settings, { page: subTabIndex })
-    )
-  }
-
-  const t = document.querySelectorAll<HTMLElement>('button.statsNerds')
+  const t = document.querySelectorAll<HTMLElement>('.statsNerds')
   for (const s of t) {
     s.addEventListener('click', (e) => displayStats(e.target as HTMLElement))
   }
@@ -1121,6 +1647,8 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('savegame').addEventListener('click', () => saveSynergy(true))
   DOMCacheGetOrSet('deleteGame').addEventListener('click', () => resetGame(false))
   DOMCacheGetOrSet('preloadDeleteGame').addEventListener('click', () => reloadDeleteGame())
+  DOMCacheGetOrSet('preloadExportSave').addEventListener('click', () => exportStoredSave())
+  DOMCacheGetOrSet('preloadImportSave').addEventListener('click', () => DOMCacheGetOrSet('importfile').click())
   DOMCacheGetOrSet('promocodes').addEventListener('click', () => promocodesPrompt())
   DOMCacheGetOrSet('addCodeBox').addEventListener('mouseover', () => promocodesInfo('add'))
   DOMCacheGetOrSet('addCode').addEventListener('click', () => promocodes('add'))
@@ -1130,6 +1658,11 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('dailyCode').addEventListener('mouseover', () => promocodesInfo('daily'))
   DOMCacheGetOrSet('timeCode').addEventListener('click', () => promocodes('time'))
   DOMCacheGetOrSet('timeCode').addEventListener('mouseover', () => promocodesInfo('time'))
+  if (isMobile) {
+    const promocodeStatus = document.createElement('p')
+    promocodeStatus.id = 'promocodeStatus'
+    DOMCacheGetOrSet('promocodeinfo').before(promocodeStatus)
+  }
   DOMCacheGetOrSet('historyTogglePerSecondButton').addEventListener(
     'click',
     () => resetHistoryTogglePerSecond()
@@ -1137,28 +1670,37 @@ export const generateEventHandlers = () => {
   DOMCacheGetOrSet('resetHotkeys').addEventListener('click', () => resetHotkeys())
   DOMCacheGetOrSet('notation').addEventListener('click', () => toggleAnnotation())
   DOMCacheGetOrSet('iconSet').addEventListener('click', () => toggleIconSet(player.iconSet + 1))
+  DOMCacheGetOrSet('monospaceFont').addEventListener('click', () => toggleMonospaceFont())
   DOMCacheGetOrSet('statSymbols').addEventListener('click', () => toggleStatSymbol())
+  if (TESTING) {
+    const testingDtMultiplierSetting = document.createElement('div')
+    testingDtMultiplierSetting.className = 'appearanceSetting'
+    const testingDtMultiplierTitle = document.createElement('p')
+    testingDtMultiplierTitle.textContent = i18next.t('settings.testingDtMultiplier')
+    const testingDtMultiplierSlider = document.createElement('input')
+    testingDtMultiplierSlider.type = 'range'
+    testingDtMultiplierSlider.min = '0.1'
+    testingDtMultiplierSlider.max = '10'
+    testingDtMultiplierSlider.step = '0.1'
+    testingDtMultiplierSlider.value = '1'
+    testingDtMultiplierSlider.setAttribute('aria-label', i18next.t('settings.testingDtMultiplier'))
+    const testingDtMultiplierValue = document.createElement('p')
+    testingDtMultiplierValue.textContent = i18next.t('settings.testingDtMultiplierValue', { x: '1.0' })
+    testingDtMultiplierSlider.addEventListener('input', () => {
+      const requested = testingDtMultiplierSlider.valueAsNumber
+      G.testingDtMultiplier = Number.isFinite(requested) ? Math.min(10, Math.max(0.1, requested)) : 1
+      testingDtMultiplierValue.textContent = i18next.t('settings.testingDtMultiplierValue', {
+        x: G.testingDtMultiplier.toFixed(1)
+      })
+    })
+    testingDtMultiplierSetting.append(testingDtMultiplierTitle, testingDtMultiplierSlider, testingDtMultiplierValue)
+    document.querySelector('.appearanceSettings')!.append(testingDtMultiplierSetting)
+  }
 
-  const html = () =>
-    [
-      i18next.t('settings.saveString.version'),
-      i18next.t('settings.saveString.time'),
-      i18next.t('settings.saveString.year'),
-      i18next.t('settings.saveString.day'),
-      i18next.t('settings.saveString.min'),
-      i18next.t('settings.saveString.period'),
-      i18next.t('settings.saveString.date'),
-      i18next.t('settings.saveString.times'),
-      i18next.t('settings.saveString.sing'),
-      i18next.t('settings.saveString.quarks'),
-      i18next.t('settings.saveString.gq'),
-      i18next.t('settings.saveString.stage')
-    ].join('<br>')
-
-  saveStringInput.addEventListener('mousemove', (e) => Modal(() => html(), e.clientX, e.clientY))
+  saveStringInput.addEventListener('mousemove', (e) => Modal(() => saveStringHTML(), e.clientX, e.clientY))
   saveStringInput.addEventListener('focus', () => {
     const elmRect = saveStringInput.getBoundingClientRect()
-    Modal(() => html(), elmRect.x, elmRect.y + elmRect.height / 2)
+    Modal(() => saveStringHTML(), elmRect.x, elmRect.y + elmRect.height / 2)
   })
   saveStringInput.addEventListener('mouseout', CloseModal)
 
@@ -1181,9 +1723,6 @@ TODO: Fix this entire tab it's utter shit
   */
 
   // Part 1: The Settings
-  /*Respec The Upgrades*/ DOMCacheGetOrSet(
-    'resetShopUpgrades'
-  ).addEventListener('click', () => resetShopUpgrades())
   /*Toggle Shop Confirmations*/ DOMCacheGetOrSet(
     'toggleConfirmShop'
   ).addEventListener('click', () => toggleShopConfirmation())
@@ -1196,52 +1735,54 @@ TODO: Fix this entire tab it's utter shit
   ).addEventListener('click', () => toggleHideShop())
 
   // Part 2: Potions
+  for (const key of shopPotionKeys) {
+    const icon = DOMCacheGetOrSet(`${key}s`)
+    const container = DOMCacheGetOrSet(`${key}Hide`)
+    const showPotionModal = (x: number, y: number) => {
+      Modal(
+        () =>
+          `<span style="color: gold">${shopUpgrades[key].name()}</span><br><br>
+          <span style="color: plum">${shopUpgrades[key].description()}</span><br><br>
+          <span style="color: limegreen">${shopUpgrades[key].effectDescription()}</span>`,
+        x,
+        y,
+        { borderColor: 'gold' },
+        MEDIUM_MODAL_UPDATE_TICK,
+        icon
+      )
+    }
+
+    icon.addEventListener('click', (event) => showPotionModal(event.clientX, event.clientY))
+    icon.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        icon.click()
+      }
+    })
+
+    if (!isMobile) {
+      container.addEventListener('mousemove', (event) => showPotionModal(event.clientX, event.clientY))
+      container.addEventListener('focusin', (event) => {
+        const rect = (event.target as HTMLElement).getBoundingClientRect()
+        showPotionModal(rect.x, rect.y + rect.height / 2)
+      })
+      container.addEventListener('mouseleave', CloseModal)
+      container.addEventListener('focusout', CloseModal)
+    }
+  }
+
   /*Offering Potion*/
-  DOMCacheGetOrSet('offeringPotions').addEventListener('mouseover', () => shopDescriptions('offeringPotion'))
-  DOMCacheGetOrSet('offeringpotionowned').addEventListener('mouseover', () => shopDescriptions('offeringPotion'))
-  DOMCacheGetOrSet('buyofferingpotion').addEventListener('mouseover', () => shopDescriptions('offeringPotion'))
-  DOMCacheGetOrSet('useofferingpotion').addEventListener('mouseover', () => shopDescriptions('offeringPotion'))
   DOMCacheGetOrSet('buyofferingpotion').addEventListener('click', () => buyShopUpgrades('offeringPotion'))
-  // DOMCacheGetOrSet('offeringPotions').addEventListener('click', () => buyShopUpgrades("offeringPotion"))  //Allow clicking of image to buy also
   DOMCacheGetOrSet('useofferingpotion').addEventListener('click', () => useConsumablePrompt('offeringPotion'))
   DOMCacheGetOrSet('toggle42').addEventListener('click', () => {
     player.autoPotionTimer = 0
   })
   /*Obtainium Potion*/
-  DOMCacheGetOrSet('obtainiumPotions').addEventListener('mouseover', () => shopDescriptions('obtainiumPotion'))
-  DOMCacheGetOrSet('obtainiumpotionowned').addEventListener('mouseover', () => shopDescriptions('obtainiumPotion'))
-  DOMCacheGetOrSet('buyobtainiumpotion').addEventListener('mouseover', () => shopDescriptions('obtainiumPotion'))
-  DOMCacheGetOrSet('useobtainiumpotion').addEventListener('mouseover', () => shopDescriptions('obtainiumPotion'))
   DOMCacheGetOrSet('buyobtainiumpotion').addEventListener('click', () => buyShopUpgrades('obtainiumPotion'))
-  // DOMCacheGetOrSet('obtainiumPotions').addEventListener('click', () => buyShopUpgrades("obtainiumPotion"))  //Allow clicking of image to buy also
   DOMCacheGetOrSet('useobtainiumpotion').addEventListener('click', () => useConsumablePrompt('obtainiumPotion'))
   DOMCacheGetOrSet('toggle43').addEventListener('click', () => {
     player.autoPotionTimerObtainium = 0
   })
-  /* Permanent Upgrade Images */
-  const shopKeys = Object.keys(player.shopUpgrades) as ShopUpgradeNames[]
-  for (const key of shopKeys) {
-    const shopItem = shopUpgrades[key]
-    if (shopItem.type === shopUpgradeTypes.UPGRADE) {
-      const boundShopDescriptions = shopDescriptions.bind(null, key)
-      const boundCreateShopHTML = createShopHTML.bind(null, key)
-      DOMCacheGetOrSet(key).addEventListener(
-        'mousemove',
-        (e) => Modal(boundCreateShopHTML, e.clientX, e.clientY, { borderColor: 'cyan' })
-      )
-      DOMCacheGetOrSet(key).addEventListener('focus', function(this: HTMLElement) {
-        const elmRect = this.getBoundingClientRect()
-        Modal(boundCreateShopHTML, elmRect.x, elmRect.y + elmRect.height / 2, { borderColor: 'cyan' })
-      })
-      DOMCacheGetOrSet(key).addEventListener('mouseout', CloseModal)
-      DOMCacheGetOrSet(key).addEventListener('blur', CloseModal)
-      DOMCacheGetOrSet(key).addEventListener('mouseover', boundShopDescriptions)
-      DOMCacheGetOrSet(`${key}Level`).addEventListener('mouseover', boundShopDescriptions)
-      DOMCacheGetOrSet(`${key}Button`).addEventListener('mouseover', boundShopDescriptions)
-      // DOMCacheGetOrSet(`${key}`).addEventListener('click', () => buyShopUpgrades(key))  //Allow clicking of image to buy also
-      DOMCacheGetOrSet(`${key}Button`).addEventListener('pointerdown', () => buyShopUpgrades(key))
-    }
-  }
   DOMCacheGetOrSet('buySingularityQuarksButton').addEventListener('click', () => buyGoldenQuarks())
   // SINGULARITY TAB
 
@@ -1251,7 +1792,7 @@ TODO: Fix this entire tab it's utter shit
   const lockToggle = DOMCacheGetOrSet('elevatorLockToggle')
   const slowClimbToggle = DOMCacheGetOrSet('elevatorSlowClimbToggle')
 
-  elevatorInput.addEventListener('input', () => {
+  elevatorInput.addEventListener('change', () => {
     const value = Number.parseInt((elevatorInput as HTMLInputElement).value) || 1
 
     const canLookahead = runes.antiquities.level > 0
@@ -1269,6 +1810,8 @@ TODO: Fix this entire tab it's utter shit
 
   // Do the cool scrolling thing
   elevatorInput.addEventListener('wheel', (e) => {
+    e.preventDefault()
+
     if (e.deltaY < 0) {
       // Scroll up: Means we can *increase* singularity
       if (player.singularityElevatorTarget < player.highestSingularityCount) {
@@ -1299,223 +1842,199 @@ TODO: Fix this entire tab it's utter shit
     updateSingularityElevator()
   })
 
-  const GQUpgrades = Object.keys(goldenQuarkUpgrades) as SingularityDataKeys[]
-  for (const key of GQUpgrades) {
-    if (!isMobile) {
-      if (key === 'offeringAutomatic') {
-        continue
-      }
-      DOMCacheGetOrSet(key).addEventListener(
-        'mousemove',
-        (e) => Modal(() => upgradeGQToString(key), e.clientX, e.clientY, { borderColor: 'gold' })
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'focus',
-        () => {
-          const element = DOMCacheGetOrSet(key)
-          const elmRect = element.getBoundingClientRect()
-          Modal(() => upgradeGQToString(key), elmRect.x, elmRect.y + elmRect.height / 2, { borderColor: 'gold' })
-        }
-      )
+  DOMCacheGetOrSet('toggleMaxedGoldenQuarkUpgrades').addEventListener('click', toggleMaxedGoldenQuarkUpgrades)
+  DOMCacheGetOrSet('freeUpgradeInfoButton').addEventListener('click', showFreeUpgradeInfo)
 
-      DOMCacheGetOrSet(key).addEventListener(
-        'mouseout',
-        CloseModal
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'blur',
-        CloseModal
-      )
-
-      DOMCacheGetOrSet(key).addEventListener(
-        'click',
-        (event) => {
-          buyGQUpgradeLevel(key, event)
-          Modal(
-            () => upgradeGQToString(key),
-            event.clientX,
-            event.clientY,
-            { borderColor: 'gold' },
-            undefined,
-            event.currentTarget as HTMLElement
-          )
-        }
-      )
-    } else {
-      if (key === 'offeringAutomatic') {
-        continue
-      }
-      DOMCacheGetOrSet(key).addEventListener(
-        'click',
-        () => updateMobileGQHTML(key)
-      )
+  for (const key of goldenQuarkUpgradeNames) {
+    if (key === 'offeringAutomatic') {
+      continue
     }
-  }
-  DOMCacheGetOrSet('actualSingularityUpgradeContainer').addEventListener(
-    'mouseover',
-    () => shopMouseover(true)
-  )
-  DOMCacheGetOrSet('actualSingularityUpgradeContainer').addEventListener(
-    'mouseout',
-    () => shopMouseover(false)
-  )
-
-  const perkImage = DOMCacheGetOrSet(
-    'singularityPerksIcon'
-  ) as HTMLImageElement
-  const perksText = DOMCacheGetOrSet('singularityPerksText')
-  const perksDesc = DOMCacheGetOrSet('singularityPerksDesc')
-  for (const perk of singularityPerks) {
-    const perkHTML = document.createElement('span')
-    perkHTML.innerHTML = `<img src="Pictures/${IconSets[player.iconSet][0]}/perk${perk.ID}.png">${perk.name()}`
-    perkHTML.id = perk.ID
-    perkHTML.classList.add('oldPerk')
-    perkHTML.style.display = 'none' // Ensure the perk is hidden if not unlocked as an anti-spoiler failsafe.
-    DOMCacheGetOrSet('singularityPerksGrid').append(perkHTML)
-    DOMCacheGetOrSet(perk.ID).addEventListener('mouseover', () => {
-      const perkInfo = getLastUpgradeInfo(perk, player.highestSingularityCount)
-      const levelInfo = i18next.t('singularity.perks.levelInfo', {
-        level: perkInfo.level,
-        singularity: perkInfo.singularity
-      })
-      perkImage.src = `Pictures/${IconSets[player.iconSet][0]}/perk${perk.ID}.png`
-      perksText.innerHTML = levelInfo
-      perksDesc.innerHTML = perk.description(
-        player.highestSingularityCount,
-        perk.levels
-      )
+    registerPurchasableModal({
+      element: DOMCacheGetOrSet(key),
+      html: () => upgradeGQToString(key),
+      style: { borderColor: 'gold' },
+      buy: (event, action) => buyGQUpgradeLevel(key, event, action === 'max')
     })
   }
 
-  // Octeract Upgrades
-  const octUpgrade = Object.keys(octeractUpgrades) as OcteractDataKeys[]
-  for (const key of octUpgrade) {
-    if (!isMobile) {
-      DOMCacheGetOrSet(key).addEventListener(
-        'mousemove',
-        (e) => Modal(() => upgradeOcteractToString(key), e.clientX, e.clientY, { borderColor: 'lightseagreen' })
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'focus',
-        () => {
-          const element = DOMCacheGetOrSet(key)
-          const elmRect = element.getBoundingClientRect()
-          Modal(() => upgradeOcteractToString(key), elmRect.x, elmRect.y + elmRect.height / 2, {
-            borderColor: 'lightseagreen'
-          })
-        }
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'mouseout',
-        CloseModal
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'blur',
-        CloseModal
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'click',
-        (event) => {
-          buyOcteractUpgradeLevel(key, event)
-          Modal(
-            () => upgradeOcteractToString(key),
-            event.clientX,
-            event.clientY,
-            { borderColor: 'lightseagreen' },
-            undefined,
-            event.currentTarget as HTMLElement
-          )
-        }
-      )
-    } else {
-      DOMCacheGetOrSet(key).addEventListener(
-        'click',
-        () => updateMobileOcteractHTML(key)
-      )
+  initializeSingularityPerkTree()
+  for (const perk of singularityPerks) {
+    const perkHTML = document.createElement('span')
+    const perkIconSrc = () => `Pictures/${IconSets[player.iconSet][0]}/perk${perk.ID}.png`
+    const unlockSingularity = perk.levels[0]
+    perkHTML.innerHTML = `<img src="${perkIconSrc()}" alt="" loading="lazy">`
+    perkHTML.id = perk.ID
+    perkHTML.classList.add('oldPerk', 'singularityPerkNode')
+    if (isMobile) {
+      perkHTML.setAttribute('role', 'button')
     }
+    perkHTML.setAttribute('tabindex', '0')
+    perkHTML.setAttribute(
+      'aria-label',
+      i18next.t('singularity.perks.treePerkLabel', {
+        name: perk.name,
+        singularity: unlockSingularity
+      })
+    )
+    perkHTML.style.display = 'none' // Ensure the perk is hidden if not unlocked as an anti-spoiler failsafe.
+    addSingularityPerkToTree(perkHTML, perk.ID)
+    const singularityPerkElement = DOMCacheGetOrSet(perk.ID)
+    if (isMobile) {
+      singularityPerkElement.addEventListener('click', (event) => {
+        Modal(
+          () => singularityPerkModalHTML(perk, perkIconSrc()),
+          event.clientX,
+          event.clientY,
+          { borderColor: 'gold' },
+          MEDIUM_MODAL_UPDATE_TICK,
+          singularityPerkElement
+        )
+      })
+      continue
+    }
+
+    singularityPerkElement.addEventListener('mousemove', (event: MouseEvent) => {
+      Modal(
+        () => singularityPerkModalHTML(perk, perkIconSrc()),
+        event.clientX,
+        event.clientY,
+        { borderColor: 'gold' },
+        MEDIUM_MODAL_UPDATE_TICK,
+        singularityPerkElement
+      )
+    })
+    singularityPerkElement.addEventListener('focus', () => {
+      const perkRect = singularityPerkElement.getBoundingClientRect()
+      Modal(
+        () => singularityPerkModalHTML(perk, perkIconSrc()),
+        perkRect.x,
+        perkRect.y + perkRect.height / 2,
+        { borderColor: 'gold' },
+        MEDIUM_MODAL_UPDATE_TICK,
+        singularityPerkElement
+      )
+    })
+    singularityPerkElement.addEventListener('mouseleave', CloseModal)
+    singularityPerkElement.addEventListener('blur', CloseModal)
   }
 
-  DOMCacheGetOrSet('octeractUpgradeContainer').addEventListener(
-    'mouseover',
-    () => shopMouseover(true)
-  )
-  DOMCacheGetOrSet('octeractUpgradeContainer').addEventListener(
-    'mouseout',
-    () => shopMouseover(false)
-  )
+  // Octeract Upgrades
+  DOMCacheGetOrSet('toggleMaxedOcteractUpgrades').addEventListener('click', toggleMaxedOcteractUpgrades)
+  DOMCacheGetOrSet('octeractFreeUpgradeInfoButton').addEventListener('click', showOcteractFreeUpgradeInfo)
+
+  for (const key of octeractUpgradeNames) {
+    registerPurchasableModal({
+      element: DOMCacheGetOrSet(key),
+      html: () => upgradeOcteractToString(key),
+      style: { borderColor: 'lightseagreen' },
+      buy: (event, action) => buyOcteractUpgradeLevel(key, event, action === 'max')
+    })
+  }
 
   // EXALT
   const singularityChallenges = Object.keys(player.singularityChallenges) as SingularityChallengeDataKeys[]
   for (const key of singularityChallenges) {
-    DOMCacheGetOrSet(key).addEventListener(
-      'mouseover',
-      () => player.singularityChallenges[key].updateChallengeHTML()
-    )
-    DOMCacheGetOrSet(key).addEventListener(
-      'click',
-      () => player.singularityChallenges[key].challengeEntryHandler()
-    )
+    const element = DOMCacheGetOrSet(key)
+
+    if (isMobile) {
+      element.addEventListener('click', (event) => {
+        Modal(
+          () =>
+            `${player.singularityChallenges[key].modalHTML()}${
+              modalBuyButtonsHTML([
+                {
+                  action: 'toggle',
+                  label: player.singularityChallenges[key].enabled
+                    ? i18next.t('singularityChallenge.modal.exit', { defaultValue: 'Exit EXALT' })
+                    : i18next.t('singularityChallenge.modal.enter', { defaultValue: 'Enter EXALT' })
+                }
+              ])
+            }`,
+          event.clientX,
+          event.clientY,
+          { borderColor: 'gold' },
+          MEDIUM_MODAL_UPDATE_TICK,
+          {
+            targetElement: element,
+            buttonClick: () => {
+              CloseModal()
+              void player.singularityChallenges[key].challengeEntryHandler()
+            }
+          }
+        )
+      })
+      continue
+    }
+
+    element.addEventListener('mouseover', () => player.singularityChallenges[key].updateChallengeHTML())
+    element.addEventListener('click', () => {
+      void player.singularityChallenges[key].challengeEntryHandler()
+    })
   }
 
   // BLUEBERRY UPGRADES
-  const blueberryUpgrades = Object.keys(
-    ambrosiaUpgrades
-  ) as AmbrosiaUpgradeNames[]
-  for (const key of blueberryUpgrades) {
-    if (!isMobile) {
-      DOMCacheGetOrSet(key).addEventListener(
-        'mousemove',
-        (e) => {
-          Modal(() => ambrosiaUpgradeToString(key), e.clientX, e.clientY, { borderColor: 'blue' })
-          highlightPrerequisites(key)
-        }
+  initializeAmbrosiaUpgradeLayout()
+  initializeAmbrosiaLedgerModals()
+
+  for (const key of ambrosiaUpgradeNames) {
+    const element = DOMCacheGetOrSet(key)
+    const enchantment = ambrosiaUpgrades[key].purpleAmbrosiaEnchantment
+    if (element.querySelector('.purpleAmbrosiaEnchantmentIcon') === null) {
+      const enchantmentIcon = document.createElement('img')
+      enchantmentIcon.classList.add('purpleAmbrosiaEnchantmentIcon', 'Exalt9x1')
+      enchantmentIcon.classList.toggle(
+        'purpleAmbrosiaEnchantmentIconType2',
+        enchantment.type === 'blueberryCostReduction'
       )
-      DOMCacheGetOrSet(key).addEventListener(
-        'mouseout',
-        () => {
-          CloseModal()
-          resetHighlights()
-        }
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'focus',
-        () => {
-          const element = DOMCacheGetOrSet(key)
-          const elmRect = element.getBoundingClientRect()
-          Modal(() => ambrosiaUpgradeToString(key), elmRect.x, elmRect.y + elmRect.height / 2, { borderColor: 'blue' })
-          highlightPrerequisites(key)
-        }
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'blur',
-        () => {
-          CloseModal()
-          resetHighlights()
-        }
-      )
-      DOMCacheGetOrSet(key).addEventListener(
-        'click',
-        (event) => {
-          buyAmbrosiaUpgradeLevel(key, event)
-          Modal(
-            () => ambrosiaUpgradeToString(key),
-            event.clientX,
-            event.clientY,
-            { borderColor: 'blue' },
-            undefined,
-            event.currentTarget as HTMLElement
-          )
-        }
-      )
-    } else {
-      DOMCacheGetOrSet(key).addEventListener(
-        'click',
-        () => {
-          updateMobileAmbrosiaHTML(key)
-          highlightPrerequisites(key)
-        }
-      )
+      enchantmentIcon.src = 'Pictures/PurpleAmbrosia/PurpleAmbrosia.png'
+      enchantmentIcon.alt = ''
+      element.appendChild(enchantmentIcon)
+      updatePurpleAmbrosiaEnchantmentBadge(key)
     }
+
+    registerPurchasableModal({
+      element,
+      html: () => ambrosiaUpgradeToString(key),
+      style: { borderColor: 'blue' },
+      buy: (event, action) => {
+        const target = event.target instanceof Element ? event.target : null
+        if (
+          action === PURPLE_AMBROSIA_ENCHANTMENT_ACTION
+          || target?.classList.contains('purpleAmbrosiaEnchantmentIcon')
+        ) {
+          return buyPurpleAmbrosiaEnchantmentLevel(key)
+        }
+        return buyAmbrosiaUpgradeLevel(key, event, action === 'max')
+      },
+      onOpen: () => highlightPrerequisites(key),
+      onClose: resetHighlights,
+      disabled: isAmbrosiaEditMode
+    })
+
+    element.addEventListener('click', (event) => {
+      if (!isAmbrosiaEditMode()) return
+
+      resetHighlights()
+      beginAmbrosiaEdit(key)
+      highlightPrerequisites(key)
+
+      Modal(
+        () => ambrosiaEditToString(key),
+        event.clientX,
+        event.clientY,
+        { borderColor: 'orange' },
+        MEDIUM_MODAL_UPDATE_TICK,
+        {
+          targetElement: element,
+          buttonClick: (button) => {
+            if (ambrosiaEditAction(key, button.dataset.modalAction)) {
+              CloseModal()
+              resetHighlights()
+            }
+          }
+        }
+      )
+    })
   }
 
   // BLUEBERRY LOADOUTS
@@ -1527,10 +2046,6 @@ TODO: Fix this entire tab it's utter shit
     const shiftedKey = i + 1
     const el = blueberryLoadouts[i]
     el.addEventListener('mouseover', () => {
-      createLoadoutDescription(
-        shiftedKey,
-        player.blueberryLoadouts[shiftedKey] ?? { ambrosiaTutorial: 0 }
-      )
       loadoutContainer.classList.add(`hoveredBlueberryLoadout${shiftedKey}`)
       displayOnlyLoadout(player.blueberryLoadouts[shiftedKey])
     })
@@ -1546,6 +2061,14 @@ TODO: Fix this entire tab it's utter shit
   }
 
   DOMCacheGetOrSet('blueberryToggleMode').addEventListener('click', () => toggleBlueberryLoadoutmode())
+  DOMCacheGetOrSet('blueberryQuickSave').addEventListener('click', () => quickSaveBlueberryTree())
+
+  setAmbrosiaEditMode(false)
+  DOMCacheGetOrSet('ambrosiaEditLevels').addEventListener('click', () => {
+    CloseModal()
+    resetHighlights()
+    toggleAmbrosiaEditMode()
+  })
 
   DOMCacheGetOrSet('getBlueberries').addEventListener('click', () => exportBlueberryTree())
   DOMCacheGetOrSet('refundBlueberries').addEventListener('click', () => resetBlueberryTree())
@@ -1556,14 +2079,33 @@ TODO: Fix this entire tab it's utter shit
     DOMCacheGetOrSet('importBlueberries').click()
   })
 
-  DOMCacheGetOrSet('showCurrAmbrosiaUpgrades').addEventListener('mouseover', () => {
-    displayLevelsBlueberry()
-    displayRedAmbrosiaLevels()
-  })
-  DOMCacheGetOrSet('showCurrAmbrosiaUpgrades').addEventListener('mouseout', () => {
-    resetLoadoutOnlyDisplay()
-    resetRedAmbrosiaDisplay()
-  })
+  const currAmbrosiaUpgrades = DOMCacheGetOrSet('showCurrAmbrosiaUpgrades')
+
+  if (isMobile) {
+    currAmbrosiaUpgrades.addEventListener('click', function(this: HTMLElement) {
+      const toggled = this.toggleAttribute('show-levels')
+      if (!toggled) {
+        resetLoadoutOnlyDisplay()
+        resetRedAmbrosiaDisplay()
+        resetPurpleAmbrosiaDisplay()
+      } else {
+        displayLevelsBlueberry()
+        displayRedAmbrosiaLevels()
+        displayPurpleAmbrosiaLevels()
+      }
+    })
+  } else {
+    currAmbrosiaUpgrades.addEventListener('mouseover', () => {
+      displayLevelsBlueberry()
+      displayRedAmbrosiaLevels()
+      displayPurpleAmbrosiaLevels()
+    })
+    currAmbrosiaUpgrades.addEventListener('mouseout', () => {
+      resetLoadoutOnlyDisplay()
+      resetRedAmbrosiaDisplay()
+      resetPurpleAmbrosiaDisplay()
+    })
+  }
 
   // RED AMBROSIA
   const redAmbrosiaUpgrades = Object.keys(
@@ -1571,67 +2113,129 @@ TODO: Fix this entire tab it's utter shit
   ) as (keyof Player['redAmbrosiaUpgrades'])[]
   for (const key of redAmbrosiaUpgrades) {
     const capitalizedName = key.charAt(0).toUpperCase() + key.slice(1)
-    if (!isMobile) {
-      DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
-        'mousemove',
-        (e) => Modal(() => redAmbrosiaUpgradeToString(key), e.clientX, e.clientY, { borderColor: 'red' })
-      )
-      DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
-        'mouseout',
-        CloseModal
-      )
-      DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
-        'focus',
-        () => {
-          const element = DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`)
-          const elmRect = element.getBoundingClientRect()
-          Modal(() => redAmbrosiaUpgradeToString(key), elmRect.x, elmRect.y + elmRect.height / 2, {
-            borderColor: 'red'
-          })
-        }
-      )
-      DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
-        'blur',
-        CloseModal
-      )
-      DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
-        'click',
-        (event) => {
-          buyRedAmbrosiaUpgradeLevel(key, event)
-          Modal(
-            () => redAmbrosiaUpgradeToString(key),
-            event.clientX,
-            event.clientY,
-            { borderColor: 'red' },
-            undefined,
-            event.currentTarget as HTMLElement
-          )
-        }
-      )
-    } else {
-      DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`).addEventListener(
-        'click',
-        () => updateMobileRedAmbrosiaHTML(key)
-      )
+    registerPurchasableModal({
+      element: DOMCacheGetOrSet(`redAmbrosia${capitalizedName}`),
+      html: () => redAmbrosiaUpgradeToString(key),
+      style: { borderColor: 'red' },
+      buy: (event, action) => buyRedAmbrosiaUpgradeLevel(key, event, action === 'max'),
+      onOpen: () => highlightRedAmbrosiaTargets(key),
+      onClose: resetHighlights
+    })
+  }
+
+  // PURPLE AMBROSIA
+  const purpleAmbrosiaUpgradeElements = document.querySelectorAll<HTMLElement>('.purpleAmbrosiaUpgrade')
+  purpleAmbrosiaUpgradeNames.forEach((key, index) => {
+    const element = purpleAmbrosiaUpgradeElements.item(index)
+    if (element === null) {
+      return
+    }
+
+    registerPurchasableModal({
+      element,
+      html: () => purpleAmbrosiaUpgradeToString(key),
+      style: { borderColor: 'purple' },
+      buy: (event, action) => buyPurpleAmbrosiaUpgradeLevel(key, event, action === 'max')
+    })
+  })
+
+  const registerPurpleReactantSlider = (
+    elementId: string,
+    reactant: 'ambrosia' | 'redAmbrosia'
+  ) => {
+    const slider = DOMCacheGetOrSet(elementId) as HTMLInputElement
+    slider.addEventListener('input', () => {
+      const requestedPercentage = slider.valueAsNumber
+      const percentage = Number.isFinite(requestedPercentage)
+        ? Math.min(100, Math.max(0, Math.round(requestedPercentage)))
+        : 0
+
+      setPurpleReactantPercentage(reactant, percentage)
+    })
+  }
+
+  registerPurpleReactantSlider('ambrosiaBarPointPercentageSlider', 'ambrosia')
+  registerPurpleReactantSlider('redAmbrosiaBarPointPercentageSlider', 'redAmbrosia')
+
+  DOMCacheGetOrSet('encabulatorOvercapToggle').addEventListener('change', (event) => {
+    if (!getPurpleAmbrosiaUpgradeEffects('libra', 'overcapToggleUnlocked')) {
+      return
+    }
+    player.encabulatorOvercapToggle = (event.target as HTMLInputElement).checked
+    visualUpdatePurple()
+  })
+
+  for (const upgradeKey of synthesisUpgradeNames) {
+    for (const amount of synthesisUpgradePurchaseAmounts) {
+      DOMCacheGetOrSet(getSynthesisUpgradePurchaseButtonID(upgradeKey, amount)).addEventListener('click', () => {
+        buySynthesisUpgrade(upgradeKey, amount)
+      })
     }
   }
 
-  // Toggle subtabs of Singularity tab
-  for (let index = 0; index < 5; index++) {
-    DOMCacheGetOrSet(`toggleSingularitySubTab${index + 1}`).addEventListener(
-      'click',
-      () => changeSubTab(Tabs.Singularity, { page: index })
-    )
+  for (const { id, amount } of synthesisCraftButtons) {
+    DOMCacheGetOrSet(id).addEventListener('click', () => {
+      craftFromSynthesis(amount, id)
+    })
   }
+
+  DOMCacheGetOrSet('synthesisAutomationUnlock').addEventListener('click', () => {
+    if (unlockSynthesisAutomation()) {
+      DOMCacheGetOrSet('synthesisAutomationToggle').focus()
+    }
+  })
+  DOMCacheGetOrSet('synthesisAutomationToggle').addEventListener('change', (event) => {
+    setSynthesisAutomationEnabled((event.target as HTMLInputElement).checked)
+  })
+
+  DOMCacheGetOrSet('purpleSynthesisToggle').addEventListener('click', () => {
+    const mode = getPurpleReactorPopupMode() === 'synthesis' ? null : 'synthesis'
+    setPurpleReactorPopupMode(mode)
+    updateSynthesis()
+
+    if (mode === 'synthesis') {
+      createFitties()
+      requestAnimationFrame(() => DOMCacheGetOrSet('purpleSynthesisClose').focus({ preventScroll: true }))
+    }
+  })
+
+  DOMCacheGetOrSet('purpleSynthesisClose').addEventListener('click', () => {
+    setPurpleReactorPopupMode(null)
+    DOMCacheGetOrSet('purpleSynthesisToggle').focus()
+  })
+
+  DOMCacheGetOrSet('purpleSynthesisContainer').addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      setPurpleReactorPopupMode(null)
+      DOMCacheGetOrSet('purpleSynthesisToggle').focus()
+      return
+    }
+
+    if (event.key === 'Tab') {
+      const focusableElements = Array.from(
+        DOMCacheGetOrSet('purpleSynthesisContainer').querySelectorAll<HTMLElement>(
+          'button:not(:disabled):not([hidden]), input:not(:disabled)'
+        )
+      )
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement?.focus()
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement?.focus()
+      }
+    }
+  })
 
   // EVENT TAB
-  function visitConsumableTab () {
-    changeTab(Tabs.Purchase)
-    changeSubTab(Tabs.Purchase, { page: 3 })
-  }
-
   document.querySelector('#consumableEvents > .consumableButton')?.addEventListener('click', visitConsumableTab)
-  document.querySelector('#lotusButtons > .consumableButton')?.addEventListener('click', visitConsumableTab)
+  DOMCacheGetOrSet('lotusConsumablesButton').addEventListener('click', visitConsumableTab)
+  DOMCacheGetOrSet('lotusConsumablesButtonCollapsed').addEventListener('click', visitConsumableTab)
+  DOMCacheGetOrSet('toggleLotusSection').addEventListener('click', toggleLotusSection)
 
   document.getElementById('apply-tips')?.addEventListener('click', () => {
     Prompt(i18next.t('pseudoCoins.consumables.applyTipsPrompt', { tips: getTips() }))
@@ -1658,9 +2262,9 @@ TODO: Fix this entire tab it's utter shit
     })
   }
 
-  for (let i = 1; i <= 5; i++) {
-    DOMCacheGetOrSet(`switchTheme${i}`).addEventListener('click', () => {
-      toggleTheme(false, i, true)
+  for (const themeNumber of themeValues) {
+    DOMCacheGetOrSet(`switchTheme${themeNumber}`).addEventListener('click', () => {
+      toggleTheme(false, themeNumber, true)
       if (isMobile) {
         DOMCacheGetOrSet('themeArea').classList.remove('open')
       }
@@ -1671,7 +2275,7 @@ TODO: Fix this entire tab it's utter shit
     const element = event.target as HTMLInputElement
 
     if (!element.checked) {
-      localStorage.removeItem('copyToClipboard')
+      storageRemoveItem('copyToClipboard')
       event.stopPropagation()
       return
     }
@@ -1682,25 +2286,21 @@ TODO: Fix this entire tab it's utter shit
 
     if (confirmed) {
       element.checked = !element.checked
-      localStorage.setItem('copyToClipboard', '')
+      storageSetItem('copyToClipboard', '')
     } else {
-      localStorage.removeItem('copyToClipboard')
+      storageRemoveItem('copyToClipboard')
     }
   })
 
-  document.getElementById('patchnotes')?.addEventListener(
+  DOMCacheGetOrSet('patchnotes').addEventListener(
     'click',
     openIframeOverlay.bind(null, 'https://changelog.synergism.cc/latest')
   )
-  document.getElementById('tosLink')?.addEventListener(
-    'click',
-    openIframeOverlay.bind(null, 'https://synergism.cc/terms-of-service')
-  )
-
-  if (isMobile) {
-    DOMCacheGetOrSet('modalContent').addEventListener('click', CloseModal)
-  }
+  registerIframeOverlayLink('tosLink', termsOfServiceUrl)
+  registerIframeOverlayLink('supportTermsLink', termsOfServiceUrl)
+  registerIframeOverlayLink('supportPrivacyLink', privacyPolicyUrl)
 
   // Window
   window.addEventListener('error', imgErrorHandler, { capture: true })
+  window.addEventListener('message', eventPageMessageHandler)
 }

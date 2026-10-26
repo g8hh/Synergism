@@ -1,4 +1,5 @@
 import i18next from 'i18next'
+import { challenge15CorruptionEffect } from '../../../../Corruptions'
 import { AntSacrificeTiers } from '../../../../Reset'
 import { format, player } from '../../../../Synergism'
 import { antUpgradeData } from '../../AntUpgrades/data/data'
@@ -27,11 +28,10 @@ export const antUpgradeHTML = (antUpgrade: AntUpgrades) => {
   }
 
   let extinctionHTML = ''
-  if (player.corruptions.used.extinction > 0 && !upgradeData.exemptFromCorruption) {
+  if (player.currentChallenge.ascension === 15 && !upgradeData.exemptFromCorruption) {
     extinctionHTML = `<br><span style="color: #00DDFF">${
       i18next.t('ants.corruptionDivisor', {
-        x: format(player.corruptions.used.extinction, 0, true),
-        y: format(player.corruptions.used.corruptionEffects('extinction'), 2, true)
+        y: format(challenge15CorruptionEffect('extinction'), 2, true)
       })
     }</span>`
   }
@@ -53,8 +53,8 @@ export const antUpgradeHTML = (antUpgrade: AntUpgrades) => {
   if (player.ants.toggles.maxBuyUpgrades && maxBuy > player.ants.upgrades[antUpgrade]) {
     const cost = getCostMaxAntUpgrades(antUpgrade)
     costHTML = i18next.t('ants.costMaxLevels', {
-      x: format(maxBuy - player.ants.upgrades[antUpgrade], 0, true),
-      y: format(cost, 2, true)
+      x: format(maxBuy - player.ants.upgrades[antUpgrade], 0, true, false),
+      y: format(cost, 2, true, false)
     })
   } else {
     const cost = getCostNextAntUpgrade(antUpgrade)

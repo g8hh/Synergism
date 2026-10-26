@@ -1,7 +1,9 @@
 import Decimal, { type DecimalSource } from 'break_infinity.js'
-import { z, type ZodNumber, type ZodType } from 'zod'
-import { CampaignManager, type ICampaignManagerData } from '../Campaign'
-import { CorruptionLoadout, CorruptionSaves } from '../Corruptions'
+import * as z from 'zod'
+import type { ZodType } from 'zod'
+import { corruptionLoadoutCount, parseSavedRules } from '../AutoAscension'
+import { ambrosiaUpgradeNames } from '../BlueberryUpgrades'
+import { transcensionChallengeCap } from '../Challenges'
 import { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from '../CubeExperimental'
 import { defaultAntMasteries } from '../Features/Ants/AntMasteries/player/default'
 import type { PlayerAntMasteries } from '../Features/Ants/AntMasteries/structs/structs'
@@ -10,6 +12,21 @@ import type { PlayerAntProducers } from '../Features/Ants/AntProducers/structs/s
 import { defaultAntUpgrades } from '../Features/Ants/AntUpgrades/player/default'
 import { AntUpgrades, LAST_ANT_UPGRADE } from '../Features/Ants/AntUpgrades/structs/structs'
 import { AntProducers, LAST_ANT_PRODUCER } from '../Features/Ants/structs/structs'
+import {
+  freeButtonPosition,
+  HEADER_BUTTON_GROUP_CAPACITY,
+  HEADER_GRID_COLUMNS,
+  type HeaderModuleId,
+  headerModuleSizes,
+  headerRegionIds,
+  isHeaderButton,
+  isHeaderGridRegion,
+  isHeaderModuleId,
+  isHeaderSizeAllowed,
+  loadoutPageModuleIds,
+  rainbowAmbrosiaModuleIds,
+  splitHeaderSlot
+} from '../HeaderLayoutDefaults'
 import { type HepteractKeys, hepteracts } from '../Hepteracts'
 import { QuarkHandler } from '../Quark'
 import {
@@ -19,10 +36,10 @@ import {
 } from '../SingularityChallenges'
 import { blankSave, deepClone } from '../Synergism'
 import { noTalismanFragments } from '../Talismans'
-import type { Player } from '../types/Synergism'
+import type { HeaderLayout, Player } from '../types/Synergism'
 import { padArray, sumContents } from '../Utility'
 
-const decimalSchema = z.custom<DecimalSource>((value) => {
+const decimalSchema = z.custom<DecimalSource>((value: any) => {
   try {
     // eslint-disable-next-line no-new
     new Decimal(value)
@@ -32,7 +49,7 @@ const decimalSchema = z.custom<DecimalSource>((value) => {
   }
 }).transform((decimalSource) => new Decimal(decimalSource))
 
-const arrayStartingWithNull = (s: ZodType) => z.tuple([z.null()]).rest(s)
+const arrayStartingWithNull = <T extends ZodType>(s: T) => z.tuple([z.null()]).rest(s)
 
 const arrayExtend = <
   K extends keyof Player,
@@ -54,7 +71,7 @@ const arrayExtendGeneral = <T>(array: T[], blankArray: T[]): T[] => {
 
 const buyAmount = z.number().refine((arg) =>
   arg === 1 || arg === 10 || arg === 100 || arg === 1000 || arg === 10_000 || arg === 100_000
-).default(1)
+).default(1).catch(1)
 
 const leaderboardEntrySchema = z.object({
   elo: z.number(),
@@ -78,7 +95,7 @@ const antsSchema = z.object({
 
       for (const key of Object.keys(record)) {
         const value = record[key]
-        const numKey = Number(key) as AntProducers
+        const numKey: AntProducers = Number(key)
         if (numKey >= AntProducers.Workers && numKey <= LAST_ANT_PRODUCER) {
           result[numKey] = value
         }
@@ -91,14 +108,14 @@ const antsSchema = z.object({
       return result
     }
   )
-    .default(() => blankSave.ants.producers),
+    .prefault(() => blankSave.ants.producers),
   masteries: z.record(z.string(), antMasterySchema).transform(
     (record) => {
       const result: Record<number, PlayerAntMasteries> = {}
 
       for (const key of Object.keys(record)) {
         const value = record[key]
-        const numKey = Number(key) as AntProducers
+        const numKey: AntProducers = Number(key)
         if (numKey >= AntProducers.Workers && numKey <= LAST_ANT_PRODUCER) {
           result[numKey] = value
         }
@@ -111,13 +128,13 @@ const antsSchema = z.object({
       return result
     }
   )
-    .default(() => blankSave.ants.masteries),
+    .prefault(() => blankSave.ants.masteries),
   upgrades: z.record(z.string(), z.number()).transform(
     (record) => {
       const result: Record<number, number> = {}
 
       for (const [key, value] of Object.entries(record)) {
-        const numKey = Number(key) as AntUpgrades
+        const numKey: AntUpgrades = Number(key)
         if (numKey >= AntUpgrades.AntSpeed && numKey <= LAST_ANT_UPGRADE) {
           result[numKey] = value
         }
@@ -132,10 +149,10 @@ const antsSchema = z.object({
       return result
     }
   )
-    .default(() => blankSave.ants.upgrades),
-  crumbs: decimalSchema.default(() => blankSave.ants.crumbs),
-  crumbsThisSacrifice: decimalSchema.default(() => blankSave.ants.crumbsThisSacrifice),
-  crumbsEverMade: decimalSchema.default(() => blankSave.ants.crumbsEverMade),
+    .prefault(() => blankSave.ants.upgrades),
+  crumbs: decimalSchema.prefault(() => blankSave.ants.crumbs),
+  crumbsThisSacrifice: decimalSchema.prefault(() => blankSave.ants.crumbsThisSacrifice),
+  crumbsEverMade: decimalSchema.prefault(() => blankSave.ants.crumbsEverMade),
   immortalELO: z.number().default(() => blankSave.ants.immortalELO),
   rebornELO: z.number().default(() => blankSave.ants.rebornELO),
   highestRebornELODaily: leaderboardEntrySchema.array().transform((array) =>
@@ -182,13 +199,14 @@ const resetToggleModesSchema = z.object({
 })
 
 const singularityUpgradeSchema = (...keys: string[]) => {
-  return z.object<Record<typeof keys[number], ZodNumber>>({
+  return z.object<Record<typeof keys[number], ZodType<number>>>({
     level: z.number(),
-    freeLevels: z.number(),
+    // Saves from before free levels existed don't have this field at all
+    freeLevels: z.number().default(0),
     ...keys.reduce((accum, value) => {
       accum[value] = z.number()
       return accum
-    }, {} as Record<string, ZodType>)
+    }, {} as Record<string, ZodType<number>>)
   })
 }
 
@@ -231,68 +249,221 @@ const newHepteractCraftSchema = z.object({
   AUTO: z.boolean()
 })
 
-const optionalCorruptionSchema = z.object({
-  viscosity: z.number().optional().default(0),
-  drought: z.number().optional().default(0),
-  deflation: z.number().optional().default(0),
-  extinction: z.number().optional().default(0),
-  illiteracy: z.number().optional().default(0),
-  recession: z.number().optional().default(0),
-  dilation: z.number().optional().default(0),
-  hyperchallenge: z.number().optional().default(0)
-})
+const corruptionLevelSchema = z.number().int().min(0)
 
 const talismanFragmentSchema = z.object({
-  shard: decimalSchema.default(() => new Decimal(0)),
-  commonFragment: decimalSchema.default(() => new Decimal(0)),
-  uncommonFragment: decimalSchema.default(() => new Decimal(0)),
-  rareFragment: decimalSchema.default(() => new Decimal(0)),
-  epicFragment: decimalSchema.default(() => new Decimal(0)),
-  legendaryFragment: decimalSchema.default(() => new Decimal(0)),
-  mythicalFragment: decimalSchema.default(() => new Decimal(0))
+  shard: decimalSchema.default(() => new Decimal()),
+  commonFragment: decimalSchema.default(() => new Decimal()),
+  uncommonFragment: decimalSchema.default(() => new Decimal()),
+  rareFragment: decimalSchema.default(() => new Decimal()),
+  epicFragment: decimalSchema.default(() => new Decimal()),
+  legendaryFragment: decimalSchema.default(() => new Decimal()),
+  mythicalFragment: decimalSchema.default(() => new Decimal())
 })
 
 const goldenQuarkUpgradeSchema = z.object({
-  level: z.number().default(0),
+  level: z.number().optional(),
   freeLevel: z.number().default(0),
   goldenQuarksInvested: z.number().default(0)
 })
 
 const octeractUpgradeSchema = z.object({
-  level: z.number().default(0),
+  level: z.number().optional(),
   freeLevel: z.number().default(0),
   octeractsInvested: z.number().default(0)
 })
 
 const ambrosiaUpgradeSchema = z.object({
   ambrosiaInvested: z.number().default(0),
-  blueberriesInvested: z.number().default(0)
+  blueberriesInvested: z.number().default(0),
+  purpleAmbrosiaInvested: z.number().default(0)
+})
+
+const purpleReactantPercentageSchema = z.number().int().min(0).max(100)
+
+const purpleReactorSchema = z.object({
+  purpleHoney: z.number().default(0),
+  lifetimePurpleHoney: z.number().default(0),
+  storedAmbrosiaBarPoints: z.number().default(0),
+  storedRedAmbrosiaBarPoints: z.number().default(0),
+  ambrosiaBarPointPercentage: purpleReactantPercentageSchema.default(0).catch(0),
+  redAmbrosiaBarPointPercentage: purpleReactantPercentageSchema.default(0).catch(0)
+})
+
+const spentPurpleHoneySchema = z.object({
+  upgrades: z.number().default(0),
+  purpleAmbrosia: z.number().default(0)
+})
+
+const synthesisUpgradesSchema = z.object({
+  redAmbrosiaReduction: z.object({
+    purpleAmbrosia: z.number().default(0),
+    redAmbrosia: z.number().default(0)
+  }).default(() => deepClone()(blankSave.synthesisUpgrades.redAmbrosiaReduction)),
+  purpleHoneyReduction: z.object({
+    purpleAmbrosia: z.number().default(0),
+    purpleHoney: z.number().default(0)
+  }).default(() => deepClone()(blankSave.synthesisUpgrades.purpleHoneyReduction)),
+  subatomicShavings: z.object({
+    purpleAmbrosia: z.number().default(0),
+    quarks: z.number().default(0)
+  }).default(() => deepClone()(blankSave.synthesisUpgrades.subatomicShavings)),
+  exceptionalLieGroup: z.object({
+    purpleAmbrosia: z.number().default(0),
+    octeracts: z.number().default(0)
+  }).default(() => deepClone()(blankSave.synthesisUpgrades.exceptionalLieGroup))
 })
 
 const playerCorruptionSchema = z.object({
-  used: optionalCorruptionSchema.transform((value) => {
-    return new CorruptionLoadout(value)
-  }),
-  next: optionalCorruptionSchema.transform((value) => {
-    return new CorruptionLoadout(value)
-  }),
-  saves: z.record(z.string(), optionalCorruptionSchema).transform((value) => {
-    return new CorruptionSaves(value)
-  }),
-  showStats: z.boolean()
-}).default(() => JSON.parse(JSON.stringify(blankSave.corruptions)))
+  used: corruptionLevelSchema.catch(() => blankSave.corruptions.used),
+  next: corruptionLevelSchema.catch(() => blankSave.corruptions.next),
+  ascensionLevel: z.number().int().min(0).optional().catch(undefined),
+  tokenCompletions: z.number().int().min(0).catch(0).array().catch(() => [0]),
+  highestCleared: z.number().int().min(0).optional().catch(undefined),
+  autoIncrease: z.boolean().catch(() => blankSave.corruptions.autoIncrease),
+  cleanseToHighest: z.boolean().catch(() => blankSave.corruptions.cleanseToHighest),
+  loadouts: corruptionLevelSchema.catch(0).array().catch(() => []).transform((levels) =>
+    Array.from({ length: corruptionLoadoutCount }, (_, i) => levels[i] ?? 0)
+  )
+}).transform(({ highestCleared, ascensionLevel, ...corruptions }) => ({
+  ...corruptions,
+  ascensionLevel: Math.min(ascensionLevel ?? corruptions.used, corruptions.used),
+  highestCleared: highestCleared
+    ?? Math.max(corruptions.used, corruptions.tokenCompletions.findLastIndex((completions) => completions > 0))
+})).prefault(() => deepClone()(blankSave.corruptions))
 
-const campaignSchema = z.object({
-  currentCampaign: z.string().optional(),
-  campaigns: z.record(z.string(), z.number()).optional()
-})
+const headerRecordSchema = z.record(z.string(), z.unknown()).catch(() => ({}))
+const headerModuleListSchema = z.unknown().array().catch(() => []).transform((ids) => ids.filter(isHeaderModuleId))
+const headerModuleSizeSchema = z.enum(headerModuleSizes)
+const headerLoadoutPageSchema = z.number().int().min(0)
+const headerAmbrosiaIconSchema = z.lazy(() => z.enum(ambrosiaUpgradeNames))
 
-const playerCampaignSchema = campaignSchema.transform((campaignData) => {
-  return new CampaignManager(campaignData as ICampaignManagerData)
-}).default(() => JSON.parse(JSON.stringify(blankSave.campaigns)))
+const headerLayoutSchema = (layout: keyof Player['headerLayouts']) =>
+  z.object({
+    columns: z.number().catch(() => layout === 'desktop' ? 6 : 2),
+    regions: z.record(z.string(), headerModuleListSchema.array().catch(() => [])).catch(() => ({})),
+    sizes: headerRecordSchema,
+    positions: headerRecordSchema,
+    hidden: headerModuleListSchema,
+    rainbowAmbrosia: z.enum(rainbowAmbrosiaModuleIds).catch(() => blankSave.headerLayouts[layout].rainbowAmbrosia),
+    octeractPerSecond: z.boolean().catch(() => blankSave.headerLayouts[layout].octeractPerSecond),
+    loadoutPages: headerRecordSchema,
+    loadoutIcons: z.object({ ambrosiaLoadoutsHeader: headerRecordSchema }).catch(() => ({
+      ambrosiaLoadoutsHeader: {}
+    }))
+  }).transform((saved): HeaderLayout => {
+    const fallback = blankSave.headerLayouts[layout]
+
+    const sizes: HeaderLayout['sizes'] = {}
+    for (const [id, size] of Object.entries(saved.sizes)) {
+      const parsed = headerModuleSizeSchema.safeParse(size)
+      if (isHeaderModuleId(id) && parsed.success && isHeaderSizeAllowed(id, parsed.data, layout)) {
+        sizes[id] = parsed.data
+      }
+    }
+
+    const placed = new Set<HeaderModuleId>()
+    const regions = {} as HeaderLayout['regions']
+    for (const region of headerRegionIds) {
+      const savedSlots = isHeaderGridRegion(region) && saved.columns !== HEADER_GRID_COLUMNS[layout]
+        ? fallback.regions[region]
+        : saved.regions[region] ?? []
+      const slots = savedSlots.flatMap((slot) => {
+        const members: HeaderModuleId[] = []
+        for (const id of slot) {
+          if (!placed.has(id)) {
+            placed.add(id)
+            members.push(id)
+          }
+        }
+
+        const split = splitHeaderSlot(members, layout)
+        for (const piece of split) {
+          if (piece.length > 1 && !piece.some(isHeaderButton)) {
+            for (const id of piece) {
+              sizes[id] = 'S'
+            }
+          } else if (split.length > 1 && piece.length === 1 && sizes[piece[0]] === 'S') {
+            delete sizes[piece[0]]
+          }
+        }
+        return split
+      })
+      regions[region] = isHeaderGridRegion(region) ? slots : slots.filter((slot) => slot.length > 0)
+    }
+
+    const hidden = [...new Set(saved.hidden)]
+    for (const region of headerRegionIds) {
+      for (const id of fallback.regions[region].flat()) {
+        if (!placed.has(id)) {
+          placed.add(id)
+          regions[region].push([id])
+          if (fallback.sizes[id] !== undefined) {
+            sizes[id] = fallback.sizes[id]
+          }
+          if (fallback.hidden.includes(id) && !hidden.includes(id)) {
+            hidden.push(id)
+          }
+        }
+      }
+    }
+
+    const positions: HeaderLayout['positions'] = {}
+    for (const [id, position] of Object.entries(saved.positions)) {
+      if (
+        isHeaderModuleId(id) && isHeaderButton(id) && typeof position === 'number' && Number.isInteger(position)
+        && position >= 0 && position < HEADER_BUTTON_GROUP_CAPACITY[layout]
+      ) {
+        positions[id] = position
+      }
+    }
+    for (const slot of Object.values(regions).flat()) {
+      const positioned: HeaderModuleId[] = []
+      for (const id of slot.filter(isHeaderButton)) {
+        const position = positions[id]
+        if (position === undefined || positioned.some((other) => positions[other] === position)) {
+          positions[id] = freeButtonPosition(positions, positioned)
+        }
+        positioned.push(id)
+      }
+    }
+
+    const loadoutPages = { ...fallback.loadoutPages }
+    for (const id of loadoutPageModuleIds) {
+      const parsed = headerLoadoutPageSchema.safeParse(saved.loadoutPages[id])
+      if (parsed.success) {
+        loadoutPages[id] = parsed.data
+      }
+    }
+
+    const ambrosiaLoadoutsHeader: HeaderLayout['loadoutIcons']['ambrosiaLoadoutsHeader'] = {}
+    for (const [slot, icon] of Object.entries(saved.loadoutIcons.ambrosiaLoadoutsHeader)) {
+      const parsed = headerAmbrosiaIconSchema.safeParse(icon)
+      if (integerStringSchema.safeParse(slot).success && parsed.success) {
+        ambrosiaLoadoutsHeader[Number(slot)] = parsed.data
+      }
+    }
+
+    return {
+      columns: HEADER_GRID_COLUMNS[layout],
+      regions,
+      sizes,
+      positions,
+      hidden,
+      rainbowAmbrosia: saved.rainbowAmbrosia,
+      octeractPerSecond: saved.octeractPerSecond,
+      loadoutPages,
+      loadoutIcons: { ambrosiaLoadoutsHeader }
+    }
+  }).catch(() => deepClone()(blankSave.headerLayouts[layout]))
+
+const clampTranscensionChallengeCompletions = <T extends number | null>(completions: T[]) =>
+  completions.map((value, index) =>
+    index >= 1 && index <= 5 && value !== null ? Math.min(value, transcensionChallengeCap) : value
+  )
 
 export const playerSchema = z.object({
-  firstPlayed: z.string().datetime().optional().default(() => new Date().toISOString()),
+  firstPlayed: z.iso.datetime().optional().default(() => new Date().toISOString()),
   worlds: z.number().transform((quarks) => new QuarkHandler(quarks)),
   coins: decimalSchema,
   coinsThisPrestige: decimalSchema,
@@ -302,102 +473,102 @@ export const playerSchema = z.object({
 
   firstOwnedCoin: z.number(),
   firstGeneratedCoin: decimalSchema,
-  firstCostCoin: decimalSchema,
+  firstPaidCoin: decimalSchema.optional(),
   firstProduceCoin: z.number(),
 
   secondOwnedCoin: z.number(),
   secondGeneratedCoin: decimalSchema,
-  secondCostCoin: decimalSchema,
+  secondPaidCoin: decimalSchema.optional(),
   secondProduceCoin: z.number(),
 
   thirdOwnedCoin: z.number(),
   thirdGeneratedCoin: decimalSchema,
-  thirdCostCoin: decimalSchema,
+  thirdPaidCoin: decimalSchema.optional(),
   thirdProduceCoin: z.number(),
 
   fourthOwnedCoin: z.number(),
   fourthGeneratedCoin: decimalSchema,
-  fourthCostCoin: decimalSchema,
+  fourthPaidCoin: decimalSchema.optional(),
   fourthProduceCoin: z.number(),
 
   fifthOwnedCoin: z.number(),
   fifthGeneratedCoin: decimalSchema,
-  fifthCostCoin: decimalSchema,
+  fifthPaidCoin: decimalSchema.optional(),
   fifthProduceCoin: z.number(),
 
   firstOwnedDiamonds: z.number(),
   firstGeneratedDiamonds: decimalSchema,
-  firstCostDiamonds: decimalSchema,
+  firstPaidDiamonds: decimalSchema.optional(),
   firstProduceDiamonds: z.number(),
 
   secondOwnedDiamonds: z.number(),
   secondGeneratedDiamonds: decimalSchema,
-  secondCostDiamonds: decimalSchema,
+  secondPaidDiamonds: decimalSchema.optional(),
   secondProduceDiamonds: z.number(),
 
   thirdOwnedDiamonds: z.number(),
   thirdGeneratedDiamonds: decimalSchema,
-  thirdCostDiamonds: decimalSchema,
+  thirdPaidDiamonds: decimalSchema.optional(),
   thirdProduceDiamonds: z.number(),
 
   fourthOwnedDiamonds: z.number(),
   fourthGeneratedDiamonds: decimalSchema,
-  fourthCostDiamonds: decimalSchema,
+  fourthPaidDiamonds: decimalSchema.optional(),
   fourthProduceDiamonds: z.number(),
 
   fifthOwnedDiamonds: z.number(),
   fifthGeneratedDiamonds: decimalSchema,
-  fifthCostDiamonds: decimalSchema,
+  fifthPaidDiamonds: decimalSchema.optional(),
   fifthProduceDiamonds: z.number(),
 
   firstOwnedMythos: z.number(),
   firstGeneratedMythos: decimalSchema,
-  firstCostMythos: decimalSchema,
+  firstPaidMythos: decimalSchema.optional(),
   firstProduceMythos: z.number(),
 
   secondOwnedMythos: z.number(),
   secondGeneratedMythos: decimalSchema,
-  secondCostMythos: decimalSchema,
+  secondPaidMythos: decimalSchema.optional(),
   secondProduceMythos: z.number(),
 
   thirdOwnedMythos: z.number(),
   thirdGeneratedMythos: decimalSchema,
-  thirdCostMythos: decimalSchema,
+  thirdPaidMythos: decimalSchema.optional(),
   thirdProduceMythos: z.number(),
 
   fourthOwnedMythos: z.number(),
   fourthGeneratedMythos: decimalSchema,
-  fourthCostMythos: decimalSchema,
+  fourthPaidMythos: decimalSchema.optional(),
   fourthProduceMythos: z.number(),
 
   fifthOwnedMythos: z.number(),
   fifthGeneratedMythos: decimalSchema,
-  fifthCostMythos: decimalSchema,
+  fifthPaidMythos: decimalSchema.optional(),
   fifthProduceMythos: z.number(),
 
   firstOwnedParticles: z.number(),
   firstGeneratedParticles: decimalSchema,
-  firstCostParticles: decimalSchema,
+  firstPaidParticles: decimalSchema.optional(),
   firstProduceParticles: z.number(),
 
   secondOwnedParticles: z.number(),
   secondGeneratedParticles: decimalSchema,
-  secondCostParticles: decimalSchema,
+  secondPaidParticles: decimalSchema.optional(),
   secondProduceParticles: z.number(),
 
   thirdOwnedParticles: z.number(),
   thirdGeneratedParticles: decimalSchema,
-  thirdCostParticles: decimalSchema,
+  thirdPaidParticles: decimalSchema.optional(),
   thirdProduceParticles: z.number(),
 
   fourthOwnedParticles: z.number(),
   fourthGeneratedParticles: decimalSchema,
-  fourthCostParticles: decimalSchema,
+  fourthPaidParticles: decimalSchema.optional(),
   fourthProduceParticles: z.number(),
 
   fifthOwnedParticles: z.number(),
   fifthGeneratedParticles: decimalSchema,
-  fifthCostParticles: decimalSchema,
+  fifthPaidParticles: decimalSchema.optional(),
   fifthProduceParticles: z.number(),
 
   firstOwnedAnts: z.number().optional(),
@@ -448,14 +619,14 @@ export const playerSchema = z.object({
   ascendBuilding4: ascendBuildingSchema.default(() => deepClone()(blankSave.ascendBuilding4)),
   ascendBuilding5: ascendBuildingSchema.default(() => deepClone()(blankSave.ascendBuilding5)),
 
-  multiplierCost: decimalSchema,
+  multiplierPaid: decimalSchema.optional(),
   multiplierBought: z.number(),
 
-  acceleratorCost: decimalSchema,
+  acceleratorPaid: decimalSchema.optional(),
   acceleratorBought: z.number(),
 
   acceleratorBoostBought: z.number(),
-  acceleratorBoostCost: decimalSchema,
+  acceleratorBoostPaid: decimalSchema.optional(),
 
   upgrades: z.number().array().transform((array) => {
     if (array.length < blankSave.upgrades.length) {
@@ -490,7 +661,7 @@ export const playerSchema = z.object({
       )
       return challengeCompletions
     })
-  ]),
+  ]).transform(clampTranscensionChallengeCompletions),
   highestchallengecompletions: z.union([
     z.union([z.number(), z.null()]).array(),
     z.record(z.string(), z.number()).transform((value) => {
@@ -502,9 +673,9 @@ export const playerSchema = z.object({
       )
       return highestChallengeCompletions
     })
-  ]),
+  ]).transform(clampTranscensionChallengeCompletions),
   challenge15Exponent: z.number().default(() => blankSave.challenge15Exponent),
-  highestChallenge15Exponent: z.number().default(() => blankSave.highestChallenge15Exponent),
+  highestChallenge15Exponent: z.number().optional(),
 
   retrychallenges: z.boolean().default(() => blankSave.retrychallenges),
   currentChallenge: z.union([
@@ -516,22 +687,23 @@ export const playerSchema = z.object({
     }).default(() => ({ ...blankSave.currentChallenge }))
   ]),
 
-  obtainium: decimalSchema.default(() => blankSave.obtainium),
-  maxObtainium: decimalSchema.default(() => blankSave.maxObtainium),
+  obtainium: decimalSchema.prefault(() => blankSave.obtainium),
+  maxObtainium: decimalSchema.prefault(() => blankSave.maxObtainium),
 
   researchPoints: z.number().optional(),
-  obtainiumtimer: z.number(),
   obtainiumpersecond: z.number().optional(),
   maxobtainiumpersecond: z.number().optional(),
   maxobtainium: z.number().optional(),
 
-  researches: z.number().array().transform((array) => arrayExtend(array, 'researches')),
+  researches: z.number().array().transform((array) =>
+    arrayExtend(array, 'researches').slice(0, blankSave.researches.length)
+  ),
 
   unlocks: z.record(z.string(), z.boolean()).transform((object) => {
     return Object.fromEntries(
       Object.keys(blankSave.unlocks).map((key) => {
         const value = object[key] ?? blankSave.unlocks[key as keyof typeof blankSave['unlocks']]
-        return value === null ? [key, false] : [key, Boolean(value)]
+        return value === null ? [key, false] : [key, value]
       })
     )
   }).default(() => ({ ...blankSave.unlocks })),
@@ -542,13 +714,11 @@ export const playerSchema = z.object({
         Object.keys(blankSave.progressiveAchievements).map((key) => {
           const value = object[key]
             ?? blankSave.progressiveAchievements[key as keyof typeof blankSave['progressiveAchievements']]
-          return value === null ? [key, 0] : [key, Number(value)]
+          return value === null ? [key, 0] : [key, value]
         })
       )
     }
   ).default(() => ({ ...blankSave.progressiveAchievements })),
-
-  achievementPoints: z.number(),
 
   prestigenomultiplier: z.boolean(),
   prestigenoaccelerator: z.boolean(),
@@ -572,39 +742,39 @@ export const playerSchema = z.object({
       return Object.fromEntries(
         Object.keys(blankSave.runes).map((key) => {
           const value = object[key] ?? blankSave.runes[key as keyof typeof blankSave['runes']]
-          return value === null ? [key, new Decimal('0')] : [key, new Decimal(value)]
+          return value === null ? [key, new Decimal()] : [key, new Decimal(value)]
         })
       )
     })
-    .default(() => ({ ...blankSave.runes })),
+    .prefault(() => ({ ...blankSave.runes })),
 
   runeBlessings: z.record(z.string(), decimalSchema)
     .transform((object) => {
       return Object.fromEntries(
         Object.keys(blankSave.runeBlessings).map((key) => {
           const value = object[key] ?? blankSave.runeBlessings[key as keyof typeof blankSave['runeBlessings']]
-          return value === null ? [key, new Decimal('0')] : [key, new Decimal(value)]
+          return value === null ? [key, new Decimal()] : [key, new Decimal(value)]
         })
       )
     })
-    .default(() => ({ ...blankSave.runeBlessings })),
+    .prefault(() => ({ ...blankSave.runeBlessings })),
 
   runeSpirits: z.record(z.string(), decimalSchema)
     .transform((object) => {
       return Object.fromEntries(
         Object.keys(blankSave.runeSpirits).map((key) => {
           const value = object[key] ?? blankSave.runeSpirits[key as keyof typeof blankSave['runeSpirits']]
-          return value === null ? [key, new Decimal('0')] : [key, new Decimal(value)]
+          return value === null ? [key, new Decimal()] : [key, new Decimal(value)]
         })
       )
     })
-    .default(() => ({ ...blankSave.runeSpirits })),
+    .prefault(() => ({ ...blankSave.runeSpirits })),
 
   runelevels: z.number().array().optional(),
   runeexp: z.union([z.number(), z.null().transform(() => 0)]).array().optional(),
 
-  offerings: decimalSchema.default(() => blankSave.offerings),
-  maxOfferings: decimalSchema.default(() => blankSave.maxOfferings),
+  offerings: decimalSchema.prefault(() => blankSave.offerings),
+  maxOfferings: decimalSchema.prefault(() => blankSave.maxOfferings),
 
   runeshards: z.number().optional(),
   maxofferings: z.number().optional(),
@@ -654,7 +824,7 @@ export const playerSchema = z.object({
   subtabNumber: z.any().optional(),
 
   codes: z.array(z.tuple([z.number(), z.boolean()])).transform((tuple) => new Map(tuple)).default(() =>
-    deepClone()([...blankSave.codes])
+    new Map(deepClone()([...blankSave.codes]))
   ),
 
   shopUpgrades: z.record(z.string(), z.union([z.number(), z.null(), z.boolean()]))
@@ -682,7 +852,6 @@ export const playerSchema = z.object({
   autoSacrificeToggle: z.boolean().default(() => blankSave.autoSacrificeToggle),
   autoBuyFragment: z.boolean().default(() => blankSave.autoBuyFragment),
   autoFortifyToggle: z.boolean().default(() => blankSave.autoFortifyToggle),
-  autoEnhanceToggle: z.boolean().default(() => blankSave.autoEnhanceToggle),
   autoResearchToggle: z.boolean().default(() => blankSave.autoResearchToggle),
   researchBuyMaxToggle: z.boolean().default(() => blankSave.researchBuyMaxToggle),
   autoResearchMode: z.string().default(() => blankSave.autoResearchMode),
@@ -708,11 +877,11 @@ export const playerSchema = z.object({
         })
       )
     })
-    .default(() => ({ ...blankSave.talismans })),
+    .prefault(() => ({ ...blankSave.talismans })),
 
   talismanLevels: z.union([
     z.number().array(),
-    arrayStartingWithNull(z.number()).transform((array) => array.slice(1))
+    arrayStartingWithNull(z.number()).transform<number[]>((array) => array.slice(1) as number[])
   ]).optional(),
   talismanRarity: z.union([
     z.number().array(),
@@ -725,13 +894,13 @@ export const playerSchema = z.object({
   talismanFive: arrayStartingWithNull(z.number()).optional(),
   talismanSix: arrayStartingWithNull(z.number()).optional(),
   talismanSeven: arrayStartingWithNull(z.number()).optional(),
-  talismanShards: decimalSchema.default(() => blankSave.talismanShards),
-  commonFragments: decimalSchema.default(() => blankSave.commonFragments),
-  uncommonFragments: decimalSchema.default(() => blankSave.uncommonFragments),
-  rareFragments: decimalSchema.default(() => blankSave.rareFragments),
-  epicFragments: decimalSchema.default(() => blankSave.epicFragments),
-  legendaryFragments: decimalSchema.default(() => blankSave.legendaryFragments),
-  mythicalFragments: decimalSchema.default(() => blankSave.mythicalFragments),
+  talismanShards: decimalSchema.prefault(() => blankSave.talismanShards),
+  commonFragments: decimalSchema.prefault(() => blankSave.commonFragments),
+  uncommonFragments: decimalSchema.prefault(() => blankSave.uncommonFragments),
+  rareFragments: decimalSchema.prefault(() => blankSave.rareFragments),
+  epicFragments: decimalSchema.prefault(() => blankSave.epicFragments),
+  legendaryFragments: decimalSchema.prefault(() => blankSave.legendaryFragments),
+  mythicalFragments: decimalSchema.prefault(() => blankSave.mythicalFragments),
 
   buyTalismanShardPercent: z.number().default(() => blankSave.buyTalismanShardPercent),
 
@@ -745,7 +914,7 @@ export const playerSchema = z.object({
   ascensionCounterReal: z.number().default(() => blankSave.ascensionCounterReal),
   ascensionCounterRealReal: z.number().default(() => blankSave.ascensionCounterRealReal),
   cubeUpgrades: arrayStartingWithNull(z.number())
-    .transform((array) => arrayExtend(array as [null, ...number[]], 'cubeUpgrades'))
+    .transform((array) => arrayExtend(array, 'cubeUpgrades'))
     .default((): [null, ...number[]] => [...blankSave.cubeUpgrades]),
   cubeUpgradesBuyMaxToggle: z.boolean().default(() => blankSave.cubeUpgradesBuyMaxToggle),
   autoCubeUpgradesToggle: z.boolean().default(() => blankSave.autoCubeUpgradesToggle),
@@ -790,15 +959,15 @@ export const playerSchema = z.object({
   platonicBlessings: z.record(z.string(), z.number()).default(() => ({ ...blankSave.platonicBlessings })),
 
   hepteracts: z.object({
-    chronos: newHepteractCraftSchema.default(() => blankSave.hepteracts.chronos),
-    hyperrealism: newHepteractCraftSchema.default(() => blankSave.hepteracts.hyperrealism),
-    quark: newHepteractCraftSchema.default(() => blankSave.hepteracts.quark),
-    challenge: newHepteractCraftSchema.default(() => blankSave.hepteracts.challenge),
-    abyss: newHepteractCraftSchema.default(() => blankSave.hepteracts.abyss),
-    accelerator: newHepteractCraftSchema.default(() => blankSave.hepteracts.accelerator),
-    acceleratorBoost: newHepteractCraftSchema.default(() => blankSave.hepteracts.acceleratorBoost),
-    multiplier: newHepteractCraftSchema.default(() => blankSave.hepteracts.multiplier)
-  }).default(() => {
+    chronos: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.chronos),
+    hyperrealism: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.hyperrealism),
+    quark: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.quark),
+    challenge: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.challenge),
+    abyss: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.abyss),
+    accelerator: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.accelerator),
+    acceleratorBoost: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.acceleratorBoost),
+    multiplier: newHepteractCraftSchema.prefault(() => blankSave.hepteracts.multiplier)
+  }).prefault(() => {
     return { ...blankSave.hepteracts }
   }),
 
@@ -815,15 +984,7 @@ export const playerSchema = z.object({
 
   ascendShards: decimalSchema.default(() => deepClone()(blankSave.ascendShards)),
   autoAscend: z.boolean().default(() => blankSave.autoAscend),
-  autoAscendMode: z.union([
-    z.string().transform((str) => {
-      if (str === 'c10Completions') return 0
-      else if (str === 'realAscensionTime') return 1
-      else return 0
-    }),
-    z.number()
-  ]).default(() => blankSave.autoAscendMode),
-  autoAscendThreshold: z.number().default(() => blankSave.autoAscendThreshold),
+  autoAscendRules: z.string().transform((text) => parseSavedRules(text)).default(() => []).catch(() => []),
   autoOpenCubes: z.boolean().default(() => blankSave.autoOpenCubes),
   openCubes: z.number().default(() => blankSave.openCubes),
   autoOpenTesseracts: z.boolean().default(() => blankSave.autoOpenTesseracts),
@@ -835,16 +996,7 @@ export const playerSchema = z.object({
   roombaResearchIndex: z.number().default(() => blankSave.roombaResearchIndex),
   ascStatToggles: z.record(integerStringSchema, z.boolean()).default(() => ({ ...blankSave.ascStatToggles })),
 
-  campaigns: playerCampaignSchema,
-
   corruptions: playerCorruptionSchema,
-
-  prototypeCorruptions: z.number().array().optional(),
-  usedCorruptions: z.number().array().optional(),
-  corruptionLoadouts: z.record(integerStringSchema, z.number().array()).optional(),
-
-  corruptionLoadoutNames: z.string().array().optional(),
-  corruptionShowStats: z.boolean().optional(),
 
   constantUpgrades: arrayStartingWithNull(z.number()).default((): [
     null,
@@ -862,7 +1014,6 @@ export const playerSchema = z.object({
   autoChallengeRunning: z.boolean().default(() => blankSave.autoChallengeRunning),
   autoChallengeIndex: z.number().default(() => blankSave.autoChallengeIndex),
   autoChallengeToggles: z.boolean().array().default(() => [...blankSave.autoChallengeToggles]),
-  autoChallengeStartExponent: z.number().default(() => blankSave.autoChallengeStartExponent),
   autoChallengeTimer: autoChallengeTimerSchema.transform((times) => {
     // Enforce minimum of 0.1s on old savefiles
     return {
@@ -888,7 +1039,7 @@ export const playerSchema = z.object({
     return value
   }),
 
-  dayCheck: z.string().datetime().nullable().default(() => blankSave.dayCheck as null).transform((value) => {
+  dayCheck: z.iso.datetime().nullable().default(() => blankSave.dayCheck as null).transform((value) => {
     return value === null ? value : new Date(value)
   }),
   dayTimer: z.number().default(() => blankSave.dayTimer),
@@ -914,36 +1065,38 @@ export const playerSchema = z.object({
   singularityElevatorTarget: z.number().default(() => blankSave.singularityElevatorTarget),
   singularityElevatorSlowClimb: z.boolean().default(() => blankSave.singularityElevatorSlowClimb),
   singularityElevatorLocked: z.boolean().default(() => blankSave.singularityElevatorLocked),
-  singularityMatter: z.number().default(() => blankSave.singularityMatter),
   goldenQuarks: z.number().default(() => blankSave.goldenQuarks),
   quarksThisSingularity: z.number().nullable().default(() => blankSave.quarksThisSingularity),
   totalQuarksEver: z.number().default(() => blankSave.totalQuarksEver),
-  hotkeys: z.record(integerStringSchema, z.string().array()).default(() => blankSave.hotkeys),
-  theme: z.string().default(() => blankSave.theme),
+  hotkeys: z.record(integerStringSchema, z.string().array()).prefault(() => blankSave.hotkeys),
   iconSet: z.number().default(() => blankSave.iconSet),
   notation: z.string().default(() => blankSave.notation),
+  headerLayouts: z.object({
+    desktop: headerLayoutSchema('desktop'),
+    mobile: headerLayoutSchema('mobile')
+  }).catch(() => deepClone()(blankSave.headerLayouts)),
 
   goldenQuarkUpgrades: z.record(z.string(), goldenQuarkUpgradeSchema).transform((object) => {
     return Object.fromEntries(
       Object.keys(blankSave.goldenQuarkUpgrades).map((key) => {
-        const value = object[key] ?? { level: 0, freeLevel: 0, goldenQuarksInvested: 0 }
-        return value === null ? [key, { level: 0, freeLevel: 0, goldenQuarksInvested: 0 }] : [key, value]
+        const value = object[key] ?? { freeLevel: 0, goldenQuarksInvested: 0 }
+        return value === null ? [key, { freeLevel: 0, goldenQuarksInvested: 0 }] : [key, value]
       })
     )
   })
-    .default(() => ({ ...blankSave.goldenQuarkUpgrades })),
+    .prefault(() => ({ ...blankSave.goldenQuarkUpgrades })),
 
   octUpgrades: z.record(z.string(), octeractUpgradeSchema).transform((object) => {
     // We use the same goldenQuarkUpgradeSchema for multiple things. maybe it should be called
     // something different. Oh well... this can be changed later. -Plat
     return Object.fromEntries(
       Object.keys(blankSave.octUpgrades).map((key) => {
-        const value = object[key] ?? { level: 0, freeLevel: 0, octeractsInvested: 0 }
-        return value === null ? [key, { level: 0, freeLevel: 0, octeractsInvested: 0 }] : [key, value]
+        const value = object[key] ?? { freeLevel: 0, octeractsInvested: 0 }
+        return value === null ? [key, { freeLevel: 0, octeractsInvested: 0 }] : [key, value]
       })
     )
   })
-    .default(() => ({ ...blankSave.octUpgrades })),
+    .prefault(() => ({ ...blankSave.octUpgrades })),
 
   ambrosiaUpgrades: z.record(z.string(), ambrosiaUpgradeSchema).transform((object) => {
     return Object.fromEntries(
@@ -953,7 +1106,7 @@ export const playerSchema = z.object({
       })
     )
   })
-    .default(() => ({ ...blankSave.ambrosiaUpgrades })),
+    .prefault(() => ({ ...blankSave.ambrosiaUpgrades })),
 
   singularityUpgrades: z.record(z.string(), singularityUpgradeSchema('goldenQuarksInvested')).optional(),
   octeractUpgrades: z.record(z.string(), singularityUpgradeSchema('octeractsInvested')).optional(),
@@ -993,18 +1146,18 @@ export const playerSchema = z.object({
               singularityRequirement: singularityChallengeData[k].singularityRequirement,
               scalingrewardcount: singularityChallengeData[k].scalingrewardcount,
               uniquerewardcount: singularityChallengeData[k].uniquerewardcount,
-              effect: singularityChallengeData[k].effect,
               alternateDescription: singularityChallengeData[k].alternateDescription
             }, k)
           ]
         })
       )
     )
-    .default(() => JSON.parse(JSON.stringify(blankSave.singularityChallenges))),
+    .prefault(() => JSON.parse(JSON.stringify(blankSave.singularityChallenges))),
 
   ambrosia: z.number().default(() => blankSave.ambrosia),
   lifetimeAmbrosia: z.number().default(() => blankSave.lifetimeAmbrosia),
-  ambrosiaRNG: z.number().default(() => blankSave.ambrosiaRNG),
+  purpleAmbrosia: z.number().default(() => blankSave.purpleAmbrosia),
+  lifetimePurpleAmbrosia: z.number().default(() => blankSave.lifetimePurpleAmbrosia),
   blueberryTime: z.number().default(() => blankSave.blueberryTime),
   visitedAmbrosiaSubtab: z.boolean().optional(),
   visitedAmbrosiaSubtabRed: z.boolean().optional(),
@@ -1014,7 +1167,7 @@ export const playerSchema = z.object({
     .optional(),
 
   // TODO: what type?
-  blueberryLoadouts: z.record(integerStringSchema, z.any()).default(() => blankSave.blueberryLoadouts),
+  blueberryLoadouts: z.record(integerStringSchema, z.any()).prefault(() => blankSave.blueberryLoadouts),
   blueberryLoadoutMode: z.string().default(() => blankSave.blueberryLoadoutMode),
 
   ultimateProgress: z.number().optional(),
@@ -1030,21 +1183,58 @@ export const playerSchema = z.object({
         Object.keys(blankSave.redAmbrosiaUpgrades).map((key) => {
           const value = object[key]
             ?? blankSave.redAmbrosiaUpgrades[key as keyof typeof blankSave['redAmbrosiaUpgrades']]
-          return value === null ? [key, 0] : [key, Number(value)]
+          return value === null ? [key, 0] : [key, value]
         })
       )
     }
   ).default(() => ({ ...blankSave.redAmbrosiaUpgrades })),
 
+  purpleAmbrosiaUpgrades: z.record(z.string(), z.number()).transform(
+    (object) => {
+      return Object.fromEntries(
+        Object.keys(blankSave.purpleAmbrosiaUpgrades).map((key) => {
+          const value = object[key]
+            ?? blankSave.purpleAmbrosiaUpgrades[key as keyof typeof blankSave['purpleAmbrosiaUpgrades']]
+          return value === null ? [key, 0] : [key, value]
+        })
+      )
+    }
+  ).default(() => ({ ...blankSave.purpleAmbrosiaUpgrades })),
+
+  purpleHoneyProgress: z.number().default(0),
+  encabulatorOvercapToggle: z.boolean().default(false),
+  purpleReactor: purpleReactorSchema.default(() => deepClone()(blankSave.purpleReactor)),
+  spentPurpleHoney: spentPurpleHoneySchema.default(() => deepClone()(blankSave.spentPurpleHoney)),
+
+  purpleReactorUpgrades: z.record(z.string(), z.number()).transform(
+    (object) => {
+      return Object.fromEntries(
+        Object.keys(blankSave.purpleReactorUpgrades).map((key) => {
+          const value = object[key]
+            ?? blankSave.purpleReactorUpgrades[key as keyof typeof blankSave['purpleReactorUpgrades']]
+          return value === null ? [key, 0] : [key, value]
+        })
+      )
+    }
+  ).default(() => ({ ...blankSave.purpleReactorUpgrades })),
+
+  synthesisUpgrades: synthesisUpgradesSchema.default(() => deepClone()(blankSave.synthesisUpgrades)),
+  synthesisAutomationUnlocked: z.boolean().default(() => blankSave.synthesisAutomationUnlocked),
+  synthesisAutomationEnabled: z.boolean().default(() => blankSave.synthesisAutomationEnabled),
+
   singChallengeTimer: z.number().default(() => blankSave.singChallengeTimer),
 
   lastExportedSave: z.number().default(() => blankSave.lastExportedSave),
 
-  seed: z.number().array().default(() => blankSave.seed)
+  seed: z.number().array().prefault(() => blankSave.seed)
     .transform((value) => arrayExtend(value, 'seed'))
     .refine((value) => value.every((seed) => seed > Date.parse('2020-01-01T00:00:00Z') && seed < Date.now() + 1000)),
 
   stats: z.object({
-    totalAddCodesUsed: z.number()
-  }).default(() => deepClone()(blankSave.stats))
+    totalAddCodesUsed: z.number(),
+    highestPurpleHoney: z.number().default(0),
+    talismanShardsThisAscension: decimalSchema.prefault(() => blankSave.stats.talismanShardsThisAscension)
+  }).default(() => deepClone()(blankSave.stats)),
+
+  purpleUpdateQuarkRefundAwarded: z.boolean().default(() => false)
 })

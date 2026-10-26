@@ -1,8 +1,7 @@
 import i18next from 'i18next'
-import { awardUngroupedAchievement } from './Achievements'
 import { DOMCacheGetOrSet, DOMCacheHas } from './Cache/DOM'
-import { platform } from './Config'
-import { pressedKeys } from './Hotkeys'
+import { isCorruptionTabUnlocked } from './Corruptions'
+import { storageGetItem, storageSetItem } from './events/storage-events'
 import { hasUnreadMessages } from './Messages'
 import { initializeCart } from './purchases/CartTab'
 import { getGQUpgradeEffect } from './singularity'
@@ -13,13 +12,28 @@ import {
   toggleAntsSubtab,
   toggleBuildingScreen,
   toggleChallengesScreen,
-  toggleCorruptionLoadoutsStats,
   toggleCubeSubTab,
   toggleRuneScreen,
   toggleSingularityScreen
 } from './Toggles'
-import { changeTabColor, CloseModal, hideStuff, revealStuff } from './UpdateHTML'
-import { assert, limitRange } from './Utility'
+import { CloseModal, createFitties, revealStuff, showCorruptionSubtab } from './UpdateHTML'
+import {
+  visualUpdateAchievements,
+  visualUpdateAnts,
+  visualUpdateBuildings,
+  visualUpdateChallenges,
+  visualUpdateCorruptions,
+  visualUpdateCubes,
+  visualUpdateEvent,
+  visualUpdatePurchase,
+  visualUpdateResearch,
+  visualUpdateRunes,
+  visualUpdateSettings,
+  visualUpdateShop,
+  visualUpdateSingularity,
+  visualUpdateUpgrades
+} from './UpdateVisuals'
+import { assert, isMobile, limitRange, memoize } from './Utility'
 import { Globals as G } from './Variables'
 
 export enum Tabs {
@@ -31,13 +45,12 @@ export enum Tabs {
   Research = 5,
   AntHill = 6,
   WowCubes = 7,
-  Campaign = 8,
-  Corruption = 9,
-  Singularity = 10,
-  Settings = 11,
-  Shop = 12,
-  Event = 13,
-  Purchase = 14
+  Corruption = 8,
+  Singularity = 9,
+  Settings = 10,
+  Shop = 11,
+  Event = 12,
+  Purchase = 13
 }
 
 /**
@@ -46,8 +59,12 @@ export enum Tabs {
  */
 type SubTabSwitchOptions = { step: number; page?: undefined } | { page: number; step?: undefined }
 
-interface SubTab {
-  tabSwitcher?: () => (id: string) => unknown
+interface TabInfo {
+  panelID: string
+  /* Runs once when the tab is initially switched to */
+  tabSwitcher?: (id: string) => void
+  /* Runs once per tick */
+  visualUpdater: () => void
   subtabIndex: number
   subTabList: {
     subTabID: string
@@ -56,9 +73,33 @@ interface SubTab {
   }[]
 }
 
-const subtabInfo: Record<Tabs, SubTab> = {
+const tabScrollPositions = new Map<Tabs, Map<number, number>>()
+
+const getMainElement = () => document.querySelector<HTMLElement>('main')
+
+const saveTabScrollPosition = (tab: Tabs, subtab: number) => {
+  if (!isMobile) {
+    return
+  }
+
+  const subtabScrollPositions = tabScrollPositions.get(tab) ?? new Map<number, number>()
+  subtabScrollPositions.set(subtab, getMainElement()?.scrollTop ?? 0)
+  tabScrollPositions.set(tab, subtabScrollPositions)
+}
+
+const restoreTabScrollPosition = (tab: Tabs, subtab: number) => {
+  if (isMobile) {
+    getMainElement()?.scrollTo({ top: tabScrollPositions.get(tab)?.get(subtab) ?? 0, left: 0 })
+  } else {
+    getMainElement()?.scrollTo({ top: 0, left: 0 })
+  }
+}
+
+const tabInfo: Record<Tabs, TabInfo> = {
   [Tabs.Settings]: {
-    tabSwitcher: () => setActiveSettingScreen,
+    panelID: 'settings',
+    tabSwitcher: setActiveSettingScreen,
+    visualUpdater: () => visualUpdateSettings(),
     subtabIndex: 0,
     subTabList: [
       { subTabID: 'settingsubtab', unlocked: () => true, buttonID: 'switchSettingSubTab1' },
@@ -90,11 +131,15 @@ const subtabInfo: Record<Tabs, SubTab> = {
     ]
   },
   [Tabs.Shop]: {
+    panelID: 'shop',
+    visualUpdater: () => visualUpdateShop(),
     subTabList: [],
     subtabIndex: 0
   },
   [Tabs.Buildings]: {
-    tabSwitcher: () => toggleBuildingScreen,
+    panelID: 'buildings',
+    tabSwitcher: toggleBuildingScreen,
+    visualUpdater: () => visualUpdateBuildings(),
     subtabIndex: 0,
     subTabList: [
       { subTabID: 'coin', unlocked: () => true, buttonID: 'switchToCoinBuilding' },
@@ -121,11 +166,15 @@ const subtabInfo: Record<Tabs, SubTab> = {
     ]
   },
   [Tabs.Upgrades]: {
+    panelID: 'upgrades',
+    visualUpdater: () => visualUpdateUpgrades(),
     subTabList: [],
     subtabIndex: 0
   },
   [Tabs.Achievements]: {
-    tabSwitcher: () => toggleAchievementScreen,
+    panelID: 'statistics',
+    tabSwitcher: toggleAchievementScreen,
+    visualUpdater: () => visualUpdateAchievements(),
     subtabIndex: 0,
     subTabList: [
       {
@@ -141,7 +190,9 @@ const subtabInfo: Record<Tabs, SubTab> = {
     ]
   },
   [Tabs.Runes]: {
-    tabSwitcher: () => toggleRuneScreen,
+    panelID: 'runes',
+    tabSwitcher: toggleRuneScreen,
+    visualUpdater: () => visualUpdateRunes(),
     subtabIndex: 0,
     subTabList: [
       {
@@ -158,16 +209,13 @@ const subtabInfo: Record<Tabs, SubTab> = {
         subTabID: '3',
         unlocked: () => player.unlocks.blessings,
         buttonID: 'toggleRuneSubTab3'
-      },
-      {
-        subTabID: '4',
-        unlocked: () => player.unlocks.spirits,
-        buttonID: 'toggleRuneSubTab4'
       }
     ]
   },
   [Tabs.Challenges]: {
-    tabSwitcher: () => toggleChallengesScreen,
+    panelID: 'challenges',
+    tabSwitcher: toggleChallengesScreen,
+    visualUpdater: () => visualUpdateChallenges(),
     subtabIndex: 0,
     subTabList: [
       { subTabID: '1', unlocked: () => true, buttonID: 'toggleChallengesSubTab1' },
@@ -179,11 +227,15 @@ const subtabInfo: Record<Tabs, SubTab> = {
     ]
   },
   [Tabs.Research]: {
+    panelID: 'research',
+    visualUpdater: () => visualUpdateResearch(),
     subTabList: [],
     subtabIndex: 0
   },
   [Tabs.AntHill]: {
-    tabSwitcher: () => toggleAntsSubtab,
+    panelID: 'ants',
+    tabSwitcher: toggleAntsSubtab,
+    visualUpdater: () => visualUpdateAnts(),
     subtabIndex: 0,
     subTabList: [
       {
@@ -204,7 +256,9 @@ const subtabInfo: Record<Tabs, SubTab> = {
     ]
   },
   [Tabs.WowCubes]: {
-    tabSwitcher: () => toggleCubeSubTab,
+    panelID: 'cubes',
+    tabSwitcher: toggleCubeSubTab,
+    visualUpdater: () => visualUpdateCubes(),
     subtabIndex: 0,
     subTabList: [
       {
@@ -244,28 +298,34 @@ const subtabInfo: Record<Tabs, SubTab> = {
       }
     ]
   },
-  [Tabs.Campaign]: {
-    subTabList: [],
-    subtabIndex: 0
-  },
   [Tabs.Corruption]: {
-    tabSwitcher: () => toggleCorruptionLoadoutsStats,
+    panelID: 'traits',
+    // Circular import... yay
+    tabSwitcher: (subTabID) => showCorruptionSubtab(subTabID),
+    visualUpdater: () => visualUpdateCorruptions(),
     subtabIndex: 0,
     subTabList: [
       {
-        subTabID: 'true',
+        subTabID: 'stats',
         unlocked: () => true,
         buttonID: 'corrStatsBtn'
       },
       {
-        subTabID: 'false',
+        subTabID: 'tokens',
         unlocked: () => true,
-        buttonID: 'corrLoadoutsBtn'
+        buttonID: 'corrTokensBtn'
+      },
+      {
+        subTabID: 'autoAscend',
+        unlocked: () => true,
+        buttonID: 'corrAutoAscendBtn'
       }
     ]
   },
   [Tabs.Singularity]: {
-    tabSwitcher: () => toggleSingularityScreen,
+    panelID: 'singularity',
+    tabSwitcher: toggleSingularityScreen,
+    visualUpdater: () => visualUpdateSingularity(),
     subtabIndex: 0,
     subTabList: [
       {
@@ -285,22 +345,31 @@ const subtabInfo: Record<Tabs, SubTab> = {
       },
       {
         subTabID: '4',
-        unlocked: () => Boolean(getGQUpgradeEffect('octeractUnlock')),
+        unlocked: () => getGQUpgradeEffect('octeractUnlock', 'unlocked'),
         buttonID: 'toggleSingularitySubTab4'
       },
       {
         subTabID: '5',
         unlocked: () => player.highestSingularityCount >= 25,
         buttonID: 'toggleSingularitySubTab5'
+      },
+      {
+        subTabID: '6',
+        unlocked: () => player.singularityChallenges.taxmanLastStand.completions > 0,
+        buttonID: 'toggleSingularitySubTab6'
       }
     ]
   },
   [Tabs.Event]: {
+    panelID: 'event',
+    visualUpdater: () => visualUpdateEvent(),
     subTabList: [],
     subtabIndex: 0
   },
   [Tabs.Purchase]: {
-    tabSwitcher: () => initializeCart,
+    panelID: 'pseudoCoins',
+    tabSwitcher: () => initializeCart(),
+    visualUpdater: () => visualUpdatePurchase(),
     subtabIndex: 0,
     subTabList: [
       {
@@ -325,23 +394,28 @@ const subtabInfo: Record<Tabs, SubTab> = {
       },
       {
         subTabID: 'cartContainer',
-        unlocked: () => true,
+        unlocked: () => PLATFORM !== 'mobile',
         buttonID: 'cartSubTab5'
-      },
-      {
-        subTabID: 'merchContainer',
-        unlocked: () => platform === 'browser', // Steam disallows purchases outside of the Steam ecosystem
-        buttonID: 'cartSubTab6'
       }
     ]
   }
 }
 
 const TAB_ORDER_KEY = 'synergism-tab-order'
+const TAB_EDIT_HOLD_MS = 650
+const TAB_HOLD_CANCEL_DISTANCE_PX = 8
 
 class TabRow extends HTMLDivElement {
   #list: $Tab[] = []
   #currentTab!: $Tab
+  #isEditing = false
+  #holdTimer: number | undefined
+  #activePointerId: number | null = null
+  #pointerDownTab: $Tab | null = null
+  #draggedTab: $Tab | null = null
+  #editDoneButton: HTMLButtonElement | null = null
+  #pointerStartX = 0
+  #pointerStartY = 0
 
   constructor () {
     super()
@@ -385,7 +459,6 @@ class TabRow extends HTMLDivElement {
     const index = this.#list.indexOf(this.#currentTab)
 
     this.#currentTab = this.#list[index + 1] ?? this.#list[0]
-    changeSubTab(this.#currentTab.getType(), { page: subtabInfo[this.#currentTab.getType()].subtabIndex })
     return this.#currentTab
   }
 
@@ -393,7 +466,6 @@ class TabRow extends HTMLDivElement {
     const index = this.#list.indexOf(this.#currentTab)
 
     this.#currentTab = this.#list[index - 1] ?? this.#list[this.#list.length - 1]
-    changeSubTab(this.#currentTab.getType(), { page: subtabInfo[this.#currentTab.getType()].subtabIndex })
     return this.#currentTab
   }
 
@@ -410,6 +482,7 @@ class TabRow extends HTMLDivElement {
   }
 
   reappend () {
+    this.#exitEditMode()
     this.replaceChildren()
 
     for (const item of this.#list) {
@@ -419,12 +492,25 @@ class TabRow extends HTMLDivElement {
     this.#list.forEach((el) => el.resetHidden())
   }
 
+  isEditing () {
+    return this.#isEditing
+  }
+
+  toggleTabHidden (tab: $Tab) {
+    if (!tab.canBeRemoved()) {
+      return
+    }
+
+    tab.toggleHidden()
+    tab.classList.remove('tab-being-dragged')
+  }
+
   #saveOrder () {
-    localStorage.setItem(TAB_ORDER_KEY, JSON.stringify(this.#list.map((tab) => tab.id)))
+    storageSetItem(TAB_ORDER_KEY, JSON.stringify(this.#list.map((tab) => tab.id)))
   }
 
   #restoreOrder () {
-    const saved = localStorage.getItem(TAB_ORDER_KEY)
+    const saved = storageGetItem(TAB_ORDER_KEY)
     if (!saved) return
 
     try {
@@ -452,68 +538,264 @@ class TabRow extends HTMLDivElement {
     }
   }
 
-  #createDrag () {
-    let dragSrcEl: HTMLElement | null = null
+  #createDrag = memoize(() => {
+    this.addEventListener('pointerdown', (event) => this.#handlePointerDown(event))
+    this.addEventListener('pointermove', (event) => this.#handlePointerMove(event))
+    this.addEventListener('pointerup', (event) => this.#handlePointerUp(event))
+    this.addEventListener('pointercancel', (event) => this.#handlePointerUp(event))
+    this.addEventListener('pointerleave', (event) => this.#handlePointerLeave(event))
+  })
 
-    const handleDragStart = (e: DragEvent) => {
-      assert(e.target instanceof HTMLElement)
-
-      e.target.style.opacity = '0.4'
-
-      dragSrcEl = e.target
-
-      e.dataTransfer!.effectAllowed = 'move'
+  #handlePointerDown (event: PointerEvent) {
+    if (event.button !== 0) {
+      return
     }
 
-    /* eslint-disable unicorn/consistent-function-scoping */
-    const handleDragEnter = (e: DragEvent) => {
-      if (e.target instanceof HTMLElement) {
-        e.target.classList.add('over')
-      }
+    const tab = this.#getTabFromEventTarget(event.target)
+    if (
+      tab === null
+      || !tab.canMove()
+      || (this.#isEditing ? !tab.isProgressionUnlocked() : !tab.isUnlocked())
+    ) {
+      return
     }
 
-    const handleDragLeave = (e: DragEvent) => {
-      if (e.target instanceof HTMLElement) {
-        e.target.classList.remove('over')
-      }
-    }
-    /* eslint-enable unicorn/consistent-function-scoping */
-
-    const handleDrop = (e: DragEvent) => {
-      e.stopPropagation()
-
-      if (dragSrcEl !== e.target && dragSrcEl !== null) {
-        this.insertBefore(dragSrcEl, e.target as HTMLElement)
-
-        const dragIndex = this.#list.indexOf(dragSrcEl as $Tab)
-        const targetIndex = this.#list.indexOf(e.target as $Tab)
-
-        this.#list.splice(targetIndex, 0, this.#list[dragIndex])
-        this.#list.splice(this.#list.indexOf(dragSrcEl as $Tab, dragIndex), 1)
-
-        this.#saveOrder()
+    if (this.#isEditing) {
+      if (!tab.isCloseButtonHit(event)) {
+        this.#beginDrag(tab, event.pointerId)
       }
 
-      return false
+      return
     }
 
-    const handleDragEnd = (e: DragEvent) => {
-      assert(e.target instanceof HTMLElement)
-      e.target.style.opacity = '1'
+    this.#clearHoldTimer()
+    this.#activePointerId = event.pointerId
+    this.#pointerDownTab = tab
+    this.#pointerStartX = event.clientX
+    this.#pointerStartY = event.clientY
+    this.#holdTimer = window.setTimeout(() => {
+      this.#holdTimer = undefined
+      this.#enterEditMode()
 
-      this.#list.forEach((item) => {
-        item.classList.remove('over')
-      })
+      if (this.#pointerDownTab !== null && this.#activePointerId !== null) {
+        this.#beginDrag(this.#pointerDownTab, this.#activePointerId)
+      }
+    }, TAB_EDIT_HOLD_MS)
+  }
+
+  #handlePointerMove (event: PointerEvent) {
+    if (this.#activePointerId !== event.pointerId) {
+      return
     }
 
-    this.#list.forEach((item) => {
-      item.addEventListener('dragstart', handleDragStart, false)
-      item.addEventListener('dragenter', handleDragEnter, false)
-      item.addEventListener('dragover', handleDrop, false)
-      item.addEventListener('dragleave', handleDragLeave, false)
-      item.addEventListener('drop', handleDrop, false)
-      item.addEventListener('dragend', handleDragEnd, false)
+    const distanceX = event.clientX - this.#pointerStartX
+    const distanceY = event.clientY - this.#pointerStartY
+    const movedBeyondHoldDistance = Math.hypot(distanceX, distanceY) > TAB_HOLD_CANCEL_DISTANCE_PX
+
+    if (!this.#isEditing) {
+      if (movedBeyondHoldDistance) {
+        this.#clearHoldTimer()
+      }
+
+      return
+    }
+
+    if (this.#draggedTab === null) {
+      return
+    }
+
+    event.preventDefault()
+    this.#moveDraggedTabToPointer(event.clientX, event.clientY)
+  }
+
+  #handlePointerUp (event: PointerEvent) {
+    if (this.#activePointerId !== event.pointerId) {
+      return
+    }
+
+    this.#clearHoldTimer()
+
+    if (this.#draggedTab !== null) {
+      this.#draggedTab.classList.remove('tab-being-dragged')
+      this.#draggedTab = null
+    }
+
+    this.#releasePointerCapture(event.pointerId)
+    this.#activePointerId = null
+    this.#pointerDownTab = null
+  }
+
+  #handlePointerLeave (event: PointerEvent) {
+    if (this.#isEditing || this.#draggedTab !== null || this.#activePointerId !== event.pointerId) {
+      return
+    }
+
+    this.#clearHoldTimer()
+    this.#activePointerId = null
+    this.#pointerDownTab = null
+  }
+
+  #releasePointerCapture (pointerId: number) {
+    if (this.hasPointerCapture(pointerId)) {
+      this.releasePointerCapture(pointerId)
+    }
+  }
+
+  #enterEditMode () {
+    if (this.#isEditing) {
+      return
+    }
+
+    this.#isEditing = true
+    this.classList.add('tab-edit-mode')
+    this.replaceChildren(...this.#list)
+    this.#list.forEach((tab) => {
+      tab.setAttribute('aria-grabbed', 'false')
+      tab.showCloseButton()
     })
+
+    this.#showEditDoneButton()
+  }
+
+  #showEditDoneButton () {
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.id = 'tabEditDone'
+    button.setAttribute('i18n', 'tabs.doneEditing')
+    button.textContent = i18next.t('tabs.doneEditing')
+    button.addEventListener('click', (event) => {
+      event.stopPropagation()
+      this.#exitEditMode()
+    })
+
+    this.#editDoneButton = button
+    this.appendChild(button)
+  }
+
+  #exitEditMode () {
+    if (!this.#isEditing) {
+      return
+    }
+
+    this.#isEditing = false
+    this.classList.remove('tab-edit-mode')
+    this.#editDoneButton?.remove()
+    this.#editDoneButton = null
+    this.#clearHoldTimer()
+
+    if (this.#draggedTab !== null) {
+      this.#draggedTab.classList.remove('tab-being-dragged')
+      this.#draggedTab = null
+    }
+
+    this.#list.forEach((tab) => {
+      tab.removeAttribute('aria-grabbed')
+      tab.hideCloseButton()
+
+      if (tab.isHidden()) {
+        tab.remove()
+      }
+    })
+
+    if (this.#currentTab.isHidden()) {
+      const nextTab = this.#getNextUnlockedTab(this.#currentTab)
+      if (nextTab !== null) {
+        changeTab(nextTab.getType())
+      }
+    }
+
+    if (this.#activePointerId !== null) {
+      this.#releasePointerCapture(this.#activePointerId)
+    }
+
+    this.#activePointerId = null
+    this.#pointerDownTab = null
+  }
+
+  #beginDrag (tab: $Tab, pointerId: number) {
+    this.#draggedTab = tab
+    this.#activePointerId = pointerId
+    tab.classList.add('tab-being-dragged')
+    tab.setAttribute('aria-grabbed', 'true')
+    this.setPointerCapture(pointerId)
+  }
+
+  #moveDraggedTabToPointer (x: number, y: number) {
+    assert(this.#draggedTab !== null)
+
+    const target = this.#getTabFromPoint(x, y)
+    if (target === null || target === this.#draggedTab) {
+      return
+    }
+
+    const targetRect = target.getBoundingClientRect()
+    const isColumn = getComputedStyle(this).flexDirection === 'column'
+    const insertBeforeTarget = isColumn
+      ? y < targetRect.top + targetRect.height / 2
+      : x < targetRect.left + targetRect.width / 2
+    const referenceTab = insertBeforeTarget ? target : this.#getNextVisibleTab(target)
+
+    this.#moveTabBefore(this.#draggedTab, referenceTab)
+  }
+
+  #moveTabBefore (tab: $Tab, referenceTab: $Tab | null) {
+    if (tab === referenceTab) {
+      return
+    }
+
+    this.insertBefore(tab, referenceTab)
+
+    // Keep the Done button at the end of the row while editing
+    if (this.#editDoneButton !== null) {
+      this.appendChild(this.#editDoneButton)
+    }
+
+    const tabs = this.#list.filter((item) => item !== tab)
+    const referenceIndex = referenceTab === null ? tabs.length : tabs.indexOf(referenceTab)
+    tabs.splice(referenceIndex === -1 ? tabs.length : referenceIndex, 0, tab)
+    this.#list = tabs
+    this.#saveOrder()
+  }
+
+  #clearHoldTimer () {
+    if (this.#holdTimer === undefined) {
+      return
+    }
+
+    window.clearTimeout(this.#holdTimer)
+    this.#holdTimer = undefined
+  }
+
+  #getTabFromEventTarget (target: EventTarget | null) {
+    if (!(target instanceof Element)) {
+      return null
+    }
+
+    const tab = target.closest('#tabrow > button')
+    return tab instanceof $Tab ? tab : null
+  }
+
+  #getTabFromPoint (x: number, y: number) {
+    return this.#getTabFromEventTarget(document.elementFromPoint(x, y))
+  }
+
+  #getNextVisibleTab (tab: $Tab) {
+    const nextSibling = tab.nextElementSibling
+    return nextSibling instanceof $Tab ? nextSibling : null
+  }
+
+  #getNextUnlockedTab (tab: $Tab) {
+    let nextTab = this.getNextTab(tab)
+
+    for (let searched = 0; searched < this.#list.length; searched++) {
+      if (nextTab.isUnlocked()) {
+        return nextTab
+      }
+
+      nextTab = this.getNextTab(nextTab)
+    }
+
+    return null
   }
 }
 
@@ -521,40 +803,65 @@ interface kSubTabOptionsBag {
   id: string
   class?: string
   i18n: string
+  mobileIcon: string
   borderColor?: string
+  activeColor: string
+  activeTextColor?: string
 }
 
 class $Tab extends HTMLButtonElement {
   #unlocked = () => true
   #type!: Tabs
+  #activeColor: string
+  #activeTextColor?: string
   #removeable = false
+  #moveable = false
   #hidden = false
 
   constructor (options: kSubTabOptionsBag) {
     super()
 
+    this.#activeColor = options.activeColor
+    this.#activeTextColor = options.activeTextColor
     this.id = options.id
     if (options.class) {
       this.classList.add(options.class)
     }
 
-    this.setAttribute('i18n', options.i18n)
+    if (isMobile) {
+      this.classList.add('mobileTabIconButton')
+      this.dataset.i18n = options.i18n
+      this.setAttribute('i18n-aria-label', options.i18n)
+      const icon = document.createElement('img')
+      icon.classList.add('mobileTabIcon')
+      icon.setAttribute('i18n-aria-label', options.i18n)
+      icon.src = `Pictures/Tab Icons/Tabs/${options.mobileIcon}`
+      icon.loading = 'lazy'
+      icon.width = 32
+      icon.height = 32
+      icon.draggable = false
+      this.appendChild(icon)
+    } else {
+      this.setAttribute('i18n', options.i18n)
+    }
 
     if (options.borderColor) {
       this.style.borderColor = options.borderColor
     }
 
-    this.addEventListener('click', () => {
-      if (this.#removeable && pressedKeys.has('ControlLeft') && pressedKeys.has('KeyX')) {
-        // When clicking on a tab while holding CTRL + X
-        if (G.currentTab !== this.#type) {
-          tabRow.removeChild(this)
-          this.#hidden = true
+    this.addEventListener('click', (event) => {
+      if (tabRow.isEditing()) {
+        event.preventDefault()
+        event.stopPropagation()
+
+        if (this.#removeable && this.isCloseButtonHit(event)) {
+          tabRow.toggleTabHidden(this)
         }
-      } else {
-        changeTab(this.#type)
-        changeTabColor()
+
+        return
       }
+
+      changeTab(this.#type)
     })
   }
 
@@ -567,6 +874,10 @@ class $Tab extends HTMLButtonElement {
     return this.#unlocked() && !this.#hidden
   }
 
+  isProgressionUnlocked () {
+    return this.#unlocked()
+  }
+
   setType (type: Tabs) {
     this.#type = type
     return this
@@ -576,22 +887,106 @@ class $Tab extends HTMLButtonElement {
     return this.#type
   }
 
+  setActive (active: boolean) {
+    this.classList.toggle('active-tab', active)
+    DOMCacheGetOrSet(tabInfo[this.#type].panelID).classList.toggle('active-tab', active)
+    this.style.backgroundColor = active ? this.#activeColor : ''
+
+    if (this.#activeTextColor !== undefined) {
+      this.style.color = active ? this.#activeTextColor : ''
+    }
+
+    if (active) {
+      this.setAttribute('aria-current', 'page')
+      DOMCacheGetOrSet('tabBorder').style.backgroundColor = this.#activeColor
+    } else {
+      this.removeAttribute('aria-current')
+    }
+  }
+
   getSubTabs () {
-    return subtabInfo[this.#type]
+    return tabInfo[this.#type]
   }
 
   makeDraggable () {
-    this.setAttribute('draggable', 'true')
+    this.#moveable = true
+    this.classList.add('tabDraggable')
     return this
   }
 
   makeRemoveable () {
     this.#removeable = true
+    this.classList.add('tabRemoveable')
     return this
+  }
+
+  canMove () {
+    return this.#moveable
+  }
+
+  canBeRemoved () {
+    return this.#removeable
+  }
+
+  toggleHidden () {
+    this.#hidden = !this.#hidden
+    this.classList.toggle('tab-hidden-in-edit-mode', this.#hidden)
+    this.#updateCloseButtonState()
+  }
+
+  isHidden () {
+    return this.#hidden
+  }
+
+  showCloseButton () {
+    if (!this.#removeable || this.getElementsByClassName('tabCloseButton').length > 0) {
+      return
+    }
+
+    const closeButton = document.createElement('span')
+    closeButton.classList.add('tabCloseButton')
+    closeButton.textContent = '×'
+    closeButton.setAttribute('role', 'button')
+    this.appendChild(closeButton)
+    this.#updateCloseButtonState()
+  }
+
+  hideCloseButton () {
+    this.getElementsByClassName('tabCloseButton').item(0)?.remove()
+  }
+
+  isCloseButtonHit (event: MouseEvent | PointerEvent) {
+    if (!this.#removeable) {
+      return false
+    }
+
+    if (event.target instanceof Element && event.target.closest('.tabCloseButton') !== null) {
+      return true
+    }
+
+    const rect = this.getBoundingClientRect()
+    const hitboxSize = 24
+
+    return event.clientX >= rect.right - hitboxSize && event.clientY <= rect.top + hitboxSize
   }
 
   resetHidden () {
     this.#hidden = false
+    this.classList.remove('tab-hidden-in-edit-mode')
+  }
+
+  #updateCloseButtonState () {
+    const closeButton = this.getElementsByClassName('tabCloseButton').item(0)
+    if (!(closeButton instanceof HTMLElement)) {
+      return
+    }
+
+    const translationKey = this.#hidden ? 'tabs.showTab' : 'tabs.hideTab'
+    closeButton.textContent = this.#hidden ? '+' : '×'
+    closeButton.classList.toggle('tabCloseButtonToggled', this.#hidden)
+    closeButton.setAttribute('aria-pressed', String(this.#hidden))
+    closeButton.setAttribute('aria-label', i18next.t(translationKey))
+    closeButton.setAttribute('i18n-aria-label', translationKey)
   }
 }
 
@@ -602,72 +997,139 @@ export const tabRow = new TabRow()
 document.getElementsByClassName('navbar').item(0)?.appendChild(tabRow)
 
 tabRow.appendButton(
-  new $Tab({ id: 'buildingstab', i18n: 'tabs.main.buildings' })
+  new $Tab({ id: 'buildingstab', i18n: 'tabs.main.buildings', mobileIcon: 'Buildings.png', activeColor: 'orange' })
     .setType(Tabs.Buildings)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ id: 'upgradestab', i18n: 'tabs.main.upgrades' })
+  new $Tab({ id: 'upgradestab', i18n: 'tabs.main.upgrades', mobileIcon: 'Upgrades.png', activeColor: 'orange' })
     .setType(Tabs.Upgrades)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ /*class: 'prestigeunlock',*/ id: 'achievementstab', i18n: 'tabs.main.achievements' })
+  new $Tab({
+    /* class: 'prestigeunlock', */
+    id: 'achievementstab',
+    i18n: 'tabs.main.achievements',
+    mobileIcon: 'Achievements.png',
+    activeColor: 'white',
+    activeTextColor: 'black'
+  })
     // .setUnlockedState(() => player.unlocks.prestige)
     .setType(Tabs.Achievements)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'prestigeunlock', id: 'runestab', i18n: 'tabs.main.runes' })
+  new $Tab({
+    class: 'prestigeunlock',
+    id: 'runestab',
+    i18n: 'tabs.main.runes',
+    mobileIcon: 'Runes.png',
+    activeColor: 'cornflowerblue'
+  })
     .setUnlockedState(() => player.unlocks.prestige)
     .setType(Tabs.Runes)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'transcendunlock', id: 'challengetab', i18n: 'tabs.main.challenges' })
+  new $Tab({
+    class: 'transcendunlock',
+    id: 'challengetab',
+    i18n: 'tabs.main.challenges',
+    mobileIcon: 'Challenges.png',
+    activeColor: 'purple'
+  })
     .setUnlockedState(() => player.unlocks.transcend)
     .setType(Tabs.Challenges)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'reincarnationunlock', id: 'researchtab', i18n: 'tabs.main.research' })
+  new $Tab({
+    class: 'reincarnationunlock',
+    id: 'researchtab',
+    i18n: 'tabs.main.research',
+    mobileIcon: 'Research.png',
+    activeColor: 'green'
+  })
     .setUnlockedState(() => player.unlocks.reincarnate)
     .setType(Tabs.Research)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'chal8', id: 'anttab', i18n: 'tabs.main.antHill' })
+  new $Tab({
+    class: 'chal8',
+    id: 'anttab',
+    i18n: 'tabs.main.antHill',
+    mobileIcon: 'Anthill.png',
+    activeColor: 'brown'
+  })
     .setUnlockedState(() => player.unlocks.anthill)
     .setType(Tabs.AntHill)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'chal10', id: 'cubetab', i18n: 'tabs.main.wowCubes' })
+  new $Tab({
+    class: 'chal10',
+    id: 'cubetab',
+    i18n: 'tabs.main.wowCubes',
+    mobileIcon: 'WowCubes.png',
+    activeColor: 'purple'
+  })
     .setUnlockedState(() => player.unlocks.ascensions)
     .setType(Tabs.WowCubes)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'chal11', id: 'campaigntab', i18n: 'tabs.main.campaign' })
-    .setUnlockedState(() => player.challengecompletions[11] > 0)
-    .setType(Tabs.Campaign)
-    .makeDraggable()
-    .makeRemoveable(),
-  new $Tab({ class: 'chal11', id: 'traitstab', i18n: 'tabs.main.corruption' })
-    .setUnlockedState(() => (player.challengecompletions[11] > 0))
+  new $Tab({
+    class: 'corruptionUnlock',
+    id: 'traitstab',
+    i18n: 'tabs.main.corruption',
+    mobileIcon: 'Corruption.png',
+    activeColor: 'orange'
+  })
+    .setUnlockedState(() => isCorruptionTabUnlocked())
     .setType(Tabs.Corruption)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'singularity', id: 'singularitytab', i18n: 'tabs.main.singularity' })
+  new $Tab({
+    class: 'singularity',
+    id: 'singularitytab',
+    i18n: 'tabs.main.singularity',
+    mobileIcon: 'Singularity.png',
+    activeColor: 'lightgoldenrodyellow'
+  })
     .setUnlockedState(() => player.highestSingularityCount > 0)
     .setType(Tabs.Singularity)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ id: 'settingstab', i18n: 'tabs.main.settings' })
+  new $Tab({
+    id: 'settingstab',
+    i18n: 'tabs.main.settings',
+    mobileIcon: 'Settings.png',
+    activeColor: 'white',
+    activeTextColor: 'black'
+  })
     .setType(Tabs.Settings)
     .makeDraggable(),
-  new $Tab({ class: 'reincarnationunlock', id: 'shoptab', i18n: 'tabs.main.shop' })
+  new $Tab({
+    class: 'reincarnationunlock',
+    id: 'shoptab',
+    i18n: 'tabs.main.shop',
+    mobileIcon: 'Shop.png',
+    activeColor: 'cyan'
+  })
     .setUnlockedState(() => player.unlocks.reincarnate || player.highestSingularityCount > 0)
     .setType(Tabs.Shop)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ class: 'isEvent', id: 'eventtab', i18n: 'tabs.main.unsmith' })
+  new $Tab({
+    class: 'isEvent',
+    id: 'eventtab',
+    i18n: 'tabs.main.unsmith',
+    mobileIcon: 'Events.png',
+    activeColor: 'limegreen'
+  })
     .setType(Tabs.Event)
     .makeDraggable()
     .makeRemoveable(),
-  new $Tab({ id: 'pseudoCoinstab', i18n: 'tabs.main.purchase' })
+  new $Tab({
+    id: 'pseudoCoinstab',
+    i18n: 'tabs.main.purchase',
+    mobileIcon: 'PseudoCoins.png',
+    activeColor: 'orchid'
+  })
     .setType(Tabs.Purchase)
     .makeDraggable()
 )
@@ -686,8 +1148,8 @@ mobileMenuToggle.addEventListener('click', toggleMobileMenu)
 
 // Close mobile menu when a tab is clicked
 tabRow.addEventListener('click', (e) => {
-  const target = e.target as HTMLElement
-  if (target.tagName === 'BUTTON' && navbar?.classList.contains('menu-open')) {
+  const target = e.target instanceof Element ? e.target.closest('#tabrow > button') : null
+  if (!isMobile && !tabRow.isEditing() && target !== null && navbar?.classList.contains('menu-open')) {
     toggleMobileMenu()
   }
 })
@@ -708,11 +1170,54 @@ export const keyboardTabChange = (step: 1 | -1 = 1, changeSubtab = false) => {
     }
 
     changeTab(tab.getType(), step)
-    changeTabColor()
   }
 }
 
+const switchSubTab = (tab: $Tab, { page, step }: SubTabSwitchOptions) => {
+  const subTabs = tab.getSubTabs()
+
+  if (!tab.isUnlocked() || subTabs.subTabList.length === 0) {
+    return false
+  }
+
+  if (page !== undefined) {
+    tabInfo[tab.getType()].subtabIndex = limitRange(page, 0, subTabs.subTabList.length - 1)
+  } else {
+    tabInfo[tab.getType()].subtabIndex = limitRange(
+      tabInfo[tab.getType()].subtabIndex + step,
+      0,
+      subTabs.subTabList.length - 1
+    )
+  }
+
+  let subTab = subTabs.subTabList[tabInfo[tab.getType()].subtabIndex]
+
+  while (!subTab.unlocked()) {
+    tabInfo[tab.getType()].subtabIndex = limitRange(
+      tabInfo[tab.getType()].subtabIndex + (step ?? 1),
+      0,
+      subTabs.subTabList.length - 1
+    )
+    subTab = subTabs.subTabList[tabInfo[tab.getType()].subtabIndex]
+  }
+
+  for (const candidate of subTabs.subTabList) {
+    const element = DOMCacheGetOrSet(candidate.buttonID)
+
+    if (candidate === subTab) {
+      element.classList.add('active-subtab')
+    } else {
+      element.classList.remove('active-subtab')
+    }
+  }
+
+  subTabs.tabSwitcher?.(subTab.subTabID)
+  return true
+}
+
 export const changeTab = (tabs: Tabs, step?: number) => {
+  saveTabScrollPosition(G.currentTab, tabInfo[G.currentTab].subtabIndex)
+
   if (step === 1) {
     tabRow.setNextTab()
   } else if (step === -1) {
@@ -732,17 +1237,34 @@ export const changeTab = (tabs: Tabs, step?: number) => {
   }
 
   G.currentTab = tabRow.getCurrentTab().getType()
-
-  if (G.currentTab === Tabs.Achievements) {
-    awardUngroupedAchievement('participationTrophy')
+  for (const tab of tabRow.getSubs()) {
+    tab.setActive(tab === tabRow.getCurrentTab())
   }
 
+  switchSubTab(tabRow.getCurrentTab(), { page: tabInfo[G.currentTab].subtabIndex })
+
   revealStuff()
-  hideStuff()
   CloseModal()
   ;(document.activeElement as HTMLElement | null)?.blur()
 
-  const subTabList = subtabInfo[G.currentTab].subTabList
+  updateSubTabVisibility()
+  createFitties()
+  restoreTabScrollPosition(G.currentTab, tabInfo[G.currentTab].subtabIndex)
+
+  if (PLATFORM === 'steam') {
+    import('./steam/discord').then(({ setRichPresenceDiscord }) => {
+      const i18n = tabRow.getCurrentTab().getAttribute('i18n')
+      setRichPresenceDiscord({
+        details: 'Playing Synergism',
+        state: `Looking at ${i18next.t(i18n!)}...`,
+        startTimestamp: new Date()
+      })
+    })
+  }
+}
+
+export const updateSubTabVisibility = () => {
+  const subTabList = tabInfo[G.currentTab].subTabList
   for (let i = 0; i < subTabList.length; i++) {
     const id = subTabList[i].buttonID
     if (DOMCacheHas(id)) {
@@ -755,24 +1277,31 @@ export const changeTab = (tabs: Tabs, step?: number) => {
       }
 
       if (button.classList.contains('active-subtab')) {
-        subtabInfo[tabRow.getCurrentTab().getType()].subtabIndex = i
+        tabInfo[tabRow.getCurrentTab().getType()].subtabIndex = i
       }
     }
   }
+}
 
-  if (platform === 'steam') {
-    import('./steam/discord').then(({ setRichPresenceDiscord }) => {
-      const i18n = tabRow.getCurrentTab().getAttribute('i18n')
-      setRichPresenceDiscord({
-        details: 'Playing Synergism',
-        state: `Looking at ${i18next.t(i18n!)}...`,
-        startTimestamp: new Date()
-      })
-    })
+/**
+ * Resets tab state with no side-effects
+ */
+export const resetAllSubTabs = (page = 0) => {
+  for (const tab of Object.values(Tabs)) {
+    if (typeof tab === 'number') {
+      const subTabs = tabInfo[tab]
+
+      if (subTabs.subTabList.length === 0) {
+        subTabs.subtabIndex = 0
+        continue
+      }
+
+      subTabs.subtabIndex = limitRange(page, 0, subTabs.subTabList.length - 1)
+    }
   }
 }
 
-export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) => {
+export const changeSubTab = (tabs: Tabs, options: SubTabSwitchOptions) => {
   let tab = tabRow.getCurrentTab()
 
   if (tab.getType() !== tabs) {
@@ -786,43 +1315,29 @@ export const changeSubTab = (tabs: Tabs, { page, step }: SubTabSwitchOptions) =>
     return
   }
 
-  if (page !== undefined) {
-    subtabInfo[tab.getType()].subtabIndex = limitRange(page, 0, subTabs.subTabList.length - 1)
-  } else {
-    subtabInfo[tab.getType()].subtabIndex = limitRange(
-      subtabInfo[tab.getType()].subtabIndex + step,
-      0,
-      subTabs.subTabList.length - 1
-    )
+  const isActiveTab = G.currentTab === tabs
+  if (isActiveTab) {
+    saveTabScrollPosition(tab.getType(), subTabs.subtabIndex)
   }
 
-  let subTabList = subTabs.subTabList[subtabInfo[tab.getType()].subtabIndex]
-
-  while (!subTabList.unlocked()) {
-    subtabInfo[tab.getType()].subtabIndex = limitRange(
-      subtabInfo[tab.getType()].subtabIndex + (step ?? 1),
-      0,
-      subTabs.subTabList.length - 1
-    )
-    subTabList = subTabs.subTabList[subtabInfo[tab.getType()].subtabIndex]
-  }
-
-  if (subTabList.unlocked()) {
-    for (const subtab of subTabs.subTabList) {
-      const element = DOMCacheGetOrSet(subtab.buttonID)
-
-      if (subtab === subTabList) {
-        element.classList.add('active-subtab')
-      } else {
-        element.classList.remove('active-subtab')
-      }
-    }
-
-    subTabs.tabSwitcher?.()(subTabList.subTabID)
+  if (switchSubTab(tab, options) && isActiveTab) {
+    restoreTabScrollPosition(tab.getType(), subTabs.subtabIndex)
   }
 
   CloseModal()
 }
+
+export const registerSubTabSwitches = memoize(() => {
+  for (const tab of Object.values(Tabs)) {
+    if (typeof tab !== 'number') {
+      continue
+    }
+
+    for (const [page, subtab] of tabInfo[tab].subTabList.entries()) {
+      DOMCacheGetOrSet(subtab.buttonID).addEventListener('click', () => changeSubTab(tab, { page }))
+    }
+  }
+})
 
 export function subTabsInMainTab (name: Tabs) {
   let tab = tabRow.getCurrentTab()
@@ -835,5 +1350,9 @@ export function subTabsInMainTab (name: Tabs) {
 }
 
 export function getActiveSubTab () {
-  return subtabInfo[tabRow.getCurrentTab().getType()].subtabIndex
+  return tabInfo[tabRow.getCurrentTab().getType()].subtabIndex
+}
+
+export function visualUpdate (name: Tabs) {
+  return tabInfo[name].visualUpdater()
 }

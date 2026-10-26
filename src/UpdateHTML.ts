@@ -1,20 +1,22 @@
 import Decimal from 'break_infinity.js'
+import fitty, { type FittyInstance } from 'fitty'
 import i18next from 'i18next'
 import {
   type AchievementGroups,
-  achievementLevel,
-  achievementPoints,
   getAchievementReward,
   groupedAchievementData,
-  type ProgressiveAchievements,
+  progressiveAchievementKeys,
   progressiveAchievements,
-  toNextAchievementLevelEXP,
   ungroupedAchievementData,
-  type UngroupedAchievementNames,
-  updateAllGroupedAchievementProgress,
-  updateAllProgressiveAchievementProgress,
-  updateAllUngroupedAchievementProgress
+  ungroupedAchievementKeys
 } from './Achievements'
+import { isAutoAscendRunning, isAutoAscendUnlocked } from './AutoAscension'
+import {
+  calculateSingularityUpgradePurchase,
+  getBuildingCost,
+  type SingularityUpgradePurchaseOptions,
+  type SingularityUpgradePurchaseQuote
+} from './Buy'
 import { DOMCacheGetOrSet } from './Cache/DOM'
 import {
   CalcCorruptionStuff,
@@ -22,49 +24,40 @@ import {
   calculateExalt6TimeLimit,
   calculateGlobalSpeedMult
 } from './Calculate'
-import { getMaxChallenges } from './Challenges'
-import { revealCorruptions } from './Corruptions'
+import {
+  calculateChallenge15Score,
+  challenge15ScoreMultiplier,
+  challengeRequirement,
+  getMaxChallenges
+} from './Challenges'
+import { isCorruptionTabUnlocked, revealCorruptions } from './Corruptions'
 import { canBuyAntMastery } from './Features/Ants/AntMasteries/lib/get-buyable'
 import { canGenerateAntCrumbs } from './Features/Ants/AntProducers/lib/generate-ant-producers'
 import { getCostNextAnt } from './Features/Ants/AntProducers/lib/get-cost'
 import { getCostNextAntUpgrade } from './Features/Ants/AntUpgrades/lib/get-cost'
 import { AntUpgrades, LAST_ANT_UPGRADE } from './Features/Ants/AntUpgrades/structs/structs'
 import { AntProducers, LAST_ANT_PRODUCER } from './Features/Ants/structs/structs'
+import {
+  cycleWhileEditing,
+  updateHeaderAmbrosia,
+  updateHeaderConsumables,
+  updateHeaderInfo,
+  updateHeaderLoadouts,
+  updateHeaderModuleVisibility
+} from './HeaderModules'
 import { getLevelMilestone } from './Levels'
 import { hasUnreadMessages } from './Messages'
-import { PCoinUpgrades } from './PseudoCoinUpgrades'
-import { initializeCart } from './purchases/CartTab'
 import { isResearchUnlocked, roombaResearchEnabled } from './Research'
-import { getRuneEffects, type RuneKeys, runes, updateRuneHTML } from './Runes'
+import { getRuneEffects, runes, runesKeys } from './Runes'
 import { getShopUpgradeEffects } from './Shop'
-import {
-  getGQUpgradeEffect,
-  updateSingularityElevator,
-  updateSingularityPenalties,
-  updateSingularityPerks
-} from './singularity'
-import { format, formatTimeShort, /*formatTimeShort*/ player } from './Synergism'
-import { getActiveSubTab, Tabs } from './Tabs'
-import { type TalismanKeys, talismans } from './Talismans'
+import { getGQUpgradeEffect } from './singularity'
+import { format, formatTimeShort, /*formatTimeShort*/ parseFormattedNumber, player } from './Synergism'
+import { getActiveSubTab, Tabs, visualUpdate } from './Tabs'
+import { updateBuildingAutomationButtons } from './tabs/buildings'
+import { talismanKeys, talismans } from './Talismans'
+import { resolveImgSrc } from './Themes'
 import type { OneToFive, ZeroToFour } from './types/Synergism'
-import {
-  visualUpdateAchievements,
-  visualUpdateAnts,
-  visualUpdateBuildings,
-  visualUpdateCampaign,
-  visualUpdateChallenges,
-  visualUpdateCorruptions,
-  visualUpdateCubes,
-  visualUpdateEvent,
-  visualUpdatePurchase,
-  visualUpdateResearch,
-  visualUpdateRunes,
-  visualUpdateSettings,
-  visualUpdateShop,
-  visualUpdateSingularity,
-  visualUpdateUpgrades
-} from './UpdateVisuals'
-import { createDeferredPromise, memoize, updateClassList } from './Utility'
+import { createDeferredPromise, isMobile, memoize, updateClassList } from './Utility'
 import { Globals as G } from './Variables'
 
 const htmlInsertPlayerRequirements = [
@@ -75,7 +68,8 @@ const htmlInsertPlayerRequirements = [
   'transcendShards',
   'reincarnationPoints',
   'worlds',
-  'obtainium'
+  'obtainium',
+  'goldenQuarks'
 ] as const
 const htmlInsertDomRequirements = [
   'coinDisplay',
@@ -85,8 +79,155 @@ const htmlInsertDomRequirements = [
   'mythosshardDisplay',
   'particlesDisplay',
   'quarkDisplay',
-  'obtainiumDisplay'
+  'obtainiumDisplay',
+  'goldenQuarkHeaderDisplay'
 ] as const
+const challengeProgressRowIds = {
+  transcension: 'transcensionChallengeProgress',
+  reincarnation: 'reincarnationChallengeProgress',
+  ascension: 'ascensionChallengeProgress'
+} as const
+
+type ChallengeProgressResource = 'coins' | 'transcendShards' | 'challenge10Completions'
+
+type ChallengeProgress = {
+  amount: Decimal | number
+  required: Decimal | number
+  resource: ChallengeProgressResource
+}
+
+const getChallengeProgress = (challenge: number): ChallengeProgress => {
+  if (challenge <= 5) {
+    return {
+      amount: player.coinsThisTranscension,
+      required: challengeRequirement(challenge, player.challengecompletions[challenge], challenge),
+      resource: 'coins'
+    }
+  }
+
+  if (challenge <= 8) {
+    return {
+      amount: player.transcendShards,
+      required: challengeRequirement(challenge, player.challengecompletions[challenge], challenge),
+      resource: 'transcendShards'
+    }
+  }
+
+  if (challenge <= 10) {
+    return {
+      amount: player.coins,
+      required: challengeRequirement(challenge, player.challengecompletions[challenge], challenge),
+      resource: 'coins'
+    }
+  }
+
+  if (challenge <= 14) {
+    return {
+      amount: player.challengecompletions[10],
+      required: challengeRequirement(challenge, player.challengecompletions[challenge], challenge),
+      resource: 'challenge10Completions'
+    }
+  }
+
+  return {
+    amount: player.coins,
+    required: Decimal.pow(10, player.challenge15Exponent / challenge15ScoreMultiplier()),
+    resource: 'coins'
+  }
+}
+
+const getChallenge15ProgressText = (name: string, progress: ChallengeProgress) => {
+  const score = player.challenge15Exponent
+  const projectedScore = calculateChallenge15Score()
+
+  if (getShopUpgradeEffects('challenge15Auto', 'unlocked') && projectedScore >= score) {
+    return i18next.t('reset.challengeProgress.challenge15AutoLine', {
+      name,
+      score: format(score, 3, true)
+    })
+  }
+
+  if (Decimal.gte(progress.amount, progress.required)) {
+    return i18next.t('reset.challengeProgress.challenge15ProjectedLine', {
+      name,
+      score: format(score, 3, true),
+      projectedScore: format(projectedScore, 3, true)
+    })
+  }
+
+  return i18next.t('reset.challengeProgress.challenge15Line', {
+    name,
+    score: format(score, 3, true),
+    current: format(progress.amount),
+    required: format(progress.required)
+  })
+}
+
+type ChallengeTier = keyof typeof challengeProgressRowIds
+
+export const challengeExit = (tier: ChallengeTier) => {
+  if (player.currentChallenge[tier] === 0) {
+    return
+  }
+
+  player.currentChallenge[tier] = 0
+
+  if (isMobile) {
+    return
+  }
+
+  const textElement = DOMCacheGetOrSet(`${challengeProgressRowIds[tier]}Text`)
+  resetFitText(textElement)
+  DOMCacheGetOrSet(challengeProgressRowIds[tier]).hidden = true
+  textElement.textContent = ''
+}
+
+const updateChallengeProgressRow = (elementId: string, challenge: number) => {
+  const element = DOMCacheGetOrSet(elementId)
+  const textElement = DOMCacheGetOrSet(`${elementId}Text`)
+
+  const progress = getChallengeProgress(challenge)
+  const name = `challenges.${challenge}.progressName`
+  const required = format(progress.required)
+  const text = challenge === 15
+    ? getChallenge15ProgressText(name, progress)
+    : i18next.t('reset.challengeProgress.line', {
+      check: Decimal.gte(progress.amount, progress.required) ? '✓' : '✗',
+      name,
+      comps: player.challengecompletions[challenge],
+      maxComps: getMaxChallenges(challenge),
+      amount: format(progress.amount),
+      resource: i18next.t(`reset.challengeProgress.resources.${progress.resource}`),
+      required
+    })
+
+  if (textElement.innerHTML !== text) {
+    textElement.innerHTML = text
+  }
+
+  if (element.hidden) {
+    element.hidden = false
+    createFitties(element)
+  }
+}
+
+const updateChallengeProgress = () => {
+  if (isMobile) {
+    return
+  }
+
+  const { transcension, reincarnation, ascension } = player.currentChallenge
+
+  if (transcension !== 0) {
+    updateChallengeProgressRow(challengeProgressRowIds.transcension, transcension)
+  }
+  if (reincarnation !== 0) {
+    updateChallengeProgressRow(challengeProgressRowIds.reincarnation, reincarnation)
+  }
+  if (ascension !== 0) {
+    updateChallengeProgressRow(challengeProgressRowIds.ascension, ascension)
+  }
+}
 
 export const revealStuff = () => {
   document.documentElement.dataset.coinOne = player.unlocks.coinone ? 'true' : 'false'
@@ -156,7 +297,9 @@ export const revealStuff = () => {
   }
 
   document.documentElement.dataset.chal11 = player.highestchallengecompletions[11] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.corruptionUnlock = isCorruptionTabUnlocked() ? 'true' : 'false'
   document.documentElement.dataset.chal12 = player.highestchallengecompletions[12] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.spiritUnlock = player.unlocks.spirits ? 'true' : 'false'
   document.documentElement.dataset.chal13 = player.highestchallengecompletions[13] > 0 ? 'true' : 'false'
   document.documentElement.dataset.chal14 = player.highestchallengecompletions[14] > 0 ? 'true' : 'false'
 
@@ -165,13 +308,12 @@ export const revealStuff = () => {
 
   document.documentElement.dataset.research150 = player.researches[150] > 0 ? 'true' : 'false'
 
-  document.documentElement.dataset.cubeUpgrade10 = player.cubeUpgrades[10] > 0 ? 'true' : 'false'
+  document.documentElement.dataset.autoAscendUnlock = isAutoAscendUnlocked() ? 'true' : 'false'
   document.documentElement.dataset.cubeUpgrade19 = player.cubeUpgrades[19] > 0 ? 'true' : 'false'
 
-  document.documentElement.dataset.instantUnlock1 = PCoinUpgrades.INSTANT_UNLOCK_1 > 0 ? 'true' : 'false'
-  document.documentElement.dataset.instantUnlock2 = PCoinUpgrades.INSTANT_UNLOCK_2 > 0 ? 'true' : 'false'
-
   document.documentElement.dataset.sacrificeAnts = getAchievementReward('antSacrificeUnlock') ? 'true' : 'false'
+  document.documentElement.dataset.autoAntSacrifice = getAchievementReward('autoAntSacrifice') ? 'true' : 'false'
+  document.documentElement.dataset.additionalAutoSacrificeOptions = player.researches[124] > 0 ? 'true' : 'false'
 
   document.documentElement.dataset.hepteracts = // Ability to use and gain hepteracts
     player.challenge15Exponent >= G.challenge15Rewards.hepteractsUnlocked.requirement ? 'true' : 'false'
@@ -182,72 +324,63 @@ export const revealStuff = () => {
   // switch color pallete to match legacy wowcubes
   document.documentElement.dataset.legacyicons = player.iconSet === 0 ? 'true' : 'false'
 
-  visualUpdateShop()
+  document.documentElement.dataset.cookies1 = getGQUpgradeEffect('cookies', 'unlocked') ? 'true' : 'false'
+  document.documentElement.dataset.cookies2 = getGQUpgradeEffect('cookies2', 'unlocked') ? 'true' : 'false'
+  document.documentElement.dataset.cookies3 = getGQUpgradeEffect('cookies3', 'unlocked') ? 'true' : 'false'
+  document.documentElement.dataset.cookies4 = getGQUpgradeEffect('cookies4', 'unlocked') ? 'true' : 'false'
+  document.documentElement.dataset.cookies5 = getGQUpgradeEffect('cookies5', 'unlocked') ? 'true' : 'false'
 
-  if (G.challenge15Rewards.hepteractsUnlocked.value > 0) {
-    DOMCacheGetOrSet('corruptionHepteracts').style.display = 'block'
-  } else {
-    DOMCacheGetOrSet('corruptionHepteracts').style.display = 'none'
-  }
+  document.documentElement.dataset.goldenQuark3Upg = getGQUpgradeEffect('goldenQuarks3', 'exportGQPerHour') > 0
+    ? 'true'
+    : 'false'
 
-  document.documentElement.dataset.cookies1 = getGQUpgradeEffect('cookies') ? 'true' : 'false'
-  document.documentElement.dataset.cookies2 = getGQUpgradeEffect('cookies2') ? 'true' : 'false'
-  document.documentElement.dataset.cookies3 = getGQUpgradeEffect('cookies3') ? 'true' : 'false'
-  document.documentElement.dataset.cookies4 = getGQUpgradeEffect('cookies4') ? 'true' : 'false'
-  document.documentElement.dataset.cookies5 = getGQUpgradeEffect('cookies5') ? 'true' : 'false'
-
-  document.documentElement.dataset.goldenQuark3Upg = getGQUpgradeEffect('goldenQuarks3') > 0 ? 'true' : 'false'
-
-  if (player.upgrades[89] === 1) {
-    DOMCacheGetOrSet('transcendautotoggle').style.display = 'block'
-    DOMCacheGetOrSet('transcendamount').style.display = 'block'
-    DOMCacheGetOrSet('autotranscend').style.display = 'block'
-  } else {
-    DOMCacheGetOrSet('transcendautotoggle').style.display = 'none'
-    DOMCacheGetOrSet('transcendamount').style.display = 'none'
-    DOMCacheGetOrSet('autotranscend').style.display = 'none'
-  }
+  document.documentElement.dataset.autoTranscend = player.upgrades[89] === 1 ? 'true' : 'false'
 
   for (const groupedAch of Object.keys(groupedAchievementData) as (Exclude<AchievementGroups, 'ungrouped'>)[]) {
     const capitalizedName = groupedAch.charAt(0).toUpperCase() + groupedAch.slice(1)
+    const img = DOMCacheGetOrSet(`achievementGroup${capitalizedName}`)
+    const shouldDisplay = groupedAchievementData[groupedAch].displayCondition() || player.highestSingularityCount > 0
 
-    DOMCacheGetOrSet(`achievementGroup${capitalizedName}`).style.display =
-      (groupedAchievementData[groupedAch].displayCondition() || player.highestSingularityCount > 0)
-        ? 'block'
-        : 'none'
-  }
-
-  for (const ungroupedAch of Object.keys(ungroupedAchievementData) as UngroupedAchievementNames[]) {
-    const capitalizedName = ungroupedAch.charAt(0).toUpperCase() + ungroupedAch.slice(1)
-
-    DOMCacheGetOrSet(`ungroupedAchievement${capitalizedName}`).style.display =
-      (ungroupedAchievementData[ungroupedAch].displayCondition() || player.highestSingularityCount > 0)
-        ? 'block'
-        : 'none'
-  }
-
-  for (const progAch of Object.keys(progressiveAchievements) as ProgressiveAchievements[]) {
-    const capitalizedName = progAch.charAt(0).toUpperCase() + progAch.slice(1)
-
-    DOMCacheGetOrSet(`progressiveAchievement${capitalizedName}`).style.display =
-      (progressiveAchievements[progAch].displayCondition() || player.highestSingularityCount > 0)
-        ? 'block'
-        : 'none'
-  }
-
-  for (const rune of Object.keys(player.runes) as RuneKeys[]) {
-    if (runes[rune].isUnlocked()) {
-      DOMCacheGetOrSet(`${rune}RuneContainer`).style.display = 'flex'
-      DOMCacheGetOrSet(`${rune}RuneLockedContainer`).style.display = 'none'
-      DOMCacheGetOrSet(`${rune}RunePower`).style.display = 'block'
-    } else {
-      DOMCacheGetOrSet(`${rune}RuneContainer`).style.display = 'none'
-      DOMCacheGetOrSet(`${rune}RuneLockedContainer`).style.display = 'flex'
-      DOMCacheGetOrSet(`${rune}RunePower`).style.display = 'none'
+    img.style.display = shouldDisplay ? 'block' : 'none'
+    if (img.parentElement) {
+      img.parentElement.style.display = shouldDisplay ? 'inline-block' : 'none'
     }
   }
 
-  for (const t of Object.keys(talismans) as TalismanKeys[]) {
+  for (const ungroupedAch of ungroupedAchievementKeys) {
+    const capitalizedName = ungroupedAch.charAt(0).toUpperCase() + ungroupedAch.slice(1)
+    const img = DOMCacheGetOrSet(`ungroupedAchievement${capitalizedName}`)
+    const shouldDisplay = ungroupedAchievementData[ungroupedAch].displayCondition()
+      || player.highestSingularityCount > 0
+
+    img.style.display = shouldDisplay ? 'block' : 'none'
+    if (img.parentElement) {
+      img.parentElement.style.display = shouldDisplay ? 'inline-block' : 'none'
+    }
+  }
+
+  for (const progAch of progressiveAchievementKeys) {
+    const capitalizedName = progAch.charAt(0).toUpperCase() + progAch.slice(1)
+    const img = DOMCacheGetOrSet(`progressiveAchievement${capitalizedName}`)
+    const shouldDisplay = progressiveAchievements[progAch].displayCondition() || player.highestSingularityCount > 0
+
+    img.style.display = shouldDisplay ? 'block' : 'none'
+    if (img.parentElement) {
+      img.parentElement.style.display = shouldDisplay ? 'inline-block' : 'none'
+    }
+  }
+
+  for (const rune of runesKeys) {
+    if (runes[rune].isUnlocked()) {
+      DOMCacheGetOrSet(`${rune}RuneContainer`).style.display = 'flex'
+      DOMCacheGetOrSet(`${rune}RuneLockedContainer`).style.display = 'none'
+    } else {
+      DOMCacheGetOrSet(`${rune}RuneContainer`).style.display = 'none'
+      DOMCacheGetOrSet(`${rune}RuneLockedContainer`).style.display = 'flex'
+    }
+  }
+
+  for (const t of talismanKeys) {
     if (talismans[t].isUnlocked()) {
       DOMCacheGetOrSet(`${t}TalismanContainer`).style.display = 'flex'
     } else {
@@ -255,159 +388,76 @@ export const revealStuff = () => {
     }
   }
 
-  if (getLevelMilestone('autoPrestige') === 1) { // Transcend Mythos Achievement 1
-    DOMCacheGetOrSet('prestigeautotoggle').style.display = 'block'
-    DOMCacheGetOrSet('prestigeamount').style.display = 'block'
-    DOMCacheGetOrSet('autoprestige').style.display = 'block'
-  } else {
-    DOMCacheGetOrSet('prestigeautotoggle').style.display = 'none'
-    DOMCacheGetOrSet('prestigeamount').style.display = 'none'
-    DOMCacheGetOrSet('autoprestige').style.display = 'none'
-  }
+  document.documentElement.dataset.autoPrestige = getLevelMilestone('autoPrestige') === 1 ? 'true' : 'false'
 
-  if (player.unlocks.talismans) { // No Runes Challenge Achievement 1
-    DOMCacheGetOrSet('toggleRuneSubTab2').style.display = 'block'
-    DOMCacheGetOrSet('toggleRuneSubTab3').style.display = 'block'
-  } else {
-    DOMCacheGetOrSet('toggleRuneSubTab2').style.display = 'none'
-    DOMCacheGetOrSet('toggleRuneSubTab3').style.display = 'none'
-  }
+  document.documentElement.dataset.research39 = // 3x9 Research [Crystal Building Power]
+    player.researches[39] > 0 ? 'true' : 'false'
 
-  const unlockedAntSac = getAchievementReward('antSacrificeUnlock')
-  if (unlockedAntSac) {
-    DOMCacheGetOrSet('sacrificeAntsLocked').style.display = 'none'
-    const sacAnts = DOMCacheGetOrSet('sacrificeAnts')
-    sacAnts.classList.add('flex')
-    sacAnts.classList.remove('none')
-  } else {
-    DOMCacheGetOrSet('sacrificeAntsLocked').style.display = 'flex'
-    const sacAnts = DOMCacheGetOrSet('sacrificeAnts')
-    sacAnts.classList.remove('flex')
-    sacAnts.classList.add('none')
-  }
+  document.documentElement.dataset.research40 = // 3x10 Research [Mythos Shard Building Power]
+    player.researches[40] > 0 ? 'true' : 'false'
 
-  const unlockedAutoAntSac = getAchievementReward('autoAntSacrifice')
-  if (unlockedAutoAntSac) {
-    DOMCacheGetOrSet('autoSacrifice').style.display = 'flex'
-    DOMCacheGetOrSet('autoSacrificeLocked').style.display = 'none'
-  } else {
-    DOMCacheGetOrSet('autoSacrifice').style.display = 'none'
-    DOMCacheGetOrSet('autoSacrificeLocked').style.display = 'block'
-  }
+  document.documentElement.dataset.research46 = // 5x6 Research [Auto R.]
+    player.researches[46] > 0 ? 'true' : 'false'
 
-  const unlockedAdditionalSacrificeOptions = player.researches[124] > 0
-  if (unlockedAdditionalSacrificeOptions) {
-    DOMCacheGetOrSet('additionalAutoSacOptionsLocked').style.display = 'none'
-    DOMCacheGetOrSet('additionalAutoSacOptions').style.display = 'flex'
-  } else {
-    DOMCacheGetOrSet('additionalAutoSacOptionsLocked').style.display = 'block'
-    DOMCacheGetOrSet('additionalAutoSacOptions').style.display = 'none'
-  }
+  document.documentElement.dataset.research130 = // 6x5 Research [Talisman Auto Fortify]
+    player.researches[130] > 0 ? 'true' : 'false'
 
-  DOMCacheGetOrSet('reincarnationCrystalInfo').style.display = // 3x9 Research [Crystal Building Power]
-    player.researches[39] > 0 ? 'block' : 'none'
+  document.documentElement.dataset.research190 = // 8x15 Research [Auto Tesseracts]
+    player.researches[190] > 0 ? 'true' : 'false'
 
-  DOMCacheGetOrSet('reincarnationMythosInfo').style.display = // 3x10 Research [Mythos Shard Building Power]
-    player.researches[40] > 0 ? 'block' : 'none'
+  document.documentElement.dataset.offeringAuto = // Auto Offering Shop Purchase
+    getShopUpgradeEffects('offeringAuto', 'autoRune') ? 'true' : 'false'
 
-  DOMCacheGetOrSet('reincarnateautomation').style.display = // 5x6 Research [Auto R.]
-    player.researches[46] > 0 ? 'block' : 'none'
-
-  DOMCacheGetOrSet('toggleautofortify').style.display = // 6x5 Research [Talisman Auto Fortify]
-    player.researches[130] > 0 ? 'block' : 'none'
-
-  for (let z = 1; z <= 5; z++) {
-    DOMCacheGetOrSet(`tesseractAutoToggle${z}`).style.display = // 8x15 Research [Auto Tesseracts]
-      player.researches[190] > 0 ? 'block' : 'none'
-  }
-  DOMCacheGetOrSet('tesseractautobuytoggle').style.display = // 8x15 Research [Auto Tesseracts]
-    player.researches[190] > 0 ? 'block' : 'none'
-  DOMCacheGetOrSet('tesseractautobuymode').style.display = // 8x15 Research [Auto Tesseracts]
-    player.researches[190] > 0 ? 'block' : 'none'
-  DOMCacheGetOrSet('tesseractAmount').style.display = // 8x15 Research [Auto Tesseracts]
-    player.researches[190] > 0 ? 'block' : 'none'
-  DOMCacheGetOrSet('autotessbuyeramount').style.display = // 8x15 Research [Auto Tesseracts]
-    player.researches[190] > 0 ? 'block' : 'none'
-
-  DOMCacheGetOrSet('toggleautosacrifice').style.display = // Auto Offering Shop Purchase
-    getShopUpgradeEffects('offeringAuto', 'autoRune') ? 'block' : 'none'
-
-  DOMCacheGetOrSet('toggleautoBuyFragments').style.display = // Auto Fragments Buy (After Cx1)
-    player.cubeUpgrades[51] > 0 && player.highestSingularityCount >= 40 ? 'block' : 'none'
+  document.documentElement.dataset.autoBuyFragments = // Auto Fragments Buy (Singularity 40)
+    player.highestSingularityCount >= 40 ? 'true' : 'false'
 
   const autoResearch = getShopUpgradeEffects('obtainiumAuto', 'autoResearch')
 
-  DOMCacheGetOrSet('toggleautoresearch').style.display = // Auto Research Shop Purchase
-    autoResearch ? 'block' : 'none'
+  document.documentElement.dataset.autoResearch = // Auto Research Shop Purchase
+    autoResearch ? 'true' : 'false'
 
-  DOMCacheGetOrSet('toggleautoresearchmode').style.display = autoResearch && roombaResearchEnabled() // Auto Research Shop Purchase Mode
-    ? 'block'
-    : 'none'
+  document.documentElement.dataset.autoResearchMode = // Auto Research Shop Purchase Mode
+    autoResearch && roombaResearchEnabled() ? 'true' : 'false'
 
-  DOMCacheGetOrSet('reincarnateAutoUpgrade').style.display = player.cubeUpgrades[8] > 0 ? 'block' : 'none'
+  document.documentElement.dataset.cubeUpgrade8 = player.cubeUpgrades[8] > 0 ? 'true' : 'false'
 
-  DOMCacheGetOrSet('maxPlatToggle').style.display = // Save Offerings
-    player.highestSingularityCount > 0 ? 'block' : 'none'
+  document.documentElement.dataset.saveOfferings = // Save Offerings
+    player.highestSingularityCount > 0 ? 'true' : 'false'
 
   // Auto Open Cubes toggle
-  if (player.highestSingularityCount >= 35) {
-    DOMCacheGetOrSet('openCubes').style.display = 'block'
-    DOMCacheGetOrSet('cubeOpensInput').style.display = 'block'
-    DOMCacheGetOrSet('openTesseracts').style.display = 'block'
-    DOMCacheGetOrSet('tesseractsOpensInput').style.display = 'block'
-    DOMCacheGetOrSet('openHypercubes').style.display = 'block'
-    DOMCacheGetOrSet('hypercubesOpensInput').style.display = 'block'
-    DOMCacheGetOrSet('openPlatonicCube').style.display = 'block'
-    DOMCacheGetOrSet('platonicCubeOpensInput').style.display = 'block'
-  } else {
-    DOMCacheGetOrSet('openCubes').style.display = 'none'
-    DOMCacheGetOrSet('cubeOpensInput').style.display = 'none'
-    DOMCacheGetOrSet('openTesseracts').style.display = 'none'
-    DOMCacheGetOrSet('tesseractsOpensInput').style.display = 'none'
-    DOMCacheGetOrSet('openHypercubes').style.display = 'none'
-    DOMCacheGetOrSet('hypercubesOpensInput').style.display = 'none'
-    DOMCacheGetOrSet('openPlatonicCube').style.display = 'none'
-    DOMCacheGetOrSet('platonicCubeOpensInput').style.display = 'none'
-  }
+  document.documentElement.dataset.autoOpenCubes = player.highestSingularityCount >= 10 ? 'true' : 'false'
 
-  DOMCacheGetOrSet('toggleAutoCubeUpgrades').style.display = // Auto Cube Upgrades
-    player.highestSingularityCount >= 50
-      ? 'block'
-      : 'none'
-  DOMCacheGetOrSet('toggleAutoPlatonicUpgrades').style.display = // Auto Platonic Upgrades
-    player.highestSingularityCount >= 50
-      ? 'block'
-      : 'none'
+  document.documentElement.dataset.autoCubeUpgrades = // Auto Cube Upgrades
+    player.highestSingularityCount >= 50 ? 'true' : 'false'
+  document.documentElement.dataset.autoPlatonicUpgrades = // Auto Platonic Upgrades
+    player.highestSingularityCount >= 50 ? 'true' : 'false'
 
   // Singularity confirmation toggle pic
-  DOMCacheGetOrSet('settingpic6').style.display = player.highestSingularityCount > 0 && player.ascensionCount > 0
-    ? 'block'
-    : 'none'
+  document.documentElement.dataset.singularityConfirmation =
+    player.highestSingularityCount > 0 && player.ascensionCount > 0 ? 'true' : 'false'
 
   // Hepteract Confirmations toggle
-  DOMCacheGetOrSet('heptnotificationpic').style.display = player.highestSingularityCount > 0
+  document.documentElement.dataset.hepteractConfirmation = player.highestSingularityCount > 0
       && player.challenge15Exponent >= G.challenge15Rewards.hepteractsUnlocked.requirement
-    ? 'block'
-    : 'none'
+    ? 'true'
+    : 'false'
 
-  DOMCacheGetOrSet('warpAuto').style.display = getShopUpgradeEffects('autoWarp', 'unlocked') ? '' : 'none'
+  document.documentElement.dataset.autoWarp = getShopUpgradeEffects('autoWarp', 'unlocked') ? 'true' : 'false'
 
   const octeractUnlocks = document.getElementsByClassName('octeracts') as HTMLCollectionOf<HTMLElement>
   for (const item of octeractUnlocks) { // Stuff that you need octeracts to access
     const parent = item.parentElement!
     if (parent.classList.contains('offlineStats')) {
-      item.style.display = getGQUpgradeEffect('octeractUnlock') ? 'flex' : 'none'
-      item.setAttribute('aria-disabled', `${!getGQUpgradeEffect('octeractUnlock')}`)
+      item.style.display = getGQUpgradeEffect('octeractUnlock', 'unlocked') ? 'flex' : 'none'
+      item.setAttribute('aria-disabled', `${!getGQUpgradeEffect('octeractUnlock', 'unlocked')}`)
     } else {
-      item.style.display = getGQUpgradeEffect('octeractUnlock') ? 'block' : 'none'
-      item.setAttribute('aria-disabled', `${!getGQUpgradeEffect('octeractUnlock')}`)
+      item.style.display = getGQUpgradeEffect('octeractUnlock', 'unlocked') ? 'block' : 'none'
+      item.setAttribute('aria-disabled', `${!getGQUpgradeEffect('octeractUnlock', 'unlocked')}`)
     }
   }
 
-  const singChallengeUnlocks = document.getElementsByClassName('singChallenges') as HTMLCollectionOf<HTMLElement>
-  for (const item of singChallengeUnlocks) {
-    item.style.display = player.highestSingularityCount >= 25 ? 'block' : 'none'
-  }
+  // Hide Challenge Subtabs until Exalts are unlocked
+  document.documentElement.dataset.singChallenges = player.highestSingularityCount >= 25 ? 'true' : 'false'
 
   const exalt1x1Unlocks = document.getElementsByClassName('Exalt1x1') as HTMLCollectionOf<HTMLElement>
   for (const item of exalt1x1Unlocks) {
@@ -433,25 +483,40 @@ export const revealStuff = () => {
     }
   }
 
+  document.documentElement.dataset.singularityButton = runes.antiquities.level > 0 || player.highestSingularityCount > 0
+    ? 'true'
+    : 'false'
+
+  const exalt9x1Unlocks = document.getElementsByClassName('Exalt9x1') as HTMLCollectionOf<HTMLElement>
+  DOMCacheGetOrSet('blueberryUpgradeContainer').dataset.ambrosiaLayout =
+    player.singularityChallenges.taxmanLastStand.completions >= 1
+      ? 'purple'
+      : player.singularityChallenges.noAmbrosiaUpgrades.completions >= 1
+      ? 'red'
+      : 'blueberry'
+
+  for (const item of exalt9x1Unlocks) {
+    const parent = item.parentElement!
+    if (parent.classList.contains('offlineStats')) {
+      item.style.display = player.singularityChallenges.taxmanLastStand.completions >= 1 ? 'flex' : 'none'
+      item.setAttribute('aria-disabled', `${player.singularityChallenges.taxmanLastStand.completions < 1}`)
+    } else {
+      item.style.visibility = player.singularityChallenges.taxmanLastStand.completions >= 1 ? 'visible' : 'hidden'
+      item.setAttribute('aria-disabled', `${player.singularityChallenges.taxmanLastStand.completions < 1}`)
+    }
+  }
+
   DOMCacheGetOrSet('toggleSingularitySubTab5').style.display = player.highestSingularityCount >= 25
     ? 'block'
     : 'none'
   // Hide Challenge Subtabs until Exalts are unlocked
   DOMCacheGetOrSet('challengesTabsToggle').style.display = player.highestSingularityCount >= 25
-    ? 'flex'
+    ? ''
     : 'none'
 
-  DOMCacheGetOrSet('singularitybtn').style.display = runes.antiquities.level > 0 || player.highestSingularityCount > 0
-    ? 'block'
-    : 'none'
+  document.documentElement.dataset.insideSingularityChallenge = player.insideSingularityChallenge ? 'true' : 'false'
 
-  DOMCacheGetOrSet('ascSingChallengeTimeTakenStats').style.display = player.insideSingularityChallenge ? '' : 'none'
-
-  DOMCacheGetOrSet('ascensionStats').style.visibility =
-    (Boolean(getAchievementReward('statTracker')) || player.highestSingularityCount > 0) ? 'visible' : 'hidden'
-  DOMCacheGetOrSet('ascHyperStats').style.display = player.challengecompletions[13] > 0 ? '' : 'none'
-  DOMCacheGetOrSet('ascPlatonicStats').style.display = player.challengecompletions[14] > 0 ? '' : 'none'
-  DOMCacheGetOrSet('ascHepteractStats').style.display = G.challenge15Rewards.hepteractsUnlocked.value >= 1 ? '' : 'none'
+  updateHeaderModuleVisibility()
 
   // I'll clean this up later. Note to 2019 Platonic: Fuck you
   // note to 2019 and 2020 Platonic, you're welcome
@@ -491,9 +556,9 @@ export const revealStuff = () => {
     transcendAutoUpgrade: player.upgrades[99] === 1, // Feature - Upgrades - Auto Buy Mythos Upgrades
     generatorsAutoUpgrade: player.upgrades[90] === 1, // Feature - Upgrades - Auto Buy Generator Upgrades
     toggle9: player.unlocks.prestige, // Feature - Upgrades - Hover to Buy
-    toggle28: player.prestigeCount > 0.5 || player.reincarnationCount > 0.5, // Settings - Confirmations - Prestige
-    toggle29: player.transcendCount > 0.5 || player.reincarnationCount > 0.5, // Settings - Confirmations - Transcension
-    toggle30: player.reincarnationCount > 0.5, // Settings - Confirmations - Reincarnation
+    toggle28: player.prestigeCount > 0 || player.reincarnationCount > 0, // Settings - Confirmations - Prestige
+    toggle29: player.transcendCount > 0 || player.reincarnationCount > 0, // Settings - Confirmations - Transcension
+    toggle30: player.reincarnationCount > 0, // Settings - Confirmations - Reincarnation
     toggle31: player.ascensionCount > 0, // Settings - Confirmations - Ascension and Asc. Challenge
     toggle32: Boolean(getAchievementReward('antSacrificeUnlock')), // Settings - Confirmations - Ant Sacrifice
     toggle33: player.highestSingularityCount > 0 && player.ascensionCount > 0, // Settings - Confirmations - Singularity
@@ -505,7 +570,7 @@ export const revealStuff = () => {
     toggle38: player.highestSingularityCount > 0, // Researchs Hover to Buy
     toggle39: player.unlocks.prestige, // Hotkeys
     toggle40: player.unlocks.prestige, // Number Hotkeys
-    toggle41: player.challengecompletions[11] > 0, // Loadouts Notifx
+    toggle41: isAutoAscendUnlocked(), // Loadouts Notify
     toggle42: player.highestSingularityCount >= 6, // Potion Autogenerator for Offering Potions
     toggle43: player.highestSingularityCount >= 6 // Potion Autogenerator for Obtainium Potions
   }
@@ -520,173 +585,33 @@ export const revealStuff = () => {
     el.style.display = automationUnlocks[key] ? 'block' : 'none'
   })
 
+  updateBuildingAutomationButtons()
+
   // Messages subtab visibility - only show when there are unread messages
-  DOMCacheGetOrSet('switchSettingSubTab10').style.display = hasUnreadMessages() ? 'block' : 'none'
+  document.documentElement.dataset.unreadMessages = hasUnreadMessages() ? 'true' : 'false'
 
   revealCorruptions()
-}
-
-export const hideStuff = () => {
-  DOMCacheGetOrSet('buildings').style.display = 'none'
-  DOMCacheGetOrSet('buildingstab').style.backgroundColor = ''
-  DOMCacheGetOrSet('upgrades').style.display = 'none'
-  DOMCacheGetOrSet('upgradestab').style.backgroundColor = ''
-  DOMCacheGetOrSet('settings').style.display = 'none'
-
-  DOMCacheGetOrSet('statistics').style.display = 'none'
-  DOMCacheGetOrSet('achievementstab').style.backgroundColor = ''
-  DOMCacheGetOrSet('achievementstab').style.color = 'white'
-  DOMCacheGetOrSet('runes').style.display = 'none'
-  DOMCacheGetOrSet('runestab').style.backgroundColor = ''
-  DOMCacheGetOrSet('challenges').style.display = 'none'
-  DOMCacheGetOrSet('challengetab').style.backgroundColor = ''
-  DOMCacheGetOrSet('research').style.display = 'none'
-  DOMCacheGetOrSet('researchtab').style.backgroundColor = ''
-  DOMCacheGetOrSet('shop').style.display = 'none'
-  DOMCacheGetOrSet('shoptab').style.backgroundColor = ''
-  DOMCacheGetOrSet('ants').style.display = 'none'
-  DOMCacheGetOrSet('anttab').style.backgroundColor = ''
-  DOMCacheGetOrSet('cubetab').style.backgroundColor = ''
-  DOMCacheGetOrSet('campaigntab').style.backgroundColor = ''
-  DOMCacheGetOrSet('campaigns').style.display = 'none'
-  DOMCacheGetOrSet('traitstab').style.backgroundColor = ''
-  DOMCacheGetOrSet('cubes').style.display = 'none'
-  DOMCacheGetOrSet('traits').style.display = 'none'
-  DOMCacheGetOrSet('singularity').style.display = 'none'
-  DOMCacheGetOrSet('singularitytab').style.backgroundColor = ''
-  DOMCacheGetOrSet('event').style.display = 'none'
-  DOMCacheGetOrSet('eventtab').style.backgroundColor = ''
-  document.getElementById('pseudoCoins')?.style.setProperty('display', 'none')
-  DOMCacheGetOrSet('pseudoCoinstab').style.backgroundColor = ''
-
-  const tab = DOMCacheGetOrSet('settingstab')
-  tab.style.backgroundColor = ''
-  tab.style.borderColor = 'white'
-
-  if (G.currentTab === Tabs.Buildings) {
-    DOMCacheGetOrSet('buildingstab').style.backgroundColor = 'orange'
-    DOMCacheGetOrSet('buildings').style.display = 'block'
-  }
-  if (G.currentTab === Tabs.Upgrades) {
-    DOMCacheGetOrSet('upgrades').style.display = 'block'
-    DOMCacheGetOrSet('upgradestab').style.backgroundColor = 'orange'
-    DOMCacheGetOrSet('upgradedescription').textContent = i18next.t('upgrades.hoverOverUpgrade')
-  }
-  if (G.currentTab === Tabs.Settings) {
-    DOMCacheGetOrSet('settings').style.display = 'block'
-    const settingsTab = DOMCacheGetOrSet('settingstab')
-    settingsTab.style.backgroundColor = 'orange'
-    settingsTab.style.borderColor = 'gold'
-  }
-  if (G.currentTab === Tabs.Achievements) {
-    DOMCacheGetOrSet('statistics').style.display = 'block'
-    DOMCacheGetOrSet('achievementstab').style.backgroundColor = 'white'
-    DOMCacheGetOrSet('achievementstab').style.color = 'black'
-    DOMCacheGetOrSet('achievementprogress').textContent = i18next.t('achievements.achievementPoints', {
-      x: format(achievementPoints)
-    })
-    DOMCacheGetOrSet('achievementQuarkBonus').innerHTML = i18next.t('achievements.achievementLevel', {
-      level: format(achievementLevel)
-    })
-    DOMCacheGetOrSet('achievementTNLText').innerHTML = i18next.t('achievements.achievementToNextLevel', {
-      level: format(achievementLevel + 1),
-      AP: format(toNextAchievementLevelEXP(), 0, true)
-    })
-    updateAllGroupedAchievementProgress()
-    updateAllUngroupedAchievementProgress()
-    updateAllProgressiveAchievementProgress()
-  } else if (G.currentTab === Tabs.Runes) {
-    DOMCacheGetOrSet('runes').style.display = 'block'
-    DOMCacheGetOrSet('runestab').style.backgroundColor = 'blue'
-    DOMCacheGetOrSet('focusedRuneLevelInfo').textContent = i18next.t('runes.hover')
-
-    for (const rune of Object.keys(player.runes)) {
-      const runeKey = rune as RuneKeys
-      updateRuneHTML(runeKey)
-    }
-  }
-  if (G.currentTab === Tabs.Challenges) {
-    DOMCacheGetOrSet('challenges').style.display = 'block'
-    DOMCacheGetOrSet('challengetab').style.backgroundColor = 'purple'
-  }
-  if (G.currentTab === Tabs.Research) {
-    DOMCacheGetOrSet('research').style.display = 'block'
-    DOMCacheGetOrSet('researchtab').style.backgroundColor = 'green'
-  }
-  if (G.currentTab === Tabs.Shop) {
-    DOMCacheGetOrSet('shop').style.display = 'block'
-    DOMCacheGetOrSet('shoptab').style.backgroundColor = 'limegreen'
-  }
-  if (G.currentTab === Tabs.AntHill) {
-    DOMCacheGetOrSet('ants').style.display = 'block'
-    DOMCacheGetOrSet('anttab').style.backgroundColor = 'brown'
-  }
-  if (G.currentTab === Tabs.WowCubes) {
-    DOMCacheGetOrSet('cubes').style.display = 'flex'
-    DOMCacheGetOrSet('cubetab').style.backgroundColor = 'white'
-  }
-  if (G.currentTab === Tabs.Campaign) {
-    DOMCacheGetOrSet('campaigns').style.display = 'block'
-    DOMCacheGetOrSet('campaigntab').style.backgroundColor = 'red'
-  }
-  if (G.currentTab === Tabs.Corruption) {
-    DOMCacheGetOrSet('traits').style.display = 'flex'
-    DOMCacheGetOrSet('traitstab').style.backgroundColor = 'white'
-  }
-
-  if (G.currentTab === Tabs.Singularity) {
-    DOMCacheGetOrSet('singularity').style.display = 'block'
-    DOMCacheGetOrSet('singularitytab').style.backgroundColor = 'lightgoldenrodyellow'
-    updateSingularityPenalties()
-    updateSingularityPerks()
-    updateSingularityElevator()
-  }
-
-  if (G.currentTab === Tabs.Event) {
-    DOMCacheGetOrSet('event').style.display = 'block'
-    DOMCacheGetOrSet('eventtab').style.backgroundColor = 'gold'
-  }
-
-  if (G.currentTab === Tabs.Purchase) {
-    initializeCart()
-
-    document.getElementById('pseudoCoins')?.style.setProperty('display', 'unset')
-    DOMCacheGetOrSet('pseudoCoinstab').style.backgroundColor = 'orange'
-  }
-}
-
-const visualTab: Record<Tabs, () => void> = {
-  [Tabs.Buildings]: visualUpdateBuildings,
-  [Tabs.Upgrades]: visualUpdateUpgrades,
-  [Tabs.Achievements]: visualUpdateAchievements,
-  [Tabs.Runes]: visualUpdateRunes,
-  [Tabs.Challenges]: visualUpdateChallenges,
-  [Tabs.Research]: visualUpdateResearch,
-  [Tabs.Settings]: visualUpdateSettings,
-  [Tabs.Shop]: visualUpdateShop,
-  [Tabs.AntHill]: visualUpdateAnts,
-  [Tabs.WowCubes]: visualUpdateCubes,
-  [Tabs.Campaign]: visualUpdateCampaign,
-  [Tabs.Corruption]: visualUpdateCorruptions,
-  [Tabs.Singularity]: visualUpdateSingularity,
-  [Tabs.Event]: visualUpdateEvent,
-  [Tabs.Purchase]: visualUpdatePurchase
 }
 
 export const htmlInserts = () => {
   // ALWAYS Update these, for they are the most important resources
   for (let i = 0; i < htmlInsertPlayerRequirements.length; i++) {
     const value = player[htmlInsertPlayerRequirements[i]]
-    const text = format(value instanceof Decimal ? value : value.valueOf())
+    const text = format(value instanceof Decimal ? value : value.valueOf(), 0, false, false)
     const dom = DOMCacheGetOrSet(htmlInsertDomRequirements[i])
     if (dom.textContent !== text) {
       dom.textContent = text
     }
   }
 
+  updateChallengeProgress()
   updateAscensionStats()
+  updateHeaderConsumables()
+  updateHeaderInfo()
+  updateHeaderAmbrosia()
+  updateHeaderLoadouts()
 
-  visualTab[G.currentTab]()
+  visualUpdate(G.currentTab)
 }
 
 // TODO(not @KhafraDev): cache the elements and stop getting them every time?
@@ -703,10 +628,6 @@ export const buttoncolorchange = () => {
     ? 'green'
     : ''
 
-  DOMCacheGetOrSet('acceleratorboostbtn').style.backgroundColor = player.toggles[8] && player.upgrades[88] > 0.5
-    ? 'green'
-    : ''
-
   DOMCacheGetOrSet('challengebtn').style.backgroundColor = player.currentChallenge.transcension === 0 ? '' : 'purple'
 
   DOMCacheGetOrSet('reincarnatechallengebtn').style.backgroundColor = player.currentChallenge.reincarnation === 0
@@ -715,8 +636,7 @@ export const buttoncolorchange = () => {
 
   DOMCacheGetOrSet('ascendChallengeBtn').style.backgroundColor = player.currentChallenge.ascension === 0 ? '' : 'purple'
 
-  DOMCacheGetOrSet('ascendbtn').style.backgroundColor =
-    player.autoAscend && player.challengecompletions[11] > 0 && player.cubeUpgrades[10] > 0 ? 'green' : ''
+  DOMCacheGetOrSet('ascendbtn').style.backgroundColor = isAutoAscendRunning() ? 'green' : ''
 
   DOMCacheGetOrSet('singularitybtn').style.filter = runes.antiquities.level > 0
     ? ''
@@ -725,17 +645,17 @@ export const buttoncolorchange = () => {
   // Notify new players the reset
   if (player.toggles[33] && player.highestSingularityCount === 0) {
     if (player.toggles[28] && !player.unlocks.prestige) {
-      DOMCacheGetOrSet('prestigebtn').style.boxShadow = player.coinsThisPrestige.gte(1e16)
+      DOMCacheGetOrSet('prestigebtn').style.boxShadow = player.coinsThisPrestige.gte(G.d1e16)
         ? 'cyan 0px 0px 10px 2px'
         : ''
     }
     if (player.toggles[29] && !player.unlocks.transcend) {
-      DOMCacheGetOrSet('transcendbtn').style.boxShadow = player.coinsThisTranscension.gte(1e100)
+      DOMCacheGetOrSet('transcendbtn').style.boxShadow = player.coinsThisTranscension.gte(G.d1e100)
         ? 'plum 0px 0px 10px 2px'
         : ''
     }
     if (player.toggles[30] && !player.unlocks.reincarnate) {
-      DOMCacheGetOrSet('reincarnatebtn').style.boxShadow = player.transcendShards.gte(1e300)
+      DOMCacheGetOrSet('reincarnatebtn').style.boxShadow = player.transcendShards.gte(G.d1e300)
         ? 'greenyellow 0px 0px 10px 2px'
         : ''
     }
@@ -757,35 +677,36 @@ export const buttoncolorchange = () => {
     const h = DOMCacheGetOrSet('buyacceleratorboost')
     a.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[1] || player.upgrades[81] === 0) && player.coins.gte(player.firstCostCoin)
+      (!player.toggles[1] || player.upgrades[81] === 0) && player.coins.gte(getBuildingCost('coin', 0))
     )
     b.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[2] || player.upgrades[82] === 0) && player.coins.gte(player.secondCostCoin)
+      (!player.toggles[2] || player.upgrades[82] === 0) && player.coins.gte(getBuildingCost('coin', 1))
     )
     c.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[3] || player.upgrades[83] === 0) && player.coins.gte(player.thirdCostCoin)
+      (!player.toggles[3] || player.upgrades[83] === 0) && player.coins.gte(getBuildingCost('coin', 2))
     )
     d.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[4] || player.upgrades[84] === 0) && player.coins.gte(player.fourthCostCoin)
+      (!player.toggles[4] || player.upgrades[84] === 0) && player.coins.gte(getBuildingCost('coin', 3))
     )
     e.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[5] || player.upgrades[85] === 0) && player.coins.gte(player.fifthCostCoin)
+      (!player.toggles[5] || player.upgrades[85] === 0) && player.coins.gte(getBuildingCost('coin', 4))
     )
     f.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[6] || player.upgrades[86] === 0) && player.coins.gte(player.acceleratorCost)
+      (!player.toggles[6] || player.upgrades[86] === 0) && player.coins.gte(getBuildingCost('accelerator'))
     )
     g.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[7] || player.upgrades[87] === 0) && player.coins.gte(player.multiplierCost)
+      (!player.toggles[7] || player.upgrades[87] === 0) && player.coins.gte(getBuildingCost('multiplier'))
     )
     h.classList.toggle(
       'buildingPurchaseBtnAvailable',
-      (!player.toggles[8] || player.upgrades[88] === 0) && player.prestigePoints.gte(player.acceleratorBoostCost)
+      (!player.toggles[8] || player.upgrades[88] === 0)
+        && player.prestigePoints.gte(getBuildingCost('acceleratorBoost'))
     )
   }
 
@@ -803,27 +724,27 @@ export const buttoncolorchange = () => {
     a.classList.toggle(
       'buildingPurchaseBtnAvailable',
       (!player.toggles[10] || getLevelMilestone('tier1CrystalAutobuy') === 0)
-        && player.prestigePoints.gte(player.firstCostDiamonds)
+        && player.prestigePoints.gte(getBuildingCost('diamond', 0))
     )
     b.classList.toggle(
       'buildingPurchaseBtnAvailable',
       (!player.toggles[11] || getLevelMilestone('tier2CrystalAutobuy') === 0)
-        && player.prestigePoints.gte(player.secondCostDiamonds)
+        && player.prestigePoints.gte(getBuildingCost('diamond', 1))
     )
     c.classList.toggle(
       'buildingPurchaseBtnAvailable',
       (!player.toggles[12] || getLevelMilestone('tier3CrystalAutobuy') === 0)
-        && player.prestigePoints.gte(player.thirdCostDiamonds)
+        && player.prestigePoints.gte(getBuildingCost('diamond', 2))
     )
     d.classList.toggle(
       'buildingPurchaseBtnAvailable',
       (!player.toggles[13] || getLevelMilestone('tier4CrystalAutobuy') === 0)
-        && player.prestigePoints.gte(player.fourthCostDiamonds)
+        && player.prestigePoints.gte(getBuildingCost('diamond', 3))
     )
     e.classList.toggle(
       'buildingPurchaseBtnAvailable',
       (!player.toggles[14] || getLevelMilestone('tier5CrystalAutobuy') === 0)
-        && player.prestigePoints.gte(player.fifthCostDiamonds)
+        && player.prestigePoints.gte(getBuildingCost('diamond', 4))
     )
     let k = 0
     if (player.upgrades[73] === 1 && player.currentChallenge.reincarnation !== 0) {
@@ -834,7 +755,7 @@ export const buttoncolorchange = () => {
       f.style.backgroundColor = player.prestigeShards.gte(
           Decimal.pow(
             10,
-            G.crystalUpgradesCost[0] - getRuneEffects('prism').costDivisorLog10
+            G.crystalUpgradesCost[0] - getRuneEffects('prism', 'costDivisorLog10')
               + G.crystalUpgradeCostIncrement[0] * Math.floor(Math.pow(player.crystalUpgrades[0] + 0.5 - k, 2) / 2)
           )
         )
@@ -847,7 +768,7 @@ export const buttoncolorchange = () => {
       g.style.backgroundColor = player.prestigeShards.gte(
           Decimal.pow(
             10,
-            G.crystalUpgradesCost[1] - getRuneEffects('prism').costDivisorLog10
+            G.crystalUpgradesCost[1] - getRuneEffects('prism', 'costDivisorLog10')
               + G.crystalUpgradeCostIncrement[1] * Math.floor(Math.pow(player.crystalUpgrades[1] + 0.5 - k, 2) / 2)
           )
         )
@@ -860,7 +781,7 @@ export const buttoncolorchange = () => {
       h.style.backgroundColor = player.prestigeShards.gte(
           Decimal.pow(
             10,
-            G.crystalUpgradesCost[2] - getRuneEffects('prism').costDivisorLog10
+            G.crystalUpgradesCost[2] - getRuneEffects('prism', 'costDivisorLog10')
               + G.crystalUpgradeCostIncrement[2] * Math.floor(Math.pow(player.crystalUpgrades[2] + 0.5 - k, 2) / 2)
           )
         )
@@ -874,7 +795,7 @@ export const buttoncolorchange = () => {
         player.prestigeShards.gte(
           Decimal.pow(
             10,
-            G.crystalUpgradesCost[3] - getRuneEffects('prism').costDivisorLog10
+            G.crystalUpgradesCost[3] - getRuneEffects('prism', 'costDivisorLog10')
               + G.crystalUpgradeCostIncrement[3] * Math.floor(Math.pow(player.crystalUpgrades[3] + 0.5 - k, 2) / 2)
           )
         )
@@ -891,7 +812,7 @@ export const buttoncolorchange = () => {
         player.prestigeShards.gte(
           Decimal.pow(
             10,
-            G.crystalUpgradesCost[4] - getRuneEffects('prism').costDivisorLog10
+            G.crystalUpgradesCost[4] - getRuneEffects('prism', 'costDivisorLog10')
               + G.crystalUpgradeCostIncrement[4] * Math.floor(Math.pow(player.crystalUpgrades[4] + 0.5 - k, 2) / 2)
           )
         )
@@ -907,8 +828,9 @@ export const buttoncolorchange = () => {
 
   if (G.currentTab === Tabs.Runes) {
     if (getActiveSubTab() === 0) {
+      const zero = new Decimal()
       for (const rune of Object.keys(player.runes)) {
-        if (player.offerings.gt(0)) {
+        if (player.offerings.gt(zero)) {
           DOMCacheGetOrSet(`${rune}RuneSacrifice`).classList.add('runeButtonAvailable')
         } else {
           DOMCacheGetOrSet(`${rune}RuneSacrifice`).classList.remove('runeButtonAvailable')
@@ -940,8 +862,8 @@ export const buttoncolorchange = () => {
   if (G.currentTab === Tabs.Buildings && G.buildingSubTab === 'mythos') {
     for (let i = 1; i <= 5; i++) {
       const toggle = player.toggles[i + 15]
-      const mythos = player[`${G.ordinals[i - 1 as ZeroToFour]}CostMythos` as const]
-      if (!toggle || !player.upgrades[93 + i] && player.transcendPoints.gte(mythos)) {
+      const mythos = getBuildingCost('mythos', i - 1 as ZeroToFour)
+      if ((!toggle || !player.upgrades[93 + i]) && player.transcendPoints.gte(mythos)) {
         DOMCacheGetOrSet(`buymythos${i}`).classList.add('buildingPurchaseBtnAvailable')
       } else {
         DOMCacheGetOrSet(`buymythos${i}`).classList.remove('buildingPurchaseBtnAvailable')
@@ -951,7 +873,7 @@ export const buttoncolorchange = () => {
 
   if (G.currentTab === Tabs.Buildings && G.buildingSubTab === 'particle') {
     for (let i = 1; i <= 5; i++) {
-      const costParticles = player[`${G.ordinals[i - 1 as ZeroToFour]}CostParticles` as const]
+      const costParticles = getBuildingCost('particle', i - 1 as ZeroToFour)
       if (player.reincarnationPoints.gte(costParticles)) {
         DOMCacheGetOrSet(`buyparticles${i}`).classList.add('buildingPurchaseBtnAvailable')
       } else {
@@ -1058,7 +980,7 @@ export const updateChallengeLevel = (k: number) => {
   const maxChallenges = getMaxChallenges(k)
 
   if (k === 15) {
-    el.textContent = format(player.challenge15Exponent, 0, false)
+    el.textContent = format(player.challenge15Exponent, 0, false, false)
   } else {
     el.textContent = `${player.challengecompletions[k]}/${maxChallenges}`
   }
@@ -1084,21 +1006,18 @@ export const updateChallengeLevel = (k: number) => {
   }
 } */
 
-export const showCorruptionStatsLoadouts = () => {
-  const statsButton = DOMCacheGetOrSet('corrStatsBtn')
-  const corrLoadoutsButton = DOMCacheGetOrSet('corrLoadoutsBtn')
+const corruptionSubtabPanels = {
+  stats: 'corruptionStats',
+  tokens: 'corruptionTokens',
+  autoAscend: 'autoAscensions'
+} as const
 
-  if (player.corruptions.showStats) {
-    DOMCacheGetOrSet('corruptionStats').style.display = 'flex'
-    DOMCacheGetOrSet('corruptionLoadouts').style.display = 'none'
-    statsButton.classList.add('subtab-active')
-    corrLoadoutsButton.classList.remove('subtab-active')
-  } else {
-    DOMCacheGetOrSet('corruptionStats').style.display = 'none'
-    DOMCacheGetOrSet('corruptionLoadouts').style.display = 'flex'
-    statsButton.classList.remove('subtab-active')
-    corrLoadoutsButton.classList.add('subtab-active')
+export const showCorruptionSubtab = (subTabID: string) => {
+  for (const [id, panel] of Object.entries(corruptionSubtabPanels)) {
+    DOMCacheGetOrSet(panel).style.display = id === subTabID ? 'flex' : 'none'
   }
+  DOMCacheGetOrSet('autoAscendSidebar').style.display = subTabID === 'autoAscend' ? '' : 'none'
+  DOMCacheGetOrSet('corruptionTierSelected').style.display = subTabID === 'autoAscend' ? 'none' : 'flex'
 }
 
 const updateAscensionStats = () => {
@@ -1108,18 +1027,25 @@ const updateAscensionStats = () => {
     t = 1
   }
   const ascensionRewards = CalcCorruptionStuff()
-  const addedAsteriskHalfMind = getGQUpgradeEffect('halfMind')
-  const addedAsteriskOneMind = getGQUpgradeEffect('oneMind')
+  const addedAsteriskHalfMind = getGQUpgradeEffect('halfMind', 'unlocked')
+  const addedAsteriskOneMind = getGQUpgradeEffect('oneMind', 'unlocked')
   const fillers: Record<string, string> = {
-    ascLen: formatTimeShort(player.ascStatToggles[6] ? player.ascensionCounter : player.ascensionCounterReal, 0),
-    ascCubes: format(ascensionRewards.wowCubes * (player.ascStatToggles[1] ? 1 : 1 / t), 2),
-    ascTess: format(ascensionRewards.wowTesseracts * (player.ascStatToggles[2] ? 1 : 1 / t), 3),
-    ascHyper: format(ascensionRewards.wowHypercubes * (player.ascStatToggles[3] ? 1 : 1 / t), 4),
-    ascPlatonic: format(ascensionRewards.wowPlatonicCubes * (player.ascStatToggles[4] ? 1 : 1 / t), 5),
-    ascHepteract: format(ascensionRewards.wowHepteracts * (player.ascStatToggles[5] ? 1 : 1 / t), 3),
+    ascLen: formatTimeShort(
+      cycleWhileEditing([false, true], player.ascStatToggles[6])
+        ? player.ascensionCounter
+        : player.ascensionCounterReal,
+      0
+    ),
+    ascCubes: format(ascensionRewards.wowCubes * (player.ascStatToggles[1] ? 1 : 1 / t), 2, false, false),
+    ascTess: format(ascensionRewards.wowTesseracts * (player.ascStatToggles[2] ? 1 : 1 / t), 2, false, false),
+    ascHyper: format(ascensionRewards.wowHypercubes * (player.ascStatToggles[3] ? 1 : 1 / t), 2, false, false),
+    ascPlatonic: format(ascensionRewards.wowPlatonicCubes * (player.ascStatToggles[4] ? 1 : 1 / t), 2, false, false),
+    ascHepteract: format(ascensionRewards.wowHepteracts * (player.ascStatToggles[5] ? 1 : 1 / t), 2, false, false),
     ascC10: format(player.challengecompletions[10]),
-    ascTimeAccel: `${format(calculateGlobalSpeedMult(), 3)}x${addedAsteriskHalfMind ? '*' : ''}`,
-    ascAscensionTimeAccel: `${format(calculateAscensionSpeedMult(), 3)}x${addedAsteriskOneMind ? '*' : ''}`,
+    ascTimeAccel: `${format(calculateGlobalSpeedMult(), 3, false, false)}x${addedAsteriskHalfMind ? '*' : ''}`,
+    ascAscensionTimeAccel: `${format(calculateAscensionSpeedMult(), 3, false, false)}x${
+      addedAsteriskOneMind ? '*' : ''
+    }`,
     ascSingularityCount: format(player.singularityCount),
     ascSingLen: formatTimeShort(player.singularityCounter),
     ascSingChallengeLen: formatTimeShort(player.singChallengeTimer)
@@ -1140,27 +1066,6 @@ const updateAscensionStats = () => {
       }
     }
   }
-}
-
-const tabColors: Partial<Record<Tabs, string>> = {
-  [Tabs.Buildings]: 'yellow',
-  [Tabs.Upgrades]: 'yellow',
-  [Tabs.Achievements]: 'white',
-  [Tabs.Runes]: 'cyan',
-  [Tabs.Challenges]: 'plum',
-  [Tabs.Research]: 'green',
-  [Tabs.AntHill]: 'brown',
-  [Tabs.WowCubes]: 'purple',
-  [Tabs.Corruption]: 'orange',
-  [Tabs.Settings]: 'white',
-  [Tabs.Shop]: 'limegreen'
-}
-
-export const changeTabColor = () => {
-  const tab = DOMCacheGetOrSet('tabBorder')
-  const color = tabColors[G.currentTab] ?? 'yellow'
-
-  tab.style.backgroundColor = color
 }
 
 class AsyncQueue {
@@ -1213,6 +1118,8 @@ export const Confirm = async (text: string) =>
 
     DOMCacheGetOrSet('alertWrapper').style.display = 'none'
     DOMCacheGetOrSet('promptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('purchasePromptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('infoAlertWrapper').style.display = 'none'
 
     conf.style.display = 'block'
     confWrap.style.display = 'block'
@@ -1238,7 +1145,8 @@ export const Confirm = async (text: string) =>
 
     const kbListener = (e: KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ') {
-        return listener({ target: ok })
+        const target = e.target instanceof HTMLButtonElement ? e.target : ok
+        return listener({ target })
       } else if (e.key === 'Escape') {
         return listener({ target: cancel })
       }
@@ -1263,6 +1171,8 @@ export const Alert = (text: string): Promise<void> =>
 
     DOMCacheGetOrSet('confirmWrapper').style.display = 'none'
     DOMCacheGetOrSet('promptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('purchasePromptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('infoAlertWrapper').style.display = 'none'
 
     conf.style.display = 'block'
     alertWrap.style.display = 'block'
@@ -1290,6 +1200,98 @@ export const Alert = (text: string): Promise<void> =>
     return p.promise
   })
 
+export interface InfoAlertSection {
+  label: string
+  html: () => string
+}
+
+export const infoAlertTableHTML = (headers: string[], rowsHTML: string) =>
+  `<table class="freeUpgradeInfoTable">
+    <thead><tr>${headers.map((header) => `<th>${header}</th>`).join('')}</tr></thead>
+    <tbody>${rowsHTML}</tbody>
+  </table>`
+
+export const infoAlertInactiveHTML = (text: string) => `<span class="freeUpgradeInfoInactive">${text}</span>`
+
+export const InfoAlert = (title: string, content: string | InfoAlertSection[]): Promise<void> =>
+  queue.enqueue(() => {
+    const conf = DOMCacheGetOrSet('confirmationBox')
+    const infoWrap = DOMCacheGetOrSet('infoAlertWrapper')
+    const overlay = DOMCacheGetOrSet('transparentBG')
+    const popup = DOMCacheGetOrSet('infoAlert')
+    const ok = DOMCacheGetOrSet('ok_infoAlert')
+    const sectionBar = DOMCacheGetOrSet('infoAlertSections')
+    const body = DOMCacheGetOrSet('infoAlertBody')
+
+    DOMCacheGetOrSet('alertWrapper').style.display = 'none'
+    DOMCacheGetOrSet('confirmWrapper').style.display = 'none'
+    DOMCacheGetOrSet('promptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('purchasePromptWrapper').style.display = 'none'
+
+    const sections = typeof content === 'string' ? [] : content
+    const selectSection = (index: number) => {
+      body.innerHTML = sections[index].html()
+      sectionBar.querySelectorAll('button').forEach((button, i) => {
+        button.setAttribute('aria-pressed', `${i === index}`)
+      })
+    }
+
+    sectionBar.innerHTML = sections.map((section, i) =>
+      `<button type="button" data-section="${i}" aria-pressed="false">${section.label}</button>`
+    ).join('')
+    sectionBar.style.display = sections.length > 0 ? '' : 'none'
+
+    if (typeof content === 'string') {
+      body.innerHTML = content
+    } else {
+      selectSection(0)
+    }
+
+    conf.classList.add('infoConfirmation')
+    conf.style.display = 'block'
+    infoWrap.style.display = 'block'
+    overlay.style.display = 'block'
+    DOMCacheGetOrSet('infoAlertTitle').textContent = title
+    popup.focus()
+
+    const p = createDeferredPromise<void>()
+
+    const sectionListener = (e: MouseEvent) => {
+      const button = e.target instanceof Element ? e.target.closest('button') : null
+      if (button?.dataset.section !== undefined) {
+        selectSection(Number(button.dataset.section))
+      }
+    }
+
+    const listener = () => {
+      ok.removeEventListener('click', listener)
+      popup.removeEventListener('keyup', kbListener)
+      sectionBar.removeEventListener('click', sectionListener)
+
+      conf.style.display = 'none'
+      infoWrap.style.display = 'none'
+      overlay.style.display = 'none'
+      conf.classList.remove('infoConfirmation')
+      sectionBar.innerHTML = ''
+      p.resolve()
+    }
+
+    const kbListener = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' && e.target instanceof Node && sectionBar.contains(e.target)) {
+        return
+      }
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+        listener()
+      }
+    }
+
+    ok.addEventListener('click', listener, { once: true })
+    popup.addEventListener('keyup', kbListener)
+    sectionBar.addEventListener('click', sectionListener)
+
+    return p.promise
+  })
+
 export const Prompt = (text: string, defaultValue?: string): Promise<string | null> =>
   queue.enqueue(() => {
     const conf = DOMCacheGetOrSet('confirmationBox')
@@ -1301,6 +1303,8 @@ export const Prompt = (text: string, defaultValue?: string): Promise<string | nu
 
     DOMCacheGetOrSet('alertWrapper').style.display = 'none'
     DOMCacheGetOrSet('confirmWrapper').style.display = 'none'
+    DOMCacheGetOrSet('purchasePromptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('infoAlertWrapper').style.display = 'none'
 
     conf.style.display = 'block'
     confWrap.style.display = 'block'
@@ -1349,52 +1353,337 @@ export const Prompt = (text: string, defaultValue?: string): Promise<string | nu
     return p.promise
   })
 
-let closeNotification: number
-let closedNotification: number
+/** Buy levels of Singularity-tier upgrades by level count or resource budget. */
+export const PurchasePrompt = (
+  options: SingularityUpgradePurchaseOptions & {
+    title: string
+    getLevel: () => number
+    getMaxLevel: () => number
+    resource: 'goldenQuarks' | 'octeracts' | 'ambrosia' | 'redAmbrosia' | 'purpleAmbrosia'
+  }
+): Promise<SingularityUpgradePurchaseQuote | null> =>
+  queue.enqueue(() => {
+    const conf = DOMCacheGetOrSet('confirmationBox')
+    const confWrap = DOMCacheGetOrSet('purchasePromptWrapper')
+    const overlay = DOMCacheGetOrSet('transparentBG')
+    const ok = DOMCacheGetOrSet('ok_purchasePrompt') as HTMLButtonElement
+    const cancel = DOMCacheGetOrSet('cancel_purchasePrompt')
+    const levels = DOMCacheGetOrSet('purchasePromptLevels') as HTMLInputElement
+    const cost = DOMCacheGetOrSet('purchasePromptCost') as HTMLInputElement
+    const summary = DOMCacheGetOrSet('purchasePromptSummary')
+
+    DOMCacheGetOrSet('alertWrapper').style.display = 'none'
+    DOMCacheGetOrSet('confirmWrapper').style.display = 'none'
+    DOMCacheGetOrSet('promptWrapper').style.display = 'none'
+    DOMCacheGetOrSet('infoAlertWrapper').style.display = 'none'
+
+    conf.classList.add('purchaseConfirmation')
+    conf.style.display = 'block'
+    confWrap.style.display = 'block'
+    overlay.style.display = 'block'
+    DOMCacheGetOrSet('purchasePromptTitle').textContent = options.title
+    DOMCacheGetOrSet('purchasePromptLevel').textContent = i18next.t('general.levelWithRatio', {
+      level: format(options.getLevel(), 0, true),
+      max: format(options.getMaxLevel(), 0, true)
+    })
+    DOMCacheGetOrSet('purchasePromptCostLabel').textContent = i18next.t(
+      `general.purchasePrompt.resource.${options.resource}`
+    )
+    levels.focus()
+
+    const p = createDeferredPromise<SingularityUpgradePurchaseQuote | null>()
+    let quote: SingularityUpgradePurchaseQuote | null = null
+
+    const onInput = (event?: Event) => {
+      const field = event?.target as HTMLInputElement | undefined
+      const input = field === cost ? 'cost' : 'levels'
+      const value = field?.value.trim() ?? ''
+      const amount = parseFormattedNumber(value)
+      quote = calculateSingularityUpgradePurchase(options, amount, input)
+      ok.disabled = quote === null || quote.levels === 0
+
+      if (field !== levels) levels.value = quote === null ? '' : String(quote.levels)
+      if (field !== cost) cost.value = quote === null ? '' : String(Math.ceil(quote.cost))
+
+      if (value === '') {
+        const affordable = calculateSingularityUpgradePurchase(options, -1, 'levels')
+        summary.textContent = affordable === null
+          ? ''
+          : i18next.t(`general.purchasePrompt.affordable.${options.resource}`, {
+            levels: format(affordable.levels, 0, true),
+            cost: format(affordable.cost, 2, true)
+          })
+      } else if (quote === null) {
+        summary.textContent = i18next.t('general.purchasePrompt.invalid')
+      } else if (quote.levels === 0) {
+        summary.textContent = i18next.t('general.purchasePrompt.unavailable')
+      } else {
+        summary.textContent = i18next.t(`general.purchasePrompt.summary.${options.resource}`, {
+          levels: format(quote.levels, 0, true),
+          cost: format(quote.cost, 2, true)
+        })
+      }
+    }
+
+    const onChange = () => {
+      if (quote === null || quote.levels === 0) return
+      levels.value = String(quote.levels)
+      cost.value = String(Math.ceil(quote.cost))
+    }
+
+    const listener = ({ target }: MouseEvent | { target: HTMLElement }) => {
+      const targetEl = target as HTMLButtonElement
+
+      if (targetEl === ok && ok.disabled) return
+
+      ok.removeEventListener('click', listener)
+      cancel.removeEventListener('click', listener)
+      levels.removeEventListener('keyup', kbListener)
+      cost.removeEventListener('keyup', kbListener)
+      levels.removeEventListener('input', onInput)
+      cost.removeEventListener('input', onInput)
+      levels.removeEventListener('change', onChange)
+      cost.removeEventListener('change', onChange)
+
+      conf.style.display = 'none'
+      confWrap.style.display = 'none'
+      overlay.style.display = 'none'
+      conf.classList.remove('purchaseConfirmation')
+
+      p.resolve(targetEl.id === ok.id ? quote : null)
+
+      levels.value = cost.value = ''
+      levels.blur()
+      cost.blur()
+    }
+
+    const kbListener = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        return listener({ target: ok })
+      } else if (e.key === 'Escape') {
+        return listener({ target: cancel })
+      }
+
+      return e.preventDefault()
+    }
+
+    ok.addEventListener('click', listener, { once: true })
+    cancel.addEventListener('click', listener, { once: true })
+    levels.addEventListener('keyup', kbListener)
+    cost.addEventListener('keyup', kbListener)
+    levels.addEventListener('input', onInput)
+    cost.addEventListener('input', onInput)
+    levels.addEventListener('change', onChange)
+    cost.addEventListener('change', onChange)
+    onInput()
+
+    return p.promise
+  })
 
 export const Notification = (text: string, time = 30000): Promise<void> => {
-  const notification = DOMCacheGetOrSet('notification')
-  const textNode = document.querySelector<HTMLElement>('#notification > p')!
-  const x = DOMCacheGetOrSet('notifx')
+  const stack = DOMCacheGetOrSet('notificationStack')
 
+  const wrap = document.createElement('div')
+  wrap.className = 'notification-wrap'
+
+  const notification = document.createElement('div')
+  notification.className = 'notification-item'
+  notification.setAttribute('role', 'alert')
+
+  const x = document.createElement('button')
+  x.className = 'notifx'
+  x.type = 'button'
+  x.setAttribute('aria-label', i18next.t('general.closeNotification'))
+
+  const img = document.createElement('img')
+  img.src = 'Pictures/Default/X.png'
+  img.height = 16
+  img.width = 16
+  img.alt = ''
+  x.appendChild(img)
+
+  const textNode = document.createElement('p')
   textNode.textContent = text
-  notification.style.display = 'block'
-  notification.classList.remove('slide-out')
+
+  notification.appendChild(x)
+  notification.appendChild(textNode)
+  wrap.appendChild(notification)
+  stack.appendChild(wrap)
   notification.classList.add('slide-in')
 
   const p = createDeferredPromise<void>()
 
+  let closeTimer = 0
+  let closedTimer = 0
+
   const closed = () => {
-    notification.style.display = 'none'
-    textNode.textContent = ''
-    closedNotification = 0
+    wrap.remove()
+    closedTimer = 0
   }
 
   const close = () => {
+    if (closeTimer === 0 && closedTimer !== 0) return
+
+    wrap.style.maxHeight = `${wrap.offsetHeight}px`
+    void wrap.offsetHeight
+    wrap.style.maxHeight = '0'
+    wrap.style.marginBottom = '0'
+
     notification.classList.add('slide-out')
     notification.classList.remove('slide-in')
 
-    closeNotification = 0
+    clearTimeout(closeTimer)
+    closeTimer = 0
     x.removeEventListener('click', close)
-    closedNotification = +setTimeout(closed, 1000)
+    closedTimer = setTimeout(closed, 1000)
     p.resolve()
   }
 
   x.addEventListener('click', close)
+  closeTimer = setTimeout(close, time)
 
-  // Reset the close timer if reopened before closed
-  clearTimeout(closeNotification)
-  clearTimeout(closedNotification)
+  return p.promise
+}
 
-  // automatically close out after <time> ms
-  closeNotification = +setTimeout(close, time)
+const bareURL = /https?:\/\/[^\s<>"']+/g
+// Trailing punctuation almost always belongs to the sentence, not the URL
+const trailingPunctuation = /[.,;:!?)\]}]+$/
+
+/**
+ * Turns bare URLs inside already-rendered markup into anchors. Text nodes are collected up front
+ * because replacing them mutates the tree the walker is iterating over, and anything already inside
+ * an <a> is skipped so hand-written links keep their own text.
+ */
+const linkify = (root: HTMLElement) => {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+  const textNodes: Text[] = []
+
+  while (walker.nextNode() !== null) {
+    const node = walker.currentNode as Text
+
+    if (!node.parentElement?.closest('a')) {
+      textNodes.push(node)
+    }
+  }
+
+  for (const node of textNodes) {
+    const text = node.data
+    const fragment = document.createDocumentFragment()
+    let index = 0
+
+    bareURL.lastIndex = 0
+
+    for (let match = bareURL.exec(text); match !== null; match = bareURL.exec(text)) {
+      const url = match[0].replace(trailingPunctuation, '')
+
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.textContent = url
+      anchor.target = '_blank'
+      anchor.rel = 'noopener noreferrer'
+
+      fragment.append(text.slice(index, match.index), anchor)
+
+      index = match.index + url.length
+      bareURL.lastIndex = index
+    }
+
+    if (index === 0) continue
+
+    fragment.append(text.slice(index))
+    node.replaceWith(fragment)
+  }
+}
+
+let announcementOverlay: HTMLDivElement | undefined
+
+const getAnnouncementOverlay = () => {
+  if (announcementOverlay === undefined) {
+    announcementOverlay = document.createElement('div')
+    announcementOverlay.id = 'announcementOverlay'
+    document.body.appendChild(announcementOverlay)
+  }
+
+  return announcementOverlay
+}
+
+/**
+ * Unlike Alert and friends this is not queued: several announcements may be open at the same time,
+ * stacked inside a shared overlay. The returned promise resolves when this specific one is closed.
+ */
+export const Announcement = (title: string, content: string) => {
+  const overlay = getAnnouncementOverlay()
+
+  const card = document.createElement('div')
+  card.className = 'announcement'
+  card.setAttribute('role', 'dialog')
+  card.tabIndex = -1
+
+  const close = document.createElement('button')
+  close.className = 'announcement-close'
+  close.type = 'button'
+  close.setAttribute('aria-label', i18next.t('general.closeAnnouncement'))
+
+  const x = document.createElement('img')
+  x.src = 'Pictures/Default/X.png'
+  x.height = 16
+  x.width = 16
+  x.alt = ''
+  close.appendChild(x)
+
+  const header = document.createElement('h2')
+  header.className = 'announcement-header'
+  header.textContent = i18next.t('general.announcement')
+
+  const titleNode = document.createElement('p')
+  titleNode.className = 'announcement-title'
+  titleNode.textContent = title
+
+  const body = document.createElement('div')
+  body.className = 'announcement-content scrollbar'
+  body.innerHTML = content
+  linkify(body)
+
+  card.append(close, header, titleNode, body)
+  overlay.appendChild(card)
+  overlay.style.display = 'flex'
+  card.focus()
+
+  const p = createDeferredPromise<void>()
+
+  const listener = () => {
+    card.removeEventListener('keyup', kbListener)
+    card.remove()
+
+    if (overlay.childElementCount === 0) {
+      overlay.style.display = 'none'
+    }
+
+    p.resolve()
+  }
+
+  const kbListener = (e: KeyboardEvent) => e.key === 'Escape' && listener()
+
+  close.addEventListener('click', listener, { once: true })
+  card.addEventListener('keyup', kbListener)
 
   return p.promise
 }
 
 type OptionalHTMLStyle = Partial<CSSStyleDeclaration>
+type ModalButtonClickCallback = (button: HTMLButtonElement, event: MouseEvent) => void
+
+interface ModalOptions {
+  targetElement?: HTMLElement
+  buttonClick?: ModalButtonClickCallback
+  backdropClick?: () => void
+  centered?: boolean
+  onClose?: () => void
+}
 
 let id: number | null = null
+let modalEventController: AbortController | null = null
+let modalCloseHandler: { modalId: number; callback: () => void } | null = null
 
 export const MEDIUM_MODAL_UPDATE_TICK = 250
 const VERY_FAST_MODAL_UPDATE_TICK = 20
@@ -1438,10 +1727,13 @@ const patchNodes = (parent: Element, newParent: DocumentFragment | Element) => {
       }
 
       // If this element or any descendant has a running animation, recurse
-      // into children to preserve the animated DOM nodes
+      // into children to preserve the animated DOM nodes. Some live modals
+      // also opt into child patching to avoid replacing stable media nodes.
       const hasAnimation = oldEl.getAnimations({ subtree: true }).length > 0
+      const shouldPreserveChildren = oldEl.dataset.modalPreserve === 'children'
+        && newEl.dataset.modalPreserve === 'children'
 
-      if (hasAnimation) {
+      if (hasAnimation || shouldPreserveChildren) {
         // Update attributes that changed
         const oldAttrs = oldEl.attributes
         const newAttrs = newEl.attributes
@@ -1464,16 +1756,32 @@ const patchNodes = (parent: Element, newParent: DocumentFragment | Element) => {
   }
 }
 
+const resolveModalImgSrcs = (root: Element | DocumentFragment) => {
+  for (const img of root.querySelectorAll('img')) {
+    const src = img.getAttribute('src')
+    if (src === null) {
+      continue
+    }
+    const resolved = resolveImgSrc(src)
+    if (resolved !== src) {
+      img.setAttribute('src', resolved)
+    }
+  }
+}
+
 const updateModal = (HTML: () => string) => {
   const modalContent = DOMCacheGetOrSet('modalContent')
   const htmlContent = HTML()
 
   if (modalContent.childNodes.length === 0) {
-    modalContent.innerHTML = htmlContent
+    modalTemplate.innerHTML = htmlContent
+    resolveModalImgSrcs(modalTemplate.content)
+    modalContent.replaceChildren(...modalTemplate.content.cloneNode(true).childNodes)
     return
   }
 
   modalTemplate.innerHTML = htmlContent
+  resolveModalImgSrcs(modalTemplate.content)
   patchNodes(modalContent, modalTemplate.content)
 }
 
@@ -1483,12 +1791,46 @@ export const Modal = (
   currY: number,
   styleMods: OptionalHTMLStyle = {},
   updateInterval = VERY_FAST_MODAL_UPDATE_TICK,
-  targetElement?: HTMLElement
+  targetElementOrOptions?: HTMLElement | ModalOptions
 ) => {
   const modal = DOMCacheGetOrSet('modal')
   const modalContent = DOMCacheGetOrSet('modalContent')
+  const modalOptions = targetElementOrOptions instanceof HTMLElement
+    ? { targetElement: targetElementOrOptions }
+    : targetElementOrOptions ?? {}
+
+  if (modalCloseHandler !== null) {
+    CloseModal()
+  }
+
+  modalEventController?.abort()
+  modalEventController = new AbortController()
+  const { signal } = modalEventController
+
+  if (modalOptions.buttonClick) {
+    modalContent.addEventListener('click', (event) => {
+      const button = event.target instanceof Element
+        ? event.target.closest('button')
+        : null
+      if (button && modalContent.contains(button)) {
+        modalOptions.buttonClick?.(button, event)
+      }
+    }, { signal })
+  }
+
+  const backdropClick = modalOptions.backdropClick ?? (isMobile ? CloseModal : undefined)
+  if (backdropClick) {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        backdropClick()
+      }
+    }, { signal })
+  }
 
   const modalId = id = Math.random()
+  modalCloseHandler = modalOptions.onClose
+    ? { modalId, callback: modalOptions.onClose }
+    : null
   const interval = setInterval(() => {
     if (id !== modalId) {
       clearInterval(interval)
@@ -1497,6 +1839,7 @@ export const Modal = (
     updateModal(HTML)
   }, updateInterval)
 
+  modal.classList.toggle('modalBottomSheet', isMobile)
   Object.assign(modal.style, styleMods)
   // Instantly update the modal once
   updateModal(HTML)
@@ -1505,6 +1848,8 @@ export const Modal = (
   modal.style.visibility = 'hidden'
   modal.style.display = 'block'
   requestAnimationFrame(() => {
+    if (id !== modalId) return
+
     const modalRect = modalContent.getBoundingClientRect()
     const viewportWidth = window.innerWidth
     const viewportHeight = window.innerHeight
@@ -1515,8 +1860,8 @@ export const Modal = (
     let baseY = currY
 
     if ((currX === 0 && currY === 0) || (currX < 5 && currY < 5)) {
-      if (targetElement) {
-        const targetRect = targetElement.getBoundingClientRect()
+      if (modalOptions.targetElement) {
+        const targetRect = modalOptions.targetElement.getBoundingClientRect()
         baseX = targetRect.left + targetRect.width / 2
         baseY = targetRect.top + targetRect.height / 2
       } else {
@@ -1525,6 +1870,24 @@ export const Modal = (
         baseY = viewportHeight / 2
       }
     }
+
+    if (isMobile) {
+      modal.style.removeProperty('left')
+      modal.style.removeProperty('top')
+      modal.style.removeProperty('transform')
+      modal.style.visibility = 'visible'
+      return
+    }
+
+    if (modalOptions.centered) {
+      modal.style.left = '50%'
+      modal.style.top = '50%'
+      modal.style.transform = 'translate(-50%, -50%)'
+      modal.style.visibility = 'visible'
+      return
+    }
+
+    modal.style.removeProperty('transform')
 
     // Base positioning
     let modalX = baseX + 20
@@ -1553,8 +1916,23 @@ export const Modal = (
 export const CloseModal = () => {
   const modal = DOMCacheGetOrSet('modal')
   const modalContent = DOMCacheGetOrSet('modalContent')
+  const modalId = id
+  const closeHandler = modalCloseHandler?.modalId === modalId
+    ? modalCloseHandler.callback
+    : null
 
   id = null
+  modalCloseHandler = null
+  modalEventController?.abort()
+  modalEventController = null
+
+  try {
+    closeHandler?.()
+  } catch (error) {
+    console.error('Failed to run modal close handler', error)
+  }
+
+  modal.classList.remove('modalBottomSheet')
   modalContent.innerHTML = ''
   modal.style.display = 'none'
 }
@@ -1601,6 +1979,41 @@ export const closeIframeOverlay = () => {
   if (currentOverlayIframe) {
     wrapper.removeChild(currentOverlayIframe)
     currentOverlayIframe = null
+  }
+}
+
+const fittyInstances = new WeakMap<HTMLElement, FittyInstance>()
+
+export const resetFitText = (element: HTMLElement) => {
+  fittyInstances.get(element)?.unsubscribe()
+  fittyInstances.delete(element)
+}
+
+export const createFitties = (root: Document | HTMLElement = document) => {
+  const fittyElements = root.getElementsByClassName('fitText') as HTMLCollectionOf<HTMLElement>
+  for (const element of fittyElements) {
+    const existingInstance = fittyInstances.get(element)
+
+    // Fitty cannot measure elements inside a hidden building tab. Unsubscribe
+    // hidden instances so they can be initialized from a valid width when shown.
+    if (element.getClientRects().length === 0 || element.parentElement?.clientWidth === 0) {
+      existingInstance?.unsubscribe()
+      fittyInstances.delete(element)
+      continue
+    }
+
+    if (!existingInstance) {
+      const maxSize = Number.parseFloat(getComputedStyle(element).fontSize)
+      const multiLine = element.classList.contains('fitTextMultiLine')
+      const fittyOptions = {
+        minSize: multiLine ? maxSize / 2 : 0,
+        maxSize,
+        multiLine
+      }
+      fittyInstances.set(element, fitty(element, fittyOptions))
+    } else {
+      existingInstance.fit()
+    }
   }
 }
 

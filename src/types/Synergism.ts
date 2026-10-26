@@ -1,14 +1,23 @@
 import type Decimal from 'break_infinity.js'
 import type { ProgressiveAchievements } from '../Achievements'
+import type { AutoAscendRule } from '../AutoAscension'
 import type { AmbrosiaUpgradeNames, BlueberryLoadoutMode, BlueberryOpt } from '../BlueberryUpgrades'
-import type { CampaignManager } from '../Campaign'
+import type { BuildingType } from '../Buy'
 import type { Challenge15RewardObject, Challenge15Rewards } from '../Challenges'
-import type { CorruptionLoadout, Corruptions, CorruptionSaves } from '../Corruptions'
 import type { WowCubes, WowHypercubes, WowPlatonicCubes, WowTesseracts } from '../CubeExperimental'
 import type { PlayerAnts } from '../Features/Ants/structs/structs'
+import type {
+  HeaderModuleId,
+  HeaderModuleSize,
+  HeaderRegionId,
+  LoadoutPageModuleId,
+  RainbowAmbrosiaModuleId
+} from '../HeaderLayoutDefaults'
 import type { HepteractKeys, HepteractValues } from '../Hepteracts'
 import type { Category, ResetHistoryEntryUnion } from '../History'
-import type { OcteractDataKeys } from '../Octeracts'
+import type { OcteractUpgrades } from '../Octeracts'
+import type { PurpleReactorNames } from '../Purple'
+import type { PurpleAmbrosiaNames } from '../PurpleAmbrosiaUpgrades'
 import type { QuarkHandler } from '../Quark'
 import type { RedAmbrosiaNames } from '../RedAmbrosiaUpgrades'
 import type { RuneBlessingKeys } from '../RuneBlessings'
@@ -17,13 +26,28 @@ import type { RuneSpiritKeys } from '../RuneSpirits'
 import type { ShopUpgradeNames } from '../Shop'
 import type { SingularityDataKeys } from '../singularity'
 import type { SingularityChallenge, SingularityChallengeDataKeys } from '../SingularityChallenges'
+import type { SynthesisUpgrades } from '../Synthesis'
 import type { Tabs } from '../Tabs'
 import type { TalismanCraftItems, TalismanKeys } from '../Talismans'
-import type { AutoAscensionModes, AutoAscensionResetModes, AutoResetModes } from '../Toggles'
+import type { AutoAscensionModes, AutoResetModes } from '../Toggles'
 
 type ArrayStartingWithNull<T> = [null, ...T[]]
 
 export type BuyAmount = 1 | 10 | 100 | 1000 | 10_000 | 100_000
+
+export interface HeaderLayout {
+  columns: number
+  regions: Record<HeaderRegionId, HeaderModuleId[][]>
+  sizes: Partial<Record<HeaderModuleId, HeaderModuleSize>>
+  positions: Partial<Record<HeaderModuleId, number>>
+  hidden: HeaderModuleId[]
+  rainbowAmbrosia: RainbowAmbrosiaModuleId
+  octeractPerSecond: boolean
+  loadoutPages: Record<LoadoutPageModuleId, number>
+  loadoutIcons: {
+    ambrosiaLoadoutsHeader: Partial<Record<number, AmbrosiaUpgradeNames>>
+  }
+}
 
 export interface Player {
   firstPlayed: string
@@ -36,102 +60,102 @@ export interface Player {
 
   firstOwnedCoin: number
   firstGeneratedCoin: Decimal
-  firstCostCoin: Decimal
+  firstPaidCoin: Decimal
   firstProduceCoin: number
 
   secondOwnedCoin: number
   secondGeneratedCoin: Decimal
-  secondCostCoin: Decimal
+  secondPaidCoin: Decimal
   secondProduceCoin: number
 
   thirdOwnedCoin: number
   thirdGeneratedCoin: Decimal
-  thirdCostCoin: Decimal
+  thirdPaidCoin: Decimal
   thirdProduceCoin: number
 
   fourthOwnedCoin: number
   fourthGeneratedCoin: Decimal
-  fourthCostCoin: Decimal
+  fourthPaidCoin: Decimal
   fourthProduceCoin: number
 
   fifthOwnedCoin: number
   fifthGeneratedCoin: Decimal
-  fifthCostCoin: Decimal
+  fifthPaidCoin: Decimal
   fifthProduceCoin: number
 
   firstOwnedDiamonds: number
   firstGeneratedDiamonds: Decimal
-  firstCostDiamonds: Decimal
+  firstPaidDiamonds: Decimal
   firstProduceDiamonds: number
 
   secondOwnedDiamonds: number
   secondGeneratedDiamonds: Decimal
-  secondCostDiamonds: Decimal
+  secondPaidDiamonds: Decimal
   secondProduceDiamonds: number
 
   thirdOwnedDiamonds: number
   thirdGeneratedDiamonds: Decimal
-  thirdCostDiamonds: Decimal
+  thirdPaidDiamonds: Decimal
   thirdProduceDiamonds: number
 
   fourthOwnedDiamonds: number
   fourthGeneratedDiamonds: Decimal
-  fourthCostDiamonds: Decimal
+  fourthPaidDiamonds: Decimal
   fourthProduceDiamonds: number
 
   fifthOwnedDiamonds: number
   fifthGeneratedDiamonds: Decimal
-  fifthCostDiamonds: Decimal
+  fifthPaidDiamonds: Decimal
   fifthProduceDiamonds: number
 
   firstOwnedMythos: number
   firstGeneratedMythos: Decimal
-  firstCostMythos: Decimal
+  firstPaidMythos: Decimal
   firstProduceMythos: number
 
   secondOwnedMythos: number
   secondGeneratedMythos: Decimal
-  secondCostMythos: Decimal
+  secondPaidMythos: Decimal
   secondProduceMythos: number
 
   thirdOwnedMythos: number
   thirdGeneratedMythos: Decimal
-  thirdCostMythos: Decimal
+  thirdPaidMythos: Decimal
   thirdProduceMythos: number
 
   fourthOwnedMythos: number
   fourthGeneratedMythos: Decimal
-  fourthCostMythos: Decimal
+  fourthPaidMythos: Decimal
   fourthProduceMythos: number
 
   fifthOwnedMythos: number
   fifthGeneratedMythos: Decimal
-  fifthCostMythos: Decimal
+  fifthPaidMythos: Decimal
   fifthProduceMythos: number
 
   firstOwnedParticles: number
   firstGeneratedParticles: Decimal
-  firstCostParticles: Decimal
+  firstPaidParticles: Decimal
   firstProduceParticles: number
 
   secondOwnedParticles: number
   secondGeneratedParticles: Decimal
-  secondCostParticles: Decimal
+  secondPaidParticles: Decimal
   secondProduceParticles: number
 
   thirdOwnedParticles: number
   thirdGeneratedParticles: Decimal
-  thirdCostParticles: Decimal
+  thirdPaidParticles: Decimal
   thirdProduceParticles: number
 
   fourthOwnedParticles: number
   fourthGeneratedParticles: Decimal
-  fourthCostParticles: Decimal
+  fourthPaidParticles: Decimal
   fourthProduceParticles: number
 
   fifthOwnedParticles: number
   fifthGeneratedParticles: Decimal
-  fifthCostParticles: Decimal
+  fifthPaidParticles: Decimal
   fifthProduceParticles: number
 
   ants: PlayerAnts
@@ -167,14 +191,14 @@ export interface Player {
     multiplier: number
   }
 
-  multiplierCost: Decimal
+  multiplierPaid: Decimal
   multiplierBought: number
 
-  acceleratorCost: Decimal
+  acceleratorPaid: Decimal
   acceleratorBought: number
 
   acceleratorBoostBought: number
-  acceleratorBoostCost: Decimal
+  acceleratorBoostPaid: Decimal
 
   upgrades: number[]
 
@@ -195,7 +219,6 @@ export interface Player {
   challengecompletions: number[]
   highestchallengecompletions: number[]
   challenge15Exponent: number
-  highestChallenge15Exponent: number
 
   retrychallenges: boolean
   currentChallenge: {
@@ -206,7 +229,6 @@ export interface Player {
 
   obtainium: Decimal
   maxObtainium: Decimal
-  obtainiumtimer: number
 
   // Ignore the first index. The other 25 are shaped in a 5x5 grid similar to the production appearance
   researches: number[]
@@ -236,8 +258,6 @@ export interface Player {
   }
   achievements: number[]
   progressiveAchievements: Record<ProgressiveAchievements, number>
-
-  achievementPoints: number
 
   prestigenomultiplier: boolean
   prestigenoaccelerator: boolean
@@ -320,7 +340,6 @@ export interface Player {
   autoSacrificeToggle: boolean
   autoBuyFragment: boolean
   autoFortifyToggle: boolean
-  autoEnhanceToggle: boolean
   autoResearchToggle: boolean
   researchBuyMaxToggle: boolean
   autoResearchMode: 'cheapest' | 'manual'
@@ -418,18 +437,19 @@ export interface Player {
   }
   ascendShards: Decimal
   autoAscend: boolean
-  autoAscendMode: AutoAscensionResetModes
-  autoAscendThreshold: number
+  autoAscendRules: AutoAscendRule[]
   roombaResearchIndex: number
   ascStatToggles: Record<number, boolean>
 
-  campaigns: CampaignManager
-
   corruptions: {
-    next: CorruptionLoadout
-    used: CorruptionLoadout
-    saves: CorruptionSaves
-    showStats: boolean
+    next: number
+    used: number
+    ascensionLevel: number
+    tokenCompletions: number[]
+    highestCleared: number
+    autoIncrease: boolean
+    cleanseToHighest: boolean
+    loadouts: number[]
   }
 
   constantUpgrades: ArrayStartingWithNull<number>
@@ -439,7 +459,6 @@ export interface Player {
   autoChallengeRunning: boolean
   autoChallengeIndex: number
   autoChallengeToggles: boolean[]
-  autoChallengeStartExponent: number
   autoChallengeTimer: {
     start: number
     exit: number
@@ -497,23 +516,20 @@ export interface Player {
   singularityElevatorTarget: number
   singularityElevatorSlowClimb: boolean
   singularityElevatorLocked: boolean
-  singularityMatter: number
   goldenQuarks: number
   quarksThisSingularity: number
   totalQuarksEver: number
   hotkeys: Record<number, string[]>
-  theme: string
   iconSet: number
   notation: 'Pure Scientific' | 'Pure Engineering' | 'Default'
+  headerLayouts: Record<'desktop' | 'mobile', HeaderLayout>
 
   goldenQuarkUpgrades: Record<SingularityDataKeys, {
-    level: number
     freeLevel: number
     goldenQuarksInvested: number
   }>
 
-  octUpgrades: Record<OcteractDataKeys, {
-    level: number
+  octUpgrades: Record<OcteractUpgrades, {
     freeLevel: number
     octeractsInvested: number
   }>
@@ -521,6 +537,7 @@ export interface Player {
   ambrosiaUpgrades: Record<AmbrosiaUpgradeNames, {
     ambrosiaInvested: number
     blueberriesInvested: number
+    purpleAmbrosiaInvested?: number
   }>
 
   dailyCodeUsed: boolean
@@ -535,9 +552,10 @@ export interface Player {
 
   ambrosia: number
   lifetimeAmbrosia: number
+  purpleAmbrosia: number
+  lifetimePurpleAmbrosia: number
 
   blueberryTime: number
-  ambrosiaRNG: number // DEPRECIATED, DO NOT USE
   spentBlueberries: number
 
   blueberryLoadouts: Record<number, BlueberryOpt>
@@ -547,6 +565,29 @@ export interface Player {
   lifetimeRedAmbrosia: number
   redAmbrosiaTime: number
   redAmbrosiaUpgrades: Record<RedAmbrosiaNames, number>
+  purpleAmbrosiaUpgrades: Record<PurpleAmbrosiaNames, number>
+
+  purpleHoneyProgress: number
+  encabulatorOvercapToggle: boolean
+
+  purpleReactor: {
+    purpleHoney: number
+    lifetimePurpleHoney: number
+    storedAmbrosiaBarPoints: number
+    storedRedAmbrosiaBarPoints: number
+    ambrosiaBarPointPercentage: number
+    redAmbrosiaBarPointPercentage: number
+  }
+
+  spentPurpleHoney: {
+    upgrades: number
+    purpleAmbrosia: number
+  }
+
+  purpleReactorUpgrades: Record<PurpleReactorNames, number>
+  synthesisUpgrades: SynthesisUpgrades
+  synthesisAutomationUnlocked: boolean
+  synthesisAutomationEnabled: boolean
 
   singChallengeTimer: number
 
@@ -559,7 +600,11 @@ export interface Player {
 
   stats: {
     totalAddCodesUsed: number
+    highestPurpleHoney: number
+    talismanShardsThisAscension: Decimal
   }
+
+  purpleUpdateQuarkRefundAwarded: boolean
 }
 
 export interface GlobalVariables {
@@ -569,20 +614,16 @@ export interface GlobalVariables {
   crystalUpgradesCost: number[]
   crystalUpgradeCostIncrement: number[]
 
-  ticker: number
-
-  costDivisor: number
-
   freeAccelerator: number
+  effectiveFreeAccelerator: number
   totalAccelerator: number
   freeAcceleratorBoost: number
   totalAcceleratorBoost: number
   acceleratorPower: number
   acceleratorEffect: Decimal
-  acceleratorEffectDisplay: Decimal
-  generatorPower: Decimal
 
   freeMultiplier: number
+  effectiveFreeMultiplier: number
   totalMultiplier: number
   multiplierPower: number
   multiplierEffect: Decimal
@@ -599,11 +640,8 @@ export interface GlobalVariables {
 
   globalCrystalMultiplier: Decimal
   globalMythosMultiplier: Decimal
-  grandmasterMultiplier: Decimal
 
-  mythosBuildingPower: number
   challengeThreeMultiplier: Decimal
-  totalMythosOwned: number
 
   prestigePointGain: Decimal
 
@@ -643,9 +681,6 @@ export interface GlobalVariables {
   producePerSecondMythos: Decimal
   producePerSecondParticles: Decimal
 
-  uFourteenMulti: Decimal
-  uFifteenMulti: Decimal
-  tuSevenMulti: number
   currentTab: Tabs
 
   ordinals: readonly [
@@ -672,29 +707,21 @@ export interface GlobalVariables {
 
   maxexponent: number
 
-  antMultiplier: Decimal
-
   talismanResourceObtainiumCosts: number[]
   talismanResourceOfferingCosts: number[]
 
   timeWarp: boolean
+  testingDtMultiplier: number
 
   triggerChallenge: number
 
-  prevReductionValue: number
+  prevBuildingCostKey: string
+  buildingCosts: Record<BuildingType, Decimal[]>
 
   buildingSubTab: BuildingSubtab
 
   autoOfferingCounter: number
-
-  viscosityPower: number[]
-  dilationMultiplier: number[]
-  hyperchallengeMultiplier: number[]
-  illiteracyPower: number[]
-  deflationMultiplier: number[]
-  extinctionDivisor: number[]
-  droughtSalvage: number[]
-  recessionPower: number[]
+  MAX_AUTO_SACRIFICE_RUNE: number
 
   ascendBuildingProduction: {
     first: Decimal
@@ -703,16 +730,10 @@ export interface GlobalVariables {
     fourth: Decimal
     fifth: Decimal
   }
-  freeUpgradeAccelerator: number
-  freeUpgradeMultiplier: number
-
-  acceleratorMultiplier: number
 
   constUpgradeCosts: ArrayStartingWithNull<number>
 
   globalConstantMult: Decimal
-
-  corruptionTrigger: keyof Corruptions
 
   c15RewardFormulae: Record<Challenge15Rewards, (e: number) => number>
   challenge15Rewards: Challenge15RewardObject
@@ -729,16 +750,80 @@ export interface GlobalVariables {
   historyCountMax: number
 
   isEvent: boolean
-  shopEnhanceVision: boolean
 
-  ambrosiaTimer: number
-  redAmbrosiaTimer: number
+  purpleReactorTimer: number
   TIME_PER_AMBROSIA: number
   TIME_PER_RED_AMBROSIA: number
 
   currentSingChallenge: SingularityChallengeDataKeys | undefined
 
   coinVanityThresholds: number[]
+
+  dOne: Decimal
+  d3: Decimal
+  d3_14: Decimal
+  d0_5: Decimal
+  d0_001: Decimal
+  d0_0001: Decimal
+  d100: Decimal
+  d500: Decimal
+  d10000: Decimal
+  d100000: Decimal
+  d1e5: Decimal
+  d1e6: Decimal
+  d4e6: Decimal
+  d666666666: Decimal
+  d4_32e10: Decimal
+  d1e11: Decimal
+  d1e12: Decimal
+  d1e16: Decimal
+  d1e20: Decimal
+  d6_9e21: Decimal
+  d1e25: Decimal
+  d1e30: Decimal
+  d1_509e33: Decimal
+  d1e40: Decimal
+  d1e50: Decimal
+  d1e66: Decimal
+  d1e100: Decimal
+  d1e200: Decimal
+  d1e300: Decimal
+  d1e308: Decimal
+  d1e250: Decimal
+  d1_8e308: Decimal
+  d1e1000: Decimal
+  d1e1500: Decimal
+  d1e2500: Decimal
+  d1e5000: Decimal
+  d1e7777: Decimal
+  d1e10000: Decimal
+  d1e15000: Decimal
+  d1e25000: Decimal
+  d1e50000: Decimal
+  d1e77777: Decimal
+  d1e99999: Decimal
+  d1e100000: Decimal
+  d1e120000: Decimal
+  d1e125000: Decimal
+  d1e250000: Decimal
+  d1e300000: Decimal
+  d1e1000000: Decimal
+  d1e2000000: Decimal
+  d1e2500000: Decimal
+  d1e5000000: Decimal
+  d1e10000000: Decimal
+  d1e25000000: Decimal
+  d1e50000000: Decimal
+  d1e100000000: Decimal
+  d1e2500000000: Decimal
+  d1e10000000000: Decimal
+  d1e100000000000: Decimal
+  d1e2500000000000: Decimal
+  d1e10000000000000: Decimal
+
+  MIND_DIVISOR: number
+  GLOBAL_RESET_THRESHOLD: number
+  ASCENSION_RESET_THRESHOLD: number
 }
 
 // If changing these, make reset tiers on top, then challenge types, then specific actions
@@ -751,7 +836,6 @@ export type resetNames =
   | 'transcensionChallenge'
   | 'reincarnationChallenge'
   | 'ascensionChallenge'
-  | 'acceleratorBoost'
 
 export type BuildingSubtab =
   | 'coin'

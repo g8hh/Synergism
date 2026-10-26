@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "jsPlugins": ["./eslint-rules/index.mjs"],
   "options": {
     "typeAware": true
   },
@@ -12,6 +13,7 @@
   "rules": {
     "no-non-null-assertion": "off",
     "no-param-reassign": "off",
+    "no-await-in-loop": "off",
 
     // Type-aware rules
     "typescript/no-misused-promises": "off",
@@ -28,7 +30,11 @@
     "import/no-named-as-default-member": "off",
 
     // Too new
-    "unicorn/no-array-sort": "off"
+    "unicorn/no-array-sort": "off",
+
+    "synergism-rules/no-relative-fetch": "error",
+    "synergism-rules/no-decimal-zero": "error",
+    "synergism-rules/no-decimal-string-literal": ["error", { "ignoreReceiverRoots": ["z", "collator", "Intl"] }]
   },
   "settings": {},
   "env": {
@@ -38,7 +44,8 @@
   "globals": {
     "PROD": "readonly",
     "DEV": "readonly",
-    "PLATFORM": "readonly"
+    "PLATFORM": "readonly",
+    "TESTING": "readonly"
   },
   "ignorePatterns": ["dist/**", "node_modules/**", "mockServiceWorker.js", "electron/**"]
 }

@@ -1,29 +1,42 @@
 import Decimal from 'break_infinity.js'
 import i18next from 'i18next'
 import { awardUngroupedAchievement, getAchievementReward } from './Achievements'
+import { getAmbrosiaUpgradeEffects } from './BlueberryUpgrades'
 import { DOMCacheGetOrSet } from './Cache/DOM'
-import { CalcECC } from './Challenges'
-import { calculateAntSacrificeCubeBlessing, calculateObtainiumCubeBlessing } from './Cubes'
+import { transcensionCubeBankTiers, useChallenge13Modifiers } from './Challenges'
+import {
+  activeCorruptionLevel,
+  ascensionEffectiveCorruptionLevel,
+  challenge15CorruptionEffect,
+  corruptionEffect,
+  isCorruptionCubeUnlocked
+} from './Corruptions'
+import { calculateAcceleratorCubeBlessing } from './Cubes'
 import { BuffType, calculateEventSourceBuff } from './Event'
 import { generateAntsAndCrumbs } from './Features/Ants/AntProducers/lib/generate-ant-producers'
 import { resetPlayerRebornELODaily } from './Features/Ants/AntSacrifice/Rewards/ELO/RebornELO/player/reset'
 import { thresholdModifiers } from './Features/Ants/AntSacrifice/Rewards/ELO/RebornELO/Stages/lib/threshold'
-import { calculateAntSacrificeObtainium } from './Features/Ants/AntSacrifice/Rewards/Obtainium/calculate-obtainium'
 import { getAntUpgradeEffect } from './Features/Ants/AntUpgrades/lib/upgrade-effects'
 import { AntUpgrades } from './Features/Ants/AntUpgrades/structs/structs'
 import { addTimers, automaticTools } from './Helper'
-import { hepteractEffective } from './Hepteracts'
+import { getHepteractEffects } from './Hepteracts'
 import { disableHotkeys, enableHotkeys } from './Hotkeys'
 import { getLevelMilestone } from './Levels'
 import { getOcteractUpgradeEffect } from './Octeracts'
-import { calculateAscensionScorePlatonicBlessing } from './PlatonicCubes'
 import { PCoinUpgradeEffects } from './PseudoCoinUpgrades'
+import { getPurpleAmbrosiaUpgradeEffects } from './PurpleAmbrosiaUpgrades'
+import {
+  calculateRedAmbrosiaReactantCapacityFromAmbrosia,
+  PURPLE_REACTOR_OVERFLOW_EFFICIENCY,
+  purpleReactantConversion
+} from './PurpleReactor'
 import { quarkHandler } from './Quark'
 import { getRedAmbrosiaUpgradeEffects } from './RedAmbrosiaUpgrades'
 import { updatePrestigeCount, updateReincarnationCount, updateTranscensionCount } from './Reset'
-import { getRuneEffects, sumOfRuneLevels } from './Runes'
+import { getRuneEffects } from './Runes'
 import { getShopUpgradeEffects } from './Shop'
-import { getGQUpgradeEffect } from './singularity'
+import { generousOrbsLevels, getGQUpgradeEffect } from './singularity'
+import { getSingularityChallengeEffect } from './SingularityChallenges'
 import {
   allAdditiveLuckMultStats,
   allAmbrosiaBlueberryStats,
@@ -33,6 +46,7 @@ import {
   allBaseObtainiumStats,
   allBaseOfferingStats,
   allCubeStats,
+  allEncabulatorSpeedStats,
   allGlobalSpeedIgnoreDRStats,
   allGlobalSpeedStats,
   allGoldenQuarkMultiplierStats,
@@ -46,6 +60,10 @@ import {
   allOfferingStats,
   allPlatonicCubeStats,
   allPowderMultiplierStats,
+  allPurpleHoneyEfficiencyStats,
+  allPurpleHoneyLuckStats,
+  allPurpleHoneyProgressRequirementStats,
+  allPurpleReactantCapacityStats,
   allQuarkStats,
   allRedAmbrosiaGenerationSpeedStats,
   allRedAmbrosiaLuckStats,
@@ -55,20 +73,26 @@ import {
   antSacrificeRewardStats,
   antSpeedStats,
   ascensionCountMultStats,
+  calculateTotalStat,
+  constructionMultiplierStats,
+  constructionStats,
+  freeAcceleratorAdditiveStats,
+  freeAcceleratorBoostAdditiveStats,
+  freeAcceleratorBoostMultiplierStats,
+  freeAcceleratorMultiplierStats,
+  freeMultiplierAdditiveStats,
+  freeMultiplierMultiplierStats,
+  negativeSalvageStatMultiplier,
   negativeSalvageStats,
   offeringObtainiumTimeModifiers,
-  positiveSalvageStats,
-  statLineDecimalMultiplication
+  positiveSalvageStatMultiplier,
+  positiveSalvageStats
 } from './Statistics'
 import { format, getTimePinnedToLoadDate, player, resourceGain, saveSynergy, updateAll } from './Synergism'
-import { getTalismanEffects, toggleTalismanBuy, updateTalismanInventory } from './Talismans'
-import { clearInterval, setInterval } from './Timers'
+import { toggleTalismanBuy, updateTalismanInventory } from './Talismans'
 import { Alert, Prompt } from './UpdateHTML'
-import { findInsertionIndex } from './Utility'
+import { DateNow, findInsertionIndex, memoize, PerformanceNow } from './Utility'
 import { Globals as G } from './Variables'
-
-const posSalvagePerkSings = [230, 245, 260, 275, 290]
-const negSalvagePerkSings = [75, 85, 105, 125, 155, 185, 215, 245, 260, 275]
 
 // dprint-ignore
 const singQuarkMilestoneThresholds = [
@@ -78,36 +102,14 @@ const singQuarkMilestoneThresholds = [
   284, 288, 290
 ];
 
-const challengeScoreArrays2 = [0, 10, 12, 15, 20, 30, 80, 120, 180, 300, 450]
-const challengeScoreArrays3 = [
-  0,
-  20,
-  30,
-  50,
-  100,
-  200,
-  250,
-  300,
-  400,
-  500,
-  750
-]
-const challengeScoreArrays4 = [
-  0,
-  10000,
-  10000,
-  10000,
-  10000,
-  10000,
-  2000,
-  3000,
-  4000,
-  5000,
-  7500
-]
-
 const ambrosiaLuckSingThresholds1 = [35, 42, 49, 56, 63, 70, 77]
 const ambrosiaLuckSingThresholds2 = [135, 142, 149, 156, 163, 170, 177]
+
+const twoMindBarRequirements = {
+  ambrosia: 10_000_000,
+  redAmbrosia: 7_500,
+  purpleHoney: 125_000
+}
 
 const derpsmithSingCounts = [
   18,
@@ -160,59 +162,39 @@ const offeringPotionThresholds = [
 
 const obtainiumPotionThresholds = [1, 20, 50, 250, 1000, 20000, 4e5, 1e7, 4e8, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15]
 
-export const calculateAllCubeMultiplier = () => {
-  return allCubeStats.reduce((a, b) => a * b.stat(), 1)
+export const calculateAllCubeMultiplier = () => calculateTotalStat(allCubeStats)
+
+const applyTauPower = (multiplier: number) => {
+  return multiplier > 1 ? Math.pow(multiplier, getGQUpgradeEffect('platonicTau', 'tauPower')) : multiplier
 }
 
-export const calculateCubeMultiplier = () => {
-  return allWowCubeStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateRawCubeMultiplier = () => calculateTotalStat(allWowCubeStats)
+export const calculateRawTesseractMultiplier = () => calculateTotalStat(allTesseractStats)
+export const calculateRawHypercubeMultiplier = () => calculateTotalStat(allHypercubeStats)
+export const calculateRawPlatonicMultiplier = () => calculateTotalStat(allPlatonicCubeStats)
+export const calculateRawHepteractMultiplier = () => calculateTotalStat(allHepteractCubeStats)
+export const calculateRawOcteractMultiplier = () => calculateTotalStat(allOcteractCubeStats)
 
-export const calculateCubeMultiplierWithTau = () => {
-  const base = calculateCubeMultiplier()
-  const tauBonus = getGQUpgradeEffect('platonicTau')
-    ? 1.01
-    : 1
-  return Math.pow(base, tauBonus)
-}
+export const calculateCubeMultiplier = () => applyTauPower(calculateRawCubeMultiplier())
+export const calculateTesseractMultiplier = () => applyTauPower(calculateRawTesseractMultiplier())
+export const calculateHypercubeMultiplier = () => applyTauPower(calculateRawHypercubeMultiplier())
+export const calculatePlatonicMultiplier = () => applyTauPower(calculateRawPlatonicMultiplier())
+export const calculateHepteractMultiplier = () => applyTauPower(calculateRawHepteractMultiplier())
+export const calculateOcteractMultiplier = () => applyTauPower(calculateRawOcteractMultiplier())
 
-export const calculateTesseractMultiplier = () => {
-  return allTesseractStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateOfferingsDecimal = () => calculateTotalStat(allOfferingStats)
+export const calculateBaseOfferings = () => calculateTotalStat(allBaseOfferingStats)
 
-export const calculateHypercubeMultiplier = () => {
-  return allHypercubeStats.reduce((a, b) => a * b.stat(), 1)
-}
-
-export const calculatePlatonicMultiplier = () => {
-  return allPlatonicCubeStats.reduce((a, b) => a * b.stat(), 1)
-}
-
-export const calculateHepteractMultiplier = () => {
-  return allHepteractCubeStats.reduce((a, b) => a * b.stat(), 1)
-}
-
-export const calculateOcteractMultiplier = () => {
-  return allOcteractCubeStats.reduce((a, b) => a * b.stat(), 1)
-}
-
-// 'Decimal' is used for calculating stats that can exceed the 1e300 cap.
-export const calculateOfferingsDecimal = () => {
-  return allOfferingStats.reduce((a, b) => a.times(b.stat()), new Decimal(1))
-}
-
-export const calculateBaseOfferings = () => {
-  return allBaseOfferingStats.reduce((a, b) => a + b.stat(), 0)
+export const calculateGlobalTimerModifiers = (time: number, timeMultCheck: boolean) => {
+  return calculateTotalStat(offeringObtainiumTimeModifiers(time, timeMultCheck))
 }
 
 export const calculateOfferings = (timeMultUsed = true) => {
   const baseOfferings = calculateBaseOfferings()
   const timeMultiplier = timeMultUsed
-    ? offeringObtainiumTimeModifiers(player.prestigecounter, getLevelMilestone('offeringTimerScaling') === 1).reduce(
-      (a, b) => a * b.stat(),
-      1
-    )
+    ? calculateGlobalTimerModifiers(player.prestigecounter, getLevelMilestone('offeringTimerScaling') === 1)
     : 1
+
   const offeringMult = calculateOfferingsDecimal()
 
   // Exalt 8 2+ Effect
@@ -235,47 +217,34 @@ export const calculateOfferings = (timeMultUsed = true) => {
   )
 }
 
-// Ditto
-export const calculateObtainiumDecimal = () => {
-  return allObtainiumStats.reduce((a, b) => a.times(b.stat()), new Decimal(1)).times(
-    calculateObtainiumCubeBlessing()
-  )
-}
-
-export const calculateBaseObtainium = () => {
-  return allBaseObtainiumStats.reduce((a, b) => a + b.stat(), 0)
-}
-
-export const calculateObtainiumDRIgnoreMult = () => {
-  return allObtainiumIgnoreDRStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateObtainiumDecimal = () => calculateTotalStat(allObtainiumStats)
+export const calculateBaseObtainium = () => calculateTotalStat(allBaseObtainiumStats)
+export const calculateObtainiumDRIgnoreMult = () => calculateTotalStat(allObtainiumIgnoreDRStats)
 
 /**
  * @param timeMultUsed Default true. If false, gives multiplier as if time multiplier was 1
- * @param logMultOnly Default false. If true, returns the log10 of the obtainium multiplier, possibly greater than 300.
+ * @param baseObtainium The precomputed base obtainium, if available
  * @returns
  */
-export const calculateObtainium = (timeMultUsed = true) => {
-  // Base Obtainium
-  const base = calculateBaseObtainium()
-
+export const calculateObtainium = (timeMultUsed = true, baseObtainium = calculateBaseObtainium()) => {
   // Immaculate Offering Capacity
   const immaculate = calculateObtainiumDRIgnoreMult()
 
-  // Illiteracy Effect
-  const DR = player.corruptions.used.corruptionEffects('illiteracy')
+  const DR = challenge15CorruptionEffect('illiteracy')
 
   // Reincarnation Timer Effects (Including HALF MIND)
   const timeMultiplier = timeMultUsed
-    ? offeringObtainiumTimeModifiers(player.reincarnationcounter, player.reincarnationCount >= 5)
-      .reduce((a, b) => a * b.stat(), 1)
+    ? calculateGlobalTimerModifiers(
+      player.reincarnationcounter,
+      Boolean(getAchievementReward('obtainiumTimerMultiplier'))
+    )
     : 1
 
   const baseMults = calculateObtainiumDecimal()
 
   // Why is this a thing? If DR = 0 (which is possible), then the calculation below will not catch chal 14 enabled.
   if (player.currentChallenge.ascension === 14) {
-    return new Decimal('0')
+    return new Decimal()
   }
 
   const total = new Decimal(immaculate).times(Decimal.pow(baseMults, DR)).times(timeMultiplier)
@@ -286,65 +255,39 @@ export const calculateObtainium = (timeMultUsed = true) => {
   ) {
     return Decimal.min(
       player.obtainium.times(100).plus(1),
-      Decimal.max(base, total)
+      Decimal.max(baseObtainium, total)
     )
   }
 
   // As of Statistics Update, you can never get less than your base Offerings per Reincarnation, no matter what.
-  return Decimal.max(base, total)
+  return Decimal.max(baseObtainium, total)
 }
 
 const calculateFastForwardResourcesGlobal = (
-  resetTime: number,
-  fastForwardAmount: Decimal,
+  fastForwardAmount: number,
   resourceMult: Decimal,
-  baseResource: number
+  baseResource: number,
+  speedMult?: number
 ) => {
-  // We're going to use the log trick to account for the fact that resourceMult * timeMult can still be >1e300
-  // Even if timeMult is very small.
-
-  // Math to compute the change in multiplier based on time
-  // The amount of offerings to give is proportional to the difference in
-  // Time Multipliers.
-  let timeMultiplier: Decimal = new Decimal('1')
-
-  const deltaTime = fastForwardAmount.times(
-    getGQUpgradeEffect('halfMind') ? 10 : calculateGlobalSpeedMult()
-  )
-
-  // Build approximations through direct computation of the derivative of time multiplier
-  // And then multiplying by deltaTime, so basically a linear approximation (See: Calculus)
-
-  // In order for the time multiplier to not decrease as your resetTime increases, while accurately portraying
-  //  take the min of
-  // two approximations: one with quadratic penalty (if less than threshold) and that of linear penalty
-  // Use the derivative of the quadratic part
-
-  timeMultiplier = Decimal.min(
-    deltaTime.times(2 * resetTime).div(resetTimeThreshold() ** 2),
-    deltaTime.div(resetTimeThreshold())
-  )
-
-  // Correct multiplier if half mind is purchased
-  timeMultiplier.times(getGQUpgradeEffect('halfMind') ? calculateGlobalSpeedMult() / 10 : 1)
-
-  return Decimal.max(fastForwardAmount.times(baseResource), resourceMult.times(timeMultiplier))
+  const globalSpeedMult = speedMult ?? calculateGlobalSpeedMult()
+  const deltaTime = Decimal.fromNumber(fastForwardAmount).times(globalSpeedMult).div(G.GLOBAL_RESET_THRESHOLD)
+  return Decimal.max(baseResource * fastForwardAmount, resourceMult.times(deltaTime))
 }
 
-export const calculatePotionValue = (resetTime: number, resourceMult: Decimal, baseResource: number) => {
-  const potionTimeValue = new Decimal(7200)
-  const fastForwardMult = calculateFastForwardResourcesGlobal(resetTime, potionTimeValue, resourceMult, baseResource)
-  const potionMultipliers = getGQUpgradeEffect('potionBuff')
-    * getGQUpgradeEffect('potionBuff2')
-    * getGQUpgradeEffect('potionBuff3')
-    * getOcteractUpgradeEffect('octeractAutoPotionEfficiency')
+export const calculatePotionValue = (resourceMult: Decimal, baseResource: number) => {
+  const potionTimeValue = 7_200
+  const fastForwardMult = calculateFastForwardResourcesGlobal(potionTimeValue, resourceMult, baseResource)
+  const potionMultipliers = getGQUpgradeEffect('potionBuff', 'potionPowerMult')
+    * getGQUpgradeEffect('potionBuff2', 'potionPowerMult')
+    * getGQUpgradeEffect('potionBuff3', 'potionPowerMult')
+    * getOcteractUpgradeEffect('octeractAutoPotionEfficiency', 'potionPowerMult')
 
   return fastForwardMult.times(potionMultipliers)
 }
 
 export const calculateResearchAutomaticObtainium = (deltaTime: number) => {
   if (player.currentChallenge.ascension === 14) {
-    return new Decimal('0')
+    return new Decimal()
   }
 
   const multiplier = 0.5 * player.researches[61]
@@ -352,46 +295,39 @@ export const calculateResearchAutomaticObtainium = (deltaTime: number) => {
     + 0.8 * player.cubeUpgrades[3]
 
   if (multiplier === 0) {
-    return new Decimal('0')
+    return new Decimal()
   }
 
   const useTimer = false
-  const resourceMult = calculateObtainium(useTimer)
-  const globalSpeedMult = calculateGlobalSpeedMult()
-  const resetTimeDivisor = resetTimeThreshold()
-  const timePenaltyMult = Math.min(1, player.reincarnationcounter / resetTimeDivisor)
-
   const baseObtainium = calculateBaseObtainium()
-  const nonBaseValue = resourceMult.times(globalSpeedMult).times(timePenaltyMult)
-  let nonBaseAntValue = new Decimal(0)
+  const resourceMult = calculateObtainium(useTimer, baseObtainium)
+  const globalSpeedMult = calculateGlobalSpeedMult()
+
+  const researchVal = calculateFastForwardResourcesGlobal(deltaTime, resourceMult, baseObtainium, globalSpeedMult)
+
+  let antVal: Decimal
   if (player.cubeUpgrades[47] > 0) {
     const stageMod = thresholdModifiers().antSacrificeObtainiumMult
-    const antMult = calculateAntSacrificeObtainium(stageMod, useTimer)
-    const antTimePenaltyMult = Math.min(1, player.antSacrificeTimer / resetTimeDivisor)
-    nonBaseAntValue = antMult.times(globalSpeedMult).times(antTimePenaltyMult)
+    const antSacMult = calculateAntSacrificeMultiplier().times(stageMod)
+    antVal = calculateFastForwardResourcesGlobal(
+      deltaTime,
+      resourceMult.times(antSacMult),
+      baseObtainium,
+      globalSpeedMult
+    )
+  } else {
+    antVal = new Decimal()
   }
 
-  return Decimal.max(baseObtainium, Decimal.max(nonBaseValue, nonBaseAntValue)).times(deltaTime).div(resetTimeDivisor)
-    .times(multiplier)
+  return Decimal.max(researchVal, antVal).times(multiplier)
 }
 
-export const calculateQuarkMultiplier = () => {
-  return allQuarkStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateQuarkMultiplier = () => calculateTotalStat(allQuarkStats)
 
-export const calculateAntSacrificeMultiplier = () => {
-  return antSacrificeRewardStats.reduce((a, b) => a.times(b.stat()), new Decimal(1)).times(
-    calculateAntSacrificeCubeBlessing()
-  )
-}
+export const calculateAntSacrificeMultiplier = () => calculateTotalStat(antSacrificeRewardStats)
 
-export const calculateGlobalSpeedDRIgnoreMult = () => {
-  return allGlobalSpeedIgnoreDRStats.reduce((a, b) => a * b.stat(), 1)
-}
-
-export const calculateGlobalSpeedDREnabledMult = () => {
-  return allGlobalSpeedStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateGlobalSpeedDRIgnoreMult = () => calculateTotalStat(allGlobalSpeedIgnoreDRStats)
+export const calculateGlobalSpeedDREnabledMult = () => calculateTotalStat(allGlobalSpeedStats)
 
 export const calculateGlobalSpeedMult = () => {
   let normalMult = calculateGlobalSpeedDREnabledMult()
@@ -417,9 +353,7 @@ export const calculateGlobalSpeedMult = () => {
   return totalTimeMultiplier
 }
 
-export const calculateRawAscensionSpeedMult = () => {
-  return allAscensionSpeedStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateRawAscensionSpeedMult = () => calculateTotalStat(allAscensionSpeedStats)
 
 export const calculateAscensionSpeedMult = () => {
   let base = calculateRawAscensionSpeedMult()
@@ -435,14 +369,8 @@ export const calculateAscensionSpeedMult = () => {
   return base
 }
 
-export const calculateAmbrosiaAdditiveLuckMult = () => {
-  return allAdditiveLuckMultStats.reduce((a, b) => a + b.stat(), 0)
-}
-
-export const calculateAmbrosiaLuckRaw = () => {
-  return allAmbrosiaLuckStats.reduce((a, b) => a + b.stat(), 0)
-}
-
+export const calculateAmbrosiaAdditiveLuckMult = () => calculateTotalStat(allAdditiveLuckMultStats)
+export const calculateAmbrosiaLuckRaw = () => calculateTotalStat(allAmbrosiaLuckStats)
 export const calculateAmbrosiaLuck = () => {
   const rawLuck = calculateAmbrosiaLuckRaw()
   const multiplier = calculateAmbrosiaAdditiveLuckMult()
@@ -450,47 +378,202 @@ export const calculateAmbrosiaLuck = () => {
   return rawLuck * multiplier
 }
 
-export const calculateBlueberryInventory = () => {
-  return allAmbrosiaBlueberryStats.reduce((a, b) => a + b.stat(), 0)
+// TWO MIND changes reward luck only; other luck-based effects keep their normal values.
+const calculateBarRewardLuck = (luck: number, calculateRequirement: (ignoreTwoMind?: boolean) => number) => {
+  if (!getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')) {
+    return luck
+  }
+
+  const fixedRequirement = calculateRequirement()
+  const oldRequirement = calculateRequirement(true)
+  return luck * (fixedRequirement / oldRequirement)
 }
 
-export const calculateAmbrosiaGenerationSpeedRaw = () => {
-  return allAmbrosiaGenerationSpeedStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateAmbrosiaRewardLuck = () =>
+  calculateBarRewardLuck(calculateAmbrosiaLuck(), calculateRequiredBlueberryTime)
 
+export const calculateBlueberryInventory = () => calculateTotalStat(allAmbrosiaBlueberryStats)
+export const calculateAmbrosiaGenerationSpeedRaw = () => calculateTotalStat(allAmbrosiaGenerationSpeedStats)
 export const calculateAmbrosiaGenerationSpeed = () => {
   const rawSpeed = calculateAmbrosiaGenerationSpeedRaw()
   const blueberries = calculateBlueberryInventory()
   return rawSpeed * blueberries
 }
 
-export const calculatePowderConversion = () => {
-  return allPowderMultiplierStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculatePowderConversion = () => calculateTotalStat(allPowderMultiplierStats)
 
-export const calculateGoldenQuarks = () => {
-  return allGoldenQuarkMultiplierStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateGoldenQuarks = () => calculateTotalStat(allGoldenQuarkMultiplierStats)
+export const calculateGoldenQuarkCost = () => calculateTotalStat(allGoldenQuarkPurchaseCostStats)
 
-export const calculateGoldenQuarkCost = () => {
-  return allGoldenQuarkPurchaseCostStats.reduce((a, b) => a * b.stat(), 1)
-}
+export const calculateLuckConversion = () => calculateTotalStat(allLuckConversionStats)
 
-export const calculateLuckConversion = () => {
-  return allLuckConversionStats.reduce((a, b) => a + b.stat(), 0)
-}
+export const calculateRedAmbrosiaLuck = () => calculateTotalStat(allRedAmbrosiaLuckStats)
 
-export const calculateRedAmbrosiaLuck = () => {
-  return allRedAmbrosiaLuckStats.reduce((a, b) => a + b.stat(), 0)
-}
+export const calculateRedAmbrosiaRewardLuck = () =>
+  calculateBarRewardLuck(calculateRedAmbrosiaLuck(), calculateRequiredRedAmbrosiaTime)
 
+export const calculateRedAmbrosiaGenerationSpeedRaw = () => calculateTotalStat(allRedAmbrosiaGenerationSpeedStats)
 export const calculateRedAmbrosiaGenerationSpeed = () => {
-  return allRedAmbrosiaGenerationSpeedStats.reduce((a, b) => a * b.stat(), 1)
+  const rawSpeed = calculateRedAmbrosiaGenerationSpeedRaw()
+  const blueberries = calculateBlueberryInventory()
+  return rawSpeed * blueberries
 }
 
-export const calculateFreeShopInfinityUpgrades = () => {
-  return allShopTablets.reduce((a, b) => a + b.stat(), 0)
+export const calculateEncabulatorSpeed = () => calculateTotalStat(allEncabulatorSpeedStats)
+export const calculatePurpleReactantCapacity = () => calculateTotalStat(allPurpleReactantCapacityStats)
+export const calculatePurpleHoneyLuck = () => calculateTotalStat(allPurpleHoneyLuckStats)
+
+export const calculatePurpleHoneyRewardLuck = () =>
+  calculateBarRewardLuck(calculatePurpleHoneyLuck(), calculatePurpleHoneyConversionFactor)
+
+export const calculateBarEXALTPurpleHoneyRequirement = () => {
+  const multiplier = Math.pow(1 + player.singularityChallenges.barDependence.completions, 2)
+  const divisor = Math.max(1, player.purpleReactor.lifetimePurpleHoney)
+  return Math.max(150_000, 1e10 * multiplier / divisor)
 }
+
+export const calculatePurpleHoneyConversionFactor = (ignoreTwoMind = false) => {
+  if (!ignoreTwoMind && getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')) {
+    return twoMindBarRequirements.purpleHoney
+  }
+
+  if (player.singularityChallenges.barDependence.enabled) {
+    return calculateBarEXALTPurpleHoneyRequirement()
+  }
+  return calculateTotalStat(allPurpleHoneyProgressRequirementStats)
+}
+
+export const calculateRedAmbrosiaReactantCapacity = () => {
+  return calculateRedAmbrosiaReactantCapacityFromAmbrosia(calculatePurpleReactantCapacity())
+}
+
+export const calculatePurpleReactantRecipe = () => {
+  const conversionMultiplier = getPurpleAmbrosiaUpgradeEffects('scorpio', 'purpleReactorConversionMult')
+  return {
+    ambrosiaBarPoints: purpleReactantConversion.ambrosiaBarPoints * conversionMultiplier,
+    redAmbrosiaBarPoints: purpleReactantConversion.redAmbrosiaBarPoints,
+    purpleBarPoints: purpleReactantConversion.purpleBarPoints * conversionMultiplier
+      * getPurpleAmbrosiaUpgradeEffects('aries', 'universalBarPointMult')
+  }
+}
+
+export const calculatePurpleReactantConversion = (
+  ambrosiaBarPoints: number,
+  redAmbrosiaBarPoints: number,
+  ambrosiaBarPointsRequested: number
+) => {
+  const recipe = calculatePurpleReactantRecipe()
+  const ambrosiaBatches = ambrosiaBarPoints / recipe.ambrosiaBarPoints
+  const redAmbrosiaBatches = redAmbrosiaBarPoints / recipe.redAmbrosiaBarPoints
+  const conversionBatches = Math.min(
+    ambrosiaBatches,
+    redAmbrosiaBatches,
+    ambrosiaBarPointsRequested / recipe.ambrosiaBarPoints
+  )
+
+  return {
+    // Consume the limiting input exactly, without leaving a floating-point remainder.
+    ambrosiaBarPointsSpent: conversionBatches === ambrosiaBatches
+      ? ambrosiaBarPoints
+      : conversionBatches * recipe.ambrosiaBarPoints,
+    redAmbrosiaBarPointsSpent: conversionBatches === redAmbrosiaBatches
+      ? redAmbrosiaBarPoints
+      : conversionBatches * recipe.redAmbrosiaBarPoints,
+    purpleBarPointsGained: conversionBatches * recipe.purpleBarPoints
+  }
+}
+
+export const calculatePurpleOverflowConversion = (ambrosiaBarPoints: number, redAmbrosiaBarPoints: number) => {
+  const reaction = calculatePurpleReactantConversion(ambrosiaBarPoints, redAmbrosiaBarPoints, ambrosiaBarPoints)
+  return {
+    ...reaction,
+    purpleBarPointsGained: reaction.purpleBarPointsGained * PURPLE_REACTOR_OVERFLOW_EFFICIENCY
+  }
+}
+
+const isPurpleReactorOverflowEnabled = () =>
+  player.encabulatorOvercapToggle && getPurpleAmbrosiaUpgradeEffects('libra', 'overcapToggleUnlocked')
+
+/**
+ * Reacts each tank's held excess against the other tank's remaining stock. This must run after
+ * the main reaction, so overflow only uses stock the Encabulator did not consume.
+ * Any unmatched excess is refunded to its regular bar.
+ */
+export const calculatePurpleOverflowResolution = (
+  ambrosiaExcessBarPoints: number,
+  redAmbrosiaExcessBarPoints: number,
+  storedAmbrosiaBarPoints: number,
+  storedRedAmbrosiaBarPoints: number
+) => {
+  if (!isPurpleReactorOverflowEnabled()) {
+    return {
+      ambrosiaOverflowBarPoints: 0,
+      redAmbrosiaOverflowBarPoints: 0,
+      storedAmbrosiaBarPointsSpent: 0,
+      storedRedAmbrosiaBarPointsSpent: 0,
+      ambrosiaRefundBarPoints: ambrosiaExcessBarPoints,
+      redAmbrosiaRefundBarPoints: redAmbrosiaExcessBarPoints,
+      purpleBarPointsGained: 0
+    }
+  }
+
+  const ambrosiaReaction = calculatePurpleOverflowConversion(ambrosiaExcessBarPoints, storedRedAmbrosiaBarPoints)
+  const redAmbrosiaReaction = calculatePurpleOverflowConversion(storedAmbrosiaBarPoints, redAmbrosiaExcessBarPoints)
+
+  return {
+    ambrosiaOverflowBarPoints: ambrosiaReaction.ambrosiaBarPointsSpent,
+    redAmbrosiaOverflowBarPoints: redAmbrosiaReaction.redAmbrosiaBarPointsSpent,
+    storedAmbrosiaBarPointsSpent: redAmbrosiaReaction.ambrosiaBarPointsSpent,
+    storedRedAmbrosiaBarPointsSpent: ambrosiaReaction.redAmbrosiaBarPointsSpent,
+    ambrosiaRefundBarPoints: Math.max(0, ambrosiaExcessBarPoints - ambrosiaReaction.ambrosiaBarPointsSpent),
+    redAmbrosiaRefundBarPoints: Math.max(0, redAmbrosiaExcessBarPoints - redAmbrosiaReaction.redAmbrosiaBarPointsSpent),
+    purpleBarPointsGained: ambrosiaReaction.purpleBarPointsGained + redAmbrosiaReaction.purpleBarPointsGained
+  }
+}
+
+/**
+ * Routes Bar Points into a reactant tank. Bar Points routed to a full tank are returned as excess;
+ * the caller either holds them for overflow or refunds them to the regular bar.
+ */
+export const calculatePurpleReactantRouting = (
+  productionPerSecond: number,
+  reservePercentage: number,
+  storedBarPoints: number,
+  capacity: number,
+  elapsedSeconds: number
+) => {
+  const clampedStored = Math.min(capacity, storedBarPoints)
+  const clampedReservePercentage = Math.min(100, Math.max(0, reservePercentage))
+  const producedBarPoints = productionPerSecond * elapsedSeconds
+  const requestedReserveBarPoints = clampedReservePercentage === 100
+    ? producedBarPoints
+    : producedBarPoints * clampedReservePercentage / 100
+  const reservedBarPoints = Math.min(requestedReserveBarPoints, capacity - clampedStored)
+  const unroundedRegularBarPoints = producedBarPoints - requestedReserveBarPoints
+  const roundingTolerance = 16 * Number.EPSILON * Math.max(1, Math.abs(producedBarPoints))
+  const regularBarPoints = Math.abs(unroundedRegularBarPoints) <= roundingTolerance
+    ? 0
+    : unroundedRegularBarPoints
+
+  return {
+    storedBarPoints: clampedStored + reservedBarPoints,
+    reservedBarPoints,
+    excessBarPoints: Math.max(0, requestedReserveBarPoints - reservedBarPoints),
+    regularBarPoints
+  }
+}
+
+export const calculatePurpleHoneyPerExtraction = () => calculateTotalStat(allPurpleHoneyEfficiencyStats)
+
+export const calculatePurpleHoneyExtractionMultiplier = (luck: number) => {
+  const guaranteedMultiplier = Math.floor(luck / 100)
+  return {
+    guaranteedMultiplier,
+    bonusMultiplierChance: luck / 100 - guaranteedMultiplier
+  }
+}
+
+export const calculateFreeShopInfinityUpgrades = () => calculateTotalStat(allShopTablets)
 
 export const calculateTotalCoinOwned = () => {
   return player.firstOwnedCoin
@@ -500,98 +583,8 @@ export const calculateTotalCoinOwned = () => {
     + player.fifthOwnedCoin
 }
 
-export const calculateTotalAcceleratorBoost = () => {
-  let b = 0
-  const totalCoinOwned = calculateTotalCoinOwned()
-  if (player.upgrades[26] > 0.5) {
-    b += 1
-  }
-  if (player.upgrades[31] > 0.5) {
-    b += (Math.floor(totalCoinOwned / 2000) * 100) / 100
-  }
-  b += +getAchievementReward('accelBoosts')
-
-  b += player.researches[93]
-    * Math.floor(
-      (1 / 20)
-        * sumOfRuneLevels()
-    )
-  b *= 1
-    + (1 / 5)
-      * player.researches[3]
-      * (1 + (1 / 2) * CalcECC('ascension', player.challengecompletions[14]))
-  b *= 1 + (1 / 20) * player.researches[16] + (1 / 20) * player.researches[17]
-  b *= 1 + (1 / 20) * player.researches[88]
-  b *= getAntUpgradeEffect(AntUpgrades.AcceleratorBoosts).acceleratorBoostMult
-  b *= 1 + (1 / 100) * player.researches[127]
-  b *= 1 + (0.8 / 100) * player.researches[142]
-  b *= 1 + (0.6 / 100) * player.researches[157]
-  b *= 1 + (0.4 / 100) * player.researches[172]
-  b *= 1 + (0.2 / 100) * player.researches[187]
-  b *= 1 + (0.01 / 100) * player.researches[200]
-  b *= 1 + (0.01 / 100) * player.cubeUpgrades[50]
-  b *= 1 + (1 / 1000) * hepteractEffective('acceleratorBoost')
-  if (
-    player.upgrades[73] > 0.5
-    && player.currentChallenge.reincarnation !== 0
-  ) {
-    b *= 2
-  }
-  b = Math.min(1e100, Math.floor(b))
-  G.freeAcceleratorBoost = b
-
-  G.totalAcceleratorBoost = (Math.floor(player.acceleratorBoostBought + G.freeAcceleratorBoost) * 100)
-    / 100
-}
-
-export const calculateAcceleratorMultiplier = () => {
-  G.acceleratorMultiplier = 1
-  G.acceleratorMultiplier *= 1
-    + (1 / 5)
-      * player.researches[1]
-      * (1 + (1 / 2) * CalcECC('ascension', player.challengecompletions[14]))
-  G.acceleratorMultiplier *= 1
-    + (1 / 20) * player.researches[6]
-    + (1 / 25) * player.researches[7]
-    + (1 / 40) * player.researches[8]
-    + (3 / 200) * player.researches[9]
-    + (1 / 200) * player.researches[10]
-  G.acceleratorMultiplier *= 1 + (1 / 20) * player.researches[86]
-  G.acceleratorMultiplier *= 1 + (1 / 100) * player.researches[126]
-  G.acceleratorMultiplier *= 1 + (0.8 / 100) * player.researches[141]
-  G.acceleratorMultiplier *= 1 + (0.6 / 100) * player.researches[156]
-  G.acceleratorMultiplier *= 1 + (0.4 / 100) * player.researches[171]
-  G.acceleratorMultiplier *= 1 + (0.2 / 100) * player.researches[186]
-  G.acceleratorMultiplier *= 1 + (0.01 / 100) * player.researches[200]
-  G.acceleratorMultiplier *= 1 + (0.01 / 100) * player.cubeUpgrades[50]
-  G.acceleratorMultiplier *= Math.pow(
-    1.01,
-    player.upgrades[21]
-      + player.upgrades[22]
-      + player.upgrades[23]
-      + player.upgrades[24]
-      + player.upgrades[25]
-  )
-  if (
-    (player.currentChallenge.transcension !== 0
-      || player.currentChallenge.reincarnation !== 0)
-    && player.upgrades[50] > 0.5
-  ) {
-    G.acceleratorMultiplier *= 1.25
-  }
-}
-
-export const calculatePositiveSalvageMultiplier = () => {
-  let multiplier = 1 + posSalvagePerkSings.filter((x) => x <= player.highestSingularityCount).length / 100
-  multiplier += getTalismanEffects('achievement').positiveSalvageMult
-
-  return multiplier
-}
-
-export const calculateRawPositiveSalvage = () => {
-  return positiveSalvageStats.reduce((a, b) => a + b.stat(), 0)
-}
-
+export const calculatePositiveSalvageMultiplier = () => calculateTotalStat(positiveSalvageStatMultiplier)
+export const calculateRawPositiveSalvage = () => calculateTotalStat(positiveSalvageStats)
 export const calculatePositiveSalvage = () => {
   if (player.singularityChallenges.taxmanLastStand.enabled) {
     const baseSalvage = 100
@@ -603,25 +596,135 @@ export const calculatePositiveSalvage = () => {
   return calculateRawPositiveSalvage() * calculatePositiveSalvageMultiplier()
 }
 
-export const calculateNegativeSalvageMultiplier = () => {
-  let multiplier = 1 - negSalvagePerkSings.filter((x) => x <= player.highestSingularityCount).length / 100
-  multiplier += getTalismanEffects('achievement').negativeSalvageMult
-  return multiplier
-}
-
-export const calculateRawNegativeSalvage = () => {
-  return negativeSalvageStats.reduce((a, b) => a + b.stat(), 0)
-}
-
+export const calculateNegativeSalvageMultiplier = () => Math.max(0, calculateTotalStat(negativeSalvageStatMultiplier))
+export const calculateRawNegativeSalvage = () => calculateTotalStat(negativeSalvageStats)
 export const calculateNegativeSalvage = () => {
   return calculateRawNegativeSalvage() * calculateNegativeSalvageMultiplier()
+}
+
+export const baseConstruction = 1
+const challenge4ConstructionDivisor = 2
+const challenge8ConstructionDivisor = 5
+export const buildingConstructionSoftcap = {
+  coin: 1000,
+  diamond: 1000,
+  mythos: 1000,
+  particle: 1000
+} as const
+
+type AccelMultConstructionType = 'accelerator' | 'multiplier' | 'acceleratorBoost'
+type ConstructionType = keyof typeof buildingConstructionSoftcap | AccelMultConstructionType
+
+const challengeConstructionExempt = new Set<ConstructionType>([
+  'particle',
+  'accelerator',
+  'multiplier',
+  'acceleratorBoost'
+])
+
+export const calculateRawConstruction = () => calculateTotalStat(constructionStats)
+export const calculateConstruction = () => calculateRawConstruction() * calculateTotalStat(constructionMultiplierStats)
+
+const getChallengeConstructionDivisor = (type: ConstructionType) => {
+  if (challengeConstructionExempt.has(type)) {
+    return 1
+  }
+  if (player.currentChallenge.reincarnation === 8) {
+    return challenge8ConstructionDivisor
+  }
+  if (
+    type !== 'mythos' && (player.currentChallenge.transcension === 4 || player.currentChallenge.reincarnation === 10)
+  ) {
+    return challenge4ConstructionDivisor
+  }
+  return 1
+}
+
+export const calculateBuildingConstruction = (type: ConstructionType) => {
+  return calculateConstruction() / getChallengeConstructionDivisor(type)
+    / corruptionEffect(activeCorruptionLevel(), 'construction')
+}
+
+export const calculateAccelMultConstructionEffect = (type: AccelMultConstructionType) =>
+  Math.sqrt(calculateBuildingConstruction(type))
+
+const freeAccelMultAdditiveStats = {
+  accelerator: freeAcceleratorAdditiveStats,
+  multiplier: freeMultiplierAdditiveStats
+} as const
+
+const freeAccelMultMultiplicativeStats = {
+  accelerator: freeAcceleratorMultiplierStats,
+  multiplier: freeMultiplierMultiplierStats
+} as const
+
+export const hepteractFreeAccelMult = {
+  accelerator: () => getHepteractEffects('accelerator').accelerators,
+  multiplier: () => getHepteractEffects('multiplier').multiplier
+} as const
+
+export const hepteractFreeAccelMultMultiplier = {
+  accelerator: () => getHepteractEffects('accelerator').acceleratorMultiplier,
+  multiplier: () => getHepteractEffects('multiplier').multiplierMultiplier
+} as const
+
+const calculateRawFreeAccelMult = (type: keyof typeof freeAccelMultAdditiveStats) =>
+  calculateTotalStat(freeAccelMultAdditiveStats[type]) * calculateTotalStat(freeAccelMultMultiplicativeStats[type])
+
+const freeAccelMultRawHardcap = 1e300
+export const freeAccelMultHardcap = 1e100
+
+export const calculateFreeAccelMult = (type: keyof typeof freeAccelMultAdditiveStats) =>
+  Math.floor(
+    Math.min(
+      freeAccelMultRawHardcap,
+      (Math.pow(calculateRawFreeAccelMult(type), challenge15CorruptionEffect('viscosity'))
+        + hepteractFreeAccelMult[type]())
+        * G.challenge15Rewards[type].value
+        * hepteractFreeAccelMultMultiplier[type]()
+    )
+  )
+
+export const calculateEffectiveFreeAccelMult = (freeAmount: number, viscosity: number) =>
+  Math.min(freeAccelMultHardcap, freeAmount / viscosity)
+
+export const calculateFreeAcceleratorBoosts = () =>
+  Math.floor(
+    Math.min(
+      1e100,
+      calculateTotalStat(freeAcceleratorBoostAdditiveStats) * calculateTotalStat(freeAcceleratorBoostMultiplierStats)
+    )
+  )
+
+export const calculateAcceleratorsPerBoost = () =>
+  5
+  + 2 * player.researches[18]
+  + 2 * player.researches[19]
+  + 3 * player.researches[20]
+  + calculateAcceleratorCubeBlessing()
+
+export const calculateTotalAcceleratorBoost = () => {
+  G.freeAcceleratorBoost = calculateFreeAcceleratorBoosts()
+  G.totalAcceleratorBoost = player.acceleratorBoostBought + G.freeAcceleratorBoost
 }
 
 export const calculateTotalSalvage = () => {
   return calculatePositiveSalvage() + calculateNegativeSalvage()
 }
 
-export const calculateSalvageRuneEXPMultiplier = (salvageVal: number | undefined = undefined): Decimal => {
+export const calculateBadOfferingsSalvage = () => {
+  return corruptionEffect(activeCorruptionLevel(), 'salvage') * calculateNegativeSalvageMultiplier()
+}
+
+export const calculateChallenge15RuneSalvage = () => {
+  return challenge15CorruptionEffect('drought') * calculateNegativeSalvageMultiplier()
+}
+
+export const calculateFirstFiveRuneSalvage = () => {
+  return calculateTotalSalvage() + calculateBadOfferingsSalvage() + calculateChallenge15RuneSalvage()
+}
+
+export const calculateSalvageRuneEXPMultiplier = (salvageVal?: number): Decimal => {
   let salvage = salvageVal
   // Factors where Salvage comes from
   if (salvage === undefined) {
@@ -631,9 +734,7 @@ export const calculateSalvageRuneEXPMultiplier = (salvageVal: number | undefined
   return Decimal.pow(10, salvage / 30)
 }
 
-export const calculateRawAntSpeedMult = () => {
-  return statLineDecimalMultiplication(antSpeedStats)
-}
+export const calculateRawAntSpeedMult = () => calculateTotalStat(antSpeedStats)
 
 export const calculateActualAntSpeedMult = () => {
   const base = calculateRawAntSpeedMult()
@@ -642,7 +743,7 @@ export const calculateActualAntSpeedMult = () => {
   let exponent = 1
   if (player.currentChallenge.ascension === 12) {
     exponent = 0.75
-  } else if (player.currentChallenge.ascension === 13) {
+  } else if (useChallenge13Modifiers()) {
     exponent = 0.23
   } else if (player.currentChallenge.ascension === 14) {
     exponent = 0.2
@@ -666,16 +767,89 @@ export const timeWarp = async () => {
 
   DOMCacheGetOrSet('offlineContainer').style.display = 'flex'
   DOMCacheGetOrSet('offlineBlur').style.display = ''
-  calculateOffline(timeUse)
+  await calculateOffline(timeUse)
+}
+
+let offlineDialogActive = false
+
+export const isOfflineDialogOpen = () => offlineDialogActive
+
+const setExitOfflineVisible = (visible: boolean) => {
+  const el = DOMCacheGetOrSet('exitOffline')
+  el.style.visibility = visible ? 'visible' : 'hidden'
+
+  if (!visible) {
+    return
+  }
+
+  setTimeout(() => {
+    // The dialog may already have been dismissed in the meantime
+    if (offlineDialogActive) {
+      el.focus()
+    }
+  }, 100)
+}
+
+let offlineQueue: Promise<void> = Promise.resolve()
+let offlineRunGeneration = 0
+
+// Resolves once every currently pending offline simulation has finished (or
+// immediately when none is running)
+export const afterOfflineProgress = () => offlineQueue
+
+export const cancelOfflineProgress = () => {
+  offlineRunGeneration += 1
+  // A cancelled run does no further work before observing the new generation and
+  // aborting, so the warp flag can be cleared now
+  G.timeWarp = false
+
+  // reloadShit is about to replace and rebuild the game state. Keep its loading
+  // screen up instead of using exitOffline(), which exposes the unfinished page
+  // and enables hotkeys before offline progress starts.
+  offlineDialogActive = false
+  setExitOfflineVisible(false)
+  document.body.classList.remove('scrollbar')
+  document.body.classList.add('loading')
+  DOMCacheGetOrSet('notificationStack').style.display = 'none'
+  DOMCacheGetOrSet('offlineContainer').style.display = 'none'
+  DOMCacheGetOrSet('transparentBG').style.display = 'block'
+  DOMCacheGetOrSet('offlineBlur').style.display = ''
 }
 
 /**
  * @param forceTime The number of SECONDS to warp. Why the fuck is it in seconds?
  */
 export const calculateOffline = (forceTime = 0, fromTips = false) => {
+  const generation = offlineRunGeneration
+  const run = offlineQueue.then(async () => {
+    if (generation !== offlineRunGeneration) {
+      return
+    }
+
+    try {
+      await runOfflineProgress(forceTime, fromTips, generation)
+    } catch (e) {
+      G.timeWarp = false
+      exitOffline()
+      throw e
+    }
+  })
+  offlineQueue = run.catch(() => {})
+  return run
+}
+
+const offlineSliceBudgetMs = 10
+
+const runOfflineProgress = async (forceTime: number, fromTips: boolean, generation: number) => {
   disableHotkeys()
 
   G.timeWarp = true
+
+  // Block input for the entire simulation, not just while the results dialog is up
+  setExitOfflineVisible(false)
+  document.body.classList.remove('scrollbar')
+  document.body.classList.add('loading')
+  DOMCacheGetOrSet('transparentBG').style.display = 'block'
 
   // Variable Declarations i guess
   const maximumTimer = !fromTips
@@ -685,7 +859,7 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
       * PCoinUpgradeEffects.OFFLINE_TIMER_CAP_BUFF
     : 1e100 // If someone exceeds this, we will be very rich aha!
 
-  const updatedTime = Date.now()
+  const updatedTime = DateNow()
   const timeAdd = Math.min(
     maximumTimer,
     Math.max(forceTime, (updatedTime - player.offlinetick) / 1000)
@@ -705,17 +879,24 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
 
   const offlineDialog = player.offlinetick > 0
 
-  player.offlinetick = player.offlinetick < 1.5e12 ? Date.now() : player.offlinetick
+  player.offlinetick = player.offlinetick < 1.5e12 ? DateNow() : player.offlinetick
 
   G.timeMultiplier = calculateGlobalSpeedMult()
-  const obtainiumGain = calculateResearchAutomaticObtainium(timeAdd)
 
   const resetAdd = {
     prestige: (player.prestigeCount > 0) ? timeAdd / Math.max(0.25, player.fastestprestige) : 0,
     offering: Math.floor(timeAdd),
     transcension: (player.transcendCount > 0) ? timeAdd / Math.max(0.25, player.fastesttranscend) : 0,
     reincarnation: (player.reincarnationCount > 0) ? timeAdd / Math.max(0.25, player.fastestreincarnate) : 0,
-    obtainium: obtainiumGain.times(timeAdd).times(G.timeMultiplier)
+    obtainium: calculateResearchAutomaticObtainium(timeAdd)
+  }
+
+  if (player.singularityChallenges.barDependence.enabled) {
+    resetAdd.prestige = 0
+    resetAdd.offering = 0
+    resetAdd.transcension = 0
+    resetAdd.reincarnation = 0
+    resetAdd.obtainium = new Decimal()
   }
 
   const resetAddDisplay = {
@@ -735,7 +916,8 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
     ambrosia: player.lifetimeAmbrosia,
     redAmbrosia: player.lifetimeRedAmbrosia,
     ambrosiaPoints: timeAdd * calculateAmbrosiaGenerationSpeed(),
-    redAmbrosiaPoints: timeAdd * calculateRedAmbrosiaGenerationSpeed()
+    redAmbrosiaPoints: timeAdd * calculateRedAmbrosiaGenerationSpeed(),
+    purpleHoney: player.purpleReactor.lifetimePurpleHoney
   }
 
   addTimers('ascension', timeAdd)
@@ -743,8 +925,6 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
   addTimers('goldenQuarks', timeAdd)
   addTimers('singularity', timeAdd)
   addTimers('octeracts', timeTick)
-  addTimers('ambrosia', timeAdd)
-  addTimers('redAmbrosia', timeAdd)
 
   updatePrestigeCount(resetAdd.prestige)
   updateTranscensionCount(resetAdd.transcension)
@@ -752,31 +932,43 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
 
   timerAdd.ascension = player.ascensionCounter - timerAdd.ascension
   timerAdd.quarks = quarkHandler().gain - timerAdd.quarks
-  timerAdd.ambrosia = player.lifetimeAmbrosia - timerAdd.ambrosia
-  timerAdd.redAmbrosia = player.lifetimeRedAmbrosia - timerAdd.redAmbrosia
 
   resetAddDisplay.prestige = player.prestigeCount - resetAddDisplay.prestige
   resetAddDisplay.transcension = player.transcendCount - resetAddDisplay.transcension
   resetAddDisplay.reincarnation = player.reincarnationCount - resetAddDisplay.reincarnation
 
   // 200 simulated all ticks [July 12, 2021]
-  const runOffline = setInterval(() => {
+  let sliceStart = PerformanceNow()
+  while (resourceTicks > 0) {
+    if (PerformanceNow() - sliceStart > offlineSliceBudgetMs) {
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
+      // A reload/import may have replaced the save while we yielded
+      if (generation !== offlineRunGeneration) {
+        G.timeWarp = false
+        return
+      }
+
+      sliceStart = PerformanceNow()
+    }
+
     G.timeMultiplier = calculateGlobalSpeedMult()
-    calculateObtainium()
 
     // Reset Stuff lmao!
-    addTimers('prestige', timeTick)
-    addTimers('transcension', timeTick)
-    addTimers('reincarnation', timeTick)
-    addTimers('octeracts', timeTick)
 
-    resourceGain(timeTick * G.timeMultiplier)
-    generateAntsAndCrumbs(timeTick)
-
+    const timerSpeedMult = memoize(calculateGlobalSpeedMult)
+    addTimers('prestige', timeTick, timerSpeedMult)
+    addTimers('transcension', timeTick, timerSpeedMult)
+    addTimers('reincarnation', timeTick, timerSpeedMult)
     // Auto Obtainium Stuff
     if (player.researches[61] > 0 && player.currentChallenge.ascension !== 14) {
       automaticTools('addObtainium', timeTick)
     }
+    addTimers('octeracts', timeTick)
+    addTimers('purpleReactor', timeTick)
+
+    resourceGain(timeTick * G.timeMultiplier)
+    generateAntsAndCrumbs(timeTick)
 
     // Auto Ant Sacrifice Stuff
     if (getAchievementReward('antSacrificeUnlock')) {
@@ -786,7 +978,7 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
     // Auto Offerings
     automaticTools('addOfferings', timeTick)
     // Auto Rune Sacrifice Stuff
-    if (getShopUpgradeEffects('offeringAuto', 'autoRune') && player.autoSacrificeToggle) {
+    if (player.autoSacrificeToggle && getShopUpgradeEffects('offeringAuto', 'autoRune')) {
       automaticTools('runeSacrifice', timeTick)
     }
 
@@ -796,12 +988,12 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
     }
 
     resourceTicks -= 1
-    // Misc functions
-    if (resourceTicks < 1) {
-      clearInterval(runOffline)
-      G.timeWarp = false
-    }
-  }, 0)
+  }
+
+  timerAdd.ambrosia = player.lifetimeAmbrosia - timerAdd.ambrosia
+  timerAdd.redAmbrosia = player.lifetimeRedAmbrosia - timerAdd.redAmbrosia
+  timerAdd.purpleHoney = player.purpleReactor.lifetimePurpleHoney - timerAdd.purpleHoney
+  G.timeWarp = false
 
   DOMCacheGetOrSet('offlinePrestigeCount').innerHTML = i18next.t(
     'offlineProgress.prestigeCount',
@@ -889,23 +1081,28 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
       value2: format(timerAdd.redAmbrosiaPoints, 0, true)
     }
   )
+  DOMCacheGetOrSet('offlinePurpleHoneyCount').innerHTML = i18next.t(
+    'offlineProgress.purpleHoney',
+    {
+      value: format(timerAdd.purpleHoney, 2, true)
+    }
+  )
 
   DOMCacheGetOrSet('progressbardescription').textContent = i18next.t(
     'calculate.offlineEarnings'
   )
 
-  player.offlinetick = updatedTime
+  player.offlinetick = Math.max(player.offlinetick, updatedTime)
 
   saveSynergy()
 
   updateTalismanInventory()
-  calculateObtainium()
 
   // allow aesthetic offline progress
   if (offlineDialog) {
-    const el = DOMCacheGetOrSet('notification')
-    el.classList.add('slide-out')
-    el.classList.remove('slide-in')
+    offlineDialogActive = true
+    setExitOfflineVisible(true)
+    DOMCacheGetOrSet('notificationStack').style.display = 'none'
     document.body.classList.remove('scrollbar')
     document.body.classList.add('loading')
     DOMCacheGetOrSet('offlineContainer').style.display = 'flex'
@@ -916,11 +1113,18 @@ export const calculateOffline = (forceTime = 0, fromTips = false) => {
 }
 
 export const exitOffline = () => {
+  if (G.timeWarp) {
+    return
+  }
+
+  offlineDialogActive = false
+  setExitOfflineVisible(false)
   document.body.classList.remove('loading')
   document.body.classList.add('scrollbar')
   DOMCacheGetOrSet('transparentBG').style.display = 'none'
   DOMCacheGetOrSet('offlineContainer').style.display = 'none'
   DOMCacheGetOrSet('offlineBlur').style.display = 'none'
+  DOMCacheGetOrSet('notificationStack').style.display = ''
   enableHotkeys()
 }
 
@@ -947,7 +1151,7 @@ export const calculateTotalOcteractCubeBonus = () => {
     const bonus = 1 + (2 / 1000) * player.totalWowOcteracts // At 1,000 returns 3
     return bonus > 1.00001 ? bonus : 1
   } else {
-    const power = 2 + +player.singularityChallenges.noOcteracts.rewards.octeractPow
+    const power = 2 + getSingularityChallengeEffect('noOcteracts', 'octeractPow')
     return 3 * Math.pow(Math.log10(player.totalWowOcteracts) - 2, power) // At 1,000 returns 3
   }
 }
@@ -965,14 +1169,14 @@ export const calculateTotalOcteractQuarkBonus = () => {
 }
 
 export const calculateTotalOcteractOfferingBonus = () => {
-  if (!player.singularityChallenges.noOcteracts.rewards.offeringBonus) {
+  if (!getSingularityChallengeEffect('noOcteracts', 'offeringBonus')) {
     return 1
   }
   return Math.pow(calculateTotalOcteractCubeBonus(), 1.25)
 }
 
 export const calculateTotalOcteractObtainiumBonus = () => {
-  if (!player.singularityChallenges.noOcteracts.rewards.obtainiumBonus) {
+  if (!getSingularityChallengeEffect('noOcteracts', 'obtainiumBonus')) {
     return 1
   }
   return Math.pow(calculateTotalOcteractCubeBonus(), 1.25)
@@ -1055,11 +1259,11 @@ const solveQuadratic = (
   positive: boolean
 ) => {
   if (a < 0) {
-    throw new Error(String(i18next.t('calculate.quadraticImproperError')))
+    throw new Error(i18next.t('calculate.quadraticImproperError'))
   }
   const determinant = Math.pow(b, 2) - 4 * a * c
   if (determinant < 0) {
-    throw new Error(String(i18next.t('calculate.quadraticDeterminantError')))
+    throw new Error(i18next.t('calculate.quadraticDeterminantError'))
   }
 
   if (determinant === 0) {
@@ -1101,7 +1305,7 @@ export const calculateCubicSumData = (
    *  We can rewrite as n^2 + n - 2 * det = 0 and solve for n.
    */
   if (totalToSpend < 0) {
-    throw new Error(String(i18next.t('calculate.cubicSumNegativeError')))
+    throw new Error(i18next.t('calculate.cubicSumNegativeError'))
   }
 
   const determinantRoot = Math.pow(totalToSpend / baseCost, 0.5) // Assume nonnegative!
@@ -1128,246 +1332,126 @@ export const calculateCubicSumData = (
     own function (specifically: calc of effective score and other global multipliers) to make it easy.
 */
 
-const computeAscensionScoreBonusMultiplier = () => {
-  let multiplier = 1
-  multiplier *= G.challenge15Rewards.score.value
-  multiplier *= calculateAscensionScorePlatonicBlessing()
-  multiplier *= player.campaigns.ascensionScoreMultiplier
-  multiplier *= getRuneEffects('finiteDescent').ascensionScore
-  if (player.cubeUpgrades[21] > 0) {
-    multiplier *= 1 + 0.05 * player.cubeUpgrades[21]
-  }
-  if (player.cubeUpgrades[31] > 0) {
-    multiplier *= 1 + 0.05 * player.cubeUpgrades[31]
-  }
-  if (player.cubeUpgrades[41] > 0) {
-    multiplier *= 1 + 0.05 * player.cubeUpgrades[41]
-  }
-  multiplier *= +getAchievementReward('ascensionScore')
-  multiplier *= 1 + 0.5 * getGQUpgradeEffect('masterPack')
-  if (G.isEvent) {
-    multiplier *= 1 + calculateEventBuff(BuffType.AscensionScore)
-  }
-
-  return multiplier
+export const calculateEventCubeGain = () => {
+  return G.isEvent ? Math.pow(1 + calculateEventBuff(BuffType.AscensionScore), 0.4) : 1
 }
 
-export const calculateAscensionScore = () => {
-  let baseScore = 0
-  const corruptionMultiplier = player.corruptions.used.totalCorruptionAscensionMultiplier
-  let effectiveScore = 0
+const sumChallengeCompletions = (from: number, to: number) => {
+  let completions = 0
+  for (let i = from; i <= to; i++) {
+    completions += player.challengecompletions[i]
+  }
+  return completions
+}
 
-  // let bonusLevel = getGQUpgradeEffect('corruptionFifteen')
-  // bonusLevel += +player.singularityChallenges.oneChallengeCap.rewards.freeCorruptionLevel
+export const transcensionChallengeCubeBankPerCompletion = () => 1 + 0.05 * player.cubeUpgrades[56]
 
-  // Init Arrays with challenge values :)
-  const challengeScoreArrays1 = [0, 8, 10, 12, 15, 20, 60, 80, 120, 180, 300]
+export const reincarnationChallengeCubeBankPerCompletion = 10
 
-  challengeScoreArrays1[1] += player.cubeUpgrades[56]
-  challengeScoreArrays1[2] += player.cubeUpgrades[56]
-  challengeScoreArrays1[3] += player.cubeUpgrades[56]
+export const cubeUpgradeCubeBankAmount = () =>
+  15 * player.cubeUpgrades[21] + 20 * player.cubeUpgrades[31] + 25 * player.cubeUpgrades[41]
 
-  // Iterate challenges 1 through 10 and award base score according to the array values
-  // Transcend Challenge: First Threshold at 75 completions, second at 750
-  // Reincarnation Challenge: First at 25, second at 60. It probably should be higher but Platonic is a dumb dumb
-  for (let i = 1; i <= 10; i++) {
-    baseScore += challengeScoreArrays1[i] * player.highestchallengecompletions[i]
-    if (i <= 5 && player.highestchallengecompletions[i] >= 75) {
-      baseScore += challengeScoreArrays2[i] * (player.highestchallengecompletions[i] - 75)
-      if (player.highestchallengecompletions[i] >= 750) {
-        baseScore += challengeScoreArrays3[i]
-          * (player.highestchallengecompletions[i] - 750)
-      }
-      if (player.highestchallengecompletions[i] >= 9000) {
-        baseScore += challengeScoreArrays4[i]
-          * (player.highestchallengecompletions[i] - 9000)
-      }
+export const challengeTenCubeBankMultiplier = () => 1.02 + 0.005 * player.cubeUpgrades[39]
+
+export const calculateCubeBankSources = () => {
+  const reincarnationCompletions = sumChallengeCompletions(6, 9)
+  const transcensionChallenges = transcensionCubeBankTiers.map(({ from, to, weight }) => {
+    let completions = 0
+    for (let i = 1; i <= 5; i++) {
+      completions += Math.max(0, Math.min(player.challengecompletions[i], to) - from + 1)
     }
-    if (i <= 10 && i > 5 && player.highestchallengecompletions[i] >= 25) {
-      baseScore += challengeScoreArrays2[i] * (player.highestchallengecompletions[i] - 25)
-      if (player.highestchallengecompletions[i] >= 60) {
-        baseScore += challengeScoreArrays3[i]
-          * (player.highestchallengecompletions[i] - 60)
-      }
-    }
-  }
-
-  baseScore += getAntUpgradeEffect(AntUpgrades.AscensionScore).ascensionScoreBase
-
-  // Calculation of Challenge 10 Exponent (It gives a constant multiplier per completion)
-  // 1.03 +
-  // 0.005 from Cube 3x9 +
-  // 0.0025 from Platonic ALPHA (Plat 1x5)
-  // 0.005 from Platonic BETA (Plat 2x5)
-  // Max: 1.0425
-  baseScore *= Math.pow(
-    1.03
-      + 0.005 * player.cubeUpgrades[39]
-      + 0.0025 * (player.platonicUpgrades[5] + player.platonicUpgrades[10]),
-    player.highestchallengecompletions[10]
-  )
-  // Corruption Multiplier is the product of all Corruption Score multipliers based on used corruptions
-  // let bonusVal = getGQUpgradeEffect('advancedPack')
-  //   ? 0.33
-  //   : 0
-  // bonusVal += +player.singularityChallenges.oneChallengeCap.rewards.corrScoreIncrease
-  // bonusVal += 0.3 * player.cubeUpgrades[74]
-
-  const bonusMultiplier = computeAscensionScoreBonusMultiplier()
-
-  effectiveScore = baseScore * corruptionMultiplier * bonusMultiplier
-  if (effectiveScore > 1e23) {
-    effectiveScore = Math.pow(effectiveScore, 0.5) * Math.pow(1e23, 0.5)
-  }
-
-  if (getGQUpgradeEffect('expertPack')) {
-    effectiveScore *= 1.5
-  }
-
+    const perCompletion = weight * transcensionChallengeCubeBankPerCompletion()
+    return { from, to, completions, perCompletion, amount: completions * perCompletion }
+  })
   return {
-    baseScore,
-    corruptionMultiplier,
-    bonusMultiplier,
-    effectiveScore
+    transcensionChallenges,
+    ants: getAntUpgradeEffect(AntUpgrades.AscensionScore).cubesBanked,
+    cubeUpgrades: cubeUpgradeCubeBankAmount(),
+    finiteDescent: getRuneEffects('finiteDescent', 'cubesBanked'),
+    achievements: +getAchievementReward('cubesBanked'),
+    advancedPack: getGQUpgradeEffect('advancedPack', 'cubesBanked'),
+    reincarnationChallenges: {
+      completions: reincarnationCompletions,
+      amount: reincarnationChallengeCubeBankPerCompletion * reincarnationCompletions
+    },
+    challengeTen: {
+      completions: player.challengecompletions[10],
+      multiplier: Math.pow(challengeTenCubeBankMultiplier(), player.challengecompletions[10])
+    }
   }
+}
+
+export const calculateCubeBank = () => {
+  const {
+    transcensionChallenges,
+    ants,
+    cubeUpgrades,
+    finiteDescent,
+    achievements,
+    advancedPack,
+    reincarnationChallenges,
+    challengeTen
+  } = calculateCubeBankSources()
+  const transcensionAmount = transcensionChallenges.reduce((total, tier) => total + tier.amount, 0)
+  return (transcensionAmount + reincarnationChallenges.amount + ants + cubeUpgrades + finiteDescent + achievements
+    + advancedPack)
+    * challengeTen.multiplier
 }
 
 export const CalcCorruptionStuff = () => {
-  const scores = calculateAscensionScore()
+  const cubeGain = calculateCubeMultiplier()
+  const tesseractGain = calculateTesseractMultiplier()
 
-  const baseScore = scores.baseScore
-  const corruptionMultiplier = scores.corruptionMultiplier
-  const bonusMultiplier = scores.bonusMultiplier
-  const effectiveScore = scores.effectiveScore
-
-  // Calculation of Cubes :)
-  const cubeGain = calculateCubeMultiplierWithTau()
-
-  // Calculation of Tesseracts :))
-  let tesseractGain = 1
-  if (effectiveScore >= 100000) {
-    tesseractGain += 0.5
-  }
-  tesseractGain *= calculateTesseractMultiplier()
-
-  // Calculation of Hypercubes :)))
-  let hypercubeGain = effectiveScore >= 1e9 ? 1 : 0
+  let hypercubeGain = isCorruptionCubeUnlocked(ascensionEffectiveCorruptionLevel(), 'hypercubes') ? 1 : 0
   hypercubeGain *= calculateHypercubeMultiplier()
 
-  // Calculation of Platonic Cubes :))))
-  let platonicGain = effectiveScore >= 2.666e12 ? 1 : 0
+  let platonicGain = isCorruptionCubeUnlocked(ascensionEffectiveCorruptionLevel(), 'platonics') ? 1 : 0
   platonicGain *= calculatePlatonicMultiplier()
 
-  // Calculation of Hepteracts :)))))
-  let hepteractGain = G.challenge15Rewards.hepteractsUnlocked.value
-      && effectiveScore >= 1.666e17
-    ? 1
-    : 0
+  let hepteractGain = isCorruptionCubeUnlocked(ascensionEffectiveCorruptionLevel(), 'hepteracts') ? 1 : 0
   hepteractGain *= calculateHepteractMultiplier()
 
   return {
     wowCubes: Math.min(1e300, Math.floor(cubeGain)),
-    wowTesseracts: Math.min(1e300, Math.max(player.singularityCount, Math.floor(tesseractGain))),
+    wowTesseracts: Math.min(1e300, Math.floor(tesseractGain)),
     wowHypercubes: Math.min(1e300, Math.floor(hypercubeGain)),
     wowPlatonicCubes: Math.min(1e300, Math.floor(platonicGain)),
-    wowHepteracts: Math.min(1e300, Math.floor(hepteractGain)),
-    baseScore: Math.floor(baseScore),
-    bonusMultiplier: bonusMultiplier,
-    corruptionMultiplier: corruptionMultiplier,
-    effectiveScore: Math.floor(effectiveScore)
+    wowHepteracts: Math.min(1e300, Math.floor(hepteractGain))
   }
-  /*return [
-    // WTF IS THIS...
-    // Also, I don't think the first element of this array is used anywhere. So stupid
-    cubeGain,
-    Math.floor(baseScore),
-    corruptionMultiplier,
-    Math.floor(effectiveScore),
-    Math.min(1e300, Math.floor(cubeGain)),
-    Math.min(
-      1e300,
-      Math.max(player.singularityCount, Math.floor(tesseractGain))
-    ),
-    Math.min(1e300, Math.floor(hypercubeGain)),
-    Math.min(1e300, Math.floor(platonicGain)),
-    Math.min(1e300, Math.floor(hepteractGain)),
-    bonusMultiplier
-  ]*/
 }
 
 export const calculateAscensionCount = () => {
   if (player.singularityChallenges.limitedAscensions.enabled) {
     return 1
   }
-  return Math.floor(ascensionCountMultStats.reduce(
-    (a, b) => a * b.stat(),
-    1
-  ))
+  return calculateTotalStat(ascensionCountMultStats)
+}
+
+export const calculateMaxBaseCubeQuarkMultiplier = (singularityCount: number) => {
+  let multiplier = 3
+  for (const singularity of generousOrbsLevels) {
+    if (singularityCount >= singularity) {
+      multiplier += 1
+    }
+  }
+  return multiplier
+}
+
+export const calculateBaseCubeQuarkMultiplier = () => {
+  const effect = player.overfluxOrbs <= 1000
+    ? 0.0005 * player.overfluxOrbs
+    : 0.5 + 0.1 * Math.log10(player.overfluxOrbs / 1000)
+  return Math.min(1 + effect, calculateMaxBaseCubeQuarkMultiplier(player.highestSingularityCount))
+}
+
+export const calculateAutoWarpQuarkMultiplier = () => {
+  return player.autoWarpCheck ? 1 + player.dailyPowderResetUses : 1
 }
 
 export const calculateCubeQuarkMultiplier = () => {
-  return (
-    (calculateSigmoid(2, Math.pow(player.overfluxOrbs, 0.5), 40)
-      + calculateSigmoid(1.5, Math.pow(player.overfluxOrbs, 0.5), 160)
-      + calculateSigmoid(1.5, Math.pow(player.overfluxOrbs, 0.5), 640)
-      + calculateSigmoid(
-        1.15,
-        +(player.highestSingularityCount >= 1)
-          * Math.pow(player.overfluxOrbs, 0.45),
-        2560
-      )
-      + calculateSigmoid(
-        1.15,
-        +(player.highestSingularityCount >= 2)
-          * Math.pow(player.overfluxOrbs, 0.4),
-        10000
-      )
-      + calculateSigmoid(
-        1.25,
-        +(player.highestSingularityCount >= 5)
-          * Math.pow(player.overfluxOrbs, 0.35),
-        40000
-      )
-      + calculateSigmoid(
-        1.25,
-        +(player.highestSingularityCount >= 10)
-          * Math.pow(player.overfluxOrbs, 0.32),
-        160000
-      )
-      + calculateSigmoid(
-        1.35,
-        +(player.highestSingularityCount >= 15)
-          * Math.pow(player.overfluxOrbs, 0.27),
-        640000
-      )
-      + calculateSigmoid(
-        1.45,
-        +(player.highestSingularityCount >= 20)
-          * Math.pow(player.overfluxOrbs, 0.24),
-        2e6
-      )
-      + calculateSigmoid(
-        1.55,
-        +(player.highestSingularityCount >= 25)
-          * Math.pow(player.overfluxOrbs, 0.21),
-        1e7
-      )
-      + calculateSigmoid(
-        1.85,
-        +(player.highestSingularityCount >= 30)
-          * Math.pow(player.overfluxOrbs, 0.18),
-        4e7
-      )
-      + calculateSigmoid(
-        3,
-        +(player.highestSingularityCount >= 35)
-          * Math.pow(player.overfluxOrbs, 0.15),
-        1e8
-      )
-      - 11)
+  return calculateBaseCubeQuarkMultiplier()
     * getShopUpgradeEffects('cubeToQuarkAll', 'quarkMult')
-    * (player.autoWarpCheck ? 1 + player.dailyPowderResetUses : 1)
-  )
+    * calculateAutoWarpQuarkMultiplier()
 }
 
 export const calculateCubeMultFromPowder = () => {
@@ -1408,85 +1492,90 @@ export const calculateSingularityAmbrosiaLuckMilestoneBonus = () => {
 }
 
 export const calculateAmbrosiaGenerationSingularityUpgrade = () => {
-  return getGQUpgradeEffect('singAmbrosiaGeneration')
-    * getGQUpgradeEffect('singAmbrosiaGeneration2')
-    * getGQUpgradeEffect('singAmbrosiaGeneration3')
-    * getGQUpgradeEffect('singAmbrosiaGeneration4')
+  return getGQUpgradeEffect('singAmbrosiaGeneration', 'ambrosiaBarSpeedMult')
+    * getGQUpgradeEffect('singAmbrosiaGeneration2', 'ambrosiaBarSpeedMult')
+    * getGQUpgradeEffect('singAmbrosiaGeneration3', 'ambrosiaBarSpeedMult')
+    * getGQUpgradeEffect('singAmbrosiaGeneration4', 'ambrosiaBarSpeedMult')
 }
 
 export const calculateAmbrosiaLuckSingularityUpgrade = () => {
-  return getGQUpgradeEffect('singAmbrosiaLuck')
-    + getGQUpgradeEffect('singAmbrosiaLuck2')
-    + getGQUpgradeEffect('singAmbrosiaLuck3')
-    + getGQUpgradeEffect('singAmbrosiaLuck4')
+  return getGQUpgradeEffect('singAmbrosiaLuck', 'ambrosiaLuck')
+    + getGQUpgradeEffect('singAmbrosiaLuck2', 'ambrosiaLuck')
+    + getGQUpgradeEffect('singAmbrosiaLuck3', 'ambrosiaLuck')
+    + getGQUpgradeEffect('singAmbrosiaLuck4', 'ambrosiaLuck')
 }
 
 export const calculateAmbrosiaGenerationOcteractUpgrade = () => {
   return (
-    getOcteractUpgradeEffect('octeractAmbrosiaGeneration')
-    * getOcteractUpgradeEffect('octeractAmbrosiaGeneration2')
-    * getOcteractUpgradeEffect('octeractAmbrosiaGeneration3')
-    * getOcteractUpgradeEffect('octeractAmbrosiaGeneration4')
+    getOcteractUpgradeEffect('octeractAmbrosiaGeneration', 'ambrosiaBarSpeedMult')
+    * getOcteractUpgradeEffect('octeractAmbrosiaGeneration2', 'ambrosiaBarSpeedMult')
+    * getOcteractUpgradeEffect('octeractAmbrosiaGeneration3', 'ambrosiaBarSpeedMult')
+    * getOcteractUpgradeEffect('octeractAmbrosiaGeneration4', 'ambrosiaBarSpeedMult')
   )
 }
 
 export const calculateAmbrosiaLuckOcteractUpgrade = () => {
   return (
-    getOcteractUpgradeEffect('octeractAmbrosiaLuck')
-    + getOcteractUpgradeEffect('octeractAmbrosiaLuck2')
-    + getOcteractUpgradeEffect('octeractAmbrosiaLuck3')
-    + getOcteractUpgradeEffect('octeractAmbrosiaLuck4')
+    getOcteractUpgradeEffect('octeractAmbrosiaLuck', 'ambrosiaLuck')
+    + getOcteractUpgradeEffect('octeractAmbrosiaLuck2', 'ambrosiaLuck')
+    + getOcteractUpgradeEffect('octeractAmbrosiaLuck3', 'ambrosiaLuck')
+    + getOcteractUpgradeEffect('octeractAmbrosiaLuck4', 'ambrosiaLuck')
   )
 }
 
-const digitReduction = 4
-
-export const calculateNumberOfThresholds = () => {
-  const numDigits = player.lifetimeAmbrosia > 0 ? 1 + Math.floor(Math.log10(player.lifetimeAmbrosia)) : 0
-  const matissa = Math.floor(player.lifetimeAmbrosia / Math.pow(10, numDigits - 1))
-
-  const extraReduction = matissa >= 3 ? 1 : 0
-
-  // First reduction at 10^(digitReduction+1), add 1 at 3 * 10^(digitReduction+1)
-  return Math.max(0, 2 * (numDigits - digitReduction) - 1 + extraReduction)
+export const calculateRequiredBlueberryTimeEXALT = () => {
+  const multiplier = player.singularityChallenges.barDependence.completions + 1
+  const divisor = 1 + player.lifetimeAmbrosia
+  return Math.max(2.5e7, 1.5e15 * multiplier / divisor)
 }
 
-export const calculateToNextThreshold = () => {
-  const numThresholds = calculateNumberOfThresholds()
-
-  if (numThresholds === 0) {
-    return 10000 - player.lifetimeAmbrosia
-  } else {
-    // This is when the previous threshold is of the form 3 * 10^n
-    if (numThresholds % 2 === 0) {
-      return Math.pow(10, numThresholds / 2 + digitReduction) - player.lifetimeAmbrosia
-    } // Previous threshold is of the form 10^n
-    else {
-      return 3 * Math.pow(10, (numThresholds - 1) / 2 + digitReduction) - player.lifetimeAmbrosia
-    }
+export const calculateRequiredBlueberryTime = (ignoreTwoMind = false) => {
+  if (!ignoreTwoMind && getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')) {
+    return twoMindBarRequirements.ambrosia
   }
-}
 
-export const calculateRequiredBlueberryTime = () => {
-  let val = G.TIME_PER_AMBROSIA // Currently 30
-  val += Math.floor(player.lifetimeAmbrosia / 500)
+  if (player.singularityChallenges.barDependence.enabled) {
+    return calculateRequiredBlueberryTimeEXALT()
+  }
+
+  let val = G.TIME_PER_AMBROSIA // Currently 45
+  val += Math.floor(player.lifetimeAmbrosia / 300)
 
   const acceleratorMult = getShopUpgradeEffects('shopAmbrosiaAccelerator', 'ambrosiaPointRequirementMult')
+  const brickOfLeadMult = getAmbrosiaUpgradeEffects('ambrosiaBrickOfLead', 'barRequirementMult')
 
   val *= acceleratorMult
-  val = Math.ceil(val)
+  val *= brickOfLeadMult
 
-  const thresholds = calculateNumberOfThresholds()
-  const thresholdBase = 2
-  return Math.pow(thresholdBase, thresholds) * val
+  if (player.lifetimeAmbrosia >= 10000) {
+    const extraScalingPower = Math.log10(4)
+    val *= Math.pow(player.lifetimeAmbrosia / 10000, extraScalingPower)
+    val = Math.ceil(val)
+  }
+
+  return val
 }
 
-export const calculateRequiredRedAmbrosiaTime = () => {
-  let val = G.TIME_PER_RED_AMBROSIA // Currently 100,000
-  val += 200 * player.lifetimeRedAmbrosia
+export const calculateRequiredRedAmbrosiaTimeEXALT = () => {
+  const multiplier = player.singularityChallenges.barDependence.completions + 1
+  const divisor = 1 + player.lifetimeRedAmbrosia
+  return Math.max(7.5e3, 2e11 * multiplier / divisor)
+}
 
-  const max = 1e6 * +player.singularityChallenges.limitedTime.rewards.barRequirementMultiplier
-  val *= +player.singularityChallenges.limitedTime.rewards.barRequirementMultiplier
+export const calculateRequiredRedAmbrosiaTime = (ignoreTwoMind = false) => {
+  if (!ignoreTwoMind && getAmbrosiaUpgradeEffects('twoMind', 'twoMindEnabled')) {
+    return twoMindBarRequirements.redAmbrosia
+  }
+
+  if (player.singularityChallenges.barDependence.enabled) {
+    return calculateRequiredRedAmbrosiaTimeEXALT()
+  }
+
+  let val = G.TIME_PER_RED_AMBROSIA // Currently 1,000
+  val += 2 * player.lifetimeRedAmbrosia
+
+  const max = 1e4 * getSingularityChallengeEffect('limitedTime', 'barRequirementMultiplier')
+  val *= getSingularityChallengeEffect('limitedTime', 'barRequirementMultiplier')
 
   return Math.min(max, val)
 }
@@ -1537,7 +1626,7 @@ export const calculateAmbrosiaQuarkMult = () => {
 }
 
 export const calculateExalt3AscensionLimit = (comps: number) => {
-  return Math.max(15 - comps * 2, 0)
+  return Math.max(15 - comps * 2, 0) + 10
 }
 
 export const calculateExalt3Penalty = () => {
@@ -1557,9 +1646,9 @@ export const calculateExalt4EffectiveSingularityMultiplier = (comps: number, for
 
 export const calculateExalt6TimeLimit = (comps: number) => {
   if (comps >= 10) {
-    return 115 - 5 * (comps - 10)
+    return 114 - 6 * (comps - 10)
   } else {
-    return 600 - 60 * comps
+    return 660 - 60 * comps
   }
 }
 
@@ -1594,6 +1683,39 @@ export const calculateDilatedFiveLeafBonus = () => {
   }
 
   return singThresholds.length / 100
+}
+
+const irishAnt3Thresholds = [285, 293]
+export const calculateIrish3PurpleLuck = () => {
+  if (player.highestSingularityCount < irishAnt3Thresholds[0]) {
+    return 0
+  }
+
+  let luckPerSing = 2
+  if (player.highestSingularityCount >= irishAnt3Thresholds[1]) {
+    luckPerSing++
+  }
+
+  return (player.highestSingularityCount - 280) * luckPerSing
+}
+
+const efficientBlueberryThresholds = [283, 289]
+export const calculateEfficientBlueberryPurpleEfficiency = () => {
+  if (player.highestSingularityCount < efficientBlueberryThresholds[0]) {
+    return 0
+  }
+
+  let efficiencyPerTwo = 0.02
+  if (player.highestSingularityCount >= efficientBlueberryThresholds[1]) {
+    efficiencyPerTwo += 0.01
+  }
+
+  const blueberries = calculateBlueberryInventory()
+  return Math.floor(blueberries / 2) * efficiencyPerTwo
+}
+
+export const calculateSingularityPurpleBarSizeMultiplier = () => {
+  return 1 - Math.max(0, Math.floor((player.highestSingularityCount - 280) / 2) / 100)
 }
 
 export const dailyResetCheck = () => {
@@ -1705,17 +1827,8 @@ export const singularityBonusTokenMult = () => {
   return 1
 }
 
-export const resetTimeThreshold = () => {
-  const base = 10
-  let reduction = 0
-
-  reduction += player.campaigns.timeThresholdReduction
-
-  return base - reduction
-}
-
 const calculatePlatonic7UpgradePower = () => {
-  return 1 - player.platonicUpgrades[7] / 30
+  return 1 - player.platonicUpgrades[7] / 20
 }
 
 export const calculateOfferingPotionBaseOfferings = () => {
@@ -1741,8 +1854,8 @@ export const calculateObtainiumPotionBaseObtainium = () => {
 }
 
 export const calculateAscensionSpeedExponentSpread = () => {
-  return getGQUpgradeEffect('singAscensionSpeed')
-    + getGQUpgradeEffect('singAscensionSpeed2')
+  return getGQUpgradeEffect('singAscensionSpeed', 'exponentSpread')
+    + getGQUpgradeEffect('singAscensionSpeed2', 'exponentSpread')
     + getShopUpgradeEffects('chronometerInfinity', 'exponentSpread')
 }
 
@@ -1755,8 +1868,8 @@ export const calculateCookieUpgrade29Luck = () => {
 }
 
 export const calculateRedAmbrosiaCubes = () => {
-  if (getRedAmbrosiaUpgradeEffects('redAmbrosiaCube').unlockedRedAmbrosiaCube) {
-    const exponent = 0.4 + getRedAmbrosiaUpgradeEffects('redAmbrosiaCubeImprover').extraExponent
+  if (getRedAmbrosiaUpgradeEffects('redAmbrosiaCube', 'unlockedRedAmbrosiaCube')) {
+    const exponent = 0.4 + getRedAmbrosiaUpgradeEffects('redAmbrosiaCubeImprover', 'extraExponent')
     return 1 + Math.pow(player.lifetimeRedAmbrosia, exponent) / 100
   } else {
     return 1
@@ -1764,7 +1877,7 @@ export const calculateRedAmbrosiaCubes = () => {
 }
 
 export const calculateRedAmbrosiaObtainium = () => {
-  if (getRedAmbrosiaUpgradeEffects('redAmbrosiaObtainium').unlockRedAmbrosiaObtainium) {
+  if (getRedAmbrosiaUpgradeEffects('redAmbrosiaObtainium', 'unlockRedAmbrosiaObtainium')) {
     return 1 + Math.pow(player.lifetimeRedAmbrosia, 0.6) / 100
   } else {
     return 1
@@ -1772,7 +1885,7 @@ export const calculateRedAmbrosiaObtainium = () => {
 }
 
 export const calculateRedAmbrosiaOffering = () => {
-  if (getRedAmbrosiaUpgradeEffects('redAmbrosiaOffering').unlockRedAmbrosiaOffering) {
+  if (getRedAmbrosiaUpgradeEffects('redAmbrosiaOffering', 'unlockRedAmbrosiaOffering')) {
     return 1 + Math.pow(player.lifetimeRedAmbrosia, 0.6) / 100
   } else {
     return 1

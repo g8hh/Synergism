@@ -1,6 +1,7 @@
 import Decimal, { type DecimalSource } from 'break_infinity.js'
 import DOMPurify from 'dompurify'
 import { DOMCacheGetOrSet } from './Cache/DOM'
+import { bus, SynEvent } from './events/bus'
 import { format } from './Synergism'
 
 export const isDecimal = (o: unknown): o is Decimal =>
@@ -98,7 +99,10 @@ export const sortDecimalWithIndices = (toSort: DecimalSource[]) => {
  * Identical to @see {DOMCacheGetOrSet} but casts the type.
  * @param id {string}
  */
+// eslint-disable-next-line typescript/no-unnecessary-type-parameters
 export const getElementById = <T extends HTMLElement>(id: string) => DOMCacheGetOrSet(id) as T
+
+export const nullPrototype = <T extends object>(obj: T): T => Object.setPrototypeOf(obj, null) as T
 
 /**
  * Pads an array (a) with param (b) (c) times
@@ -130,6 +134,7 @@ export const btoa = (s: string) => {
   try {
     return window.btoa(s)
   } catch (err) {
+    bus.dispatchEvent(new SynEvent('error:report', { extra: { save: s } }))
     console.error('An error occurred:', err)
     // e.code = 5
     return null
@@ -171,6 +176,9 @@ const formatMS = (ms: number) =>
 export const formatS = (s: number) => {
   return formatMS(1000 * s)
 }
+
+export const PerformanceNow = performance.now.bind(performance)
+export const DateNow = Date.now.bind(Date)
 
 const addLeadingZero = (n: number): string => {
   return n < 10 ? `0${n}` : String(n)
@@ -269,7 +277,7 @@ export function memoize<Args extends unknown[], Ret> (fn: (...args: Args) => Ret
   }
 }
 
-export const validateNonnegativeInteger = (n: number | string): boolean => {
+export const validateNonnegativeInteger = (n: number) => {
   return Number.isFinite(n) && !Number.isNaN(n) && Number.isInteger(n)
 }
 /**
@@ -337,7 +345,8 @@ export function isomorphicDecode (input: Uint8Array) {
 }
 
 export const isMobile = (function isMobileDevice() {
-  return window.matchMedia('(pointer: coarse)').matches
+  return PLATFORM === 'mobile'
+    || (window.matchMedia('(any-pointer: coarse)').matches && !window.matchMedia('(any-pointer: fine)').matches)
     || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 })()
 
@@ -360,7 +369,6 @@ export async function retry<T> (
 ) {
   const reject: unknown[] = []
 
-  /* eslint-disable no-await-in-loop */
   for (let i = 0; i < times; i++) {
     try {
       return await operation()
@@ -379,7 +387,6 @@ export async function retry<T> (
       }
     }
   }
-  /* eslint-enable no-await-in-loop */
 
   throw new AggregateError(reject, `Failed after ${times} retries`)
 }
@@ -393,17 +400,46 @@ export const geometricSeries = (startIndex: number, endIndex: number, ratio: num
 }
 
 export const displayHTMLError = async (response: Response) => {
-  const html = await response.text()
+  let errorMessage = await response.text()
+
+  try {
+    const { error } = JSON.parse(errorMessage)
+    if (typeof error === 'string') {
+      errorMessage = error
+    }
+  } catch {
+  }
+
   const overlay = document.createElement('div')
   overlay.style.cssText =
     'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:99999'
   const modal = document.createElement('div')
   modal.style.cssText =
-    'background:var(--alert-color);color:var(--text-color);padding:20px;border:1px solid var(--boxmain-bordercolor);border-radius:8px;max-width:500px;max-height:80vh;overflow:auto'
-  modal.innerHTML = DOMPurify.sanitize(html)
+    'position:relative;background:var(--alert-color);color:var(--text-color);padding:20px;border:1px solid var(--boxmain-bordercolor);border-radius:8px;max-width:500px;max-height:80vh;overflow:auto'
+  modal.innerHTML = DOMPurify.sanitize(errorMessage)
+
+  const closeButton = document.createElement('button')
+  closeButton.textContent = '×'
+  closeButton.setAttribute('aria-label', 'Close')
+  closeButton.style.cssText =
+    'position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text-color);font-size:24px;line-height:1;cursor:pointer;padding:0'
+  modal.appendChild(closeButton)
+
+  const controller = new AbortController()
+  const { signal } = controller
+  const close = () => {
+    overlay.remove()
+    controller.abort()
+  }
+
+  closeButton.addEventListener('click', close, { signal })
   overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.remove()
-  }, { once: true })
+    if (e.target === overlay) close()
+  }, { signal })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close()
+  }, { signal })
+
   overlay.appendChild(modal)
   document.body.appendChild(overlay)
 }

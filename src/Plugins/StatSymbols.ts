@@ -2,18 +2,25 @@ import type { PostProcessorModule } from 'i18next'
 
 let showStatSymbol = false
 
-export const enableStatSymbols = (): void => {
-  showStatSymbol = true
+export const setStatSymbols = (enabled: boolean): void => {
+  // Symbols inconsistently (oftentimes don't) show up properly on mobile devices
+  showStatSymbol = enabled && PLATFORM !== 'mobile'
 }
+
+export const enableStatSymbols = (): void => setStatSymbols(true)
 
 const KEYWORD_SYMBOLS: Record<string, string> = {
   'Offering': '☤',
   'Obtainium': '❍',
   'Salvage': '♻',
+  'Construction': '⌂',
   'Ambrosia Luck': '☘',
   'Red Luck': '⚅',
+  'Purple Honey Luck': '✰',
   'Ambrosia Bar Point': '◊',
   'Red Bar Point': '❖',
+  'Purple Bar Point': '𝚫',
+  'Purple Honey': '☼',
   'Blueberries': '☌',
   'Quark': '❂',
   'Cube': '⬢',
@@ -29,13 +36,15 @@ const KEYWORD_SYMBOLS: Record<string, string> = {
   'Global Speed': '⧖',
   'Ascension Speed': '⧗',
   'Research': '⚛',
+  'Platonic Cube': '✞',
   'Platonic': '✞',
   'Ant ELO': '☇',
   'Immortal ELO': '⛉',
   'Reborn ELO': '🝘',
   'Ant Speed': '≫',
   'Ant Sacrifice': '⤬',
-  'Stage': '⎍'
+  'Stage': '⎍',
+  'Encabulator Speed': '⏲'
 }
 
 const reg = new RegExp(Object.keys(KEYWORD_SYMBOLS).join('|'), 'g')
@@ -48,18 +57,6 @@ export default {
       return value
     }
 
-    const iterable = value.matchAll(reg)
-    let offset = 0
-
-    for (const iter of iterable) {
-      value = `${value.substring(0, iter.index + offset)}${KEYWORD_SYMBOLS[iter[0]]} ${
-        value.slice(iter.index + offset)
-      }`
-      // Each time we replace the value, we add characters (space and the length of the symbol) but the indices are based on the original string
-      offset += 1 + KEYWORD_SYMBOLS[iter[0]].length
-      // Fun fact! '🝘' has a length of 2.
-    }
-
-    return value
+    return value.replaceAll(reg, (substring) => `${KEYWORD_SYMBOLS[substring]}\u00A0${substring}`)
   }
 } satisfies PostProcessorModule

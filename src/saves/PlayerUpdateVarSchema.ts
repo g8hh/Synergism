@@ -1,45 +1,65 @@
 import Decimal from 'break_infinity.js'
-import { type AmbrosiaUpgradeNames, ambrosiaUpgrades } from '../BlueberryUpgrades'
-import { CorruptionLoadout, type Corruptions, CorruptionSaves } from '../Corruptions'
+import * as z from 'zod'
+import type { AmbrosiaUpgradeNames } from '../BlueberryUpgrades'
 import { AntProducers } from '../Features/Ants/structs/structs'
 import { NUM_SACRIFICE_MODES } from '../Features/Ants/toggles/structs/sacrifice'
-import { type HepteractKeys, hepteracts } from '../Hepteracts'
-import { type OcteractDataKeys, octeractUpgrades } from '../Octeracts'
-import { goldenQuarkUpgrades, type SingularityDataKeys } from '../singularity'
+import type { HepteractKeys } from '../Hepteracts'
+import { octeractUpgradeNames, type OcteractUpgrades, octeractUpgrades } from '../Octeracts'
+import { getGQUpgradeCumulativeCost, goldenQuarkUpgradeNames, type SingularityDataKeys } from '../singularity'
 import { updateResourcePredefinedLevel } from '../Talismans'
-import type { AutoAscensionModes, AutoResetModes } from '../Toggles'
-import { convertArrayToCorruption } from './PlayerJsonSchema'
 import { playerSchema } from './PlayerSchema'
 
-export const playerUpdateVarSchema = playerSchema.transform((player) => {
-  if (player.usedCorruptions !== undefined) {
-    const corrLoadout = convertArrayToCorruption(player.usedCorruptions)
-    player.corruptions.used = new CorruptionLoadout(corrLoadout)
+const getLegacyOcteractsInvested = (
+  key: OcteractUpgrades,
+  upgrade: { level?: number; octeractsInvested?: number }
+): number => {
+  return upgrade.level === undefined
+    ? upgrade.octeractsInvested ?? 0
+    : octeractUpgrades[key].costFormula(upgrade.level)
+}
+
+const getLegacyGoldenQuarksInvested = (
+  key: SingularityDataKeys,
+  upgrade: { level?: number; goldenQuarksInvested?: number }
+): number => {
+  return upgrade.level === undefined
+    ? upgrade.goldenQuarksInvested ?? 0
+    : getGQUpgradeCumulativeCost(key, upgrade.level)
+}
+
+const legacyCorruptionKeys = ['usedCorruptions', 'prototypeCorruptions', 'corruptionLoadouts', 'corruptionLoadoutNames']
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null
+}
+
+const hasLegacyCorruptions = (data: Record<string, unknown>) => {
+  if (legacyCorruptionKeys.some((key) => data[key] !== undefined)) {
+    return true
   }
 
-  if (player.prototypeCorruptions !== undefined) {
-    const corrLoadout = convertArrayToCorruption(player.prototypeCorruptions)
-    player.corruptions.next = new CorruptionLoadout(corrLoadout)
+  return isRecord(data.corruptions) && isRecord(data.corruptions.used)
+}
+
+const cleanseLegacyCorruptions = (data: unknown) => {
+  if (!isRecord(data) || !hasLegacyCorruptions(data)) {
+    return data
   }
 
-  if (player.corruptionShowStats !== undefined) {
-    player.corruptions.showStats = player.corruptionShowStats
+  const cleansed: Record<string, unknown> = { ...data }
+  Reflect.deleteProperty(cleansed, 'corruptions')
+  for (const key of legacyCorruptionKeys) {
+    Reflect.deleteProperty(cleansed, key)
   }
 
-  if (player.corruptionLoadouts !== undefined && player.corruptionLoadoutNames !== undefined) {
-    const corruptionSaveStuff = player.corruptionLoadoutNames.reduce(
-      (map, key, index) => {
-        if (player.corruptionLoadouts?.[index + 1]) {
-          map[key] = convertArrayToCorruption(player.corruptionLoadouts[index + 1] ?? Array(100).fill(0))
-        }
-        return map
-      },
-      {} as Record<string, Corruptions>
-    )
-
-    player.corruptions.saves = new CorruptionSaves(corruptionSaveStuff)
+  if (isRecord(data.currentChallenge) && data.currentChallenge.ascension === 15) {
+    cleansed.currentChallenge = { ...data.currentChallenge, ascension: 0 }
   }
 
+  return cleansed
+}
+
+export const playerUpdateVarSchema = z.preprocess(cleanseLegacyCorruptions, playerSchema).transform((player) => {
   if (player.ultimatePixels !== undefined || player.cubeUpgradeRedBarFilled !== undefined) {
     // One-time conversion for red bar filled and ultimate pixels (to a lesser degree)
 
@@ -130,9 +150,6 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
         const AUTO = value.AUTO ?? false
 
         player.hepteracts[k] = { BAL, TIMES_CAP_EXTENDED, AUTO }
-        hepteracts[k].BAL = BAL
-        hepteracts[k].TIMES_CAP_EXTENDED = TIMES_CAP_EXTENDED
-        hepteracts[k].AUTO = AUTO
       }
     }
   }
@@ -144,39 +161,55 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
         continue
       }
 
+      // Older saves may predate some upgrades; keep their schema defaults.
+      if (player.singularityUpgrades[key] === undefined) {
+        continue
+      }
+
       const k = key as SingularityDataKeys
 
-      const level = player.singularityUpgrades[k].level ?? 0
       const freeLevel = player.singularityUpgrades[k].freeLevels ?? 0
-      const goldenQuarksInvested = player.singularityUpgrades[k].goldenQuarksInvested ?? 0
+      const goldenQuarksInvested = getLegacyGoldenQuarksInvested(k, player.singularityUpgrades[k])
 
       player.goldenQuarkUpgrades[k] = {
-        level,
         freeLevel,
         goldenQuarksInvested
       }
-      goldenQuarkUpgrades[k].level = level
-      goldenQuarkUpgrades[k].freeLevel = freeLevel
-      goldenQuarkUpgrades[k].goldenQuarksInvested = goldenQuarksInvested
+    }
+  }
+
+  for (const key of goldenQuarkUpgradeNames) {
+    const upgrade = player.goldenQuarkUpgrades[key]
+
+    if (upgrade.level !== undefined) {
+      upgrade.goldenQuarksInvested = getLegacyGoldenQuarksInvested(key, upgrade)
+      Reflect.deleteProperty(upgrade, 'level')
     }
   }
 
   if (player.octeractUpgrades !== undefined) {
-    for (const key of Object.keys(player.octeractUpgrades)) {
-      const k = key as OcteractDataKeys
+    for (const key of octeractUpgradeNames) {
+      // Older saves may predate some upgrades; keep their schema defaults.
+      if (player.octeractUpgrades[key] === undefined) {
+        continue
+      }
 
-      const level = player.octeractUpgrades[k].level ?? 0
-      const freeLevel = player.octeractUpgrades[k].freeLevels ?? 0
-      const octeractsInvested = player.octeractUpgrades[k].octeractsInvested ?? 0
+      const freeLevel = player.octeractUpgrades[key].freeLevels ?? 0
+      const octeractsInvested = getLegacyOcteractsInvested(key, player.octeractUpgrades[key])
 
-      player.octUpgrades[k] = {
-        level,
+      player.octUpgrades[key] = {
         freeLevel,
         octeractsInvested
       }
-      octeractUpgrades[k].level = level
-      octeractUpgrades[k].freeLevel = level
-      octeractUpgrades[k].octeractsInvested = octeractsInvested
+    }
+  }
+
+  for (const key of Object.keys(player.octUpgrades) as OcteractUpgrades[]) {
+    const upgrade = player.octUpgrades[key]
+
+    if (upgrade.level !== undefined) {
+      upgrade.octeractsInvested = getLegacyOcteractsInvested(key, upgrade)
+      Reflect.deleteProperty(upgrade, 'level')
     }
   }
 
@@ -191,8 +224,6 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
         ambrosiaInvested,
         blueberriesInvested
       }
-      ambrosiaUpgrades[k].ambrosiaInvested = ambrosiaInvested
-      ambrosiaUpgrades[k].blueberriesInvested = blueberriesInvested
     }
   }
 
@@ -201,32 +232,32 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
   if (player.antPoints !== undefined) {
     player.ants.producers[AntProducers.Workers] = {
       purchased: Math.min(2000, player.firstOwnedAnts ?? 0),
-      generated: Decimal.min(new Decimal(1e200), player.firstGeneratedAnts ?? new Decimal(0))
+      generated: Decimal.min(new Decimal(1e200), player.firstGeneratedAnts ?? new Decimal())
     }
 
     player.ants.producers[AntProducers.Breeders] = {
       purchased: Math.min(1000, player.secondOwnedAnts ?? 0),
-      generated: Decimal.min(new Decimal(1e200), player.secondGeneratedAnts ?? new Decimal(0))
+      generated: Decimal.min(new Decimal(1e200), player.secondGeneratedAnts ?? new Decimal())
     }
 
     player.ants.producers[AntProducers.MetaBreeders] = {
       purchased: Math.min(500, player.thirdOwnedAnts ?? 0),
-      generated: Decimal.min(new Decimal(1e200), player.thirdGeneratedAnts ?? new Decimal(0))
+      generated: Decimal.min(new Decimal(1e200), player.thirdGeneratedAnts ?? new Decimal())
     }
 
     player.ants.producers[AntProducers.MegaBreeders] = {
       purchased: Math.min(250, player.fourthOwnedAnts ?? 0),
-      generated: Decimal.min(new Decimal(1e200), player.fourthGeneratedAnts ?? new Decimal(0))
+      generated: Decimal.min(new Decimal(1e200), player.fourthGeneratedAnts ?? new Decimal())
     }
 
     player.ants.producers[AntProducers.Queens] = {
       purchased: Math.min(87, player.fifthOwnedAnts ?? 0),
-      generated: Decimal.min(new Decimal(10), player.fifthGeneratedAnts ?? new Decimal(0))
+      generated: Decimal.min(new Decimal(10), player.fifthGeneratedAnts ?? new Decimal())
     }
 
     player.ants.producers[AntProducers.LordRoyals] = {
       purchased: Math.min(1, player.sixthOwnedAnts ?? 0),
-      generated: new Decimal(0)
+      generated: new Decimal()
     }
 
     // The rest cost more than 1e1000 crumbs, so we can ignore
@@ -282,16 +313,16 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
   }
 
   if (player.resettoggle1 !== undefined) {
-    player.resetToggleModes.prestige = (oldToNewToggles[player.resettoggle1] ?? 0) as AutoResetModes
+    player.resetToggleModes.prestige = oldToNewToggles[player.resettoggle1] ?? 0
   }
   if (player.resettoggle2 !== undefined) {
-    player.resetToggleModes.transcend = (oldToNewToggles[player.resettoggle2] ?? 0) as AutoResetModes
+    player.resetToggleModes.transcend = oldToNewToggles[player.resettoggle2] ?? 0
   }
   if (player.resettoggle3 !== undefined) {
-    player.resetToggleModes.reincarnation = (oldToNewToggles[player.resettoggle3] ?? 0) as AutoResetModes
+    player.resetToggleModes.reincarnation = oldToNewToggles[player.resettoggle3] ?? 0
   }
   if (player.resettoggle4 !== undefined) {
-    player.resetToggleModes.ascension = (oldToNewToggles[player.resettoggle4] ?? 0) as AutoAscensionModes
+    player.resetToggleModes.ascension = oldToNewToggles[player.resettoggle4] ?? 0
   }
 
   Reflect.deleteProperty(player, 'runeshards')
@@ -304,7 +335,6 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
   Reflect.deleteProperty(player, 'runelevels')
   Reflect.deleteProperty(player, 'usedCorruptions')
   Reflect.deleteProperty(player, 'prototypeCorruptions')
-  Reflect.deleteProperty(player, 'corruptionShowStats')
   Reflect.deleteProperty(player, 'corruptionLoadouts')
   Reflect.deleteProperty(player, 'corruptionLoadoutNames')
   Reflect.deleteProperty(player, 'ultimatePixels')
@@ -373,6 +403,8 @@ export const playerUpdateVarSchema = playerSchema.transform((player) => {
 
   Reflect.deleteProperty(player, 'visitedAmbrosiaSubtab')
   Reflect.deleteProperty(player, 'visitedAmbrosiaSubtabRed')
+
+  Reflect.deleteProperty(player, 'highestChallenge15Exponent')
 
   return player
 })
